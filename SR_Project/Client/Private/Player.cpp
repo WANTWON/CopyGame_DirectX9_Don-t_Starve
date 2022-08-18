@@ -37,6 +37,8 @@ int CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	
+
 	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_UP))
 	{
 		m_pTransformCom->Go_Straight(fTimeDelta, m_fTerrain_Height);
@@ -60,7 +62,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	}
 	else if (GetKeyState(VK_LEFT) < 0)
 	{
-		m_pTransformCom->Go_Left(fTimeDelta, m_fTerrain_Height);
+		m_pTransformCom->Go_Right(fTimeDelta, m_fTerrain_Height);
 		m_eState = LEFT;
 
 		if (m_ePastState != m_eState)
@@ -296,6 +298,9 @@ HRESULT CPlayer::Change_Texture(const _tchar * LayerTag)
 void CPlayer::SetUp_BillBoard()
 {
 	_float4x4		ViewMatrix;
+
+	if (m_eState == LEFT)
+		return;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 
