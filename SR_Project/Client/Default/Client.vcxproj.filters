@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="99.Defines">
+      <UniqueIdentifier>{127f9ffa-dbe3-48d8-8f90-d9f2f940dde9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Default">
+      <UniqueIdentifier>{3a02a7f2-f122-4e3f-ba73-7c184c26e2ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MainApp">
+      <UniqueIdentifier>{846a7fd6-9bff-46df-a0df-d53f7bc7bf25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels">
+      <UniqueIdentifier>{e376087f-2316-4210-923f-73ce86c4f3fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\Logo">
+      <UniqueIdentifier>{9cd4d860-6255-46f1-8974-5088a1d359cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\Loading">
+      <UniqueIdentifier>{d0295cc5-86a0-4de0-bd55-3e301366d030}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\GamePlay">
+      <UniqueIdentifier>{66f494b9-9924-420d-b47d-fe913d73777b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\Loading\Loader">
+      <UniqueIdentifier>{51a8caee-15f6-46ec-a7c4-fc3ba8214797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject">
+      <UniqueIdentifier>{7ef2d9ce-ece3-4860-9e4f-84f6fb56200b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster">
+      <UniqueIdentifier>{04b114f1-fbdb-4517-a19d-e416023815d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Terrain">
+      <UniqueIdentifier>{766736ac-cf5c-45ad-94f6-40d5bd86f420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Camera">
+      <UniqueIdentifier>{107d5aff-84f1-4289-b6c9-bff96bfa8fe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player">
+      <UniqueIdentifier>{338d1323-c14f-4477-a3c9-89e249b58e75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Sky">
+      <UniqueIdentifier>{a2194b4b-fa7c-47c2-a338-0078656411e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UI">
+      <UniqueIdentifier>{d9d4e8eb-8704-4d4b-b177-4121e1b49c59}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Public\MainApp.h">
+      <Filter>00.MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Defines.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Logo.h">
+      <Filter>01.Levels\Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Levels\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Loading.h">
+      <Filter>01.Levels\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Loader.h">
+      <Filter>01.Levels\Loading\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02.GameObject\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>02.GameObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CameraDynamic.h">
+      <Filter>02.GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Player.h">
+      <Filter>02.GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI.h">
+      <Filter>02.GameObject\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sky.h">
+      <Filter>02.GameObject\Sky</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Private\MainApp.cpp">
+      <Filter>00.MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>98.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>98.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Logo.cpp">
+      <Filter>01.Levels\Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_GamePlay.cpp">
+      <Filter>01.Levels\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Loading.cpp">
+      <Filter>01.Levels\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loader.cpp">
+      <Filter>01.Levels\Loading\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>02.GameObject\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Terrain.cpp">
+      <Filter>02.GameObject\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraDynamic.cpp">
+      <Filter>02.GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Player.cpp">
+      <Filter>02.GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI.cpp">
+      <Filter>02.GameObject\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sky.cpp">
+      <Filter>02.GameObject\Sky</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Client.ico">
+      <Filter>98.Default</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>98.Default</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Client.rc">
+      <Filter>98.Default</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
