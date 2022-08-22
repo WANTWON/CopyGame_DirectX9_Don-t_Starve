@@ -46,6 +46,10 @@ private:
 	_float3			m_TargetPos = {1, 0, 1};
 	const _tchar*	m_TimerTag = TEXT("");
 
+private ://for Debug
+	_tchar					m_szDebug[MAX_PATH] = TEXT("");
+	_float			m_TestTimer = 0.f;
+
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -21,9 +21,11 @@ public:
 	virtual HRESULT Render();
 
 	void Update_Position(_float3 position) { m_vPosition = position; }
+	//Get
 	_float3 Get_Position() { return m_vPosition; }
 	_float  Get_Radius() { return m_fRadius; }
-
+	//Set
+	void	Set_Radius(_float _fRadius) { m_fRadius = _fRadius;}
 protected:
 	LPDIRECT3DDEVICE9			m_pGraphic_Device = nullptr;
 

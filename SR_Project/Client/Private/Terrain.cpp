@@ -151,6 +151,9 @@ void CTerrain::SetUp_TerrainY()
 		return;
 
 	pPlayer->Set_TerrainY(Height);
+
+	Safe_Release(pGameInstance);
+	Safe_Release(pPlayer);
 }
 
 CTerrain * CTerrain::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

@@ -32,8 +32,7 @@ public:
 	void Set_Scale(_float x, _float y, _float z);
 	_float4x4 Get_WorldMatrix() const { return m_WorldMatrix;}
 	void Set_TransformDesc(TRANSFORMDESC TransformDesc) { m_TransformDesc = TransformDesc; }
-
-
+	TRANSFORMDESC Get_TransformDesc(void) { return m_TransformDesc; }
 public:
 	void Go_Straight(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
 	void Go_Backward(_float fTimeDelta, _float fHeight = NONE_HEIGHT);

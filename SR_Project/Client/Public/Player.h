@@ -46,7 +46,6 @@ public:
 public:
 	typedef struct tagPlayerStat
 	{
-		_float fHP = 0.f;
 		_float fSpeed = 0.f;
 		_float fMental = 0.f;
 		_float fHungry = 0.f;
@@ -125,8 +124,7 @@ private:
 
 	map<INTERACTKEY, _int> m_KeySets;
 
-private: /*Scale*/
-	_float3				m_OriginScale;
+private: 
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
