@@ -9,7 +9,10 @@
 #include "Terrain.h"
 #include "CameraDynamic.h"
 #include "Sky.h"
-#include "UI.h"
+#include "MainInventory.h"
+#include "MainInventory_back.h"
+#include "MainInventory_front.h"
+#include "Pont.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -128,9 +131,23 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/tile%03d.png"), 15))))
 		return E_FAIL;
 
-	/*For.Prototype_Component_Texture_UI */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_UI"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
+	/*For.Prototype_Component_Texture_MainInventory */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory.png"), 1))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_MainInventory_back */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory_back"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory_back.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_MainInventory_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/itom/item%d.png"), 3))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Pont */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pont"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 10))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Sky */
@@ -188,9 +205,22 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CCameraDynamic::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	/*For.Prototype_GameObject_UI */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI"),
-		CUI::Create(m_pGraphic_Device))))
+	/*For.Prototype_GameObject_MainInventory */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory"),
+		CMainInventory::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInventory_back */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory_back"),
+		CMainInventory_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInventory_front */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory_front"),
+		CMainInventory_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Pont */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pont"),
+		CPont::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Sky */

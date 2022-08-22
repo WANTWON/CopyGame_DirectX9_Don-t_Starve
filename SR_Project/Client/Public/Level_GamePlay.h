@@ -21,7 +21,11 @@ public:
 	HRESULT Ready_Layer_Monster(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_UI(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_MainInventory(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_MainInventory_back(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_MainInventory_front(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Pont(const _tchar* pLayerTag);
+	
 
 public:
 	static CLevel_GamePlay* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

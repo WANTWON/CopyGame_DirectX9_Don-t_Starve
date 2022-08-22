@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Client_Defines.h"
 #include "GameObject.h"
 
@@ -12,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CUI final : public CGameObject
+class CMainInventory_front final : public CGameObject
 {
 private:
-	CUI(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CUI(const CUI& rhs);
-	virtual ~CUI() = default;
+	CMainInventory_front(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CMainInventory_front(const CMainInventory_front& rhs);
+	virtual ~CMainInventory_front() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -42,9 +41,18 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	static CUI* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CMainInventory_front* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
+
+	bool get_check() { return m_bcheck; }
+	void set_check(bool tof) { m_bcheck = tof ; }
+
+private:
+	int* iNumber = nullptr;
+	int iNum = 0;
+	int texnum = 0;
+	bool m_bcheck = false;
 };
 
 END
