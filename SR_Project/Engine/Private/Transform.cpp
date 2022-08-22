@@ -28,7 +28,7 @@ HRESULT CTransform::Initialize(void * pArg)
 	}
 		
 
-	return S_OK;
+	return S_OK; 
 }
 
 _float3 CTransform::Get_Scale()
