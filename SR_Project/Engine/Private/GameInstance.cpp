@@ -48,6 +48,17 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 	return S_OK;
 }
 
+HRESULT CGameInstance::Init_Device(const GRAPHIC_DESC & GraphicDesc, LPDIRECT3DDEVICE9 * ppOut)
+{
+	if (nullptr == m_pGraphic_Device)
+		return E_FAIL;
+
+	if (FAILED(m_pGraphic_Device->InitDevice(GraphicDesc, ppOut)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 void CGameInstance::Tick_Engine(_float fTimeDelta)
 {
 	if (nullptr == m_pLevel_Manager || 

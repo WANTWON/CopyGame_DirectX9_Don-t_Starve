@@ -21,7 +21,8 @@ HRESULT CMainApp::Initialize()
 	Graphic_Desc.iWinSizeY = g_iWinSizeY;
 	Graphic_Desc.eWinMode = GRAPHIC_DESC::MODE_WIN;
 
-	if (FAILED(m_pGameInstance->Initialize_Engine(g_ToolhInst, LEVEL_END, Graphic_Desc, &m_pGraphic_Device)))
+	if (FAILED(m_pGameInstance->Initialize_Engine(g_ToolhInst,LEVEL_END,Graphic_Desc,&m_pGraphic_Device)))
+	//if(FAILED(m_pGameInstance->Init_Device(Graphic_Desc, &m_pGraphic_Device)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Prototype_Component()))

@@ -19,6 +19,7 @@ private:
 
 public: /* For.Engine */
 	HRESULT Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, LPDIRECT3DDEVICE9* ppOut);
+	HRESULT Init_Device(const GRAPHIC_DESC& GraphicDesc, LPDIRECT3DDEVICE9* ppOut);
 	void Tick_Engine(_float fTimeDelta);
 
 	void Clear(_uint iLevelIndex);

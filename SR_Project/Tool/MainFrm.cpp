@@ -7,7 +7,6 @@
 
 #include "MainFrm.h"
 #include "ToolView.h"
-#include "MyForm.h"
 #include "MainApp.h"
 
 #ifdef _DEBUG
@@ -99,6 +98,10 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	g_ToolhWnd = GetSafeHwnd();
 	g_ToolhInst = AfxGetInstanceHandle();
 
+	//m_MainSplitter.CreateStatic(this, 1, 2);
+	//m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CToolView), CSize(g_iWinSizeX, g_iWinSizeY), pContext);
+	//m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CMyForm), CSize(300, g_iWinSizeY), pContext);
+
 	return TRUE;//CFrameWnd::OnCreateClient(lpcs, pContext);
 }
 
@@ -107,5 +110,6 @@ void CMainFrame::OnDestroy()
 {
 	CFrameWnd::OnDestroy();
 
+	m_MainSplitter.DestroyWindow();
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 }

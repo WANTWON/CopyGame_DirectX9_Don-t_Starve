@@ -13,8 +13,6 @@
 #define new DEBUG_NEW
 #endif
 
-HWND g_hWnd;
-
 // CToolView
 
 IMPLEMENT_DYNCREATE(CToolView, CView)
@@ -106,11 +104,6 @@ CToolDoc* CToolView::GetDocument() const // 디버그되지 않은 버전은 인라인으로 지
 void CToolView::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
-
-	g_hWnd = GetSafeHwnd();
-
-	CMainApp::Get_Instance()->Initialize();
-
 
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.

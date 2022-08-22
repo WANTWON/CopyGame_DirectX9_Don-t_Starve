@@ -54,9 +54,6 @@
     <ClInclude Include="ToolView.h">
       <Filter>02.View\00.ToolView</Filter>
     </ClInclude>
-    <ClInclude Include="MyForm.h">
-      <Filter>02.View\01.MyForm</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -76,9 +73,6 @@
     </ClCompile>
     <ClCompile Include="ToolView.cpp">
       <Filter>02.View\00.ToolView</Filter>
-    </ClCompile>
-    <ClCompile Include="MyForm.cpp">
-      <Filter>02.View\01.MyForm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
