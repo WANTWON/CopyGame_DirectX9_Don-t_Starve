@@ -33,8 +33,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(SetUp_KeySettings()))
 		return E_FAIL;
 
-	m_OriginScale = m_pTransformCom->Get_Scale();
-
 	return S_OK;
 }
 

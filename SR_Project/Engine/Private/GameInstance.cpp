@@ -229,8 +229,6 @@ bool CGameInstance::Key_Down(int _Key)
 
 void CGameInstance::Release_Engine()
 {
-	CKeyMgr::Get_Instance()->Destroy_Instance();
-
 	CGameInstance::Get_Instance()->Destroy_Instance();
 
 	CLevel_Manager::Get_Instance()->Destroy_Instance();
@@ -242,6 +240,8 @@ void CGameInstance::Release_Engine()
 	CTimer_Manager::Get_Instance()->Destroy_Instance();
 
 	CInput_Device::Get_Instance()->Destroy_Instance();
+
+	CKeyMgr::Get_Instance()->Destroy_Instance();
 
 	CGraphic_Device::Get_Instance()->Destroy_Instance();
 }

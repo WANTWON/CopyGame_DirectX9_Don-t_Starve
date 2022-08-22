@@ -45,12 +45,17 @@ int CMonster::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
+	
+
 	return OBJ_NOEVENT;
 }
 
 void CMonster::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	//Test1
+	m_TestTimer += fTimeDelta;
 
 	SetUp_BillBoard();
 
@@ -63,6 +68,14 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	{
 		if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this))
 		{
+			/*if (m_TestTimer > 1.0f)
+			{
+				wsprintf(m_szDebug, TEXT("Collision"));
+
+				OutputDebugString(m_szDebug);
+
+				m_TestTimer = 0.f;
+			}*/
 			m_bDead = true;
 		}
 			
