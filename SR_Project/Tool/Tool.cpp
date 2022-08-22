@@ -11,6 +11,8 @@
 #include "ToolDoc.h"
 #include "ToolView.h"
 
+#include "MainApp.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -174,6 +176,26 @@ void CToolApp::OnAppAbout()
 {
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
+}
+
+BOOL CToolApp::OnIdle(LONG lCount)
+{
+	if (this->m_pMainWnd->IsIconic())
+	{
+		return FALSE;
+	}
+	else
+	{
+		
+		if (nullptr == pMainApp)
+			pMainApp = CMainApp::Create();
+
+		pMainApp->Tick(0.0f);
+
+		pMainApp->Render();
+	}
+
+	return TRUE;
 }
 
 // CToolApp 메시지 처리기

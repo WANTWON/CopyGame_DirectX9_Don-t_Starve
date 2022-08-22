@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "Tool_Defines.h"
 
 class CMainFrame : public CFrameWnd
 {
@@ -38,6 +39,12 @@ protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	DECLARE_MESSAGE_MAP()
 
+	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
+public:
+	afx_msg void OnDestroy();
+
+public:
+	CSplitterWnd			m_MainSplitter;
 };
 
 

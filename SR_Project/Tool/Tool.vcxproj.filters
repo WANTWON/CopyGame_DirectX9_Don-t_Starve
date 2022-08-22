@@ -13,6 +13,15 @@
     <Filter Include="02.View">
       <UniqueIdentifier>{b1db3dad-4326-4cbb-8778-00ddd85ba61a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Defines">
+      <UniqueIdentifier>{b28bf69d-db1e-4376-a58e-52bba78455a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.View\00.ToolView">
+      <UniqueIdentifier>{a7a6fc84-f46d-4ccc-b497-6f7ab4be1294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.View\01.MyForm">
+      <UniqueIdentifier>{3cbd3fde-5d73-4105-8930-c118cccb2e77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -20,9 +29,6 @@
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
       <Filter>00.MainFrame</Filter>
-    </ClInclude>
-    <ClInclude Include="ToolView.h">
-      <Filter>02.View</Filter>
     </ClInclude>
     <ClInclude Include="ToolDoc.h">
       <Filter>98.Default</Filter>
@@ -39,13 +45,19 @@
     <ClInclude Include="Resource.h">
       <Filter>98.Default</Filter>
     </ClInclude>
+    <ClInclude Include="Tool_Defines.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="MainApp.h">
+      <Filter>01.MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolView.h">
+      <Filter>02.View\00.ToolView</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
       <Filter>00.MainFrame</Filter>
-    </ClCompile>
-    <ClCompile Include="ToolView.cpp">
-      <Filter>02.View</Filter>
     </ClCompile>
     <ClCompile Include="ToolDoc.cpp">
       <Filter>98.Default</Filter>
@@ -55,6 +67,12 @@
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>98.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="MainApp.cpp">
+      <Filter>01.MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolView.cpp">
+      <Filter>02.View\00.ToolView</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +90,7 @@
     <None Include="res\Tool.rc2">
       <Filter>98.Default</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Tool.rc">

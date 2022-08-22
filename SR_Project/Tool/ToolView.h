@@ -3,8 +3,10 @@
 //
 
 #pragma once
+#include "Tool_Defines.h"
 
 
+class CToolDoc;
 class CToolView : public CView
 {
 protected: // serialization에서만 만들어집니다.
