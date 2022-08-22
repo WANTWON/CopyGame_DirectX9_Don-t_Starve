@@ -15,3 +15,5 @@
 *.res
 *.log
 *.VC.db
+*.ipch
+*.VC.VC.opendb
