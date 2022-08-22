@@ -147,7 +147,6 @@ void CTerrain::SetUp_TerrainY()
 
 	_float3 TargetPos = pPlayer->Get_Pos();
 	_float Height = m_pVIBufferCom->Get_TerrainY(TargetPos.x, TargetPos.z);
-
 	if (Height == 0)
 		return;
 
