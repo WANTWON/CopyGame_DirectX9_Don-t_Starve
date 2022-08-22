@@ -11,6 +11,7 @@
 *.exe
 *.lib
 *.pch
+*.ipch
 *.suo
 *.res
 *.log
