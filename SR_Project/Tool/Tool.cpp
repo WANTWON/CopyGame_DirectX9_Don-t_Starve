@@ -186,9 +186,8 @@ BOOL CToolApp::OnIdle(LONG lCount)
 	}
 	else
 	{
-		
 		if (nullptr == pMainApp)
-			pMainApp = CMainApp::Create();
+			pMainApp = CMainApp::Get_Instance();
 
 		pMainApp->Tick(0.0f);
 

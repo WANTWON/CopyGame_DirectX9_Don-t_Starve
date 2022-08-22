@@ -2,6 +2,9 @@
 #include "MainApp.h"
 #include "GameInstance.h"
 
+IMPLEMENT_SINGLETON(CMainApp)
+
+
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
 {

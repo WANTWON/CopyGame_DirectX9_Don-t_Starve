@@ -3,19 +3,17 @@
 //
 
 #include "stdafx.h"
-// SHARED_HANDLERS는 미리 보기, 축소판 그림 및 검색 필터 처리기를 구현하는 ATL 프로젝트에서 정의할 수 있으며
-// 해당 프로젝트와 문서 코드를 공유하도록 해 줍니다.
-#ifndef SHARED_HANDLERS
 #include "Tool.h"
-#endif
-
+#include "MainApp.h"
 #include "ToolDoc.h"
 #include "ToolView.h"
+#include "GameInstance.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
+HWND g_hWnd;
 
 // CToolView
 
@@ -30,7 +28,8 @@ END_MESSAGE_MAP()
 
 // CToolView 생성/소멸
 
-CToolView::CToolView()
+CToolView::CToolView() :
+	m_pGameInstance(CGameInstance::Get_Instance())
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
 
@@ -102,3 +101,17 @@ CToolDoc* CToolView::GetDocument() const // 디버그되지 않은 버전은 인라인으로 지
 
 
 // CToolView 메시지 처리기
+
+
+void CToolView::OnInitialUpdate()
+{
+	CView::OnInitialUpdate();
+
+	g_hWnd = GetSafeHwnd();
+
+	CMainApp::Get_Instance()->Initialize();
+
+
+
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+}

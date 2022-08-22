@@ -13,6 +13,7 @@ BEGIN(Tool)
 
 class CMainApp final : public CBase
 {
+	DECLARE_SINGLETON(CMainApp)
 private:
 	CMainApp();
 	virtual ~CMainApp() = default;
