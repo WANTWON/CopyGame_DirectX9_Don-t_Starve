@@ -2,6 +2,7 @@
 #include "..\Public\Terrain.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "Picking.h"
 
 CTerrain::CTerrain(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -167,20 +168,18 @@ void CTerrain::Picking()
 
 	Safe_AddRef(pPlayer);
 
-	POINT MousePt;
 	_float3 OutPos;
-	GetCursorPos(&MousePt);
-	ClientToScreen(g_hWnd, &MousePt);
 
 	if (pGameInstance->Key_Up(VK_LBUTTON))
 	{
-		if(true == m_pVIBufferCom->Picking(MousePt, m_pTransformCom->Get_WorldMatrix(), &OutPos))
+		if(true == m_pVIBufferCom->Picking(m_pTransformCom, &OutPos))
 			pPlayer->Set_PickingPoint(_float3(OutPos.x, 1, OutPos.z));
 
 	}
 	Safe_Release(pGameInstance);
 	Safe_Release(pPlayer);
 }
+
 
 CTerrain * CTerrain::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {

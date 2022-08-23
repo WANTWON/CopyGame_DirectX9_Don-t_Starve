@@ -79,6 +79,9 @@
     <Filter Include="01.Utility\03.Components\Collider">
       <UniqueIdentifier>{11816ccc-002f-497b-9a60-521110f52178}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.Picking">
+      <UniqueIdentifier>{ae6fb8e8-a4a4-455b-909f-0c5ee4031308}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -149,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collider.cpp">
       <Filter>01.Utility\03.Components\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Picking.cpp">
+      <Filter>01.Utility\04.Picking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +241,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Collider.h">
       <Filter>01.Utility\03.Components\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Picking.h">
+      <Filter>01.Utility\04.Picking</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

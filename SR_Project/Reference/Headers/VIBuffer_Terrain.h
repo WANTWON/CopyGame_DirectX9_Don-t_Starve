@@ -24,11 +24,12 @@ public:
 
 public:
 	_float Get_TerrainY(_float Posx, _float Posz);
-	bool Picking(POINT & ptMouse, _float4x4 WorldMatrix, _float3 * pOutPos);
+	bool Picking(class CTransform * pTransform, _float3 * pOut);
 
 private:
 	TERRAINDESC		m_TerrainDesc;
 	VTXTEX*			m_pVertices = nullptr;
+	FACEINDICES32*	m_pIndices = nullptr;
 
 public:
 	static CVIBuffer_Terrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device, TERRAINDESC TerrainDesc);

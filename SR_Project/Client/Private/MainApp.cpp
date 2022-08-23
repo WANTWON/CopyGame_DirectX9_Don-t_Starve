@@ -12,6 +12,15 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Initialize()
 {
+	if (::AllocConsole() == TRUE)
+	{
+		FILE* nfp[3];
+		freopen_s(nfp + 0, "CONOUT$", "rb", stdin);
+		freopen_s(nfp + 1, "CONOUT$", "wb", stdout);
+		freopen_s(nfp + 2, "CONOUT$", "wb", stderr);
+		std::ios::sync_with_stdio();
+	}
+
 	GRAPHIC_DESC		Graphic_Desc;
 	ZeroMemory(&Graphic_Desc, sizeof(GRAPHIC_DESC));
 

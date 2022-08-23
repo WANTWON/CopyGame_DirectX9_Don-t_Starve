@@ -79,8 +79,8 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 
 	_float3 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-	if ( abs(vPlayerPos.x - m_vPickingPoint.x ) < 0.3 &&
-		abs(vPlayerPos.z - m_vPickingPoint.z) < 0.3)
+	if ( abs(vPlayerPos.x - m_vPickingPoint.x ) < 0.1 &&
+		abs(vPlayerPos.z - m_vPickingPoint.z) < 0.1)
 	{
 		
 		m_bPicked = false;

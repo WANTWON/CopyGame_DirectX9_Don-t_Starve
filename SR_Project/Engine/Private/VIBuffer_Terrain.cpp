@@ -1,4 +1,6 @@
 #include "..\Public\VIBuffer_Terrain.h"
+#include "Picking.h"
+#include "Transform.h"
 
 CVIBuffer_Terrain::CVIBuffer_Terrain(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CVIBuffer(pGraphic_Device)
@@ -52,9 +54,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(TERRAINDESC TerrainDesc)
 	if (FAILED(__super::Ready_Index_Buffer()))
 		return E_FAIL;
 
-	FACEINDICES32*			pIndices = nullptr;
+	m_pIndices = nullptr;
 
-	m_pIB->Lock(0, 0, (void**)&pIndices, 0);
+	m_pIB->Lock(0, 0, (void**)&m_pIndices, 0);
 
 	_uint		iNumFaces = 0;
 
@@ -71,14 +73,14 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(TERRAINDESC TerrainDesc)
 				iIndex
 			};
 
-			pIndices[iNumFaces]._0 = iIndices[0];
-			pIndices[iNumFaces]._1 = iIndices[1];
-			pIndices[iNumFaces]._2 = iIndices[2];
+			m_pIndices[iNumFaces]._0 = iIndices[0];
+			m_pIndices[iNumFaces]._1 = iIndices[1];
+			m_pIndices[iNumFaces]._2 = iIndices[2];
 			++iNumFaces;
 
-			pIndices[iNumFaces]._0 = iIndices[0];
-			pIndices[iNumFaces]._1 = iIndices[2];
-			pIndices[iNumFaces]._2 = iIndices[3];
+			m_pIndices[iNumFaces]._0 = iIndices[0];
+			m_pIndices[iNumFaces]._1 = iIndices[2];
+			m_pIndices[iNumFaces]._2 = iIndices[3];
 			++iNumFaces;
 		}
 	}
@@ -122,78 +124,43 @@ _float CVIBuffer_Terrain::Get_TerrainY(_float Posx, _float Posz)
 	return fHeight + 1;
 }
 
-bool CVIBuffer_Terrain::Picking(POINT & ptMouse, _float4x4 WorldMatrix, _float3 * pOutPos)
+bool CVIBuffer_Terrain::Picking(class CTransform * pTransform, _float3 * pOut)
 {
-	D3DVIEWPORT9		ViewPort;
-	m_pGraphic_Device->GetViewport(&ViewPort);
+	CPicking*		pPicking = CPicking::Get_Instance();
 
-	_float4		vMousePos = _float4((_float)ptMouse.x, (_float)ptMouse.y, 0.0f, 0.0f);
+	Safe_AddRef(pPicking);
 
-	// 2차원 투영 스페이스로 변환한다.(0, 0, g_iWinCX, g_iWinCY -> -1, 1, 1, -1)
-	vMousePos.x = vMousePos.x / (ViewPort.Width * 0.5f) - 1.f;
-	vMousePos.y = vMousePos.y / -(ViewPort.Height * 0.5f) + 1.f;
-	vMousePos.z = 0.f;
-	vMousePos.w = 1.f;
-
-	//기존 투영행렬을 얻어온다
-	_float4x4 ProjMatrix;
-	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
-	D3DXMatrixInverse(&ProjMatrix, nullptr, &ProjMatrix);
-
-	D3DXVec4Transform(&vMousePos, &vMousePos, &ProjMatrix);
-
-	// 뷰스페이스 상의 마우스 레이, 마우스의 시작점을 구한다.
-	_float3		vMousePoint = _float3(0.f, 0.f, 0.f);
-	_float3		vMouseRay = _float3(vMousePos.x, vMousePos.y, vMousePos.z) - vMousePoint;
-
-	//기존 뷰 행렬을 어떻게 얻어온다 
-	_float4x4 ViewMatrix;
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
-
-	// 월드스페이스 상의 마우스 레이, 마우스의 시작점을 구한다.
-	D3DXVec3TransformCoord(&vMousePoint, &vMousePoint, &ViewMatrix);
-	D3DXVec3TransformNormal(&vMouseRay, &vMouseRay, &ViewMatrix);
-
-	// 로컬로 변환 (픽킹 대상 객체의 월드 행렬을 가져온다)
+	_float4x4   WorldMatrix = pTransform->Get_WorldMatrix();
 	_float4x4	WorldMatrixInverse;
 	D3DXMatrixInverse(&WorldMatrixInverse, nullptr, &WorldMatrix);
 
-	// 로컬스페이스 상의 마우스 레이, 마우스의 시작점을 구한다.
-	D3DXVec3TransformCoord(&vMousePoint, &vMousePoint, &WorldMatrixInverse);
-	D3DXVec3TransformNormal(&vMouseRay, &vMouseRay, &WorldMatrixInverse);
+
+	_float3			vMouseRay, vMousePoint;
+	pPicking->Compute_LocalRayInfo(&vMouseRay, &vMousePoint, pTransform);
 
 	D3DXVec3Normalize(&vMouseRay, &vMouseRay);
 
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&m_pVertices, 0);
+	m_pIB->Lock(0, 0, (void**)&m_pIndices, 0);
 
-	for (int iIndex = 0; iIndex < m_iNumVertices ; ++iIndex)
+
+	for (int iIndex = 0; iIndex < m_iNumPrimitive; ++iIndex)
 	{
-		_uint iIndices[4] = {
-			{ iIndex + m_TerrainDesc.m_iNumVerticesX },
-			{ iIndex + m_TerrainDesc.m_iNumVerticesX + 1 },
-			{ iIndex + 1 },
-			{ iIndex },
-		};
 		_float		fU, fV, fDist;
 
-		// 우 상단 삼각형.z
-		if (true == D3DXIntersectTri(&m_pVertices[iIndices[1]].vPosition, &m_pVertices[iIndices[0]].vPosition, &m_pVertices[iIndices[2]].vPosition, &vMousePoint, &vMouseRay, &fU, &fV, &fDist))
+		if (true == D3DXIntersectTri(&m_pVertices[m_pIndices[iIndex]._0].vPosition, &m_pVertices[m_pIndices[iIndex]._1].vPosition,
+			&m_pVertices[m_pIndices[iIndex]._2].vPosition, &vMousePoint, &vMouseRay, &fU, &fV, &fDist))
 		{
 			_float3 vLocalMouse = vMousePoint + *D3DXVec3Normalize(&vMouseRay, &vMouseRay) * fDist;
-			D3DXVec3TransformCoord(pOutPos, &vLocalMouse, &WorldMatrix);
+			D3DXVec3TransformCoord(pOut, &vLocalMouse, &WorldMatrix);
+			m_pVB->Unlock();
+			m_pIB->Unlock();
 			return true;
-		}
-
-		// 좌 하단 삼각형.
-		if (true == D3DXIntersectTri(&m_pVertices[iIndices[3]].vPosition, &m_pVertices[iIndices[2]].vPosition, &m_pVertices[iIndices[0]].vPosition, &vMousePoint, &vMouseRay, &fU, &fV, &fDist))
-		{
-			_float3 vLocalMouse = vMousePoint + *D3DXVec3Normalize(&vMouseRay, &vMouseRay) * fDist;
-			D3DXVec3TransformCoord(pOutPos, &vLocalMouse, &WorldMatrix);
-			return true;
-
 		}
 	}
+
+	m_pVB->Unlock();
+	m_pIB->Unlock();
 
 	return false;
 }

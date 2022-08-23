@@ -7,6 +7,7 @@
 #include "Component_Manager.h"
 #include "Input_Device.h"
 #include "KeyMgr.h"
+#include "Picking.h"
 
 BEGIN(Engine)
 
@@ -69,6 +70,7 @@ private:
 	CTimer_Manager*					m_pTimer_Manager = nullptr;
 	CComponent_Manager*				m_pComponent_Manager = nullptr;
 	CKeyMgr*						m_pKey_Manager = nullptr;
+	CPicking*						m_pPicking = nullptr;
 
 public:
 	virtual void Free() override;
