@@ -45,12 +45,17 @@ int CMonster::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
+	
+
 	return OBJ_NOEVENT;
 }
 
 void CMonster::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	//Test1
+	m_TestTimer += fTimeDelta;
 
 	SetUp_BillBoard();
 
@@ -63,6 +68,14 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	{
 		if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this))
 		{
+			/*if (m_TestTimer > 1.0f)
+			{
+				wsprintf(m_szDebug, TEXT("Collision"));
+
+				OutputDebugString(m_szDebug);
+
+				m_TestTimer = 0.f;
+			}*/
 			m_bDead = true;
 		}
 			
@@ -149,6 +162,8 @@ HRESULT CMonster::SetUp_RenderState()
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL; 
 
+
+	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
@@ -160,6 +175,8 @@ HRESULT CMonster::SetUp_RenderState()
 HRESULT CMonster::Release_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	return S_OK;
 }
 
