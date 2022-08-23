@@ -39,6 +39,9 @@ int CTerrain::Tick(_float fTimeDelta)
 
 	SetUp_TerrainY();
 
+	Picking();
+		
+
 	return OBJ_NOEVENT;
 }
 
@@ -152,6 +155,29 @@ void CTerrain::SetUp_TerrainY()
 
 	pPlayer->Set_TerrainY(Height);
 
+	Safe_Release(pGameInstance);
+	Safe_Release(pPlayer);
+}
+
+void CTerrain::Picking()
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+
+	Safe_AddRef(pPlayer);
+
+	POINT MousePt;
+	_float3 OutPos;
+	GetCursorPos(&MousePt);
+	ClientToScreen(g_hWnd, &MousePt);
+
+	if (pGameInstance->Key_Up(VK_LBUTTON))
+	{
+		if(true == m_pVIBufferCom->Picking(MousePt, m_pTransformCom->Get_WorldMatrix(), &OutPos))
+			pPlayer->Set_PickingPoint(_float3(OutPos.x, 1, OutPos.z));
+
+	}
 	Safe_Release(pGameInstance);
 	Safe_Release(pPlayer);
 }

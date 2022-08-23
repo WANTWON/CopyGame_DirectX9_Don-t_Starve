@@ -22,7 +22,7 @@ public:
 	void Clear(_uint iLevelIndex);
 
 public:
-	class CGameObject* Find_Objects(_uint iLevelIndex ,const _tchar* pLayerTag);
+	class CGameObject* Find_Objects(_uint iLevelIndex ,const _tchar* pLayerTag, _uint iIndex = 0);
 
 
 private:

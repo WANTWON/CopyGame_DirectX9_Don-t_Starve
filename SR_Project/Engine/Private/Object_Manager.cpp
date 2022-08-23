@@ -94,13 +94,13 @@ void CObject_Manager::Clear(_uint iLevelIndex)
 	
 }
 
-CGameObject * CObject_Manager::Find_Objects(_uint iLevelIndex, const _tchar * pLayerTag)
+CGameObject * CObject_Manager::Find_Objects(_uint iLevelIndex, const _tchar * pLayerTag, _uint iIndex)
 {
 	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
 	if (pLayer == nullptr)
 		return nullptr;
 
-	return pLayer->Get_Object();
+	return pLayer->Get_Object(iIndex);
 }
 
 CGameObject * CObject_Manager::Find_Prototype(const _tchar * pPrototypeTag)

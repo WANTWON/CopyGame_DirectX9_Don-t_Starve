@@ -2,7 +2,6 @@
 
 _tchar* CCamera::m_pTransformTag = TEXT("Com_Transform");
 
-
 CCamera::CCamera(LPDIRECT3DDEVICE9 pGraphicDevice)
 	: CGameObject(pGraphicDevice)
 {

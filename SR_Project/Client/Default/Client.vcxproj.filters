@@ -46,7 +46,7 @@
     <Filter Include="02.GameObject\UI">
       <UniqueIdentifier>{d9d4e8eb-8704-4d4b-b177-4121e1b49c59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96.Picking_Manager">
+    <Filter Include="96.Picking">
       <UniqueIdentifier>{cc03f7d2-7df6-4213-a974-0e62271f0d17}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -102,6 +102,9 @@
     <ClInclude Include="..\Public\Sky.h">
       <Filter>02.GameObject\Sky</Filter>
     </ClInclude>
+    <ClInclude Include="PickingMgr.h">
+      <Filter>96.Picking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -142,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Sky.cpp">
       <Filter>02.GameObject\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="PickingMgr.cpp">
+      <Filter>96.Picking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

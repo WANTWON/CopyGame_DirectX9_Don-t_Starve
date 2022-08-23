@@ -41,6 +41,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	GetKeyDown(fTimeDelta);
+	Move_to_PickingPoint(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 	return OBJ_NOEVENT;
@@ -64,6 +65,28 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 _float3 CPlayer::Get_Pos()
 {
 	return (m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+}
+
+void CPlayer::Move_to_PickingPoint(_float fTimedelta)
+{
+	/* Picking 포인트가 존재하지 않거나, 이미 도착했다면 return*/
+	if (m_bPicked == false || m_bArrive == true || m_bInputKey == true)
+		return;
+
+	//m_pTransformCom->Follow_Target(m_vPickingPoint, _float3(0,1,0));
+	m_pTransformCom->LookAt(m_vPickingPoint);
+	m_pTransformCom->Go_Straight(fTimedelta);
+
+	_float3 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	if ( abs(vPlayerPos.x - m_vPickingPoint.x ) < 0.3 &&
+		abs(vPlayerPos.z - m_vPickingPoint.z) < 0.3)
+	{
+		
+		m_bPicked = false;
+		m_bArrive = true;
+		m_bInputKey = false;
+	}
 }
 
 HRESULT CPlayer::Render()
@@ -212,22 +235,27 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_UP]))
 	{
 		Move_Up(_fTimeDelta);
+		m_bInputKey = true;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_RIGHT]))
 	{
 		Move_Right(_fTimeDelta);
+		m_bInputKey = true;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_DOWN]))
 	{
 		Move_Down(_fTimeDelta);
+		m_bInputKey = true;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_LEFT]))
 	{
 		Move_Left(_fTimeDelta);
+		m_bInputKey = true;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_ATTACK]))
 	{
 		Attack(_fTimeDelta);
+		m_bInputKey = true;
 	}
 	else
 	{

@@ -38,8 +38,9 @@ private:
 	HRESULT SetUp_SamplerState();
 	HRESULT Release_RenderState();
 
-private:
+public:
 	void SetUp_TerrainY();
+	void Picking();
 
 public:
 	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

@@ -127,7 +127,6 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 
 	}
 
-
 	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
 
 	Safe_AddRef(pTarget);
