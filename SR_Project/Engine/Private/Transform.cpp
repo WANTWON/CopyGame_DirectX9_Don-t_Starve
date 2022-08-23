@@ -226,5 +226,5 @@ void CTransform::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pGraphic_Device);
+	//Safe_Release(m_pGraphic_Device);
 }

@@ -240,9 +240,10 @@ bool CGameInstance::Key_Down(int _Key)
 
 void CGameInstance::Release_Engine()
 {
-	CKeyMgr::Get_Instance()->Destroy_Instance();
 
 	CGameInstance::Get_Instance()->Destroy_Instance();
+
+	CKeyMgr::Get_Instance()->Destroy_Instance();
 
 	CLevel_Manager::Get_Instance()->Destroy_Instance();
 
@@ -267,5 +268,4 @@ void CGameInstance::Free()
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pGraphic_Device);
 	
-
 }
