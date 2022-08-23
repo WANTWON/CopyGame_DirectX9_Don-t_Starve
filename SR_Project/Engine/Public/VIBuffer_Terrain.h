@@ -25,6 +25,7 @@ public:
 public:
 	_float Get_TerrainY(_float Posx, _float Posz);
 	bool Picking(class CTransform * pTransform, _float3 * pOut);
+	void UpTerrain(class CTransform * pTransform, _float3 * pOut);
 
 private:
 	TERRAINDESC		m_TerrainDesc;

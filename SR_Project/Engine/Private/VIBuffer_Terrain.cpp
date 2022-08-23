@@ -98,14 +98,14 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 _float CVIBuffer_Terrain::Get_TerrainY(_float Posx, _float Posz)
 {
 	_float fHeight = 0;
-	int index = int(Posz / (m_TerrainDesc.m_iNumVerticesZ)+(Posx / m_TerrainDesc.m_iNumVerticesX));
-
+	_uint index = Posz *  m_TerrainDesc.m_iNumVerticesX + Posx;
 	if (index > m_TerrainDesc.m_iNumVerticesX*m_TerrainDesc.m_iNumVerticesZ || index < 0)
 		return 0;
 
-	int OneTilePosX = Posx / m_TerrainDesc.m_iNumVerticesX;
-	int OneTilePosZ = Posx / m_TerrainDesc.m_iNumVerticesZ;
+	int OneTilePosX = Posx; /// m_TerrainDesc.m_iNumVerticesX;
+	int OneTilePosZ = Posz; /// m_TerrainDesc.m_iNumVerticesZ;
 
+	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&m_pVertices, 0);
 	//a,b,c = 평면의 법선벡터  / x,y,z 평면위의 점
 	D3DXPLANE Plane;
 
@@ -114,12 +114,19 @@ _float CVIBuffer_Terrain::Get_TerrainY(_float Posx, _float Posz)
 	{
 		D3DXPlaneFromPoints(&Plane, &m_pVertices[index + m_TerrainDesc.m_iNumVerticesX].vPosition, &m_pVertices[index + m_TerrainDesc.m_iNumVerticesX + 1].vPosition, &m_pVertices[index + 1].vPosition);
 		fHeight = -(Plane.a*Posx + Plane.c*Posz + Plane.a*Plane.b*Plane.c*Plane.d) / Plane.b;
+		
 	}
 	else
 	{
 		D3DXPlaneFromPoints(&Plane, &m_pVertices[index + m_TerrainDesc.m_iNumVerticesX].vPosition, &m_pVertices[index + 1].vPosition, &m_pVertices[index].vPosition);
 		fHeight = -(Plane.a*Posx + Plane.c*Posz + Plane.a*Plane.b*Plane.c*Plane.d) / Plane.b;
+		
 	}
+
+	if(fHeight != 0)
+		cout << "Plane : " << fHeight+1 << endl;
+
+	m_pVB->Unlock();
 
 	return fHeight + 1;
 }
@@ -165,6 +172,51 @@ bool CVIBuffer_Terrain::Picking(class CTransform * pTransform, _float3 * pOut)
 	m_pIB->Unlock();
 
 	return false;
+}
+
+void CVIBuffer_Terrain::UpTerrain(CTransform * pTransform, _float3 * pOut)
+{
+	CPicking*		pPicking = CPicking::Get_Instance();
+
+	Safe_AddRef(pPicking);
+
+	_float4x4   WorldMatrix = pTransform->Get_WorldMatrix();
+	_float4x4	WorldMatrixInverse;
+	D3DXMatrixInverse(&WorldMatrixInverse, nullptr, &WorldMatrix);
+
+
+	_float3			vMouseRay, vMousePoint;
+	pPicking->Compute_LocalRayInfo(&vMouseRay, &vMousePoint, pTransform);
+
+	D3DXVec3Normalize(&vMouseRay, &vMouseRay);
+
+	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&m_pVertices, 0);
+	m_pIB->Lock(0, 0, (void**)&m_pIndices, 0);
+
+
+	Safe_Release(pPicking);
+
+	for (int iIndex = 0; iIndex < m_iNumPrimitive; ++iIndex)
+	{
+		_float		fU, fV, fDist;
+
+		if (true == D3DXIntersectTri(&m_pVertices[m_pIndices[iIndex]._0].vPosition, &m_pVertices[m_pIndices[iIndex]._1].vPosition,
+			&m_pVertices[m_pIndices[iIndex]._2].vPosition, &vMousePoint, &vMouseRay, &fU, &fV, &fDist))
+		{
+			m_pVertices[m_pIndices[iIndex]._0].vPosition.y += 0.1f;
+			m_pVertices[m_pIndices[iIndex]._1].vPosition.y += 0.1f;
+			m_pVertices[m_pIndices[iIndex]._2].vPosition.y += 0.1f;
+
+			m_pVB->Unlock();
+			m_pIB->Unlock();
+			return;
+		}
+	}
+
+	m_pVB->Unlock();
+	m_pIB->Unlock();
+
+	return;
 }
 
 CVIBuffer_Terrain * CVIBuffer_Terrain::Create(LPDIRECT3DDEVICE9 pGraphic_Device, TERRAINDESC TerrainDesc)
