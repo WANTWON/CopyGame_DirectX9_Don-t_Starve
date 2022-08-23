@@ -144,6 +144,8 @@ bool CVIBuffer_Terrain::Picking(class CTransform * pTransform, _float3 * pOut)
 	m_pIB->Lock(0, 0, (void**)&m_pIndices, 0);
 
 
+	Safe_Release(pPicking);
+
 	for (int iIndex = 0; iIndex < m_iNumPrimitive; ++iIndex)
 	{
 		_float		fU, fV, fDist;
