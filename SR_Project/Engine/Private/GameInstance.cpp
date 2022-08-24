@@ -197,6 +197,14 @@ CGameObject * CGameInstance::Get_Object(_uint iLevelIndex, const _tchar * pLayer
 	return m_pObject_Manager->Find_Objects(iLevelIndex, pLayerTag, iIndex);
 }
 
+list<CGameObject*>* CGameInstance::Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return nullptr;
+
+	return m_pObject_Manager->Get_ObjectList(iSceneID, pLayerTag);
+}
+
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag, CComponent * pPrototype)
 {
 	if (nullptr == m_pComponent_Manager)

@@ -62,7 +62,7 @@ HRESULT CTerrain::Render()
 	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(10)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pVIBufferCom->GetTerrainDesc().m_iTextureNum)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))
@@ -86,8 +86,16 @@ HRESULT CTerrain::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
+
+	m_TerrainDesc.m_iNumVerticesX = 30;
+	m_TerrainDesc.m_iNumVerticesZ = 30;
+	m_TerrainDesc.m_fTextureSize = 30.f;
+	m_TerrainDesc.m_fSizeX = 1;
+	m_TerrainDesc.m_fSizeZ = 1;
+	m_TerrainDesc.m_iTextureNum = 10;
+
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), (CComponent**)&m_pVIBufferCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), (CComponent**)&m_pVIBufferCom, &m_TerrainDesc)))
 		return E_FAIL;
 
 

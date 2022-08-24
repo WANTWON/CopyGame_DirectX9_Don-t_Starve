@@ -40,7 +40,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(TERRAINDESC TerrainDesc)
 		{
 			_uint	iIndex = i * m_TerrainDesc.m_iNumVerticesX + j;
 
-			m_pVertices[iIndex].vPosition = _float3(j*m_TerrainDesc.m_fSizeX, 0.0f, i*m_TerrainDesc.m_fSizeZ);
+			m_pVertices[iIndex].vPosition = _float3(m_TerrainDesc.m_iPosVerticesX + j*m_TerrainDesc.m_fSizeX, 0.0f, m_TerrainDesc.m_iPosVerticesZ + i*m_TerrainDesc.m_fSizeZ);
 			m_pVertices[iIndex].vTexture = _float2(j / (m_TerrainDesc.m_iNumVerticesX - 1.0f)*m_TerrainDesc.m_fTextureSize, i / (m_TerrainDesc.m_iNumVerticesZ - 1.0f)*m_TerrainDesc.m_fTextureSize);
 			int a = 0;
 		}
@@ -92,6 +92,79 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(TERRAINDESC TerrainDesc)
 
 HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 {
+	if (pArg == nullptr)
+		return S_OK;
+
+	ZeroMemory(&m_TerrainDesc, sizeof(TERRAINDESC));
+	memcpy(&m_TerrainDesc, (TERRAINDESC*)pArg, sizeof(TERRAINDESC));
+
+	m_iNumVertices = m_TerrainDesc.m_iNumVerticesX * m_TerrainDesc.m_iNumVerticesZ;
+	m_iStride = sizeof(VTXTEX);
+	m_dwFVF = D3DFVF_XYZ | D3DFVF_TEX1;
+	m_ePrimitiveType = D3DPT_TRIANGLELIST;
+	m_iNumPrimitive = (m_TerrainDesc.m_iNumVerticesX - 1) * (m_TerrainDesc.m_iNumVerticesZ - 1) * 2;
+
+	/* 정점들을 할당했다. */
+	if (FAILED(__super::Ready_Vertex_Buffer()))
+		return E_FAIL;
+
+	//VTXTEX*			pVertices = nullptr;
+	m_pVertices = nullptr;
+
+	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&m_pVertices, 0);
+
+	for (_uint i = 0; i < m_TerrainDesc.m_iNumVerticesZ; ++i)
+	{
+		for (_uint j = 0; j < m_TerrainDesc.m_iNumVerticesX; ++j)
+		{
+			_uint	iIndex = i * m_TerrainDesc.m_iNumVerticesX + j;
+
+			m_pVertices[iIndex].vPosition = _float3(m_TerrainDesc.m_iPosVerticesX + j*m_TerrainDesc.m_fSizeX, 0.0f, m_TerrainDesc.m_iPosVerticesZ + i*m_TerrainDesc.m_fSizeZ);
+			m_pVertices[iIndex].vTexture = _float2(j / (m_TerrainDesc.m_iNumVerticesX - 1.0f)*m_TerrainDesc.m_fTextureSize, i / (m_TerrainDesc.m_iNumVerticesZ - 1.0f)*m_TerrainDesc.m_fTextureSize);
+			int a = 0;
+		}
+	}
+
+	m_pVB->Unlock();
+
+	m_iIndicesByte = sizeof(FACEINDICES32);
+	m_eIndexFormat = D3DFMT_INDEX32;
+
+	if (FAILED(__super::Ready_Index_Buffer()))
+		return E_FAIL;
+
+	m_pIndices = nullptr;
+
+	m_pIB->Lock(0, 0, (void**)&m_pIndices, 0);
+
+	_uint		iNumFaces = 0;
+
+	for (_uint i = 0; i < m_TerrainDesc.m_iNumVerticesZ - 1; ++i)
+	{
+		for (_uint j = 0; j < m_TerrainDesc.m_iNumVerticesX - 1; ++j)
+		{
+			_uint	iIndex = i * m_TerrainDesc.m_iNumVerticesX + j;
+
+			_uint	iIndices[4] = {
+				iIndex + m_TerrainDesc.m_iNumVerticesX,
+				iIndex + m_TerrainDesc.m_iNumVerticesX + 1,
+				iIndex + 1,
+				iIndex
+			};
+
+			m_pIndices[iNumFaces]._0 = iIndices[0];
+			m_pIndices[iNumFaces]._1 = iIndices[1];
+			m_pIndices[iNumFaces]._2 = iIndices[2];
+			++iNumFaces;
+
+			m_pIndices[iNumFaces]._0 = iIndices[0];
+			m_pIndices[iNumFaces]._1 = iIndices[2];
+			m_pIndices[iNumFaces]._2 = iIndices[3];
+			++iNumFaces;
+		}
+	}
+
+	m_pIB->Unlock();
 	return S_OK;
 }
 
@@ -124,7 +197,7 @@ _float CVIBuffer_Terrain::Get_TerrainY(_float Posx, _float Posz)
 	}
 
 	if(fHeight != 0)
-		cout << "Plane : " << fHeight+1 << endl;
+		cout << "Plane : " << fHeight << endl;
 
 	m_pVB->Unlock();
 

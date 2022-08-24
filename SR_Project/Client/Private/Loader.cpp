@@ -172,11 +172,14 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	CVIBuffer_Terrain::TERRAINDESC		TerrainDesc;
 	ZeroMemory(&TerrainDesc, sizeof(CVIBuffer_Terrain::TERRAINDESC));
+
 	TerrainDesc.m_iNumVerticesX = 30;
 	TerrainDesc.m_iNumVerticesZ = 30;
 	TerrainDesc.m_fTextureSize = 30.f;
 	TerrainDesc.m_fSizeX = 1;
 	TerrainDesc.m_fSizeZ = 1;
+	TerrainDesc.m_iTextureNum = 0;
+
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pGraphic_Device, TerrainDesc))))

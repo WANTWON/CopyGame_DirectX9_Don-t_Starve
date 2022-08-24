@@ -23,7 +23,7 @@ public:
 
 public:
 	class CGameObject* Find_Objects(_uint iLevelIndex ,const _tchar* pLayerTag, _uint iIndex = 0);
-
+	list<CGameObject*>* Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag);
 
 private:
 	map<const _tchar*, class CGameObject*>			m_Prototypes;
