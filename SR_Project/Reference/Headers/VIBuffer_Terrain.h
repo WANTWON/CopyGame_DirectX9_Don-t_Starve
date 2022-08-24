@@ -9,6 +9,7 @@ public:
 	typedef struct TerrainDesc
 	{
 		_uint			m_iPosVerticesX = 0;
+		_uint			m_iPosVerticesY = 0;
 		_uint			m_iPosVerticesZ = 0;
 		_uint			m_iNumVerticesX = 0;
 		_uint			m_iNumVerticesZ = 0;
@@ -26,6 +27,10 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
+	HRESULT Load_TerrainDesc(const _tchar * TerrainDescFilePath, const _tchar * HeightFilePath);
+	HRESULT Load_Prototype(const _tchar * HeightFilePath);
+
+public:
 	_float Get_TerrainY(_float Posx, _float Posz);
 	bool Picking(class CTransform * pTransform, _float3 * pOut);
 	void UpTerrain(class CTransform * pTransform, _float3 * pOut);
@@ -38,6 +43,7 @@ private:
 
 public:
 	static CVIBuffer_Terrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device, TERRAINDESC TerrainDesc);
+	static CVIBuffer_Terrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device, const _tchar * TerrainDescFilePath, const _tchar * HeightFilePath);
 	virtual CComponent* Clone(void* pArg);
 	virtual void Free() override;
 };
