@@ -14,8 +14,6 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-
-
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
@@ -39,16 +37,14 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_Layer_Pont(TEXT("Layer_Pont"))))
 		return E_FAIL;
-	
-	
-
-
 	return S_OK;
 }
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	
 
 }
 

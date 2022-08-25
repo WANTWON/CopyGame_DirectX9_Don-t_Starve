@@ -256,6 +256,70 @@ bool CGameInstance::Key_Down(int _Key)
 	return m_pKey_Manager->Key_Down(_Key);
 }
 
+void CGameInstance::PlaySound(TCHAR * pSoundKey, const _uint & eID, const float & fVolume)
+{
+	if (nullptr == m_pSound_Manager)
+		return;
+
+	m_pSound_Manager->PlaySoundW(pSoundKey, eID, fVolume);
+}
+
+void CGameInstance::PlayBGM(TCHAR * pSoundKey, const float & fVolume)
+{
+	if (nullptr == m_pSound_Manager)
+		return;
+
+	m_pSound_Manager->PlayBGM(pSoundKey, fVolume);
+}
+
+void CGameInstance::StopSound(const _uint & eID)
+{
+	if (nullptr == m_pSound_Manager)
+		return;
+
+	m_pSound_Manager->StopSound(eID);
+}
+
+void CGameInstance::StopAll()
+{
+	if (nullptr == m_pSound_Manager)
+		return;
+
+	m_pSound_Manager->StopAll();
+}
+
+void CGameInstance::SetChannelVolume(const _uint & eID, const float & fVolume)
+{
+	if (nullptr == m_pSound_Manager)
+		return;
+
+	m_pSound_Manager->SetChannelVolume(eID, fVolume);
+}
+
+int CGameInstance::VolumeUp(const _uint & eID, const _float & _vol)
+{
+	if (nullptr == m_pSound_Manager)
+		return 0;
+
+	return m_pSound_Manager->VolumeUp(eID, _vol);
+}
+
+int CGameInstance::VolumeDown(const _uint & eID, const _float & _vol)
+{
+	if (nullptr == m_pSound_Manager)
+		return 0;
+
+	return m_pSound_Manager->VolumeDown(eID, _vol);
+}
+
+int CGameInstance::Pause(const _uint & eID)
+{
+	if (nullptr == m_pSound_Manager)
+		return 0;
+
+	return m_pSound_Manager->Pause(eID);
+}
+
 void CGameInstance::Release_Engine()
 {
 

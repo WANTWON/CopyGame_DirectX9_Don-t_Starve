@@ -38,7 +38,7 @@ int CTerrain::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	//SetUp_TerrainY();
+	SetUp_TerrainY();
 
 	Picking();
 		

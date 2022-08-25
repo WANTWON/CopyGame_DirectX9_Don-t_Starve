@@ -62,6 +62,17 @@ public: /* For. Key Manager*/
 	bool		Key_Up(int _Key);		// 누르고 있다가 뗐을 때
 	bool		Key_Down(int _Key);		// 눌렀을 때
 
+public: /* For. Sound Manager */
+	void PlaySound(TCHAR* pSoundKey, const _uint& eID, const float& fVolume);
+	void PlayBGM(TCHAR * pSoundKey, const float& fVolume);
+	void StopSound(const _uint& eID);
+	void StopAll();
+	void SetChannelVolume(const _uint& eID, const float& fVolume);
+	int  VolumeUp(const _uint& eID, const _float& _vol);
+	int  VolumeDown(const _uint& eID, const _float& _vol);
+	int  Pause(const _uint& eID);
+
+
 public:
 	static void Release_Engine();
 
