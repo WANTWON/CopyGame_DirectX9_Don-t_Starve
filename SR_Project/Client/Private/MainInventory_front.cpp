@@ -222,6 +222,11 @@ CGameObject * CMainInventory_front::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject * CMainInventory_front::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
+}
+
 void CMainInventory_front::Free()
 {
 	__super::Free();

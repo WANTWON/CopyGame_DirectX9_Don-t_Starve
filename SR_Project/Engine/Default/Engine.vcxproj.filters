@@ -82,6 +82,9 @@
     <Filter Include="01.Utility\04.Picking">
       <UniqueIdentifier>{ae6fb8e8-a4a4-455b-909f-0c5ee4031308}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\96.SoundMgr">
+      <UniqueIdentifier>{d6c928c1-659c-4723-8daa-71cf7a82c4f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -155,6 +158,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Picking.cpp">
       <Filter>01.Utility\04.Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sound_Manager.cpp">
+      <Filter>01.Utility\96.SoundMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +250,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Picking.h">
       <Filter>01.Utility\04.Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sound_Manager.h">
+      <Filter>01.Utility\96.SoundMgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

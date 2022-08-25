@@ -212,6 +212,11 @@ CGameObject * CPont::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject * CPont::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
+}
+
 void CPont::Free()
 {
 	__super::Free();

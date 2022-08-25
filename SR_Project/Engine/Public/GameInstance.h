@@ -8,6 +8,7 @@
 #include "Input_Device.h"
 #include "KeyMgr.h"
 #include "Picking.h"
+#include "Sound_Manager.h"
 
 BEGIN(Engine)
 
@@ -20,7 +21,6 @@ private:
 
 public: /* For.Engine */
 	HRESULT Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, LPDIRECT3DDEVICE9* ppOut);
-	HRESULT Init_Device(const GRAPHIC_DESC& GraphicDesc, LPDIRECT3DDEVICE9* ppOut);
 	void Tick_Engine(_float fTimeDelta);
 
 	void Clear(_uint iLevelIndex);
@@ -74,6 +74,7 @@ private:
 	CComponent_Manager*				m_pComponent_Manager = nullptr;
 	CKeyMgr*						m_pKey_Manager = nullptr;
 	CPicking*						m_pPicking = nullptr;
+	CSound_Manager*					m_pSound_Manager = nullptr;
 
 public:
 	virtual void Free() override;

@@ -11,6 +11,7 @@ CGameInstance::CGameInstance()
 	, m_pInput_Device(CInput_Device::Get_Instance())
 	, m_pKey_Manager(CKeyMgr::Get_Instance())
 	, m_pPicking(CPicking::Get_Instance())
+	, m_pSound_Manager(CSound_Manager::Get_Instance())
 {
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pTimer_Manager);
@@ -20,6 +21,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pInput_Device);
 	Safe_AddRef(m_pKey_Manager);
 	Safe_AddRef(m_pPicking);
+	Safe_AddRef(m_pSound_Manager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, LPDIRECT3DDEVICE9* ppOut)
@@ -27,7 +29,8 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 	if (nullptr == m_pGraphic_Device || 
 		nullptr == m_pObject_Manager ||
 		nullptr == m_pInput_Device	||
-		nullptr == m_pPicking)
+		nullptr == m_pPicking		||
+		nullptr == m_pSound_Manager)
 		return E_FAIL;
 
 	/* 그래픽 디바이스를 초기화한다. */
@@ -35,12 +38,12 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 		return E_FAIL;
 
 	/* 입력 디바이스를 초기화한다. */
-	//if (FAILED(m_pInput_Device->Initialize(hInst, GraphicDesc.hWnd)))
-		//return E_FAIL;
+	if (FAILED(m_pInput_Device->Initialize(hInst, GraphicDesc.hWnd)))
+		return E_FAIL;
 
 	/* 사운드 디바이스를 초기화한다. */
-
-
+	if (FAILED(m_pSound_Manager->Initialize()))
+		return E_FAIL;
 
 	/* 픽킹 초기화 */
 	if (FAILED(m_pPicking->Initialize(GraphicDesc.hWnd, GraphicDesc.iWinSizeX, GraphicDesc.iWinSizeY, *ppOut)))
@@ -64,7 +67,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 		nullptr == m_pInput_Device )
 		return;
 
-	//m_pInput_Device->Update();
+	m_pInput_Device->Update();
 
 	m_pLevel_Manager->Tick(fTimeDelta);
 	m_pObject_Manager->Tick(fTimeDelta);
@@ -258,6 +261,8 @@ void CGameInstance::Release_Engine()
 
 	CGameInstance::Get_Instance()->Destroy_Instance();
 
+	CSound_Manager::Get_Instance()->Destroy_Instance();
+
 	CPicking::Get_Instance()->Destroy_Instance();
 
 	CLevel_Manager::Get_Instance()->Destroy_Instance();
@@ -277,6 +282,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pPicking);
 	Safe_Release(m_pKey_Manager);
 	Safe_Release(m_pComponent_Manager);
@@ -285,6 +291,4 @@ void CGameInstance::Free()
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pGraphic_Device);
-	
-
 }
