@@ -34,11 +34,19 @@ HRESULT CTerrain::Initialize(void* pArg)
 	return S_OK;
 }
 
+HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	if (FAILED(SetUp_Components(VIBufferTag, pArg)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 int CTerrain::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	SetUp_TerrainY();
+	//SetUp_TerrainY();
 
 	Picking();
 		
@@ -106,6 +114,37 @@ HRESULT CTerrain::SetUp_Components(void* pArg)
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 	TransformDesc.InitPos = *(_float3*)pArg;
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+		return E_FAIL;
+
+
+	return S_OK;
+}
+
+HRESULT CTerrain::SetUp_Components(const _tchar * VIBufferTag, void * pArg)
+{
+	/* For.Com_Renderer */
+	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
+		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, VIBufferTag, (CComponent**)&m_pVIBufferCom, pArg)))
+		return E_FAIL;
+
+
+	/* For.Com_Transform */
+	CTransform::TRANSFORMDESC		TransformDesc;
+	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
+
+	TransformDesc.fSpeedPerSec = 5.f;
+	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
+	if (pArg != nullptr)
+		TransformDesc.InitPos = *(_float3*)pArg;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
@@ -223,7 +262,15 @@ CGameObject * CTerrain::Clone(void* pArg)
 
 CGameObject * CTerrain::Clone_Load(const _tchar * VIBufferTag, void * pArg)
 {
-	return nullptr;
+	CTerrain*	pInstance = new CTerrain(*this);
+
+	if (FAILED(pInstance->Initialize_Load(VIBufferTag, pArg)))
+	{
+		ERR_MSG(TEXT("Failed to Cloned : CTerrain"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CTerrain::Free()

@@ -23,7 +23,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"), _float3(0.f, 0.f, 0.f))))
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Terrain"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_MainInventory"))))
@@ -55,13 +55,42 @@ void CLevel_GamePlay::Late_Tick(_float fTimeDelta)
 	
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag, _float3 Pos)
+HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag, &Pos)))
+	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag, _float3(0,0,0))))
+		//return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load0"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load1"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load2"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load3"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load4"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load5"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load6"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))

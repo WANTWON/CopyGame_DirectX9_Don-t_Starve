@@ -139,9 +139,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/* 텍스쳐 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐 로딩 중."));
 
+#pragma region 텍스처 로딩
 	/*For.Prototype_Component_Texture_Terrain*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/tile%03d.png"), 15))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/tile%03d.png"), 17))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_MainInventory */
@@ -181,8 +182,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Run/Pig_RUN_SIDE_%03d.png"), 33))))
 		return E_FAIL;
 
-
-
+#pragma endregion 텍스처 로딩
 
 	/* 모델 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("모델 로딩 중."));
@@ -202,10 +202,15 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CVIBuffer_Terrain::Create(m_pGraphic_Device, TerrainDesc))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_VIBuffer_Terrain by MapTool */
+	if (FAILED(Loading_Terrain_ForGamePlayLevel()))
+		return E_FAIL;
+
 	/*For.Prototype_Component_VIBuffer_Cube */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"),
 		CVIBuffer_Cube::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
 
 	/* 셰이더 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중."));
@@ -257,6 +262,47 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	m_isFinished = true;
 
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Terrain_ForGamePlayLevel()
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	Safe_AddRef(pGameInstance);
+
+	int			iNum;
+	_ulong		dwByte = 0;
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Vertex.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load0"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load1"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load2"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load3"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load4"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load5"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load6"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
+		return E_FAIL;
+
+	CloseHandle(hFile);
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }

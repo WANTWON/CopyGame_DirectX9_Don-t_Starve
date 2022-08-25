@@ -65,29 +65,30 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
 
-	
-
-
 
 	if (nullptr != m_pColliderCom)
 	{
-		if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this)&&(GetKeyState(VK_SPACE) < 0))
-		{
-			/*if (m_TestTimer > 1.0f)
-			{
-				wsprintf(m_szDebug, TEXT("Collision"));
+		//if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (GetKeyState(VK_SPACE) < 0))
+		//{
+		//	CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
+		//	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
+		//	for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
+		//	{
+		//		if (!(*iter)->get_check())
+		//		{
+		//			(*iter)->set_texnum(2); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
+		//			(*iter)->set_check(true);
 
-				OutputDebugString(m_szDebug);
+		//			return;
+		//		}
+		//		else
+		//			++iter;
 
-				m_TestTimer = 0.f;
-			}*/
-			m_bDead = true;
-		}
+		//		m_bDead = true;
+		//	}
 
+		//}
 	}
-
-
-
 }
 
 HRESULT CMonster::Render()
