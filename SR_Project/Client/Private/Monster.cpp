@@ -73,7 +73,6 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	{
 		if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this)&&(GetKeyState(VK_SPACE) < 0))
 		{
-<<<<<<< HEAD
 			/*if (m_TestTimer > 1.0f)
 			{
 				wsprintf(m_szDebug, TEXT("Collision"));
@@ -82,9 +81,6 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 				m_TestTimer = 0.f;
 			}*/
-=======
-			
->>>>>>> JeongWon
 			m_bDead = true;
 		}
 
