@@ -51,6 +51,19 @@ void CLayer::Late_Tick(_float fTimeDelta)
 	}
 }
 
+CGameObject * CLayer::Get_Object(_uint iIndex)
+{
+	if (m_GameObjects.size() <= iIndex)
+		return nullptr;
+
+	auto	iter = m_GameObjects.begin();
+
+	for (size_t i = 0; i < iIndex; ++i)
+		++iter;
+
+	return *iter;
+}
+
 CLayer * CLayer::Create()
 {
 	CLayer*	pInstance = new CLayer();

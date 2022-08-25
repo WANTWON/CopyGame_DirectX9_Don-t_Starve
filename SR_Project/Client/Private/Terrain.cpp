@@ -2,6 +2,7 @@
 #include "..\Public\Terrain.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "Picking.h"
 
 CTerrain::CTerrain(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -39,6 +40,9 @@ int CTerrain::Tick(_float fTimeDelta)
 
 	SetUp_TerrainY();
 
+	Picking();
+		
+
 	return OBJ_NOEVENT;
 }
 
@@ -58,7 +62,7 @@ HRESULT CTerrain::Render()
 	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(10)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pVIBufferCom->GetTerrainDesc().m_iTextureNum)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))
@@ -82,8 +86,16 @@ HRESULT CTerrain::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
+
+	m_TerrainDesc.m_iNumVerticesX = 30;
+	m_TerrainDesc.m_iNumVerticesZ = 30;
+	m_TerrainDesc.m_fTextureSize = 30.f;
+	m_TerrainDesc.m_fSizeX = 1;
+	m_TerrainDesc.m_fSizeZ = 1;
+	m_TerrainDesc.m_iTextureNum = 10;
+
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), (CComponent**)&m_pVIBufferCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), (CComponent**)&m_pVIBufferCom, &m_TerrainDesc)))
 		return E_FAIL;
 
 
@@ -156,6 +168,33 @@ void CTerrain::SetUp_TerrainY()
 	Safe_Release(pPlayer);
 }
 
+void CTerrain::Picking()
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+
+	Safe_AddRef(pPlayer);
+
+	_float3 OutPos;
+
+	if (pGameInstance->Key_Up(VK_LBUTTON))
+	{
+		if(true == m_pVIBufferCom->Picking(m_pTransformCom, &OutPos))
+			pPlayer->Set_PickingPoint(_float3(OutPos.x, 1, OutPos.z));
+		
+	}
+	if (pGameInstance->Key_Pressing(VK_RBUTTON))
+	{
+		m_pVIBufferCom->UpTerrain(m_pTransformCom, &OutPos);
+	}
+
+
+	Safe_Release(pGameInstance);
+	Safe_Release(pPlayer);
+}
+
+
 CTerrain * CTerrain::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
 	CTerrain*	pInstance = new CTerrain(pGraphic_Device);
@@ -180,6 +219,11 @@ CGameObject * CTerrain::Clone(void* pArg)
 	}
 
 	return pInstance;
+}
+
+CGameObject * CTerrain::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
 }
 
 void CTerrain::Free()

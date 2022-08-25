@@ -72,6 +72,8 @@ public:
 public:
 	_float3 Get_Pos();
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
+	void Move_to_PickingPoint(_float fTimedelta);
+	void Set_PickingPoint(_float3 PickingPoint) { m_vPickingPoint = PickingPoint; m_bPicked = true; m_bInputKey = false; m_bArrive = false; };
 
 private:/*Setup*/
 	HRESULT SetUp_Components();
@@ -122,6 +124,12 @@ private:
 	_bool			m_bInverseScale = false;
 	_float			m_fTerrain_Height = 0.f;
 
+	/* for Picking Test */
+	_float3			m_vPickingPoint;
+	_bool			m_bPicked = false;
+	_bool			m_bArrive = false;
+	_bool			m_bInputKey = false;
+
 	map<INTERACTKEY, _int> m_KeySets;
 
 private: 
@@ -129,6 +137,7 @@ private:
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
+	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 

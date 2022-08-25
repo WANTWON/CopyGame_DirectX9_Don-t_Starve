@@ -39,11 +39,12 @@ protected:
 	HRESULT Add_Components(const _tchar* pComponentTag, _uint iLevelIndex, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg = nullptr);
 	HRESULT Change_Component(const _tchar* pComponentTag, CComponent** ppOut);
 
-protected:
+public:
 	class CComponent* Find_Component(const _tchar* pComponentTag);
 
 public:	
 	virtual CGameObject* Clone(void* pArg = nullptr) = 0;
+	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr) = 0;
 	virtual void Free() override;
 };
 

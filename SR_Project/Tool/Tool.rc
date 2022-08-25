@@ -191,6 +191,15 @@ BEGIN
     PUSHBUTTON      "Button1",IDC_BUTTON1,18,22,105,33
 END
 
+IDD_TEST DIALOG 0, 0, 320, 200
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "대화 상자"
+FONT 9, "MS Shell Dlg"
+BEGIN
+    DEFPUSHBUTTON   "확인",IDOK,209,179,50,14
+    PUSHBUTTON      "취소",IDCANCEL,263,179,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -248,6 +257,14 @@ BEGIN
     END
 
     IDD_MYFORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 193
+    END
+
+    IDD_TEST, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 313

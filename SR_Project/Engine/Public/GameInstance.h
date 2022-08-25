@@ -7,6 +7,7 @@
 #include "Component_Manager.h"
 #include "Input_Device.h"
 #include "KeyMgr.h"
+#include "Picking.h"
 
 BEGIN(Engine)
 
@@ -19,6 +20,7 @@ private:
 
 public: /* For.Engine */
 	HRESULT Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, LPDIRECT3DDEVICE9* ppOut);
+	HRESULT Init_Device(const GRAPHIC_DESC& GraphicDesc, LPDIRECT3DDEVICE9* ppOut);
 	void Tick_Engine(_float fTimeDelta);
 
 	void Clear(_uint iLevelIndex);
@@ -46,7 +48,10 @@ public: /* For.Level_Manager */
 public: /* For.Object_Manager */
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
-	class CGameObject* Get_Object(_uint iLevelIndex, const _tchar * pLayerTag);
+	HRESULT Add_GameObjectLoad(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, const _tchar* VIBUfferTag, void* pArg = nullptr);
+
+	class CGameObject* Get_Object(_uint iLevelIndex, const _tchar * pLayerTag, _uint iIndex =0);
+	list<CGameObject*>* Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag);
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);
@@ -68,6 +73,7 @@ private:
 	CTimer_Manager*					m_pTimer_Manager = nullptr;
 	CComponent_Manager*				m_pComponent_Manager = nullptr;
 	CKeyMgr*						m_pKey_Manager = nullptr;
+	CPicking*						m_pPicking = nullptr;
 
 public:
 	virtual void Free() override;

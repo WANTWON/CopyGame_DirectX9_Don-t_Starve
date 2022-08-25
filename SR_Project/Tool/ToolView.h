@@ -42,6 +42,12 @@ protected:
 // 생성된 메시지 맵 함수
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	virtual void OnInitialUpdate();
+
+private:
+	class CGameInstance* m_pGameInstance = nullptr;
+	LPDIRECT3DDEVICE9	m_pGraphic_Device = nullptr;
 };
 
 #ifndef _DEBUG  // ToolView.cpp의 디버그 버전

@@ -127,7 +127,6 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 
 	}
 
-
 	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
 
 	Safe_AddRef(pTarget);
@@ -166,6 +165,11 @@ CCamera * CCameraDynamic::Clone(void * pArg)
 	}
 
 	return pInstance;
+}
+
+CGameObject * CCameraDynamic::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
 }
 
 void CCameraDynamic::Free()

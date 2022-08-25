@@ -160,6 +160,11 @@ CGameObject * CSky::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject * CSky::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
+}
+
 void CSky::Free()
 {
 	__super::Free();

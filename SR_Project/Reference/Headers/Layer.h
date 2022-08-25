@@ -18,7 +18,8 @@ public:
 	void Late_Tick(_float fTimeDelta);
 
 public:
-	class CGameObject* Get_Object() { return *m_GameObjects.begin(); }
+	class CGameObject* Get_Object(_uint iIndex = 0);
+	list<CGameObject*>*		Get_ObjectList() { return &m_GameObjects; };
 
 private:
 	list<class CGameObject*>			m_GameObjects;

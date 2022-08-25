@@ -187,9 +187,19 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/* ¸ðµ¨ ·Îµù Áß. */
 	lstrcpy(m_szLoadingText, TEXT("¸ðµ¨ ·Îµù Áß."));
 
+	CVIBuffer_Terrain::TERRAINDESC		TerrainDesc;
+	ZeroMemory(&TerrainDesc, sizeof(CVIBuffer_Terrain::TERRAINDESC));
+
+	TerrainDesc.m_iNumVerticesX = 30;
+	TerrainDesc.m_iNumVerticesZ = 30;
+	TerrainDesc.m_fTextureSize = 30.f;
+	TerrainDesc.m_fSizeX = 1;
+	TerrainDesc.m_fSizeZ = 1;
+	TerrainDesc.m_iTextureNum = 0;
+
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pGraphic_Device, 200, 200))))
+		CVIBuffer_Terrain::Create(m_pGraphic_Device, TerrainDesc))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_VIBuffer_Cube */

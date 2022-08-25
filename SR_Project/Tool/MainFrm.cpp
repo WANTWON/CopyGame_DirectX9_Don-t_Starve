@@ -67,6 +67,8 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: CREATESTRUCT cs를 수정하여 여기에서
 	//  Window 클래스 또는 스타일을 수정합니다.
 
+	cs.hMenu = NULL;
+
 	return TRUE;
 }
 
@@ -96,6 +98,10 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	g_ToolhWnd = GetSafeHwnd();
 	g_ToolhInst = AfxGetInstanceHandle();
 
+	//m_MainSplitter.CreateStatic(this, 1, 2);
+	//m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CToolView), CSize(g_iWinSizeX, g_iWinSizeY), pContext);
+	//m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CMyForm), CSize(300, g_iWinSizeY), pContext);
+
 	return TRUE;//CFrameWnd::OnCreateClient(lpcs, pContext);
 }
 
@@ -104,5 +110,6 @@ void CMainFrame::OnDestroy()
 {
 	CFrameWnd::OnDestroy();
 
+	m_MainSplitter.DestroyWindow();
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 }

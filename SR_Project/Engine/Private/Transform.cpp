@@ -9,6 +9,7 @@ CTransform::CTransform(LPDIRECT3DDEVICE9 pGraphic_Device)
 CTransform::CTransform(const CTransform & rhs)
 	: CComponent(rhs.m_pGraphic_Device)
 	, m_WorldMatrix(rhs.m_WorldMatrix)
+	, m_TransformDesc(rhs.m_TransformDesc)
 {
 }
 
@@ -226,5 +227,5 @@ void CTransform::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pGraphic_Device);
+	//Safe_Release(m_pGraphic_Device);
 }

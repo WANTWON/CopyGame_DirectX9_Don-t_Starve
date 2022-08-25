@@ -12,6 +12,8 @@ namespace Tool
 
 }
 
+extern HWND g_hWnd;
+
 extern HWND		g_ToolhWnd;
 extern HINSTANCE g_ToolhInst;
 
