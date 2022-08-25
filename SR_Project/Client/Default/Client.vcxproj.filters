@@ -46,9 +46,12 @@
     <Filter Include="02.GameObject\UI">
       <UniqueIdentifier>{d9d4e8eb-8704-4d4b-b177-4121e1b49c59}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
+    <Filter Include="02.GameObject\UI\Manager">
+      <UniqueIdentifier>{0ce27845-1f05-42f5-9b8a-42171989412e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UI\Inventory">
+      <UniqueIdentifier>{f59ecfce-7a20-45a1-9070-bcbd8ff0d307}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\MainApp.h">
@@ -93,11 +96,23 @@
     <ClInclude Include="..\public\Player.h">
       <Filter>02.GameObject\Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UI.h">
-      <Filter>02.GameObject\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Sky.h">
       <Filter>02.GameObject\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Pont.h">
+      <Filter>02.GameObject\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainInventory.h">
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainInventory_back.h">
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainInventory_front.h">
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Inventory.h">
+      <Filter>02.GameObject\UI\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -134,11 +149,23 @@
     <ClCompile Include="..\private\Player.cpp">
       <Filter>02.GameObject\Player</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UI.cpp">
-      <Filter>02.GameObject\UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Sky.cpp">
       <Filter>02.GameObject\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Pont.cpp">
+      <Filter>02.GameObject\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainInventory.cpp">
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainInventory_back.cpp">
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainInventory_front.cpp">
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Inventory.cpp">
+      <Filter>02.GameObject\UI\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -153,5 +180,10 @@
     <ResourceCompile Include="Client.rc">
       <Filter>98.Default</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>99.Defines</Filter>
+    </Text>
   </ItemGroup>
 </Project>

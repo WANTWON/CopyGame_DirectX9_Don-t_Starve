@@ -159,6 +159,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Inventory.h" />
+    <ClInclude Include="..\Public\MainInventory_back.h" />
+    <ClInclude Include="..\Public\MainInventory_front.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\Public\CameraDynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -168,15 +171,19 @@
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\Pont.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
-    <ClInclude Include="..\Public\UI.h" />
+    <ClInclude Include="..\Public\MainInventory.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Inventory.cpp" />
+    <ClCompile Include="..\Private\MainInventory_back.cpp" />
+    <ClCompile Include="..\Private\MainInventory_front.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\Private\CameraDynamic.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
@@ -185,9 +192,10 @@
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\Pont.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
-    <ClCompile Include="..\Private\UI.cpp" />
+    <ClCompile Include="..\Private\MainInventory.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

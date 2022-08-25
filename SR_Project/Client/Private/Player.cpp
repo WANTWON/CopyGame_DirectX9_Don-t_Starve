@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "KeyMgr.h"
 
+
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -57,6 +58,32 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+	
+	
+
+	//추후에 아이템 만들어지고 플레이어가 아이템과 닿았을떄 획득하는 상호작용을 마친후에 인벤토리에 들어오는건 아래코드 그대로 쓰시면 작동합니다!!
+	//#include "Inven.h" 포함하시고
+	/*CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
+
+	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
+
+	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_ITEM, this) && (GetKeyState(VK_SPACE) < 0))
+	{
+		for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
+		{
+			if (!(*iter)->get_check())
+			{
+				(*iter)->set_texnum(2); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
+				(*iter)->set_check(true);
+
+				return;
+			}
+			else
+				++iter;
+
+		}*/
+
+	
 
 }
 

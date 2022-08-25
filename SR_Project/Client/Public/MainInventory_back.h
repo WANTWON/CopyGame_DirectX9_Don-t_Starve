@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Client_Defines.h"
 #include "GameObject.h"
 
@@ -12,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CUI final : public CGameObject
+class CMainInventory_back final : public CGameObject
 {
 private:
-	CUI(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CUI(const CUI& rhs);
-	virtual ~CUI() = default;
+	CMainInventory_back(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CMainInventory_back(const CMainInventory_back& rhs);
+	virtual ~CMainInventory_back() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -42,9 +41,13 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	static CUI* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CMainInventory_back* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
+private:
+
+	int* iNumber = nullptr;
+	int iNum = 0;
 };
 
 END
