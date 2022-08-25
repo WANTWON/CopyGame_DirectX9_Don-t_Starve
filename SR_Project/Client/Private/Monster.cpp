@@ -2,6 +2,7 @@
 #include "..\Public\Monster.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "Inventory.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -59,15 +60,22 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
 
+	
+
+
+
 	if (nullptr != m_pColliderCom)
 	{
-		if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this))
+		if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this)&&(GetKeyState(VK_SPACE) < 0))
 		{
+			
 			m_bDead = true;
 		}
-			
+
 	}
-		
+
+
+
 }
 
 HRESULT CMonster::Render()

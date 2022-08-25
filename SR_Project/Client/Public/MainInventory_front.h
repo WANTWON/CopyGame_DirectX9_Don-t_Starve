@@ -47,6 +47,7 @@ public:
 
 	bool get_check() { return m_bcheck; }
 	void set_check(bool tof) { m_bcheck = tof ; }
+	void set_texnum(_uint texnumber) { texnum = texnumber; }
 
 private:
 	int* iNumber = nullptr;

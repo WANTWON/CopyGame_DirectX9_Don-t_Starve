@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\MainInventory_front.h"
 #include "GameInstance.h"
+#include "Inventory.h"
 
 
 CMainInventory_front::CMainInventory_front(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -18,6 +19,8 @@ HRESULT CMainInventory_front::Initialize_Prototype()
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
 
+
+
 	return S_OK;
 }
 
@@ -25,6 +28,9 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+
+
+	
 
 	iNumber = (int*)pArg;
 
@@ -42,6 +48,10 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+
+	//CInventory_Manager::Get_Instance()->Get_Inven_list()->front.push_back(this);
+	//CInventory_Manager::Get_Instance()->Get_Inven_list().push_back(this);
+	//INVENLIST
 
 	return S_OK;
 }
@@ -208,7 +218,7 @@ CGameObject * CMainInventory_front::Clone(void* pArg)
 		ERR_MSG(TEXT("Failed to Cloned : Prototype_Component_Texture_MainInventory_front"));
 		Safe_Release(pInstance);
 	}
-
+	CInventory_Manager::Get_Instance()->Get_Inven_list()->push_back(pInstance);//Get_Inven_list().push_back(pInstance);
 	return pInstance;
 }
 
