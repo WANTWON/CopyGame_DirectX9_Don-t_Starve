@@ -221,6 +221,11 @@ CGameObject * CTerrain::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject * CTerrain::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
+}
+
 void CTerrain::Free()
 {
 	__super::Free();

@@ -35,8 +35,8 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 		return E_FAIL;
 
 	/* 입력 디바이스를 초기화한다. */
-	if (FAILED(m_pInput_Device->Initialize(hInst, GraphicDesc.hWnd)))
-		return E_FAIL;
+	//if (FAILED(m_pInput_Device->Initialize(hInst, GraphicDesc.hWnd)))
+		//return E_FAIL;
 
 	/* 사운드 디바이스를 초기화한다. */
 
@@ -64,7 +64,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 		nullptr == m_pInput_Device )
 		return;
 
-	m_pInput_Device->Update();
+	//m_pInput_Device->Update();
 
 	m_pLevel_Manager->Tick(fTimeDelta);
 	m_pObject_Manager->Tick(fTimeDelta);
@@ -187,6 +187,14 @@ HRESULT CGameInstance::Add_GameObject(const _tchar * pPrototypeTag, _uint iLevel
 		return E_FAIL;
 
 	return m_pObject_Manager->Add_GameObject(pPrototypeTag, iLevelIndex, pLayerTag, pArg);
+}
+
+HRESULT CGameInstance::Add_GameObjectLoad(const _tchar * pPrototypeTag, _uint iLevelIndex, const _tchar * pLayerTag, const _tchar * VIBUfferTag, void * pArg)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Add_GameObjectLoad(pPrototypeTag, iLevelIndex, pLayerTag, VIBUfferTag, pArg);
 }
 
 CGameObject * CGameInstance::Get_Object(_uint iLevelIndex, const _tchar * pLayerTag, _uint iIndex)

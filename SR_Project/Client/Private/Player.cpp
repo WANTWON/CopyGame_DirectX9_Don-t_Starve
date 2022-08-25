@@ -552,6 +552,11 @@ CGameObject * CPlayer::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject * CPlayer::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
+}
+
 void CPlayer::Free()
 {
 	__super::Free();

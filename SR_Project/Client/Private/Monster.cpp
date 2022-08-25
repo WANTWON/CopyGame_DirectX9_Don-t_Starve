@@ -238,6 +238,11 @@ CGameObject * CMonster::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject * CMonster::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
+}
+
 void CMonster::Free()
 {
 	__super::Free();

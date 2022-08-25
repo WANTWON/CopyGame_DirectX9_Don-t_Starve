@@ -170,6 +170,11 @@ CGameObject * CUI::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject * CUI::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
+}
+
 void CUI::Free()
 {
 	__super::Free();

@@ -167,6 +167,11 @@ CCamera * CCameraDynamic::Clone(void * pArg)
 	return pInstance;
 }
 
+CGameObject * CCameraDynamic::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
+}
+
 void CCameraDynamic::Free()
 {
 	__super::Free();
