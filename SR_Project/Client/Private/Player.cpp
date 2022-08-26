@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "KeyMgr.h"
 
+
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -29,6 +30,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
+	
+	if (FAILED(SetUp_KeySettings()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -37,89 +41,8 @@ int CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	
-
-	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_UP))
-	{
-		m_pTransformCom->Go_Straight(fTimeDelta, m_fTerrain_Height);
-		m_eState = UP;
-		if (m_ePastState != m_eState)
-		{
-			Change_Texture(TEXT("Com_Texture_Run_Up"));
-			m_ePastState = m_eState;
-		}
-	}
-	else if (GetKeyState(VK_DOWN) < 0)
-	{
-		m_pTransformCom->Go_Backward(fTimeDelta, m_fTerrain_Height);
-		m_eState = DOWN;
-
-		if (m_ePastState != m_eState)
-		{
-			Change_Texture(TEXT("Com_Texture_Run_Down"));
-			m_ePastState = m_eState;
-		}
-	}
-	else if (GetKeyState(VK_LEFT) < 0)
-	{
-		m_pTransformCom->Go_Right(fTimeDelta, m_fTerrain_Height);
-		m_eState = LEFT;
-
-		if (m_ePastState != m_eState)
-		{
-
-			if (!m_bInverseScale)
-			{
-				m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
-				m_bInverseScale = true;
-			}
-			Change_Texture(TEXT("Com_Texture_Run_Side"));
-
-			m_ePastState = m_eState;
-		}
-	}
-	else if (GetKeyState(VK_RIGHT) < 0)
-	{
-		m_pTransformCom->Go_Right(fTimeDelta, m_fTerrain_Height);
-		m_eState = RIGHT;
-
-		if (m_ePastState != m_eState)
-		{
-			if (m_bInverseScale)
-			{
-				m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
-				m_bInverseScale = false;
-			}
-			Change_Texture(TEXT("Com_Texture_Run_Side"));
-			m_ePastState = m_eState;
-		}
-	}
-	else
-	{
-		m_eState = IDLE;
-
-		if (m_ePastState != m_eState)
-		{
-			switch (m_ePastState)
-			{
-			case Client::CPlayer::DOWN:
-				Change_Texture(TEXT("Com_Texture_Idle_Down"));
-				break;
-			case Client::CPlayer::UP:
-				Change_Texture(TEXT("Com_Texture_Idle_Up"));
-				break;
-			case Client::CPlayer::RIGHT:
-				Change_Texture(TEXT("Com_Texture_Idle_Side"));
-				break;
-			case Client::CPlayer::LEFT:
-				Change_Texture(TEXT("Com_Texture_Idle_Side"));
-				break;
-			}
-
-			m_ePastState = m_eState;
-		}
-	}
-
+	GetKeyDown(fTimeDelta);
+	Move_to_PickingPoint(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 	return OBJ_NOEVENT;
@@ -136,6 +59,32 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+	
+	
+
+	//추후에 아이템 만들어지고 플레이어가 아이템과 닿았을떄 획득하는 상호작용을 마친후에 인벤토리에 들어오는건 아래코드 그대로 쓰시면 작동합니다!!
+	//#include "Inven.h" 포함하시고
+	/*CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
+
+	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
+
+	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_ITEM, this) && (GetKeyState(VK_SPACE) < 0))
+	{
+		for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
+		{
+			if (!(*iter)->get_check())
+			{
+				(*iter)->set_texnum(2); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
+				(*iter)->set_check(true);
+
+				return;
+			}
+			else
+				++iter;
+
+		}*/
+
+	
 
 }
 
@@ -143,6 +92,28 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 _float3 CPlayer::Get_Pos()
 {
 	return (m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+}
+
+void CPlayer::Move_to_PickingPoint(_float fTimedelta)
+{
+	/* Picking 포인트가 존재하지 않거나, 이미 도착했다면 return*/
+	if (m_bPicked == false || m_bArrive == true || m_bInputKey == true)
+		return;
+
+	//m_pTransformCom->Follow_Target(m_vPickingPoint, _float3(0,1,0));
+	m_pTransformCom->LookAt(m_vPickingPoint);
+	m_pTransformCom->Go_Straight(fTimedelta);
+
+	_float3 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	if ( abs(vPlayerPos.x - m_vPickingPoint.x ) < 0.1 &&
+		abs(vPlayerPos.z - m_vPickingPoint.z) < 0.1)
+	{
+		
+		m_bPicked = false;
+		m_bArrive = true;
+		m_bInputKey = false;
+	}
 }
 
 HRESULT CPlayer::Render()
@@ -160,6 +131,8 @@ HRESULT CPlayer::Render()
 
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
+
+
 
 	m_pVIBufferCom->Render();
 
@@ -216,11 +189,57 @@ HRESULT CPlayer::SetUp_Components()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_KeySettings()
+{
+	m_KeySets[INTERACTKEY::KEY_LBUTTON] = VK_LBUTTON;	
+
+	m_KeySets[INTERACTKEY::KEY_RBUTTON]= VK_RBUTTON;
+
+	m_KeySets[INTERACTKEY::KEY_UP] = 'W';
+
+	m_KeySets[INTERACTKEY::KEY_RIGHT] = 'D';
+
+	m_KeySets[INTERACTKEY::KEY_DOWN] = 'S';
+
+	m_KeySets[INTERACTKEY::KEY_LEFT] = 'A';
+
+	m_KeySets[INTERACTKEY::KEY_MAP] = VK_TAB;
+
+	m_KeySets[INTERACTKEY::KEY_ATTACK] = 'F';
+
+	m_KeySets[INTERACTKEY::KEY_ACTION] = VK_SPACE;
+
+	m_KeySets[INTERACTKEY::KEY_INVEN1] = '1';
+
+	m_KeySets[INTERACTKEY::KEY_INVEN2] = '2';
+
+	m_KeySets[INTERACTKEY::KEY_INVEN3] = '3';
+
+	m_KeySets[INTERACTKEY::KEY_INVEN4] = '4';
+
+	m_KeySets[INTERACTKEY::KEY_INVEN5] = '5';
+
+	m_KeySets[INTERACTKEY::KEY_INVEN6] = '6';
+
+	m_KeySets[INTERACTKEY::KEY_INVEN7] = '7';
+
+	m_KeySets[INTERACTKEY::KEY_INVEN8] = '8';
+
+	m_KeySets[INTERACTKEY::KEY_INVEN9] = '9';
+
+	m_KeySets[INTERACTKEY::KEY_INVEN0] = '0';
+
+	m_KeySets[INTERACTKEY::KEY_MENU] = VK_ESCAPE;
+
+	return S_OK;
+}
+
 HRESULT CPlayer::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
+	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
@@ -232,8 +251,213 @@ HRESULT CPlayer::SetUp_RenderState()
 HRESULT CPlayer::Release_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
+	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	return S_OK;
+}
+
+void CPlayer::GetKeyDown(_float _fTimeDelta)
+{
+
+
+	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_UP]))
+	{
+		Move_Up(_fTimeDelta);
+		m_bInputKey = true;
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_RIGHT]))
+	{
+		Move_Right(_fTimeDelta);
+		m_bInputKey = true;
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_DOWN]))
+	{
+		Move_Down(_fTimeDelta);
+		m_bInputKey = true;
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_LEFT]))
+	{
+		Move_Left(_fTimeDelta);
+		m_bInputKey = true;
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_ATTACK]))
+	{
+		Attack(_fTimeDelta);
+		m_bInputKey = true;
+	}
+	else
+	{
+		Move_Idle(_fTimeDelta);
+	}
+}
+
+bool CPlayer::ResetAction(_float _fTimeDelta)
+{
+	if (m_eState == ACTION_STATE::ATTACK || m_eState == ACTION_STATE::AXE || m_eState == ACTION_STATE::MINING)
+	{
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex -1)
+		{
+			//m_pTransformCom->Set_Scale(1/1.5f, 1/1.5f, 1.f);
+			return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+void CPlayer::Move_Idle(_float _fTimeDelta)
+{//조건문으로 오른쪽마우스로 액션 실행동안에는 못하도록 해야함.
+	
+	if (!ResetAction(_fTimeDelta))
+		return;
+
+	//if(m_eState == ACTION_STATE::ATTACK || m_eState == ACTION_STATE::AXE || m_eState == ACTION_STATE:: MINING)
+	m_eState = ACTION_STATE::IDLE;
+
+	if (m_ePreState != m_eState)
+	{
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Idle_Down"));
+			break;
+		case DIR_STATE::DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Idle_Up"));
+			break;
+		case DIR_STATE::DIR_LEFT:
+		case DIR_STATE::DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Idle_Side"));
+			break;
+		}
+		m_ePreState = m_eState;
+	}
+}
+
+void CPlayer::Move_Up(_float _fTimeDelta)
+{
+	m_pTransformCom->Go_Straight(_fTimeDelta, m_fTerrain_Height);
+	m_eState = ACTION_STATE::MOVE;
+	m_eDirState = DIR_STATE::DIR_UP;
+	if (m_ePreState != m_eState
+		|| m_ePreDirState != m_eDirState)
+	{
+		Change_Texture(TEXT("Com_Texture_Run_Up"));
+		m_ePreState = m_eState;
+		m_ePreDirState = m_eDirState;
+	}
+}
+
+void CPlayer::Move_Right(_float _fTimeDelta)
+{
+	m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
+	m_eState = ACTION_STATE::MOVE;
+	m_eDirState = DIR_STATE::DIR_RIGHT;
+	if (m_ePreState != m_eState || m_ePreDirState != m_eDirState)
+	{
+		if (m_ePreDirState != m_eDirState)
+		{
+			m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
+			//m_bInverseScale = false;
+		}
+	/*	if (m_bInverseScale)
+		{
+			m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
+			m_bInverseScale = false;
+		}*/
+		Change_Texture(TEXT("Com_Texture_Run_Side"));
+		m_ePreState = m_eState;
+		m_ePreDirState = m_eDirState;
+	}
+}
+
+void CPlayer::Move_Down(_float _fTimeDelta)
+{
+	m_pTransformCom->Go_Backward(_fTimeDelta, m_fTerrain_Height);
+	m_eState = ACTION_STATE::MOVE;
+	m_eDirState = DIR_STATE::DIR_DOWN;
+
+	if (m_ePreState != m_eState || m_ePreDirState != m_eDirState)
+	{
+		Change_Texture(TEXT("Com_Texture_Run_Down"));
+		m_ePreState = m_eState;
+		m_ePreDirState = m_eDirState;
+	}
+}
+
+void CPlayer::Move_Left(_float _fTimeDelta)
+{
+	m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
+	m_eState = ACTION_STATE::MOVE;
+	m_eDirState = DIR_STATE::DIR_LEFT;
+
+	if (m_ePreState != m_eState || m_ePreDirState != m_eDirState)
+	{
+
+		if (m_ePreDirState != m_eDirState)
+		{
+			m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
+			//m_bInverseScale = false;
+		}
+		/*if (!m_bInverseScale)
+		{
+			m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
+			m_bInverseScale = true;
+		}*/
+		Change_Texture(TEXT("Com_Texture_Run_Side"));
+
+		m_ePreState = m_eState;
+		m_ePreDirState = m_eDirState;
+	}
+}
+
+void CPlayer::Attack(_float _fTimeDelta)
+{
+	m_eState = ACTION_STATE::ATTACK;
+	
+	//공격 무기 확인코드 만들기
+
+	if (m_eState != m_ePreState)
+	{
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_DOWN:
+			switch (m_eWeaponType)
+			{
+			case WEAPON_TYPE::WEAPON_HAND:
+				Change_Texture(TEXT("Com_Texture_Punch_Down"));
+				break;
+			case WEAPON_TYPE::WEAPON_SWORD:
+				break;
+			}
+			break;
+		case DIR_STATE::DIR_UP:
+			switch (m_eWeaponType)
+			{
+			case WEAPON_TYPE::WEAPON_HAND:
+				Change_Texture(TEXT("Com_Texture_Punch_Up"));
+				break;
+			case WEAPON_TYPE::WEAPON_SWORD:
+				break;
+			}			
+			break;
+		case DIR_STATE::DIR_LEFT:
+		case DIR_STATE::DIR_RIGHT:
+			//m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.f);
+			switch (m_eWeaponType)
+			{
+			case WEAPON_TYPE::WEAPON_HAND:
+				Change_Texture(TEXT("Com_Texture_Punch_Side"));
+				break;
+			case WEAPON_TYPE::WEAPON_SWORD:
+				break;
+			}
+			break;
+		}
+		m_ePreState = m_eState;
+	}
+	
 }
 
 HRESULT CPlayer::Texture_Clone()
@@ -245,42 +469,59 @@ HRESULT CPlayer::Texture_Clone()
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_iEndTex = 32;
 	TextureDesc.m_fSpeed = 60;
-
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BackGround_Run_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	/*Run*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Run_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BackGround_Run_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Run_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BackGround_Run_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Run_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_iEndTex = 66;
 	TextureDesc.m_fSpeed = 60;
-
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BackGround_Idle_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	/*Idle*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Idle_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BackGround_Idle_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Idle_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BackGround_Idle_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Idle_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
+	/*Attack*/
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_iEndTex = 46;
 	TextureDesc.m_fSpeed = 60;
-
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Attack_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BackGround_Attack_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Attack_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Attack_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
+
+	/*Punch*/
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_iEndTex = 24;
+	TextureDesc.m_fSpeed = 60;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Punch_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Punch_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Punch_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Punch_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Punch_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Punch_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
 
 	return S_OK;
 }
@@ -299,7 +540,7 @@ void CPlayer::SetUp_BillBoard()
 {
 	_float4x4		ViewMatrix;
 
-	if (m_eState == LEFT)
+	if (m_eDirState == DIR_STATE::DIR_LEFT)
 		return;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
@@ -336,6 +577,11 @@ CGameObject * CPlayer::Clone(void* pArg)
 	}
 
 	return pInstance;
+}
+
+CGameObject * CPlayer::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
 }
 
 void CPlayer::Free()

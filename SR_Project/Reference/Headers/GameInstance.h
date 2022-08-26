@@ -7,6 +7,8 @@
 #include "Component_Manager.h"
 #include "Input_Device.h"
 #include "KeyMgr.h"
+#include "Picking.h"
+#include "Sound_Manager.h"
 
 BEGIN(Engine)
 
@@ -46,7 +48,10 @@ public: /* For.Level_Manager */
 public: /* For.Object_Manager */
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
-	class CGameObject* Get_Object(_uint iLevelIndex, const _tchar * pLayerTag);
+	HRESULT Add_GameObjectLoad(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, const _tchar* VIBUfferTag, void* pArg = nullptr);
+
+	class CGameObject* Get_Object(_uint iLevelIndex, const _tchar * pLayerTag, _uint iIndex =0);
+	list<CGameObject*>* Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag);
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);
@@ -56,6 +61,17 @@ public: /* For. Key Manager*/
 	bool		Key_Pressing(int _Key);
 	bool		Key_Up(int _Key);		// 누르고 있다가 뗐을 때
 	bool		Key_Down(int _Key);		// 눌렀을 때
+
+public: /* For. Sound Manager */
+	void PlaySound(TCHAR* pSoundKey, const _uint& eID, const float& fVolume);
+	void PlayBGM(TCHAR * pSoundKey, const float& fVolume);
+	void StopSound(const _uint& eID);
+	void StopAll();
+	void SetChannelVolume(const _uint& eID, const float& fVolume);
+	int  VolumeUp(const _uint& eID, const _float& _vol);
+	int  VolumeDown(const _uint& eID, const _float& _vol);
+	int  Pause(const _uint& eID);
+
 
 public:
 	static void Release_Engine();
@@ -68,6 +84,8 @@ private:
 	CTimer_Manager*					m_pTimer_Manager = nullptr;
 	CComponent_Manager*				m_pComponent_Manager = nullptr;
 	CKeyMgr*						m_pKey_Manager = nullptr;
+	CPicking*						m_pPicking = nullptr;
+	CSound_Manager*					m_pSound_Manager = nullptr;
 
 public:
 	virtual void Free() override;

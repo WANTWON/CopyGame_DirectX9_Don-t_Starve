@@ -21,9 +21,11 @@ public:
 	virtual HRESULT Render();
 
 	void Update_Position(_float3 position) { m_vPosition = position; }
+	//Get
 	_float3 Get_Position() { return m_vPosition; }
 	_float  Get_Radius() { return m_fRadius; }
-
+	//Set
+	void	Set_Radius(_float _fRadius) { m_fRadius = _fRadius;}
 protected:
 	LPDIRECT3DDEVICE9			m_pGraphic_Device = nullptr;
 
@@ -37,11 +39,12 @@ protected:
 	HRESULT Add_Components(const _tchar* pComponentTag, _uint iLevelIndex, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg = nullptr);
 	HRESULT Change_Component(const _tchar* pComponentTag, CComponent** ppOut);
 
-protected:
+public:
 	class CComponent* Find_Component(const _tchar* pComponentTag);
 
 public:	
 	virtual CGameObject* Clone(void* pArg = nullptr) = 0;
+	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr) = 0;
 	virtual void Free() override;
 };
 

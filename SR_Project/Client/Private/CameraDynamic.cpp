@@ -94,16 +94,16 @@ void CCameraDynamic::Default_Camera(_float fTimeDelta)
 	if (GetKeyState('E') < 0)
 		m_pTransform->Turn(_float3(0.f, 1.f, 0.f), -fTimeDelta);
 
-	if (GetKeyState('W') < 0)
+	if (GetKeyState(VK_UP) < 0)
 		m_pTransform->Go_Straight(fTimeDelta);
 
-	if (GetKeyState('S') < 0)
+	if (GetKeyState(VK_DOWN) < 0)
 		m_pTransform->Go_Backward(fTimeDelta);
 
-	if (GetKeyState('A') < 0)
+	if (GetKeyState(VK_LEFT) < 0)
 		m_pTransform->Go_Left(fTimeDelta);
 
-	if (GetKeyState('D') < 0)
+	if (GetKeyState(VK_RIGHT) < 0)
 		m_pTransform->Go_Right(fTimeDelta);
 
 	Safe_Release(pGameInstance);
@@ -126,7 +126,6 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 		m_vDistance.z += fTimeDelta*m_lMouseWheel*0.01f;
 
 	}
-
 
 	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
 
@@ -166,6 +165,11 @@ CCamera * CCameraDynamic::Clone(void * pArg)
 	}
 
 	return pInstance;
+}
+
+CGameObject * CCameraDynamic::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
 }
 
 void CCameraDynamic::Free()

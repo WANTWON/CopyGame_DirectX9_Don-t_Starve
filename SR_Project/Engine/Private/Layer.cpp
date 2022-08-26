@@ -28,7 +28,15 @@ void CLayer::Tick(_float fTimeDelta)
 		{
 			int iEvent = pGameObject->Tick(fTimeDelta);
 			if (iEvent == OBJ_DEAD)
+			{
 				Safe_Release(pGameObject);
+				/*m_gameobjects.erase(std::remove(m_gameobjects.begin(), m_gameobjects.end(), [](auto iter)->bool {
+					if (iter == nullptr)
+						return true;
+					return false;
+				}), m_gameobjects.end());*/
+			}
+				
 		}
 			
 	}
@@ -41,6 +49,19 @@ void CLayer::Late_Tick(_float fTimeDelta)
 		if (nullptr != pGameObject)
 			pGameObject->Late_Tick(fTimeDelta);
 	}
+}
+
+CGameObject * CLayer::Get_Object(_uint iIndex)
+{
+	if (m_GameObjects.size() <= iIndex)
+		return nullptr;
+
+	auto	iter = m_GameObjects.begin();
+
+	for (size_t i = 0; i < iIndex; ++i)
+		++iter;
+
+	return *iter;
 }
 
 CLayer * CLayer::Create()

@@ -2,6 +2,7 @@
 #include "..\Public\Monster.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "Inventory.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -45,12 +46,17 @@ int CMonster::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
+	
+
 	return OBJ_NOEVENT;
 }
 
 void CMonster::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	//Test1
+	m_TestTimer += fTimeDelta;
 
 	SetUp_BillBoard();
 
@@ -59,15 +65,30 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
 
+
 	if (nullptr != m_pColliderCom)
 	{
-		if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this))
-		{
-			m_bDead = true;
-		}
-			
+		//if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (GetKeyState(VK_SPACE) < 0))
+		//{
+		//	CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
+		//	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
+		//	for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
+		//	{
+		//		if (!(*iter)->get_check())
+		//		{
+		//			(*iter)->set_texnum(2); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
+		//			(*iter)->set_check(true);
+
+		//			return;
+		//		}
+		//		else
+		//			++iter;
+
+		//		m_bDead = true;
+		//	}
+
+		//}
 	}
-		
 }
 
 HRESULT CMonster::Render()
@@ -149,6 +170,8 @@ HRESULT CMonster::SetUp_RenderState()
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL; 
 
+
+	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
@@ -160,6 +183,8 @@ HRESULT CMonster::SetUp_RenderState()
 HRESULT CMonster::Release_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	return S_OK;
 }
 
@@ -219,6 +244,11 @@ CGameObject * CMonster::Clone(void* pArg)
 	}
 
 	return pInstance;
+}
+
+CGameObject * CMonster::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
 }
 
 void CMonster::Free()

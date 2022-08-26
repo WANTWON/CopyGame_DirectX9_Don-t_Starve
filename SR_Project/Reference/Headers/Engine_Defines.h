@@ -18,6 +18,7 @@ using namespace std;
 #include <map>
 #include <list>
 #include <algorithm>
+#include <iostream>
 
 #include "Engine_Macro.h"
 #include "Engine_Function.h"

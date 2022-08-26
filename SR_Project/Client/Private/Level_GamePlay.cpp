@@ -27,6 +27,21 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Terrain"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_MainInventory"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_MainInventory_back(TEXT("Layer_MainInventory_back"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_MainInventory_front(TEXT("Layer_MainInventory_front"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Pont(TEXT("Layer_Pont"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -34,22 +49,53 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	
+
 }
 
 void CLevel_GamePlay::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
+	
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag, _float3 Pos)
+HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag, &Pos)))
+	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag, _float3(0,0,0))))
+		//return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load0"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load1"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load2"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load3"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load4"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load5"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
+		TEXT("Prototype_Component_VIBuffer_Terrain_Load6"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
@@ -129,18 +175,98 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_MainInventory(const _tchar * pLayerTag)
 {
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainInventory"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
+
+	
 
 	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
+HRESULT CLevel_GamePlay::Ready_Layer_MainInventory_back(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+
+	for (int i = 0; i < 10; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainInventory_back"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_MainInventory_front(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+
+	for (int i = 0; i < 10; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainInventory_front"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+	}
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Pont(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+
+	for (int i = 0; i < 10; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+//HRESULT CLevel_GamePlay::Ready_Layer_MainInventory_front(const _tchar * pLayerTag)
+//{
+//	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+//	Safe_AddRef(pGameInstance);
+//
+//
+//	for (int i = 0; i < 10; ++i)
+//	{
+//		int number = i;
+//
+//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainInventory_back"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+//			return E_FAIL;
+//	}
+//
+//	Safe_Release(pGameInstance);
+//
+//	return S_OK;
+//}
+
 
 
 CLevel_GamePlay * CLevel_GamePlay::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
