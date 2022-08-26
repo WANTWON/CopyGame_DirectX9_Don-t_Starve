@@ -52,6 +52,9 @@
     <Filter Include="02.GameObject\Grass">
       <UniqueIdentifier>{f8894d0b-65b2-404a-9db2-d23f0476fe57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Boulder">
+      <UniqueIdentifier>{6221d872-9563-42ff-8ea3-17b1ed0ad709}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -129,6 +132,9 @@
     <ClInclude Include="..\public\Grass.h">
       <Filter>02.GameObject\Grass</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Boulder.h">
+      <Filter>02.GameObject\Boulder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -187,6 +193,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Grass.cpp">
       <Filter>02.GameObject\Grass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boulder.cpp">
+      <Filter>02.GameObject\Boulder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,7 @@
 #include "Sky.h"
 #include "Tree.h"
 #include "Grass.h"
+#include "Boulder.h"
 #include "MainInventory.h"
 #include "MainInventory_back.h"
 #include "MainInventory_front.h"
@@ -254,6 +255,15 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 #pragma endregion Add_Texture_Grass
 
 #pragma region Add_Texture_Boulder
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Boulder_HEALTHY"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Boulder/Healthy/Healthy_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Boulder_DAMAGED"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Boulder/Damaged/Damaged_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Boulder_BROKEN"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Boulder/Broken/Broken_%03d.png"), 1))))
+		return E_FAIL;
 #pragma endregion Add_Texture_Boulder
 
 #pragma endregion
@@ -350,8 +360,14 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTree::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/*For.Prototype_GameObject_Grass */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Grass"),
 		CGrass::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Boulder */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boulder"),
+		CBoulder::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
