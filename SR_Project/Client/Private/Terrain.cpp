@@ -220,7 +220,7 @@ void CTerrain::Picking()
 	if (pGameInstance->Key_Up(VK_LBUTTON))
 	{
 		if(true == m_pVIBufferCom->Picking(m_pTransformCom, &OutPos))
-			pPlayer->Set_PickingPoint(_float3(OutPos.x, 1, OutPos.z));
+			pPlayer->Set_PickingPoint(_float3(OutPos.x, OutPos.y+1, OutPos.z));
 		
 	}
 	if (pGameInstance->Key_Pressing(VK_RBUTTON))
