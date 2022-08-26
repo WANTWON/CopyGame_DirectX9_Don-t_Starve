@@ -225,7 +225,7 @@ void CTerrain::Picking()
 	}
 	if (pGameInstance->Key_Pressing(VK_RBUTTON))
 	{
-		m_pVIBufferCom->UpTerrain(m_pTransformCom, &OutPos);
+		//m_pVIBufferCom->UpTerrain(m_pTransformCom, &OutPos);
 	}
 
 
