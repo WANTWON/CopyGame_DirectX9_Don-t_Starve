@@ -159,6 +159,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\public\BerryBush.h" />
     <ClInclude Include="..\public\Boulder.h" />
     <ClInclude Include="..\public\Grass.h" />
     <ClInclude Include="..\Public\Inventory.h" />
@@ -184,6 +185,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\BerryBush.cpp" />
     <ClCompile Include="..\private\Boulder.cpp" />
     <ClCompile Include="..\private\Grass.cpp" />
     <ClCompile Include="..\Private\Inventory.cpp" />

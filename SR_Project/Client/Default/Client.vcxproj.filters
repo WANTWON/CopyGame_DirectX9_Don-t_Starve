@@ -55,6 +55,9 @@
     <Filter Include="02.GameObject\Boulder">
       <UniqueIdentifier>{6221d872-9563-42ff-8ea3-17b1ed0ad709}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Berry Bush">
+      <UniqueIdentifier>{3218fc99-aa20-40ce-b2c6-3740becc227a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -135,6 +138,9 @@
     <ClInclude Include="..\public\Boulder.h">
       <Filter>02.GameObject\Boulder</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BerryBush.h">
+      <Filter>02.GameObject\Berry Bush</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -196,6 +202,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Boulder.cpp">
       <Filter>02.GameObject\Boulder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BerryBush.cpp">
+      <Filter>02.GameObject\Berry Bush</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

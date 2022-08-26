@@ -129,6 +129,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boulder"), LEVEL_GAMEPLAY, pLayerTag, _float3(3.f, 1.f, 3.f))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berry_Bush"), LEVEL_GAMEPLAY, pLayerTag, _float3(7.f, 1.f, 7.f))))
+		return E_FAIL;
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
