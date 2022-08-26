@@ -46,6 +46,9 @@
     <Filter Include="02.GameObject\UI">
       <UniqueIdentifier>{d9d4e8eb-8704-4d4b-b177-4121e1b49c59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Tree">
+      <UniqueIdentifier>{2346487a-7d5d-4f93-80ff-5dc4b98ec1dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -99,6 +102,9 @@
     <ClInclude Include="..\Public\Sky.h">
       <Filter>02.GameObject\Sky</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Tree.h">
+      <Filter>02.GameObject\Tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -139,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Sky.cpp">
       <Filter>02.GameObject\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Tree.cpp">
+      <Filter>02.GameObject\Tree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
