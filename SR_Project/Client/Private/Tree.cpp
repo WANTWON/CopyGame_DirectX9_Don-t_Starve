@@ -18,7 +18,6 @@ HRESULT CTree::Initialize_Prototype()
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
 
-
 	return S_OK;
 }
 
@@ -340,4 +339,9 @@ void CTree::Free()
 		Safe_Release(iter);
 
 	m_vecTexture.clear();
+}
+
+CGameObject * CTree::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	return nullptr;
 }

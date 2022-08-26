@@ -159,6 +159,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\public\Grass.h" />
     <ClInclude Include="..\Public\Inventory.h" />
     <ClInclude Include="..\Public\MainInventory_back.h" />
     <ClInclude Include="..\Public\MainInventory_front.h" />
@@ -175,7 +176,6 @@
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\Tree.h" />
-    <ClInclude Include="..\Public\UI.h" />
     <ClInclude Include="..\Public\MainInventory.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -183,6 +183,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\Grass.cpp" />
     <ClCompile Include="..\Private\Inventory.cpp" />
     <ClCompile Include="..\Private\MainInventory_back.cpp" />
     <ClCompile Include="..\Private\MainInventory_front.cpp" />
@@ -198,7 +199,6 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\Tree.cpp" />
-    <ClCompile Include="..\Private\UI.cpp" />
     <ClCompile Include="..\Private\MainInventory.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">

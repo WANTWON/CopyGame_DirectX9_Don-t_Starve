@@ -49,6 +49,9 @@
     <Filter Include="02.GameObject\Tree">
       <UniqueIdentifier>{2346487a-7d5d-4f93-80ff-5dc4b98ec1dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Grass">
+      <UniqueIdentifier>{f8894d0b-65b2-404a-9db2-d23f0476fe57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -123,6 +126,9 @@
     <ClInclude Include="..\Public\Inventory.h">
       <Filter>02.GameObject\UI\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Grass.h">
+      <Filter>02.GameObject\Grass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -178,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Inventory.cpp">
       <Filter>02.GameObject\UI\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Grass.cpp">
+      <Filter>02.GameObject\Grass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
