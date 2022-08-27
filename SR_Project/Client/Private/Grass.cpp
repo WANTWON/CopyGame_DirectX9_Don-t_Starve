@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "../Public/Grass.h"
 #include "GameInstance.h"
-#include "Player.h"
+
 
 CGrass::CGrass(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -84,7 +84,7 @@ HRESULT CGrass::Render()
 	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
 		return E_FAIL;
 
-	m_pTextureCom->MoveFrame(m_TimerTag);
+	//m_pTextureCom->MoveFrame(m_TimerTag);
 
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;

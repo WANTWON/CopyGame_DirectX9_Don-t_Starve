@@ -6,6 +6,7 @@
 #include "MainInventory_front.h"
 #include "Equipment_front.h"
 #include "Pont.h"
+#include "Mouse.h"
 
 /*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
@@ -36,6 +37,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CMainInventory_front*> m_MainInventorylist;//[INVEN_END]
 	list<CEquipment_front*> m_Equipmentlist;
 	list<CPont*> m_Pontlist;
+	CMouse*		pMouse = nullptr;
 
 	typedef list<CMainInventory_front*> INVENLIST ; 
 

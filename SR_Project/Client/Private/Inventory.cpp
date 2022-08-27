@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "..\Public\Inventory.h"
-#include "Mouse.h"
 
 IMPLEMENT_SINGLETON(CInventory_Manager)
+
 CInventory_Manager::CInventory_Manager()
+	: pMouse(CMouse::Get_Instance())
 {
 }
 
@@ -91,10 +92,6 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 		}
 	}
 */
-	CMouse*			pMouse = CMouse::Get_Instance();
-	Safe_AddRef(pMouse);
-
-	
 
 	for (auto& i : m_MainInventorylist)
 	{
@@ -106,7 +103,7 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 		}
 	}
 	
-	Safe_Release(pMouse);
+	
 
 
 }
@@ -127,8 +124,9 @@ void CInventory_Manager::Clear(_uint iLevelIndex)
 
 void CInventory_Manager::Free()
 {
-		
-	for (auto& iter : m_MainInventorylist)
+	Safe_Release(pMouse);
+
+	/*for (auto& iter : m_MainInventorylist)
 		Safe_Release(iter);
 
 	m_MainInventorylist.clear();
@@ -136,11 +134,11 @@ void CInventory_Manager::Free()
 	for (auto& iter : m_Equipmentlist)
 		Safe_Release(iter);
 
-	m_Equipmentlist.clear();
+	m_Equipmentlist.clear();*/
 
-	for (auto& iter : m_Pontlist)
-		Safe_Release(iter);
+	//for (auto& iter : m_Pontlist)
+	//	Safe_Release(iter);
 
-	m_Pontlist.clear();
+	//m_Pontlist.clear();
 
 }

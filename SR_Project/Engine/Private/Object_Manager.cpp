@@ -118,7 +118,7 @@ void CObject_Manager::Late_Tick(_float fTimeDelta)
 }
 
 void CObject_Manager::Clear(_uint iLevelIndex)
-{
+ {
 	if (iLevelIndex >= m_iNumLevels || 
 		nullptr == m_pLayers)
 		return;
