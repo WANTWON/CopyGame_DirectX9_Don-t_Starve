@@ -6,6 +6,7 @@
 CBoulder::CBoulder(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
+	ZeroMemory(&m_tInfo, sizeof(OBJINFO));
 }
 
 CBoulder::CBoulder(const CBoulder & rhs)
@@ -29,6 +30,9 @@ HRESULT CBoulder::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
+	m_tInfo.iMaxHp = 60;
+	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+
 	return S_OK;
 }
 
@@ -36,7 +40,15 @@ int CBoulder::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	m_eState = HEALTHY;
+	if (CKeyMgr::Get_Instance()->Key_Down('F'))
+		Apply_Damage(10);
+
+	if (m_tInfo.iCurrentHp > 40)
+		m_eState = HEALTHY;
+	else if (m_tInfo.iCurrentHp <= 40 && m_tInfo.iCurrentHp > 0)
+		m_eState = DAMAGED;
+	else if (m_tInfo.iCurrentHp <= 0)
+		m_eState = BROKEN;
 
 	if (m_eState != m_ePreState)
 	{
@@ -92,6 +104,17 @@ HRESULT CBoulder::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CBoulder::Apply_Damage(_uint Damage)
+{
+	if (m_tInfo.iCurrentHp == 0)
+		return;
+
+	if (Damage > m_tInfo.iCurrentHp) 
+		m_tInfo.iCurrentHp = 0;
+	else 
+		m_tInfo.iCurrentHp -= Damage;
 }
 
 HRESULT CBoulder::SetUp_Components(void* pArg)

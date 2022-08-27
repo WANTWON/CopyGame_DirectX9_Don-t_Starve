@@ -32,6 +32,7 @@ public:
 public:
 	_float3 Get_Pos() { return m_pTransformCom->Get_State(CTransform::STATE_POSITION); }
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
+	void Apply_Damage(_uint Damage = 0);
 
 private:
 	HRESULT SetUp_Components(void* pArg);
@@ -57,6 +58,7 @@ private:
 	STATE m_ePreState = MAX;
 	const _tchar* m_TimerTag = TEXT("");
 	_float m_fTerrain_Height = 0.f;
+	OBJINFO m_tInfo;
 
 public:
 	static CBoulder* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
