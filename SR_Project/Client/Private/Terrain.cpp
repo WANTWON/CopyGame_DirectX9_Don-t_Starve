@@ -91,16 +91,16 @@ HRESULT CTerrain::SetUp_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 
-	m_TerrainDesc.m_iNumVerticesX = 30;
-	m_TerrainDesc.m_iNumVerticesZ = 30;
-	m_TerrainDesc.m_fTextureSize = 30.f;
+	m_TerrainDesc.m_iNumVerticesX = 50;
+	m_TerrainDesc.m_iNumVerticesZ = 50;
+	m_TerrainDesc.m_fTextureSize = 5.f;
 	m_TerrainDesc.m_fSizeX = 1;
 	m_TerrainDesc.m_fSizeZ = 1;
-	m_TerrainDesc.m_iTextureNum = 10;
+	m_TerrainDesc.m_iTextureNum = 17;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), (CComponent**)&m_pVIBufferCom, &m_TerrainDesc)))
