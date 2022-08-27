@@ -1,22 +1,20 @@
 #include "stdafx.h"
-#include "..\Public\MainInventory_front.h"
+#include "..\Public\Equipment_front.h"
 #include "GameInstance.h"
 #include "Inventory.h"
-#include "Mouse.h"
-#include "KeyMgr.h"
 
 
-CMainInventory_front::CMainInventory_front(LPDIRECT3DDEVICE9 pGraphic_Device)
+CEquipment_front::CEquipment_front(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CMainInventory_front::CMainInventory_front(const CMainInventory_front & rhs)
+CEquipment_front::CEquipment_front(const CEquipment_front & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CMainInventory_front::Initialize_Prototype()
+HRESULT CEquipment_front::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -26,13 +24,13 @@ HRESULT CMainInventory_front::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CMainInventory_front::Initialize(void* pArg)
+HRESULT CEquipment_front::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 
-	
+
 
 	iNumber = (int*)pArg;
 
@@ -42,7 +40,7 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 
 	m_fSizeX = 40.0f;
 	m_fSizeY = 40.0f;
-	m_fX = 300.f + (iNum * 50.f);
+	m_fX = 800.f + (iNum * 50.f);
 	m_fY = 690.f;
 
 	if (FAILED(SetUp_Components()))
@@ -51,11 +49,6 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
-	if(iNum ==2 )
-	texnum = ITEMNAME_WOOD;
-
-	
-
 	//CInventory_Manager::Get_Instance()->Get_Inven_list()->front.push_back(this);
 	//CInventory_Manager::Get_Instance()->Get_Inven_list().push_back(this);
 	//INVENLIST
@@ -63,11 +56,11 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	return S_OK;
 }
 
-int CMainInventory_front::Tick(_float fTimeDelta)
+int CEquipment_front::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	RECT		rcRect;
+	/*RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
 	POINT		ptMouse;
@@ -81,9 +74,9 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 		m_fSizeY = 55.f;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		//set_check(true);
-		//plus_itemcount();
-	}
+		set_check(true);
+		plus_itemcount();
+	}*/
 
 
 
@@ -92,75 +85,36 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	return OBJ_NOEVENT;
 }
 
-void CMainInventory_front::Late_Tick(_float fTimeDelta)
+void CEquipment_front::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
-	CMouse*			pMouse = CMouse::Get_Instance();
-	Safe_AddRef(pMouse);
-	
-	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-	
+	//RECT		rcRect;
+	//SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
+	//POINT		ptMouse;
+	//GetCursorPos(&ptMouse);
+	//ScreenToClient(g_hWnd, &ptMouse);
 
-
-
-
-	if (!PtInRect(&rcRect, ptMouse))
-	{
-		
-		m_fSizeX = 40;
-		m_fSizeY = 40;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	}
-
-		
-	
-	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
-
-		if (false == pMouse->Get_picked())
-		{
-
-			pMouse->Set_Item_name(texnum);
-			pMouse->Set_index(iNum);
-			pMouse->Set_picked(true);
-			
-
-		}
-
-		else if (true == pMouse->Get_picked())
-		{
-			pMouse->Set_Prev_Item_name(texnum);
-			set_texnum(pMouse->Get_Item_name());
-			pMouse->Set_picked(false);
-
-		}
+	//if (!PtInRect(&rcRect, ptMouse))
+	//{
+	//	m_fSizeX = 40;
+	//	m_fSizeY = 40;
+	//	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 
 
-	}
-
-		
-		
-	Safe_Release(pMouse);
-	
-	
-
-
-	if (nullptr != m_pRendererCom)//&&m_bcheck)
+	//	//ERR_MSG(L"Ãæµ¹");
+	//}
+	if (nullptr != m_pRendererCom&&m_bcheck)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
-	
+
 	//set_check(false);
 }
 
-HRESULT CMainInventory_front::Render()
+HRESULT CEquipment_front::Render()
 {
-	//if (m_bcheck)
-	//{
+	if (m_bcheck)
+	{
 		if (FAILED(__super::Render()))
 			return E_FAIL;
 
@@ -183,22 +137,22 @@ HRESULT CMainInventory_front::Render()
 
 		if (FAILED(Release_RenderState()))
 			return E_FAIL;
-	//}
-	
+	}
+
 
 
 
 	return S_OK;
 }
 
-HRESULT CMainInventory_front::SetUp_Components()
+HRESULT CEquipment_front::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory_front"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Equipment_front"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -220,7 +174,7 @@ HRESULT CMainInventory_front::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CMainInventory_front::SetUp_RenderState()
+HRESULT CEquipment_front::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -234,7 +188,7 @@ HRESULT CMainInventory_front::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CMainInventory_front::Release_RenderState()
+HRESULT CEquipment_front::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
@@ -243,39 +197,39 @@ HRESULT CMainInventory_front::Release_RenderState()
 	return S_OK;
 }
 
-CMainInventory_front * CMainInventory_front::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CEquipment_front * CEquipment_front::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CMainInventory_front*	pInstance = new CMainInventory_front(pGraphic_Device);
+	CEquipment_front*	pInstance = new CEquipment_front(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : Prototype_Component_Texture_MainInventory_front"));
+		ERR_MSG(TEXT("Failed to Created : Prototype_Component_Texture_Equipment_front"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CMainInventory_front::Clone(void* pArg)
+CGameObject * CEquipment_front::Clone(void* pArg)
 {
-	CMainInventory_front*	pInstance = new CMainInventory_front(*this);
+	CEquipment_front*	pInstance = new CEquipment_front(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : Prototype_Component_Texture_MainInventory_front"));
+		ERR_MSG(TEXT("Failed to Cloned : Prototype_Component_Texture_Equipment_front"));
 		Safe_Release(pInstance);
 	}
-	CInventory_Manager::Get_Instance()->Get_Inven_list()->push_back(pInstance);//Get_Inven_list().push_back(pInstance);
+	CInventory_Manager::Get_Instance()->Get_Equipment_list()->push_back(pInstance);//Get_Inven_list().push_back(pInstance);
 	return pInstance;
 
 }
 
-CGameObject * CMainInventory_front::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+CGameObject * CEquipment_front::Clone_Load(const _tchar * VIBufferTag, void * pArg)
 {
 	return nullptr;
 }
 
-void CMainInventory_front::Free()
+void CEquipment_front::Free()
 {
 	__super::Free();
 
@@ -285,7 +239,7 @@ void CMainInventory_front::Free()
 	Safe_Release(m_pTextureCom);
 }
 
-void CMainInventory_front::Use_item(ITEMNAME item)
+void CEquipment_front::Use_item(ITEMNAME item)
 {
 	switch (item)
 	{

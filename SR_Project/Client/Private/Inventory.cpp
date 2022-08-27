@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\Inventory.h"
+#include "Mouse.h"
 
 IMPLEMENT_SINGLETON(CInventory_Manager)
 CInventory_Manager::CInventory_Manager()
@@ -54,6 +55,32 @@ void CInventory_Manager::Tick(_float fTimeDelta)
 			iter->Tick(fTimeDelta);
 		}
 	}*/
+	
+	
+
+	
+
+
+	auto iter = m_MainInventorylist.begin();
+	auto iterfont = m_Pontlist.begin();
+	bool bcheck = true;
+	
+	while (bcheck&&!m_MainInventorylist.empty() && !m_Pontlist.empty())
+	{
+		
+
+		
+		(*iterfont)->set_pont_num((*iter)->get_item_number());              //->set_pont_num(iter->get_item_number());
+
+		++iter;
+		++iterfont;
+
+		if (iter == m_MainInventorylist.end() || iterfont == m_Pontlist.end())
+		{
+			bcheck = false;
+		}
+	}
+		
 }
 
 void CInventory_Manager::Late_Tick(_float fTimeDelta)
@@ -66,10 +93,22 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 		}
 	}
 */
+	CMouse*			pMouse = CMouse::Get_Instance();
+	Safe_AddRef(pMouse);
 
+	
 
-
-
+	for (auto& i : m_MainInventorylist)
+	{
+		if (i->get_iNum() == pMouse->Get_index() && pMouse->Get_picked() == false)
+		{
+			i->set_texnum(pMouse->Get_Prev_Item_name());
+			pMouse->Set_index(20);
+			return;
+		}
+	}
+	
+	Safe_Release(pMouse);
 
 
 }

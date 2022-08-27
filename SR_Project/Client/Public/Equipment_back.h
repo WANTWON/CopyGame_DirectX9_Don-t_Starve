@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CMainInventory_front final : public CGameObject
+class CEquipment_back final : public CGameObject
 {
 private:
-	CMainInventory_front(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CMainInventory_front(const CMainInventory_front& rhs);
-	virtual ~CMainInventory_front() = default;
+	CEquipment_back(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CEquipment_back(const CEquipment_back& rhs);
+	virtual ~CEquipment_back() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -34,7 +34,6 @@ private: /* For.Components */
 private:
 	_float4x4				m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
-	_float                  m_pfX, m_pfY;
 
 private:
 	HRESULT SetUp_Components();
@@ -42,25 +41,15 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	static CMainInventory_front* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CEquipment_back* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
-	virtual CGameObject* Clone_Load(const _tchar * VIBufferTag, void * pArg = nullptr) override;
+	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr);
 	virtual void Free() override;
-
-	bool get_check() { return m_bcheck; }
-	void set_check(bool tof) { m_bcheck = tof ; }
-	void plus_itemcount() { item_number = 6; }
-	void set_texnum(ITEMNAME texnumber) { texnum = texnumber; }
-	_uint get_item_number() { return item_number; }
-	void Use_item(ITEMNAME item);
-	int get_iNum() { return iNum;  }
-
 private:
+
 	int* iNumber = nullptr;
-	int iNum = 100;
-	ITEMNAME texnum = ITEMNAME_CARROT;
-	_uint item_number = 0;//æ∆¿Ã≈€∞πºˆ
-	bool m_bcheck = false;
+	int iNum = 0;
+	int texnum = 0;
 };
 
 END

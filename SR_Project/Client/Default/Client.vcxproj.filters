@@ -58,6 +58,9 @@
     <Filter Include="02.GameObject\Berry Bush">
       <UniqueIdentifier>{3218fc99-aa20-40ce-b2c6-3740becc227a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Mouse">
+      <UniqueIdentifier>{22e28144-0102-4609-9f9e-e6c0be621428}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -141,6 +144,15 @@
     <ClInclude Include="..\public\BerryBush.h">
       <Filter>02.GameObject\Berry Bush</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Equipment_front.h">
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Equipment_back.h">
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mouse.h">
+      <Filter>03.Mouse</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -205,6 +217,15 @@
     </ClCompile>
     <ClCompile Include="..\private\BerryBush.cpp">
       <Filter>02.GameObject\Berry Bush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Equipment_front.cpp">
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Equipment_back.cpp">
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mouse.cpp">
+      <Filter>03.Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
