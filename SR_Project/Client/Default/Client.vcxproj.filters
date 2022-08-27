@@ -46,6 +46,21 @@
     <Filter Include="02.GameObject\UI">
       <UniqueIdentifier>{d9d4e8eb-8704-4d4b-b177-4121e1b49c59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Tree">
+      <UniqueIdentifier>{2346487a-7d5d-4f93-80ff-5dc4b98ec1dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Grass">
+      <UniqueIdentifier>{f8894d0b-65b2-404a-9db2-d23f0476fe57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Boulder">
+      <UniqueIdentifier>{6221d872-9563-42ff-8ea3-17b1ed0ad709}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Berry Bush">
+      <UniqueIdentifier>{3218fc99-aa20-40ce-b2c6-3740becc227a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
     <Filter Include="02.GameObject\UI\Manager">
       <UniqueIdentifier>{0ce27845-1f05-42f5-9b8a-42171989412e}</UniqueIdentifier>
     </Filter>
@@ -99,6 +114,9 @@
     <ClInclude Include="..\Public\Sky.h">
       <Filter>02.GameObject\Sky</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Tree.h">
+      <Filter>02.GameObject\Tree</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Pont.h">
       <Filter>02.GameObject\UI</Filter>
     </ClInclude>
@@ -113,6 +131,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Inventory.h">
       <Filter>02.GameObject\UI\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Grass.h">
+      <Filter>02.GameObject\Grass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boulder.h">
+      <Filter>02.GameObject\Boulder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BerryBush.h">
+      <Filter>02.GameObject\Berry Bush</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +179,9 @@
     <ClCompile Include="..\Private\Sky.cpp">
       <Filter>02.GameObject\Sky</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Tree.cpp">
+      <Filter>02.GameObject\Tree</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Pont.cpp">
       <Filter>02.GameObject\UI</Filter>
     </ClCompile>
@@ -166,6 +196,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Inventory.cpp">
       <Filter>02.GameObject\UI\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Grass.cpp">
+      <Filter>02.GameObject\Grass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boulder.cpp">
+      <Filter>02.GameObject\Boulder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BerryBush.cpp">
+      <Filter>02.GameObject\Berry Bush</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
