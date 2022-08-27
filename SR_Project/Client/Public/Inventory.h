@@ -28,10 +28,6 @@ public:
 	list<CPont*>* Get_Pont_list(void) { return &m_Pontlist; }
 	list<CEquipment_front*>* Get_Equipment_list(void) { return&m_Equipmentlist; }
 
-	
-
-public:
-	class CGameObject* Find_Objects(_uint iLevelIndex, const _tchar* pLayerTag);
 
 private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	_uint										m_iNumLevels = 0;

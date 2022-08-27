@@ -16,6 +16,8 @@
 #include "MainInventory_back.h"
 #include "MainInventory_front.h"
 #include "Pont.h"
+#include "Equipment_back.h"
+#include "Equipment_front.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -146,7 +148,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/tile%03d.png"), 17))))
 		return E_FAIL;
-
 	/*For.Prototype_Component_Texture_MainInventory */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory.png"), 1))))
@@ -158,7 +159,17 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/*For.Prototype_Component_Texture_MainInventory_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/itom/item%d.png"), 3))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/itom/item%d.png"), 5))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Equipment_back */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Equipment_back"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/jangbi%d.png"), 4))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Equipment_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Equipment_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/itom/equip%d.png"), 1))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Pont */
@@ -356,6 +367,15 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_GameObject_MainInventory_front */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory_front"),
 		CMainInventory_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Equipment_back */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Equipment_back"),
+		CEquipment_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInventory_front */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Equipment_front"),
+		CEquipment_front::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Pont */

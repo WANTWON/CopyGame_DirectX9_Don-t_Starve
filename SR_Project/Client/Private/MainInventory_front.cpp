@@ -120,7 +120,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 		
 	
-	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_RBUTTON))
 	{
 
 		if (false == pMouse->Get_picked())

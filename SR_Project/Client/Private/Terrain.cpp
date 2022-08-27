@@ -223,10 +223,6 @@ void CTerrain::Picking()
 			pPlayer->Set_PickingPoint(_float3(OutPos.x, OutPos.y+1, OutPos.z));
 		
 	}
-	if (pGameInstance->Key_Pressing(VK_RBUTTON))
-	{
-		//m_pVIBufferCom->UpTerrain(m_pTransformCom, &OutPos);
-	}
 
 
 	Safe_Release(pGameInstance);

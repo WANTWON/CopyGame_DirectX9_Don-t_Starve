@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "Inventory.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
@@ -51,6 +52,8 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	m_pGameInstance->Tick_Engine(fTimeDelta);
 	m_pCollider->Update_ColliderGroup();
+	CInventory_Manager::Get_Instance()->Tick(fTimeDelta);
+	CInventory_Manager::Get_Instance()->Late_Tick(fTimeDelta);
 
 #ifdef _DEBUG
 	m_fTimeAcc += fTimeDelta;
@@ -153,6 +156,7 @@ void CMainApp::Free()
 	Safe_Release(m_pCollider);
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pGameInstance);
+	CInventory_Manager::Get_Instance()->Destroy_Instance();
 	
 	CGameInstance::Release_Engine();
 }
