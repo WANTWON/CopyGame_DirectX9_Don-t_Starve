@@ -47,10 +47,12 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 	{
 		Default_Camera(fTimeDelta);
 	}
-	else
+	else if (m_eCamMode == CAM_PLAYER)
 	{
 		Player_Camera(fTimeDelta);
 	}
+	else
+		Turn_Camera(fTimeDelta);
 		
 
 	if (FAILED(Bind_OnGraphicDev()))
@@ -136,27 +138,73 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 	Safe_Release(pTarget);
 
 	m_pTransform->LookAt(m_TargetPos);
+	
 
-	if (pGameInstance->Key_Up('Q'))
+	if (m_eCamMode == CAM_PLAYER && pGameInstance->Key_Up('Q'))
+	{
 		m_iTurnCount++;
+		m_eCamMode = CAM_TURNMODE;
+		Safe_Release(pGameInstance);
+		return;
+	}
 
 	switch (m_iTurnCount % 4)
 	{
 	case 0:
-		m_pTransform->Follow_Target(m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
+		m_pTransform->Follow_Target( m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
 		break;
 	case 1:
-		m_pTransform->Follow_Target(m_TargetPos, _float3(m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		m_pTransform->Follow_Target( m_TargetPos, _float3(m_vDistance.z, m_vDistance.y, m_vDistance.x));
 		break;
 	case 2:
-		m_pTransform->Follow_Target(m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, -m_vDistance.z));
+		m_pTransform->Follow_Target( m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, -m_vDistance.z));
 		break;
 	case 3:
-		m_pTransform->Follow_Target(m_TargetPos, _float3(-m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		m_pTransform->Follow_Target( m_TargetPos, _float3(-m_vDistance.z, m_vDistance.y, m_vDistance.x));
 		break;
 	}
-	
-	
+
+
+	Safe_Release(pGameInstance);
+}
+
+void CCameraDynamic::Turn_Camera(_float fTimeDelta)
+{
+
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+	Safe_AddRef(pTarget);
+
+	_float3 m_TargetPos = pTarget->Get_Pos();
+	Safe_Release(pTarget);
+
+	_float3 NewTransPos(0, 0, 0);
+	switch (m_iTurnCount % 4)
+	{
+	case 0:
+		NewTransPos = _float3( m_vDistance.x, m_vDistance.y, m_vDistance.z);
+		break;
+	case 1:
+		NewTransPos = _float3(m_vDistance.z, m_vDistance.y, m_vDistance.x);
+		break;
+	case 2:
+		NewTransPos = _float3(m_vDistance.x, m_vDistance.y, -m_vDistance.z);
+		break;
+	case 3:
+		NewTransPos = _float3(-m_vDistance.z, m_vDistance.y, m_vDistance.x);
+		break;
+	}
+
+	m_pTransform->LookAt(m_TargetPos);
+	m_pTransform->Go_PosTarget(fTimeDelta, m_TargetPos, NewTransPos);
+
+
+	_float3 vDistance = NewTransPos - m_pTransform->Get_State(CTransform::STATE_POSITION);
+
+	if (vDistance.x < 0.5 && vDistance.y < 0.5 && vDistance.z < 0.5)
+		m_eCamMode = CAM_PLAYER;
 
 	Safe_Release(pGameInstance);
 }
