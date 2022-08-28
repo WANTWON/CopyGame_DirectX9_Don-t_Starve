@@ -199,11 +199,11 @@ void CCameraDynamic::Turn_Camera(_float fTimeDelta)
 
 	m_pTransform->LookAt(m_TargetPos);
 	m_pTransform->Go_PosTarget(fTimeDelta, m_TargetPos, NewTransPos);
-
+	NewTransPos += m_TargetPos;
 
 	_float3 vDistance = NewTransPos - m_pTransform->Get_State(CTransform::STATE_POSITION);
 
-	if (vDistance.x < 0.5 && vDistance.y < 0.5 && vDistance.z < 0.5)
+	if (fabsf(vDistance.x) < 0.5f && fabsf(vDistance.y) < 0.5f && fabsf(vDistance.z) < 0.5f)
 		m_eCamMode = CAM_PLAYER;
 
 	Safe_Release(pGameInstance);
