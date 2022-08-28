@@ -159,7 +159,9 @@
     <ClInclude Include="..\Public\Water.h">
       <Filter>02.GameObject\Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Equip_Animation.h" />
+    <ClInclude Include="..\Public\Equip_Animation.h">
+      <Filter>02.GameObject\Player\Equip_Anim</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -237,7 +239,9 @@
     <ClCompile Include="..\Private\Water.cpp">
       <Filter>02.GameObject\Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Equip_Animation.cpp" />
+    <ClCompile Include="..\Private\Equip_Animation.cpp">
+      <Filter>02.GameObject\Player\Equip_Anim</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
