@@ -63,6 +63,9 @@
     </Filter>
     <Filter Include="02.GameObject\UI\Status">
       <UniqueIdentifier>{fc83907d-7ac8-4b18-8db2-9cfa48e23244}</UniqueIdentifier>
+</Filter>
+    <Filter Include="02.GameObject\Player\Equip_Anim">
+      <UniqueIdentifier>{55813ade-5830-4af6-ac26-f780a6c7363a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +162,11 @@
     <ClInclude Include="..\Public\Playerhp.h">
       <Filter>02.GameObject\UI\Status</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Water.h">
+      <Filter>02.GameObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Equip_Animation.h" />
+ </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -236,6 +244,11 @@
     <ClCompile Include="..\Private\Playerhp.cpp">
       <Filter>02.GameObject\UI\Status</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Water.cpp">
+      <Filter>02.GameObject\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Equip_Animation.cpp" />
+ </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

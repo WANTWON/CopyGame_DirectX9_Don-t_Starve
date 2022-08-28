@@ -44,7 +44,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(TERRAINDESC TerrainDesc)
 		{
 			_uint	iIndex = i * m_TerrainDesc.m_iNumVerticesX + j;
 
-			m_pVertices[iIndex].vPosition = _float3(m_TerrainDesc.m_iPosVerticesX + j*m_TerrainDesc.m_fSizeX, 0.0f, m_TerrainDesc.m_iPosVerticesZ + i*m_TerrainDesc.m_fSizeZ);
+			m_pVertices[iIndex].vPosition = _float3(m_TerrainDesc.m_iPosVerticesX + j*m_TerrainDesc.m_fSizeX, 0, m_TerrainDesc.m_iPosVerticesZ + i*m_TerrainDesc.m_fSizeZ);
 			m_pVertices[iIndex].vTexture = _float2(j / (m_TerrainDesc.m_iNumVerticesX - 1.0f)*m_TerrainDesc.m_fTextureSize, i / (m_TerrainDesc.m_iNumVerticesZ - 1.0f)*m_TerrainDesc.m_fTextureSize);
 		}
 	}
