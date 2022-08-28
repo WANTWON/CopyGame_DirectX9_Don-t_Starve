@@ -9,7 +9,6 @@
 *.exp
 *.ilk
 *.exe
-*.lib
 *.pch
 *.suo
 *.res
