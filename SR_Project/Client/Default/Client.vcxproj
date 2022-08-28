@@ -163,6 +163,7 @@
     <ClInclude Include="..\public\Boulder.h" />
     <ClInclude Include="..\Public\Equipment_back.h" />
     <ClInclude Include="..\Public\Equipment_front.h" />
+    <ClInclude Include="..\Public\Equip_Animation.h" />
     <ClInclude Include="..\public\Grass.h" />
     <ClInclude Include="..\Public\Inventory.h" />
     <ClInclude Include="..\Public\MainInventory_back.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="..\private\Boulder.cpp" />
     <ClCompile Include="..\Private\Equipment_back.cpp" />
     <ClCompile Include="..\Private\Equipment_front.cpp" />
+    <ClCompile Include="..\Private\Equip_Animation.cpp" />
     <ClCompile Include="..\private\Grass.cpp" />
     <ClCompile Include="..\Private\Inventory.cpp" />
     <ClCompile Include="..\Private\MainInventory_back.cpp" />
