@@ -63,7 +63,7 @@
     </Filter>
     <Filter Include="02.GameObject\UI\Status">
       <UniqueIdentifier>{fc83907d-7ac8-4b18-8db2-9cfa48e23244}</UniqueIdentifier>
-</Filter>
+    </Filter>
     <Filter Include="02.GameObject\Player\Equip_Anim">
       <UniqueIdentifier>{55813ade-5830-4af6-ac26-f780a6c7363a}</UniqueIdentifier>
     </Filter>
@@ -166,7 +166,8 @@
       <Filter>02.GameObject\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Equip_Animation.h" />
- </ClInclude>
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -248,7 +249,8 @@
       <Filter>02.GameObject\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Equip_Animation.cpp" />
- </ClCompile>
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
