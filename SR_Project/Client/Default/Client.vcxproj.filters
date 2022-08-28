@@ -61,6 +61,9 @@
     <Filter Include="03.Mouse">
       <UniqueIdentifier>{22e28144-0102-4609-9f9e-e6c0be621428}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\UI\Status">
+      <UniqueIdentifier>{fc83907d-7ac8-4b18-8db2-9cfa48e23244}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -153,6 +156,9 @@
     <ClInclude Include="..\Public\Mouse.h">
       <Filter>03.Mouse</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Playerhp.h">
+      <Filter>02.GameObject\UI\Status</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -226,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Mouse.cpp">
       <Filter>03.Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Playerhp.cpp">
+      <Filter>02.GameObject\UI\Status</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

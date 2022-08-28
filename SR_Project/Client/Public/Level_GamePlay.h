@@ -28,7 +28,7 @@ public:
 	HRESULT Ready_Layer_Pont(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Equipment_back(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Equipment_front(const _tchar* pLayerTag);
-	
+	HRESULT Ready_Layer_Playerhp(const _tchar* pLayerTag);
 
 public:
 	static CLevel_GamePlay* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

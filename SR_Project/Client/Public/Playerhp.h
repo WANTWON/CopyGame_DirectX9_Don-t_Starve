@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Client_Defines.h"
 #include "GameObject.h"
 
@@ -11,12 +12,12 @@ END
 
 BEGIN(Client)
 
-class CEquipment_front final : public CGameObject
+class CPlayerhp final : public CGameObject
 {
 private:
-	CEquipment_front(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CEquipment_front(const CEquipment_front& rhs);
-	virtual ~CEquipment_front() = default;
+	CPlayerhp(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CPlayerhp(const CPlayerhp& rhs);
+	virtual ~CPlayerhp() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -40,26 +41,14 @@ private:
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
+	_uint texnum = 25;
+	_uint m_ihp = 100;
+
 public:
-	static CEquipment_front* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CPlayerhp* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
-	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr);
+	virtual CGameObject* Clone_Load(const _tchar * VIBufferTag, void * pArg = nullptr) override;
 	virtual void Free() override;
-
-	bool get_check() { return m_bcheck; }
-	void set_check(bool tof) { m_bcheck = tof; }
-	void plus_itemcount() { item_number = 6; }
-	void set_texnum(ITEMNAME texnumber) { texnum = texnumber; }
-	_uint get_item_number() { return item_number; }
-	void Use_item(ITEMNAME item);
-	int get_iNum() { return iNum; }
-
-private:
-	int* iNumber = nullptr;
-	int iNum = 0;
-	ITEMNAME texnum = ITEMNAME_SWORD;
-	_uint item_number = 0;//æ∆¿Ã≈€∞πºˆ
-	bool m_bcheck = true;
 };
 
 END
