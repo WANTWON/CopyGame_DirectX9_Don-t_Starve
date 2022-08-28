@@ -27,8 +27,8 @@ HRESULT CPlayerhp::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 100.f;
-	m_fSizeY = 100.f;
+	m_fSizeX = 80.f;
+	m_fSizeY = 80.f;
 	m_fX = 1100.f;
 	m_fY = 200.f;
 
