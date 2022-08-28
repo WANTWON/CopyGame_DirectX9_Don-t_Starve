@@ -89,10 +89,10 @@ void CCameraDynamic::Default_Camera(_float fTimeDelta)
 		m_pTransform->Go_Straight(fTimeDelta*m_lMouseWheel*0.01f);
 
 	if (GetKeyState('Q') < 0)
-		m_pTransform->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
+		m_pTransform->Turn(_float3(0, 1 ,0), fTimeDelta);
 
 	if (GetKeyState('E') < 0)
-		m_pTransform->Turn(_float3(0.f, 1.f, 0.f), -fTimeDelta);
+		m_pTransform->Turn(_float3(0, 1, 0), -fTimeDelta);
 
 	if (GetKeyState(VK_UP) < 0)
 		m_pTransform->Go_Straight(fTimeDelta);
@@ -136,7 +136,27 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 	Safe_Release(pTarget);
 
 	m_pTransform->LookAt(m_TargetPos);
-	m_pTransform->Follow_Target(m_TargetPos,  m_vDistance);
+
+	if (pGameInstance->Key_Up('Q'))
+		m_iTurnCount++;
+
+	switch (m_iTurnCount % 4)
+	{
+	case 0:
+		m_pTransform->Follow_Target(m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
+		break;
+	case 1:
+		m_pTransform->Follow_Target(m_TargetPos, _float3(m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		break;
+	case 2:
+		m_pTransform->Follow_Target(m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, -m_vDistance.z));
+		break;
+	case 3:
+		m_pTransform->Follow_Target(m_TargetPos, _float3(-m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		break;
+	}
+	
+	
 
 	Safe_Release(pGameInstance);
 }
