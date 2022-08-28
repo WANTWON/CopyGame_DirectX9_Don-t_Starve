@@ -12,12 +12,11 @@ class CCollider;
 END
 
 BEGIN(Client)
-
 class CPlayer final : public CGameObject
 {
 public:
-	enum class DIR_STATE { DIR_DOWN, DIR_UP, DIR_RIGHT, DIR_LEFT, PLAYER_END};
-	enum class ACTION_STATE{ IDLE, MOVE, MINING, AXE, ATTACK, ACTION_END};
+
+	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, ACTION_END };
 	typedef enum class InteractionKey {
 		KEY_LBUTTON, //VK_LBUTTON
 		KEY_RBUTTON, //VK_RBUTTON
@@ -42,19 +41,24 @@ public:
 		KEY_END
 	}INTERACTKEY;
 
-	enum class WEAPON_TYPE{ WEAPON_HAND, WEAPON_SWORD, WEAPON_END};
+
 public:
 	typedef struct tagPlayerStat
 	{
 		_float fSpeed = 0.f;
-		_float fMental = 0.f;
-		_float fHungry = 0.f;
-		_float fAtk = 0.f;
-	 }PLAYERSTAT;
+		_float fMaxHealth = 100.f;
+		_float fCurrentHealth = fMaxHealth;
+		_float fMaxMental = 100.f;
+		_float fCurrentMental = fMaxMental;
+		_float fMaxHungry = 100.f;
+		_float fCurrentHungry = 100.f;
+		_float fAtk = 20.f;
+		_float fArmor = 0.f;
+	}PLAYERSTAT;
 
 	/*typedef struct tagActData {
-		_int iKeyNum;
-		_bool bIsKeyDown;
+	_int iKeyNum;
+	_bool bIsKeyDown;
 	}ACTDATA;*/
 
 private:
@@ -75,12 +79,25 @@ public:
 	void Move_to_PickingPoint(_float fTimedelta);
 	void Set_PickingPoint(_float3 PickingPoint) { m_vPickingPoint = PickingPoint; m_bPicked = true; m_bInputKey = false; m_bArrive = false; };
 
+public: /*Get&Set*/
+		//Gets
+
+
+		//Sets
+	void	Set_HP(_float _fHP) { m_tStat.fCurrentHealth += _fHP; }
+	void	Set_Atk(_float _fAtk) { m_tStat.fAtk += _fAtk; }
+	void	Set_Hungry(_float _fHungry) { m_tStat.fCurrentHungry += _fHungry; }
+	void	Set_Mental(_float _fMental) { m_tStat.fCurrentMental += _fMental; }
+	void	Set_Speed(_float _fSpeed) { m_tStat.fSpeed += _fSpeed; }
+	void	Set_Armor(_float _fArmor) { m_tStat.fArmor += _fArmor; }
+	void	Set_WeaponType(WEAPON_TYPE _eWeapon) { m_eWeaponType = _eWeapon; }
+
 private:/*Setup*/
 	HRESULT SetUp_Components();
 	HRESULT SetUp_KeySettings();
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
-	
+
 private: /**Actions*/
 	void GetKeyDown(_float _fTimeDelta);
 	bool ResetAction(_float _fTimeDelta);
@@ -93,13 +110,25 @@ private: /**Actions*/
 	void Move_Left(_float _fTimeDelta);
 	//Actions
 	void Attack(_float _fTimeDelta);
+	void Mining(_float _fTimeDelta);
+	void Chop(_float _fTimeDelta);
 
+	void Multi_Action(_float _fTimeDelta); //멀티키
+										   //Passive
+	void Decrease_Stat(void); //일정시간마다 Hunger 감소
+
+	void Detect_Enemy(void);
+	//Test
+	void Test_Func(_int _iNum);
+	void Test_Debug(_float fTimeDelta);
+	//void Test_Attack()
 private: /*For TextureCom */
 	HRESULT Texture_Clone();
 	HRESULT Change_Texture(const _tchar* LayerTag);
 
 private: /* For TransformCom*/
 	void SetUp_BillBoard();
+
 
 
 private: /* For.Components */
@@ -110,18 +139,15 @@ private: /* For.Components */
 	CCollider*				m_pColliderCom = nullptr;
 	vector<CTexture*>       m_vecTexture;
 
-
-private:
+private: /*State*/
 	DIR_STATE				m_eDirState = DIR_STATE::DIR_DOWN;
 	DIR_STATE				m_ePreDirState = DIR_STATE::DIR_DOWN;
 	ACTION_STATE			m_eState = ACTION_STATE::IDLE;
 	ACTION_STATE			m_ePreState = ACTION_STATE::IDLE;
 	WEAPON_TYPE				m_eWeaponType = WEAPON_TYPE::WEAPON_HAND;
 
+private: /*others*/
 	const _tchar*	m_TimerTag = TEXT("");
-
-	//_uint			m_iKeyNum;
-	_bool			m_bInverseScale = false;
 	_float			m_fTerrain_Height = 0.f;
 
 	/* for Picking Test */
@@ -132,8 +158,10 @@ private:
 
 	map<INTERACTKEY, _int> m_KeySets;
 
-private: 
+	PLAYERSTAT		m_tStat;
 
+private: //Test
+	class CEquip_Animation*	m_Equipment = nullptr;
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
