@@ -49,7 +49,7 @@ public:
 
 public:
 	void LookAt(_float3 TargetPos);
-	void Follow_Target(_float3 TargetPos, _float3 distance);
+	void Follow_Target(_float fTimeDelta, _float3 TargetPos, _float3 distance);
 	
 
 public:

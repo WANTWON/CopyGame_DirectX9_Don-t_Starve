@@ -82,12 +82,12 @@ void CCameraDynamic::Default_Camera(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 
 	if (m_lMouseWheel > 0)
-		m_lMouseWheel -= 0.001;
+		m_lMouseWheel -= (_long)0.001;
 	if (m_lMouseWheel < 0)
-		m_lMouseWheel += 0.001;
+		m_lMouseWheel += (_long)0.001;
 
 
-	if (m_lMouseWheel += pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05)
+	if (m_lMouseWheel += (_long)(pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
 		m_pTransform->Go_Straight(fTimeDelta*m_lMouseWheel*0.01f);
 
 	if (GetKeyState('Q') < 0)
@@ -117,12 +117,12 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 
 	if (m_lMouseWheel > 0)
-		m_lMouseWheel -= 0.001;
+		m_lMouseWheel -= (_long)0.001;
 	if (m_lMouseWheel < 0)
-		m_lMouseWheel += 0.001;
+		m_lMouseWheel += (_long)0.001;
 
 
-	if (m_lMouseWheel += pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05)
+	if (m_lMouseWheel += (_long)(pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
 	{
 		m_vDistance.y -= fTimeDelta*m_lMouseWheel*0.01f;
 		m_vDistance.z += fTimeDelta*m_lMouseWheel*0.01f;
@@ -148,19 +148,21 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 		return;
 	}
 
+	
+
 	switch (m_iTurnCount % 4)
 	{
 	case 0:
-		m_pTransform->Follow_Target( m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
 		break;
 	case 1:
-		m_pTransform->Follow_Target( m_TargetPos, _float3(m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		m_pTransform->Follow_Target(fTimeDelta,m_TargetPos, _float3(m_vDistance.z, m_vDistance.y, m_vDistance.x));
 		break;
 	case 2:
-		m_pTransform->Follow_Target( m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, -m_vDistance.z));
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, -m_vDistance.z));
 		break;
 	case 3:
-		m_pTransform->Follow_Target( m_TargetPos, _float3(-m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		m_pTransform->Follow_Target(fTimeDelta,m_TargetPos, _float3(-m_vDistance.z, m_vDistance.y, m_vDistance.x));
 		break;
 	}
 
