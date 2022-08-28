@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "..\Public\Playerhp.h"
+#include "..\Public\Playerhunger.h"
 #include "GameInstance.h"
 #include "Player.h"
 #include "Inventory.h"
 
-CPlayerhp::CPlayerhp(LPDIRECT3DDEVICE9 pGraphic_Device)
+CPlayerhunger::CPlayerhunger(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CPlayerhp::CPlayerhp(const CPlayerhp & rhs)
+CPlayerhunger::CPlayerhunger(const CPlayerhunger & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CPlayerhp::Initialize_Prototype()
+HRESULT CPlayerhunger::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -22,7 +22,7 @@ HRESULT CPlayerhp::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CPlayerhp::Initialize(void* pArg)
+HRESULT CPlayerhunger::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -43,7 +43,7 @@ HRESULT CPlayerhp::Initialize(void* pArg)
 	return S_OK;
 }
 
-int CPlayerhp::Tick(_float fTimeDelta)
+int CPlayerhunger::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
@@ -51,28 +51,28 @@ int CPlayerhp::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 
-	
-		pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fMaxHealth));
+
+	pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fMaxHealth));
 	Safe_AddRef(pGameInstance);
 	Safe_AddRef(pinv);
 	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
-	texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fMaxHealth)/2;
-		
+	texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fMaxHealth) / 2;
+
 	Safe_Release(pGameInstance);
 	Safe_AddRef(pinv);
-	
+
 	/*if (GetKeyState(VK_BACK) & 0x8000)
 	{
-		--m_ihp;
+	--m_ihp;
 	}
 
 	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
-		++m_ihp;
+	++m_ihp;
 	}*/
 
 
-	
+
 	/*RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
@@ -90,7 +90,7 @@ int CPlayerhp::Tick(_float fTimeDelta)
 	return OBJ_NOEVENT;
 }
 
-void CPlayerhp::Late_Tick(_float fTimeDelta)
+void CPlayerhunger::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
@@ -98,7 +98,7 @@ void CPlayerhp::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 }
 
-HRESULT CPlayerhp::Render()
+HRESULT CPlayerhunger::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
@@ -128,7 +128,7 @@ HRESULT CPlayerhp::Render()
 	return S_OK;
 }
 
-HRESULT CPlayerhp::SetUp_Components()
+HRESULT CPlayerhunger::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -157,7 +157,7 @@ HRESULT CPlayerhp::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CPlayerhp::SetUp_RenderState()
+HRESULT CPlayerhunger::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -171,7 +171,7 @@ HRESULT CPlayerhp::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CPlayerhp::Release_RenderState()
+HRESULT CPlayerhunger::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -179,38 +179,38 @@ HRESULT CPlayerhp::Release_RenderState()
 	return S_OK;
 }
 
-CPlayerhp * CPlayerhp::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CPlayerhunger * CPlayerhunger::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CPlayerhp*	pInstance = new CPlayerhp(pGraphic_Device);
+	CPlayerhunger*	pInstance = new CPlayerhunger(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CPlayerhp"));
+		ERR_MSG(TEXT("Failed to Created : CPlayerhunger"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CPlayerhp::Clone(void* pArg)
+CGameObject * CPlayerhunger::Clone(void* pArg)
 {
-	CPlayerhp*	pInstance = new CPlayerhp(*this);
+	CPlayerhunger*	pInstance = new CPlayerhunger(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CPlayerhp"));
+		ERR_MSG(TEXT("Failed to Cloned : CPlayerhunger"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CPlayerhp::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+CGameObject * CPlayerhunger::Clone_Load(const _tchar * VIBufferTag, void * pArg)
 {
 	return nullptr;
 }
 
-void CPlayerhp::Free()
+void CPlayerhunger::Free()
 {
 	__super::Free();
 

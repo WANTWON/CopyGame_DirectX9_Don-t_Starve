@@ -57,7 +57,7 @@ public:
 private:
 	int* iNumber = nullptr;
 	int iNum = 0;
-	ITEMNAME texnum = ITEMNAME_SWORD;
+	ITEMNAME texnum = ITEMNAME_END;
 	_uint item_number = 0;//아이템갯수
 	bool m_bcheck = true;
 };

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\Inventory.h"
 #include "Mouse.h"
+#include "Player.h"
+#include "GameInstance.h"
 
 IMPLEMENT_SINGLETON(CInventory_Manager)
 CInventory_Manager::CInventory_Manager()
@@ -140,7 +142,45 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 
 	}
 
-	Safe_Release(pMouse);
+	//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+
+	//Safe_AddRef(pGameInstance);
+
+	//pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")) != nullptr;
+
+	//int playerhp = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fMaxHealth);
+	
+
+	for (auto& p : m_Hppontlist)
+	{
+		if ( p->get_iNum() == 0)
+		{
+			
+			p->set_pont_num(m_ihp/100);
+			
+			
+		}
+
+		if ( p->get_iNum() == 1)
+		{
+			p->set_pont_num((m_ihp%100)/10);
+
+		
+		}
+
+		if (p->get_iNum() == 2)
+		{
+			p->set_pont_num(m_ihp%10);
+
+	
+
+		}
+
+	
+	}
+
+	//Safe_Release(pMouse);
 
 
 }

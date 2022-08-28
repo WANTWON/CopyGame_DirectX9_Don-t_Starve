@@ -47,6 +47,10 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Playerhp(TEXT("Layer_Playerhp"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_HpPont(TEXT("Layer_HpPont"))))
+		return E_FAIL;
+	
+
 	return S_OK;
 }
 
@@ -270,6 +274,26 @@ HRESULT CLevel_GamePlay::Ready_Layer_Pont(const _tchar * pLayerTag)
 		int number = i;
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_HpPont(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+
+	for (int i = 0; i < 3; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_HpPont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}

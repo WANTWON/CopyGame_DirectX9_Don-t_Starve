@@ -179,6 +179,8 @@
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\Playerhp.h" />
+    <ClInclude Include="..\Public\Playerhp_pont.h" />
+    <ClInclude Include="..\Public\Playerhunger.h" />
     <ClInclude Include="..\Public\Pont.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -210,6 +212,8 @@
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Playerhp.cpp" />
+    <ClCompile Include="..\Private\Playerhp_pont.cpp" />
+    <ClCompile Include="..\Private\Playerhunger.cpp" />
     <ClCompile Include="..\Private\Pont.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />

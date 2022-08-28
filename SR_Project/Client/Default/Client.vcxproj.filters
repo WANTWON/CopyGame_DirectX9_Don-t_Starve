@@ -64,6 +64,12 @@
     <Filter Include="02.GameObject\Player\Equip_Anim">
       <UniqueIdentifier>{55813ade-5830-4af6-ac26-f780a6c7363a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\UI\Playerhp">
+      <UniqueIdentifier>{b7a321ea-c5a7-4fba-912a-3ec0f1ffff5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UI\Playerhunger">
+      <UniqueIdentifier>{64733c64-827d-43a7-922b-f68e5e8f330a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -162,6 +168,15 @@
     <ClInclude Include="..\Public\Equip_Animation.h">
       <Filter>02.GameObject\Player\Equip_Anim</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Playerhp.h">
+      <Filter>02.GameObject\UI\Playerhp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Playerhp_pont.h">
+      <Filter>02.GameObject\UI\Playerhp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Playerhunger.h">
+      <Filter>02.GameObject\UI\Playerhunger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -241,6 +256,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Equip_Animation.cpp">
       <Filter>02.GameObject\Player\Equip_Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Playerhp.cpp">
+      <Filter>02.GameObject\UI\Playerhp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Playerhp_pont.cpp">
+      <Filter>02.GameObject\UI\Playerhp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Playerhunger.cpp">
+      <Filter>02.GameObject\UI\Playerhunger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

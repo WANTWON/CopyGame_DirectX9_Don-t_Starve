@@ -12,12 +12,12 @@ END
 
 BEGIN(Client)
 
-class CPlayerhp final : public CGameObject
+class CPlayerhunger final : public CGameObject
 {
 private:
-	CPlayerhp(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CPlayerhp(const CPlayerhp& rhs);
-	virtual ~CPlayerhp() = default;
+	CPlayerhunger(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CPlayerhunger(const CPlayerhunger& rhs);
+	virtual ~CPlayerhunger() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -42,10 +42,10 @@ private:
 	HRESULT Release_RenderState();
 
 	_uint texnum = 0;
-	_uint m_ihp ;
+	_uint m_ihp;
 
 public:
-	static CPlayerhp* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CPlayerhunger* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual CGameObject* Clone_Load(const _tchar * VIBufferTag, void * pArg = nullptr) override;
 	virtual void Free() override;

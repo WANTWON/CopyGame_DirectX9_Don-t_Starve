@@ -82,6 +82,7 @@ public:
 public: /*Get&Set*/
 		//Gets
 
+	PLAYERSTAT Get_Player_Stat() { return m_tStat; }
 
 		//Sets
 	void	Set_HP(_float _fHP) { m_tStat.fCurrentHealth += _fHP; }

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Client_Defines.h"
 #include "GameObject.h"
 
@@ -12,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CPlayerhp final : public CGameObject
+class CPlayerhp_pont final : public CGameObject
 {
 private:
-	CPlayerhp(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CPlayerhp(const CPlayerhp& rhs);
-	virtual ~CPlayerhp() = default;
+	CPlayerhp_pont(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CPlayerhp_pont(const CPlayerhp_pont& rhs);
+	virtual ~CPlayerhp_pont() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -41,14 +40,22 @@ private:
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
-	_uint texnum = 0;
-	_uint m_ihp ;
-
 public:
-	static CPlayerhp* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CPlayerhp_pont* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual CGameObject* Clone_Load(const _tchar * VIBufferTag, void * pArg = nullptr) override;
 	virtual void Free() override;
+
+	bool get_check() { return m_bcheck; }
+	int get_iNum() { return iNum; }
+	void set_check(bool tof) { m_bcheck = tof; }
+	void set_pont_num(int num) { texnum = num; }
+
+private:
+	int* iNumber = nullptr;
+	int iNum = 0;
+	int texnum = 0;
+	bool m_bcheck = true;
 };
 
 END
