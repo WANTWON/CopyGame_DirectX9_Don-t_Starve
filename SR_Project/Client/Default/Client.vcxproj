@@ -182,6 +182,7 @@
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\Tree.h" />
     <ClInclude Include="..\Public\MainInventory.h" />
+    <ClInclude Include="..\Public\Water.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -210,6 +211,7 @@
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\Tree.cpp" />
     <ClCompile Include="..\Private\MainInventory.cpp" />
+    <ClCompile Include="..\Private\Water.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

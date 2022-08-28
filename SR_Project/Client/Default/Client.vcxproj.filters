@@ -153,6 +153,9 @@
     <ClInclude Include="..\Public\Mouse.h">
       <Filter>03.Mouse</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Water.h">
+      <Filter>02.GameObject\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -226,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Mouse.cpp">
       <Filter>03.Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Water.cpp">
+      <Filter>02.GameObject\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
