@@ -121,10 +121,10 @@ HRESULT CMonster::SetUp_Components(void* pArg)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Monster"))))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Monster"))))
+	//	return E_FAIL;
 
-	m_TimerTag = TEXT("Timer_Monster");
+	//m_TimerTag = TEXT("Timer_Monster");
 
 	Safe_Release(pGameInstance);
 

@@ -84,6 +84,7 @@ public:
 
 public:/*Picking*/
 	_float3 Get_Pos();
+	_float3 Get_Look();
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
 	void Move_to_PickingPoint(_float fTimedelta);
 	void Set_PickingPoint(_float3 PickingPoint) { m_vPickingPoint = PickingPoint; m_bPicked = true; m_bInputKey = false; m_bArrive = false; };
@@ -91,6 +92,7 @@ public:/*Picking*/
 public: /*Get&Set*/
 		//Gets
 
+	PLAYERSTAT Get_Player_Stat() { return m_tStat; }
 
 		//Sets
 	void	Set_HP(_float _fHP) { m_tStat.fCurrentHealth += _fHP; }

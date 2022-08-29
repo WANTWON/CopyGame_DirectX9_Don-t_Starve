@@ -4,6 +4,7 @@
 #include "Inventory.h"
 #include "Mouse.h"
 #include "KeyMgr.h"
+#include "Player.h"
 
 
 CMainInventory_front::CMainInventory_front(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -32,7 +33,7 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	
+
 
 	iNumber = (int*)pArg;
 
@@ -51,8 +52,30 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
-	if(iNum ==2 )
-	texnum = ITEMNAME_WOOD;
+	if (iNum == 0)
+	{
+		texnum = ITEMNAME_ARMOR;
+	}
+
+	if (iNum == 1)
+	{
+		texnum = ITEMNAME_AXE;
+	}
+
+	if (iNum == 2)
+	{
+		texnum = ITEMNAME_HELMAT;
+	}
+
+	if (iNum == 3)
+	{
+		texnum = ITEMNAME_BAG;
+	}
+
+	if (iNum == 4)
+	{
+		texnum = ITEMNAME_BERRY;
+	}
 
 	
 
@@ -73,6 +96,47 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
+
+	
+
+	if (texnum == ITEMNAME_ARMOR)
+	{
+		m_itemtype = ITEM_ARMOR;
+	}
+	if (texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TOARCH || texnum == ITEMNAME_WAND || texnum == ITEMNAME_PICK|| texnum == ITEMNAME_HAMSTICK)
+	{
+		m_itemtype = ITEM_HAND;
+	}
+
+	if (texnum == ITEMNAME_HELMAT)
+	{
+		m_itemtype = ITEM_HAT;
+	}
+
+	if (texnum == ITEMNAME_BAG)
+	{
+		m_itemtype = ITEM_BAG;
+	}
+
+
+	if (texnum == ITEMNAME_BERRY || texnum == ITEMNAME_CARROT || texnum == ITEMNAME_MEAT || texnum == ITEMNAME_MONSTERMEAT)
+	{
+		m_itemtype = ITEM_FOOD;
+	}
+
+
+	if (m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT || m_itemtype == ITEM_HAND || m_itemtype == ITEM_ARMOR)
+	{
+		m_bpontcheck = false;
+
+	}
+
+
+
+
+
+
+
 
 	if (PtInRect(&rcRect, ptMouse))
 	{
@@ -97,14 +161,14 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 	CMouse*			pMouse = CMouse::Get_Instance();
 	Safe_AddRef(pMouse);
-	
+
 	RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
-	
+
 
 
 
@@ -112,14 +176,14 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 	if (!PtInRect(&rcRect, ptMouse))
 	{
-		
+
 		m_fSizeX = 40;
 		m_fSizeY = 40;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	}
 
-		
-	
+
+
 	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
 
@@ -129,7 +193,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 			pMouse->Set_Item_name(texnum);
 			pMouse->Set_index(iNum);
 			pMouse->Set_picked(true);
-			
+
 
 		}
 
@@ -144,16 +208,35 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 	}
 
-		
-		
+	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_RBUTTON)) //付快胶 快努腐贸府
+	{
+		if (m_itemtype == ITEM_ARMOR || m_itemtype == ITEM_HAND || m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT)
+		{
+			pMouse->Set_Item_type(m_itemtype);
+			pMouse->Set_Equipment_name(texnum);
+			set_texnum(ITEMNAME_END);
+
+		}
+
+		minus_itemcount();
+
+		if (m_itemtype == ITEM_FOOD)
+		{
+			Use_item(texnum);
+		}
+
+	}
+
+
+
 	Safe_Release(pMouse);
-	
-	
+
+
 
 
 	if (nullptr != m_pRendererCom)//&&m_bcheck)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
-	
+
 	//set_check(false);
 }
 
@@ -161,30 +244,30 @@ HRESULT CMainInventory_front::Render()
 {
 	//if (m_bcheck)
 	//{
-		if (FAILED(__super::Render()))
-			return E_FAIL;
+	if (FAILED(__super::Render()))
+		return E_FAIL;
 
-		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-			return E_FAIL;
+	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+		return E_FAIL;
 
-		_float4x4		ViewMatrix;
-		D3DXMatrixIdentity(&ViewMatrix);
+	_float4x4		ViewMatrix;
+	D3DXMatrixIdentity(&ViewMatrix);
 
-		m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
-		m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
-			return E_FAIL;
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+		return E_FAIL;
 
-		if (FAILED(SetUp_RenderState()))
-			return E_FAIL;
+	if (FAILED(SetUp_RenderState()))
+		return E_FAIL;
 
-		m_pVIBufferCom->Render();
+	m_pVIBufferCom->Render();
 
-		if (FAILED(Release_RenderState()))
-			return E_FAIL;
+	if (FAILED(Release_RenderState()))
+		return E_FAIL;
 	//}
-	
+
 
 
 
@@ -287,14 +370,31 @@ void CMainInventory_front::Free()
 
 void CMainInventory_front::Use_item(ITEMNAME item)
 {
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
 	switch (item)
 	{
 	case ITEMNAME_CARROT:
-		CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
+		
 
-		Safe_Release(pGameInstance);
+
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_HP(10));
+        minus_itemcount();
+		break;
+
+
+	case ITEMNAME_BERRY:
+		
+
+
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_Hungry(10));
+	     minus_itemcount();
+		break;
+
+		
 
 	}
 
+
+	Safe_Release(pGameInstance);
 }

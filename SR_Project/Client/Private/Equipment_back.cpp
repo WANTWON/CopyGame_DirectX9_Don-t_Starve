@@ -59,15 +59,15 @@ int CEquipment_back::Tick(_float fTimeDelta)
 
 	if (PtInRect(&rcRect, ptMouse))
 	{
-		m_fSizeX = 55.f;
-		m_fSizeY = 55.f;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+	m_fSizeX = 55.f;
+	m_fSizeY = 55.f;
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
-		
+
 	}*/
 
-	
+
 
 	return OBJ_NOEVENT;
 }

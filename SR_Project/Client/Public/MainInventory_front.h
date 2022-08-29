@@ -44,23 +44,28 @@ private:
 public:
 	static CMainInventory_front* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
-	virtual CGameObject* Clone_Load(const _tchar * VIBufferTag, void * pArg = nullptr) override;
+	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr);
 	virtual void Free() override;
 
 	bool get_check() { return m_bcheck; }
-	void set_check(bool tof) { m_bcheck = tof ; }
-	void plus_itemcount() { item_number = 6; }
+	bool get_pontcheck() { return m_bpontcheck; }
+	void set_check(bool tof) { m_bcheck = tof; }
+	void plus_itemcount() { ++item_number; }
+	void minus_itemcount() { --item_number; }
 	void set_texnum(ITEMNAME texnumber) { texnum = texnumber; }
+	ITEMNAME get_texnum() { return texnum; }
 	_uint get_item_number() { return item_number; }
 	void Use_item(ITEMNAME item);
-	int get_iNum() { return iNum;  }
+	int get_iNum() { return iNum; }
 
 private:
 	int* iNumber = nullptr;
 	int iNum = 100;
 	ITEMNAME texnum = ITEMNAME_CARROT;
-	_uint item_number = 0;//æ∆¿Ã≈€∞πºˆ
+	ITEMID m_itemtype = ITEM_END;
+	_uint item_number = 4;//æ∆¿Ã≈€∞πºˆ
 	bool m_bcheck = false;
+	bool m_bpontcheck = true;
 };
 
 END

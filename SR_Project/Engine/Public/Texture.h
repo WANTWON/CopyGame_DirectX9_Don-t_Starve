@@ -31,7 +31,7 @@ public:
 	HRESULT Bind_OnGraphicDev(_uint iIndex = 0);
 
 public:
-	void MoveFrame(const _tchar* TimerTag);
+	bool MoveFrame(const _tchar* TimerTag, _bool bLoop = true);
 	void Set_Frame(int iStartTex, int iEndTex, int iSpeed);
 	void Set_ZeroFrame() { m_TextureDesc.m_iCurrentTex = 0; }
 	TEXTUREDESC& Get_Frame() { return m_TextureDesc;}
