@@ -23,6 +23,7 @@ public:
 		const _tchar* pTexturePrototype;
 		ITEMNAME eItemName;
 	} ITEMDESC;
+
 private:
 	CItem(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CItem(const CItem& rhs);

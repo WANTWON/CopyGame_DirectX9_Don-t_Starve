@@ -63,6 +63,10 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	m_Equipment->Set_TargetPos(Get_Pos());
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+
 	return OBJ_NOEVENT;
 }
 
@@ -74,10 +78,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
-
 
 
 	if (GetKeyState(VK_BACK) & 0x8000)
@@ -111,6 +111,8 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_ITEM, this) && (GetKeyState(VK_SPACE) < 0))
 	{
+
+
 	for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
 	{
 	if((*iter)->get_texnum() == (당신이 먹은 아이템 이넘값)

@@ -134,7 +134,7 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 
 
 
-
+	
 
 
 
@@ -168,6 +168,8 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
+
+
 
 
 
@@ -218,7 +220,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 		}
 
-		minus_itemcount();
+		//minus_itemcount();
 
 		if (m_itemtype == ITEM_FOOD)
 		{
@@ -232,9 +234,23 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	Safe_Release(pMouse);
 
 
+	if (texnum == ITEMNAME_END)
+	{
+		//set_check(false);
+	}
 
 
-	if (nullptr != m_pRendererCom)//&&m_bcheck)
+	if (item_number <= 0)
+	{
+		m_bpontcheck = false;
+		m_bcheck == false;
+		item_number = 0;
+		set_texnum(ITEMNAME_END);
+
+	}
+
+
+	if (nullptr != m_pRendererCom&&m_bcheck == true)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	//set_check(false);
@@ -242,8 +258,8 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 HRESULT CMainInventory_front::Render()
 {
-	//if (m_bcheck)
-	//{
+	if (m_bcheck == true)
+	{
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -266,7 +282,7 @@ HRESULT CMainInventory_front::Render()
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
-	//}
+	}
 
 
 
@@ -379,7 +395,8 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 
 
 		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_HP(10));
-        minus_itemcount();
+		item_number -= 1;
+        //minus_itemcount();
 		break;
 
 

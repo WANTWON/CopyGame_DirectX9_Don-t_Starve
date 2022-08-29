@@ -147,9 +147,6 @@
     <ClInclude Include="..\Public\MainInventory_back.h">
       <Filter>02.GameObject\UI\Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MainInventory_front.h">
-      <Filter>02.GameObject\UI\Inventory</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Inventory.h">
       <Filter>02.GameObject\UI\Manager</Filter>
     </ClInclude>
@@ -200,6 +197,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Spider.h">
       <Filter>02.GameObject\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainInventory_front.h">
+      <Filter>02.GameObject\UI\Inventory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

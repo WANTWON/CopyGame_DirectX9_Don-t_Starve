@@ -63,8 +63,8 @@ private:
 	int iNum = 100;
 	ITEMNAME texnum = ITEMNAME_CARROT;
 	ITEMID m_itemtype = ITEM_END;
-	_uint item_number = 4;//아이템갯수
-	bool m_bcheck = false;
+	_uint item_number = 5;//아이템갯수
+	bool m_bcheck = true;
 	bool m_bpontcheck = true;
 };
 
