@@ -31,7 +31,7 @@ HRESULT CPlayerhp::Initialize(void* pArg)
 
 	m_fSizeX = 80.f;
 	m_fSizeY = 80.f;
-	m_fX = 1100.f;
+	m_fX = 1145.f;
 	m_fY = 200.f;
 
 	if (FAILED(SetUp_Components()))
@@ -52,11 +52,11 @@ int CPlayerhp::Tick(_float fTimeDelta)
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 
 	
-		pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fMaxHealth));
+		pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
 	Safe_AddRef(pGameInstance);
 	Safe_AddRef(pinv);
 	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
-	texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fMaxHealth)/2;
+	texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth)/2;
 		
 	Safe_Release(pGameInstance);
 	Safe_AddRef(pinv);
@@ -112,7 +112,7 @@ HRESULT CPlayerhp::Render()
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(50-texnum)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))

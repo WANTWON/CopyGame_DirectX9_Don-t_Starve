@@ -82,8 +82,12 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	if (GetKeyState(VK_BACK) & 0x8000)
 	{
-	--m_tStat.fMaxHealth;
+	--m_tStat.fCurrentHealth;
+	--m_tStat.fCurrentHungry;
+	--m_tStat.fCurrentMental;
 	}
+
+
 	//추후에 아이템 만들어지고 플레이어가 아이템과 닿았을떄 획득하는 상호작용을 마친후에 인벤토리에 들어오는건 아래코드 그대로 쓰시면 작동합니다!!
 	//#include "Inven.h" 포함하시고
 	/*CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();

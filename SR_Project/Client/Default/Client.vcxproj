@@ -181,6 +181,9 @@
     <ClInclude Include="..\Public\Playerhp.h" />
     <ClInclude Include="..\Public\Playerhp_pont.h" />
     <ClInclude Include="..\Public\Playerhunger.h" />
+    <ClInclude Include="..\Public\Playerhunger_pont.h" />
+    <ClInclude Include="..\Public\PlayerMentality.h" />
+    <ClInclude Include="..\Public\PlayerMentality_pont.h" />
     <ClInclude Include="..\Public\Pont.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -214,6 +217,9 @@
     <ClCompile Include="..\Private\Playerhp.cpp" />
     <ClCompile Include="..\Private\Playerhp_pont.cpp" />
     <ClCompile Include="..\Private\Playerhunger.cpp" />
+    <ClCompile Include="..\Private\Playerhunger_pont.cpp" />
+    <ClCompile Include="..\Private\PlayerMentality.cpp" />
+    <ClCompile Include="..\Private\PlayerMentality_pont.cpp" />
     <ClCompile Include="..\Private\Pont.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />

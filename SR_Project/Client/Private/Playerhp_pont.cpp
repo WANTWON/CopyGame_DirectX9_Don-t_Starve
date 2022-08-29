@@ -142,7 +142,7 @@ HRESULT CPlayerhp_pont::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pont"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_HpPont"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -193,7 +193,7 @@ CPlayerhp_pont * CPlayerhp_pont::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : Prototype_Component_Texture_Layer_HpPont"));
+		ERR_MSG(TEXT("Failed to Created : CPlayerhp_pont"));
 		Safe_Release(pInstance);
 	}
 
@@ -206,7 +206,7 @@ CGameObject * CPlayerhp_pont::Clone(void* pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : Prototype_Component_Texture_Layer_HpPont"));
+		ERR_MSG(TEXT("Failed to Cloned : CPlayerhp_pont"));
 		Safe_Release(pInstance);
 	}
 	CInventory_Manager::Get_Instance()->Get_playerhp_Pont_list()->push_back(pInstance);

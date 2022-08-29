@@ -70,6 +70,9 @@
     <Filter Include="02.GameObject\UI\Playerhunger">
       <UniqueIdentifier>{64733c64-827d-43a7-922b-f68e5e8f330a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\UI\PlayerMentality">
+      <UniqueIdentifier>{2e42577c-a502-484f-b8e5-c72f548bafae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -177,6 +180,15 @@
     <ClInclude Include="..\Public\Playerhunger.h">
       <Filter>02.GameObject\UI\Playerhunger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerMentality.h">
+      <Filter>02.GameObject\UI\PlayerMentality</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerMentality_pont.h">
+      <Filter>02.GameObject\UI\PlayerMentality</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Playerhunger_pont.h">
+      <Filter>02.GameObject\UI\Playerhunger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -264,6 +276,15 @@
       <Filter>02.GameObject\UI\Playerhp</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Playerhunger.cpp">
+      <Filter>02.GameObject\UI\Playerhunger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerMentality.cpp">
+      <Filter>02.GameObject\UI\PlayerMentality</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerMentality_pont.cpp">
+      <Filter>02.GameObject\UI\PlayerMentality</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Playerhunger_pont.cpp">
       <Filter>02.GameObject\UI\Playerhunger</Filter>
     </ClCompile>
   </ItemGroup>

@@ -44,10 +44,10 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Equipment_front(TEXT("Layer_Equipment_front"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Playerhp(TEXT("Layer_Playerhp"))))
+	if (FAILED(Ready_Layer_PlayerStatUI(TEXT("Layer_PlayerStatUI"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_HpPont(TEXT("Layer_HpPont"))))
+	if (FAILED(Ready_Layer_StatUIPont(TEXT("Layer_StatUIPont"))))
 		return E_FAIL;
 	
 
@@ -193,12 +193,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Playerhp(const _tchar * pLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_PlayerStatUI(const _tchar * pLayerTag)
 {
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Playerhp"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Playerhunger"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_PlayerMentality"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
 
 
@@ -283,7 +289,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Pont(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_HpPont(const _tchar * pLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_StatUIPont(const _tchar * pLayerTag)
 {
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -294,6 +300,24 @@ HRESULT CLevel_GamePlay::Ready_Layer_HpPont(const _tchar * pLayerTag)
 		int number = i;
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_HpPont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	for (int i = 0; i < 3; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_hungerPont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	for (int i = 0; i < 3; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MentalityPont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}

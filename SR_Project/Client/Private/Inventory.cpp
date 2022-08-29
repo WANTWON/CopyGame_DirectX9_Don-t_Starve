@@ -180,6 +180,62 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 	
 	}
 
+	for (auto& p : m_Hungerpontlist)
+	{
+		if (p->get_iNum() == 0)
+		{
+
+			p->set_pont_num(m_ihunger / 100);
+
+
+		}
+
+		if (p->get_iNum() == 1)
+		{
+			p->set_pont_num((m_ihunger % 100) / 10);
+
+
+		}
+
+		if (p->get_iNum() == 2)
+		{
+			p->set_pont_num(m_ihunger % 10);
+
+
+
+		}
+
+
+	}
+
+	for (auto& p : m_Mentalitiypontlist)
+	{
+		if (p->get_iNum() == 0)
+		{
+
+			p->set_pont_num(m_mentality / 100);
+
+
+		}
+
+		if (p->get_iNum() == 1)
+		{
+			p->set_pont_num((m_mentality % 100) / 10);
+
+
+		}
+
+		if (p->get_iNum() == 2)
+		{
+			p->set_pont_num(m_mentality % 10);
+
+
+
+		}
+
+
+	}
+
 	//Safe_Release(pMouse);
 
 
