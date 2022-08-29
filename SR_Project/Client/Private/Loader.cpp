@@ -4,7 +4,7 @@
 #include "GameInstance.h"
 #include "Equip_Animation.h"
 
-
+#include "Bullet.h"
 #include "Player.h"
 #include "Monster.h"
 #include "Terrain.h"
@@ -78,6 +78,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/* 텍스쳐 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐 로딩 중."));
+
+	/* run*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_DebugLine"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/DebugLine_%03d.png"), 1))))
+		return E_FAIL;
 
 #pragma region Add_Texture_Player
 	/* run*/
@@ -222,6 +227,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Equipment"),
 		CEquip_Animation::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet"),
+		CBullet::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
@@ -479,7 +489,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Dynamic"),
 		CCameraDynamic::Create(m_pGraphic_Device))))
 		return E_FAIL;
-
+	//여기서부터 Test 주석
 	/*For.Prototype_GameObject_MainInventory */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory"),
 		CMainInventory::Create(m_pGraphic_Device))))
