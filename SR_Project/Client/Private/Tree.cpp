@@ -200,9 +200,9 @@ HRESULT CTree::SetUp_Components(void* pArg)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	m_TimerTag = TEXT("Timer_Tree");
-	if (FAILED(pGameInstance->Add_Timer(m_TimerTag)))
-		return E_FAIL;
+//	m_TimerTag = TEXT("Timer_Tree");
+	//if (FAILED(pGameInstance->Add_Timer(m_TimerTag)))
+		//return E_FAIL;
 
 	Safe_Release(pGameInstance);
 
