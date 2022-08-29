@@ -142,6 +142,19 @@ void CTransform::Go_PosRight(_float fTimeDelta)
 	Set_State(CTransform::STATE_POSITION, vPos);
 }
 
+void CTransform::Go_PosTarget(_float fTimeDelta, _float3 TargetPos, _float3 distance)
+{
+	_float3 vPos = Get_State(CTransform::STATE_POSITION);
+	_float3 vNewPos = { TargetPos.x + distance.x, TargetPos.y + distance.y, TargetPos.z + distance.z };
+	_float3 vDir = vNewPos - vPos;
+
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	vPos += vDir*fTimeDelta*m_TransformDesc.fSpeedPerSec;
+
+	Set_State(CTransform::STATE_POSITION, vPos);
+}
+
 void CTransform::LookAt(_float3 TargetPos)
 {
 	_float3 vPos = Get_State(CTransform::STATE_POSITION);
@@ -178,7 +191,7 @@ void CTransform::Turn(_float3 vAxis,_float fTimeDelta)
 }
 
 
-void CTransform::Follow_Target(_float3 TargetPos, _float3 distance)
+void CTransform::Follow_Target(_float fTimeDelta, _float3 TargetPos, _float3 distance)
 {
 	_float3 vPos = Get_State(CTransform::STATE_POSITION);
 	_float3 vNewPos = { TargetPos.x + distance.x, TargetPos.y+ distance.y, TargetPos.z + distance.z };

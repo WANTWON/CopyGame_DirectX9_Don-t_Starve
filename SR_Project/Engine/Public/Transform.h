@@ -45,10 +45,11 @@ public:
 	void Go_PosDown(_float fTimeDelta);
 	void Go_PosLeft(_float fTimeDelta);
 	void Go_PosRight(_float fTimeDelta);
+	void Go_PosTarget(_float fTimeDelta, _float3 TargetPos, _float3 distance);
 
 public:
 	void LookAt(_float3 TargetPos);
-	void Follow_Target(_float3 TargetPos, _float3 distance);
+	void Follow_Target(_float fTimeDelta, _float3 TargetPos, _float3 distance);
 	
 
 public:

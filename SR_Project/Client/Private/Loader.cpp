@@ -14,6 +14,7 @@
 #include "Grass.h"
 #include "Boulder.h"
 #include "BerryBush.h"
+#include "Item.h"
 #include "MainInventory.h"
 #include "MainInventory_back.h"
 #include "MainInventory_front.h"
@@ -464,6 +465,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTerrain::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/*For.Prototype_GameObject_Item*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Item"),
+		CItem::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/*For.Prototype_GameObject_Monster*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster"),
 		CMonster::Create(m_pGraphic_Device))))
@@ -500,7 +506,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pont"),
 		CPont::Create(m_pGraphic_Device))))
 		return E_FAIL;
-	
 
 	/*For.Prototype_GameObject_Playerhp */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Playerhp"),

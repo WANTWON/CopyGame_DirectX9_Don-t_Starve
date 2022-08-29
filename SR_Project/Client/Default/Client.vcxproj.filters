@@ -73,6 +73,12 @@
     <Filter Include="02.GameObject\UI\PlayerMentality">
       <UniqueIdentifier>{2e42577c-a502-484f-b8e5-c72f548bafae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Item">
+      <UniqueIdentifier>{715ff672-5fe2-4be2-b9f8-37e47a3991cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Spider">
+      <UniqueIdentifier>{ebbeb7fe-c79e-4ba0-b3e3-df77adf12af3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -189,6 +195,12 @@
     <ClInclude Include="..\Public\Playerhunger_pont.h">
       <Filter>02.GameObject\UI\Playerhunger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Item.h">
+      <Filter>02.GameObject\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spider.h">
+      <Filter>02.GameObject\Spider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -242,6 +254,9 @@
     <ClCompile Include="..\Private\MainInventory_front.cpp">
       <Filter>02.GameObject\UI\Inventory</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Inventory.cpp">
+      <Filter>02.GameObject\UI\Manager</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Grass.cpp">
       <Filter>02.GameObject\Grass</Filter>
     </ClCompile>
@@ -284,8 +299,11 @@
     <ClCompile Include="..\Private\Playerhunger_pont.cpp">
       <Filter>02.GameObject\UI\Playerhunger</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Inventory.cpp">
-      <Filter>02.GameObject\UI\Manager</Filter>
+    <ClCompile Include="..\Private\Item.cpp">
+      <Filter>02.GameObject\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spider.cpp">
+      <Filter>02.GameObject\Spider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

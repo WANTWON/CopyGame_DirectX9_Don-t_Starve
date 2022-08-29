@@ -139,6 +139,11 @@ _float3 CPlayer::Get_Pos()
 	return (m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 }
 
+_float3 CPlayer::Get_Look()
+{
+	return m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+}
+
 void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 {
 	/* Picking 포인트가 존재하지 않거나, 이미 도착했다면 return*/
