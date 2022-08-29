@@ -43,6 +43,8 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 	}
 
 
+	////
+
 	if (m_eCamMode == CAM_DEFAULT)
 	{
 		Default_Camera(fTimeDelta);
