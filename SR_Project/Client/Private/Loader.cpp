@@ -524,12 +524,12 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/*For.Prototype_GameObject_hungerPont */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_hungerPont"),
-		CPlayerhp_pont::Create(m_pGraphic_Device))))
+		CPlayerhunger_pont::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_MentalityPont */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MentalityPont"),
-		CPlayerhp_pont::Create(m_pGraphic_Device))))
+		CPlayerMentality_pont::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Sky */

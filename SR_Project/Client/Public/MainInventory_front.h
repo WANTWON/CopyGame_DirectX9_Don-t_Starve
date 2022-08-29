@@ -48,6 +48,7 @@ public:
 	virtual void Free() override;
 
 	bool get_check() { return m_bcheck; }
+	bool get_pontcheck() { return m_bpontcheck; }
 	void set_check(bool tof) { m_bcheck = tof; }
 	void plus_itemcount() { ++item_number; }
 	void minus_itemcount() { --item_number; }
@@ -62,8 +63,9 @@ private:
 	int iNum = 100;
 	ITEMNAME texnum = ITEMNAME_CARROT;
 	ITEMID m_itemtype = ITEM_END;
-	_uint item_number = 0;//아이템갯수
+	_uint item_number = 4;//아이템갯수
 	bool m_bcheck = false;
+	bool m_bpontcheck = true;
 };
 
 END

@@ -35,8 +35,8 @@ HRESULT CPlayerhp_pont::Initialize(void* pArg)
 
 	m_fSizeX = 20.0f;
 	m_fSizeY = 20.0f;
-	m_fX = 1140.f + (iNum * 20.f);
-	m_fY = 200.f;
+	m_fX = 1130.f + (iNum * 15.f);
+	m_fY = 250.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;

@@ -73,6 +73,11 @@ void CInventory_Manager::Tick(_float fTimeDelta)
 
 
 		(*iterfont)->set_pont_num((*iter)->get_item_number());              //->set_pont_num(iter->get_item_number());
+		
+		if ((*iter)->get_pontcheck() == false)
+		{
+			(*iterfont)->set_check(false);        
+		}
 
 		++iter;
 		++iterfont;
@@ -158,79 +163,69 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 		{
 			
 			p->set_pont_num(m_ihp/100);
-			
-			
 		}
 
 		if ( p->get_iNum() == 1)
 		{
 			p->set_pont_num((m_ihp%100)/10);
-
-		
 		}
 
 		if (p->get_iNum() == 2)
 		{
 			p->set_pont_num(m_ihp%10);
-
-	
-
 		}
-
-	
-	}
-
-	for (auto& p : m_Hungerpontlist)
-	{
-		if (p->get_iNum() == 0)
-		{
-
-			p->set_pont_num(m_ihunger / 100);
-
-
-		}
-
-		if (p->get_iNum() == 1)
-		{
-			p->set_pont_num((m_ihunger % 100) / 10);
-
-
-		}
-
-		if (p->get_iNum() == 2)
-		{
-			p->set_pont_num(m_ihunger % 10);
-
-
-
-		}
-
 
 	}
 
-	for (auto& p : m_Mentalitiypontlist)
+
+
+	for (auto& i : m_Hungerpontlist)
 	{
-		if (p->get_iNum() == 0)
+		
+		if (i->get_iNum() == 0)
 		{
 
-			p->set_pont_num(m_mentality / 100);
+			i->set_pont_num(m_ihunger / 100);
 
 
 		}
 
-		if (p->get_iNum() == 1)
+		if (i->get_iNum() == 1)
 		{
-			p->set_pont_num((m_mentality % 100) / 10);
+			i->set_pont_num((m_ihunger % 100) / 10);
 
 
 		}
 
-		if (p->get_iNum() == 2)
+		if (i->get_iNum() == 2)
 		{
-			p->set_pont_num(m_mentality % 10);
+			i->set_pont_num(m_ihunger % 10);
+        }
+
+	}
 
 
+	for (auto& k : m_Mentalitiypontlist)
+	{
+		
+		if (k->get_iNum() == 0)
+		{
 
+			k->set_pont_num(m_mentality / 100);
+
+
+		}
+
+		if (k->get_iNum() == 1)
+		{
+			k->set_pont_num((m_mentality % 100) / 10);
+
+
+		}
+
+		if (k->get_iNum() == 2)
+		{
+			k->set_pont_num(m_mentality % 10);
 		}
 
 

@@ -87,6 +87,21 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	--m_tStat.fCurrentMental;
 	}
 
+	if (m_tStat.fCurrentHealth > m_tStat.fMaxHealth)
+	{
+		m_tStat.fCurrentHealth = m_tStat.fMaxHealth;
+	}
+
+	if (m_tStat.fCurrentHungry > m_tStat.fMaxHungry)
+	{
+		m_tStat.fCurrentHungry = m_tStat.fMaxHungry;
+	}
+
+	if (m_tStat.fCurrentMental > m_tStat.fMaxMental)
+	{
+		m_tStat.fCurrentMental = m_tStat.fMaxMental;
+	}
+
 
 	//추후에 아이템 만들어지고 플레이어가 아이템과 닿았을떄 획득하는 상호작용을 마친후에 인벤토리에 들어오는건 아래코드 그대로 쓰시면 작동합니다!!
 	//#include "Inven.h" 포함하시고
@@ -98,7 +113,13 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	{
 	for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
 	{
-	if (!(*iter)->get_check())
+	if((*iter)->get_texnum() == (당신이 먹은 아이템 이넘값)
+	{
+	(*iter)->plus_itemcount();  //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
+	루프탈출
+	}
+
+	else if ((*iter)->get_check() == false)
 	{
 	(*iter)->set_texnum(2); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
 	(*iter)->set_check(true);

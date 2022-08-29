@@ -242,9 +242,6 @@
     <ClCompile Include="..\Private\MainInventory_front.cpp">
       <Filter>02.GameObject\UI\Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Inventory.cpp">
-      <Filter>02.GameObject\UI\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Grass.cpp">
       <Filter>02.GameObject\Grass</Filter>
     </ClCompile>
@@ -286,6 +283,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Playerhunger_pont.cpp">
       <Filter>02.GameObject\UI\Playerhunger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Inventory.cpp">
+      <Filter>02.GameObject\UI\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@
 #include "Inventory.h"
 #include "Mouse.h"
 #include "KeyMgr.h"
+#include "Player.h"
 
 
 CMainInventory_front::CMainInventory_front(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -51,10 +52,32 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
+	if (iNum == 0)
+	{
+		texnum = ITEMNAME_ARMOR;
+	}
+
+	if (iNum == 1)
+	{
+		texnum = ITEMNAME_AXE;
+	}
+
 	if (iNum == 2)
-		texnum = ITEMNAME_WOOD;
+	{
+		texnum = ITEMNAME_HELMAT;
+	}
 
+	if (iNum == 3)
+	{
+		texnum = ITEMNAME_BAG;
+	}
 
+	if (iNum == 4)
+	{
+		texnum = ITEMNAME_BERRY;
+	}
+
+	
 
 	//CInventory_Manager::Get_Instance()->Get_Inven_list()->front.push_back(this);
 	//CInventory_Manager::Get_Instance()->Get_Inven_list().push_back(this);
@@ -74,10 +97,46 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	if (texnum == ITEMNAME_WOOD)
+	
+
+	if (texnum == ITEMNAME_ARMOR)
 	{
 		m_itemtype = ITEM_ARMOR;
 	}
+	if (texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TOARCH || texnum == ITEMNAME_WAND || texnum == ITEMNAME_PICK|| texnum == ITEMNAME_HAMSTICK)
+	{
+		m_itemtype = ITEM_HAND;
+	}
+
+	if (texnum == ITEMNAME_HELMAT)
+	{
+		m_itemtype = ITEM_HAT;
+	}
+
+	if (texnum == ITEMNAME_BAG)
+	{
+		m_itemtype = ITEM_BAG;
+	}
+
+
+	if (texnum == ITEMNAME_BERRY || texnum == ITEMNAME_CARROT || texnum == ITEMNAME_MEAT || texnum == ITEMNAME_MONSTERMEAT)
+	{
+		m_itemtype = ITEM_FOOD;
+	}
+
+
+	if (m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT || m_itemtype == ITEM_HAND || m_itemtype == ITEM_ARMOR)
+	{
+		m_bpontcheck = false;
+
+	}
+
+
+
+
+
+
+
 
 	if (PtInRect(&rcRect, ptMouse))
 	{
@@ -155,10 +214,16 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 		{
 			pMouse->Set_Item_type(m_itemtype);
 			pMouse->Set_Equipment_name(texnum);
+			set_texnum(ITEMNAME_END);
+
 		}
 
-		set_texnum(ITEMNAME_END);
+		minus_itemcount();
 
+		if (m_itemtype == ITEM_FOOD)
+		{
+			Use_item(texnum);
+		}
 
 	}
 
@@ -305,14 +370,31 @@ void CMainInventory_front::Free()
 
 void CMainInventory_front::Use_item(ITEMNAME item)
 {
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
 	switch (item)
 	{
 	case ITEMNAME_CARROT:
-		CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
+		
 
-		Safe_Release(pGameInstance);
+
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_HP(10));
+        minus_itemcount();
+		break;
+
+
+	case ITEMNAME_BERRY:
+		
+
+
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_Hungry(10));
+	     minus_itemcount();
+		break;
+
+		
 
 	}
 
+
+	Safe_Release(pGameInstance);
 }
