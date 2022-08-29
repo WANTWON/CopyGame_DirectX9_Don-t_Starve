@@ -91,9 +91,9 @@ void CCameraDynamic::Default_Camera(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 
 	if (m_lMouseWheel > 0)
-		m_lMouseWheel -= (_long)0.001;
+		m_lMouseWheel -= 0.001;
 	if (m_lMouseWheel < 0)
-		m_lMouseWheel += (_long)0.001;
+		m_lMouseWheel += 0.001;
 
 
 	if (m_lMouseWheel += (_long)(pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
@@ -126,9 +126,9 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 
 	if (m_lMouseWheel > 0)
-		m_lMouseWheel -= (_long)0.001;
+		m_lMouseWheel -= 0.001;
 	if (m_lMouseWheel < 0)
-		m_lMouseWheel += (_long)0.001;
+		m_lMouseWheel += 0.001;
 
 
 	if (m_lMouseWheel += (_long)(pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
