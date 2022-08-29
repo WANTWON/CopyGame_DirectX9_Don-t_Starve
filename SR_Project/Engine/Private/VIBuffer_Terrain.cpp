@@ -181,6 +181,10 @@ _float CVIBuffer_Terrain::Compute_Height(const _float3 & vWorldPos, const _float
 
 	_uint		iIndex = _uint(vWorldPos.z) * m_TerrainDesc.m_iNumVerticesX + _uint(vWorldPos.x);
 
+	if (iIndex < 0 || iIndex >= m_TerrainDesc.m_iNumVerticesX*m_TerrainDesc.m_iNumVerticesZ)
+		return 0.f;
+
+
 	_uint		iIndices[] = {
 		iIndex + m_TerrainDesc.m_iNumVerticesX,
 		iIndex + m_TerrainDesc.m_iNumVerticesX + 1,
@@ -208,9 +212,6 @@ _float CVIBuffer_Terrain::Compute_Height(const _float3 & vWorldPos, const _float
 
 	// _float		fHeight = (-ax - cz - d) / b;
 	_float		fHeight = (-Plane.a * vPosition.x - Plane.c * vPosition.z - Plane.d) / Plane.b + fOffset;
-
-	if (fHeight != 0)
-		cout << "Plane : " << fHeight << endl;
 
 	m_pVB->Unlock();
 

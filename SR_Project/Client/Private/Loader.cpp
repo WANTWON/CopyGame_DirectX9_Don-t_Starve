@@ -27,6 +27,7 @@
 #include "Playerhunger_pont.h"
 #include "PlayerMentality.h"
 #include "PlayerMentality_pont.h"
+#include "Water.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -449,9 +450,9 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	TerrainDesc.m_iTextureNum = 0;
 
 	/*For.Prototype_Component_VIBuffer_Terrain*/
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
-	//	CVIBuffer_Terrain::Create(m_pGraphic_Device, TerrainDesc))))
-	//	return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
+		CVIBuffer_Terrain::Create(m_pGraphic_Device, TerrainDesc))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_VIBuffer_Terrain by MapTool */
 	if (FAILED(Loading_Terrain_ForGamePlayLevel()))
@@ -472,7 +473,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/*For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
-		CTerrain::Create(m_pGraphic_Device))))
+		CWater::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Item*/
@@ -489,6 +490,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Dynamic"),
 		CCameraDynamic::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
 	//여기서부터 Test 주석
 	/*For.Prototype_GameObject_MainInventory */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory"),
@@ -591,7 +593,7 @@ HRESULT CLoader::Loading_Terrain_ForGamePlayLevel()
 
 	int			iNum;
 	_ulong		dwByte = 0;
-	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Vertex.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Vertex2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 

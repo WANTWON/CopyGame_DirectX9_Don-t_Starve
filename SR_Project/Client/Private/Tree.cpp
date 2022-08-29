@@ -34,6 +34,10 @@ HRESULT CTree::Initialize(void* pArg)
 	m_tInfo.iMaxHp = 60;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 
+	_float fSize = (rand() % 200)*0.01f + 1.5f;
+	m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
+	m_fRadius *= fSize;
+
 	return S_OK;
 }
 
@@ -82,6 +86,7 @@ int CTree::Tick(_float fTimeDelta)
 		m_ePreState = m_eState;
 	}
 
+	WalkingTerrain();
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	return OBJ_NOEVENT;
@@ -386,11 +391,33 @@ void CTree::SetUp_BillBoard()
 {
 	_float4x4 ViewMatrix;
 
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);	// Get View Matrix
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);		// Get Inverse of View Matrix (World Matrix of Camera)
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix
+	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
 
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
+	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+}
+
+void CTree::WalkingTerrain()
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return;
+
+	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	if (nullptr == pVIBuffer_Terrain)
+		return;
+
+	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	if (nullptr == pTransform_Terrain)
+		return;
+
+	_float3			vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_fRadius);
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
 CTree* CTree::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
