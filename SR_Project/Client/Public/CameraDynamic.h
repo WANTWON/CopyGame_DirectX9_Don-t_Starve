@@ -7,7 +7,7 @@ BEGIN(Client)
 class CCameraDynamic final : public CCamera
 {
 public:
-	enum CAMERAMODE {CAM_DEFAULT, CAM_PLAYER, CAM_TURNMODE, CAM_END};
+	enum CAMERAMODE {CAM_DEFAULT, CAM_PLAYER, CAM_TURNMODE, CAM_FPS, CAM_END};
 
 	typedef struct tagCameraDesc_Derived
 	{
@@ -31,6 +31,7 @@ private:
 	void Default_Camera(_float fTimeDelta);
 	void Player_Camera(_float fTimeDelta);
 	void Turn_Camera(_float fTimeDelta);
+	void FPS_Camera(_float fTimeDelta);
 
 private:
 	_long			m_lMouseWheel = 0;
