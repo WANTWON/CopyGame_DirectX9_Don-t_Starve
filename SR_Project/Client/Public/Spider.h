@@ -22,7 +22,6 @@ class CSpider final : public CGameObject
 		DIR_LEFT, 
 		MAX
 	};
-
 	enum class STATE
 	{
 		IDLE,
@@ -79,10 +78,10 @@ private:
 	const _tchar* m_TimerTag = TEXT("");
 	DIR m_eDir = DIR::DIR_DOWN;
 	DIR	m_ePreDir = DIR::MAX;
-	STATE m_eState = STATE::IDLE;
+	STATE m_eState = STATE::MOVE;
 	STATE m_ePreState = STATE::MAX;
+	OBJINFO m_tInfo;
 	CGameObject* m_pTarget = nullptr;
-
 
 public:
 	static CSpider* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
