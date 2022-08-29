@@ -79,6 +79,12 @@
     <Filter Include="02.GameObject\Spider">
       <UniqueIdentifier>{ebbeb7fe-c79e-4ba0-b3e3-df77adf12af3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Monster\Pig">
+      <UniqueIdentifier>{c2ba77b3-594b-4b1e-b0f8-323d91d764ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Spider">
+      <UniqueIdentifier>{2245b0c7-c591-466d-b491-b61ae6bd9526}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

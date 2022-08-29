@@ -37,6 +37,8 @@ int CBerryBush::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	// Change Texture based on State
 	if (m_eState != m_ePreState)
@@ -73,8 +75,6 @@ void CBerryBush::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('F')))
 		Interact();

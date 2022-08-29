@@ -63,6 +63,8 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	m_Equipment->Set_TargetPos(Get_Pos());
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
 	return OBJ_NOEVENT;
 }
 
@@ -75,8 +77,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+
 
 
 
