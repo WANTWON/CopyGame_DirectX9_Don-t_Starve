@@ -46,7 +46,8 @@ int CMonster::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-	
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
 
 	return OBJ_NOEVENT;
 }
@@ -62,8 +63,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
+	
 
 
 	if (nullptr != m_pColliderCom)
@@ -161,6 +161,8 @@ HRESULT CMonster::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
+	//Test
+	Set_Radius(0.25f);
 
 	return S_OK;
 }

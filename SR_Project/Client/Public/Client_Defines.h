@@ -12,6 +12,8 @@ namespace Client
 		unsigned int iMaxHp;
 		unsigned int iCurrentHp;
 	} OBJINFO;
+
+	
 }
 
 #include <process.h>
