@@ -179,28 +179,6 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 
 void CCameraDynamic::Turn_Camera(_float fTimeDelta)
 {
-
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
-	Safe_AddRef(pTarget);
-
-	_float3 vecTargetLook = pTarget->Get_Look();
-	D3DXVec3Normalize(&vecTargetLook, &vecTargetLook);
-	_float3 vecargetPos = pTarget->Get_Pos() + vecTargetLook;
-	_float3 PlayerLook = pTarget->Get_Look();
-
-	m_pTransform->Follow_Target(fTimeDelta, vecargetPos, _float3(0, 0, 0 ));
-
-	m_pTransform->LookAt(PlayerLook);
-
-	Safe_Release(pTarget);
-	Safe_Release(pGameInstance);
-}
-
-void CCameraDynamic::FPS_Camera(_float fTimeDelta)
-{
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
@@ -236,6 +214,28 @@ void CCameraDynamic::FPS_Camera(_float fTimeDelta)
 	if (fabsf(vDistance.x) < 0.5f && fabsf(vDistance.y) < 0.5f && fabsf(vDistance.z) < 0.5f)
 		m_eCamMode = CAM_PLAYER;
 
+	Safe_Release(pGameInstance);
+}
+
+void CCameraDynamic::FPS_Camera(_float fTimeDelta)
+{
+
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+	Safe_AddRef(pTarget);
+
+	_float3 vecTargetLook = pTarget->Get_Look();
+	D3DXVec3Normalize(&vecTargetLook, &vecTargetLook);
+	_float3 vecargetPos = pTarget->Get_Pos() + vecTargetLook;
+	_float3 PlayerLook = pTarget->Get_Look();
+
+	m_pTransform->Follow_Target(fTimeDelta, vecargetPos, _float3(0, 0, 0));
+
+	m_pTransform->LookAt(PlayerLook);
+
+	Safe_Release(pTarget);
 	Safe_Release(pGameInstance);
 }
 
