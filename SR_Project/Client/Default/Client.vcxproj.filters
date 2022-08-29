@@ -64,6 +64,21 @@
     <Filter Include="02.GameObject\Player\Equip_Anim">
       <UniqueIdentifier>{55813ade-5830-4af6-ac26-f780a6c7363a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\UI\Playerhp">
+      <UniqueIdentifier>{b7a321ea-c5a7-4fba-912a-3ec0f1ffff5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UI\Playerhunger">
+      <UniqueIdentifier>{64733c64-827d-43a7-922b-f68e5e8f330a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UI\PlayerMentality">
+      <UniqueIdentifier>{2e42577c-a502-484f-b8e5-c72f548bafae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Item">
+      <UniqueIdentifier>{715ff672-5fe2-4be2-b9f8-37e47a3991cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Spider">
+      <UniqueIdentifier>{ebbeb7fe-c79e-4ba0-b3e3-df77adf12af3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -162,6 +177,30 @@
     <ClInclude Include="..\Public\Equip_Animation.h">
       <Filter>02.GameObject\Player\Equip_Anim</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Playerhp.h">
+      <Filter>02.GameObject\UI\Playerhp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Playerhp_pont.h">
+      <Filter>02.GameObject\UI\Playerhp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Playerhunger.h">
+      <Filter>02.GameObject\UI\Playerhunger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerMentality.h">
+      <Filter>02.GameObject\UI\PlayerMentality</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerMentality_pont.h">
+      <Filter>02.GameObject\UI\PlayerMentality</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Playerhunger_pont.h">
+      <Filter>02.GameObject\UI\Playerhunger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Item.h">
+      <Filter>02.GameObject\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spider.h">
+      <Filter>02.GameObject\Spider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -241,6 +280,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\Equip_Animation.cpp">
       <Filter>02.GameObject\Player\Equip_Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Playerhp.cpp">
+      <Filter>02.GameObject\UI\Playerhp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Playerhp_pont.cpp">
+      <Filter>02.GameObject\UI\Playerhp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Playerhunger.cpp">
+      <Filter>02.GameObject\UI\Playerhunger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerMentality.cpp">
+      <Filter>02.GameObject\UI\PlayerMentality</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerMentality_pont.cpp">
+      <Filter>02.GameObject\UI\PlayerMentality</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Playerhunger_pont.cpp">
+      <Filter>02.GameObject\UI\Playerhunger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Item.cpp">
+      <Filter>02.GameObject\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spider.cpp">
+      <Filter>02.GameObject\Spider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

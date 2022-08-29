@@ -7,15 +7,22 @@
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
+class CCollider;
 class CTransform;
-class CVIBuffer_Terrain;
+class CVIBuffer_Rect;
 END
 
 BEGIN(Client)
 class CBoulder final : public CGameObject
 {
 public:
-	enum STATE { HEALTHY, DAMAGED, BROKEN, MAX };
+	enum STATE 
+	{ 
+		HEALTHY, 
+		DAMAGED, 
+		BROKEN, 
+		MAX 
+	};
 
 private:
 	CBoulder(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -32,7 +39,8 @@ public:
 public:
 	_float3 Get_Pos() { return m_pTransformCom->Get_State(CTransform::STATE_POSITION); }
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
-	void Apply_Damage(_uint Damage = 0);
+	void Interact(_uint Damage = 0);
+	HRESULT Drop_Items();
 
 private:
 	HRESULT SetUp_Components(void* pArg);
@@ -50,7 +58,9 @@ private: /* For.Components */
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
 	CTransform* m_pTransformCom = nullptr;
-	CVIBuffer_Terrain* m_pVIBufferCom = nullptr;
+	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
+	CCollider* m_pColliderCom = nullptr;
+
 	vector<CTexture*> m_vecTexture;
 
 private:

@@ -8,14 +8,25 @@ BEGIN(Engine)
 class CTexture;
 class CRenderer;
 class CTransform;
-class CVIBuffer_Terrain;
+class CVIBuffer_Rect;
+class CCollider;
 END
 
 BEGIN(Client)
 class CTree final : public CGameObject
 {
 public:
-	enum STATE { IDLE, CHOP, SHAKE, GROW, FALL_RIGHT, FALL_LEFT, STUMP, MAX };
+	enum STATE 
+	{ 
+		IDLE, 
+		CHOP, 
+		SHAKE, 
+		GROW, 
+		FALL_RIGHT, 
+		FALL_LEFT, 
+		STUMP, 
+		MAX 
+	};
 
 private:
 	CTree(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -32,6 +43,8 @@ public:
 public:
 	_float3 Get_Pos() { return m_pTransformCom->Get_State(CTransform::STATE_POSITION); }
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
+	void Interact(_uint Damage = 0);
+	HRESULT Drop_Items();
 
 private:
 	HRESULT SetUp_Components(void* pArg);
@@ -49,7 +62,9 @@ private: /* For.Components */
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
 	CTransform* m_pTransformCom = nullptr;
-	CVIBuffer_Terrain* m_pVIBufferCom = nullptr;
+	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
+	CCollider* m_pColliderCom = nullptr;
+
 	vector<CTexture*> m_vecTexture;
 
 private:
@@ -57,6 +72,7 @@ private:
 	STATE m_ePreState = MAX;
 	const _tchar* m_TimerTag = TEXT("");
 	_float m_fTerrain_Height = 0.f;
+	OBJINFO m_tInfo; // TODO: Add Droppable Items in this Struct
 
 public:
 	static CTree* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

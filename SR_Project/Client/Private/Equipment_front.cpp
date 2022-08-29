@@ -60,7 +60,7 @@ int CEquipment_front::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	/*RECT		rcRect;
+	RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
 	POINT		ptMouse;
@@ -74,9 +74,33 @@ int CEquipment_front::Tick(_float fTimeDelta)
 		m_fSizeY = 55.f;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		set_check(true);
-		plus_itemcount();
-	}*/
+
+	}
+
+	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_RBUTTON))
+	{
+		CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
+		Safe_AddRef(pInventory_Manager);
+		auto Maininvenlist = pInventory_Manager->Get_Inven_list();
+		Safe_Release(pInventory_Manager);
+
+		for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
+		{
+			if ((*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(texnum);
+				set_texnum(ITEMNAME_END);
+
+
+				break;
+			}
+
+			else
+				++iter;
+
+		}
+	}
+
 
 
 
@@ -89,23 +113,23 @@ void CEquipment_front::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	//RECT		rcRect;
-	//SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	RECT		rcRect;
+	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
-	//POINT		ptMouse;
-	//GetCursorPos(&ptMouse);
-	//ScreenToClient(g_hWnd, &ptMouse);
+	POINT		ptMouse;
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
 
-	//if (!PtInRect(&rcRect, ptMouse))
-	//{
-	//	m_fSizeX = 40;
-	//	m_fSizeY = 40;
-	//	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	if (!PtInRect(&rcRect, ptMouse))
+	{
+		m_fSizeX = 40;
+		m_fSizeY = 40;
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 
 
-	//	//ERR_MSG(L"Ãæµ¹");
-	//}
-	if (nullptr != m_pRendererCom&&m_bcheck)
+	}
+
+	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	//set_check(false);
@@ -113,31 +137,31 @@ void CEquipment_front::Late_Tick(_float fTimeDelta)
 
 HRESULT CEquipment_front::Render()
 {
-	if (m_bcheck)
-	{
-		if (FAILED(__super::Render()))
-			return E_FAIL;
+	//if (m_bcheck)
+	//{
+	if (FAILED(__super::Render()))
+		return E_FAIL;
 
-		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-			return E_FAIL;
+	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+		return E_FAIL;
 
-		_float4x4		ViewMatrix;
-		D3DXMatrixIdentity(&ViewMatrix);
+	_float4x4		ViewMatrix;
+	D3DXMatrixIdentity(&ViewMatrix);
 
-		m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
-		m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
-			return E_FAIL;
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+		return E_FAIL;
 
-		if (FAILED(SetUp_RenderState()))
-			return E_FAIL;
+	if (FAILED(SetUp_RenderState()))
+		return E_FAIL;
 
-		m_pVIBufferCom->Render();
+	m_pVIBufferCom->Render();
 
-		if (FAILED(Release_RenderState()))
-			return E_FAIL;
-	}
+	if (FAILED(Release_RenderState()))
+		return E_FAIL;
+	//}
 
 
 

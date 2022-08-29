@@ -49,14 +49,15 @@ public:
 	bool get_check() { return m_bcheck; }
 	void set_check(bool tof) { m_bcheck = tof; }
 	void plus_itemcount() { item_number = 6; }
-	void set_texnum(_uint texnumber) { texnum = texnumber; }
+	void set_texnum(ITEMNAME texnumber) { texnum = texnumber; }
 	_uint get_item_number() { return item_number; }
 	void Use_item(ITEMNAME item);
+	int get_iNum() { return iNum; }
 
 private:
 	int* iNumber = nullptr;
 	int iNum = 0;
-	int texnum = 0;
+	ITEMNAME texnum = ITEMNAME_END;
 	_uint item_number = 0;//아이템갯수
 	bool m_bcheck = true;
 };

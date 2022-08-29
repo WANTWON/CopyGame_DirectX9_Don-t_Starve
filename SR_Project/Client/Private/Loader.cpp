@@ -14,12 +14,19 @@
 #include "Grass.h"
 #include "Boulder.h"
 #include "BerryBush.h"
+#include "Item.h"
 #include "MainInventory.h"
 #include "MainInventory_back.h"
 #include "MainInventory_front.h"
 #include "Pont.h"
 #include "Equipment_back.h"
 #include "Equipment_front.h"
+#include "Playerhp.h"
+#include "Playerhp_pont.h"
+#include "Playerhunger.h"
+#include "Playerhunger_pont.h"
+#include "PlayerMentality.h"
+#include "PlayerMentality_pont.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -251,7 +258,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/*For.Prototype_Component_Texture_MainInventory_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/itom/item%d.png"), 5))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 23))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Equipment_back */
@@ -261,12 +268,30 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/*For.Prototype_Component_Texture_Equipment_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Equipment_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/itom/equip%d.png"), 1))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 23))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Pont */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pont"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 10))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_HpPont */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_HpPont"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 10))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Playerhp */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Playerhp"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Health/Health_%03d.png"), 50))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_Playerhunger */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Playerhunger"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Hunger/Hunger_%03d.png"), 50))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_Playermentality */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_PlayerMentality"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Sanity/Sanity_%03d.png"), 50))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Sky */
@@ -440,6 +465,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTerrain::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/*For.Prototype_GameObject_Item*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Item"),
+		CItem::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/*For.Prototype_GameObject_Monster*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster"),
 		CMonster::Create(m_pGraphic_Device))))
@@ -475,6 +505,36 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_GameObject_Pont */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pont"),
 		CPont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Playerhp */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Playerhp"),
+		CPlayerhp::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Playerhunger */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Playerhunger"),
+		CPlayerhunger::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_PlayerMentality */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerMentality"),
+		CPlayerMentality::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_HpPont */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HpPont"),
+		CPlayerhp_pont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_hungerPont */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_hungerPont"),
+		CPlayerhp_pont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_MentalityPont */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MentalityPont"),
+		CPlayerhp_pont::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Sky */
