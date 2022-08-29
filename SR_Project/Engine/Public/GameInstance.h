@@ -52,6 +52,7 @@ public: /* For.Object_Manager */
 
 	class CGameObject* Get_Object(_uint iLevelIndex, const _tchar * pLayerTag, _uint iIndex =0);
 	list<CGameObject*>* Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag);
+	class CComponent* Get_Component(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pComponentTag, _uint iIndex = 0);
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);

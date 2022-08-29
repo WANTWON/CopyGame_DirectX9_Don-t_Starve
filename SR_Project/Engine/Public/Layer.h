@@ -20,6 +20,7 @@ public:
 public:
 	class CGameObject* Get_Object(_uint iIndex = 0);
 	list<CGameObject*>*		Get_ObjectList() { return &m_GameObjects; };
+	class CComponent* Get_Component(const _tchar* pComponentTag, _uint iIndex = 0);
 
 private:
 	list<class CGameObject*>			m_GameObjects;

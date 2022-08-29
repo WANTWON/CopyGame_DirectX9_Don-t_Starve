@@ -36,7 +36,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	_float Get_TerrainY(_float Posx, _float Posz);
+	_float Compute_Height(const _float3& vPosition, const _float4x4& WorldMatrix, _float fOffset = 0.f);
 	bool Picking(class CTransform * pTransform, _float3 * pOut);
 	void UpTerrain(class CTransform * pTransform, _float3 * pOut);
 	TERRAINDESC& GetTerrainDesc() { return m_TerrainDesc; }

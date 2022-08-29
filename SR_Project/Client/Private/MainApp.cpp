@@ -156,8 +156,8 @@ void CMainApp::Free()
 	Safe_Release(m_pCollider);
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pGameInstance);
-	
-	CGameInstance::Release_Engine();
+
+	CGameInstance::Release_Engine();	
 
 	CInventory_Manager::Get_Instance()->Destroy_Instance();
 }

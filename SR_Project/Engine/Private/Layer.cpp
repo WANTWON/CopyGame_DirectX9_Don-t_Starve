@@ -64,6 +64,16 @@ CGameObject * CLayer::Get_Object(_uint iIndex)
 	return *iter;
 }
 
+CComponent * CLayer::Get_Component(const _tchar * pComponentTag, _uint iIndex)
+{
+	auto	iter = m_GameObjects.begin();
+
+	for (_uint i = 0; i < iIndex; ++i)
+		++iter;
+
+	return (*iter)->Find_Component(pComponentTag);
+}
+
 CLayer * CLayer::Create()
 {
 	CLayer*	pInstance = new CLayer();

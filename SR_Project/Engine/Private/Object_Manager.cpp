@@ -148,6 +148,15 @@ list<CGameObject*>* CObject_Manager::Get_ObjectList(_uint iSceneID, const _tchar
 	return pLayer->Get_ObjectList();
 }
 
+CComponent * CObject_Manager::Get_Component(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pComponentTag, _uint iIndex)
+{
+	CLayer*		pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	if (nullptr == pLayer)
+		return nullptr;
+
+	return pLayer->Get_Component(pComponentTag, iIndex);
+}
+
 CGameObject * CObject_Manager::Find_Prototype(const _tchar * pPrototypeTag)
 {
 	auto	iter = find_if(m_Prototypes.begin(), m_Prototypes.end(), CTag_Finder(pPrototypeTag));

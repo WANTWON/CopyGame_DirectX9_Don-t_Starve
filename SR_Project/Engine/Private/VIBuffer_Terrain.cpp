@@ -44,7 +44,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(TERRAINDESC TerrainDesc)
 		{
 			_uint	iIndex = i * m_TerrainDesc.m_iNumVerticesX + j;
 
-			m_pVertices[iIndex].vPosition = _float3(m_TerrainDesc.m_iPosVerticesX + j*m_TerrainDesc.m_fSizeX, 0, m_TerrainDesc.m_iPosVerticesZ + i*m_TerrainDesc.m_fSizeZ);
+			m_pVertices[iIndex].vPosition =  _float3(m_TerrainDesc.m_iPosVerticesX + j*m_TerrainDesc.m_fSizeX, 0, m_TerrainDesc.m_iPosVerticesZ + i*m_TerrainDesc.m_fSizeZ);
 			m_pVertices[iIndex].vTexture = _float2(j / (m_TerrainDesc.m_iNumVerticesX - 1.0f)*m_TerrainDesc.m_fTextureSize, i / (m_TerrainDesc.m_iNumVerticesZ - 1.0f)*m_TerrainDesc.m_fTextureSize);
 		}
 	}
@@ -101,7 +101,6 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 
 	ZeroMemory(&m_TerrainDesc, sizeof(TERRAINDESC));
 	memcpy(&m_TerrainDesc, (TERRAINDESC*)pArg, sizeof(TERRAINDESC));
-
 	m_iNumVertices = m_TerrainDesc.m_iNumVerticesX * m_TerrainDesc.m_iNumVerticesZ;
 	m_iStride = sizeof(VTXTEX);
 	m_dwFVF = D3DFVF_XYZ | D3DFVF_TEX1;
@@ -175,42 +174,47 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 }
 
 
-
-_float CVIBuffer_Terrain::Get_TerrainY(_float Posx, _float Posz)
+_float CVIBuffer_Terrain::Compute_Height(const _float3 & vWorldPos, const _float4x4 & WorldMatrix, _float fOffset)
 {
-	_float fHeight = 0;
-	_uint index = Posz *  m_TerrainDesc.m_iNumVerticesX + Posx;
-	if (index > m_TerrainDesc.m_iNumVerticesX*m_TerrainDesc.m_iNumVerticesZ || index < 0)
-		return 0;
+	_float4x4	WorldMatrixInv = *D3DXMatrixInverse(&WorldMatrixInv, nullptr, &WorldMatrix);
+	_float3		vPosition = *D3DXVec3TransformCoord(&vPosition, &vWorldPos, &WorldMatrixInv);
 
-	int OneTilePosX = Posx; /// m_TerrainDesc.m_iNumVerticesX;
-	int OneTilePosZ = Posz; /// m_TerrainDesc.m_iNumVerticesZ;
+	_uint		iIndex = _uint(vWorldPos.z) * m_TerrainDesc.m_iNumVerticesX + _uint(vWorldPos.x);
+
+	_uint		iIndices[] = {
+		iIndex + m_TerrainDesc.m_iNumVerticesX,
+		iIndex + m_TerrainDesc.m_iNumVerticesX + 1,
+		iIndex + 1,
+		iIndex
+	};
 
 	VTXTEX* m_pVertices = nullptr;
 	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&m_pVertices, 0);
 	//a,b,c = 평면의 법선벡터  / x,y,z 평면위의 점
-	D3DXPLANE Plane;
 
-	// ax + by + cz + d = 0;
-	if ((OneTilePosX - 0.5 >= 0) && (0.5 - OneTilePosZ) < 0)
-	{
-		D3DXPlaneFromPoints(&Plane, &m_pVertices[index + m_TerrainDesc.m_iNumVerticesX].vPosition, &m_pVertices[index + m_TerrainDesc.m_iNumVerticesX + 1].vPosition, &m_pVertices[index + 1].vPosition);
-		fHeight = -(Plane.a*Posx + Plane.c*Posz + Plane.a*Plane.b*Plane.c*Plane.d) / Plane.b;
-		
-	}
+	_float		fWidth = vPosition.x - m_pVertices[iIndices[0]].vPosition.x;
+	_float		fDepth = m_pVertices[iIndices[0]].vPosition.z - vPosition.z;
+
+	D3DXPLANE			Plane;
+
+	/*  오른쪽 위 삼각형에 존재한다. */
+	if (fWidth > fDepth)
+		D3DXPlaneFromPoints(&Plane, &m_pVertices[iIndices[0]].vPosition, &m_pVertices[iIndices[1]].vPosition, &m_pVertices[iIndices[2]].vPosition);
+
+
+	/* 왼쪽 아래 삼각형에 존재한다. */
 	else
-	{
-		D3DXPlaneFromPoints(&Plane, &m_pVertices[index + m_TerrainDesc.m_iNumVerticesX].vPosition, &m_pVertices[index + 1].vPosition, &m_pVertices[index].vPosition);
-		fHeight = -(Plane.a*Posx + Plane.c*Posz + Plane.a*Plane.b*Plane.c*Plane.d) / Plane.b;
-		
-	}
+		D3DXPlaneFromPoints(&Plane, &m_pVertices[iIndices[0]].vPosition, &m_pVertices[iIndices[2]].vPosition, &m_pVertices[iIndices[3]].vPosition);
 
-	if(fHeight != 0)
+	// _float		fHeight = (-ax - cz - d) / b;
+	_float		fHeight = (-Plane.a * vPosition.x - Plane.c * vPosition.z - Plane.d) / Plane.b + fOffset;
+
+	if (fHeight != 0)
 		cout << "Plane : " << fHeight << endl;
 
 	m_pVB->Unlock();
 
-	return fHeight + 1;
+	return fHeight;
 }
 
 bool CVIBuffer_Terrain::Picking(class CTransform * pTransform, _float3 * pOut)

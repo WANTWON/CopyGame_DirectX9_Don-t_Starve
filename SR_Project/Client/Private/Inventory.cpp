@@ -231,7 +231,7 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 
 	}
 
-	//Safe_Release(pMouse);
+	Safe_Release(pMouse);
 
 
 }

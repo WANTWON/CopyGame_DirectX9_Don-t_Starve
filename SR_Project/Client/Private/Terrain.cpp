@@ -187,25 +187,6 @@ HRESULT CTerrain::Release_RenderState()
 	return S_OK;
 }
 
-void CTerrain::SetUp_TerrainY()
-{
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
-
-	Safe_AddRef(pPlayer);
-
-	_float3 TargetPos = pPlayer->Get_Pos();
-	_float Height = m_pVIBufferCom->Get_TerrainY(TargetPos.x, TargetPos.z);
-	if (Height == 0)
-		return;
-
-	pPlayer->Set_TerrainY(Height);
-
-	Safe_Release(pGameInstance);
-	Safe_Release(pPlayer);
-}
 
 void CTerrain::Picking()
 {

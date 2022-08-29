@@ -43,10 +43,11 @@ int CMonster::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	Follow_Player(fTimeDelta);
-
+	WalkingTerrain();
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-	
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
 
 	return OBJ_NOEVENT;
 }
@@ -62,8 +63,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
+	
 
 
 	if (nullptr != m_pColliderCom)
@@ -161,6 +161,8 @@ HRESULT CMonster::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
+	//Test
+	Set_Radius(0.25f);
 
 	return S_OK;
 }
@@ -218,6 +220,27 @@ void CMonster::Follow_Player(_float fTimeDelta)
 
 	m_pTransformCom->LookAt(m_TargetPos);
 	m_pTransformCom->Go_Straight(fTimeDelta*0.1f);
+}
+
+void CMonster::WalkingTerrain()
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return;
+
+	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	if (nullptr == pVIBuffer_Terrain)
+		return;
+
+	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	if (nullptr == pTransform_Terrain)
+		return;
+
+	_float3			vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
 CMonster * CMonster::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

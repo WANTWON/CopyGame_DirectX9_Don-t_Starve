@@ -5,6 +5,7 @@
 #include "KeyMgr.h"
 #include "Inventory.h"
 #include "Equip_Animation.h"
+#include "Bullet.h"
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -46,7 +47,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Safe_Release(pGameInstance);
 
 	//Test
-	Change_Texture(TEXT("Com_Texture_Weapon_Down"));
+	Change_Texture(TEXT("Com_Texture_Idle_Down"));
 
 	return S_OK;
 }
@@ -57,9 +58,9 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	GetKeyDown(fTimeDelta);
 	Move_to_PickingPoint(fTimeDelta);
+	WalkingTerrain();
 
-
-
+	Create_Bullet();
 
 	m_Equipment->Set_TargetPos(Get_Pos());
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -78,7 +79,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
 
 	if (GetKeyState(VK_BACK) & 0x8000)
 	{
@@ -105,6 +105,12 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	//ÃßÈÄ¿¡ ¾ÆÀÌÅÛ ¸¸µé¾îÁö°í ÇÃ·¹ÀÌ¾î°¡ ¾ÆÀÌÅÛ°ú ´ê¾ÒÀ»‹š È¹µæÇÏ´Â »óÈ£ÀÛ¿ëÀ» ¸¶Ä£ÈÄ¿¡ ÀÎº¥Åä¸®¿¡ µé¾î¿À´Â°Ç ¾Æ·¡ÄÚµå ±×´ë·Î ¾²½Ã¸é ÀÛµ¿ÇÕ´Ï´Ù!!
 	//#include "Inven.h" Æ÷ÇÔÇÏ½Ã°í
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+
+	
+	Test_Debug(fTimeDelta);
+	
 	/*CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
 
 	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
@@ -115,15 +121,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
 	{
-	if((*iter)->get_texnum() == (´ç½ÅÀÌ ¸ÔÀº ¾ÆÀÌÅÛ ÀÌ³Ñ°ª)
+	if (!(*iter)->get_check())
 	{
-	(*iter)->plus_itemcount();  //¸ÔÀº ¾ÆÀÌÅÛÀÌ ÀÎº¥Åä¸®¿¡ ÀÌ¹Ì Á¸ÀçÇÒ¶§ Ä«¿îÆ® Áõ°¡
-	·çÇÁÅ»Ãâ
-	}
-
-	else if ((*iter)->get_check() == false)
-	{
-	(*iter)->set_texnum(2); //ÃßÈÄ¿¡ ¾ÆÀÌÅÛenum ¸¸µé°íºÎÅÍ´Â ¼ýÀÚ´ë½Å ¿øÇÏ´Â ¾ÆÀÌÅÛ ³Ö¾îÁÖ¼¼¿ä
+	(*iter)->set_texnum(2); //ï¿½ï¿½ï¿½Ä¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½enum ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í´ï¿?ï¿½ï¿½ï¿½Ú´ï¿½ï¿?ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½
 	(*iter)->set_check(true);
 
 	return;
@@ -143,12 +143,12 @@ _float3 CPlayer::Get_Pos()
 
 _float3 CPlayer::Get_Look()
 {
-	return m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	return (m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 }
 
 void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 {
-	/* Picking Æ÷ÀÎÆ®°¡ Á¸ÀçÇÏÁö ¾Ê°Å³ª, ÀÌ¹Ì µµÂøÇß´Ù¸é return*/
+	
 	if (m_bPicked == false || m_bArrive == true || m_bInputKey == true)
 		return;
 
@@ -158,6 +158,14 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 
 	_float3 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
+	if (vPlayerPos.x < m_vPickingPoint.x)
+	{
+		Move_Right(fTimedelta);
+	}
+	else if (vPlayerPos.x > m_vPickingPoint.x)
+	{
+		Move_Left(fTimedelta);
+	}
 	if (abs(vPlayerPos.x - m_vPickingPoint.x) < 0.1 &&
 		abs(vPlayerPos.z - m_vPickingPoint.z) < 0.1)
 	{
@@ -186,7 +194,8 @@ HRESULT CPlayer::Render()
 		return E_FAIL;
 
 	m_pVIBufferCom->Render();
-
+	//Test
+	Debug_Render();
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
@@ -234,6 +243,9 @@ HRESULT CPlayer::SetUp_Components()
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
+	if(Test_Setup())
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -279,6 +291,12 @@ HRESULT CPlayer::SetUp_KeySettings()
 
 	m_KeySets[INTERACTKEY::KEY_MENU] = VK_ESCAPE;
 
+	m_KeySets[INTERACTKEY::KEY_DEBUG] = VK_OEM_6;
+
+	m_KeySets[INTERACTKEY::KEY_CAMLEFT] = 'q';
+
+	m_KeySets[INTERACTKEY::KEY_CAMRIGHT] = 'e';
+
 	return S_OK;
 }
 
@@ -303,8 +321,49 @@ HRESULT CPlayer::Release_RenderState()
 	return S_OK;
 }
 
+HRESULT CPlayer::Test_Setup()
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Components(TEXT("Com_DebugBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pDebugBufferCom)))
+		return E_FAIL;
+
+	/* For.Com_Transform */
+	CTransform::TRANSFORMDESC		TransformDesc;
+	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
+
+	TransformDesc.fSpeedPerSec = 5.f;
+	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
+	TransformDesc.InitPos = _float3(10.f, 2.f, 5.f);
+
+	if (FAILED(__super::Add_Components(TEXT("Com_DebugTransform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pDebugTransformCom, &TransformDesc)))
+		return E_FAIL;
+
+	m_pDebugTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
+	//TEXTURE
+	CTexture::TEXTUREDESC		TextureDesc;
+	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
+
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_iEndTex = 1;
+	TextureDesc.m_fSpeed = 60;
+	/*Debug*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Debug"), LEVEL_STATIC, TEXT("Prototype_Component_DebugLine"), (CComponent**)&m_pDebugTextureCom, &TextureDesc)))
+		return E_FAIL;
+
+	Set_Radius(0.25f);
+
+	return S_OK;
+}
+
 void CPlayer::GetKeyDown(_float _fTimeDelta)
 {
+	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_DEBUG]))
+	{
+		m_bDebugKey = !m_bDebugKey;
+	}
+
 	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN1]))
 	{
 		Test_Func(1);
@@ -326,38 +385,50 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		Chop(_fTimeDelta);
 	}
 
+
 	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_UP]))
 	{
-		Move_Up(_fTimeDelta);
 		m_bInputKey = true;
+		m_bPicked = false;
+		Move_Up(_fTimeDelta);
+		
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_RIGHT]))
 	{
-		Move_Right(_fTimeDelta);
 		m_bInputKey = true;
+		m_bPicked = false;
+		Move_Right(_fTimeDelta);
+	
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_DOWN]))
 	{
-		Move_Down(_fTimeDelta);
 		m_bInputKey = true;
+		m_bPicked = false;
+		Move_Down(_fTimeDelta);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_LEFT]))
 	{
-		Move_Left(_fTimeDelta);
 		m_bInputKey = true;
+		m_bPicked = false;
+		Move_Left(_fTimeDelta);
+	
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_ATTACK]))
 	{
-		Attack(_fTimeDelta);
 		m_bInputKey = true;
+		m_bPicked = false;
+		Attack(_fTimeDelta);	
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_ACTION]))
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_ACTION]))
 	{
 		Multi_Action(_fTimeDelta);
 	}
 	else
 	{
-		Move_Idle(_fTimeDelta);
+		if (!m_bPicked)
+		{
+			Move_Idle(_fTimeDelta);
+		}
 	}
 }
 
@@ -378,7 +449,7 @@ bool CPlayer::ResetAction(_float _fTimeDelta)
 }
 
 void CPlayer::Move_Idle(_float _fTimeDelta)
-{//Á¶°Ç¹®À¸·Î ¿À¸¥ÂÊ¸¶¿ì½º·Î ¾×¼Ç ½ÇÇàµ¿¾È¿¡´Â ¸øÇÏµµ·Ï ÇØ¾ßÇÔ.
+{
 
 	if (!ResetAction(_fTimeDelta))
 		return;
@@ -408,7 +479,12 @@ void CPlayer::Move_Idle(_float _fTimeDelta)
 
 void CPlayer::Move_Up(_float _fTimeDelta)
 {
-	m_pTransformCom->Go_Straight(_fTimeDelta, m_fTerrain_Height);
+	if (m_bInputKey)
+	{
+		m_pTransformCom->Go_Straight(_fTimeDelta, m_fTerrain_Height);
+	}
+	
+
 	m_eState = ACTION_STATE::MOVE;
 	m_eDirState = DIR_STATE::DIR_UP;
 	if (m_ePreState != m_eState
@@ -426,7 +502,11 @@ void CPlayer::Move_Up(_float _fTimeDelta)
 
 void CPlayer::Move_Right(_float _fTimeDelta)
 {
-	m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
+	if (m_bInputKey)
+	{
+		m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
+	}
+	
 	m_eState = ACTION_STATE::MOVE;
 	m_eDirState = DIR_STATE::DIR_RIGHT;
 	if (m_ePreState != m_eState || m_ePreDirState != m_eDirState)
@@ -452,7 +532,11 @@ void CPlayer::Move_Right(_float _fTimeDelta)
 
 void CPlayer::Move_Down(_float _fTimeDelta)
 {
-	m_pTransformCom->Go_Backward(_fTimeDelta, m_fTerrain_Height);
+	if (m_bInputKey)
+	{
+		m_pTransformCom->Go_Backward(_fTimeDelta, m_fTerrain_Height);
+	}
+	
 	m_eState = ACTION_STATE::MOVE;
 	m_eDirState = DIR_STATE::DIR_DOWN;
 
@@ -469,7 +553,10 @@ void CPlayer::Move_Down(_float _fTimeDelta)
 
 void CPlayer::Move_Left(_float _fTimeDelta)
 {
-	m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
+	if (m_bInputKey)
+	{
+		m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
+	}	
 	m_eState = ACTION_STATE::MOVE;
 	m_eDirState = DIR_STATE::DIR_LEFT;
 
@@ -500,7 +587,7 @@ void CPlayer::Attack(_float _fTimeDelta)
 {
 	m_eState = ACTION_STATE::ATTACK;
 
-	//°ø°Ý ¹«±â È®ÀÎÄÚµå ¸¸µé±â
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿?
 
 	if (m_eState != m_ePreState)
 	{
@@ -614,11 +701,105 @@ void CPlayer::Chop(_float _fTimeDelta)
 
 void CPlayer::Multi_Action(_float _fTimeDelta)
 {
+	Find_Priority();
+
+	if (m_pTarget != nullptr)
+	{
+		Set_PickingPoint(m_pTarget->Get_Position());
+	}
+
+}
+
+void CPlayer::Create_Bullet()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	
+	
+	if (m_eState == ACTION_STATE::ATTACK)
+	{
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.eDirState = m_eDirState;
+		BulletData.eWeaponType = m_eWeaponType;
+		BulletData.vPosition = Get_Pos();
+		switch (m_eWeaponType)
+		{
+		case WEAPON_TYPE::WEAPON_HAND:
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 10)
+			{	
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+				
+			break;
+		case WEAPON_TYPE::WEAPON_SWORD:
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20)
+			{
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+			break;
+		case WEAPON_TYPE::WEAPON_STAFF:
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20)
+			{
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+			break;
+		case WEAPON_TYPE::WEAPON_DART:
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 17)
+			{
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+			break;
+		}
+	}
 }
 
 void CPlayer::Detect_Enemy(void)
 {
-	/*¹Ý°æ ³»ÀÇ ÀüÃ¼ ¿ÀºêÁ§Æ®µé °Ë»öÇÏ±â. */
+	/*ï¿½Ý°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ë»ï¿½ï¿½Ï±ï¿½. */
+}
+
+void CPlayer::Find_Priority()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Object"));
+
+	_uint iIndex = 0;
+
+	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
+	{
+		//ï¿½ï¿½ï¿½ß¿ï¿½ Detectï¿½ï¿½ï¿½ï¿½& ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½.
+		if (iIndex == 0)
+		{
+			m_pTarget = *iter_Obj;
+		}
+
+
+		_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
+			+ (Get_Pos().y - (*iter_Obj)->Get_Position().y)*(Get_Pos().y - (*iter_Obj)->Get_Position().y)
+			+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
+
+		_float fTargetDir = (Get_Pos().x - (m_pTarget)->Get_Position().x)*(Get_Pos().x - (m_pTarget)->Get_Position().x)
+			+ (Get_Pos().y - (m_pTarget)->Get_Position().y)*(Get_Pos().y - (m_pTarget)->Get_Position().y)
+			+ (Get_Pos().z - (m_pTarget)->Get_Position().z)*(Get_Pos().z - (m_pTarget)->Get_Position().z);
+
+		if (fCmpDir < fTargetDir)
+		{
+			m_pTarget = *iter_Obj;
+		}
+
+		++iIndex;
+		iter_Obj++;
+	}
+
+
+	Safe_Release(pGameInstance);
 }
 
 void CPlayer::Test_Func(_int _iNum)
@@ -638,17 +819,51 @@ void CPlayer::Test_Func(_int _iNum)
 	m_Equipment->Set_WeaponType(m_eWeaponType);
 }
 
+void CPlayer::Test_Detect(_float fTImeDelta)
+{
+	
+}
+
 void CPlayer::Test_Debug(_float fTimeDelta)
 {
-	CGameInstance* pInstance = CGameInstance::Get_Instance();
+	if (!m_bDebugKey)
+		return;
 
-	if (pInstance->Get_TimeDelta(m_TimerTag) > 0.9f)
+	m_pDebugTransformCom->Set_State(CTransform::STATE_POSITION, Get_Pos());
+
+	CGameInstance* pInstance = CGameInstance::Get_Instance();
+	fTimeAcc += fTimeDelta;
+	if (fTimeAcc > 1.f && m_pColliderCom->Collision_with_Group(CCollider::COLLISION_MONSTER, this))
 	{
-#ifdef _DEBUG
-		//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
-		printf("%d\n ", m_tStat.fCurrentHealth);
-#endif
+		m_tStat.fCurrentHealth -= 5.f;
+
 	}
+
+	if (fTimeAcc > 2.f)
+	{
+		//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+		printf("%f\n ", m_tStat.fCurrentHealth);
+		fTimeAcc = 0.f;
+	}
+
+}
+
+void CPlayer::Debug_Render(void)
+{
+	if (!m_bDebugKey)
+		return;
+
+	m_pDebugTransformCom->Bind_OnGraphicDev();
+	if (FAILED(m_pDebugTextureCom->Bind_OnGraphicDev(0)))
+		return;
+
+	//m_pGraphic_Device->SetRenderState(D3DRS_LIGHTING, TRUE);
+	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+
+	m_pDebugBufferCom->Render();
+
+	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	//m_pGraphic_Device->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 }
 
@@ -787,18 +1002,37 @@ HRESULT CPlayer::Change_Texture(const _tchar * LayerTag)
 
 void CPlayer::SetUp_BillBoard()
 {
-	_float4x4		ViewMatrix;
-
 	if (m_eDirState == DIR_STATE::DIR_LEFT)
 		return;
+	_float4x4 ViewMatrix;
 
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix
+	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
 
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
-
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
-	//m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
+	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+}
+
+void CPlayer::WalkingTerrain()
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return;
+
+	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	if (nullptr == pVIBuffer_Terrain)
+		return;
+
+	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	if (nullptr == pTransform_Terrain)
+		return;
+
+	_float3			vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
+
+	Set_TerrainY(vPosition.y);
 }
 
 

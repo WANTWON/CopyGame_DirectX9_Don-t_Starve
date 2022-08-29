@@ -25,6 +25,7 @@ public:
 public:
 	class CGameObject* Find_Objects(_uint iLevelIndex ,const _tchar* pLayerTag, _uint iIndex = 0);
 	list<CGameObject*>* Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag);
+	class CComponent* Get_Component(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pComponentTag, _uint iIndex = 0);
 
 private:
 	map<const _tchar*, class CGameObject*>			m_Prototypes;
