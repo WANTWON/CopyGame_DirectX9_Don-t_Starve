@@ -82,6 +82,9 @@
     <Filter Include="02.GameObject\Monster\Spider">
       <UniqueIdentifier>{2245b0c7-c591-466d-b491-b61ae6bd9526}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Player\Bullet">
+      <UniqueIdentifier>{d7427aa0-c24d-4580-858b-52ddbc1476ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -204,6 +207,9 @@
     <ClInclude Include="..\Public\Spider.h">
       <Filter>02.GameObject\Monster\Spider</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bullet.h">
+      <Filter>02.GameObject\Player\Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -307,6 +313,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Spider.cpp">
       <Filter>02.GameObject\Monster\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bullet.cpp">
+      <Filter>02.GameObject\Player\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

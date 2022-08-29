@@ -59,7 +59,6 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	void SetUp_TerrainY();
 	void Picking();
 
 public:

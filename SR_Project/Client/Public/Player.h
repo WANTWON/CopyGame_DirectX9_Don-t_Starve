@@ -38,6 +38,10 @@ public:
 		KEY_INVEN9,
 		KEY_INVEN0,//0
 		KEY_MENU, //VK_ESCAPE
+		KEY_DEBUG,//VK_OEM_6 (]) 
+		KEY_CAMLEFT, //q
+		KEY_CAMRIGHT, //e
+
 		KEY_END
 	}INTERACTKEY;
 
@@ -60,7 +64,12 @@ public:
 	_int iKeyNum;
 	_bool bIsKeyDown;
 	}ACTDATA;*/
-
+	
+	typedef struct tagBulletData {
+		WEAPON_TYPE eWeaponType;
+		_float3		vPosition;
+		DIR_STATE	eDirState;
+	}BULLETDATA;
 private:
 	CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CPlayer(const CPlayer& rhs);
@@ -73,8 +82,9 @@ public:
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
 
-public:
+public:/*Picking*/
 	_float3 Get_Pos();
+	_float3 Get_Look();
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
 	void Move_to_PickingPoint(_float fTimedelta);
 	void Set_PickingPoint(_float3 PickingPoint) { m_vPickingPoint = PickingPoint; m_bPicked = true; m_bInputKey = false; m_bArrive = false; };
@@ -99,6 +109,8 @@ private:/*Setup*/
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
+	//Test
+	HRESULT Test_Setup();
 private: /**Actions*/
 	void GetKeyDown(_float _fTimeDelta);
 	bool ResetAction(_float _fTimeDelta);
@@ -115,22 +127,27 @@ private: /**Actions*/
 	void Chop(_float _fTimeDelta);
 
 	void Multi_Action(_float _fTimeDelta); //멀티키
-										   //Passive
+	 //Passive
 	void Decrease_Stat(void); //일정시간마다 Hunger 감소
-
+	void Create_Bullet();
 	void Detect_Enemy(void);
+
+	void Find_Priority();
+
+	//Debug
+	void Test_Debug(_float fTimeDelta);
+	void Debug_Render(void);
 	//Test
 	void Test_Func(_int _iNum);
-	void Test_Debug(_float fTimeDelta);
-	//void Test_Attack()
+	
+	void Test_Detect(_float fTImeDelta);
 private: /*For TextureCom */
 	HRESULT Texture_Clone();
 	HRESULT Change_Texture(const _tchar* LayerTag);
 
 private: /* For TransformCom*/
 	void SetUp_BillBoard();
-
-
+	void WalkingTerrain();
 
 private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
@@ -151,18 +168,29 @@ private: /*others*/
 	const _tchar*	m_TimerTag = TEXT("");
 	_float			m_fTerrain_Height = 0.f;
 
-	/* for Picking Test */
+	map<INTERACTKEY, _int> m_KeySets;
+
+	PLAYERSTAT		m_tStat;
+
+	class CEquip_Animation*	m_Equipment = nullptr;
+
+private:/* for Picking Test */
 	_float3			m_vPickingPoint;
 	_bool			m_bPicked = false;
 	_bool			m_bArrive = false;
 	_bool			m_bInputKey = false;
 
-	map<INTERACTKEY, _int> m_KeySets;
+private: /*for Debug*/	
+	_float fTimeAcc = 0.f;
 
-	PLAYERSTAT		m_tStat;
-
+	_bool					m_bDebugKey = false;
+	CVIBuffer_Rect*			m_pDebugBufferCom = nullptr;
+	CTransform*				m_pDebugTransformCom = nullptr;
+	CTexture*				m_pDebugTextureCom = nullptr;
 private: //Test
-	class CEquip_Animation*	m_Equipment = nullptr;
+	CGameObject*			m_pTarget = nullptr;
+
+
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

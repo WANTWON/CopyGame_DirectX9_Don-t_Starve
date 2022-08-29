@@ -42,7 +42,11 @@ int CItem::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	WalkingTerrain();
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	return OBJ_NOEVENT;
 }
@@ -55,8 +59,6 @@ void CItem::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE)))
 		Interact();
@@ -88,13 +90,10 @@ void CItem::Interact()
 {
 	// TODO: Pickup Here
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-
 	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
 
 	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (GetKeyState(VK_SPACE) < 0))
 	{
-
-
 		for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
 		{
 			if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true)
@@ -103,7 +102,6 @@ void CItem::Interact()
 				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
 				return;
 			}
-
 			else if ((*iter)->get_check() == false)
 			{
 				(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
@@ -198,6 +196,27 @@ void CItem::SetUp_BillBoard()
 
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+}
+
+void CItem::WalkingTerrain()
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return;
+
+	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	if (nullptr == pVIBuffer_Terrain)
+		return;
+
+	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	if (nullptr == pTransform_Terrain)
+		return;
+
+	_float3			vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
 CItem* CItem::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

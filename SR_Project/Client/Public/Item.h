@@ -23,6 +23,7 @@ public:
 		const _tchar* pTexturePrototype;
 		ITEMNAME eItemName;
 	} ITEMDESC;
+
 private:
 	CItem(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CItem(const CItem& rhs);
@@ -50,6 +51,7 @@ private: /*For TextureCom */
 
 private: /* For TransformCom*/
 	void SetUp_BillBoard();
+	void WalkingTerrain();
 
 private: /* For.Components */
 	CTexture* m_pTextureCom = nullptr;
