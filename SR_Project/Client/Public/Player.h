@@ -130,6 +130,7 @@ private: /*For TextureCom */
 
 private: /* For TransformCom*/
 	void SetUp_BillBoard();
+	void WalkingTerrain();
 
 
 

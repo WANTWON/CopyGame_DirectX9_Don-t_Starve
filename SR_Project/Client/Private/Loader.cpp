@@ -439,9 +439,9 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	TerrainDesc.m_iTextureNum = 0;
 
 	/*For.Prototype_Component_VIBuffer_Terrain*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pGraphic_Device, TerrainDesc))))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
+	//	CVIBuffer_Terrain::Create(m_pGraphic_Device, TerrainDesc))))
+	//	return E_FAIL;
 
 	/* For.Prototype_Component_VIBuffer_Terrain by MapTool */
 	if (FAILED(Loading_Terrain_ForGamePlayLevel()))
