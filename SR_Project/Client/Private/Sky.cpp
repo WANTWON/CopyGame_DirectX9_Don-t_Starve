@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Sky.h"
 #include "GameInstance.h"
+#include "CameraDynamic.h"
 
 CSky::CSky(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -43,6 +44,12 @@ int CSky::Tick(_float fTimeDelta)
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, *(_float3*)&ViewMatrix.m[3][0]);
 
+	/*CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	CCameraDynamic* pCamera = (CCameraDynamic*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"));
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, pCamera->Get_Position());*/
+	
 	return OBJ_NOEVENT;
 }
 

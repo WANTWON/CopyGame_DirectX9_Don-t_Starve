@@ -15,10 +15,10 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 
 	
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Terrain"))))
+	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Terrain"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
@@ -52,6 +52,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_StatUIPont(TEXT("Layer_StatUIPont"))))
 		return E_FAIL;
 	
+	
+
 
 	return S_OK;
 }
