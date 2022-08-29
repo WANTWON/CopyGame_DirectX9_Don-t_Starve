@@ -41,6 +41,7 @@ private:
 private: /* For TransformCom*/
 	void SetUp_BillBoard();
 	void Follow_Player(_float fTimeDelta);
+	void WalkingTerrain();
 
 private:
 	_float3			m_TargetPos = {1, 0, 1};

@@ -81,7 +81,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	
 	Test_Debug(fTimeDelta);
-	//���Ŀ� ������ ��������� �÷��̾ �����۰� ������� ȹ���ϴ� ��ȣ�ۿ��� ��ģ�Ŀ� �κ��丮�� �����°� �Ʒ��ڵ� �״�� ���ø� �۵��մϴ�!!
+	//���Ŀ� ������ ���������?�÷��̾ �����۰� �������?ȹ���ϴ� ��ȣ�ۿ��� ��ģ�Ŀ� �κ��丮�� �����°� �Ʒ��ڵ� �״��?���ø� �۵��մϴ�!!
 	//#include "Inven.h" �����Ͻð�
 	/*CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
 
@@ -93,7 +93,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	{
 	if (!(*iter)->get_check())
 	{
-	(*iter)->set_texnum(2); //���Ŀ� ������enum ��������ʹ� ���ڴ�� ���ϴ� ������ �־��ּ���
+	(*iter)->set_texnum(2); //���Ŀ� ������enum ��������ʹ�?���ڴ��?���ϴ� ������ �־��ּ���
 	(*iter)->set_check(true);
 
 	return;
@@ -557,7 +557,7 @@ void CPlayer::Attack(_float _fTimeDelta)
 {
 	m_eState = ACTION_STATE::ATTACK;
 
-	//���� ���� Ȯ���ڵ� �����
+	//���� ���� Ȯ���ڵ� �����?
 
 	if (m_eState != m_ePreState)
 	{
@@ -744,7 +744,7 @@ void CPlayer::Find_Priority()
 
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
-		//���߿� Detect����& ��� ���� ������ ��.
+		//���߿� Detect����& ���?���� ������ ��.
 		if (iIndex == 0)
 		{
 			m_pTarget = *iter_Obj;
@@ -972,6 +972,8 @@ HRESULT CPlayer::Change_Texture(const _tchar * LayerTag)
 
 void CPlayer::SetUp_BillBoard()
 {
+	if (m_eDirState == DIR_STATE::DIR_LEFT)
+		return;
 	_float4x4 ViewMatrix;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix
