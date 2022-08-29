@@ -187,6 +187,7 @@
     <ClInclude Include="..\Public\PlayerMentality_pont.h" />
     <ClInclude Include="..\Public\Pont.h" />
     <ClInclude Include="..\Public\Sky.h" />
+    <ClInclude Include="..\Public\Spider.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\Tree.h" />
     <ClInclude Include="..\Public\MainInventory.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="..\Private\PlayerMentality_pont.cpp" />
     <ClCompile Include="..\Private\Pont.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
+    <ClCompile Include="..\Private\Spider.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\Tree.cpp" />
     <ClCompile Include="..\Private\MainInventory.cpp" />
