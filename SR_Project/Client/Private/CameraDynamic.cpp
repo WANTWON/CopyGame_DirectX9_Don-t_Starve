@@ -186,10 +186,10 @@ void CCameraDynamic::Turn_Camera(_float fTimeDelta)
 	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
 	Safe_AddRef(pTarget);
 
-	_float3 vecTargetLook = pTarget->Get_State(CTransform::STATE_LOOK);
+	_float3 vecTargetLook = pTarget->Get_Look();
 	D3DXVec3Normalize(&vecTargetLook, &vecTargetLook);
 	_float3 vecargetPos = pTarget->Get_Pos() + vecTargetLook;
-	_float3 PlayerLook = pTarget->Get_State(CTransform::STATE_LOOK);
+	_float3 PlayerLook = pTarget->Get_Look();
 
 	m_pTransform->Follow_Target(fTimeDelta, vecargetPos, _float3(0, 0, 0 ));
 

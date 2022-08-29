@@ -110,9 +110,9 @@ _float3 CPlayer::Get_Pos()
 	return (m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 }
 
-_float3 CPlayer::Get_State(CTransform::STATE eState)
+_float3 CPlayer::Get_Look()
 {
-	return m_pTransformCom->Get_State(eState); 
+	return m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 }
 
 void CPlayer::Move_to_PickingPoint(_float fTimedelta)

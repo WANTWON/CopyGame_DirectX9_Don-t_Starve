@@ -75,7 +75,7 @@ public:
 
 public:
 	_float3 Get_Pos();
-	_float3 Get_State(CTransform::STATE  eState);
+	_float3 Get_Look();
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
 	void Move_to_PickingPoint(_float fTimedelta);
 	void Set_PickingPoint(_float3 PickingPoint) { m_vPickingPoint = PickingPoint; m_bPicked = true; m_bInputKey = false; m_bArrive = false; };
