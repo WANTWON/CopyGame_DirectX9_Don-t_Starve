@@ -2,10 +2,12 @@
 #include "../Public/Tree.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "Item.h"
 
 CTree::CTree(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
+	ZeroMemory(&m_tInfo, sizeof(OBJINFO));
 }
 
 CTree::CTree(const CTree & rhs)
@@ -29,6 +31,9 @@ HRESULT CTree::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
+	m_tInfo.iMaxHp = 60;
+	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+
 	return S_OK;
 }
 
@@ -36,8 +41,17 @@ int CTree::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	m_eState = IDLE;
+	// If Hp <= 0 : Fall and Drop Items
+	if (m_tInfo.iCurrentHp <= 0 && m_eState < FALL_RIGHT)
+	{
+		_bool bLeftRight = rand() % 2;
+		STATE eFall = bLeftRight ? FALL_RIGHT : FALL_LEFT;
+		m_eState = eFall;
 
+		Drop_Items();
+	}
+
+	// Change Texture based on State
 	if (m_eState != m_ePreState)
 	{
 		switch (m_eState)
@@ -69,6 +83,7 @@ int CTree::Tick(_float fTimeDelta)
 	}
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+
 	return OBJ_NOEVENT;
 }
 
@@ -80,6 +95,40 @@ void CTree::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
+
+	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('F')))
+		Interact(10);
+
+	// Move Texture Frame
+	switch (m_eState)
+	{
+	case IDLE:
+		m_pTextureCom->MoveFrame(m_TimerTag);
+		break;
+	case CHOP:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = IDLE;
+		break;
+	case SHAKE:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = IDLE;
+		break;
+	case GROW:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = IDLE;
+		break;
+	case FALL_LEFT:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		break;
+	case FALL_RIGHT:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		break;
+	case STUMP:
+		m_pTextureCom->MoveFrame(m_TimerTag, false);
+		break;
+	}
 }
 
 HRESULT CTree::Render()
@@ -93,8 +142,6 @@ HRESULT CTree::Render()
 	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
 		return E_FAIL;
 
-	m_pTextureCom->MoveFrame(m_TimerTag);
-
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
 
@@ -102,6 +149,48 @@ HRESULT CTree::Render()
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+void CTree::Interact(_uint Damage)
+{
+	if (m_tInfo.iCurrentHp == 0)
+		return;
+
+	if (Damage > m_tInfo.iCurrentHp)
+		m_tInfo.iCurrentHp = 0;
+	else
+		m_tInfo.iCurrentHp -= Damage;
+
+	m_eState = CHOP;
+}
+
+HRESULT CTree::Drop_Items()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	CItem::ITEMDESC ItemDesc;
+	ZeroMemory(&ItemDesc, sizeof(CItem::ITEMDESC));
+
+	// Random Position Drop based on Object Position
+	_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * .5f;
+	_bool bSignX = rand() % 2;
+	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * .5f;
+	_bool bSignZ = rand() % 2;
+	_float fPosX = bSignX ? (Get_Pos().x + fOffsetX) : (Get_Pos().x - fOffsetX);
+	_float fPosZ = bSignZ ? (Get_Pos().z + fOffsetZ) : (Get_Pos().z - fOffsetZ);
+
+	ItemDesc.fPosition = _float3(fPosX, Get_Pos().y, fPosZ);
+	ItemDesc.pTextureComponent = TEXT("Com_Texture_Log");
+	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
+	ItemDesc.eItemName = ITEMNAME::ITEMNAME_WOOD;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Item"), &ItemDesc)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
@@ -122,6 +211,10 @@ HRESULT CTree::SetUp_Components(void* pArg)
 
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
+		return E_FAIL;
+
+	/* For.Com_Collider*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -333,6 +426,7 @@ void CTree::Free()
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTextureCom);
 
 	for (auto& iter : m_vecTexture)
