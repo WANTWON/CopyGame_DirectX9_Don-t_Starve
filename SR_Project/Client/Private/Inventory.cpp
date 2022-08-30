@@ -317,6 +317,7 @@ void CInventory_Manager::Use_bag()
 		}
 
 		m_BagInventorylist.front()->set_check_bag(true);
+		m_BagInventorylist.front()->set_openbag();
 
 
 
@@ -345,7 +346,7 @@ void CInventory_Manager::Off_bag()
 		}
 	}
 
-	m_BagInventorylist.front()->set_check_bag(false);
+	m_BagInventorylist.front()->set_closebag();      //set_check_bag(false);
 }
 
 

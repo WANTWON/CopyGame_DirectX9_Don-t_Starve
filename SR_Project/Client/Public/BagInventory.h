@@ -28,12 +28,20 @@ public:
 
 	bool get_check_bag() { return m_bcheck_bag; }
 	void set_check_bag(bool tof) { m_bcheck_bag = tof; }
+	void set_closebag() { m_eState = CLOSE; }
+	void set_openbag() { m_eState = OPEN; }
+
+public: /*For TextureCom */
+	HRESULT Texture_Clone();
+	HRESULT Change_Texture(const _tchar* LayerTag);
 
 private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
+
+	vector<CTexture*> m_vecTexture;
 
 private:
 	_float4x4				m_ProjMatrix;
@@ -52,6 +60,14 @@ public:
 
 private:
 	bool m_bcheck_bag = false;
+
+public:
+	enum STATE
+	{IDLE , OPEN , CLOSE , MAX};
+private:
+	STATE m_eState = IDLE;
+	STATE m_ePreState = MAX;
+	const _tchar*	m_TimerTag = TEXT("");
 };
 
 END

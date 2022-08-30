@@ -178,6 +178,8 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 
 HRESULT CPlayer::Render()
 {
+	WEAPON_TYPE type = m_eWeaponType;
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 

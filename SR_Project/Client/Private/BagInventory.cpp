@@ -53,10 +53,25 @@ int CBagInventory::Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	if (PtInRect(&rcRect, ptMouse))
-	{
+	*/
 
-	}*/
+	if (m_eState != m_ePreState)
+	{
+		switch (m_eState)
+		{
+		case CBagInventory::IDLE:
+			Change_Texture(TEXT("Com_Texture"));
+			break;
+		case CBagInventory::OPEN:
+			Change_Texture(TEXT("Com_Texture_Bag_open"));
+			break;
+		case CBagInventory::CLOSE:
+			Change_Texture(TEXT("Com_Texture_Bag_close"));
+			break;
+		}
+
+		m_ePreState = m_eState;
+	}
 
 	return OBJ_NOEVENT;
 }
@@ -67,6 +82,34 @@ void CBagInventory::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom && m_bcheck_bag == true)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+
+
+	switch (m_eState)
+	{
+	case IDLE:
+		//m_pTextureCom->MoveFrame(m_TimerTag, false);
+		break;
+		//if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			//break;
+	case OPEN:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		{
+			m_eState = IDLE;
+			m_pTextureCom->Set_ZeroFrame();
+			Change_Texture(TEXT("Com_Texture"));
+		}
+				
+		break;
+	case CLOSE:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		{
+			//m_bcheck_bag = false;
+		}
+			
+
+		break;
+	}
+	
 }
 
 HRESULT CBagInventory::Render()
@@ -83,7 +126,7 @@ HRESULT CBagInventory::Render()
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))
@@ -105,14 +148,13 @@ HRESULT CBagInventory::SetUp_Components()
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BagInventory"), (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
-
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
+	/* For.Com_Texture */
+	if (FAILED(Texture_Clone()))
+		return E_FAIL;
 
 	/* For.Com_Transform */
 	CTransform::TRANSFORMDESC		TransformDesc;
@@ -181,6 +223,46 @@ CInventory_Manager::Get_Instance()->Get_BagInventory_list()->push_back(pInstance
 CGameObject * CBagInventory::Clone_Load(const _tchar * VIBufferTag, void * pArg)
 {
 	return nullptr;
+}
+
+HRESULT CBagInventory::Texture_Clone()
+{
+	CTexture::TEXTUREDESC TextureDesc;
+	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
+
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_fSpeed = 60;
+
+	TextureDesc.m_iStartTex = 1;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BagInventory"), (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+
+	// Tall
+	TextureDesc.m_iEndTex = 14;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Bag_open"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bagopen"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 10;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Bag_close"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bagclose"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+
+
+	return S_OK;
+}
+
+HRESULT CBagInventory::Change_Texture(const _tchar * LayerTag)
+{
+	if (FAILED(__super::Change_Component(LayerTag, (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
+	m_pTextureCom->Set_ZeroFrame();
+
+	return S_OK;
 }
 
 void CBagInventory::Free()

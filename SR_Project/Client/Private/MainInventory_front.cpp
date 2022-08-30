@@ -201,6 +201,13 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 		m_bpontcheck = true;
 	}
 
+
+
+	if (texnum == ITEMNAME_END)
+	{
+		m_itemtype == ITEM_END;
+	}
+
 	/*if (texnum == ITEMNAME_BAG || texnum == ITEMNAME_HELMET || texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH
 		|| texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK || texnum == ITEMNAME_HAMBAT || texnum == ITEMNAME_ARMOR || texnum == ITEMNAME_END)
 	{
@@ -320,6 +327,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 			pMouse->Set_Item_type(m_itemtype);
 			pMouse->Set_Equipment_name(texnum);
 			set_texnum(ITEMNAME_END);
+			m_itemtype = ITEM_END;
 
 			if(m_itemtype == ITEM_BAG)
 			{

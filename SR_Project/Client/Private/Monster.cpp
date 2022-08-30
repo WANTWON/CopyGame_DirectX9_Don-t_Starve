@@ -43,7 +43,7 @@ int CMonster::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	Follow_Player(fTimeDelta);
-	WalkingTerrain();
+	//WalkingTerrain();
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	if (nullptr != m_pColliderCom)
@@ -156,7 +156,7 @@ HRESULT CMonster::SetUp_Components(void* pArg)
 	
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
 	TransformDesc.fSpeedPerSec = 5.f;
-	TransformDesc.InitPos = { 3,1,3 };
+	TransformDesc.InitPos = { 10,1,10 };
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
