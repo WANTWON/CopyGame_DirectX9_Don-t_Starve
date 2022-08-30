@@ -60,7 +60,7 @@ void CItem::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
-	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE)))
+	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('C')))
 		Interact();
 }   
 
@@ -92,26 +92,23 @@ void CItem::Interact()
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
 
-	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (GetKeyState(VK_SPACE) < 0))
+	for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
 	{
-		for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
+		if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true)
 		{
-			if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true)
-			{
 
-				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
-				return;
-			}
-			else if ((*iter)->get_check() == false)
-			{
-				(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
-				(*iter)->set_check(true);
-
-				return;
-			}
-			else
-				++iter;
+			(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
+			return;
 		}
+		else if ((*iter)->get_check() == false)
+		{
+			(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
+			(*iter)->set_check(true);
+
+			return;
+		}
+		else
+			++iter;
 	}
 }
 
