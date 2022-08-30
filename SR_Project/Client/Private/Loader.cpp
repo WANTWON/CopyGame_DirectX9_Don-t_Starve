@@ -6,7 +6,7 @@
 
 #include "Bullet.h"
 #include "Player.h"
-#include "Monster.h"
+#include "Pig.h"
 #include "Spider.h"
 #include "Terrain.h"
 #include "CameraDynamic.h"
@@ -518,8 +518,8 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Monster*/
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster"),
-		CMonster::Create(m_pGraphic_Device))))
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pig"),
+		CPig::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For. Prototype_GameObject_Spider */

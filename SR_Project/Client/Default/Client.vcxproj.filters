@@ -210,6 +210,9 @@
     <ClInclude Include="..\Public\Bullet.h">
       <Filter>02.GameObject\Player\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Pig.h">
+      <Filter>02.GameObject\Monster\Pig</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -316,6 +319,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bullet.cpp">
       <Filter>02.GameObject\Player\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Pig.cpp">
+      <Filter>02.GameObject\Monster\Pig</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

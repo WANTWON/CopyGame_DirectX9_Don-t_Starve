@@ -171,6 +171,7 @@
     <ClInclude Include="..\Public\MainInventory_back.h" />
     <ClInclude Include="..\Public\MainInventory_front.h" />
     <ClInclude Include="..\Public\Mouse.h" />
+    <ClInclude Include="..\public\Pig.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\Public\CameraDynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="..\Private\MainInventory_back.cpp" />
     <ClCompile Include="..\Private\MainInventory_front.cpp" />
     <ClCompile Include="..\Private\Mouse.cpp" />
+    <ClCompile Include="..\private\Pig.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\Private\CameraDynamic.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />

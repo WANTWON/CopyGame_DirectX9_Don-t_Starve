@@ -36,6 +36,7 @@ HRESULT CSpider::Initialize(void* pArg)
 
 	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	
 
 	return S_OK;
 }
@@ -69,6 +70,8 @@ void CSpider::Late_Tick(_float fTimeDelta)
 	// Testing: 
 	if (CKeyMgr::Get_Instance()->Key_Down('F'))
 		Interact(20);
+
+
 
 	Change_Motion();
 	Change_Frame();
