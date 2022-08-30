@@ -96,7 +96,7 @@ void CCameraDynamic::Default_Camera(_float fTimeDelta)
 
 
 	if (m_lMouseWheel += (_long)(pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
-		Add_Fov(fTimeDelta*m_lMouseWheel*0.01f);
+		m_pTransform->Go_Straight(fTimeDelta*m_lMouseWheel*0.01f);
 
 	if (GetKeyState('Q') < 0)
 		m_pTransform->Turn(_float3(0, 1 ,0), fTimeDelta);
