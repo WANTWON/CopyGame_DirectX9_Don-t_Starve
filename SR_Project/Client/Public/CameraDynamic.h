@@ -42,7 +42,7 @@ private:
 private:
 	_long			m_lMouseWheel = 0;
 	_float3			m_vDistance = _float3(0, 3, -3);
-	CAMERAMODE		m_eCamMode = CAM_DEFAULT;
+	CAMERAMODE		m_eCamMode = CAM_PLAYER;
 	_int			m_iTurnCount = 0;
 
 public:

@@ -80,7 +80,7 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 
 	if (m_lMouseWheel += (_long)(pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
 	{
-		Add_Fov(fTimeDelta*m_lMouseWheel*0.01f);
+		m_pTransform->Go_Straight(fTimeDelta*m_lMouseWheel*0.01f);
 	}
 
 	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
@@ -164,7 +164,7 @@ void CCameraDynamic::FPS_Camera(_float fTimeDelta)
 
 	_float3 vecTargetLook = pTarget->Get_Look();
 	D3DXVec3Normalize(&vecTargetLook, &vecTargetLook);
-	_float3 vectargetPos = pTarget->Get_Pos() + _float3(0.f, 1.f, vecTargetLook.z);
+	_float3 vectargetPos = pTarget->Get_Pos() + _float3(0.f, 0.5f, vecTargetLook.z);
 	_float3 PlayerLook = (pTarget->Get_Look());
 
 	m_pTransform->Follow_Target(fTimeDelta, vectargetPos, _float3(0, 0, 0));
