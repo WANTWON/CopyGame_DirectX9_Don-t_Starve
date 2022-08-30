@@ -35,6 +35,7 @@ public:
 
 public:
 	HRESULT Bind_OnGraphicDev();
+	void Add_Fov(_float fAspect) { m_CameraDesc.fFovy += fAspect; }
 
 protected:
 	static _tchar*		m_pTransformTag;
