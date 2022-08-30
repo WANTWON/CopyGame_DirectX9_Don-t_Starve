@@ -82,6 +82,12 @@
     <Filter Include="02.GameObject\Player\Bullet">
       <UniqueIdentifier>{d7427aa0-c24d-4580-858b-52ddbc1476ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\ParticleSystem">
+      <UniqueIdentifier>{25f6308c-e538-40d4-ae30-691fccf0fb97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\ParticleSystem\Particle">
+      <UniqueIdentifier>{6efa72c4-7f08-49e9-8189-07dae52ccf9a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -207,6 +213,12 @@
     <ClInclude Include="..\Public\Bullet.h">
       <Filter>02.GameObject\Player\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Particle.h">
+      <Filter>02.GameObject\ParticleSystem\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ParticleSystem.h">
+      <Filter>02.GameObject\ParticleSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -313,6 +325,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bullet.cpp">
       <Filter>02.GameObject\Player\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Particle.cpp">
+      <Filter>02.GameObject\ParticleSystem\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ParticleSystem.cpp">
+      <Filter>02.GameObject\ParticleSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
