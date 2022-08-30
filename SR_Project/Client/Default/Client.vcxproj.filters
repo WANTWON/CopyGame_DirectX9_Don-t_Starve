@@ -46,18 +46,6 @@
     <Filter Include="02.GameObject\UI">
       <UniqueIdentifier>{d9d4e8eb-8704-4d4b-b177-4121e1b49c59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Tree">
-      <UniqueIdentifier>{2346487a-7d5d-4f93-80ff-5dc4b98ec1dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Grass">
-      <UniqueIdentifier>{f8894d0b-65b2-404a-9db2-d23f0476fe57}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Boulder">
-      <UniqueIdentifier>{6221d872-9563-42ff-8ea3-17b1ed0ad709}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Berry Bush">
-      <UniqueIdentifier>{3218fc99-aa20-40ce-b2c6-3740becc227a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Mouse">
       <UniqueIdentifier>{22e28144-0102-4609-9f9e-e6c0be621428}</UniqueIdentifier>
     </Filter>
@@ -73,14 +61,29 @@
     <Filter Include="02.GameObject\UI\PlayerMentality">
       <UniqueIdentifier>{2e42577c-a502-484f-b8e5-c72f548bafae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Item">
-      <UniqueIdentifier>{715ff672-5fe2-4be2-b9f8-37e47a3991cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Spider">
       <UniqueIdentifier>{ebbeb7fe-c79e-4ba0-b3e3-df77adf12af3}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\Player\Bullet">
       <UniqueIdentifier>{d7427aa0-c24d-4580-858b-52ddbc1476ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Interactive_Object">
+      <UniqueIdentifier>{106b4813-326e-48d9-a363-26551b9017b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Interactive_Object\Tree">
+      <UniqueIdentifier>{2346487a-7d5d-4f93-80ff-5dc4b98ec1dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Interactive_Object\Item">
+      <UniqueIdentifier>{715ff672-5fe2-4be2-b9f8-37e47a3991cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Interactive_Object\Boulder">
+      <UniqueIdentifier>{6221d872-9563-42ff-8ea3-17b1ed0ad709}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Interactive_Object\Berry Bush">
+      <UniqueIdentifier>{3218fc99-aa20-40ce-b2c6-3740becc227a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Interactive_Object\Grass">
+      <UniqueIdentifier>{f8894d0b-65b2-404a-9db2-d23f0476fe57}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -139,7 +142,7 @@
       <Filter>02.GameObject\Sky</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Tree.h">
-      <Filter>02.GameObject\Tree</Filter>
+      <Filter>02.GameObject\Interactive_Object\Tree</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Pont.h">
       <Filter>02.GameObject\UI</Filter>
@@ -157,13 +160,13 @@
       <Filter>02.GameObject\UI\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Grass.h">
-      <Filter>02.GameObject\Grass</Filter>
+      <Filter>02.GameObject\Interactive_Object\Grass</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Boulder.h">
-      <Filter>02.GameObject\Boulder</Filter>
+      <Filter>02.GameObject\Interactive_Object\Boulder</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BerryBush.h">
-      <Filter>02.GameObject\Berry Bush</Filter>
+      <Filter>02.GameObject\Interactive_Object\Berry Bush</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Equipment_front.h">
       <Filter>02.GameObject\UI\Inventory</Filter>
@@ -199,13 +202,16 @@
       <Filter>02.GameObject\UI\Playerhunger</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Item.h">
-      <Filter>02.GameObject\Item</Filter>
+      <Filter>02.GameObject\Interactive_Object\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Spider.h">
       <Filter>02.GameObject\Spider</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Bullet.h">
       <Filter>02.GameObject\Player\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Interactive_Object.h">
+      <Filter>02.GameObject\Interactive_Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -246,7 +252,7 @@
       <Filter>02.GameObject\Sky</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Tree.cpp">
-      <Filter>02.GameObject\Tree</Filter>
+      <Filter>02.GameObject\Interactive_Object\Tree</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Pont.cpp">
       <Filter>02.GameObject\UI</Filter>
@@ -264,13 +270,13 @@
       <Filter>02.GameObject\UI\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Grass.cpp">
-      <Filter>02.GameObject\Grass</Filter>
+      <Filter>02.GameObject\Interactive_Object\Grass</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boulder.cpp">
-      <Filter>02.GameObject\Boulder</Filter>
+      <Filter>02.GameObject\Interactive_Object\Boulder</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BerryBush.cpp">
-      <Filter>02.GameObject\Berry Bush</Filter>
+      <Filter>02.GameObject\Interactive_Object\Berry Bush</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Equipment_front.cpp">
       <Filter>02.GameObject\UI\Inventory</Filter>
@@ -306,13 +312,16 @@
       <Filter>02.GameObject\UI\Playerhunger</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Item.cpp">
-      <Filter>02.GameObject\Item</Filter>
+      <Filter>02.GameObject\Interactive_Object\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Spider.cpp">
       <Filter>02.GameObject\Spider</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Bullet.cpp">
       <Filter>02.GameObject\Player\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Interactive_Object.cpp">
+      <Filter>02.GameObject\Interactive_Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

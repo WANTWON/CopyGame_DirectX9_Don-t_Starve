@@ -30,11 +30,6 @@ void CLayer::Tick(_float fTimeDelta)
 			if (iEvent == OBJ_DEAD)
 			{
 				Safe_Release(pGameObject);
-				/*m_gameobjects.erase(std::remove(m_gameobjects.begin(), m_gameobjects.end(), [](auto iter)->bool {
-					if (iter == nullptr)
-						return true;
-					return false;
-				}), m_gameobjects.end());*/
 			}
 				
 		}

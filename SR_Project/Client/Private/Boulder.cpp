@@ -5,13 +5,13 @@
 #include "Item.h"
 
 CBoulder::CBoulder(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CInteractive_Object(pGraphic_Device)
 {
 	ZeroMemory(&m_tInfo, sizeof(OBJINFO));
 }
 
 CBoulder::CBoulder(const CBoulder & rhs)
-	: CGameObject(rhs)
+	: CInteractive_Object(rhs)
 {
 }
 
@@ -31,6 +31,7 @@ HRESULT CBoulder::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
+	m_eInteract_OBJ_ID = INTERACTOBJ_ID::BOULDER;
 	m_tInfo.iMaxHp = 60;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 
@@ -50,6 +51,7 @@ int CBoulder::Tick(_float fTimeDelta)
 	{
 		if (m_eState < BROKEN)
 		{
+			m_bInteract = false;
 			m_eState = BROKEN;
 			
 			Drop_Items();
@@ -152,7 +154,7 @@ HRESULT CBoulder::Drop_Items()
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_ROCK;
 	
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Item"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

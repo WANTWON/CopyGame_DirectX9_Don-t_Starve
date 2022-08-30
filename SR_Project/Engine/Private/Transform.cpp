@@ -156,6 +156,19 @@ void CTransform::Go_PosTarget(_float fTimeDelta, _float3 TargetPos, _float3 dist
 	Set_State(CTransform::STATE_POSITION, vPos);
 }
 
+void CTransform::Go_PosDir(_float fTimeDelta, _float3 vecDir)
+{
+	_float3 vPos = Get_State(CTransform::STATE_POSITION);
+	
+	_float3 vDir = vecDir;
+
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	vPos += vDir*fTimeDelta*m_TransformDesc.fSpeedPerSec;
+
+	Set_State(CTransform::STATE_POSITION, vPos);
+}
+
 void CTransform::LookAt(_float3 TargetPos)
 {
 	_float3 vPos = Get_State(CTransform::STATE_POSITION);

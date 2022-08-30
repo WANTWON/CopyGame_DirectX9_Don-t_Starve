@@ -8,7 +8,7 @@ class CCameraDynamic final : public CCamera
 {
 public:
 	enum CAMERAMODE {CAM_DEFAULT, CAM_PLAYER, CAM_TURNMODE, CAM_FPS, CAM_END};
-
+	//Default ÇÊ¿äx , 
 	typedef struct tagCameraDesc_Derived
 	{
 		_uint						iTest;
@@ -27,12 +27,18 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+public: //SetEnum
+	void Set_CamMode(CAMERAMODE _eCamMode, _int _TurnCount = 0) 
+	{
+		m_eCamMode = _eCamMode; Switch_TurnCnt(_TurnCount);
+	}
+	CAMERAMODE Get_CamMode() { return m_eCamMode; }
+
 private:
-	void Default_Camera(_float fTimeDelta);
 	void Player_Camera(_float fTimeDelta);
 	void Turn_Camera(_float fTimeDelta);
 	void FPS_Camera(_float fTimeDelta);
-
+	void Switch_TurnCnt(_int _TurnCount);
 private:
 	_long			m_lMouseWheel = 0;
 	_float3			m_vDistance = _float3(0, 3, -3);

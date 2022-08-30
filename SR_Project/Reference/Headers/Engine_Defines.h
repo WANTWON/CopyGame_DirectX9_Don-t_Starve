@@ -14,11 +14,14 @@ enum DIMM {DIMM_X, DIMM_Y, DIMM_WHEEL, DIMM_END};
 
 using namespace std;
 
+#include <stack>
+#include <queue>
 #include <vector>
 #include <map>
 #include <list>
 #include <algorithm>
 #include <iostream>
+
 
 #include "Engine_Macro.h"
 #include "Engine_Function.h"

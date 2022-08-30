@@ -166,6 +166,7 @@
     <ClInclude Include="..\Public\Equipment_front.h" />
     <ClInclude Include="..\Public\Equip_Animation.h" />
     <ClInclude Include="..\public\Grass.h" />
+    <ClInclude Include="..\Public\Interactive_Object.h" />
     <ClInclude Include="..\Public\Inventory.h" />
     <ClInclude Include="..\Public\Item.h" />
     <ClInclude Include="..\Public\MainInventory_back.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="..\Private\Equipment_front.cpp" />
     <ClCompile Include="..\Private\Equip_Animation.cpp" />
     <ClCompile Include="..\private\Grass.cpp" />
+    <ClCompile Include="..\Private\Interactive_Object.cpp" />
     <ClCompile Include="..\Private\Inventory.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
     <ClCompile Include="..\Private\MainInventory_back.cpp" />

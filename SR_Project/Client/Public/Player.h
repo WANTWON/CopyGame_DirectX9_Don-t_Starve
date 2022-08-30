@@ -16,7 +16,7 @@ class CPlayer final : public CGameObject
 {
 public:
 
-	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, ACTION_END };
+	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, ACTION_END };
 	typedef enum class InteractionKey {
 		KEY_LBUTTON, //VK_LBUTTON
 		KEY_RBUTTON, //VK_RBUTTON
@@ -41,7 +41,8 @@ public:
 		KEY_DEBUG,//VK_OEM_6 (]) 
 		KEY_CAMLEFT, //q
 		KEY_CAMRIGHT, //e
-
+		KEY_CAMFPSMODE, // F1
+		KEY_CAMTPSMODE, //F2
 		KEY_END
 	}INTERACTKEY;
 
@@ -69,6 +70,8 @@ public:
 		WEAPON_TYPE eWeaponType;
 		_float3		vPosition;
 		DIR_STATE	eDirState;
+		_float3		vLook;
+		//_bool		bIsFPSMode = false;
 	}BULLETDATA;
 private:
 	CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -113,8 +116,9 @@ private:/*Setup*/
 	HRESULT Test_Setup();
 private: /**Actions*/
 	void GetKeyDown(_float _fTimeDelta);
-	bool ResetAction(_float _fTimeDelta);
+	
 	//Idle
+	bool ResetAction(_float _fTimeDelta);
 	void Move_Idle(_float _fTimeDelta);
 	//Move
 	void Move_Up(_float _fTimeDelta);
@@ -125,14 +129,21 @@ private: /**Actions*/
 	void Attack(_float _fTimeDelta);
 	void Mining(_float _fTimeDelta);
 	void Chop(_float _fTimeDelta);
+	
+	void Cutting_Grass(_float _fTimeDelta);
+	void Eatting(_float _fTimeDelta);
+	void Pickup(_float _fTimeDelta);
 
 	void Multi_Action(_float _fTimeDelta); //멀티키
 	 //Passive
-	void Decrease_Stat(void); //일정시간마다 Hunger 감소
-	void Create_Bullet();
-	void Detect_Enemy(void);
-
+	void	 Decrease_Stat(void); //일정시간마다 Hunger 감소
+	void	Create_Bullet(void);
+	void	Detect_Enemy(void);
+	_bool	Check_Interact_End(void);
 	void Find_Priority();
+	//ActStack
+	void Tick_ActStack(_float fTimeDelta);
+	void Clear_ActStack();
 
 	//Debug
 	void Test_Debug(_float fTimeDelta);
@@ -141,6 +152,11 @@ private: /**Actions*/
 	void Test_Func(_int _iNum);
 	
 	void Test_Detect(_float fTImeDelta);
+	
+	//Interact Check
+	ACTION_STATE Select_Interact_State(INTERACTOBJ_ID _eObjID);
+	
+
 private: /*For TextureCom */
 	HRESULT Texture_Clone();
 	HRESULT Change_Texture(const _tchar* LayerTag);
@@ -174,6 +190,8 @@ private: /*others*/
 
 	class CEquip_Animation*	m_Equipment = nullptr;
 
+	/*CamMode*/
+	_bool			m_bIsFPS = false;
 private:/* for Picking Test */
 	_float3			m_vPickingPoint;
 	_bool			m_bPicked = false;
@@ -190,7 +208,10 @@ private: /*for Debug*/
 private: //Test
 	CGameObject*			m_pTarget = nullptr;
 
+	_bool					m_bAutoMode = false;
+	stack<ACTION_STATE>		m_ActStack;
 
+	//_int					m_iTestCnt = 0;
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

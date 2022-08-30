@@ -5,12 +5,12 @@
 #include "Inventory.h"
 
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CInteractive_Object(pGraphic_Device)
 {
 }
 
 CItem::CItem(const CItem & rhs)
-	: CGameObject(rhs)
+	: CInteractive_Object(rhs)
 {
 }
 
@@ -32,8 +32,9 @@ HRESULT CItem::Initialize(void* pArg)
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-
+	//ITEMNAME::
 	m_pTransformCom->Set_Scale(.3f, .3f, 1.f);
+	m_eInteract_OBJ_ID = INTERACTOBJ_ID::ITEMS;
 
 	return S_OK;
 }
@@ -86,7 +87,7 @@ HRESULT CItem::Render()
 	return S_OK;
 }
 
-void CItem::Interact()
+void CItem::Interact(_uint Damage)
 {
 	// TODO: Pickup Here
 	//#include "Inven.h" 포함하시고
@@ -94,9 +95,10 @@ void CItem::Interact()
 
 	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
 
-	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (GetKeyState(VK_SPACE) < 0))
+	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this))//VK_Space delete
 	{
-
+		//Interact = false;
+		m_bInteract = false;
 
 		for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
 		{
@@ -124,6 +126,11 @@ void CItem::Interact()
 	
 
 	}
+}
+
+HRESULT CItem::Drop_Items()
+{
+	return S_OK;
 }
 
 HRESULT CItem::SetUp_Components()

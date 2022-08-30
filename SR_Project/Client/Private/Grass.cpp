@@ -5,12 +5,12 @@
 #include "Item.h"
 
 CGrass::CGrass(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CInteractive_Object(pGraphic_Device)
 {
 }
 
 CGrass::CGrass(const CGrass & rhs)
-	: CGameObject(rhs)
+	: CInteractive_Object(rhs)
 {
 }
 
@@ -29,6 +29,8 @@ HRESULT CGrass::Initialize(void* pArg)
 
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
+
+	m_eInteract_OBJ_ID = INTERACTOBJ_ID::GRASS;
 
 	return S_OK;
 }
@@ -119,10 +121,11 @@ HRESULT CGrass::Render()
 	return S_OK;
 }
 
-void CGrass::Interact()
+void CGrass::Interact(_uint Damage)
 {
 	if (m_eState < PICK)
 	{
+		m_bInteract = false;
 		m_eState = PICK;
 		Drop_Items();
 	}
@@ -149,7 +152,7 @@ HRESULT CGrass::Drop_Items()
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_GRASS;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Item"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
