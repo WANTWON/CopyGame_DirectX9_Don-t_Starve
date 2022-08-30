@@ -139,7 +139,8 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 	
 	if (m_bPicked == false || m_bArrive == true || m_bInputKey == true)
 		return;
-
+	WalkingTerrain();
+	m_vPickingPoint.y = m_fTerrain_Height;
 	m_pTransformCom->Go_PosTarget(fTimedelta, m_vPickingPoint, _float3(0.f, 0.f, 0.f));
 
 	_float3 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -152,6 +153,7 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 	{
 		Move_Left(fTimedelta);
 	}
+
 	if (abs(vPlayerPos.x - m_vPickingPoint.x) < 0.1 &&
 		abs(vPlayerPos.z - m_vPickingPoint.z) < 0.1)
 	{
@@ -160,11 +162,6 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 		m_bArrive = true;
 		m_bInputKey = false;
 	}
-
-	/*if (m_ActQueue.front()== ACTION_STATE::MOVE && m_bArrive && m_bAutoMode)
-	{
-		
-	}*/
 }
 
 HRESULT CPlayer::Render()
