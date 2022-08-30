@@ -128,13 +128,13 @@ void CItem::Interact()
 			for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
 			{
 				if ((*iter)->get_iNum() >= 10)
-					return;
+					break;
 
 				if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true)
 				{
 
 					(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
-					return;
+					break;
 				}
 
 
@@ -144,7 +144,7 @@ void CItem::Interact()
 					(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
 					(*iter)->set_check(true);
 
-					return;
+					break;
 				}
 				else
 					++iter;

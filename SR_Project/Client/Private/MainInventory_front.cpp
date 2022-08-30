@@ -126,7 +126,7 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 		texnum = ITEMNAME_BERRY;
 	}
 
-	if (iNum >= 10)
+	if (iNum == 15)
 	{
 		texnum = ITEMNAME_STAFF;
 	}
@@ -327,7 +327,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 			pMouse->Set_Item_type(m_itemtype);
 			pMouse->Set_Equipment_name(texnum);
 			set_texnum(ITEMNAME_END);
-			m_itemtype = ITEM_END;
+			
 
 			if(m_itemtype == ITEM_BAG)
 			{
@@ -336,6 +336,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 			Safe_Release(pinv);
 			}
 			
+			m_itemtype = ITEM_END;
 		}
 
 		//minus_itemcount();

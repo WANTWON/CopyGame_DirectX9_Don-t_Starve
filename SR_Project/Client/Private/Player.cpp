@@ -182,7 +182,7 @@ HRESULT CPlayer::Render()
 
 	if (FAILED(__super::Render()))
 		return E_FAIL;
-
+	
 	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 		return E_FAIL;
 
