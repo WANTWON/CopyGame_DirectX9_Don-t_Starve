@@ -2,6 +2,7 @@
 #include "..\Public\Equipment_front.h"
 #include "GameInstance.h"
 #include "Inventory.h"
+#include "Player.h"
 
 
 CEquipment_front::CEquipment_front(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -81,6 +82,10 @@ int CEquipment_front::Tick(_float fTimeDelta)
 	{
 		CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
 		Safe_AddRef(pInventory_Manager);
+		if (texnum == ITEMNAME_BAG)
+		{
+			pInventory_Manager->Off_bag();
+		}
 		auto Maininvenlist = pInventory_Manager->Get_Inven_list();
 		Safe_Release(pInventory_Manager);
 
@@ -101,7 +106,35 @@ int CEquipment_front::Tick(_float fTimeDelta)
 		}
 	}
 
+	if (iNum == 0)
+	{
+		switch (texnum)
+		{
+		case ITEMNAME_SHOTTER:
 
+			weapontype = WEAPON_TYPE::WEAPON_DART;
+			break;
+		case ITEMNAME_HAMBAT:
+
+			weapontype = WEAPON_TYPE::WEAPON_SWORD;
+			break;
+		case ITEMNAME_STAFF:
+
+			weapontype = WEAPON_TYPE::WEAPON_STAFF;
+			break;
+
+		default:
+
+			weapontype = WEAPON_TYPE::WEAPON_HAND;
+
+
+		}
+	}
+
+	
+ 
+	
+		
 
 
 
@@ -132,7 +165,13 @@ void CEquipment_front::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-	//set_check(false);
+	//set_check(falseB
+
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if(iNum == 0)
+	(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_WeaponType(weapontype));
 }
 
 HRESULT CEquipment_front::Render()

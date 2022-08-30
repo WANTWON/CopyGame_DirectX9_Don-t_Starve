@@ -5,13 +5,13 @@
 #include "Item.h"
 
 CTree::CTree(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CInteractive_Object(pGraphic_Device)
 {
 	ZeroMemory(&m_tInfo, sizeof(OBJINFO));
 }
 
 CTree::CTree(const CTree & rhs)
-	: CGameObject(rhs)
+	: CInteractive_Object(rhs)
 {
 }
 
@@ -30,7 +30,8 @@ HRESULT CTree::Initialize(void* pArg)
 
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
-
+	//Wood1
+	m_eInteract_OBJ_ID = INTERACTOBJ_ID::TREE;
 	m_tInfo.iMaxHp = 60;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 
@@ -45,16 +46,19 @@ int CTree::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
+
 	// If Hp <= 0 : Fall and Drop Items
 	if (m_tInfo.iCurrentHp <= 0 && m_eState < FALL_RIGHT)
 	{
+		m_bInteract = false;
 		_bool bLeftRight = rand() % 2;
 		STATE eFall = bLeftRight ? FALL_RIGHT : FALL_LEFT;
 		m_eState = eFall;
 
 		Drop_Items();
 	}
-
 	// Change Texture based on State
 	if (m_eState != m_ePreState)
 	{
@@ -100,8 +104,6 @@ void CTree::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('F')))
 		Interact(10);
@@ -164,7 +166,10 @@ void CTree::Interact(_uint Damage)
 		return;
 
 	if (Damage > m_tInfo.iCurrentHp)
+	{
 		m_tInfo.iCurrentHp = 0;
+
+	}	
 	else
 		m_tInfo.iCurrentHp -= Damage;
 
@@ -192,7 +197,7 @@ HRESULT CTree::Drop_Items()
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_WOOD;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Item"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

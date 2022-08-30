@@ -159,6 +159,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\BagInventory.h" />
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\public\BerryBush.h" />
     <ClInclude Include="..\public\Boulder.h" />
@@ -166,13 +167,14 @@
     <ClInclude Include="..\Public\Equipment_front.h" />
     <ClInclude Include="..\Public\Equip_Animation.h" />
     <ClInclude Include="..\public\Grass.h" />
+    <ClInclude Include="..\Public\Interactive_Object.h" />
     <ClInclude Include="..\Public\Inventory.h" />
     <ClInclude Include="..\Public\Item.h" />
     <ClInclude Include="..\Public\MainInventory_back.h" />
     <ClInclude Include="..\Public\MainInventory_front.h" />
     <ClInclude Include="..\Public\Mouse.h" />
-    <ClInclude Include="..\Public\Particle.h" />
-    <ClInclude Include="..\Public\ParticleSystem.h" />
+    <ClInclude Include="..\Public\Mouse_item.h" />
+    <ClInclude Include="..\public\Pig.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\Public\CameraDynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -201,6 +203,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\BagInventory.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\private\BerryBush.cpp" />
     <ClCompile Include="..\private\Boulder.cpp" />
@@ -208,13 +211,14 @@
     <ClCompile Include="..\Private\Equipment_front.cpp" />
     <ClCompile Include="..\Private\Equip_Animation.cpp" />
     <ClCompile Include="..\private\Grass.cpp" />
+    <ClCompile Include="..\Private\Interactive_Object.cpp" />
     <ClCompile Include="..\Private\Inventory.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
     <ClCompile Include="..\Private\MainInventory_back.cpp" />
     <ClCompile Include="..\Private\MainInventory_front.cpp" />
     <ClCompile Include="..\Private\Mouse.cpp" />
-    <ClCompile Include="..\Private\Particle.cpp" />
-    <ClCompile Include="..\Private\ParticleSystem.cpp" />
+    <ClCompile Include="..\Private\Mouse_item.cpp" />
+    <ClCompile Include="..\private\Pig.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\Private\CameraDynamic.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />

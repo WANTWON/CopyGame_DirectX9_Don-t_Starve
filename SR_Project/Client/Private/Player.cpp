@@ -6,6 +6,10 @@
 #include "Inventory.h"
 #include "Equip_Animation.h"
 #include "Bullet.h"
+#include "CameraDynamic.h"
+#include "Interactive_Object.h"
+
+
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -48,6 +52,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	//Test
 	Change_Texture(TEXT("Com_Texture_Idle_Down"));
+	m_ActStack.push(ACTION_STATE::IDLE);
 
 	return S_OK;
 }
@@ -56,17 +61,22 @@ int CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+
 	GetKeyDown(fTimeDelta);
 	Move_to_PickingPoint(fTimeDelta);
 	WalkingTerrain();
 
 	Create_Bullet();
 
+	//Test
+	Tick_ActStack(fTimeDelta);
+	///
 	m_Equipment->Set_TargetPos(Get_Pos());
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+	
 
 	return OBJ_NOEVENT;
 }
@@ -111,28 +121,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	
 	Test_Debug(fTimeDelta);
 	
-	/*CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
-
-	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
-
-	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_ITEM, this) && (GetKeyState(VK_SPACE) < 0))
-	{
-
-
-	for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
-	{
-	if (!(*iter)->get_check())
-	{
-	(*iter)->set_texnum(2); //ï¿½ï¿½ï¿½Ä¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½enum ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í´ï¿?ï¿½ï¿½ï¿½Ú´ï¿½ï¿?ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½
-	(*iter)->set_check(true);
-
-	return;
-	}
-	else
-	++iter;
-
-	}*/
-
 }
 
 
@@ -142,7 +130,7 @@ _float3 CPlayer::Get_Pos()
 }
 
 _float3 CPlayer::Get_Look()
-{
+{		
 	return (m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 }
 
@@ -151,10 +139,9 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 	
 	if (m_bPicked == false || m_bArrive == true || m_bInputKey == true)
 		return;
-
-	//m_pTransformCom->Follow_Target(m_vPickingPoint, _float3(0,1,0));
-	m_pTransformCom->LookAt(m_vPickingPoint);
-	m_pTransformCom->Go_Straight(fTimedelta);
+	WalkingTerrain();
+	m_vPickingPoint.y = m_fTerrain_Height;
+	m_pTransformCom->Go_PosTarget(fTimedelta, m_vPickingPoint, _float3(0.f, 0.f, 0.f));
 
 	_float3 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
@@ -166,6 +153,7 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 	{
 		Move_Left(fTimedelta);
 	}
+
 	if (abs(vPlayerPos.x - m_vPickingPoint.x) < 0.1 &&
 		abs(vPlayerPos.z - m_vPickingPoint.z) < 0.1)
 	{
@@ -178,9 +166,11 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 
 HRESULT CPlayer::Render()
 {
+	WEAPON_TYPE type = m_eWeaponType;
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
-
+	
 	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 		return E_FAIL;
 
@@ -293,10 +283,13 @@ HRESULT CPlayer::SetUp_KeySettings()
 
 	m_KeySets[INTERACTKEY::KEY_DEBUG] = VK_OEM_6;
 
-	m_KeySets[INTERACTKEY::KEY_CAMLEFT] = 'q';
+	m_KeySets[INTERACTKEY::KEY_CAMLEFT] = 'Q';
 
-	m_KeySets[INTERACTKEY::KEY_CAMRIGHT] = 'e';
+	m_KeySets[INTERACTKEY::KEY_CAMRIGHT] = 'E';
 
+	m_KeySets[INTERACTKEY::KEY_CAMFPSMODE] = VK_F1;
+
+	m_KeySets[INTERACTKEY::KEY_CAMTPSMODE] = VK_F2;
 	return S_OK;
 }
 
@@ -359,11 +352,48 @@ HRESULT CPlayer::Test_Setup()
 
 void CPlayer::GetKeyDown(_float _fTimeDelta)
 {
+#pragma region Debug&CamKey
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_DEBUG]))
 	{
 		m_bDebugKey = !m_bDebugKey;
 	}
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMFPSMODE]))
+	{
+		m_bIsFPS = true;
+		CGameInstance* pInstance = CGameInstance::Get_Instance();
+		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 0);
+		Camera->Set_CamMode(CCameraDynamic::CAM_FPS);
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMTPSMODE]))
+	{
+		m_bIsFPS = false;
+		CGameInstance* pInstance = CGameInstance::Get_Instance();
+		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 0);
+		Camera->Set_CamMode(CCameraDynamic::CAM_PLAYER);
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMLEFT]))
+	{
+		CGameInstance* pInstance = CGameInstance::Get_Instance();
+		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 0);
+		if (Camera->Get_CamMode() == CCameraDynamic::CAM_PLAYER)
+		{
+			Camera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 1);
+		}
+		
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
+	{
+		CGameInstance* pInstance = CGameInstance::Get_Instance();
+		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 0);
+		if (Camera->Get_CamMode() == CCameraDynamic::CAM_PLAYER)
+		{
+			Camera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 2);
+		}
+	}
+#pragma endregion Debug&CamKey
 
+#pragma region Action
+	//Action
 	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN1]))
 	{
 		Test_Func(1);
@@ -378,38 +408,45 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN4]))
 	{
-		Mining(_fTimeDelta);
+		Test_Func(0);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN5]))
 	{
-		Chop(_fTimeDelta);
+		Eatting(_fTimeDelta);
 	}
+#pragma endregion Action
 
-
+#pragma region Move
+	//Move
 	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_UP]))
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
-		Move_Up(_fTimeDelta);
-		
+
+		Clear_ActStack();
+		Move_Up(_fTimeDelta);		
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_RIGHT]))
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
+		Clear_ActStack();
 		Move_Right(_fTimeDelta);
-	
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_DOWN]))
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
+
+		Clear_ActStack();
 		Move_Down(_fTimeDelta);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_LEFT]))
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
+
+		Clear_ActStack();
 		Move_Left(_fTimeDelta);
 	
 	}
@@ -417,25 +454,39 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
+
+		Clear_ActStack();
 		Attack(_fTimeDelta);	
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_ACTION]))
 	{
+		Clear_ActStack();
 		Multi_Action(_fTimeDelta);
 	}
 	else
 	{
-		if (!m_bPicked)
+		if (!m_bPicked && m_ActStack.top() == ACTION_STATE::IDLE)
 		{
 			Move_Idle(_fTimeDelta);
 		}
 	}
+#pragma endregion Move
 }
 
 bool CPlayer::ResetAction(_float _fTimeDelta)
 {
-	if (m_eState == ACTION_STATE::ATTACK || m_eState == ACTION_STATE::CHOP || m_eState == ACTION_STATE::MINING)
+	switch (m_eState)
 	{
+	case Client::CPlayer::ACTION_STATE::IDLE:
+		break;
+	case Client::CPlayer::ACTION_STATE::MOVE:
+		break;
+	case Client::CPlayer::ACTION_STATE::ATTACK:
+	case Client::CPlayer::ACTION_STATE::MINING:
+	case Client::CPlayer::ACTION_STATE::CHOP:
+	case Client::CPlayer::ACTION_STATE::WEEDING:
+	case Client::CPlayer::ACTION_STATE::EAT:
+	case Client::CPlayer::ACTION_STATE::PICKUP:
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1)
 		{
 			return true;
@@ -444,7 +495,13 @@ bool CPlayer::ResetAction(_float _fTimeDelta)
 		{
 			return false;
 		}
+		break;
+	case Client::CPlayer::ACTION_STATE::ACTION_END:
+		break;
+	default:
+		break;
 	}
+
 	return true;
 }
 
@@ -587,8 +644,6 @@ void CPlayer::Attack(_float _fTimeDelta)
 {
 	m_eState = ACTION_STATE::ATTACK;
 
-	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿?
-
 	if (m_eState != m_ePreState)
 	{
 		m_Equipment->Set_ActionState((_uint)ACTION_STATE::ATTACK);
@@ -651,6 +706,8 @@ void CPlayer::Attack(_float _fTimeDelta)
 		m_ePreState = m_eState;
 	}
 
+	
+
 }
 
 void CPlayer::Mining(_float _fTimeDelta)
@@ -673,6 +730,10 @@ void CPlayer::Mining(_float _fTimeDelta)
 			break;
 		}
 		m_ePreState = m_eState;
+	}
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 24)
+	{
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(10);
 	}
 }
 
@@ -697,16 +758,101 @@ void CPlayer::Chop(_float _fTimeDelta)
 		}
 		m_ePreState = m_eState;
 	}
+
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 28)
+	{
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(20);
+	}
+}
+
+void CPlayer::Cutting_Grass(_float _fTimeDelta)
+{
+	m_eState = ACTION_STATE::WEEDING;
+
+	if (m_ePreState != m_eState)
+	{
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Build_Down"));
+			break;
+		case DIR_STATE::DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Build_Up"));
+			break;
+		case DIR_STATE::DIR_LEFT:
+		case DIR_STATE::DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Build_Side"));
+			break;
+		}
+		m_ePreState = m_eState;
+	}
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 28)
+	{
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(20);
+	}
+}
+
+void CPlayer::Eatting(_float _fTimeDelta)
+{
+	m_eState = ACTION_STATE::EAT;
+
+	if (m_ePreState != m_eState)
+	{
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_DOWN:
+		case DIR_STATE::DIR_UP:
+		case DIR_STATE::DIR_LEFT:
+		case DIR_STATE::DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Eat"));
+			break;
+		}
+		m_ePreState = m_eState;
+	}
+}
+
+void CPlayer::Pickup(_float _fTimeDelta)
+{
+	m_eState = ACTION_STATE::PICKUP;
+
+	if (m_ePreState != m_eState)
+	{
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Pickup_Down"));
+			break;
+		case DIR_STATE::DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Pickup_Up"));
+			break;
+		case DIR_STATE::DIR_LEFT:
+		case DIR_STATE::DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Pickup_Side"));
+			break;
+		}
+		m_ePreState = m_eState;
+	}
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8)
+	{
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact();
+	}
 }
 
 void CPlayer::Multi_Action(_float _fTimeDelta)
 {
+	//Only Objects
 	Find_Priority();
 
 	if (m_pTarget != nullptr)
 	{
 		Set_PickingPoint(m_pTarget->Get_Position());
+		m_bAutoMode = true;
+		m_ActStack.push(ACTION_STATE::MOVE);
 	}
+	else {
+		Clear_ActStack();
+	}
+
 
 }
 
@@ -720,9 +866,21 @@ void CPlayer::Create_Bullet()
 	{
 		BULLETDATA BulletData;
 		ZeroMemory(&BulletData, sizeof(BulletData));
-		BulletData.eDirState = m_eDirState;
+		if (m_bIsFPS)
+		{
+			BulletData.eDirState = DIR_STATE::DIR_END;
+			//BulletData.bIsFPSMode = true;
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		}
+		else
+		{
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+			BulletData.eDirState = m_eDirState;
+		}
 		BulletData.eWeaponType = m_eWeaponType;
 		BulletData.vPosition = Get_Pos();
+		//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		
 		switch (m_eWeaponType)
 		{
 		case WEAPON_TYPE::WEAPON_HAND:
@@ -731,7 +889,6 @@ void CPlayer::Create_Bullet()
 				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
 					return;
 			}
-				
 			break;
 		case WEAPON_TYPE::WEAPON_SWORD:
 			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20)
@@ -760,7 +917,7 @@ void CPlayer::Create_Bullet()
 
 void CPlayer::Detect_Enemy(void)
 {
-	/*ï¿½Ý°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ë»ï¿½ï¿½Ï±ï¿½. */
+	
 }
 
 void CPlayer::Find_Priority()
@@ -772,10 +929,17 @@ void CPlayer::Find_Priority()
 
 	_uint iIndex = 0;
 
+	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
-		//ï¿½ï¿½ï¿½ß¿ï¿½ Detectï¿½ï¿½ï¿½ï¿½& ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½.
-		if (iIndex == 0)
+		if (!dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_CanInteract())
+		{
+			++iIndex;
+			iter_Obj++;
+			continue;
+		}
+
+		if (m_pTarget == nullptr)
 		{
 			m_pTarget = *iter_Obj;
 		}
@@ -822,6 +986,129 @@ void CPlayer::Test_Func(_int _iNum)
 void CPlayer::Test_Detect(_float fTImeDelta)
 {
 	
+}
+
+void CPlayer::Tick_ActStack(_float fTimeDelta)
+{
+	if (m_bAutoMode)
+	{
+		if (m_pTarget == nullptr)
+		{
+			Clear_ActStack();
+			return;
+		}
+
+		CInteractive_Object* pObj = (CInteractive_Object*)m_pTarget;
+		INTERACTOBJ_ID eObjID = pObj->Get_InteractName();
+
+		switch (m_ActStack.top())
+		{
+		case ACTION_STATE::IDLE:
+			m_bAutoMode = false;
+			break;
+		case ACTION_STATE::MOVE:
+			if (m_bArrive && !Check_Interact_End())
+			{
+				m_ActStack.push(Select_Interact_State(eObjID));
+			}
+			else if (m_pTarget == nullptr|| Check_Interact_End())//¸ñÇ¥°¡ ¾øÀ¸¸é »èÁ¦.
+			{
+				m_ActStack.pop();
+			}
+			break;
+		case ACTION_STATE::MINING:
+			if (Check_Interact_End())
+			{
+				m_ActStack.pop();
+				//m_pTarget = nullptr;
+			}
+			else {//falseÀÏ ½Ã °è¼Ó ¼öÇà 
+				Mining(fTimeDelta);
+			}
+			break;
+		case ACTION_STATE::CHOP:
+			if (Check_Interact_End()) 
+			{
+				m_ActStack.pop();
+				//m_pTarget = nullptr;
+			}
+			else {//falseÀÏ ½Ã °è¼Ó ¼öÇà 
+				Chop(fTimeDelta);
+			}
+			break;
+		case ACTION_STATE::WEEDING:
+			if (Check_Interact_End())
+			{
+				m_ActStack.pop();
+				//m_pTarget = nullptr;
+			}
+			else {//falseÀÏ ½Ã °è¼Ó ¼öÇà 
+				Cutting_Grass(fTimeDelta);
+			}
+			break;
+		//case ACTION_STATE::EAT:
+		//	if (Check_Action_End())
+		//	{
+		//		m_ActStack.pop();
+		//	}
+		//	else {//falseÀÏ ½Ã °è¼Ó ¼öÇà 
+		//		Eatting(fTimeDelta);
+		//	}
+		//	break;
+		case ACTION_STATE::PICKUP:
+			if (Check_Interact_End())
+			{
+				m_ActStack.pop();
+				//m_pTarget = nullptr;
+			}
+			else {//falseÀÏ ½Ã °è¼Ó ¼öÇà 
+				Pickup(fTimeDelta);
+			}
+			break;
+		case ACTION_STATE::ATTACK:
+			break;
+		default:
+			break;
+		}
+
+	}
+
+}
+
+void CPlayer::Clear_ActStack()
+{
+	while (m_ActStack.size() != 1)
+	{
+		m_ActStack.pop();
+	}
+	m_bAutoMode = false;
+}
+
+CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
+{
+	switch (_eObjID)
+	{
+	case INTERACTOBJ_ID::BERRYBUSH:
+	case INTERACTOBJ_ID::CARROT:
+	case INTERACTOBJ_ID::GRASS:
+		return ACTION_STATE::WEEDING;
+		break;
+	case INTERACTOBJ_ID::TREE:
+		return ACTION_STATE::CHOP;
+		break;
+	case INTERACTOBJ_ID::BOULDER:
+		return ACTION_STATE::MINING;
+		break;
+	case INTERACTOBJ_ID::ITEMS:
+		return ACTION_STATE::PICKUP;
+		break;
+	}
+}
+
+_bool CPlayer::Check_Interact_End(void)
+{
+	//CInteractive_Object* pObj = (CInteractive_Object*)m_pTarget;
+	return	(dynamic_cast<CInteractive_Object*>(m_pTarget)->Get_CanInteract() ? false : true);
 }
 
 void CPlayer::Test_Debug(_float fTimeDelta)
@@ -987,6 +1274,46 @@ HRESULT CPlayer::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
+	/*Build*/
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_iEndTex = 29;
+	TextureDesc.m_fSpeed = 60;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Build_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Build_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Build_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	/*Eat*/
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_iEndTex = 21;
+	TextureDesc.m_fSpeed = 60;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Eat"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Eat"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	/*Pickup*/
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_iEndTex = 10;
+	TextureDesc.m_fSpeed = 60;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Pickup_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Pickup_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Pickup_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
 	return S_OK;
 }
 
@@ -1078,6 +1405,10 @@ void CPlayer::Free()
 	Safe_Release(m_pColliderCom);
 
 	Safe_Release(m_Equipment);
+	//Debug
+	Safe_Release(m_pDebugBufferCom);
+	Safe_Release(m_pDebugTransformCom);
+	Safe_Release(m_pDebugTextureCom);
 
 	for (auto& iter : m_vecTexture)
 		Safe_Release(iter);

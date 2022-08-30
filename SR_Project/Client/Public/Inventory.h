@@ -4,11 +4,14 @@
 
 #include "Base.h"
 #include "MainInventory_front.h"
+#include "MainInventory_back.h"
 #include "Equipment_front.h"
 #include "Pont.h"
 #include "Playerhp_pont.h"
 #include "Playerhunger_pont.h"
 #include "PlayerMentality_pont.h"
+#include "BagInventory.h"
+#include "Mouse_item.h"
 /*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -32,10 +35,16 @@ public:
 	list<CPlayerhp_pont*>* Get_playerhp_Pont_list(void) { return &m_Hppontlist; }
 	list<CPlayerhunger_pont*>* Get_playerhunger_Pont_list() { return &m_Hungerpontlist; }
 	list<CPlayerMentality_pont*>* Get_playermentality_Pont_list() { return &m_Mentalitiypontlist; }
+	list<CBagInventory*>* Get_BagInventory_list() {return &m_BagInventorylist;}
+	list<CMainInventory_back*>* Get_back_Inven_list(void) { return &m_MainInventorybacklist; }
+	list<CMouse_item*>* Get_Mouse_item_list(void) { return &m_Mouseitemlist; }
 
 	void sethp(_uint hp) { m_ihp = hp; }
 	void sethuger(_uint hunger) { m_ihunger = hunger;}
 	void setmentality(_uint mental) { m_mentality = mental; }
+
+	void Use_bag();
+	void Off_bag();
 
 
 
@@ -47,11 +56,14 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	/*map<const _tchar*, class CLayer*>*			m_pLayers = nullptr;
 	typedef map<const _tchar*, class CLayer*>	LAYERS;*/
 	list<CMainInventory_front*> m_MainInventorylist;//[INVEN_END]
+	list<CMainInventory_back*> m_MainInventorybacklist;
 	list<CEquipment_front*> m_Equipmentlist;
 	list<CPont*> m_Pontlist;
 	list<CPlayerhp_pont*> m_Hppontlist;
 	list<CPlayerhunger_pont*>m_Hungerpontlist;
 	list<CPlayerMentality_pont*>m_Mentalitiypontlist;
+	list<CBagInventory*>m_BagInventorylist;
+	list<CMouse_item*>m_Mouseitemlist;
 
 	typedef list<CMainInventory_front*> INVENLIST;
 

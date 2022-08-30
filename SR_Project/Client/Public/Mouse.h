@@ -30,6 +30,10 @@ public:
 
 	ITEMNAME Get_Item_name(void) { return m_Item_Name; }
 	ITEMNAME Get_Prev_Item_name(void) { return m_Prev_Item_Name; }
+	_uint Get_Item_count(void) { return m_itemcount; }
+	void Set_Item_count(_uint count) { m_itemcount = count; }
+	_uint Get_Item_prev_count(void) { return m_prev_itemcount ; }
+	void Set_Item_prev_count(_uint count) { m_prev_itemcount = count; }
 	void Set_Item_name(ITEMNAME& itemname) { m_Item_Name = itemname; }
 	void Set_Prev_Item_name(ITEMNAME& itemname) { m_Prev_Item_Name = itemname; }
 	bool Get_picked(void) { return m_bpicked; }
@@ -45,6 +49,8 @@ public:
 
 private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	_uint										m_iboxindex = 20;
+	_uint                                       m_itemcount = 0;
+	_uint                                       m_prev_itemcount = 0;
 	ITEMNAME m_Item_Name = ITEMNAME_END;
 	ITEMNAME m_Prev_Item_Name = ITEMNAME_END;
 	ITEMNAME m_Equipment_Name = ITEMNAME_END;

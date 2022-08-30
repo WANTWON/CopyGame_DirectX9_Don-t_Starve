@@ -156,7 +156,7 @@ HRESULT CMonster::SetUp_Components(void* pArg)
 	
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
 	TransformDesc.fSpeedPerSec = 5.f;
-	TransformDesc.InitPos = { 3,1,3 };
+	TransformDesc.InitPos = *(_float3*)pArg;;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;

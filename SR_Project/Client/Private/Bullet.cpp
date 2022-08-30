@@ -42,6 +42,8 @@ HRESULT CBullet::Initialize(void * pArg)
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
+	
+
 
 	return S_OK;
 }
@@ -158,11 +160,17 @@ void CBullet::Excute(_float fTimeDelta)
 	화살, 불마법은 누가 맞았는지에 따른 처리도 필요,
 	또한 화살 불마법은 지속적인 위치 업데이트가 필요하다.
 	*/
+	
 
 	switch (m_tBulletData.eWeaponType)
 	{
 		case WEAPON_TYPE::WEAPON_HAND:
 		case WEAPON_TYPE::WEAPON_SWORD:
+			m_fAccDeadTimer += fTimeDelta;
+			if (m_fAccDeadTimer > 1.f)
+			{
+				m_bDead = OBJ_DEAD;
+			}
 			break;
 		case WEAPON_TYPE::WEAPON_STAFF:
 			switch (m_tBulletData.eDirState)
@@ -178,6 +186,11 @@ void CBullet::Excute(_float fTimeDelta)
 				break;
 			case DIR_STATE::DIR_LEFT:
 				m_pTransformCom->Go_Left(fTimeDelta);
+				break;
+			case DIR_STATE::DIR_END:
+				m_pTransformCom->Go_PosDir(fTimeDelta, m_tBulletData.vLook);
+				//m_pTransformCom->Go_Straight(fTimeDelta);
+				break;
 			default:
 				break;
 			}
@@ -196,6 +209,10 @@ void CBullet::Excute(_float fTimeDelta)
 				break;
 			case DIR_STATE::DIR_LEFT:
 				m_pTransformCom->Go_Right(fTimeDelta);
+				break;
+			case DIR_STATE::DIR_END:
+				m_pTransformCom->Go_PosDir(fTimeDelta, m_tBulletData.vLook);
+				break;
 			default:
 				break;
 			}
@@ -252,7 +269,9 @@ HRESULT CBullet::Render_TextureState()
 			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(2)))
 				return E_FAIL;
 			break;
-		default:
+		case DIR_STATE::DIR_END:
+			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(1)))
+				return E_FAIL;
 			break;
 		}
 	}
@@ -272,7 +291,7 @@ HRESULT CBullet::Change_Texture(const _tchar * LayerTag)
 void CBullet::SetUp_BillBoard()
 {
 
-	if (m_tBulletData.eDirState == DIR_STATE::DIR_LEFT)
+	if (m_tBulletData.eDirState == DIR_STATE::DIR_END)
 		return;
 
 	_float4x4		ViewMatrix;
@@ -344,9 +363,15 @@ HRESULT CBullet::Init_Data(void)
 		{
 			m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
 		}
-		
 	}
-	
+
+	if (m_tBulletData.eDirState == DIR_STATE::DIR_END)
+	{
+		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.0f);
+
+		//m_pTransformCom->Set_State(CTransform::STATE_LOOK, m_tBulletData.vLook);
+
+	}
 
 	return S_OK;
 }

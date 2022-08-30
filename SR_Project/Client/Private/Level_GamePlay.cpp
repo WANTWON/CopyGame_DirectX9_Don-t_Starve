@@ -123,7 +123,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Monster"), LEVEL_GAMEPLAY, pLayerTag)))
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig"), LEVEL_GAMEPLAY, pLayerTag, _float3(7.f, 1.f, 5.f))))
+		return E_FAIL;*/
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider"), LEVEL_GAMEPLAY, pLayerTag, _float3(10.f, 1.f, 8.f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -275,6 +278,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_PlayerStatUI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_PlayerMentality"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Mouse_item"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+
 
 
 	Safe_Release(pGameInstance);
@@ -290,6 +296,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainInventory(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainInventory"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BagInventory"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
 
 
 	Safe_Release(pGameInstance);
@@ -304,7 +312,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainInventory_back(const _tchar * pLayerTag
 	Safe_AddRef(pGameInstance);
 
 
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 18; ++i)
 	{
 		int number = i;
 
@@ -324,7 +332,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainInventory_front(const _tchar * pLayerTa
 	Safe_AddRef(pGameInstance);
 
 
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 18; ++i)
 	{
 		int number = i;
 

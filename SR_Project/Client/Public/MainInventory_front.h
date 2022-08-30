@@ -49,9 +49,12 @@ public:
 
 	bool get_check() { return m_bcheck; }
 	bool get_pontcheck() { return m_bpontcheck; }
+	bool get_check_bag() { return m_bcheck_bag; }
 	void set_check(bool tof) { m_bcheck = tof; }
+	void set_check_bag(bool tof) { m_bcheck_bag = tof; }
 	void plus_itemcount() { ++item_number; }
 	void minus_itemcount() { --item_number; }
+	void set_itemcount(_uint count) { item_number = count; }
 	void set_texnum(ITEMNAME texnumber) { texnum = texnumber; }
 	ITEMNAME get_texnum() { return texnum; }
 	_uint get_item_number() { return item_number; }
@@ -66,6 +69,8 @@ private:
 	_uint item_number = 5;//æ∆¿Ã≈€∞πºˆ
 	bool m_bcheck = true;
 	bool m_bpontcheck = true;
+	bool m_bcheck_bag = false;
+
 };
 
 END

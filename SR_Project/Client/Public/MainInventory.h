@@ -46,6 +46,9 @@ public:
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual CGameObject* Clone_Load(const _tchar * VIBufferTag, void * pArg = nullptr) override;
 	virtual void Free() override;
+
+private:
+	
 };
 
 END

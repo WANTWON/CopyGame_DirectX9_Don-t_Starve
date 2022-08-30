@@ -53,11 +53,13 @@ public:
 	_uint get_item_number() { return item_number; }
 	void Use_item(ITEMNAME item);
 	int get_iNum() { return iNum; }
+	ITEMNAME get_texnum() { return texnum; }
 
 private:
 	int* iNumber = nullptr;
 	int iNum = 0;
 	ITEMNAME texnum = ITEMNAME_END;
+	WEAPON_TYPE weapontype = WEAPON_TYPE::WEAPON_HAND;
 	_uint item_number = 0;//아이템갯수
 	bool m_bcheck = true;
 };

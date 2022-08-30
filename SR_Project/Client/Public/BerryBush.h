@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "Interactive_Object.h"
 
 BEGIN(Engine)
 class CTexture;
@@ -13,7 +14,7 @@ class CVIBuffer_Rect;
 END
 
 BEGIN(Client)
-class CBerryBush final : public CGameObject
+class CBerryBush final : public CInteractive_Object
 {
 public:
 	enum STATE 
@@ -40,8 +41,9 @@ public:
 public:
 	_float3 Get_Pos() { return m_pTransformCom->Get_State(CTransform::STATE_POSITION); }
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
-	void Interact();
-	HRESULT Drop_Items();
+	//New
+	virtual void Interact(_uint Damage) override;
+	virtual HRESULT Drop_Items() override;
 
 private:
 	HRESULT SetUp_Components(void* pArg);

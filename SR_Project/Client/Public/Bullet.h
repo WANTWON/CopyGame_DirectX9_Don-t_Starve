@@ -16,9 +16,11 @@ class CBullet : public CGameObject
 {
 public:
 	typedef struct tagBulletData {
-		WEAPON_TYPE eWeaponType;
-		_float3		vPosition;
-		DIR_STATE	eDirState;
+			WEAPON_TYPE eWeaponType;
+			_float3		vPosition;
+			DIR_STATE	eDirState;
+			_float3		vLook;
+	//	_bool		bIsFPSMode;
 	}BULLETDATA;
 public:
 	CBullet(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -39,7 +41,6 @@ private:
 
 	HRESULT Texture_Clone(void);
 private:
-	//삭제해도 될듯
 	HRESULT Init_Data(void);
 
 	_uint Dead_Check(void);
@@ -64,7 +65,7 @@ private: //values
 	_bool					m_bIsAttacked = false;
 
 	BULLETDATA				m_tBulletData;
-
+	_float					m_fAccDeadTimer = 0.f;
 public:
 	static CBullet* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

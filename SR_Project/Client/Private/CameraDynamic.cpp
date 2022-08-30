@@ -35,33 +35,17 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	
-	if (CKeyMgr::Get_Instance()->Key_Down(VK_F1))
-	{
-		if (m_eCamMode == CAM_DEFAULT)
-			m_eCamMode = CAM_PLAYER;
-		else if (m_eCamMode == CAM_PLAYER)
-			m_eCamMode = CAM_FPS;
-		else if (m_eCamMode == CAM_FPS)
-			m_eCamMode = CAM_DEFAULT;
-	}
-
-	if (m_eCamMode == CAM_DEFAULT)
-	{
-		Default_Camera(fTimeDelta);
-	}
-	else if (m_eCamMode == CAM_PLAYER)
+	if (m_eCamMode == CAM_PLAYER)
 	{
 		Player_Camera(fTimeDelta);
 	}
 	else if (m_eCamMode == CAM_TURNMODE)
+	{
+		
 		Turn_Camera(fTimeDelta);
+	}		
 	else if (m_eCamMode == CAM_FPS)
 		FPS_Camera(fTimeDelta);
-
-
-	Update_Position(m_pTransform->Get_State(CTransform::STATE_POSITION));
-
 
 	if (FAILED(Bind_OnGraphicDev()))
 		return OBJ_NOEVENT;
@@ -81,42 +65,6 @@ HRESULT CCameraDynamic::Render()
 
 
 	return S_OK;
-}
-
-void CCameraDynamic::Default_Camera(_float fTimeDelta)
-{
-
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (m_lMouseWheel > 0)
-		m_lMouseWheel -= 0.001;
-	if (m_lMouseWheel < 0)
-		m_lMouseWheel += 0.001;
-
-
-	if (m_lMouseWheel += (_long)(pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
-		m_pTransform->Go_Straight(fTimeDelta*m_lMouseWheel*0.01f);
-
-	if (GetKeyState('Q') < 0)
-		m_pTransform->Turn(_float3(0, 1 ,0), fTimeDelta);
-
-	if (GetKeyState('E') < 0)
-		m_pTransform->Turn(_float3(0, 1, 0), -fTimeDelta);
-
-	if (GetKeyState(VK_UP) < 0)
-		m_pTransform->Go_Straight(fTimeDelta);
-
-	if (GetKeyState(VK_DOWN) < 0)
-		m_pTransform->Go_Backward(fTimeDelta);
-
-	if (GetKeyState(VK_LEFT) < 0)
-		m_pTransform->Go_Left(fTimeDelta);
-
-	if (GetKeyState(VK_RIGHT) < 0)
-		m_pTransform->Go_Right(fTimeDelta);
-
-	Safe_Release(pGameInstance);
 }
 
 void CCameraDynamic::Player_Camera(_float fTimeDelta)
@@ -144,17 +92,6 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 	Safe_Release(pTarget);
 
 	m_pTransform->LookAt(m_TargetPos);
-	
-
-	if (m_eCamMode == CAM_PLAYER && pGameInstance->Key_Up('Q'))
-	{
-		m_iTurnCount++;
-		m_eCamMode = CAM_TURNMODE;
-		Safe_Release(pGameInstance);
-		return;
-	}
-
-	
 
 	switch (m_iTurnCount % 4)
 	{
@@ -227,15 +164,38 @@ void CCameraDynamic::FPS_Camera(_float fTimeDelta)
 
 	_float3 vecTargetLook = pTarget->Get_Look();
 	D3DXVec3Normalize(&vecTargetLook, &vecTargetLook);
-	_float3 vecargetPos = pTarget->Get_Pos() + vecTargetLook;
-	_float3 PlayerLook = pTarget->Get_Look();
+	_float3 vectargetPos = pTarget->Get_Pos() + _float3(0.f, 1.f, vecTargetLook.z);
+	_float3 PlayerLook = (pTarget->Get_Look());
 
-	m_pTransform->Follow_Target(fTimeDelta, vecargetPos, _float3(0, 0, 0));
-
-	m_pTransform->LookAt(PlayerLook);
-
+	m_pTransform->Follow_Target(fTimeDelta, vectargetPos, _float3(0, 0, 0));
+	//m_pTransform->LookAt(PlayerLook);
+	m_pTransform->Set_State(CTransform::STATE_LOOK, _float3(PlayerLook.x, 0.f, PlayerLook.z));
 	Safe_Release(pTarget);
 	Safe_Release(pGameInstance);
+}
+
+void CCameraDynamic::Switch_TurnCnt(_int _TurnCount)
+{
+	switch (_TurnCount)
+	{
+	case 0:
+		break;
+	case 1:
+		++m_iTurnCount;
+		break;
+	case 2:
+		--m_iTurnCount;
+		break;
+	}
+
+	if (m_iTurnCount >= 4)
+	{
+		m_iTurnCount = 0;
+	}
+	else if (m_iTurnCount < 0)
+	{
+		m_iTurnCount = 3;
+	}
 }
 
 CCameraDynamic * CCameraDynamic::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

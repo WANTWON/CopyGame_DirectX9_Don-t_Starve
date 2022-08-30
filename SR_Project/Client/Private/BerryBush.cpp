@@ -5,12 +5,12 @@
 #include "Item.h"
 
 CBerryBush::CBerryBush(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CInteractive_Object(pGraphic_Device)
 {
 }
 
 CBerryBush::CBerryBush(const CBerryBush & rhs)
-	: CGameObject(rhs)
+	: CInteractive_Object(rhs)
 {
 }
 
@@ -29,7 +29,7 @@ HRESULT CBerryBush::Initialize(void* pArg)
 
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
-
+	m_eInteract_OBJ_ID = INTERACTOBJ_ID::BERRYBUSH;
 	return S_OK;
 }
 
@@ -37,6 +37,8 @@ int CBerryBush::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	// Change Texture based on State
 	if (m_eState != m_ePreState)
@@ -73,11 +75,9 @@ void CBerryBush::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('F')))
-		Interact();
+		Interact(0);
 
 	// Move Texture Frame
 	switch (m_eState)
@@ -121,10 +121,11 @@ HRESULT CBerryBush::Render()
 	return S_OK;
 }
 
-void CBerryBush::Interact()
+void CBerryBush::Interact(_uint Damage)
 {
 	if (m_eState < PICKED)
 	{
+		m_bInteract = false;
 		m_eState = PICK;
 		Drop_Items();
 	}
@@ -151,7 +152,7 @@ HRESULT CBerryBush::Drop_Items()
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME_BERRY;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Item"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
