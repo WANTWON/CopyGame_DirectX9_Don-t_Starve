@@ -59,7 +59,9 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 	else if (m_eCamMode == CAM_FPS)
 		FPS_Camera(fTimeDelta);
 
-		
+
+	Update_Position(m_pTransform->Get_State(CTransform::STATE_POSITION));
+
 
 	if (FAILED(Bind_OnGraphicDev()))
 		return OBJ_NOEVENT;

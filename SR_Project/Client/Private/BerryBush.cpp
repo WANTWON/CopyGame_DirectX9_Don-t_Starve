@@ -37,6 +37,8 @@ int CBerryBush::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	// Change Texture based on State
 	if (m_eState != m_ePreState)
@@ -73,8 +75,6 @@ void CBerryBush::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('F')))
 		Interact();
@@ -267,10 +267,11 @@ void CBerryBush::SetUp_BillBoard()
 {
 	_float4x4 ViewMatrix;
 
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);	// Get View Matrix
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);		// Get Inverse of View Matrix (World Matrix of Camera)
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix
+	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
 
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
+	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 

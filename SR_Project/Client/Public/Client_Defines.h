@@ -1,5 +1,7 @@
 #pragma once
 
+class Item;
+
 namespace Client
 {
 	const unsigned int g_iWinSizeX = 1280;
@@ -9,7 +11,7 @@ namespace Client
 	{
 		unsigned int iMaxHp;
 		unsigned int iCurrentHp;
-
+		//vector<Item*> vItemDrops;
 	}OBJINFO;
 
 	enum LEVEL { LEVEL_STATIC, LEVEL_LOADING, LEVEL_LOGO, LEVEL_GAMEPLAY, LEVEL_END };

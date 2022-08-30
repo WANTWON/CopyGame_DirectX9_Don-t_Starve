@@ -60,9 +60,9 @@ void CItem::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
-	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE)))
+	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('C')))
 		Interact();
-}
+}   
 
 HRESULT CItem::Render()
 {
@@ -89,9 +89,7 @@ HRESULT CItem::Render()
 void CItem::Interact()
 {
 	// TODO: Pickup Here
-	//#include "Inven.h" 포함하시고
-	CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
-
+	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
 	auto equipmentlist = pInventory_Manager->Get_Equipment_list()->begin();
 
@@ -99,7 +97,7 @@ void CItem::Interact()
 
    
 
-	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (GetKeyState(VK_SPACE) < 0))
+	for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
 	{
 		if ((*equipmentlist)->get_texnum() == ITEMNAME_BAG) // 가방을 장착하고있을때
 		{
@@ -152,8 +150,6 @@ void CItem::Interact()
 					++iter;
 			}
 	
-	
-
 	}
 }
 
@@ -256,7 +252,7 @@ void CItem::WalkingTerrain()
 
 	_float3			vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.15f);
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
