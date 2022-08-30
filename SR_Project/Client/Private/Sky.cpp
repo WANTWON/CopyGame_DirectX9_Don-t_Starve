@@ -29,6 +29,9 @@ HRESULT CSky::Initialize(void* pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15, 0, 15));
+	//m_pTransformCom->Set_Scale(10.f, 10.f, 1.f);
+
 	return S_OK;
 }
 
@@ -36,19 +39,22 @@ int CSky::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	_float4x4		ViewMatrix;
 
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	_float4x4 ViewMatrix;
 
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix
+	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, *(_float3*)&ViewMatrix.m[3][0]);
+	//_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	//m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	//m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, *(_float3*)&ViewMatrix.m[3][0]);
 
-	/*CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	CCameraDynamic* pCamera = (CCameraDynamic*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"));
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, pCamera->Get_Position());*/
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, pCamera->Get_Position());
 	
 	return OBJ_NOEVENT;
 }
