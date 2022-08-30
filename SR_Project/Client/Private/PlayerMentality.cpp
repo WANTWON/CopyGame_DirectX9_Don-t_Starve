@@ -32,7 +32,7 @@ HRESULT CPlayerMentality::Initialize(void* pArg)
 
 	m_fSizeX = 80.f;
 	m_fSizeY = 80.f;
-	m_fX = 1045.f;
+	m_fX = 1130.f;
 	m_fY = 200.f;
 
 	if (FAILED(SetUp_Components()))

@@ -58,6 +58,7 @@ private: /*For TextureCom */
 
 private: /* For TransformCom*/
 	void SetUp_BillBoard();
+	void WalkingTerrain();
 
 private: /* For.Components */
 	CTexture* m_pTextureCom = nullptr;

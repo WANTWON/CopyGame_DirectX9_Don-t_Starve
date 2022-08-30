@@ -46,6 +46,55 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	m_fX = 300.f + (iNum * 50.f);
 	m_fY = 690.f;
 
+	if (iNum == 10)
+	{
+		m_fX = 1185.f;
+		m_fY = 375.f;
+
+	}
+
+	if (iNum == 11)
+	{
+		m_fX = 1235.f;
+		m_fY = 375.f;
+	}
+
+	if (iNum == 12)
+	{
+		m_fX = 1185.f;
+		m_fY = 425.f;
+	}
+
+	if (iNum == 13)
+	{
+		m_fX = 1235.f;
+		m_fY = 425.f;
+	}
+
+	if (iNum == 14)
+	{
+		m_fX = 1185.f;
+		m_fY = 475.f;
+	}
+
+	if (iNum == 15)
+	{
+		m_fX = 1235.f;
+		m_fY = 475.f;
+	}
+
+	if (iNum == 16)
+	{
+		m_fX = 1185.f;
+		m_fY = 525.f;
+	}
+
+	if (iNum == 17)
+	{
+		m_fX = 1235.f;
+		m_fY = 525.f;
+	}
+
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
@@ -59,12 +108,12 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 
 	if (iNum == 1)
 	{
-		texnum = ITEMNAME_AXE;
+		texnum = ITEMNAME_HAMBAT;
 	}
 
 	if (iNum == 2)
 	{
-		texnum = ITEMNAME_HELMAT;
+		texnum = ITEMNAME_HELMET;
 	}
 
 	if (iNum == 3)
@@ -77,7 +126,12 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 		texnum = ITEMNAME_BERRY;
 	}
 
+	if (iNum == 15)
+	{
+		texnum = ITEMNAME_STAFF;
+	}
 	
+
 
 	//CInventory_Manager::Get_Instance()->Get_Inven_list()->front.push_back(this);
 	//CInventory_Manager::Get_Instance()->Get_Inven_list().push_back(this);
@@ -103,12 +157,12 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	{
 		m_itemtype = ITEM_ARMOR;
 	}
-	if (texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TOARCH || texnum == ITEMNAME_WAND || texnum == ITEMNAME_PICK|| texnum == ITEMNAME_HAMSTICK)
+	if (texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH || texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK|| texnum == ITEMNAME_HAMBAT)
 	{
 		m_itemtype = ITEM_HAND;
 	}
 
-	if (texnum == ITEMNAME_HELMAT)
+	if (texnum == ITEMNAME_HELMET)
 	{
 		m_itemtype = ITEM_HAT;
 	}
@@ -124,13 +178,43 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 		m_itemtype = ITEM_FOOD;
 	}
 
-
-	if (m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT || m_itemtype == ITEM_HAND || m_itemtype == ITEM_ARMOR)
+	if (texnum == ITEMNAME_COAL || texnum == ITEMNAME_WOOD || texnum == ITEMNAME_ROCK || texnum == ITEMNAME_GOLD || texnum == ITEMNAME_WOOD2 ||
+		texnum == ITEMNAME_PIGTAIL || texnum == ITEMNAME_ROPE || texnum == ITEMNAME_WEB || texnum == ITEMNAME_GRASS)
 	{
+		m_itemtype == ITEM_MATERIAL;
+	}
+
+
+	
+
+
+
+	if (m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT || m_itemtype == ITEM_HAND || m_itemtype == ITEM_ARMOR || texnum == ITEMNAME_END)
+	{
+
+
 		m_bpontcheck = false;
 
 	}
+	else if (m_itemtype == ITEM_FOOD || m_itemtype == ITEM_MATERIAL)
+	{
+		m_bpontcheck = true;
+	}
 
+
+
+	if (texnum == ITEMNAME_END)
+	{
+		m_itemtype == ITEM_END;
+	}
+
+	/*if (texnum == ITEMNAME_BAG || texnum == ITEMNAME_HELMET || texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH
+		|| texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK || texnum == ITEMNAME_HAMBAT || texnum == ITEMNAME_ARMOR || texnum == ITEMNAME_END)
+	{
+		m_bpontcheck = false;
+	}
+	else if(texnum == carrot)
+		m_bpontcheck = true;*/
 
 
 
@@ -169,14 +253,13 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
+	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+	Safe_AddRef(pinv);
+
+	auto mouse = pinv->Get_Mouse_item_list()->begin();
 
 
-
-
-
-
-
-	if (!PtInRect(&rcRect, ptMouse))
+   if (!PtInRect(&rcRect, ptMouse))
 	{
 
 		m_fSizeX = 40;
@@ -186,29 +269,56 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 
 
-	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
+   if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+		   
+	   {
 
-		if (false == pMouse->Get_picked())
-		{
+		
 
-			pMouse->Set_Item_name(texnum);
-			pMouse->Set_index(iNum);
-			pMouse->Set_picked(true);
+		   if (false == pMouse->Get_picked())
+		   {
+
+			   pMouse->Set_Item_name(texnum);   //첫피킹
+			   pMouse->Set_index(iNum);
+			   pMouse->Set_picked(true);
+			   pMouse->Set_Item_count(item_number);
+
+			   (*mouse)->set_check(true);
+			   (*mouse)->set_texnum(texnum);//마우스이미지
+
+			   set_texnum(ITEMNAME_END);
+		   }
+
+		   else if (true == pMouse->Get_picked() )
+		   {
+
+			   pMouse->Set_Prev_Item_name(texnum);
+			   pMouse->Set_Item_prev_count(item_number);
+			   set_texnum(pMouse->Get_Item_name());
+			   set_itemcount(pMouse->Get_Item_count());
+			   pMouse->Set_picked(false);
+
+			   (*mouse)->set_texnum(ITEMNAME_END);
+			   (*mouse)->set_check(false);//마우스이미지
+
+		   }
 
 
-		}
-
-		else if (true == pMouse->Get_picked())
-		{
-			pMouse->Set_Prev_Item_name(texnum);
-			set_texnum(pMouse->Get_Item_name());
-			pMouse->Set_picked(false);
-
-		}
+	   }
 
 
-	}
+   /*if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON)&& !PtInRect(&rcRect, ptMouse))
+   {
+	   (*mouse)->set_texnum(ITEMNAME_END);
+	   (*mouse)->set_check(false);
+   }*/
+
+	   
+	 
+	 
+
+   
+
 
 	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_RBUTTON)) //마우스 우클릭처리
 	{
@@ -217,12 +327,21 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 			pMouse->Set_Item_type(m_itemtype);
 			pMouse->Set_Equipment_name(texnum);
 			set_texnum(ITEMNAME_END);
+			
 
+			if(m_itemtype == ITEM_BAG)
+			{
+			pinv->Late_Tick(fTimeDelta);
+			pinv->Use_bag();
+			Safe_Release(pinv);
+			}
+			
+			m_itemtype = ITEM_END;
 		}
 
 		//minus_itemcount();
 
-		if (m_itemtype == ITEM_FOOD)
+		else if (m_itemtype == ITEM_FOOD)
 		{
 			Use_item(texnum);
 		}
@@ -250,7 +369,10 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	}
 
 
-	if (nullptr != m_pRendererCom&&m_bcheck == true)
+	if (nullptr != m_pRendererCom&&m_bcheck == true&& iNum < 10)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+
+	else if (nullptr != m_pRendererCom&&m_bcheck == true && iNum >= 10 &&m_bcheck_bag)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	//set_check(false);
@@ -348,7 +470,7 @@ CMainInventory_front * CMainInventory_front::Create(LPDIRECT3DDEVICE9 pGraphic_D
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : Prototype_Component_Texture_MainInventory_front"));
+		ERR_MSG(TEXT("Failed to Created : MainInventory_front"));
 		Safe_Release(pInstance);
 	}
 
@@ -361,7 +483,7 @@ CGameObject * CMainInventory_front::Clone(void* pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : Prototype_Component_Texture_MainInventory_front"));
+		ERR_MSG(TEXT("Failed to Cloned : MainInventory_front"));
 		Safe_Release(pInstance);
 	}
 	CInventory_Manager::Get_Instance()->Get_Inven_list()->push_back(pInstance);//Get_Inven_list().push_back(pInstance);

@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Transform.h"
 
+
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CGameObject(pGraphic_Device)
 {
@@ -89,7 +90,8 @@ HRESULT CBullet::Render()
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
 
-	m_pVIBufferCom->Render();
+	if(m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_HAND && m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_SWORD)
+		m_pVIBufferCom->Render();
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;

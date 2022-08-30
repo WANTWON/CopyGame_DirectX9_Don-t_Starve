@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\MainInventory_back.h"
 #include "GameInstance.h"
+#include "Inventory.h"
 
 
 CMainInventory_back::CMainInventory_back(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -34,8 +35,61 @@ HRESULT CMainInventory_back::Initialize(void* pArg)
 
 	m_fSizeX = 40.0f;
 	m_fSizeY = 40.0f;
-	m_fX = 300.f + (iNum * 50.f);
-	m_fY = 690.f;
+	if (iNum < 10)
+	{
+		m_fX = 300.f + (iNum * 50.f);
+		m_fY = 690.f;
+	}
+	
+
+	if (iNum == 10)
+	{
+		m_fX = 1185.f;
+		m_fY = 375.f;
+
+	}
+
+	if (iNum == 11)
+	{
+		m_fX = 1235.f;
+		m_fY = 375.f;
+	}
+
+	if (iNum == 12)
+	{
+		m_fX = 1185.f;
+		m_fY = 425.f;
+	}
+
+	if (iNum == 13)
+	{
+		m_fX = 1235.f;
+		m_fY = 425.f;
+	}
+
+	if (iNum == 14)
+	{
+		m_fX = 1185.f;
+		m_fY = 475.f;
+	}
+
+	if (iNum == 15)
+	{
+		m_fX = 1235.f;
+		m_fY = 475.f;
+	}
+
+	if (iNum == 16)
+	{
+		m_fX = 1185.f;
+		m_fY = 525.f;
+	}
+
+	if (iNum == 17)
+	{
+		m_fX = 1235.f;
+		m_fY = 525.f;
+	}
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
@@ -104,7 +158,10 @@ void CMainInventory_back::Late_Tick(_float fTimeDelta)
 
 	}*/
 
-	if (nullptr != m_pRendererCom)
+	if (nullptr != m_pRendererCom && iNum < 10)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+
+	else if (nullptr != m_pRendererCom&& iNum >= 10 && m_bcheck_bag)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 }
 
@@ -206,6 +263,8 @@ CGameObject * CMainInventory_back::Clone(void* pArg)
 		ERR_MSG(TEXT("Failed to Cloned : CMainInventory_back"));
 		Safe_Release(pInstance);
 	}
+
+	CInventory_Manager::Get_Instance()->Get_back_Inven_list()->push_back(pInstance);
 
 	return pInstance;
 }
