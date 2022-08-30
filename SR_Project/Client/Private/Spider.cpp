@@ -32,7 +32,7 @@ HRESULT CSpider::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(1.5f, .5f, 1.f);
+	m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
 
 	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
@@ -43,48 +43,14 @@ HRESULT CSpider::Initialize(void* pArg)
 int CSpider::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	
-	if (m_bDead)
+
+	if (IsDead())
 		return OBJ_DEAD;
 
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
 
-	// A.I. Behaviour
-	m_pTarget = Find_Target();
-	if (m_pTarget)
-		Follow_Target(fTimeDelta);
-
-	// Change Texture based on State
-	if (m_eState != m_ePreState)
-	{
-		switch (m_eState)
-		{
-		case STATE::IDLE:
-			Change_Texture(TEXT("Com_Texture_IDLE"));
-			break;
-		case STATE::MOVE:
-			// TODO: Check for Direction
-			/*Change_Texture(TEXT("Com_Texture_MOVE_UP"));
-			Change_Texture(TEXT("Com_Texture_MOVE_DOWN"));*/
-			Change_Texture(TEXT("Com_Texture_MOVE_SIDE"));
-			break;
-		case STATE::ATTACK:
-			// TODO: Check for Direction
-			Change_Texture(TEXT("Com_Texture_ATTACK_UP"));
-			Change_Texture(TEXT("Com_Texture_ATTACK_DOWN"));
-			Change_Texture(TEXT("Com_Texture_ATTACK_SIDE"));
-			break;
-		case STATE::HIT:
-			Change_Texture(TEXT("Com_Texture_HIT"));
-			break;
-		case STATE::DIE:
-			Change_Texture(TEXT("Com_Texture_DIE"));
-			break;
-		}
-
-		m_ePreState = m_eState;
-	}
+	AI_Behaviour(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -100,30 +66,12 @@ void CSpider::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
-	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('F')))
-		Interact();
+	// Testing: 
+	if (CKeyMgr::Get_Instance()->Key_Down('F'))
+		Interact(20);
 
-	// Move Texture Frame
-	switch (m_eState)
-	{
-	case STATE::IDLE:
-		m_pTextureCom->MoveFrame(m_TimerTag, false);
-		break;
-	case STATE::MOVE:
-		m_pTextureCom->MoveFrame(m_TimerTag);
-		break;
-	case STATE::ATTACK:
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = m_ePreState; //
-		break;
-	case STATE::HIT:
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = m_ePreState; //
-		break;
-	case STATE::DIE:
-		m_pTextureCom->MoveFrame(m_TimerTag, false);
-		break;
-	}
+	Change_Motion();
+	Change_Frame();
 }
 
 HRESULT CSpider::Render()
@@ -251,13 +199,18 @@ HRESULT CSpider::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
+	TextureDesc.m_iEndTex = 31;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_TAUNT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Taunt"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
 	TextureDesc.m_iEndTex = 16;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 27;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DEAD"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Die"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DIE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Die"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 }
@@ -272,6 +225,118 @@ HRESULT CSpider::Change_Texture(const _tchar * LayerTag)
 	return S_OK;
 }
 
+void CSpider::Change_Frame()
+{
+	switch (m_eState)
+	{
+	case STATE::IDLE:
+		m_pTextureCom->MoveFrame(m_TimerTag);
+		break;
+	case STATE::MOVE:
+		if (m_eDir == DIR::DIR_LEFT)
+			m_pTransformCom->Set_Scale(-1.2f, 1.f, 1.f);
+		else
+			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
+
+		m_pTextureCom->MoveFrame(m_TimerTag);
+		break;
+	case STATE::ATTACK:
+		if (m_eDir == DIR::DIR_LEFT)
+			m_pTransformCom->Set_Scale(-1.2f, 1.f, 1.f);
+		else
+			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
+
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		{
+			m_bIsAttacking = false;
+			m_dwAttackTime = GetTickCount();
+		}
+		break;
+	case STATE::TAUNT:
+		if (m_eDir == DIR::DIR_LEFT)
+			m_pTransformCom->Set_Scale(-1.2f, 1.f, 1.f);
+		else
+			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
+
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = STATE::IDLE;
+		break;
+	case STATE::HIT:
+		if (m_eDir == DIR::DIR_LEFT)
+			m_pTransformCom->Set_Scale(-1.2f, 1.f, 1.f);
+		else
+			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
+
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
+			m_bHit = false;
+		break;
+	case STATE::DIE:
+		m_pTextureCom->MoveFrame(m_TimerTag, false);
+		break;
+	}
+}
+
+void CSpider::Change_Motion()
+{
+	if (m_eState != m_ePreState || m_eDir != m_ePreDir)
+	{
+		switch (m_eState)
+		{
+		case STATE::IDLE:
+			Change_Texture(TEXT("Com_Texture_IDLE"));
+			break;
+		case STATE::MOVE:
+			switch (m_eDir)
+			{
+			case DIR::DIR_UP:
+				Change_Texture(TEXT("Com_Texture_MOVE_UP"));
+				break;
+			case DIR::DIR_DOWN:
+				Change_Texture(TEXT("Com_Texture_MOVE_DOWN"));
+				break;
+			case DIR::DIR_RIGHT:
+			case DIR::DIR_LEFT:
+				Change_Texture(TEXT("Com_Texture_MOVE_SIDE"));
+				break;
+			}
+
+			if (m_eDir != m_ePreDir)
+				m_ePreDir = m_eDir;
+			break;
+		case STATE::ATTACK:
+			switch (m_eDir)
+			{
+			case DIR::DIR_UP:
+				Change_Texture(TEXT("Com_Texture_ATTACK_UP"));
+				break;
+			case DIR::DIR_DOWN:
+				Change_Texture(TEXT("Com_Texture_ATTACK_DOWN"));
+				break;
+			case DIR::DIR_RIGHT:
+			case DIR::DIR_LEFT:
+				Change_Texture(TEXT("Com_Texture_ATTACK_SIDE"));
+				break;
+			}
+
+			if (m_eDir != m_ePreDir)
+				m_ePreDir = m_eDir;
+			break;
+		case STATE::TAUNT:
+			Change_Texture(TEXT("Com_Texture_TAUNT"));
+			break;
+		case STATE::HIT:
+			Change_Texture(TEXT("Com_Texture_HIT"));
+			break;
+		case STATE::DIE:
+			Change_Texture(TEXT("Com_Texture_DIE"));
+			break;
+		}
+
+		if (m_eState != m_ePreState)
+			m_ePreState = m_eState;
+	}
+}
+
 void CSpider::SetUp_BillBoard()
 {
 	_float4x4 ViewMatrix;
@@ -284,31 +349,113 @@ void CSpider::SetUp_BillBoard()
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 
-CGameObject* CSpider::Find_Target()
+void CSpider::AI_Behaviour(_float fTimeDelta)
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
+	if (m_bHit)
+		m_eState = STATE::HIT;
 
-	CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+	// Get Target and Aggro Radius
+	Find_Target();
 
-	Safe_Release(pGameInstance);
+	// Check for Target, AggroRadius
+	if (m_pTarget && m_bAggro)
+	{
+		// If in AttackRadius > Attack
+		if (m_fDistanceToTarget < m_fAttackRadius)
+		{
+			if (!m_bIsAttacking && GetTickCount() > m_dwAttackTime + 1500)
+			{
+				m_eState = STATE::ATTACK;
+				m_bIsAttacking = true;
+			}
+			else if (!m_bIsAttacking)
+				m_eState = STATE::IDLE;
+		}
+		// If NOT in AttackRadius > Follow Target
+		else
+			Follow_Target(fTimeDelta);
+	}
+}
 
-	if (pTarget)
-		return pTarget;
+void CSpider::Find_Target()
+{
+	if (!m_bIsAttacking && !m_bHit && !m_bDead)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+
+		Safe_Release(pGameInstance);
+
+		if (pTarget)
+		{
+			_float3 vTargetPos = pTarget->Get_Position();
+			m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
+
+			if (m_fDistanceToTarget < m_fAggroRadius || m_bAggro)
+				m_bAggro = true;
+
+			m_pTarget = pTarget;
+		}
+		else
+			m_pTarget = nullptr;
+	}
 	else
-		return nullptr;
+		m_pTarget = nullptr;
 }
 
 void CSpider::Follow_Target(_float fTimeDelta)
 {
-	m_pTransformCom->LookAt(m_pTarget->Get_Position());
+	// Set State 
+	m_eState = STATE::MOVE;
+
+	_float3 fTargetPos = m_pTarget->Get_Position();
+
+	// Set Direction
+	_float fX = fTargetPos.x - Get_Position().x;
+	_float fZ = fTargetPos.z - Get_Position().z;
+
+	// Move Horizontally
+	if (abs(fX) > abs(fZ))
+		if (fX > 0)
+			m_eDir = DIR::DIR_RIGHT;
+		else
+			m_eDir = DIR::DIR_LEFT;
+	// Move Vertically
+	else
+		if (fZ > 0)
+			m_eDir = DIR::DIR_UP;
+		else
+			m_eDir = DIR::DIR_DOWN;
+
+	m_pTransformCom->LookAt(fTargetPos);
 	m_pTransformCom->Go_Straight(fTimeDelta * .1f);
+
+	m_bIsAttacking = false;
 }
 
-void CSpider::Interact()
+void CSpider::Interact(_int iDamage)
 {
-	// TODO: Get Hit
-	// ...
+	if (m_tInfo.iCurrentHp > 0)
+	{
+		if (iDamage >= m_tInfo.iCurrentHp)
+		{
+			m_bDead = true;
+			m_tInfo.iCurrentHp = 0;
+		}
+		else
+		{
+			m_bHit = true;
+			m_tInfo.iCurrentHp -= iDamage;
+		}
+
+		// If Hit/Dead stop and reset Attack
+		m_bIsAttacking = false;
+		m_dwAttackTime = GetTickCount();
+	}
+	else
+		m_bDead = true;	
 }
 
 HRESULT CSpider::Drop_Items()
@@ -338,6 +485,19 @@ HRESULT CSpider::Drop_Items()
 	Safe_Release(pGameInstance);
 
 	return S_OK;
+}
+
+_bool CSpider::IsDead()
+{
+	if (m_bDead && m_eState == STATE::DIE && GetTickCount() > m_dwDeathTime + 1500)
+		return true;
+	else if (m_bDead && m_eState != STATE::DIE)
+	{
+		m_dwDeathTime = GetTickCount();
+		m_eState = STATE::DIE;
+	}
+	
+	return false;
 }
 
 CSpider* CSpider::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
