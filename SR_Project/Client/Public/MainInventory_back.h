@@ -25,6 +25,10 @@ public:
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
 
+	bool get_check_bag() { return m_bcheck_bag; }
+	void set_check_bag(bool tof) { m_bcheck_bag = tof; }
+	int get_iNum() { return iNum; }
+
 private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
@@ -49,6 +53,8 @@ private:
 
 	int* iNumber = nullptr;
 	int iNum = 0;
+	bool m_bcheck_bag = false;
+	//bool m_bcheck = true;
 };
 
 END

@@ -207,6 +207,12 @@
     <ClInclude Include="..\Public\Bullet.h">
       <Filter>02.GameObject\Player\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BagInventory.h">
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mouse_item.h">
+      <Filter>03.Mouse</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -313,6 +319,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bullet.cpp">
       <Filter>02.GameObject\Player\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BagInventory.cpp">
+      <Filter>02.GameObject\UI\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mouse_item.cpp">
+      <Filter>03.Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

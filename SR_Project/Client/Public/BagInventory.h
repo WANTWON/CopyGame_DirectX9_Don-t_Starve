@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Client_Defines.h"
 #include "GameObject.h"
 
@@ -11,12 +12,12 @@ END
 
 BEGIN(Client)
 
-class CEquipment_front final : public CGameObject
+class CBagInventory final : public CGameObject
 {
 private:
-	CEquipment_front(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CEquipment_front(const CEquipment_front& rhs);
-	virtual ~CEquipment_front() = default;
+	CBagInventory(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CBagInventory(const CBagInventory& rhs);
+	virtual ~CBagInventory() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -24,6 +25,9 @@ public:
 	virtual int Tick(_float fTimeDelta)override;
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
+
+	bool get_check_bag() { return m_bcheck_bag; }
+	void set_check_bag(bool tof) { m_bcheck_bag = tof; }
 
 private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
@@ -41,27 +45,13 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	static CEquipment_front* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CBagInventory* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
-	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr);
+	virtual CGameObject* Clone_Load(const _tchar * VIBufferTag, void * pArg = nullptr) override;
 	virtual void Free() override;
 
-	bool get_check() { return m_bcheck; }
-	void set_check(bool tof) { m_bcheck = tof; }
-	void plus_itemcount() { item_number = 6; }
-	void set_texnum(ITEMNAME texnumber) { texnum = texnumber; }
-	_uint get_item_number() { return item_number; }
-	void Use_item(ITEMNAME item);
-	int get_iNum() { return iNum; }
-	ITEMNAME get_texnum() { return texnum; }
-
 private:
-	int* iNumber = nullptr;
-	int iNum = 0;
-	ITEMNAME texnum = ITEMNAME_END;
-	WEAPON_TYPE weapontype = WEAPON_TYPE::WEAPON_HAND;
-	_uint item_number = 0;//æ∆¿Ã≈€∞πºˆ
-	bool m_bcheck = true;
+	bool m_bcheck_bag = false;
 };
 
 END

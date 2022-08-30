@@ -206,6 +206,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_PlayerStatUI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_PlayerMentality"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Mouse_item"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+
 
 
 	Safe_Release(pGameInstance);
@@ -221,6 +224,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainInventory(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainInventory"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BagInventory"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
 
 
 	Safe_Release(pGameInstance);
@@ -235,7 +240,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainInventory_back(const _tchar * pLayerTag
 	Safe_AddRef(pGameInstance);
 
 
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 18; ++i)
 	{
 		int number = i;
 
@@ -255,7 +260,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainInventory_front(const _tchar * pLayerTa
 	Safe_AddRef(pGameInstance);
 
 
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 18; ++i)
 	{
 		int number = i;
 

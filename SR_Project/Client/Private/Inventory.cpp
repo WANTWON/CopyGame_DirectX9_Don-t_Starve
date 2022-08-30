@@ -78,6 +78,10 @@ void CInventory_Manager::Tick(_float fTimeDelta)
 		{
 			(*iterfont)->set_check(false);        
 		}
+		else if ((*iter)->get_pontcheck() == true)
+		{
+			(*iterfont)->set_check(true);
+		}
 
 		++iter;
 		++iterfont;
@@ -107,11 +111,16 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 
 	for (auto& i : m_MainInventorylist)
 	{
-		if (i->get_iNum() == pMouse->Get_index() && pMouse->Get_picked() == false)
+		if (i->get_iNum() == pMouse->Get_index() && pMouse->Get_picked() == false )
 		{
-			i->set_texnum(pMouse->Get_Prev_Item_name());
+			if (pMouse->Get_Prev_Item_name() != ITEMNAME_END)
+			{
+				i->set_texnum(pMouse->Get_Prev_Item_name());
+			}
+			
+			i->set_itemcount(pMouse->Get_Item_prev_count());
 			pMouse->Set_index(20);
-			return;
+			break;
 		}
 	}
 
@@ -121,31 +130,33 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 		{
 			p->set_texnum(pMouse->Get_Equipment_name());
 			pMouse->Set_Item_type(ITEM_END);
-			return;
+			break;
 		}
 
 		if (pMouse->Get_Item_type() == ITEM_BAG && p->get_iNum() == 1)
 		{
 			p->set_texnum(pMouse->Get_Equipment_name());
 			pMouse->Set_Item_type(ITEM_END);
-			return;
+			break;
 		}
 
 		if (pMouse->Get_Item_type() == ITEM_ARMOR && p->get_iNum() == 2)
 		{
 			p->set_texnum(pMouse->Get_Equipment_name());
 			pMouse->Set_Item_type(ITEM_END);
-			return;
+			break;
 		}
 
 		if (pMouse->Get_Item_type() == ITEM_HAT && p->get_iNum() == 3)
 		{
 			p->set_texnum(pMouse->Get_Equipment_name());
 			pMouse->Set_Item_type(ITEM_END);
-			return;
+			break;
 		}
 
 	}
+
+
 
 	//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
@@ -231,7 +242,35 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 
 	}
 
-	Safe_Release(pMouse);
+	
+	
+		
+	/*for (auto& p : m_Equipmentlist)
+	{
+		if (p->get_texnum() == ITEMNAME_BAG)
+		{
+			for (auto& k : m_MainInventorylist)
+			{
+				if (k->get_iNum() >= 10)
+				{
+					k->set_check_bag(true);
+				}
+			}
+
+			for (auto& j : m_MainInventorybacklist)
+			{
+
+				if (j->get_iNum() >= 10)
+				{
+					j->set_check_bag(true);
+				}
+			}
+
+			m_BagInventorylist.front()->set_check_bag(true);
+              }
+	}*/
+
+	//Safe_Release(pMouse);
 
 
 }
@@ -248,6 +287,69 @@ void CInventory_Manager::Clear(_uint iLevelIndex)
 	m_MainInventorylist[iLevelIndex].clear();*/
 
 }
+
+void CInventory_Manager::Use_bag()
+{
+	
+	auto p = m_Equipmentlist.begin();
+
+	++p;
+	
+	if ((*p)->get_texnum() == ITEMNAME_BAG)
+	{
+
+
+		for (auto& k : m_MainInventorylist)
+		{
+			if (k->get_iNum() >= 10)
+			{
+				k->set_check_bag(true);
+			}
+		}
+
+		for (auto& j : m_MainInventorybacklist)
+		{
+
+			if (j->get_iNum() >= 10)
+			{
+				j->set_check_bag(true);
+			}
+		}
+
+		m_BagInventorylist.front()->set_check_bag(true);
+
+
+
+	}
+
+		
+}
+
+void CInventory_Manager::Off_bag()
+{
+
+	for (auto& k : m_MainInventorylist)
+	{
+		if (k->get_iNum() >= 10)
+		{
+			k->set_check_bag(false);
+		}
+	}
+
+	for (auto& j : m_MainInventorybacklist)
+	{
+
+		if (j->get_iNum() >= 10)
+		{
+			j->set_check_bag(false);
+		}
+	}
+
+	m_BagInventorylist.front()->set_check_bag(false);
+}
+
+
+
 
 //CGameObject * CObject_Manager::Find_Objects(_uint iLevelIndex, const _tchar * pLayerTag)
 //{

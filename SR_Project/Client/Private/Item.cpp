@@ -41,7 +41,7 @@ HRESULT CItem::Initialize(void* pArg)
 int CItem::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
+	
 	WalkingTerrain();
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -93,33 +93,64 @@ void CItem::Interact()
 	CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
 
 	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
+	auto equipmentlist = pInventory_Manager->Get_Equipment_list()->begin();
+
+	++equipmentlist;
+
+   
 
 	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (GetKeyState(VK_SPACE) < 0))
 	{
-
-
-		for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
+		if ((*equipmentlist)->get_texnum() == ITEMNAME_BAG) // 가방을 장착하고있을때
 		{
-			if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true)
+			for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
 			{
+				if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true)
+				{
 
-				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
-				return;
+					(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
+					return;
+				}
+
+
+
+				else if ((*iter)->get_check() == false)
+				{
+					(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
+					(*iter)->set_check(true);
+
+					return;
+				}
+				else
+					++iter;
 			}
-
-
-
-			else if ((*iter)->get_check() == false)
-			{
-				(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
-				(*iter)->set_check(true);
-
-				return;
-			}
-			else
-				++iter;
 		}
+		else // 가방을 장착하고있지 않을때
+		
+			for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
+			{
+				if ((*iter)->get_iNum() >= 10)
+					return;
 
+				if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true)
+				{
+
+					(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
+					return;
+				}
+
+
+
+				else if ((*iter)->get_check() == false)
+				{
+					(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
+					(*iter)->set_check(true);
+
+					return;
+				}
+				else
+					++iter;
+			}
 	
 	
 
