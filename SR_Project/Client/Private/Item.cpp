@@ -41,6 +41,10 @@ HRESULT CItem::Initialize(void* pArg)
 
 int CItem::Tick(_float fTimeDelta)
 {
+
+	if (m_bDead)
+		return OBJ_DEAD;
+
 	__super::Tick(fTimeDelta);
 
 	WalkingTerrain();
@@ -62,7 +66,11 @@ void CItem::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('C')))
+	{
 		Interact();
+		m_bDead = true;
+	}
+		
 }
 
 HRESULT CItem::Render()
