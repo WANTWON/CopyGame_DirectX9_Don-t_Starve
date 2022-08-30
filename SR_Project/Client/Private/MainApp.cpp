@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "Inventory.h"
+#include "PickingMgr.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
@@ -158,7 +159,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGameInstance);
 
 	CGameInstance::Release_Engine();	
-
+	CPickingMgr::Get_Instance()->Destroy_Instance();
 	CInventory_Manager::Get_Instance()->Destroy_Instance();
 }
 

@@ -106,7 +106,7 @@ void CTexture::Set_Frame(int iStartTex, int iEndTex, int iSpeed)
 {
 	m_TextureDesc.m_iStartTex = iStartTex;
 	m_TextureDesc.m_iEndTex = iEndTex;
-	m_TextureDesc.m_fSpeed = iSpeed;
+	m_TextureDesc.m_fSpeed = (_float)iSpeed;
 	m_TextureDesc.m_iCurrentTex = m_TextureDesc.m_iStartTex;
 }
 

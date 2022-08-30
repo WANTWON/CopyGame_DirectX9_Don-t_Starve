@@ -20,12 +20,16 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+
+public:
 	void Update_Position(_float3 position) { m_vPosition = position; }
-	//Get
 	_float3 Get_Position() { return m_vPosition; }
 	_float  Get_Radius() { return m_fRadius; }
-	//Set
 	void	Set_Radius(_float _fRadius) { m_fRadius = _fRadius;}
+	virtual _bool Picking(_float3* PickingPoint) { return true; }
+	virtual void PickingTrue() { return; }
+
+
 protected:
 	LPDIRECT3DDEVICE9			m_pGraphic_Device = nullptr;
 

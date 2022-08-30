@@ -131,12 +131,6 @@ int CEquipment_front::Tick(_float fTimeDelta)
 		}
 	}
 
-	
- 
-	
-		
-
-
 
 	//if()
 	return OBJ_NOEVENT;
@@ -172,6 +166,7 @@ void CEquipment_front::Late_Tick(_float fTimeDelta)
 
 	if(iNum == 0)
 	(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_WeaponType(weapontype));
+	Safe_Release(pGameInstance);
 }
 
 HRESULT CEquipment_front::Render()
@@ -287,10 +282,6 @@ CGameObject * CEquipment_front::Clone(void* pArg)
 
 }
 
-CGameObject * CEquipment_front::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CEquipment_front::Free()
 {

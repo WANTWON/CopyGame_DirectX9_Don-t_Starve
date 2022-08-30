@@ -34,6 +34,7 @@ public:
 public:
 	static CLevel_GamePlay* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;
+
 };
 
 END

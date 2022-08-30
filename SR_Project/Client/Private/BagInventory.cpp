@@ -273,4 +273,9 @@ void CBagInventory::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
+
+	for (auto& iter : m_vecTexture)
+		Safe_Release(iter);
+
+	m_vecTexture.clear();
 }

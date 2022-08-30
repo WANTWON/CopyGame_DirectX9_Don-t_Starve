@@ -18,10 +18,6 @@ private:
 	virtual ~CMouse() = default;
 
 public:
-	/*HRESULT Reserve_Container(_uint iNumLevels);
-	HRESULT Add_GameObject(_uint iLevelIndex, void* pArg = nullptr);
-	void Tick(_float fTimeDelta);
-	void Late_Tick(_float fTimeDelta);*/
 	void Clear(_uint iLevelIndex);
 
 

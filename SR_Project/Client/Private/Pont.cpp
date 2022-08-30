@@ -31,7 +31,7 @@ HRESULT CPont::Initialize(void* pArg)
 
 	iNum = *iNumber;
 
-	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
+	D3DXMatrixOrthoLH(&m_ProjMatrix, (_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f);
 
 	m_fSizeX = 20.0f;
 	m_fSizeY = 20.0f;
@@ -52,7 +52,7 @@ int CPont::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcRect, (_int)(m_fX - m_fSizeX * 0.5f), (_int)(m_fY - m_fSizeY * 0.5f), (_int)(m_fX + m_fSizeX * 0.5f), (_int)(m_fY + m_fSizeY * 0.5f));
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
@@ -80,7 +80,7 @@ void CPont::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcRect, (_int)(m_fX - m_fSizeX * 0.5f), (_int)(m_fY - m_fSizeY * 0.5f), (_int)(m_fX + m_fSizeX * 0.5f), (_int)(m_fY + m_fSizeY * 0.5f));
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
@@ -213,10 +213,6 @@ CGameObject * CPont::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject * CPont::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CPont::Free()
 {

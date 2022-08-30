@@ -59,7 +59,12 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	void Picking();
+	virtual _bool Picking(_float3* PickingPoint);
+	virtual void PickingTrue();
+
+private:
+	_float3 m_vecOutPos;
+	_bool m_bPicking;
 
 public:
 	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

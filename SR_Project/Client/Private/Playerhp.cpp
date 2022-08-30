@@ -50,41 +50,16 @@ int CPlayerhp::Tick(_float fTimeDelta)
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-
-	
-		pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
 	Safe_AddRef(pGameInstance);
 	Safe_AddRef(pinv);
+
+	pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
+
 	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
-	texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth)/2;
-		
+	texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth) / 2;
+
 	Safe_Release(pGameInstance);
-	Safe_AddRef(pinv);
-	
-	/*if (GetKeyState(VK_BACK) & 0x8000)
-	{
-		--m_ihp;
-	}
-
-	if (GetKeyState(VK_SPACE) & 0x8000)
-	{
-		++m_ihp;
-	}*/
-
-
-	
-	/*RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (PtInRect(&rcRect, ptMouse))
-	{
-
-	}*/
-
+	Safe_Release(pinv);
 
 
 	return OBJ_NOEVENT;
@@ -112,7 +87,7 @@ HRESULT CPlayerhp::Render()
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(50-texnum)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(50 - texnum)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))
@@ -205,10 +180,6 @@ CGameObject * CPlayerhp::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject * CPlayerhp::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CPlayerhp::Free()
 {

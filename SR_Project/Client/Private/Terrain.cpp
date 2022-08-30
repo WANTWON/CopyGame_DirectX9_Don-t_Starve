@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "Picking.h"
+#include "PickingMgr.h"
 
 CTerrain::CTerrain(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -31,6 +32,8 @@ HRESULT CTerrain::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
+	m_bPicking = false;
+
 	return S_OK;
 }
 
@@ -39,18 +42,16 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 	if (FAILED(SetUp_Components(VIBufferTag, pArg)))
 		return E_FAIL;
 
+	m_bPicking = false;
+
 	return S_OK;
 }
 
 int CTerrain::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
-	//SetUp_TerrainY();
-
-	Picking();
 		
-
+	
 	return OBJ_NOEVENT;
 }
 
@@ -188,26 +189,28 @@ HRESULT CTerrain::Release_RenderState()
 }
 
 
-void CTerrain::Picking()
+_bool CTerrain::Picking(_float3* PickingPoint)
+{
+	if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
+	{
+		m_vecOutPos = *PickingPoint;
+		return true;
+	}
+	else
+		return false;
+}
+
+void CTerrain::PickingTrue()
 {
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
 
-	Safe_AddRef(pPlayer);
+	pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
 
-	_float3 OutPos;
-
-	if (pGameInstance->Key_Up('P'))
-	{
-		if(true == m_pVIBufferCom->Picking(m_pTransformCom, &OutPos))
-			pPlayer->Set_PickingPoint(_float3(OutPos.x, OutPos.y+1, OutPos.z));
-		
-	}
-
+	cout << "Collision Terrain : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
 
 	Safe_Release(pGameInstance);
-	Safe_Release(pPlayer);
 }
 
 

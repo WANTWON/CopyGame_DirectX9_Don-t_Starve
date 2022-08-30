@@ -37,7 +37,7 @@ public:
 
 public:
 	_float Compute_Height(const _float3& vPosition, const _float4x4& WorldMatrix, _float fOffset = 0.f);
-	bool Picking(class CTransform * pTransform, _float3 * pOut);
+	virtual _bool Picking(class CTransform * pTransform, _float3 * pOut = nullptr) override;
 	void UpTerrain(class CTransform * pTransform, _float3 * pOut);
 	TERRAINDESC& GetTerrainDesc() { return m_TerrainDesc; }
 

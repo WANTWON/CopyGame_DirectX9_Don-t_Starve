@@ -218,7 +218,7 @@ _float CVIBuffer_Terrain::Compute_Height(const _float3 & vWorldPos, const _float
 	return fHeight;
 }
 
-bool CVIBuffer_Terrain::Picking(class CTransform * pTransform, _float3 * pOut)
+_bool CVIBuffer_Terrain::Picking(class CTransform * pTransform, _float3 * pOut)
 {
 	CPicking*		pPicking = CPicking::Get_Instance();
 
@@ -228,35 +228,26 @@ bool CVIBuffer_Terrain::Picking(class CTransform * pTransform, _float3 * pOut)
 	_float4x4	WorldMatrixInverse;
 	D3DXMatrixInverse(&WorldMatrixInverse, nullptr, &WorldMatrix);
 
+	pPicking->Transform_ToLocalSpace(WorldMatrixInverse);
 
-	_float3			vMouseRay, vMousePoint;
-	pPicking->Compute_LocalRayInfo(&vMouseRay, &vMousePoint, pTransform);
-
-	D3DXVec3Normalize(&vMouseRay, &vMouseRay);
-
-	FACEINDICES32* m_pIndices = nullptr;
-	VTXTEX* m_pVertices = nullptr;
-	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&m_pVertices, 0);
-	m_pIB->Lock(0, 0, (void**)&m_pIndices, 0);
+	FACEINDICES32* pIndices = nullptr;
+	VTXTEX* pVertices = nullptr;
+	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&pVertices, 0);
+	m_pIB->Lock(0, 0, (void**)&pIndices, 0);
 
 
-	Safe_Release(pPicking);
-
-	for (int iIndex = 0; iIndex < m_iNumPrimitive; ++iIndex)
+	for (_uint iIndex = 0; iIndex < m_iNumPrimitive; ++iIndex)
 	{
-		_float		fU, fV, fDist;
-
-		if (true == D3DXIntersectTri(&m_pVertices[m_pIndices[iIndex]._0].vPosition, &m_pVertices[m_pIndices[iIndex]._1].vPosition,
-			&m_pVertices[m_pIndices[iIndex]._2].vPosition, &vMousePoint, &vMouseRay, &fU, &fV, &fDist))
+		if (true == pPicking->Intersect_InLocalSpace(pVertices[pIndices[iIndex]._0].vPosition, pVertices[pIndices[iIndex]._1].vPosition,
+			pVertices[pIndices[iIndex]._2].vPosition, pOut))
 		{
-			_float3 vLocalMouse = vMousePoint + *D3DXVec3Normalize(&vMouseRay, &vMouseRay) * fDist;
-			D3DXVec3TransformCoord(pOut, &vLocalMouse, &WorldMatrix);
+			Safe_Release(pPicking);
 			m_pVB->Unlock();
 			m_pIB->Unlock();
 			return true;
 		}
 	}
-
+	Safe_Release(pPicking);
 	m_pVB->Unlock();
 	m_pIB->Unlock();
 
@@ -273,38 +264,35 @@ void CVIBuffer_Terrain::UpTerrain(CTransform * pTransform, _float3 * pOut)
 	_float4x4	WorldMatrixInverse;
 	D3DXMatrixInverse(&WorldMatrixInverse, nullptr, &WorldMatrix);
 
-
-	_float3			vMouseRay, vMousePoint;
-	pPicking->Compute_LocalRayInfo(&vMouseRay, &vMousePoint, pTransform);
-
-	D3DXVec3Normalize(&vMouseRay, &vMouseRay);
+	pPicking->Transform_ToLocalSpace(WorldMatrixInverse);
 
 	FACEINDICES32* m_pIndices = nullptr;
 	VTXTEX* m_pVertices = nullptr;
-
 	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&m_pVertices, 0);
 	m_pIB->Lock(0, 0, (void**)&m_pIndices, 0);
 
 
 	Safe_Release(pPicking);
 
-	for (int iIndex = 0; iIndex < m_iNumPrimitive; ++iIndex)
+	for (_uint iIndex = 0; iIndex < m_iNumPrimitive; ++iIndex)
 	{
-		_float		fU, fV, fDist;
+		_float		fU =0, fV=0, fDist =0;
 
-		if (true == D3DXIntersectTri(&m_pVertices[m_pIndices[iIndex]._0].vPosition, &m_pVertices[m_pIndices[iIndex]._1].vPosition,
-			&m_pVertices[m_pIndices[iIndex]._2].vPosition, &vMousePoint, &vMouseRay, &fU, &fV, &fDist))
+		if (true == pPicking->Intersect_InLocalSpace(m_pVertices[m_pIndices[iIndex]._0].vPosition, m_pVertices[m_pIndices[iIndex]._1].vPosition,
+			m_pVertices[m_pIndices[iIndex]._2].vPosition, pOut))
 		{
 			m_pVertices[m_pIndices[iIndex]._0].vPosition.y += 0.1f;
 			m_pVertices[m_pIndices[iIndex]._1].vPosition.y += 0.1f;
 			m_pVertices[m_pIndices[iIndex]._2].vPosition.y += 0.1f;
 
+			Safe_Release(pPicking);
 			m_pVB->Unlock();
 			m_pIB->Unlock();
 			return;
 		}
 	}
 
+	Safe_Release(pPicking);
 	m_pVB->Unlock();
 	m_pIB->Unlock();
 

@@ -32,9 +32,6 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-
-
-
 	iNumber = (int*)pArg;
 
 	iNum = *iNumber;
@@ -130,8 +127,6 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	{
 		texnum = ITEMNAME_STAFF;
 	}
-	
-
 
 	//CInventory_Manager::Get_Instance()->Get_Inven_list()->front.push_back(this);
 	//CInventory_Manager::Get_Instance()->Get_Inven_list().push_back(this);
@@ -151,13 +146,13 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	
+
 
 	if (texnum == ITEMNAME_ARMOR)
 	{
 		m_itemtype = ITEM_ARMOR;
 	}
-	if (texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH || texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK|| texnum == ITEMNAME_HAMBAT)
+	if (texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH || texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK || texnum == ITEMNAME_HAMBAT)
 	{
 		m_itemtype = ITEM_HAND;
 	}
@@ -183,9 +178,6 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	{
 		m_itemtype == ITEM_MATERIAL;
 	}
-
-
-	
 
 
 
@@ -218,9 +210,6 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 
 
 
-	
-
-
 
 	if (PtInRect(&rcRect, ptMouse))
 	{
@@ -243,6 +232,7 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 void CMainInventory_front::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
 	CMouse*			pMouse = CMouse::Get_Instance();
 	Safe_AddRef(pMouse);
 
@@ -259,7 +249,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
 
 
-   if (!PtInRect(&rcRect, ptMouse))
+	if (!PtInRect(&rcRect, ptMouse))
 	{
 
 		m_fSizeX = 40;
@@ -269,55 +259,55 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 
 
-   if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-		   
-	   {
+	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 
-		
-
-		   if (false == pMouse->Get_picked())
-		   {
-
-			   pMouse->Set_Item_name(texnum);   //첫피킹
-			   pMouse->Set_index(iNum);
-			   pMouse->Set_picked(true);
-			   pMouse->Set_Item_count(item_number);
-
-			   (*mouse)->set_check(true);
-			   (*mouse)->set_texnum(texnum);//마우스이미지
-
-			   set_texnum(ITEMNAME_END);
-		   }
-
-		   else if (true == pMouse->Get_picked() )
-		   {
-
-			   pMouse->Set_Prev_Item_name(texnum);
-			   pMouse->Set_Item_prev_count(item_number);
-			   set_texnum(pMouse->Get_Item_name());
-			   set_itemcount(pMouse->Get_Item_count());
-			   pMouse->Set_picked(false);
-
-			   (*mouse)->set_texnum(ITEMNAME_END);
-			   (*mouse)->set_check(false);//마우스이미지
-
-		   }
+	{
 
 
-	   }
+
+		if (false == pMouse->Get_picked())
+		{
+
+			pMouse->Set_Item_name(texnum);   //첫피킹
+			pMouse->Set_index(iNum);
+			pMouse->Set_picked(true);
+			pMouse->Set_Item_count(item_number);
+
+			(*mouse)->set_check(true);
+			(*mouse)->set_texnum(texnum);//마우스이미지
+
+			set_texnum(ITEMNAME_END);
+		}
+
+		else if (true == pMouse->Get_picked())
+		{
+
+			pMouse->Set_Prev_Item_name(texnum);
+			pMouse->Set_Item_prev_count(item_number);
+			set_texnum(pMouse->Get_Item_name());
+			set_itemcount(pMouse->Get_Item_count());
+			pMouse->Set_picked(false);
+
+			(*mouse)->set_texnum(ITEMNAME_END);
+			(*mouse)->set_check(false);//마우스이미지
+
+		}
 
 
-   /*if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON)&& !PtInRect(&rcRect, ptMouse))
-   {
-	   (*mouse)->set_texnum(ITEMNAME_END);
-	   (*mouse)->set_check(false);
-   }*/
+	}
 
-	   
-	 
-	 
 
-   
+	/*if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON)&& !PtInRect(&rcRect, ptMouse))
+	{
+		(*mouse)->set_texnum(ITEMNAME_END);
+		(*mouse)->set_check(false);
+	}*/
+
+
+
+
+
+
 
 
 	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_RBUTTON)) //마우스 우클릭처리
@@ -327,15 +317,15 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 			pMouse->Set_Item_type(m_itemtype);
 			pMouse->Set_Equipment_name(texnum);
 			set_texnum(ITEMNAME_END);
-			
 
-			if(m_itemtype == ITEM_BAG)
+
+			if (m_itemtype == ITEM_BAG)
 			{
-			pinv->Late_Tick(fTimeDelta);
-			pinv->Use_bag();
-			Safe_Release(pinv);
+				pinv->Late_Tick(fTimeDelta);
+				pinv->Use_bag();
+				Safe_Release(pinv);
 			}
-			
+
 			m_itemtype = ITEM_END;
 		}
 
@@ -351,6 +341,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 
 	Safe_Release(pMouse);
+	Safe_Release(pinv);
 
 
 	if (texnum == ITEMNAME_END)
@@ -362,17 +353,17 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	if (item_number <= 0)
 	{
 		m_bpontcheck = false;
-		m_bcheck == false;
+		m_bcheck = false;
 		item_number = 0;
 		set_texnum(ITEMNAME_END);
 
 	}
 
 
-	if (nullptr != m_pRendererCom&&m_bcheck == true&& iNum < 10)
+	if (nullptr != m_pRendererCom&&m_bcheck == true && iNum < 10)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-	else if (nullptr != m_pRendererCom&&m_bcheck == true && iNum >= 10 &&m_bcheck_bag)
+	else if (nullptr != m_pRendererCom&&m_bcheck == true && iNum >= 10 && m_bcheck_bag)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	//set_check(false);
@@ -382,28 +373,28 @@ HRESULT CMainInventory_front::Render()
 {
 	if (m_bcheck == true)
 	{
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+		if (FAILED(__super::Render()))
+			return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
+		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+			return E_FAIL;
 
-	_float4x4		ViewMatrix;
-	D3DXMatrixIdentity(&ViewMatrix);
+		_float4x4		ViewMatrix;
+		D3DXMatrixIdentity(&ViewMatrix);
 
-	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
-		return E_FAIL;
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+			return E_FAIL;
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
+		if (FAILED(SetUp_RenderState()))
+			return E_FAIL;
 
-	m_pVIBufferCom->Render();
+		m_pVIBufferCom->Render();
 
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
+		if (FAILED(Release_RenderState()))
+			return E_FAIL;
 	}
 
 
@@ -491,10 +482,6 @@ CGameObject * CMainInventory_front::Clone(void* pArg)
 
 }
 
-CGameObject * CMainInventory_front::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CMainInventory_front::Free()
 {
@@ -513,24 +500,24 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 	switch (item)
 	{
 	case ITEMNAME_CARROT:
-		
+
 
 
 		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_HP(10));
 		item_number -= 1;
-        //minus_itemcount();
+		//minus_itemcount();
 		break;
 
 
 	case ITEMNAME_BERRY:
-		
+
 
 
 		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_Hungry(10));
-	     minus_itemcount();
+		minus_itemcount();
 		break;
 
-		
+
 
 	}
 

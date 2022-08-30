@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "CameraDynamic.h"
+#include "PickingMgr.h"
 
 CLevel_GamePlay::CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -51,9 +52,8 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_Layer_StatUIPont(TEXT("Layer_StatUIPont"))))
 		return E_FAIL;
-	
-	
 
+	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL_GAMEPLAY);
 
 	return S_OK;
 }
@@ -61,15 +61,19 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
 	
-
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	if (pGameInstance->Key_Up('P'))
+	{
+		CPickingMgr::Get_Instance()->Picking();
+	}
+	Safe_Release(pGameInstance);
 }
 
 void CLevel_GamePlay::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
-
 	
 }
 
@@ -83,7 +87,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 		TEXT("Prototype_Component_VIBuffer_Terrain_Load0"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag, _float3(-10.f, -1.5f, -10.f))))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Water"), LEVEL_GAMEPLAY, pLayerTag, _float3(-10.f, -1.5f, -10.f))))
 		return E_FAIL;
 
 	/*if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,

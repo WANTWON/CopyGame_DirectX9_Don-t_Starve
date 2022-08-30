@@ -71,6 +71,15 @@ private:
 	_float m_fTerrain_Height = 0.f;
 	OBJINFO m_tInfo;
 
+
+public: /*For Picking */
+	virtual _bool Picking(_float3* PickingPoint);
+	virtual void PickingTrue();
+private:
+	_float3 m_vecOutPos;
+	_bool m_bPicking;
+
+
 public:
 	static CBoulder* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

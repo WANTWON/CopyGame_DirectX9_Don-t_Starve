@@ -269,10 +269,6 @@ CGameObject * CMainInventory_back::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject * CMainInventory_back::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CMainInventory_back::Free()
 {

@@ -53,7 +53,7 @@ int CTree::Tick(_float fTimeDelta)
 	if (m_tInfo.iCurrentHp <= 0 && m_eState < FALL_RIGHT)
 	{
 		m_bInteract = false;
-		_bool bLeftRight = rand() % 2;
+		_int bLeftRight = rand() % 2;
 		STATE eFall = bLeftRight ? FALL_RIGHT : FALL_LEFT;
 		m_eState = eFall;
 
@@ -186,9 +186,9 @@ HRESULT CTree::Drop_Items()
 
 	// Random Position Drop based on Object Position
 	_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * .5f;
-	_bool bSignX = rand() % 2;
+	_int bSignX = rand() % 2;
 	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * .5f;
-	_bool bSignZ = rand() % 2;
+	_int bSignZ = rand() % 2;
 	_float fPosX = bSignX ? (Get_Pos().x + fOffsetX) : (Get_Pos().x - fOffsetX);
 	_float fPosZ = bSignZ ? (Get_Pos().z + fOffsetZ) : (Get_Pos().z - fOffsetZ);
 

@@ -216,6 +216,8 @@ HRESULT CSpider::Texture_Clone()
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DIE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Die"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
+
+	return S_OK;
 }
 
 HRESULT CSpider::Change_Texture(const _tchar * LayerTag)
@@ -438,7 +440,7 @@ void CSpider::Follow_Target(_float fTimeDelta)
 	m_bIsAttacking = false;
 }
 
-void CSpider::Interact(_int iDamage)
+void CSpider::Interact(_uint iDamage)
 {
 	if (m_tInfo.iCurrentHp > 0)
 	{
@@ -471,9 +473,9 @@ HRESULT CSpider::Drop_Items()
 
 	// Random Position Drop based on Object Position
 	_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * .5f;
-	_bool bSignX = rand() % 2;
+	_int bSignX = rand() % 2;
 	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * .5f;
-	_bool bSignZ = rand() % 2;
+	_int bSignZ = rand() % 2;
 	_float fPosX = bSignX ? (Get_Pos().x + fOffsetX) : (Get_Pos().x - fOffsetX);
 	_float fPosZ = bSignZ ? (Get_Pos().z + fOffsetZ) : (Get_Pos().z - fOffsetZ);
 

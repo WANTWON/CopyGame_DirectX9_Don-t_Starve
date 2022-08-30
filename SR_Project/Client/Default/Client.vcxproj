@@ -176,6 +176,7 @@
     <ClInclude Include="..\Public\Mouse_item.h" />
     <ClInclude Include="..\Public\Particle.h" />
     <ClInclude Include="..\Public\ParticleSystem.h" />
+    <ClInclude Include="..\Public\PickingMgr.h" />
     <ClInclude Include="..\public\Pig.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\Public\CameraDynamic.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="..\Private\Mouse_item.cpp" />
     <ClCompile Include="..\Private\Particle.cpp" />
     <ClCompile Include="..\Private\ParticleSystem.cpp" />
+    <ClCompile Include="..\Private\PickingMgr.cpp" />
     <ClCompile Include="..\private\Pig.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\Private\CameraDynamic.cpp" />

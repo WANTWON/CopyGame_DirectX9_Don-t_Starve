@@ -22,6 +22,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Render();
 
+public:
+	virtual _bool Picking(class CTransform * pTransform, _float3 * pOut = nullptr) { return true; };
+
 protected:
 	LPDIRECT3DVERTEXBUFFER9		m_pVB = nullptr;
 	_uint						m_iNumVertices = 0;
@@ -29,6 +32,7 @@ protected:
 	_ulong						m_dwFVF = 0;
 	D3DPRIMITIVETYPE			m_ePrimitiveType;
 	_uint						m_iNumPrimitive = 0;
+	_float3*					m_pVerticesPos = nullptr;
 
 protected:
 	LPDIRECT3DINDEXBUFFER9		m_pIB = nullptr;

@@ -94,7 +94,7 @@ private:
 	void AI_Behaviour(_float fTimeDelta);
 	void Find_Target();
 	void Follow_Target(_float fTimeDelta);
-	void Interact(_int iDamage = 0);
+	void Interact(_uint iDamage = 0);
 	HRESULT Drop_Items();
 	_bool IsDead();
 

@@ -554,6 +554,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/*For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
+		CTerrain::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Water"),
 		CWater::Create(m_pGraphic_Device))))
 		return E_FAIL;
 

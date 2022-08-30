@@ -56,15 +56,44 @@ void CPicking::Tick()
 	D3DXVec3TransformCoord(&m_vRayPos, &m_vRayPos, &ViewMatrixInv);
 	D3DXVec3TransformNormal(&m_vRayDir, &m_vRayDir, &ViewMatrixInv);
 
+	D3DXVec3Normalize(&m_vRayDir, &m_vRayDir);
+
 }
 
-void CPicking::Compute_LocalRayInfo(_float3 * pRayDir, _float3 * pRayPos, CTransform * pTransform)
+void CPicking::Transform_ToLocalSpace(_float4x4 WorldMatrixInverse)
 {
-	_float4x4	WorldMatrixInverse;
-	D3DXMatrixInverse(&WorldMatrixInverse, nullptr, &pTransform->Get_WorldMatrix());
+	D3DXVec3TransformCoord(&m_vRayPos_Local, &m_vRayPos, &WorldMatrixInverse);
+	D3DXVec3TransformNormal(&m_vRayDir_Local, &m_vRayDir, &WorldMatrixInverse);
 
-	D3DXVec3TransformCoord(pRayPos, &m_vRayPos, &WorldMatrixInverse);
-	D3DXVec3TransformNormal(pRayDir, &m_vRayDir, &WorldMatrixInverse);
+	D3DXVec3Normalize(&m_vRayDir_Local, &m_vRayDir_Local);
+}
+
+_bool CPicking::Intersect_InWorldSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float3* pOut)
+{
+	_float		fU, fV, fDist;
+
+	if (TRUE == D3DXIntersectTri(&vPointA, &vPointB, &vPointC, &m_vRayPos, &m_vRayDir, &fU, &fV, &fDist))
+	{
+		*pOut = m_vRayPos + m_vRayDir* fDist;
+
+		return true;
+	}
+
+	return false;
+}
+
+_bool CPicking::Intersect_InLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float3* pOut)
+{
+	_float		fU, fV, fDist;
+
+	if (TRUE == D3DXIntersectTri(&vPointA, &vPointB, &vPointC, &m_vRayPos_Local, &m_vRayDir_Local, &fU, &fV, &fDist))
+	{
+		*pOut = m_vRayPos_Local + m_vRayDir_Local * fDist;
+
+		return true;
+	}
+
+	return false;
 }
 
 void CPicking::Free()

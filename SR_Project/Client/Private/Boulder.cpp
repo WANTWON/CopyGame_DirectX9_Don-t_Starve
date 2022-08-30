@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "Item.h"
+#include "PickingMgr.h"
 
 CBoulder::CBoulder(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -35,6 +36,8 @@ HRESULT CBoulder::Initialize(void* pArg)
 	m_tInfo.iMaxHp = 60;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_pTransformCom->Set_Scale(1.f, 0.6f, 1.f);
+
+	m_bPicking = false;
 
 	return S_OK;
 }
@@ -98,6 +101,13 @@ void CBoulder::Late_Tick(_float fTimeDelta)
 	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('F')))
 		Interact(10);
 
+	if (!m_bPicking)
+	{
+		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
+		m_bPicking = true;
+	}
+		
+
 	// Move Texture Frame
 	m_pTextureCom->MoveFrame(m_TimerTag);
 }
@@ -145,9 +155,9 @@ HRESULT CBoulder::Drop_Items()
 
 	// Random Position Drop based on Object Position
 	_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * 1;
-	_bool bSignX = rand() % 2;
+	_int bSignX = rand() % 2;
 	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * 1;
-	_bool bSignZ = rand() % 2;
+	_int bSignZ = rand() % 2;
 	_float fPosX = bSignX ? (Get_Pos().x + fOffsetX) : (Get_Pos().x - fOffsetX);
 	_float fPosZ = bSignZ ? (Get_Pos().z + fOffsetZ) : (Get_Pos().z - fOffsetZ);
 
@@ -273,6 +283,30 @@ void CBoulder::SetUp_BillBoard()
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+}
+
+_bool CBoulder::Picking(_float3 * PickingPoint)
+{
+	if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
+	{
+		m_vecOutPos = *PickingPoint;
+		return true;
+	}
+	else
+		return false;
+}
+
+void CBoulder::PickingTrue()
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+
+	pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y, m_vecOutPos.z));
+
+	cout << "Collision Rock : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
+
+	Safe_Release(pGameInstance);
 }
 
 CBoulder* CBoulder::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

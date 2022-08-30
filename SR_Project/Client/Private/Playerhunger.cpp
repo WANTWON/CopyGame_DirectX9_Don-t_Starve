@@ -50,42 +50,16 @@ int CPlayerhunger::Tick(_float fTimeDelta)
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-
-
-	pinv->sethuger((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHungry));
 	Safe_AddRef(pGameInstance);
 	Safe_AddRef(pinv);
+
+	pinv->sethuger((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHungry));
+	
 	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
 	texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHungry) / 2;
 
 	Safe_Release(pGameInstance);
-	Safe_AddRef(pinv);
-
-	/*if (GetKeyState(VK_BACK) & 0x8000)
-	{
-	--m_ihp;
-	}
-
-	if (GetKeyState(VK_SPACE) & 0x8000)
-	{
-	++m_ihp;
-	}*/
-
-
-
-	/*RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (PtInRect(&rcRect, ptMouse))
-	{
-
-	}*/
-
-
+	Safe_Release(pinv);
 
 	return OBJ_NOEVENT;
 }
