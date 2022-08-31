@@ -39,6 +39,27 @@ HRESULT CGameObject::Render()
 }
 
 
+
+void CGameObject::Apply_Damage(_float fDamage, CGameObject * DamagedObj, void * AttackType)
+{
+}
+
+void CGameObject::Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void * AttackType)
+{
+}
+
+
+_float CGameObject::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
+{
+	/*
+	HP -= fDamage;
+	DamageType = DamageType
+
+	*/
+	return 0.f;
+}
+
+
 HRESULT CGameObject::Add_Components(const _tchar * pComponentTag, _uint iLevelIndex, const _tchar * pPrototypeTag, CComponent** ppOut, void * pArg)
 {
 	if (nullptr != Find_Component(pComponentTag))

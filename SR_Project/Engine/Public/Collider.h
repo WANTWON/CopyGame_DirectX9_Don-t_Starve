@@ -22,6 +22,8 @@ public:/*For. Using Client */
 	HRESULT Update_ColliderGroup();
 	bool Collision_with_Group(COLLISON_GROUP eGroup, class CGameObject* pGameObject);
 	
+	_bool Collision_Check_Group_Multi(COLLISON_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, class CGameObject* pDamageCauser);
+
 private:
 	list<class CGameObject*>				m_GameObjects[COLLISION_END];
 	typedef list<class CGameObject*>		GAMEOBJECTS;

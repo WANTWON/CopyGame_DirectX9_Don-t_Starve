@@ -49,6 +49,8 @@ public:
 	_float3 Get_Pos() { return m_pTransformCom->Get_State(CTransform::STATE_POSITION); }
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
 
+	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
+
 private: /* For.Components */
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;

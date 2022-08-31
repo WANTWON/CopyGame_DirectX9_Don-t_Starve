@@ -193,6 +193,15 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
+_float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
+{
+	m_tStat.fCurrentHealth -= fDamage;
+
+	return fDamage;
+}
+
+
+
 HRESULT CPlayer::SetUp_Components()
 {
 
@@ -832,7 +841,7 @@ void CPlayer::Pickup(_float _fTimeDelta)
 		}
 		m_ePreState = m_eState;
 	}
-	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8)
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 2)
 	{
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact();
 	}

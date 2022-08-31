@@ -68,10 +68,6 @@ void CSpider::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 	// Testing: 
-	if (CKeyMgr::Get_Instance()->Key_Down('F'))
-		Interact(20);
-
-
 
 	Change_Motion();
 	Change_Frame();
@@ -97,6 +93,19 @@ HRESULT CSpider::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+_float CSpider::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
+{
+	if (m_tInfo.iCurrentHp > fDamage)
+		m_tInfo.iCurrentHp -= fDamage;
+	else if (m_tInfo.iCurrentHp <= fDamage)
+	{
+		m_bDead = true;
+		m_tInfo.iCurrentHp = 0.f;
+	}
+
+	return fDamage;
 }
 
 HRESULT CSpider::SetUp_Components(void* pArg)
