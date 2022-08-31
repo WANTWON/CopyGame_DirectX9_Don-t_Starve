@@ -123,6 +123,11 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 		texnum = ITEMNAME_BERRY;
 	}
 
+	if (iNum == 5)
+	{
+		texnum = ITEMNAME_SHOTTER;
+	}
+
 	if (iNum == 15)
 	{
 		texnum = ITEMNAME_STAFF;
