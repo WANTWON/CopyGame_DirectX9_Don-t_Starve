@@ -14,6 +14,17 @@ namespace Client
 		//vector<Item*> vItemDrops;
 	}OBJINFO;
 
+
+	/*struct BoundingBox
+	{
+		BoundingBox();
+
+		bool isPointInside(D3DXVECTOR3& p);
+
+		D3DXVECTOR3 _min;
+		D3DXVECTOR3 _max;
+	};*/
+
 	enum LEVEL { LEVEL_STATIC, LEVEL_LOADING, LEVEL_LOGO, LEVEL_GAMEPLAY, LEVEL_END };
 }
 

@@ -34,6 +34,10 @@ HRESULT CParticleSystem::Initialize(void * pArg)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_StateDesc.vPosition);
 	m_bStart = false;
 
+
+	m_pTransformCom->Set_Scale(m_StateDesc.vParticleScale.x, m_StateDesc.vParticleScale.y, 0);
+
+
 	return S_OK;
 }
 
@@ -52,10 +56,11 @@ int CParticleSystem::Tick(_float fTimeDelta)
 	{
 		switch (m_StateDesc.eType)
 		{
-		case Client::CParticleSystem::PARTICLE_LEAF:
-			Particle_Leaf_Moveing(fTimeDelta);
+		case Client::CParticleSystem::PARTICLE_ROCK:
+			Particle_Rock_Mining(fTimeDelta);
 			break;
-		case Client::CParticleSystem::PARTICLE_END:
+		case Client::CParticleSystem::PARTICLE_LEAF:
+			Particle_Leaf_Moving(fTimeDelta);
 			break;
 		default:
 			break;
@@ -77,7 +82,7 @@ int CParticleSystem::Tick(_float fTimeDelta)
 	/*2. 모든 살아 있는 파티클들을 버퍼로 복사한다 */
 	if (FAILED(Update_VIBuffer()))
 		return E_FAIL;
-	
+
 	/*3. 버텍스 버퍼를 그린다. 이건 렌더부분에서*/
 	return OBJ_NOEVENT;
 }
@@ -87,7 +92,7 @@ void CParticleSystem::Late_Tick(_float fTimeDelta)
 	if (nullptr == m_pRendererCom)
 		return;
 
-	if (FAILED(m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+	if (FAILED(m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this)))
 		return;
 }
 
@@ -96,7 +101,21 @@ HRESULT CParticleSystem::Render()
 	if (nullptr == m_pVBuffer)
 		return E_FAIL;
 
+	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+		return E_FAIL;
+
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
+		return E_FAIL;
+
+	//m_pTextureCom->MoveFrame(TEXT(""), false);
+
+	if (FAILED(SetUp_RenderState()))
+		return E_FAIL;
+
 	if (FAILED(Render_VIBuffer()))
+		return E_FAIL;
+
+	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
 	return S_OK;
@@ -115,12 +134,13 @@ HRESULT CParticleSystem::Render_VIBuffer()
 	return S_OK;
 }
 
-HRESULT CParticleSystem::Particle_Leaf_Moveing(_float fTimeDelta)
+HRESULT CParticleSystem::Particle_Rock_Mining(_float fTimeDelta)
 {
+
 	m_bStart = true;
 	_bool emitParticle = false;
 	_bool found = false;
-	float positionX, positionY, positionZ, red, green, blue;
+	float positionX, positionY, positionZ;
 	int index, i, j;
 
 	m_dCurrentSpawnTime += fTimeDelta;
@@ -134,20 +154,16 @@ HRESULT CParticleSystem::Particle_Leaf_Moveing(_float fTimeDelta)
 
 	if ((emitParticle == true) && (m_iCurrentParticleCount < (m_StateDesc.iMaxParticleCount - 1)))
 	{
+
 		m_iCurrentParticleCount++;
 
-		positionX = (((float)rand() - (float)rand()) / RAND_MAX) * m_StateDesc.vParticleDeviation.x;
-		positionY = (((float)rand() - (float)rand()) / RAND_MAX) * m_StateDesc.vParticleDeviation.y;
-		positionZ = (((float)rand() - (float)rand()) / RAND_MAX) * m_StateDesc.vParticleDeviation.z;
-		_float3 vPosition = _float3(positionX, positionY, positionZ);
+		_float3 vPosition = _float3(0,0,0);
 
-		_float3 vVelocity = m_StateDesc.vVelocity * (((float)rand() - (float)rand()) / RAND_MAX) * m_StateDesc.fVelocityDeviation;
+		_float3 vVelocity =_float3((rand() % 3)*0.05f, (rand() % 3) * 0.05f, (rand() % 3) * 0.05f);
 
-		red = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-		green = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-		blue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+		if (rand() % 2 == 0)
+			vVelocity.x *= -1;
 
-		_float4 vColor = _float4(red, green, blue, 1.f);
 
 		index = 0;
 		found = false;
@@ -171,7 +187,6 @@ HRESULT CParticleSystem::Particle_Leaf_Moveing(_float fTimeDelta)
 			m_ParticleArray[i].bActive = m_ParticleArray[j].bActive;
 			m_ParticleArray[i].vPosition = m_ParticleArray[j].vPosition;
 			m_ParticleArray[i].vVelocity = m_ParticleArray[j].vVelocity;
-			m_ParticleArray[i].vColor = m_ParticleArray[j].vColor;
 			m_ParticleArray[i].dCurrentLifeTime = m_ParticleArray[j].dCurrentLifeTime;
 			i--;
 			j--;
@@ -180,7 +195,72 @@ HRESULT CParticleSystem::Particle_Leaf_Moveing(_float fTimeDelta)
 		m_ParticleArray[i].bActive = true;
 		m_ParticleArray[i].vPosition = vPosition;
 		m_ParticleArray[i].vVelocity = vVelocity;
-		m_ParticleArray[i].vColor = vColor;
+		m_ParticleArray[i].dCurrentLifeTime = 0;
+	}
+
+	return S_OK;
+}
+
+HRESULT CParticleSystem::Particle_Leaf_Moving(_float fTimeDelta)
+{
+	m_bStart = true;
+	_bool emitParticle = false;
+	_bool found = false;
+	float positionX, positionY, positionZ;
+	int index, i, j;
+
+	m_dCurrentSpawnTime += fTimeDelta;
+	emitParticle = false;
+
+	if (m_dCurrentSpawnTime > (m_StateDesc.dSpawnTime / m_StateDesc.fParticlePerSecond))
+	{
+		m_dCurrentSpawnTime = 0.0f;
+		emitParticle = true;
+	}
+
+	if ((emitParticle == true) && (m_iCurrentParticleCount < (m_StateDesc.iMaxParticleCount - 1)))
+	{
+		m_iCurrentParticleCount++;
+
+		positionX = (((float)rand() - (float)rand()) / RAND_MAX) * m_StateDesc.vParticleDeviation.x;
+		positionY = 0;
+		positionZ = (((float)rand() - (float)rand()) / RAND_MAX) * m_StateDesc.vParticleDeviation.z;
+		_float3 vPosition = _float3(positionX, positionY, positionZ);
+
+		_float3 vVelocity = m_StateDesc.vVelocity * (rand()%10*0.01f) * m_StateDesc.fVelocityDeviation;
+		if(rand()%2 == 0)
+			vVelocity.x *= -1;
+
+		index = 0;
+		found = false;
+		while (!found)
+		{
+			if ((m_ParticleArray[index].bActive == false) || Compute_ViewZ(m_ParticleArray[index].vPosition) < Compute_ViewZ(vPosition))
+			{
+				found = true;
+			}
+			else
+			{
+				index++;
+			}
+		}
+
+		i = m_iCurrentParticleCount;
+		j = i - 1;
+
+		while (i != index)
+		{
+			m_ParticleArray[i].bActive = m_ParticleArray[j].bActive;
+			m_ParticleArray[i].vPosition = m_ParticleArray[j].vPosition;
+			m_ParticleArray[i].vVelocity = m_ParticleArray[j].vVelocity;
+			m_ParticleArray[i].dCurrentLifeTime = m_ParticleArray[j].dCurrentLifeTime;
+			i--;
+			j--;
+		}
+
+		m_ParticleArray[i].bActive = true;
+		m_ParticleArray[i].vPosition = vPosition;
+		m_ParticleArray[i].vVelocity = vVelocity;
 		m_ParticleArray[i].dCurrentLifeTime = 0;
 	}
 
@@ -198,13 +278,11 @@ HRESULT CParticleSystem::SetUp_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	/* For Com_Texture */
-	CTexture::TEXTUREDESC		TextureDesc;
-	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_iEndTex = 32;
-	TextureDesc.m_fSpeed = 60;
+	CTexture::TEXTUREDESC  TextureDesc;
+	TextureDesc.m_iEndTex = m_StateDesc.iTextureNum - 1;
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_RUN_DOWN"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	/* For Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), m_StateDesc.eTextureScene, m_StateDesc.pTextureKey, (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Transform*/
@@ -233,7 +311,22 @@ HRESULT CParticleSystem::Ready_ParticleSystem()
 
 HRESULT CParticleSystem::Ready_VIBuffer()
 {
-	return E_NOTIMPL;
+	// For. Vertices
+	// For. Vertices
+	m_iStride = sizeof(VTXTEX);
+	m_iNumVertices = m_StateDesc.iMaxParticleCount * 6; // 중복 정점 허용?
+	m_iNumPrimitive = m_iNumVertices / 3;
+	m_dwFVF = D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE4(0);
+
+	m_Vertices = new VTXTEX[m_iNumVertices];
+	if (nullptr == m_Vertices)
+		return E_FAIL;
+	ZeroMemory(m_Vertices, sizeof(VTXTEX) * m_iNumVertices);
+
+	if (FAILED(m_pGraphic_Device->CreateVertexBuffer(m_iStride * m_iNumVertices, D3DUSAGE_DYNAMIC, m_dwFVF, D3DPOOL_DEFAULT, &m_pVBuffer, nullptr)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CParticleSystem::Update_Particles(_float fTimeDelta)
@@ -245,9 +338,16 @@ HRESULT CParticleSystem::Update_Particles(_float fTimeDelta)
 			// 각 파티클들의 시간과 위치 업데이트
 			switch (m_StateDesc.eType)
 			{
+			case Client::CParticleSystem::PARTICLE_ROCK:
+				m_ParticleArray[i].dCurrentLifeTime += fTimeDelta;
+				m_ParticleArray[i].vPosition += m_ParticleArray[i].vVelocity;
+				break;
 			case Client::CParticleSystem::PARTICLE_LEAF:
 				m_ParticleArray[i].dCurrentLifeTime += fTimeDelta;
 				m_ParticleArray[i].vPosition += m_ParticleArray[i].vVelocity;
+
+				if (m_ParticleArray[i].dCurrentLifeTime == m_StateDesc.dParticleLifeTime*0.5)
+					m_ParticleArray[i].vVelocity *= -1;
 				break;
 			case Client::CParticleSystem::PARTICLE_END:
 				break;
@@ -281,7 +381,7 @@ HRESULT CParticleSystem::Update_VIBuffer()
 	{
 		/// 오른쪽 위 삼각형
 		// Left Top
-		_float3 LocalPos = _float3(-0.5f, 0.5f, 0);
+		_float3 LocalPos = _float3(-0.5f*m_StateDesc.vParticleScale.x, 0.5f*m_StateDesc.vParticleScale.y, 0);
 		D3DXVec3TransformCoord(&LocalPos, &LocalPos, &InvViewMatrix);
 		pVertices[index].vPosition = m_ParticleArray[i].vPosition + LocalPos;
 		pVertices[index].vTexture = _float2(0.f, 0.f);
@@ -289,7 +389,7 @@ HRESULT CParticleSystem::Update_VIBuffer()
 		++index;
 
 		// Right Top
-		LocalPos = _float3(0.5f, 0.5f, 0);
+		LocalPos = _float3(0.5f*m_StateDesc.vParticleScale.x, 0.5f*m_StateDesc.vParticleScale.y, 0);
 		D3DXVec3TransformCoord(&LocalPos, &LocalPos, &InvViewMatrix);
 		pVertices[index].vPosition = m_ParticleArray[i].vPosition + LocalPos;
 		pVertices[index].vTexture = _float2(1.f, 0.f);
@@ -297,7 +397,7 @@ HRESULT CParticleSystem::Update_VIBuffer()
 		++index;
 
 		// Right Bottom
-		LocalPos = _float3(0.5f, -0.5f, 0);
+		LocalPos = _float3(0.5f*m_StateDesc.vParticleScale.x, -0.5f*m_StateDesc.vParticleScale.y, 0);
 		D3DXVec3TransformCoord(&LocalPos, &LocalPos, &InvViewMatrix);
 		pVertices[index].vPosition = m_ParticleArray[i].vPosition + LocalPos;
 		pVertices[index].vTexture = _float2(1.f, 1.f);
@@ -306,7 +406,7 @@ HRESULT CParticleSystem::Update_VIBuffer()
 
 		/// 왼쪽 아래 삼각형
 		// Left Top
-		LocalPos = _float3(-0.5f, 0.5f, 0);
+		LocalPos = _float3(-0.5f*m_StateDesc.vParticleScale.x, 0.5f*m_StateDesc.vParticleScale.y, 0);
 		D3DXVec3TransformCoord(&LocalPos, &LocalPos, &InvViewMatrix);
 		pVertices[index].vPosition = m_ParticleArray[i].vPosition + LocalPos;
 		pVertices[index].vTexture = _float2(0.f, 0.f);
@@ -314,7 +414,7 @@ HRESULT CParticleSystem::Update_VIBuffer()
 		++index;
 
 		// Right Bottom
-		LocalPos = _float3(0.5f, -0.5f, 0);
+		LocalPos = _float3(0.5f*m_StateDesc.vParticleScale.x, -0.5f*m_StateDesc.vParticleScale.y, 0);
 		D3DXVec3TransformCoord(&LocalPos, &LocalPos, &InvViewMatrix);
 		pVertices[index].vPosition = m_ParticleArray[i].vPosition + LocalPos;
 		pVertices[index].vTexture = _float2(1.f, 1.f);
@@ -322,7 +422,8 @@ HRESULT CParticleSystem::Update_VIBuffer()
 		++index;
 
 		// Left Bottom
-		LocalPos = _float3(-0.5f, -0.5f, 0);
+		//pVertices[index].vPosition = _float3(m_ParticleArray[i].vPosition.x - m_vParticleScale.x, m_ParticleArray[i].vPosition.y - m_vParticleScale.y, m_ParticleArray[i].vPosition.z);
+		LocalPos = _float3(-0.5f*m_StateDesc.vParticleScale.x, -0.5f*m_StateDesc.vParticleScale.y, 0);
 		D3DXVec3TransformCoord(&LocalPos, &LocalPos, &InvViewMatrix);
 		pVertices[index].vPosition = m_ParticleArray[i].vPosition + LocalPos;
 		pVertices[index].vTexture = _float2(0.f, 1.f);
@@ -332,6 +433,21 @@ HRESULT CParticleSystem::Update_VIBuffer()
 
 	m_pVBuffer->Unlock();
 
+	return S_OK;
+}
+
+HRESULT CParticleSystem::SetUp_RenderState()
+{
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	return S_OK;
+}
+
+HRESULT CParticleSystem::Release_RenderState()
+{
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 	return S_OK;
 }
 
@@ -371,16 +487,49 @@ _bool CParticleSystem::Check_AllParticleDead()
 	return true;
 }
 
+_float CParticleSystem::Compute_ViewZ(_float3 WorldPos)
+{
+	/*카메라의 월드 매트릭스의 좌표 받아오기*/
+	_float4x4 ViewInvMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewInvMatrix);
+	D3DXMatrixInverse(&ViewInvMatrix, nullptr, &ViewInvMatrix);
+	_float3 vCamPosition = *(_float3*)&ViewInvMatrix.m[3][0];
+	_float3	 vDistance = vCamPosition - WorldPos;
+	return D3DXVec3Length(&vDistance);
+}
+
 CParticleSystem * CParticleSystem::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	return nullptr;
+
+	CParticleSystem*	pInstance = new CParticleSystem(pGraphic_Device);
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		ERR_MSG(TEXT("Failed to Created : CParticleSystem"));
+		Safe_Release(pInstance);
+	}
+	return pInstance;
 }
 
 CGameObject * CParticleSystem::Clone(void * pArg)
 {
-	return nullptr;
+	CParticleSystem*	pInstance = new CParticleSystem(*this);
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		ERR_MSG(TEXT("Failed to Cloned : CParticleSystem"));
+		Safe_Release(pInstance);
+	}
+	return pInstance;
 }
 
 void CParticleSystem::Free()
 {
+	__super::Free();
+	Safe_Delete_Array(m_ParticleArray);
+	Safe_Delete_Array(m_Vertices);
+
+	Safe_Release(m_pVBuffer);
+
+	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pTransformCom);
 }

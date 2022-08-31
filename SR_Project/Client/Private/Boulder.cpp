@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "Item.h"
 #include "PickingMgr.h"
+#include "ParticleSystem.h"
+#include "Particle.h"
 
 CBoulder::CBoulder(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -302,7 +304,7 @@ void CBoulder::PickingTrue()
 	Safe_AddRef(pGameInstance);
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
 
-	pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y, m_vecOutPos.z));
+	//pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y, m_vecOutPos.z));
 
 	cout << "Collision Rock : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
 

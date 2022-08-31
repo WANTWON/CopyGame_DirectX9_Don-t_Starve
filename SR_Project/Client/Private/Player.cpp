@@ -8,6 +8,7 @@
 #include "Bullet.h"
 #include "CameraDynamic.h"
 #include "Interactive_Object.h"
+#include "ParticleSystem.h"
 
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -734,6 +735,28 @@ void CPlayer::Mining(_float _fTimeDelta)
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 24)
 	{
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(10);
+
+
+		CParticleSystem::STATEDESC ParticleDesc;
+		ZeroMemory(&ParticleDesc, sizeof(CParticleSystem::STATEDESC));
+		ParticleDesc.eType = CParticleSystem::PARTICLE_ROCK;
+		ParticleDesc.eTextureScene = LEVEL_GAMEPLAY;
+		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Rock");
+		ParticleDesc.dDuration = 0.2; //파티클 시간
+		ParticleDesc.dParticleLifeTime = 0.2; //수명
+		ParticleDesc.dSpawnTime = 1; //스폰 타임
+		ParticleDesc.fParticlePerSecond = 75;
+		ParticleDesc.fVelocityDeviation = 1.f;
+		ParticleDesc.iMaxParticleCount = 5;
+		ParticleDesc.vParticleScale = _float2(0.5, 0.5);
+		ParticleDesc.vParticleDeviation = _float3(1 * 0.6f, 0.f, 1 * 0.6f);
+		ParticleDesc.iTextureNum = 1;
+		ParticleDesc.vVelocity = _float3((rand() % 10)*0.1f, (rand() % 10) * 0.1f, rand() % 10 * 0.1f);
+		ParticleDesc.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		ParticleDesc.vPosition.z += 0.001;
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Particle"), &ParticleDesc)))
+			return;
 	}
 }
 
@@ -762,6 +785,28 @@ void CPlayer::Chop(_float _fTimeDelta)
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 28)
 	{
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(20);
+
+		CParticleSystem::STATEDESC ParticleDesc;
+		ZeroMemory(&ParticleDesc, sizeof(CParticleSystem::STATEDESC));
+		ParticleDesc.eType = CParticleSystem::PARTICLE_LEAF;
+		ParticleDesc.eTextureScene = LEVEL_GAMEPLAY;
+		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Leaf");
+		ParticleDesc.dDuration = 1; //파티클 시간
+		ParticleDesc.dParticleLifeTime = 1; //수명
+		ParticleDesc.dSpawnTime = 1; //스폰 타임
+		ParticleDesc.fParticlePerSecond = 75;
+		ParticleDesc.fVelocityDeviation = 1.f;
+		ParticleDesc.iMaxParticleCount = 5;
+		ParticleDesc.vParticleScale = _float2(0.5, 0.5);
+		ParticleDesc.vParticleDeviation = _float3(1 * 0.6f, 0.f, 1 * 0.6f);
+		ParticleDesc.iTextureNum = 4;
+		ParticleDesc.vVelocity = _float3(0.01f,-0.5,0.f);
+		ParticleDesc.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		ParticleDesc.vPosition.z -= 0.001;
+		ParticleDesc.vPosition.y += 1;
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Particle"), &ParticleDesc)))
+			return;
 	}
 }
 

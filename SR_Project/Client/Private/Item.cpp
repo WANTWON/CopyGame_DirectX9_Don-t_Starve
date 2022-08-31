@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "Inventory.h"
 
+#include "ParticleSystem.h"
+
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
 {

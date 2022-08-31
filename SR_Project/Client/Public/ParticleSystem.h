@@ -7,7 +7,7 @@ BEGIN(Client)
 class CParticleSystem final : public CGameObject
 {
 public:
-	enum PARTICLE_TYPE { PARTICLE_LEAF, PARTICLE_END };
+	enum PARTICLE_TYPE { PARTICLE_ROCK, PARTICLE_LEAF, PARTICLE_END };
 
 
 public:
@@ -17,7 +17,7 @@ public:
 		// Particle TextureInfo
 		LEVEL			eTextureScene;
 		const _tchar*		pTextureKey;
-		_uint				iShaderPass;
+		_uint				iTextureNum;
 
 		// System CreateInfo
 		_bool				bActive;
@@ -48,7 +48,6 @@ public:
 
 		_float3			vVelocity;
 		_float3			vPosition;
-		_float4			vColor;
 
 		_double		dCurrentLifeTime;
 	}PARTICLE_INFO; /*현재 파티클 정보*/
@@ -67,20 +66,26 @@ public:
 
 public:
 	HRESULT SetUp_Components(void* pArg = nullptr);
+	HRESULT SetUp_RenderState();
+	HRESULT Release_RenderState();
 	HRESULT Ready_ParticleSystem();
 	HRESULT Ready_VIBuffer();
 	HRESULT Update_Particles(_float fTimeDelta);
 	HRESULT Update_VIBuffer();
-	HRESULT Kill_DeadParticles();
 	HRESULT Render_VIBuffer();
+	
+public:
+	HRESULT Kill_DeadParticles();
+	
 
 public:
-	HRESULT Particle_Leaf_Moveing(_float fTimeDelta);
+	HRESULT Particle_Rock_Mining(_float fTimeDelta);
+	HRESULT Particle_Leaf_Moving(_float fTimeDelta);
 
 
 public:
 	_bool Check_AllParticleDead();
-
+	_float Compute_ViewZ(_float3 WorldPos);
 
 private:
 	CTransform*			m_pTransformCom = nullptr;
@@ -99,9 +104,10 @@ private:
 private:
 	PARTICLE_INFO*			m_ParticleArray = nullptr;		// 파티클의 정보들
 	VTXTEX*					m_Vertices = nullptr;			// 정점들의 정보들
+	list<CParticle*>		m_listParticle;
 
 protected: // For.VertexBuffer
-	PDIRECT3DVERTEXBUFFER9		m_pVBuffer = nullptr;
+	LPDIRECT3DVERTEXBUFFER9		m_pVBuffer = nullptr;
 	_uint			m_iStride = 0;
 	_uint			m_iNumVertices = 0;
 	_uint			m_iNumPrimitive = 0;
