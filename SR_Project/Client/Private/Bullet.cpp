@@ -223,7 +223,9 @@ void CBullet::Excute(_float fTimeDelta)
 
 void CBullet::AttackCheck()
 {
-	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_MONSTER, this))
+	vector<CGameObject*> vecDamagedActor;
+
+	if (m_pColliderCom->Collision_Check_Group_Multi(CCollider::COLLISION_MONSTER, vecDamagedActor,this))
 	{
 		switch (m_tBulletData.eWeaponType)
 		{
@@ -238,7 +240,12 @@ void CBullet::AttackCheck()
 			m_bDead = OBJ_DEAD;
 			break;
 		}
+
+		Apply_Damage_Multi(20.f, vecDamagedActor, nullptr);
 	}
+	
+	
+	vecDamagedActor.clear();
 }
 
 HRESULT CBullet::Render_TextureState()
@@ -286,6 +293,23 @@ HRESULT CBullet::Change_Texture(const _tchar * LayerTag)
 	m_pTextureCom->Set_ZeroFrame();
 
 	return S_OK;
+}
+
+void CBullet::Apply_Damage(_float Damage, CGameObject * DamagedObj, void * AttackType)
+{
+	DamagedObj->Take_Damage(Damage, nullptr, this);
+}
+
+void CBullet::Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void * AttackType)
+{
+	//Damge_Type 추후 넣기.
+
+	for (auto& iter = vecDamagedObj.begin(); iter != vecDamagedObj.end();)
+	{
+		(*iter)->Take_Damage(fDamage, nullptr, this);
+		iter++;
+	}
+
 }
 
 void CBullet::SetUp_BillBoard()

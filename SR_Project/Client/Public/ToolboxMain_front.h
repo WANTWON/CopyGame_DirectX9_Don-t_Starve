@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CMainInventory_front final : public CGameObject
+class CToolboxMain_front final : public CGameObject
 {
 private:
-	CMainInventory_front(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CMainInventory_front(const CMainInventory_front& rhs);
-	virtual ~CMainInventory_front() = default;
+	CToolboxMain_front(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CToolboxMain_front(const CToolboxMain_front& rhs);
+	virtual ~CToolboxMain_front() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -42,7 +42,7 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	static CMainInventory_front* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CToolboxMain_front* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 
@@ -57,7 +57,7 @@ public:
 	void set_texnum(ITEMNAME texnumber) { texnum = texnumber; }
 	ITEMNAME get_texnum() { return texnum; }
 	_uint get_item_number() { return item_number; }
-	void Use_item(ITEMNAME item);
+	//void Use_item(ITEMNAME item);
 	int get_iNum() { return iNum; }
 
 private:

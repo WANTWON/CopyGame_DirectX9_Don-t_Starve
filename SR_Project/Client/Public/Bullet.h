@@ -51,6 +51,9 @@ private:
 	HRESULT Render_TextureState();
 	HRESULT Change_Texture(const _tchar* LayerTag);
 
+	virtual void	Apply_Damage(_float Damage, CGameObject* DamagedObj, void* AttackType = nullptr);
+	virtual void	Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void* AttackType = nullptr);
+private:
 	void SetUp_BillBoard();
 private:/*For Components*/
 	CTexture*				m_pTextureCom = nullptr;

@@ -9,8 +9,8 @@ namespace Client
 
 	typedef struct ObjectInfo
 	{
-		unsigned int iMaxHp;
-		unsigned int iCurrentHp;
+		float iMaxHp;
+		float iCurrentHp;
 		//vector<Item*> vItemDrops;
 	}OBJINFO;
 
