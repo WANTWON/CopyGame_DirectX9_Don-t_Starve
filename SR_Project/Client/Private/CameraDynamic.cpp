@@ -78,10 +78,10 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 		m_lMouseWheel += 0.001;
 
 
-	if (m_lMouseWheel += (pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
+	if (m_lMouseWheel += (_long)(pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
 	{
-		m_vDistance.y -= fTimeDelta*m_lMouseWheel*0.01f;
-		m_vDistance.z += fTimeDelta*m_lMouseWheel*0.01f;
+		m_vDistance.y -= (fTimeDelta*m_lMouseWheel*0.01f);
+		m_vDistance.z += (fTimeDelta*m_lMouseWheel*0.01f);
 	}
 
 	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
@@ -165,12 +165,12 @@ void CCameraDynamic::FPS_Camera(_float fTimeDelta)
 
 	_float3 vecTargetLook = pTarget->Get_Look();
 	D3DXVec3Normalize(&vecTargetLook, &vecTargetLook);
-	_float3 vectargetPos = pTarget->Get_Pos() + _float3(0.f, 0.2f, vecTargetLook.z);
+	_float3 vectargetPos = pTarget->Get_Pos() + _float3(0.f, 0.5f, vecTargetLook.z);
 	_float3 PlayerLook = (pTarget->Get_Look());
 
 	m_pTransform->Follow_Target(fTimeDelta, vectargetPos, _float3(0, 0, 0));
 	//m_pTransform->LookAt(PlayerLook);
-	m_pTransform->Set_State(CTransform::STATE_LOOK, _float3(PlayerLook.x, 0.0f, PlayerLook.z));
+	m_pTransform->Set_State(CTransform::STATE_LOOK, _float3(PlayerLook.x, 0.f, PlayerLook.z));
 	Safe_Release(pTarget);
 	Safe_Release(pGameInstance);
 }
