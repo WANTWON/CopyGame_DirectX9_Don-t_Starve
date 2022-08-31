@@ -124,7 +124,7 @@ void CItem::Interact(_uint Damage)
 			{
 				for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
 				{
-					if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true)
+					if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true && (*iter)->get_item_number() <= 8)
 					{
 
 						(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
@@ -133,6 +133,7 @@ void CItem::Interact(_uint Damage)
 					else if ((*iter)->get_check() == false)
 					{
 						(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
+						(*iter)->plus_itemcount();
 						(*iter)->set_check(true);
 
 						return;
@@ -157,6 +158,7 @@ void CItem::Interact(_uint Damage)
 					else if ((*iter)->get_check() == false)
 					{
 						(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
+						(*iter)->plus_itemcount();
 						(*iter)->set_check(true);
 
 						return;

@@ -122,6 +122,10 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	{
 		texnum = ITEMNAME_BERRY;
 	}
+	if (iNum == 5)
+	{
+		texnum = ITEMNAME_ROCK2;
+	}
 
 	if (iNum == 5)
 	{
@@ -178,12 +182,15 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 		m_itemtype = ITEM_FOOD;
 	}
 
-	if (texnum == ITEMNAME_COAL || texnum == ITEMNAME_WOOD || texnum == ITEMNAME_ROCK || texnum == ITEMNAME_GOLD || texnum == ITEMNAME_WOOD2 ||
-		texnum == ITEMNAME_PIGTAIL || texnum == ITEMNAME_ROPE || texnum == ITEMNAME_WEB || texnum == ITEMNAME_GRASS)
+	if (texnum == ITEMNAME_COAL || texnum == ITEMNAME_WOOD || texnum == ITEMNAME_ROCK || texnum == ITEMNAME_GOLD || texnum == ITEMNAME_WOOD2 )
 	{
-		m_itemtype == ITEM_MATERIAL;
+		m_itemtype = ITEM_MATERIAL;
 	}
 
+	if (texnum == ITEMNAME_PIGTAIL || texnum == ITEMNAME_ROPE || texnum == ITEMNAME_WEB || texnum == ITEMNAME_GRASS || texnum == ITEMNAME_ROCK2)
+	{
+		m_itemtype = ITEM_MATERIAL;
+	}
 
 
 	if (m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT || m_itemtype == ITEM_HAND || m_itemtype == ITEM_ARMOR || texnum == ITEMNAME_END)
@@ -289,9 +296,10 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 			pMouse->Set_Prev_Item_name(texnum);
 			pMouse->Set_Item_prev_count(item_number);
-			set_texnum(pMouse->Get_Item_name());
+			texnum = (pMouse->Get_Item_name());
 			set_itemcount(pMouse->Get_Item_count());
 			pMouse->Set_picked(false);
+			m_bcheck = true;
 
 			(*mouse)->set_texnum(ITEMNAME_END);
 			(*mouse)->set_check(false);//마우스이미지
@@ -353,9 +361,12 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	{
 		//set_check(false);
 	}
+	if (m_itemtype == ITEM_HAT && m_itemtype == ITEM_BAG && m_itemtype == ITEM_HAND && m_itemtype == ITEM_ARMOR) // 
+	{
+		item_number = 0;
+	}
 
-
-	if (item_number <= 0)
+	if (item_number <= 0 && m_itemtype != ITEM_HAT && m_itemtype !=ITEM_BAG && m_itemtype != ITEM_HAND && m_itemtype != ITEM_ARMOR ) // 카운트가 필요한 타입들이면서 
 	{
 		m_bpontcheck = false;
 		m_bcheck = false;
@@ -364,6 +375,13 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 	}
 
+
+	if (texnum == ITEMNAME_END)
+	{
+		m_bcheck = false;
+	}
+	else
+		m_bcheck = true;
 
 	if (nullptr != m_pRendererCom&&m_bcheck == true && iNum < 10)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
