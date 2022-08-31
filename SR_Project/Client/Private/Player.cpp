@@ -60,19 +60,19 @@ HRESULT CPlayer::Initialize(void* pArg)
 int CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
+	//Collider Add
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
-
+	//KeyInput
 	GetKeyDown(fTimeDelta);
+	//Move
 	Move_to_PickingPoint(fTimeDelta);
 	WalkingTerrain();
 
-	Create_Bullet();
-
-	//Test
+	//Act Auto
 	Tick_ActStack(fTimeDelta);
-	///
+
+	Create_Bullet();
 	m_Equipment->Set_TargetPos(Get_Pos());
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -932,7 +932,7 @@ void CPlayer::Find_Priority()
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
-		if (!dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_CanInteract())
+		if ( (*iter_Obj) == nullptr ||!dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_CanInteract())
 		{
 			++iIndex;
 			iter_Obj++;
@@ -1108,7 +1108,11 @@ CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
 _bool CPlayer::Check_Interact_End(void)
 {
 	//CInteractive_Object* pObj = (CInteractive_Object*)m_pTarget;
+	if (m_pTarget == nullptr)
+		return true;
+	
 	return	(dynamic_cast<CInteractive_Object*>(m_pTarget)->Get_CanInteract() ? false : true);
+	
 }
 
 void CPlayer::Test_Debug(_float fTimeDelta)

@@ -27,11 +27,15 @@ public:
 	virtual HRESULT Render() override;
 
 public:
+	_bool	Get_Dead(void) { return m_bDead; }
+
+public:
 	virtual void Interact(_uint Damage = 0);
 	virtual HRESULT Drop_Items(void);
 	INTERACTOBJ_ID	Get_InteractName(void) { return m_eInteract_OBJ_ID; }
 	_uint		Set_Damage(_uint _iDamage) { m_iDamage = 0; }
 	_bool		Get_CanInteract(void) { return m_bInteract; }
+
 protected:
 	INTERACTOBJ_ID		m_eInteract_OBJ_ID;
 	_uint			m_iDamage =0;

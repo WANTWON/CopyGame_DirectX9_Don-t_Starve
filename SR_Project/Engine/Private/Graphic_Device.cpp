@@ -166,7 +166,7 @@ void CGraphic_Device::Free()
 
 	unsigned long		RefCnt = 0;
 	if (RefCnt = Safe_Release(m_pDevice))
-		ERR_MSG(TEXT("Failed to Release : IDirect3DDevice9"));
+		//ERR_MSG(TEXT("Failed to Release : IDirect3DDevice9"));
 	
 	Safe_Release(m_p3D);
 }

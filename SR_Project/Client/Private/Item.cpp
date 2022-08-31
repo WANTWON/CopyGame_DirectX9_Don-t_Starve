@@ -65,11 +65,11 @@ void CItem::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
-	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('C')))
+	/*if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('C')))
 	{
 		Interact();
 		m_bDead = true;
-	}
+	}*/
 		
 }
 
@@ -108,7 +108,13 @@ void CItem::Interact(_uint Damage)
 	{
 		//Interact = false;
 		m_bInteract = false;
-
+		m_bDead = true;
+		if (m_bDead)
+		{
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			CPlayer* pPlayer = dynamic_cast<CPlayer*>(pInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 0));
+			pPlayer->Check_Target(m_bDead);
+		}
 		++equipmentlist;
 
 		for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)

@@ -106,6 +106,8 @@ public: /*Get&Set*/
 	void	Set_Armor(_float _fArmor) { m_tStat.fArmor += _fArmor; }
 	void	Set_WeaponType(WEAPON_TYPE _eWeapon) { m_eWeaponType = _eWeapon; }
 
+	//Test
+	void Check_Target(_bool _bDead) { if (_bDead) m_pTarget = nullptr; }
 private:/*Setup*/
 	HRESULT SetUp_Components();
 	HRESULT SetUp_KeySettings();
@@ -152,6 +154,7 @@ private: /**Actions*/
 	void Test_Func(_int _iNum);
 	
 	void Test_Detect(_float fTImeDelta);
+	
 	
 	//Interact Check
 	ACTION_STATE Select_Interact_State(INTERACTOBJ_ID _eObjID);
