@@ -5,6 +5,7 @@
 #include "Mouse.h"
 #include "KeyMgr.h"
 #include "Player.h"
+#include "PickingMgr.h"
 
 
 CMainInventory_front::CMainInventory_front(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -123,6 +124,11 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 		texnum = ITEMNAME_BERRY;
 	}
 
+	if (iNum == 10)
+	{
+		texnum = ITEMNAME_SHOTTER;
+	}
+
 	if (iNum == 15)
 	{
 		texnum = ITEMNAME_STAFF;
@@ -176,7 +182,7 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	if (texnum == ITEMNAME_COAL || texnum == ITEMNAME_WOOD || texnum == ITEMNAME_ROCK || texnum == ITEMNAME_GOLD || texnum == ITEMNAME_WOOD2 ||
 		texnum == ITEMNAME_PIGTAIL || texnum == ITEMNAME_ROPE || texnum == ITEMNAME_WEB || texnum == ITEMNAME_GRASS)
 	{
-		m_itemtype == ITEM_MATERIAL;
+		m_itemtype = ITEM_MATERIAL;
 	}
 
 
@@ -197,7 +203,7 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 
 	if (texnum == ITEMNAME_END)
 	{
-		m_itemtype == ITEM_END;
+		m_itemtype = ITEM_END;
 	}
 
 	/*if (texnum == ITEMNAME_BAG || texnum == ITEMNAME_HELMET || texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH
@@ -251,93 +257,78 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 	if (!PtInRect(&rcRect, ptMouse))
 	{
-
+		
 		m_fSizeX = 40;
 		m_fSizeY = 40;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	}
 
 
-
-	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-
+	if (PtInRect(&rcRect, ptMouse))
 	{
+		CPickingMgr::Get_Instance()->Mouse_Intersect_UI(true);
 
-
-
-		if (false == pMouse->Get_picked())
+		if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
-
-			pMouse->Set_Item_name(texnum);   //첫피킹
-			pMouse->Set_index(iNum);
-			pMouse->Set_picked(true);
-			pMouse->Set_Item_count(item_number);
-
-			(*mouse)->set_check(true);
-			(*mouse)->set_texnum(texnum);//마우스이미지
-
-			set_texnum(ITEMNAME_END);
-		}
-
-		else if (true == pMouse->Get_picked())
-		{
-
-			pMouse->Set_Prev_Item_name(texnum);
-			pMouse->Set_Item_prev_count(item_number);
-			set_texnum(pMouse->Get_Item_name());
-			set_itemcount(pMouse->Get_Item_count());
-			pMouse->Set_picked(false);
-
-			(*mouse)->set_texnum(ITEMNAME_END);
-			(*mouse)->set_check(false);//마우스이미지
-
-		}
-
-
-	}
-
-
-	/*if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON)&& !PtInRect(&rcRect, ptMouse))
-	{
-		(*mouse)->set_texnum(ITEMNAME_END);
-		(*mouse)->set_check(false);
-	}*/
-
-
-
-
-
-
-
-
-	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_RBUTTON)) //마우스 우클릭처리
-	{
-		if (m_itemtype == ITEM_ARMOR || m_itemtype == ITEM_HAND || m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT)
-		{
-			pMouse->Set_Item_type(m_itemtype);
-			pMouse->Set_Equipment_name(texnum);
-			set_texnum(ITEMNAME_END);
-
-
-			if (m_itemtype == ITEM_BAG)
+			if (false == pMouse->Get_picked())
 			{
-				pinv->Late_Tick(fTimeDelta);
-				pinv->Use_bag();
-				Safe_Release(pinv);
+
+				pMouse->Set_Item_name(texnum);   //첫피킹
+				pMouse->Set_index(iNum);
+				pMouse->Set_picked(true);
+				pMouse->Set_Item_count(item_number);
+
+				(*mouse)->set_check(true);
+				(*mouse)->set_texnum(texnum);//마우스이미지
+
+				set_texnum(ITEMNAME_END);
 			}
 
-			m_itemtype = ITEM_END;
+			else if (true == pMouse->Get_picked())
+			{
+
+				pMouse->Set_Prev_Item_name(texnum);
+				pMouse->Set_Item_prev_count(item_number);
+				set_texnum(pMouse->Get_Item_name());
+				set_itemcount(pMouse->Get_Item_count());
+				pMouse->Set_picked(false);
+
+				(*mouse)->set_texnum(ITEMNAME_END);
+				(*mouse)->set_check(false);//마우스이미지
+				CPickingMgr::Get_Instance()->Mouse_Intersect_UI(false);
+
+			}
 		}
 
-		//minus_itemcount();
-
-		else if (m_itemtype == ITEM_FOOD)
+		if (CKeyMgr::Get_Instance()->Key_Up(VK_RBUTTON)) //마우스 우클릭처리
 		{
-			Use_item(texnum);
+			if (m_itemtype == ITEM_ARMOR || m_itemtype == ITEM_HAND || m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT)
+			{
+				pMouse->Set_Item_type(m_itemtype);
+				pMouse->Set_Equipment_name(texnum);
+				set_texnum(ITEMNAME_END);
+
+
+				if (m_itemtype == ITEM_BAG)
+				{
+					pinv->Late_Tick(fTimeDelta);
+					pinv->Use_bag();
+					Safe_Release(pinv);
+				}
+
+				m_itemtype = ITEM_END;
+			}
+			else if (m_itemtype == ITEM_FOOD)
+			{
+				Use_item(texnum);
+			}
+
 		}
-
+		
 	}
-
+		
+	if(pMouse->Get_picked() == true && !PtInRect(&rcRect, ptMouse))
+		CPickingMgr::Get_Instance()->Mouse_Intersect_UI(false);
 
 
 	Safe_Release(pMouse);

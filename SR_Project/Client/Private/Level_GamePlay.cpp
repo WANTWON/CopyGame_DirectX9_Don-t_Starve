@@ -62,13 +62,9 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 	
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-	if (pGameInstance->Key_Up('P'))
-	{
-		CPickingMgr::Get_Instance()->Picking();
-	}
-	Safe_Release(pGameInstance);
+	
+	CPickingMgr::Get_Instance()->Picking();
+	
 }
 
 void CLevel_GamePlay::Late_Tick(_float fTimeDelta)
@@ -89,30 +85,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Water"), LEVEL_GAMEPLAY, pLayerTag, _float3(-10.f, -1.5f, -10.f))))
 		return E_FAIL;
-
-	/*if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
-		TEXT("Prototype_Component_VIBuffer_Terrain_Load1"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
-		TEXT("Prototype_Component_VIBuffer_Terrain_Load2"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
-		TEXT("Prototype_Component_VIBuffer_Terrain_Load3"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
-		TEXT("Prototype_Component_VIBuffer_Terrain_Load4"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
-		TEXT("Prototype_Component_VIBuffer_Terrain_Load5"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
-		TEXT("Prototype_Component_VIBuffer_Terrain_Load6"))))
-		return E_FAIL;*/
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
 		return E_FAIL;

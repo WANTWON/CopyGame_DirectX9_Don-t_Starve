@@ -129,9 +129,6 @@ HRESULT CPlayerhp_pont::Render()
 			return E_FAIL;
 //	}
 
-
-
-
 	return S_OK;
 }
 
