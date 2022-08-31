@@ -118,6 +118,15 @@
     <Filter Include="04.PickingMgr">
       <UniqueIdentifier>{80208a1b-95a2-4ca8-8dc2-20edd667da03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\02.Toolbox">
+      <UniqueIdentifier>{0120c8c6-e2e0-4f10-988a-c10eb96fae86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\02.Toolbox\MainToolbox">
+      <UniqueIdentifier>{2a9ee06d-8c4c-4c91-94a0-4c54b812c3a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\02.Toolbox\WeaponToolbox">
+      <UniqueIdentifier>{42130d4b-f387-4555-8a97-c6a7d3bf4b64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -258,6 +267,24 @@
     <ClInclude Include="..\Public\PickingMgr.h">
       <Filter>04.PickingMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ToolboxMain.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\MainToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxMain_back.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\MainToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxMain_front.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\MainToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxWeapon.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\WeaponToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxWeapon_back.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\WeaponToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxWeapon_front.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\WeaponToolbox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -385,6 +412,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\PickingMgr.cpp">
       <Filter>04.PickingMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxMain.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\MainToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxMain_back.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\MainToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxMain_front.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\MainToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxWeapon.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\WeaponToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxWeapon_back.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\WeaponToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxWeapon_front.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\WeaponToolbox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
