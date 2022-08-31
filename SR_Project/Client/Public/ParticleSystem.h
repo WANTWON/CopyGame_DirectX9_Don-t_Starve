@@ -72,9 +72,13 @@ public:
 	HRESULT Update_Particles(_float fTimeDelta);
 	HRESULT Update_VIBuffer();
 	HRESULT Kill_DeadParticles();
+	HRESULT Render_VIBuffer();
 
 public:
+	HRESULT Particle_Leaf_Moveing(_float fTimeDelta);
 
+
+public:
 	_bool Check_AllParticleDead();
 
 
