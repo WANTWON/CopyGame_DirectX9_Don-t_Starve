@@ -1,18 +1,10 @@
 #pragma once
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Monster.h"
 #include "Transform.h"
 
-BEGIN(Engine)
-class CRenderer;
-class CVIBuffer_Rect;
-class CTransform;
-class CTexture;
-class CCollider;
-END
-
 BEGIN(Client)
-class CSpider final : public CGameObject
+class CSpider final : public CMonster
 {
 	enum class DIR 
 	{ 
@@ -45,60 +37,27 @@ public:
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
 
-public://Damaged Test
-	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
-public:
-	_float3 Get_Pos() { return m_pTransformCom->Get_State(CTransform::STATE_POSITION); }
-	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
-	
-private: /* For.Components */
-	CTexture* m_pTextureCom = nullptr;
-	CRenderer* m_pRendererCom = nullptr;
-	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
-	CTransform*	m_pTransformCom = nullptr;
-	CCollider* m_pColliderCom = nullptr;
-
-	vector<CTexture*> m_vecTexture;
-
 private:
-	HRESULT SetUp_Components(void* pArg = nullptr);
-	HRESULT SetUp_RenderState();
-	HRESULT Release_RenderState();
+	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
 
 private: /*For TextureCom */
-	HRESULT Texture_Clone();
-	HRESULT Change_Texture(const _tchar* LayerTag);
-	void Change_Frame();
-	void Change_Motion();
-
-private: /* For TransformCom*/
-	void SetUp_BillBoard();
+	virtual HRESULT Texture_Clone() override;
+	virtual void Change_Frame() override;
+	virtual void Change_Motion() override;
 	
 private:
-	_float m_fTerrain_Height = 0.f;
-	const _tchar* m_TimerTag = TEXT("");
 	DIR m_eDir = DIR::DIR_DOWN;
 	DIR	m_ePreDir = DIR::MAX;
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
-	OBJINFO m_tInfo;
-	CGameObject* m_pTarget = nullptr;
-	_float m_fDistanceToTarget = 0.f;
-	_float m_fAggroRadius = 3.f;
-	_bool m_bAggro = false;
-	_float m_fAttackRadius = .5f;
-	_bool m_bIsAttacking = false;
-	DWORD m_dwAttackTime = GetTickCount();
-	_bool m_bHit = false;
-	DWORD m_dwDeathTime = GetTickCount();
 
 private:
-	void AI_Behaviour(_float fTimeDelta);
-	void Find_Target();
-	void Follow_Target(_float fTimeDelta);
-	void Interact(_uint iDamage = 0);
-	HRESULT Drop_Items();
-	_bool IsDead();
+	virtual void AI_Behaviour(_float fTimeDelta) override;
+	virtual void Find_Target() override;
+	virtual void Follow_Target(_float fTimeDelta) override;
+	virtual void Interact(_uint iDamage = 0) override;
+	virtual HRESULT Drop_Items() override;
+	virtual _bool IsDead() override;
 
 public:
 	static CSpider* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

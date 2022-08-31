@@ -130,8 +130,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig"), LEVEL_GAMEPLAY, pLayerTag, _float3(7.f, 1.f, 5.f))))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig"), LEVEL_GAMEPLAY, pLayerTag, _float3(15.f, 1.f, 9.f))))
+		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider"), LEVEL_GAMEPLAY, pLayerTag, _float3(10.f, 1.f, 8.f))))
 		return E_FAIL;
