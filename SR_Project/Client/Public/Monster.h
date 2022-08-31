@@ -68,6 +68,7 @@ protected:
 	virtual void Find_Target() { };
 	virtual void Follow_Target(_float fTimeDelta) { };
 	virtual void Interact(_uint iDamage = 0) { };
+	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser);
 	virtual HRESULT Drop_Items() { return S_OK; };
 	virtual _bool IsDead() = 0;
 

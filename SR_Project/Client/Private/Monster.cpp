@@ -141,6 +141,19 @@ void CMonster::WalkingTerrain()
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
+_float CMonster::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
+{
+	if (m_tInfo.iCurrentHp > fDamage)
+		m_tInfo.iCurrentHp -= fDamage;
+	else if (m_tInfo.iCurrentHp <= fDamage)
+	{
+		m_bDead = true;
+		m_tInfo.iCurrentHp = 0.f;
+	}
+
+	return fDamage;
+}
+
 void CMonster::Free()
 {
 	__super::Free();
