@@ -53,6 +53,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_StatUIPont(TEXT("Layer_StatUIPont"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_MainToolbox"))))
+		return E_FAIL;
+
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL_GAMEPLAY);
 
 	return S_OK;
@@ -302,6 +305,29 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainInventory(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BagInventory"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
+
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainToolbox"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainToolbox_back"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
 
 
 	Safe_Release(pGameInstance);

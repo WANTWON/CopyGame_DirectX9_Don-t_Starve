@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\Public\MainInventory_front.h"
+#include "..\Public\ToolboxMain_front.h"
 #include "GameInstance.h"
 #include "Inventory.h"
 #include "Mouse.h"
@@ -7,17 +7,17 @@
 #include "Player.h"
 
 
-CMainInventory_front::CMainInventory_front(LPDIRECT3DDEVICE9 pGraphic_Device)
+CToolboxMain_front::CToolboxMain_front(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CMainInventory_front::CMainInventory_front(const CMainInventory_front & rhs)
+CToolboxMain_front::CToolboxMain_front(const CToolboxMain_front & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CMainInventory_front::Initialize_Prototype()
+HRESULT CToolboxMain_front::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -27,7 +27,7 @@ HRESULT CMainInventory_front::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CMainInventory_front::Initialize(void* pArg)
+HRESULT CToolboxMain_front::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -98,44 +98,6 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
-	if (iNum == 0)
-	{
-		texnum = ITEMNAME_ARMOR;
-	}
-
-	if (iNum == 1)
-	{
-		texnum = ITEMNAME_HAMBAT;
-	}
-
-	if (iNum == 2)
-	{
-		texnum = ITEMNAME_HELMET;
-	}
-
-	if (iNum == 3)
-	{
-		texnum = ITEMNAME_BAG;
-	}
-
-	if (iNum == 4)
-	{
-		texnum = ITEMNAME_BERRY;
-	}
-	if (iNum == 5)
-	{
-		texnum = ITEMNAME_ROCK2;
-	}
-
-	if (iNum == 5)
-	{
-		texnum = ITEMNAME_SHOTTER;
-	}
-
-	if (iNum == 15)
-	{
-		texnum = ITEMNAME_STAFF;
-	}
 
 	//CInventory_Manager::Get_Instance()->Get_Inven_list()->front.push_back(this);
 	//CInventory_Manager::Get_Instance()->Get_Inven_list().push_back(this);
@@ -144,7 +106,7 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	return S_OK;
 }
 
-int CMainInventory_front::Tick(_float fTimeDelta)
+int CToolboxMain_front::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
@@ -182,7 +144,7 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 		m_itemtype = ITEM_FOOD;
 	}
 
-	if (texnum == ITEMNAME_COAL || texnum == ITEMNAME_WOOD || texnum == ITEMNAME_ROCK || texnum == ITEMNAME_GOLD || texnum == ITEMNAME_WOOD2 )
+	if (texnum == ITEMNAME_COAL || texnum == ITEMNAME_WOOD || texnum == ITEMNAME_ROCK || texnum == ITEMNAME_GOLD || texnum == ITEMNAME_WOOD2)
 	{
 		m_itemtype = ITEM_MATERIAL;
 	}
@@ -213,12 +175,12 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	}
 
 	/*if (texnum == ITEMNAME_BAG || texnum == ITEMNAME_HELMET || texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH
-		|| texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK || texnum == ITEMNAME_HAMBAT || texnum == ITEMNAME_ARMOR || texnum == ITEMNAME_END)
+	|| texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK || texnum == ITEMNAME_HAMBAT || texnum == ITEMNAME_ARMOR || texnum == ITEMNAME_END)
 	{
-		m_bpontcheck = false;
+	m_bpontcheck = false;
 	}
 	else if(texnum == carrot)
-		m_bpontcheck = true;*/
+	m_bpontcheck = true;*/
 
 
 
@@ -241,7 +203,7 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	return OBJ_NOEVENT;
 }
 
-void CMainInventory_front::Late_Tick(_float fTimeDelta)
+void CToolboxMain_front::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
@@ -312,8 +274,8 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 	/*if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON)&& !PtInRect(&rcRect, ptMouse))
 	{
-		(*mouse)->set_texnum(ITEMNAME_END);
-		(*mouse)->set_check(false);
+	(*mouse)->set_texnum(ITEMNAME_END);
+	(*mouse)->set_check(false);
 	}*/
 
 
@@ -346,7 +308,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 		else if (m_itemtype == ITEM_FOOD)
 		{
-			Use_item(texnum);
+			//Use_item(texnum);
 		}
 
 	}
@@ -366,7 +328,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 		item_number = 0;
 	}
 
-	if (item_number <= 0 && m_itemtype != ITEM_HAT && m_itemtype !=ITEM_BAG && m_itemtype != ITEM_HAND && m_itemtype != ITEM_ARMOR ) // 카운트가 필요한 타입들이면서 
+	if (item_number <= 0 && m_itemtype != ITEM_HAT && m_itemtype != ITEM_BAG && m_itemtype != ITEM_HAND && m_itemtype != ITEM_ARMOR) // 카운트가 필요한 타입들이면서 
 	{
 		m_bpontcheck = false;
 		m_bcheck = false;
@@ -392,7 +354,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	//set_check(false);
 }
 
-HRESULT CMainInventory_front::Render()
+HRESULT CToolboxMain_front::Render()
 {
 	if (m_bcheck == true)
 	{
@@ -426,7 +388,7 @@ HRESULT CMainInventory_front::Render()
 	return S_OK;
 }
 
-HRESULT CMainInventory_front::SetUp_Components()
+HRESULT CToolboxMain_front::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -455,7 +417,7 @@ HRESULT CMainInventory_front::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CMainInventory_front::SetUp_RenderState()
+HRESULT CToolboxMain_front::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -469,7 +431,7 @@ HRESULT CMainInventory_front::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CMainInventory_front::Release_RenderState()
+HRESULT CToolboxMain_front::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
@@ -478,9 +440,9 @@ HRESULT CMainInventory_front::Release_RenderState()
 	return S_OK;
 }
 
-CMainInventory_front * CMainInventory_front::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CToolboxMain_front * CToolboxMain_front::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CMainInventory_front*	pInstance = new CMainInventory_front(pGraphic_Device);
+	CToolboxMain_front*	pInstance = new CToolboxMain_front(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -491,22 +453,22 @@ CMainInventory_front * CMainInventory_front::Create(LPDIRECT3DDEVICE9 pGraphic_D
 	return pInstance;
 }
 
-CGameObject * CMainInventory_front::Clone(void* pArg)
+CGameObject * CToolboxMain_front::Clone(void* pArg)
 {
-	CMainInventory_front*	pInstance = new CMainInventory_front(*this);
+	CToolboxMain_front*	pInstance = new CToolboxMain_front(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		ERR_MSG(TEXT("Failed to Cloned : MainInventory_front"));
 		Safe_Release(pInstance);
 	}
-	CInventory_Manager::Get_Instance()->Get_Inven_list()->push_back(pInstance);//Get_Inven_list().push_back(pInstance);
+	//CInventory_Manager::Get_Instance()->Get_Inven_list()->push_back(pInstance);//Get_Inven_list().push_back(pInstance);
 	return pInstance;
 
 }
 
 
-void CMainInventory_front::Free()
+void CToolboxMain_front::Free()
 {
 	__super::Free();
 
@@ -516,34 +478,34 @@ void CMainInventory_front::Free()
 	Safe_Release(m_pTextureCom);
 }
 
-void CMainInventory_front::Use_item(ITEMNAME item)
-{
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-	switch (item)
-	{
-	case ITEMNAME_CARROT:
-
-
-
-		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_HP(10));
-		item_number -= 1;
-		//minus_itemcount();
-		break;
-
-
-	case ITEMNAME_BERRY:
-
-
-
-		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_Hungry(10));
-		minus_itemcount();
-		break;
-
-
-
-	}
-
-
-	Safe_Release(pGameInstance);
-}
+//void CMainInventory_front::Use_item(ITEMNAME item)
+//{
+//	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+//	Safe_AddRef(pGameInstance);
+//	switch (item)
+//	{
+//	case ITEMNAME_CARROT:
+//
+//
+//
+//		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_HP(10));
+//		item_number -= 1;
+//		//minus_itemcount();
+//		break;
+//
+//
+//	case ITEMNAME_BERRY:
+//
+//
+//
+//		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_Hungry(10));
+//		minus_itemcount();
+//		break;
+//
+//
+//
+//	}
+//
+//
+//	Safe_Release(pGameInstance);
+//}
