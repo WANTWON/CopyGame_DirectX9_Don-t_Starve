@@ -3,14 +3,16 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "Inventory.h"
+#include "Item.h"
 
 CPig::CPig(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CMonster(pGraphic_Device)
 {
+	ZeroMemory(&m_tInfo, sizeof(OBJINFO));
 }
 
 CPig::CPig(const CPig & rhs)
-	: CGameObject(rhs)
+	: CMonster(rhs)
 {
 }
 
@@ -27,27 +29,24 @@ HRESULT CPig::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(SetUp_Components(pArg)))
-		return E_FAIL;
+	m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 
-	m_pTransformCom->Set_Scale(5.f, 1.f, 1.f);
+	m_tInfo.iMaxHp = 100;
+	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_fAttackRadius = .8f;
 
 	return S_OK;
 }
 
 int CPig::Tick(_float fTimeDelta)
 {
-	if (m_bDead)
+	if (__super::Tick(fTimeDelta))
 		return OBJ_DEAD;
 
-	__super::Tick(fTimeDelta);
+	// A.I.
+	AI_Behaviour(fTimeDelta);
 
-	Follow_Player(fTimeDelta);
-	WalkingTerrain();
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
 
 	return OBJ_NOEVENT;
 }
@@ -56,39 +55,12 @@ void CPig::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	//Test1
-	m_TestTimer += fTimeDelta;
+	// Testing: 
+	if (CKeyMgr::Get_Instance()->Key_Down('F'))
+		Interact(20);
 
-	SetUp_BillBoard();
-
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
-
-
-	if (nullptr != m_pColliderCom)
-	{
-		//if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (GetKeyState(VK_SPACE) < 0))
-		//{
-		//	CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
-		//	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
-		//	for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
-		//	{
-		//		if (!(*iter)->get_check())
-		//		{
-		//			(*iter)->set_texnum(2); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
-		//			(*iter)->set_check(true);
-
-		//			return;
-		//		}
-		//		else
-		//			++iter;
-
-		//		m_bDead = true;
-		//	}
-
-		//}
-	}
+	Change_Motion();
+	Change_Frame();
 }
 
 HRESULT CPig::Render()
@@ -96,37 +68,22 @@ HRESULT CPig::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-		return E_FAIL;
-
-	m_pTextureCom->MoveFrame(m_TimerTag);
-
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
-
-	m_pVIBufferCom->Render();
-
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
-
 	return S_OK;
 }
 
 HRESULT CPig::SetUp_Components(void* pArg)
 {
-
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	//if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Monster"))))
-	//	return E_FAIL;
-
-	//m_TimerTag = TEXT("Timer_Monster");
+	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Pig"))))
+		return E_FAIL;
+	m_TimerTag = TEXT("Timer_Pig");
 
 	Safe_Release(pGameInstance);
+
+	/* For.Com_Texture */
+	Texture_Clone();
 
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -136,111 +93,373 @@ HRESULT CPig::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
 		return E_FAIL;
 
-	/* For Com_Texture */
-	CTexture::TEXTUREDESC		TextureDesc;
-	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_iEndTex = 32;
-	TextureDesc.m_fSpeed = 60;
-
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_RUN_DOWN"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
-	/* For.Transform*/
-	CTransform::TRANSFORMDESC		TransformDesc;
+	/* For.Transform */
+	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
-
 
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
 	TransformDesc.fSpeedPerSec = 5.f;
-	TransformDesc.InitPos = *(_float3*)pArg;;
+	TransformDesc.InitPos = *(_float3*)pArg;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
-	//Test
-	Set_Radius(0.25f);
-
 	return S_OK;
 }
 
-HRESULT CPig::SetUp_RenderState()
+HRESULT CPig::Texture_Clone()
 {
-	if (nullptr == m_pGraphic_Device)
+	CTexture::TEXTUREDESC TextureDesc;
+	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
+
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_fSpeed = 60;
+
+	TextureDesc.m_iEndTex = 17;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Idle_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
 
+	TextureDesc.m_iEndTex = 17;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Idle_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
 
-	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	TextureDesc.m_iEndTex = 17;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_SIDE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Idle_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 20;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_WALK_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Walk_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 20;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_WALK_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Walk_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 20;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_WALK_SIDE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Walk_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 16;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_RUN_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Run_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 16;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_RUN_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Run_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 16;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_RUN_SIDE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Run_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 30;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Attack_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 32;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Attack_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 36;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_SIDE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Attack_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 14;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 31;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DIE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Death"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
 
 	return S_OK;
 }
 
-HRESULT CPig::Release_RenderState()
+void CPig::Change_Frame()
 {
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	switch (m_eState)
+	{
+	case STATE::IDLE:
+		if (m_eDir == DIR::DIR_LEFT)
+			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
+		else
+			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 
-	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	return S_OK;
+		m_pTextureCom->MoveFrame(m_TimerTag);
+		break;
+	case STATE::WALK:
+		if (m_eDir == DIR::DIR_LEFT)
+			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
+		else
+			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+
+		m_pTextureCom->MoveFrame(m_TimerTag);
+		break;
+	case STATE::ATTACK:
+		if (m_eDir == DIR::DIR_LEFT)
+			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
+		else
+			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		{
+			m_bIsAttacking = false;
+			m_dwAttackTime = GetTickCount();
+		}
+		break;
+	case STATE::HIT:
+		if (m_eDir == DIR::DIR_LEFT)
+			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
+		else
+			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
+			m_bHit = false;
+		break;
+	case STATE::DIE:
+		m_pTextureCom->MoveFrame(m_TimerTag, false);
+		break;
+	}
 }
 
-void CPig::SetUp_BillBoard()
+void CPig::Change_Motion()
 {
-	_float4x4		ViewMatrix;
+	if (m_eState != m_ePreState || m_eDir != m_ePreDir)
+	{
+		switch (m_eState)
+		{
+		case STATE::IDLE:
+			switch (m_eDir)
+			{
+			case DIR::DIR_UP:
+				Change_Texture(TEXT("Com_Texture_IDLE_UP"));
+				break;
+			case DIR::DIR_DOWN:
+				Change_Texture(TEXT("Com_Texture_IDLE_DOWN"));
+				break;
+			case DIR::DIR_RIGHT:
+			case DIR::DIR_LEFT:
+				Change_Texture(TEXT("Com_Texture_IDLE_SIDE"));
+				break;
+			}
 
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+			if (m_eDir != m_ePreDir)
+				m_ePreDir = m_eDir;
+			break;
+		case STATE::WALK:
+			switch (m_eDir)
+			{
+			case DIR::DIR_UP:
+				Change_Texture(TEXT("Com_Texture_WALK_UP"));
+				break;
+			case DIR::DIR_DOWN:
+				Change_Texture(TEXT("Com_Texture_WALK_DOWN"));
+				break;
+			case DIR::DIR_RIGHT:
+			case DIR::DIR_LEFT:
+				Change_Texture(TEXT("Com_Texture_WALK_SIDE"));
+				break;
+			}
 
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
+			if (m_eDir != m_ePreDir)
+				m_ePreDir = m_eDir;
+			break;
+		case STATE::ATTACK:
+			switch (m_eDir)
+			{
+			case DIR::DIR_UP:
+				Change_Texture(TEXT("Com_Texture_ATTACK_UP"));
+				break;
+			case DIR::DIR_DOWN:
+				Change_Texture(TEXT("Com_Texture_ATTACK_DOWN"));
+				break;
+			case DIR::DIR_RIGHT:
+			case DIR::DIR_LEFT:
+				Change_Texture(TEXT("Com_Texture_ATTACK_SIDE"));
+				break;
+			}
 
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
-	//m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+			if (m_eDir != m_ePreDir)
+				m_ePreDir = m_eDir;
+			break;
+		case STATE::HIT:
+			Change_Texture(TEXT("Com_Texture_HIT"));
+			break;
+		case STATE::DIE:
+			Change_Texture(TEXT("Com_Texture_DIE"));
+			break;
+		}
+
+		if (m_eState != m_ePreState)
+			m_ePreState = m_eState;
+	}
 }
 
-void CPig::Follow_Player(_float fTimeDelta)
+void CPig::AI_Behaviour(_float fTimeDelta)
 {
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	if (m_bHit)
+		m_eState = STATE::HIT;
+
+	// Get Target and Aggro Radius
+	Find_Target();
+
+	// Check for Target, AggroRadius
+	if (m_pTarget && m_bAggro)
+	{
+		// If in AttackRadius > Attack
+		if (m_fDistanceToTarget < m_fAttackRadius)
+		{
+			if (!m_bIsAttacking && GetTickCount() > m_dwAttackTime + 1500)
+			{
+				m_eState = STATE::ATTACK;
+				m_bIsAttacking = true;
+			}
+			else if (!m_bIsAttacking)
+				m_eState = STATE::IDLE;
+		}
+		// If NOT in AttackRadius > Follow Target
+		else
+			Follow_Target(fTimeDelta);
+	}
+}
+
+void CPig::Find_Target()
+{
+	if (!m_bIsAttacking && !m_bHit && !m_bDead)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+
+		Safe_Release(pGameInstance);
+
+		if (pTarget)
+		{
+			_float3 vTargetPos = pTarget->Get_Position();
+			m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
+
+			if (m_fDistanceToTarget < m_fAggroRadius || m_bAggro)
+				m_bAggro = true;
+
+			m_pTarget = pTarget;
+		}
+		else
+			m_pTarget = nullptr;
+	}
+	else
+		m_pTarget = nullptr;
+}
+
+void CPig::Follow_Target(_float fTimeDelta)
+{
+	// Set State 
+	m_eState = STATE::WALK;
+
+	_float3 fTargetPos = m_pTarget->Get_Position();
+
+	// Set Direction
+	_float fX = fTargetPos.x - Get_Position().x;
+	_float fZ = fTargetPos.z - Get_Position().z;
+
+	// Move Horizontally
+	if (abs(fX) > abs(fZ))
+		if (fX > 0)
+			m_eDir = DIR::DIR_RIGHT;
+		else
+			m_eDir = DIR::DIR_LEFT;
+	// Move Vertically
+	else
+		if (fZ > 0)
+			m_eDir = DIR::DIR_UP;
+		else
+			m_eDir = DIR::DIR_DOWN;
+
+	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
+
+	m_bIsAttacking = false;
+}
+
+void CPig::Interact(_uint iDamage)
+{
+	if (m_tInfo.iCurrentHp > 0)
+	{
+		if (iDamage >= m_tInfo.iCurrentHp)
+		{
+			m_bDead = true;
+			m_tInfo.iCurrentHp = 0;
+		}
+		else
+		{
+			m_bHit = true;
+			m_tInfo.iCurrentHp -= iDamage;
+		}
+
+		// If Hit/Dead stop and reset Attack
+		m_bIsAttacking = false;
+		m_dwAttackTime = GetTickCount();
+	}
+	else
+		m_bDead = true;
+}
+
+HRESULT CPig::Drop_Items()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+	CItem::ITEMDESC ItemDesc;
+	ZeroMemory(&ItemDesc, sizeof(CItem::ITEMDESC));
 
-	Safe_AddRef(pTarget);
+	// Random Position Drop based on Object Position
+	_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * .5f;
+	_int bSignX = rand() % 2;
+	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * .5f;
+	_int bSignZ = rand() % 2;
+	_float fPosX = bSignX ? (Get_Position().x + fOffsetX) : (Get_Position().x - fOffsetX);
+	_float fPosZ = bSignZ ? (Get_Position().z + fOffsetZ) : (Get_Position().z - fOffsetZ);
 
-	m_TargetPos = pTarget->Get_Pos();
+	ItemDesc.fPosition = _float3(fPosX, Get_Position().y, fPosZ);
+	ItemDesc.pTextureComponent = TEXT("Com_Texture_Spider_Meat");
+	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
+	ItemDesc.eItemName = ITEMNAME::ITEMNAME_MONSTERMEAT;
 
-	Safe_Release(pTarget);
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Item"), &ItemDesc)))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 
-	m_pTransformCom->LookAt(m_TargetPos);
-	m_pTransformCom->Go_Straight(fTimeDelta*0.1f);
+	return S_OK;
 }
 
-void CPig::WalkingTerrain()
+_bool CPig::IsDead()
 {
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	if (nullptr == pGameInstance)
-		return;
+	if (m_bDead && m_eState == STATE::DIE && GetTickCount() > m_dwDeathTime + 1500)
+		return true;
+	else if (m_bDead && m_eState != STATE::DIE)
+	{
+		m_dwDeathTime = GetTickCount();
+		m_eState = STATE::DIE;
+	}
 
-	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
-	if (nullptr == pVIBuffer_Terrain)
-		return;
-
-	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
-	if (nullptr == pTransform_Terrain)
-		return;
-
-	_float3 vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
-	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+	return false;
 }
 
 CPig* CPig::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -249,7 +468,7 @@ CPig* CPig::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CMonster"));
+		ERR_MSG(TEXT("Failed to Created : CPig"));
 		Safe_Release(pInstance);
 	}
 
@@ -262,7 +481,7 @@ CGameObject* CPig::Clone(void* pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CMonster"));
+		ERR_MSG(TEXT("Failed to Cloned : CPig"));
 		Safe_Release(pInstance);
 	}
 
@@ -283,4 +502,9 @@ void CPig::Free()
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+
+	for (auto& iter : m_vecTexture)
+		Safe_Release(iter);
+
+	m_vecTexture.clear();
 }

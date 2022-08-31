@@ -12,51 +12,66 @@ END
 
 BEGIN(Client)
 
-class CMonster final : public CGameObject
+class CMonster abstract : public CGameObject
 {
-private:
+protected:
 	CMonster(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CMonster(const CMonster& rhs);
 	virtual ~CMonster() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg)override;
-	virtual int Tick(_float fTimeDelta)override;
-	virtual void Late_Tick(_float fTimeDelta)override;
+	virtual HRESULT Initialize(void* pArg) override;
+	virtual int Tick(_float fTimeDelta) override;
+	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-private: /* For.Components */
-	CTexture*				m_pTextureCom = nullptr;
-	CRenderer*				m_pRendererCom = nullptr;
-	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
-	CTransform*				m_pTransformCom = nullptr;
-	CCollider*				m_pColliderCom = nullptr;
+protected: /* For.Components */
+	CTexture* m_pTextureCom = nullptr;
+	CRenderer* m_pRendererCom = nullptr;
+	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
+	CTransform*	m_pTransformCom = nullptr;
+	CCollider* m_pColliderCom = nullptr;
 
-private:
-	HRESULT SetUp_Components(void* pArg = nullptr);
+	vector<CTexture*> m_vecTexture;
+
+protected:
+	virtual HRESULT SetUp_Components(void* pArg = nullptr) = 0;
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
-private: /* For TransformCom*/
+protected: /*For TextureCom */
+	virtual HRESULT Texture_Clone() = 0;
+	HRESULT Change_Texture(const _tchar* LayerTag);
+	virtual void Change_Frame() = 0;
+	virtual void Change_Motion() = 0;
+
+protected: /* For TransformCom*/
 	void SetUp_BillBoard();
-	void Follow_Player(_float fTimeDelta);
 	void WalkingTerrain();
 
-private:
-	_float3			m_TargetPos = {1, 0, 1};
-	const _tchar*	m_TimerTag = TEXT("");
+protected:
+	const _tchar* m_TimerTag = TEXT("");
+	OBJINFO m_tInfo;
+	CGameObject* m_pTarget = nullptr;
+	_float m_fDistanceToTarget = 0.f;
+	_float m_fAggroRadius = 3.f;
+	_bool m_bAggro = false;
+	_float m_fAttackRadius = .5f;
+	_bool m_bIsAttacking = false;
+	DWORD m_dwAttackTime = GetTickCount();
+	_bool m_bHit = false;
+	DWORD m_dwDeathTime = GetTickCount();
 
-private ://for Debug
-	_tchar					m_szDebug[MAX_PATH] = TEXT("");
-	_float			m_TestTimer = 0.f;
+protected:
+	virtual void AI_Behaviour(_float fTimeDelta) { };
+	virtual void Find_Target() { };
+	virtual void Follow_Target(_float fTimeDelta) { };
+	virtual void Interact(_uint iDamage = 0) { };
+	virtual HRESULT Drop_Items() { return S_OK; };
+	virtual _bool IsDead() = 0;
 
 public:
-	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
-	virtual CGameObject* Clone(void* pArg = nullptr) override;
-	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr);
 	virtual void Free() override;
 };
-
 END
-
