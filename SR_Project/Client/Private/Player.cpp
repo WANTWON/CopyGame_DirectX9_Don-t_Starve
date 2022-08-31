@@ -63,14 +63,15 @@ int CPlayer::Tick(_float fTimeDelta)
 	//Collider Add
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+
+	//Act Auto
+	Tick_ActStack(fTimeDelta);
+
 	//KeyInput
 	GetKeyDown(fTimeDelta);
 	//Move
 	Move_to_PickingPoint(fTimeDelta);
 	WalkingTerrain();
-
-	//Act Auto
-	Tick_ActStack(fTimeDelta);
 
 	Create_Bullet();
 	m_Equipment->Set_TargetPos(Get_Pos());
@@ -89,13 +90,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
-	if (GetKeyState(VK_BACK) & 0x8000)
-	{
-	--m_tStat.fCurrentHealth;
-	--m_tStat.fCurrentHungry;
-	--m_tStat.fCurrentMental;
-	}
 
 	if (m_tStat.fCurrentHealth > m_tStat.fMaxHealth)
 	{
@@ -196,6 +190,11 @@ HRESULT CPlayer::Render()
 _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
 	m_tStat.fCurrentHealth -= fDamage;
+
+	m_ActStack.push(ACTION_STATE::DAMAGED);
+
+	m_bDamaged = true;
+	m_bAutoMode = true;
 
 	return fDamage;
 }
@@ -361,6 +360,8 @@ HRESULT CPlayer::Test_Setup()
 
 void CPlayer::GetKeyDown(_float _fTimeDelta)
 {
+	
+
 #pragma region Debug&CamKey
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_DEBUG]))
 	{
@@ -400,6 +401,10 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		}
 	}
 #pragma endregion Debug&CamKey
+
+	/*InvenKey를 제외한 나머지키는 불가.*/
+	if (m_bDamaged)
+		return;
 
 #pragma region Action
 	//Action
@@ -496,6 +501,7 @@ bool CPlayer::ResetAction(_float _fTimeDelta)
 	case Client::CPlayer::ACTION_STATE::WEEDING:
 	case Client::CPlayer::ACTION_STATE::EAT:
 	case Client::CPlayer::ACTION_STATE::PICKUP:
+	case Client::CPlayer::ACTION_STATE::DAMAGED:
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1)
 		{
 			return true;
@@ -847,6 +853,36 @@ void CPlayer::Pickup(_float _fTimeDelta)
 	}
 }
 
+void CPlayer::Damaged(_float _fTimeDelta)
+{
+	m_eState = ACTION_STATE::DAMAGED;
+
+	if (m_ePreState != m_eState)
+	{
+		m_bDamaged = true;
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Damaged_Down"));
+			break;
+		case DIR_STATE::DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Damaged_Up"));
+			break;
+		case DIR_STATE::DIR_LEFT:
+		case DIR_STATE::DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Damaged_Side"));
+			break;
+		}
+		m_ePreState = m_eState;
+
+	}
+
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iCurrentTex - 1)
+	{
+		 m_bDamaged = false;
+	}
+}
+
 void CPlayer::Multi_Action(_float _fTimeDelta)
 {
 	//Only Objects
@@ -1001,14 +1037,18 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 {
 	if (m_bAutoMode)
 	{
-		if (m_pTarget == nullptr)
+		/*if (m_pTarget == nullptr)
 		{
 			Clear_ActStack();
 			return;
-		}
+		}*/
 
 		CInteractive_Object* pObj = (CInteractive_Object*)m_pTarget;
-		INTERACTOBJ_ID eObjID = pObj->Get_InteractName();
+		INTERACTOBJ_ID eObjID = INTERACTOBJ_ID::ID_END; 
+		if (m_pTarget != nullptr)
+		{
+			eObjID = pObj->Get_InteractName();
+		}
 
 		switch (m_ActStack.top())
 		{
@@ -1075,6 +1115,17 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 			}
 			break;
 		case ACTION_STATE::ATTACK:
+			break;
+		case ACTION_STATE::DAMAGED:
+			if (!m_bDamaged)
+			{
+				m_ActStack.pop();
+				//m_pTarget = nullptr;
+			}
+			else
+			{
+				Damaged(fTimeDelta);
+			}
 			break;
 		default:
 			break;
@@ -1324,6 +1375,22 @@ HRESULT CPlayer::Texture_Clone()
 	m_vecTexture.push_back(m_pTextureCom);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Pickup_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	/*Damaged*/
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_iEndTex = 29;
+	TextureDesc.m_fSpeed = 60;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Damaged_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Damaged_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Damaged_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Damaged_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Damaged_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Damaged_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 

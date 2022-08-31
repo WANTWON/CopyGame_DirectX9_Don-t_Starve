@@ -16,7 +16,7 @@ class CPlayer final : public CGameObject
 {
 public:
 
-	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, ACTION_END };
+	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, DAMAGED, ACTION_END };
 	typedef enum class InteractionKey {
 		KEY_LBUTTON, //VK_LBUTTON
 		KEY_RBUTTON, //VK_RBUTTON
@@ -84,7 +84,8 @@ public:
 	virtual int Tick(_float fTimeDelta)override;
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
-
+	
+	//Damaged 
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 
 
@@ -134,10 +135,11 @@ private: /**Actions*/
 	void Attack(_float _fTimeDelta);
 	void Mining(_float _fTimeDelta);
 	void Chop(_float _fTimeDelta);
-	
 	void Cutting_Grass(_float _fTimeDelta);
 	void Eatting(_float _fTimeDelta);
 	void Pickup(_float _fTimeDelta);
+
+	void Damaged(_float _fTimeDelta);
 
 	void Multi_Action(_float _fTimeDelta); //¸ÖÆ¼Å°
 	 //Passive
@@ -217,7 +219,7 @@ private: //Test
 	_bool					m_bAutoMode = false;
 	stack<ACTION_STATE>		m_ActStack;
 
-	//_int					m_iTestCnt = 0;
+	_bool					m_bDamaged = false;
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

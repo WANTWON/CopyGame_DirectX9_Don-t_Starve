@@ -53,6 +53,8 @@ int CSpider::Tick(_float fTimeDelta)
 
 	AI_Behaviour(fTimeDelta);
 
+	
+
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	return OBJ_NOEVENT;
@@ -107,6 +109,8 @@ _float CSpider::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 
 	return fDamage;
 }
+
+
 
 HRESULT CSpider::SetUp_Components(void* pArg)
 {
@@ -379,8 +383,10 @@ void CSpider::AI_Behaviour(_float fTimeDelta)
 		{
 			if (!m_bIsAttacking && GetTickCount() > m_dwAttackTime + 1500)
 			{
+				
 				m_eState = STATE::ATTACK;
 				m_bIsAttacking = true;
+				//test
 			}
 			else if (!m_bIsAttacking)
 				m_eState = STATE::IDLE;
