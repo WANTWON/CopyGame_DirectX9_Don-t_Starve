@@ -16,7 +16,7 @@ class CPlayer final : public CGameObject
 {
 public:
 
-	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, DAMAGED, ACTION_END };
+	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, DAMAGED, TELEPORT, ACTION_END };
 	typedef enum class InteractionKey {
 		KEY_LBUTTON, //VK_LBUTTON
 		KEY_RBUTTON, //VK_RBUTTON
@@ -135,6 +135,7 @@ private: /**Actions*/
 	void	Eatting(_float _fTimeDelta);
 	void	Pickup(_float _fTimeDelta);
 	void	Damaged(_float _fTimeDelta);
+	void	Jump(_float _fTimeDelta);
 
 	void Multi_Action(_float _fTimeDelta); //¸ÖÆ¼Å°
 	 //Passive
@@ -174,8 +175,8 @@ private: /* For.Components */
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CCollider*				m_pColliderCom = nullptr;
-	vector<CTexture*>       m_vecTexture;
-
+	//vector<CTexture*>       m_mapTexture;
+	map<const _tchar*, CTexture*> m_mapTexture;
 private: /*State*/
 	DIR_STATE				m_eDirState = DIR_STATE::DIR_DOWN;
 	DIR_STATE				m_ePreDirState = DIR_STATE::DIR_DOWN;

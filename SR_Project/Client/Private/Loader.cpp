@@ -227,6 +227,18 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Damaged/Player_Damaged_Side_%03d.png"), 30))))
 		return E_FAIL;
 
+	/*Jump to Teleport*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Jump_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Jump/Player_Jump_Up_%03d.png"), 40))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Jump_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Jump/Player_Jump_Down_%03d.png"), 40))))
+		return E_FAIL;																								   
+																													   
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Jump_Side"),		   
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Jump/Player_Jump_Side_%03d.png"), 40))))
+		return E_FAIL;
 
 	/*Eat*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Eat"),
@@ -272,7 +284,23 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/Dart/Dart_%03d.png"), 3))))
 		return E_FAIL;
 
+	/*Bath_Bomb*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_BathBomb"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/Bomb/Bath_Bomb_%03d.png"), 1))))
+		return E_FAIL;
 #pragma  endregion Add_Texture_others
+
+#pragma  region Add_Texture_Effects
+	/*Smoke*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_RedSmoke"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Small_Puff/small_puff_%03d.png"), 17))))
+		return E_FAIL;
+
+	/*Build_Effect*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_BuildEffect"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Build_Effect/Build_Effect_%03d.png"), 26))))
+		return E_FAIL;
+#pragma  endregion Add_Texture_Effects
 	/* 셰이더 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중."));
 

@@ -31,23 +31,24 @@ private:
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
-	HRESULT Texture_Clone(void);
-private:
+private://Init
 	HRESULT Init_Data(void);
-
-	_uint Dead_Check(void);
+	HRESULT Texture_Clone(void);
+private://Passive
 	void Excute(_float fTimeDelta);
-
-	void AttackCheck();
-
-	HRESULT Render_TextureState();
-	HRESULT Change_Texture(const _tchar* LayerTag);
-
+	void AttackCheck(_float _fTimeDelta);
+private:/*Act Player`s Bullets*/
+	void Red_Smoke(_float _fTimeDelta);
+	void Bomb(void);
+	//ApplyDamage
 	virtual void	Apply_Damage(_float Damage, CGameObject* DamagedObj, void* AttackType = nullptr);
 	virtual void	Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void* AttackType = nullptr);
 
 	//Campare Terrain& Bullets
 	_bool Compare_Terrain(void);
+private:/*for Texture*/
+	HRESULT Render_TextureState();
+	HRESULT Change_Texture(const _tchar* LayerTag);
 private:
 	void SetUp_BillBoard();
 private:/*For Components*/
@@ -64,13 +65,15 @@ private: //values
 
 	BULLETDATA				m_tBulletData;
 	_float					m_fAccDeadTimer = 0.f;
+	_float					m_fDamageTimger = 0.f; //jisokDamage
 
-
+	_float					m_fDamage= 20.f;
 	//Test
 	_float					m_fTime = 0.f;
 	_float					m_fPower = 2.f;
 	_float					m_MaxTime;
 	_float					m_AddTime;
+
 public:
 	static CBullet* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -193,7 +193,7 @@ void CSpider::Change_Frame()
 			m_bIsAttacking = false;
 			m_dwAttackTime = GetTickCount();
 		}
-		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20)
 		{
 			BULLETDATA BulletData;
 			ZeroMemory(&BulletData, sizeof(BulletData));
