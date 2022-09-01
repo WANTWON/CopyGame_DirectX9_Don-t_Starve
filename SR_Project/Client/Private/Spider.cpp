@@ -175,7 +175,7 @@ void CSpider::Change_Frame()
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::MOVE:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-1.2f, 1.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
@@ -183,7 +183,7 @@ void CSpider::Change_Frame()
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::ATTACK:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-1.2f, 1.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
@@ -193,9 +193,21 @@ void CSpider::Change_Frame()
 			m_bIsAttacking = false;
 			m_dwAttackTime = GetTickCount();
 		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+		{
+			BULLETDATA BulletData;
+			ZeroMemory(&BulletData, sizeof(BulletData));
+			BulletData.vPosition = Get_Position();
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+			BulletData.eDirState = m_eDir;
+
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+				return;
+		}
 		break;
 	case STATE::TAUNT:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-1.2f, 1.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
@@ -204,7 +216,7 @@ void CSpider::Change_Frame()
 			m_eState = STATE::IDLE;
 		break;
 	case STATE::HIT:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-1.2f, 1.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
@@ -230,14 +242,14 @@ void CSpider::Change_Motion()
 		case STATE::MOVE:
 			switch (m_eDir)
 			{
-			case DIR::DIR_UP:
+			case DIR_STATE::DIR_UP:
 				Change_Texture(TEXT("Com_Texture_MOVE_UP"));
 				break;
-			case DIR::DIR_DOWN:
+			case DIR_STATE::DIR_DOWN:
 				Change_Texture(TEXT("Com_Texture_MOVE_DOWN"));
 				break;
-			case DIR::DIR_RIGHT:
-			case DIR::DIR_LEFT:
+			case DIR_STATE::DIR_RIGHT:
+			case DIR_STATE::DIR_LEFT:
 				Change_Texture(TEXT("Com_Texture_MOVE_SIDE"));
 				break;
 			}
@@ -248,14 +260,14 @@ void CSpider::Change_Motion()
 		case STATE::ATTACK:
 			switch (m_eDir)
 			{
-			case DIR::DIR_UP:
+			case DIR_STATE::DIR_UP:
 				Change_Texture(TEXT("Com_Texture_ATTACK_UP"));
 				break;
-			case DIR::DIR_DOWN:
+			case DIR_STATE::DIR_DOWN:
 				Change_Texture(TEXT("Com_Texture_ATTACK_DOWN"));
 				break;
-			case DIR::DIR_RIGHT:
-			case DIR::DIR_LEFT:
+			case DIR_STATE::DIR_RIGHT:
+			case DIR_STATE::DIR_LEFT:
 				Change_Texture(TEXT("Com_Texture_ATTACK_SIDE"));
 				break;
 			}
@@ -349,42 +361,35 @@ void CSpider::Follow_Target(_float fTimeDelta)
 	// Move Horizontally
 	if (abs(fX) > abs(fZ))
 		if (fX > 0)
-			m_eDir = DIR::DIR_RIGHT;
+			m_eDir = DIR_STATE::DIR_RIGHT;
 		else
-			m_eDir = DIR::DIR_LEFT;
+			m_eDir = DIR_STATE::DIR_LEFT;
 	// Move Vertically
 	else
 		if (fZ > 0)
-			m_eDir = DIR::DIR_UP;
+			m_eDir = DIR_STATE::DIR_UP;
 		else
-			m_eDir = DIR::DIR_DOWN;
+			m_eDir = DIR_STATE::DIR_DOWN;
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
 
 	m_bIsAttacking = false;
 }
 
-void CSpider::Interact(_uint iDamage)
+_float CSpider::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
-	if (m_tInfo.iCurrentHp > 0)
+	_float fDmg = __super::Take_Damage(fDamage, DamageType, DamageCauser);
+	
+	if (fDmg > 0)
 	{
-		if (iDamage >= m_tInfo.iCurrentHp)
-		{
-			m_bDead = true;
-			m_tInfo.iCurrentHp = 0;
-		}
-		else
-		{
+		if (!m_bDead)
 			m_bHit = true;
-			m_tInfo.iCurrentHp -= iDamage;
-		}
 
-		// If Hit/Dead stop and reset Attack
 		m_bIsAttacking = false;
 		m_dwAttackTime = GetTickCount();
 	}
-	else
-		m_bDead = true;	
+
+	return fDmg;
 }
 
 HRESULT CSpider::Drop_Items()

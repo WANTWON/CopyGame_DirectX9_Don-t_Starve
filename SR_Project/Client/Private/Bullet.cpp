@@ -165,87 +165,97 @@ HRESULT CBullet::Release_RenderState()
 void CBullet::Excute(_float fTimeDelta)
 {	/*공격이나 칼은 맞는 객체가 몬스터만 있으면되지만
 	화살, 불마법은 누가 맞았는지에 따른 처리도 필요,
-	또한 화살 불마법은 지속적인 위치 업데이트가 필요하다.
-	*/
+	또한 화살 불마법은 지속적인 위치 업데이트가 필요하다.*/
 
-
-	switch (m_tBulletData.eWeaponType)
+	if (!m_tBulletData.bIsPlayerBullet)
 	{
-	case WEAPON_TYPE::WEAPON_HAND:
-	case WEAPON_TYPE::WEAPON_SWORD:
 		m_fAccDeadTimer += fTimeDelta;
 		if (m_fAccDeadTimer > 1.f)
 		{
 			m_bDead = OBJ_DEAD;
 		}
-		break;
-	case WEAPON_TYPE::WEAPON_STAFF:
-		switch (m_tBulletData.eDirState)
-		{
-		case DIR_STATE::DIR_UP:
-			m_pTransformCom->Go_Straight(fTimeDelta);
-			break;
-		case DIR_STATE::DIR_DOWN:
-			m_pTransformCom->Go_Backward(fTimeDelta);
-			break;
-		case DIR_STATE::DIR_RIGHT:
-			m_pTransformCom->Go_Right(fTimeDelta);
-			break;
-		case DIR_STATE::DIR_LEFT:
-			m_pTransformCom->Go_Left(fTimeDelta);
-			break;
-		case DIR_STATE::DIR_END:
-			m_pTransformCom->Go_PosDir(fTimeDelta, m_tBulletData.vLook);
-			//m_pTransformCom->Go_Straight(fTimeDelta);
-			break;
-		default:
-			break;
-		}
-		break;
-	case WEAPON_TYPE::WEAPON_DART:
-		switch (m_tBulletData.eDirState)
-		{
-		case DIR_STATE::DIR_UP:
-			m_pTransformCom->Go_Straight(fTimeDelta);
-			break;
-		case DIR_STATE::DIR_DOWN:
-			m_pTransformCom->Go_Backward(fTimeDelta);
-			break;
-		case DIR_STATE::DIR_RIGHT:
-			m_pTransformCom->Go_Right(fTimeDelta);
-			break;
-		case DIR_STATE::DIR_LEFT:
-			m_pTransformCom->Go_Right(fTimeDelta);
-			break;
-		case DIR_STATE::DIR_END:
-			m_pTransformCom->Go_PosDir(fTimeDelta, m_tBulletData.vLook);
-			break;
-		default:
-			break;
-		}
-		break;
-	case WEAPON_TYPE::WEAPON_BOMB:
-		//y = time* time -power*time ;
-		m_fTime += 0.1f;//m_tBulletData.fAdd_Z;
-		//if (m_fTime >= m_MaxTime) // 시간값을 크게??	
-			m_MaxTime = 2.f * 8.2f;
-		
-		float fSpeed = (-0.3f *m_fTime*m_fTime + 0.3f);//m_tBulletData.fAdd_Z); // ((3.f / 2.f)*m_fPower *0.03f); //0.1f 보간
-		m_tBulletData.vPosition.y += fSpeed;
-		m_tBulletData.vPosition.x += m_tBulletData.vTargetPos.x / m_MaxTime;
-		m_tBulletData.vPosition.z += m_tBulletData.vTargetPos.z / m_MaxTime;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_tBulletData.vPosition);
-
-		break;
 	}
+	else
+	{
+		switch (m_tBulletData.eWeaponType)
+		{
+		case WEAPON_TYPE::WEAPON_HAND:
+		case WEAPON_TYPE::WEAPON_SWORD:
+			m_fAccDeadTimer += fTimeDelta;
+			if (m_fAccDeadTimer > 1.f)
+			{
+				m_bDead = OBJ_DEAD;
+			}
+			break;
+		case WEAPON_TYPE::WEAPON_STAFF:
+			switch (m_tBulletData.eDirState)
+			{
+			case DIR_STATE::DIR_UP:
+				m_pTransformCom->Go_Straight(fTimeDelta);
 
+				break;
+			case DIR_STATE::DIR_DOWN:
+				m_pTransformCom->Go_Backward(fTimeDelta);
+				break;
+			case DIR_STATE::DIR_RIGHT:
+				m_pTransformCom->Go_Right(fTimeDelta);
+				break;
+			case DIR_STATE::DIR_LEFT:
+				m_pTransformCom->Go_Left(fTimeDelta);
+				break;
+			case DIR_STATE::DIR_END:
+				m_pTransformCom->Go_PosDir(fTimeDelta, m_tBulletData.vLook);
+				//m_pTransformCom->Go_Straight(fTimeDelta);
+				break;
+			default:
+				break;
+			}
+			break;
+		case WEAPON_TYPE::WEAPON_DART:
+			switch (m_tBulletData.eDirState)
+			{
+			case DIR_STATE::DIR_UP:
+				m_pTransformCom->Go_Straight(fTimeDelta);
+				break;
+			case DIR_STATE::DIR_DOWN:
+				m_pTransformCom->Go_Backward(fTimeDelta);
+				break;
+			case DIR_STATE::DIR_RIGHT:
+				m_pTransformCom->Go_Right(fTimeDelta);
+				break;
+			case DIR_STATE::DIR_LEFT:
+				m_pTransformCom->Go_Right(fTimeDelta);
+				break;
+			case DIR_STATE::DIR_END:
+				m_pTransformCom->Go_PosDir(fTimeDelta, m_tBulletData.vLook);
+				break;
+			default:
+				break;
+			}
+			break;
+		case WEAPON_TYPE::WEAPON_BOMB:
+			//y = time* time -power*time ;
+			m_fTime += 0.1f;//m_tBulletData.fAdd_Z;
+			//if (m_fTime >= m_MaxTime) // 시간값을 크게??	
+			m_MaxTime = 2.f * 8.2f;
+
+			float fSpeed = (-0.3f *m_fTime*m_fTime + 0.3f);//m_tBulletData.fAdd_Z); // ((3.f / 2.f)*m_fPower *0.03f); //0.1f 보간
+			m_tBulletData.vPosition.y += fSpeed;
+			m_tBulletData.vPosition.x += m_tBulletData.vTargetPos.x / m_MaxTime;
+			m_tBulletData.vPosition.z += m_tBulletData.vTargetPos.z / m_MaxTime;
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_tBulletData.vPosition);
+
+			break;
+		}
+	}
 }
 
 void CBullet::AttackCheck()
 {
 	vector<CGameObject*> vecDamagedActor;
 
-	if (m_pColliderCom->Collision_Check_Group_Multi(CCollider::COLLISION_MONSTER, vecDamagedActor, this))
+
+	if (m_pColliderCom->Collision_Check_Group_Multi(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, vecDamagedActor, this))
 	{
 		switch (m_tBulletData.eWeaponType)
 		{

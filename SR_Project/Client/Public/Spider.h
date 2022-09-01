@@ -6,15 +6,7 @@
 BEGIN(Client)
 class CSpider final : public CMonster
 {
-	enum class DIR 
-	{ 
-		DIR_UP,
-		DIR_DOWN,
-		DIR_RIGHT, 
-		DIR_LEFT, 
-		MAX
-	};
-	enum class STATE
+	enum STATE
 	{
 		IDLE,
 		MOVE,
@@ -46,8 +38,8 @@ private: /*For TextureCom */
 	virtual void Change_Motion() override;
 	
 private:
-	DIR m_eDir = DIR::DIR_DOWN;
-	DIR	m_ePreDir = DIR::MAX;
+	DIR_STATE m_eDir = DIR_STATE::DIR_DOWN;
+	DIR_STATE m_ePreDir = DIR_STATE::DIR_END;
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
 
@@ -55,7 +47,7 @@ private:
 	virtual void AI_Behaviour(_float fTimeDelta) override;
 	virtual void Find_Target() override;
 	virtual void Follow_Target(_float fTimeDelta) override;
-	virtual void Interact(_uint iDamage = 0) override;
+	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 	virtual HRESULT Drop_Items() override;
 	virtual _bool IsDead() override;
 

@@ -56,18 +56,22 @@ protected:
 	CGameObject* m_pTarget = nullptr;
 	_float m_fDistanceToTarget = 0.f;
 	_float m_fAggroRadius = 3.f;
-	_bool m_bAggro = false;
+	_float m_fPatrolRadius = 3.f;
+	_float m_fPatrolPosX = 0.f;
+	_float m_fPatrolPosZ = 0.f;
 	_float m_fAttackRadius = .5f;
+	_bool m_bAggro = false;
 	_bool m_bIsAttacking = false;
-	DWORD m_dwAttackTime = GetTickCount();
 	_bool m_bHit = false;
+	DWORD m_dwIdleTime = GetTickCount();
+	DWORD m_dwWalkTime = GetTickCount();
+	DWORD m_dwAttackTime = GetTickCount();
 	DWORD m_dwDeathTime = GetTickCount();
 
 protected:
 	virtual void AI_Behaviour(_float fTimeDelta) { };
 	virtual void Find_Target() { };
 	virtual void Follow_Target(_float fTimeDelta) { };
-	virtual void Interact(_uint iDamage = 0) { };
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser);
 	virtual HRESULT Drop_Items() { return S_OK; };
 	virtual _bool IsDead() = 0;

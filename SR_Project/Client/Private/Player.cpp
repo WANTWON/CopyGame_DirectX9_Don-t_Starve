@@ -97,7 +97,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	m_Equipment->Set_TargetPos(Get_Pos());
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-	
+	cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
 
 	return OBJ_NOEVENT;
 }
@@ -125,16 +125,8 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	{
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
 	}
-
-
-	//추후에 아이템 만들어지고 플레이어가 아이템과 닿았을떄 획득하는 상호작용을 마친후에 인벤토리에 들어오는건 아래코드 그대로 쓰시면 작동합니다!!
-	//#include "Inven.h" 포함하시고
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
-
 	
 	Test_Debug(fTimeDelta);
-	
 }
 
 
@@ -431,6 +423,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 
 		BULLETDATA BulletData;
 		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.bIsPlayerBullet = true;
 		BulletData.eDirState = DIR_STATE::DIR_DOWN;
 		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
 		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
@@ -952,7 +945,6 @@ void CPlayer::Create_Bullet()
 		if (m_bIsFPS)
 		{
 			BulletData.eDirState = DIR_STATE::DIR_END;
-			//BulletData.bIsFPSMode = true;
 			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 		}
 		else
@@ -960,9 +952,10 @@ void CPlayer::Create_Bullet()
 			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 			BulletData.eDirState = m_eDirState;
 		}
+		BulletData.bIsPlayerBullet = true;
 		BulletData.eWeaponType = m_eWeaponType;
 		BulletData.vPosition = Get_Pos();
-		//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
 		switch (m_eWeaponType)
 		{
 		case WEAPON_TYPE::WEAPON_HAND:
@@ -973,7 +966,7 @@ void CPlayer::Create_Bullet()
 			}
 			break;
 		case WEAPON_TYPE::WEAPON_SWORD:
-			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20)
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 5)
 			{
 				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
 					return;
