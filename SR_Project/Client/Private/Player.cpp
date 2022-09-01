@@ -423,6 +423,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 
 		BULLETDATA BulletData;
 		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.bIsPlayerBullet = true;
 		BulletData.eDirState = DIR_STATE::DIR_DOWN;
 		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
 		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
