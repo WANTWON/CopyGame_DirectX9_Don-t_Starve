@@ -10,7 +10,7 @@ CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphic_Device)
 }
 
 CBullet::CBullet(const CBullet & rhs)
-	:CGameObject(rhs)
+	: CGameObject(rhs)
 {
 }
 
@@ -28,7 +28,7 @@ HRESULT CBullet::Initialize_Prototype()
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
-	
+
 	return S_OK;
 }
 
@@ -42,7 +42,7 @@ HRESULT CBullet::Initialize(void * pArg)
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	
+
 
 
 	return S_OK;
@@ -59,7 +59,7 @@ int CBullet::Tick(_float fTimeDelta)
 		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	Excute(fTimeDelta);
-	
+
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 	return OBJ_NOEVENT;
 }
@@ -90,7 +90,7 @@ HRESULT CBullet::Render()
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
 
-	if(m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_HAND && m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_SWORD)
+	if (m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_HAND && m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_SWORD)
 		m_pVIBufferCom->Render();
 
 	if (FAILED(Release_RenderState()))
@@ -101,7 +101,7 @@ HRESULT CBullet::Render()
 
 HRESULT CBullet::SetUp_Components()
 {
-	
+
 
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -156,7 +156,7 @@ HRESULT CBullet::Release_RenderState()
 }
 
 void CBullet::Excute(_float fTimeDelta)
-{	/*공격이나 칼은 맞는 객체가 몬스터만 있으면되지만 
+{	/*공격이나 칼은 맞는 객체가 몬스터만 있으면되지만
 	화살, 불마법은 누가 맞았는지에 따른 처리도 필요,
 	또한 화살 불마법은 지속적인 위치 업데이트가 필요하다.*/
 
@@ -185,6 +185,7 @@ void CBullet::Excute(_float fTimeDelta)
 			{
 			case DIR_STATE::DIR_UP:
 				m_pTransformCom->Go_Straight(fTimeDelta);
+
 				break;
 			case DIR_STATE::DIR_DOWN:
 				m_pTransformCom->Go_Backward(fTimeDelta);
@@ -225,6 +226,19 @@ void CBullet::Excute(_float fTimeDelta)
 				break;
 			}
 			break;
+		case WEAPON_TYPE::WEAPON_BOMB:
+			//y = time* time -power*time ;
+			m_fTime += 0.1f;//m_tBulletData.fAdd_Z;
+			//if (m_fTime >= m_MaxTime) // 시간값을 크게??	
+			m_MaxTime = 2.f * 8.2f;
+
+			float fSpeed = (-0.3f *m_fTime*m_fTime + 0.3f);//m_tBulletData.fAdd_Z); // ((3.f / 2.f)*m_fPower *0.03f); //0.1f 보간
+			m_tBulletData.vPosition.y += fSpeed;
+			m_tBulletData.vPosition.x += m_tBulletData.vTargetPos.x / m_MaxTime;
+			m_tBulletData.vPosition.z += m_tBulletData.vTargetPos.z / m_MaxTime;
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_tBulletData.vPosition);
+
+			break;
 		}
 	}
 }
@@ -232,6 +246,7 @@ void CBullet::Excute(_float fTimeDelta)
 void CBullet::AttackCheck()
 {
 	vector<CGameObject*> vecDamagedActor;
+
 
 	if (m_pColliderCom->Collision_Check_Group_Multi(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, vecDamagedActor, this))
 	{
@@ -251,8 +266,8 @@ void CBullet::AttackCheck()
 
 		Apply_Damage_Multi(20.f, vecDamagedActor, nullptr);
 	}
-	
-	
+
+
 	vecDamagedActor.clear();
 }
 
@@ -344,7 +359,7 @@ HRESULT CBullet::Texture_Clone(void)
 {
 	CTexture::TEXTUREDESC		TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
-	
+
 	switch (m_tBulletData.eWeaponType)
 	{
 	case WEAPON_TYPE::WEAPON_HAND:
@@ -368,6 +383,7 @@ HRESULT CBullet::Texture_Clone(void)
 #endif
 		break;
 	case WEAPON_TYPE::WEAPON_STAFF:
+	case WEAPON_TYPE::WEAPON_BOMB:
 		TextureDesc.m_iStartTex = 0;
 		TextureDesc.m_iEndTex = 9;
 		TextureDesc.m_fSpeed = 60;
@@ -381,6 +397,7 @@ HRESULT CBullet::Texture_Clone(void)
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Dart"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dart"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
+
 	}
 
 	return S_OK;
@@ -391,10 +408,16 @@ HRESULT CBullet::Init_Data(void)
 
 	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_DART)
 	{
+		m_pTransformCom->Set_Scale(0.3f, 0.3f, 1.f);
 		if (m_tBulletData.eDirState == DIR_STATE::DIR_LEFT)
 		{
-			m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
+			m_pTransformCom->Set_Scale(-0.3f, 0.3f, 1.f);
 		}
+	}
+
+	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_BOMB)
+	{
+		Change_Texture(TEXT("Com_Texture_Fireball"));
 	}
 
 	if (m_tBulletData.eDirState == DIR_STATE::DIR_END)

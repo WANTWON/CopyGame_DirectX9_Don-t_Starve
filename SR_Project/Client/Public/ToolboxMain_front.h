@@ -70,6 +70,9 @@ private:
 	bool m_bpontcheck = true;
 	bool m_bcheck_bag = false;
 
+	TOOLTYPE  m_tooltype = TOOL_END;
+
+
 };
 
 END

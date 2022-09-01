@@ -41,9 +41,9 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 	}
 	else if (m_eCamMode == CAM_TURNMODE)
 	{
-		
+
 		Turn_Camera(fTimeDelta);
-	}		
+	}
 	else if (m_eCamMode == CAM_FPS)
 		FPS_Camera(fTimeDelta);
 
@@ -100,13 +100,13 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
 		break;
 	case 1:
-		m_pTransform->Follow_Target(fTimeDelta,m_TargetPos, _float3(m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.z, m_vDistance.y, m_vDistance.x));
 		break;
 	case 2:
 		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, -m_vDistance.z));
 		break;
 	case 3:
-		m_pTransform->Follow_Target(fTimeDelta,m_TargetPos, _float3(-m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(-m_vDistance.z, m_vDistance.y, m_vDistance.x));
 		break;
 	}
 
@@ -168,9 +168,25 @@ void CCameraDynamic::FPS_Camera(_float fTimeDelta)
 	_float3 vectargetPos = pTarget->Get_Pos() + _float3(0.f, 0.5f, vecTargetLook.z);
 	_float3 PlayerLook = (pTarget->Get_Look());
 
+	
 	m_pTransform->Follow_Target(fTimeDelta, vectargetPos, _float3(0, 0, 0));
 	//m_pTransform->LookAt(PlayerLook);
 	m_pTransform->Set_State(CTransform::STATE_LOOK, _float3(PlayerLook.x, 0.f, PlayerLook.z));
+
+	//_long			MouseMove = 0;
+
+	//if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+	//{
+
+	//	m_pTransform->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * MouseMove * 0.1f);
+	//}
+
+	/*if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+	{
+		m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * 0.1f);
+	}*/
+
+
 	Safe_Release(pTarget);
 	Safe_Release(pGameInstance);
 }

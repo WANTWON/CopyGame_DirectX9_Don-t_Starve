@@ -16,7 +16,7 @@ class CPlayer final : public CGameObject
 {
 public:
 
-	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, ACTION_END };
+	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, DAMAGED, ACTION_END };
 	typedef enum class InteractionKey {
 		KEY_LBUTTON, //VK_LBUTTON
 		KEY_RBUTTON, //VK_RBUTTON
@@ -66,13 +66,6 @@ public:
 	_bool bIsKeyDown;
 	}ACTDATA;*/
 	
-	//typedef struct tagBulletData {
-	//	WEAPON_TYPE eWeaponType;
-	//	_float3		vPosition;
-	//	DIR_STATE	eDirState;
-	//	_float3		vLook;
-	//	//_bool		bIsFPSMode = false;
-	//}BULLETDATA;
 private:
 	CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CPlayer(const CPlayer& rhs);
@@ -84,7 +77,8 @@ public:
 	virtual int Tick(_float fTimeDelta)override;
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
-
+	
+public:
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 
 
@@ -94,6 +88,7 @@ public:/*Picking*/
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
 	void Move_to_PickingPoint(_float fTimedelta);
 	void Set_PickingPoint(_float3 PickingPoint) { m_vPickingPoint = PickingPoint; m_bPicked = true; m_bInputKey = false; m_bArrive = false; };
+
 
 public: /*Get&Set*/
 		//Gets
@@ -109,6 +104,8 @@ public: /*Get&Set*/
 	void	Set_Armor(_float _fArmor) { m_tStat.fArmor += _fArmor; }
 	void	Set_WeaponType(WEAPON_TYPE _eWeapon) { m_eWeaponType = _eWeapon; }
 
+public:
+	void	Add_ActStack(ACTION_STATE _ACT_STATE) { m_ActStack.push(_ACT_STATE); m_bAutoMode = true; m_bMove = false; }
 	//Test
 	void Check_Target(_bool _bDead) { if (_bDead) m_pTarget = nullptr; }
 private:/*Setup*/
@@ -126,29 +123,29 @@ private: /**Actions*/
 	bool ResetAction(_float _fTimeDelta);
 	void Move_Idle(_float _fTimeDelta);
 	//Move
-	void Move_Up(_float _fTimeDelta);
-	void Move_Right(_float _fTimeDelta);
-	void Move_Down(_float _fTimeDelta);
-	void Move_Left(_float _fTimeDelta);
+	void	Move_Up(_float _fTimeDelta);
+	void	Move_Right(_float _fTimeDelta);
+	void	Move_Down(_float _fTimeDelta);
+	void	Move_Left(_float _fTimeDelta);
 	//Actions
-	void Attack(_float _fTimeDelta);
-	void Mining(_float _fTimeDelta);
-	void Chop(_float _fTimeDelta);
-	
-	void Cutting_Grass(_float _fTimeDelta);
-	void Eatting(_float _fTimeDelta);
-	void Pickup(_float _fTimeDelta);
+	void	Attack(_float _fTimeDelta);
+	void	Mining(_float _fTimeDelta);
+	void	Chop(_float _fTimeDelta);
+	void	Cutting_Grass(_float _fTimeDelta);
+	void	Eatting(_float _fTimeDelta);
+	void	Pickup(_float _fTimeDelta);
+	void	Damaged(_float _fTimeDelta);
 
 	void Multi_Action(_float _fTimeDelta); //멀티키
 	 //Passive
-	void	 Decrease_Stat(void); //일정시간마다 Hunger 감소
+	void	Decrease_Stat(void); //일정시간마다 Hunger 감소
 	void	Create_Bullet(void);
 	void	Detect_Enemy(void);
 	_bool	Check_Interact_End(void);
-	void Find_Priority();
+	void	Find_Priority();
 	//ActStack
-	void Tick_ActStack(_float fTimeDelta);
-	void Clear_ActStack();
+	void	Tick_ActStack(_float fTimeDelta);
+	void	Clear_ActStack();
 
 	//Debug
 	void Test_Debug(_float fTimeDelta);
@@ -211,13 +208,18 @@ private: /*for Debug*/
 	CVIBuffer_Rect*			m_pDebugBufferCom = nullptr;
 	CTransform*				m_pDebugTransformCom = nullptr;
 	CTexture*				m_pDebugTextureCom = nullptr;
-private: //Test
+private: /*for Auto*/
 	CGameObject*			m_pTarget = nullptr;
 
 	_bool					m_bAutoMode = false;
 	stack<ACTION_STATE>		m_ActStack;
 
-	//_int					m_iTestCnt = 0;
+	_bool					m_bMove = true;
+
+private: // Test
+	_float3					m_vTargetPicking;
+	public:
+	void Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

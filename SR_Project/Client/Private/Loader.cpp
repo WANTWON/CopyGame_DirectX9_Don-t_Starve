@@ -33,6 +33,13 @@
 #include "Water.h"
 #include "ToolboxMain.h"
 #include "ToolboxMain_back.h"
+#include "ToolboxMain_front.h"
+#include "ToolboxWeapon.h"
+#include "ToolboxWeapon_front.h"
+#include "ToolboxWeapon_back.h"
+#include "ToolboxGather.h"
+#include "ToolboxGather_back.h"
+#include "ToolboxGather_front.h"
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -207,6 +214,19 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Pickup/Player_Pickup_Side_%03d.png"), 11))))
 		return E_FAIL;
 
+	/*Damaged*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Damaged_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Damaged/Player_Damaged_Up_%03d.png"), 30))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Damaged_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Damaged/Player_Damaged_Down_%03d.png"), 30))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Damaged_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Damaged/Player_Damaged_Side_%03d.png"), 30))))
+		return E_FAIL;
+
 
 	/*Eat*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Eat"),
@@ -300,7 +320,14 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory.png"), 1))))
 		return E_FAIL;
-
+	/*For.Prototype_Component_Texture_WeaponToolbox_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_GatherToolbox_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/gather%d.png"), 2))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_WeaponToolbox_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WeaponToolbox_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/weapon%d.png"), 3))))
+		return E_FAIL;
 	/*For.Prototype_Component_Texture_MainToolbox */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/Toolbox.png"), 1))))
@@ -308,6 +335,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_Component_Texture_MainToolbox_back */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox_back"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/Toolboxback%d.png"), 3))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_MainToolbox_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/Toolboxfront%d.png"), 4))))
 		return E_FAIL;
 	/*For.Prototype_Component_Texture_BagInventory */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BagInventory"),
@@ -631,12 +662,41 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CMainInventory::Create(m_pGraphic_Device))))
 		return E_FAIL;
 	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox"),
+		CToolboxWeapon::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox_back"),
+		CToolboxWeapon_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox_front"),
+		CToolboxWeapon_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox"),
+		CToolboxGather::Create(m_pGraphic_Device))))				   
+		return E_FAIL;												   
+	/*For.Prototype_GameObject_MainInToolbox */						   
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox_back"),
+		CToolboxGather_back::Create(m_pGraphic_Device))))			  
+		return E_FAIL;												  
+	/*For.Prototype_GameObject_MainInToolbox */						  
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox_front"),
+		CToolboxGather_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+		
+	/*For.Prototype_GameObject_MainInToolbox */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox"),
 		CToolboxMain::Create(m_pGraphic_Device))))
 		return E_FAIL;
 	/*For.Prototype_GameObject_MainIToolbox_back */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox_back"),
 		CToolboxMain_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainIToolbox_back */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox_front"),
+		CToolboxMain_front::Create(m_pGraphic_Device))))
 		return E_FAIL;
 	/*For.Prototype_GameObject_BagInventory */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BagInventory"),

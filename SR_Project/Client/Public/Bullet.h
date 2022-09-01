@@ -15,14 +15,6 @@ BEGIN(Client)
 class CBullet : public CGameObject
 {
 public:
-	//typedef struct tagBulletData {
-	//		WEAPON_TYPE eWeaponType;
-	//		_float3		vPosition;
-	//		DIR_STATE	eDirState;
-	//		_float3		vLook;
-	////	_bool		bIsFPSMode;
-	//}BULLETDATA;
-public:
 	CBullet(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CBullet(const CBullet& rhs);
 	virtual ~CBullet() = default;
@@ -69,6 +61,13 @@ private: //values
 
 	BULLETDATA				m_tBulletData;
 	_float					m_fAccDeadTimer = 0.f;
+
+
+	//Test
+	_float					m_fTime = 0.f;
+	_float					m_fPower = 2.f;
+	_float					m_MaxTime;
+	_float					m_AddTime;
 public:
 	static CBullet* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

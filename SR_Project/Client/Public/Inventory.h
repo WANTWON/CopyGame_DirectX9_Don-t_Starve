@@ -12,6 +12,12 @@
 #include "PlayerMentality_pont.h"
 #include "BagInventory.h"
 #include "Mouse_item.h"
+#include "ToolboxWeapon.h"
+#include "ToolboxWeapon_back.h"
+#include "ToolboxWeapon_front.h"
+#include "ToolboxGather.h"
+#include "ToolboxGather_back.h"
+#include "ToolboxGather_front.h"
 /*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -38,6 +44,13 @@ public:
 	list<CBagInventory*>* Get_BagInventory_list() {return &m_BagInventorylist;}
 	list<CMainInventory_back*>* Get_back_Inven_list(void) { return &m_MainInventorybacklist; }
 	list<CMouse_item*>* Get_Mouse_item_list(void) { return &m_Mouseitemlist; }
+	list<CToolboxWeapon*>*Get_Toolboxweapon_list(void) { return &m_Toolboxweapon; }
+	list<CToolboxWeapon_back*>*Get_Toolboxweapon_back_list(void) { return &m_Toolboxweapon_back; }
+	list<CToolboxWeapon_front*>*Get_Toolboxweapon_front_list(void) { return &m_Toolboxweapon_front; }
+
+	list<CToolboxGather*>*Get_Toolboxgather_list(void) { return &m_Toolboxgather; }
+	list<CToolboxGather_back*>*Get_Toolboxgather_back_list(void) { return &m_Toolboxgather_back; }
+	list<CToolboxGather_front*>*Get_Toolboxgather_front_list(void) { return &m_Toolboxgather_front; }
 
 	void sethp(_uint hp) { m_ihp = hp; }
 	void sethuger(_uint hunger) { m_ihunger = hunger;}
@@ -45,6 +58,12 @@ public:
 
 	void Use_bag();
 	void Off_bag();
+
+	void weapontool_on();
+	void weapontool_off();
+
+	void gathertool_on();
+	void gathertool_off();
 
 
 
@@ -57,13 +76,21 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	typedef map<const _tchar*, class CLayer*>	LAYERS;*/
 	list<CMainInventory_front*> m_MainInventorylist;//[INVEN_END]
 	list<CMainInventory_back*> m_MainInventorybacklist;
-	list<CEquipment_front*> m_Equipmentlist;
-	list<CPont*> m_Pontlist;
-	list<CPlayerhp_pont*> m_Hppontlist;
-	list<CPlayerhunger_pont*>m_Hungerpontlist;
-	list<CPlayerMentality_pont*>m_Mentalitiypontlist;
-	list<CBagInventory*>m_BagInventorylist;
-	list<CMouse_item*>m_Mouseitemlist;
+	list<CEquipment_front*> m_Equipmentlist;//
+	list<CPont*> m_Pontlist;//
+	list<CPlayerhp_pont*> m_Hppontlist;//
+	list<CPlayerhunger_pont*>m_Hungerpontlist;//
+	list<CPlayerMentality_pont*>m_Mentalitiypontlist;//
+	list<CBagInventory*>m_BagInventorylist;//
+	list<CMouse_item*>m_Mouseitemlist;//
+	list<CToolboxWeapon*>m_Toolboxweapon;//
+	list<CToolboxWeapon_back*>m_Toolboxweapon_back;//
+	list<CToolboxWeapon_front*>m_Toolboxweapon_front;//
+
+	list<CToolboxGather*>m_Toolboxgather;
+	list<CToolboxGather_back*>m_Toolboxgather_back;
+	list<CToolboxGather_front*>m_Toolboxgather_front;
+
 
 	typedef list<CMainInventory_front*> INVENLIST;
 
