@@ -104,7 +104,6 @@ private:
 private:
 	PARTICLE_INFO*			m_ParticleArray = nullptr;		// 파티클의 정보들
 	VTXTEX*					m_Vertices = nullptr;			// 정점들의 정보들
-	list<CParticle*>		m_listParticle;
 
 protected: // For.VertexBuffer
 	LPDIRECT3DVERTEXBUFFER9		m_pVBuffer = nullptr;
