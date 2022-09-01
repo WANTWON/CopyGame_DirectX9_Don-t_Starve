@@ -66,6 +66,14 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 		}
 	}
 
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	if (pGameInstance->Key_Up('P'))
+	{
+		CPickingMgr::Get_Instance()->Picking();
+	}
+	Safe_Release(pGameInstance);
+
 	CPickingMgr::Get_Instance()->Picking();
 
 }
