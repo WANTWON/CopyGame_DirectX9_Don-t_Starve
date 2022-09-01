@@ -133,6 +133,9 @@
     <Filter Include="02.GameObject\04.Interactive_Object\Pig King">
       <UniqueIdentifier>{7a569719-d033-4a90-bd6a-eecfe70825a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00.Player\Attack_Range">
+      <UniqueIdentifier>{e8c146f3-d322-439e-96cf-64101fe7d66f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -303,6 +306,7 @@
     <ClInclude Include="PigKing.h">
       <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AttackRange.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -461,6 +465,7 @@
     <ClCompile Include="PigKing.cpp">
       <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\AttackRange.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

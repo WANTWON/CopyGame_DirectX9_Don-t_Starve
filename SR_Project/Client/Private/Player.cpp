@@ -8,8 +8,8 @@
 #include "Bullet.h"
 #include "CameraDynamic.h"
 #include "Interactive_Object.h"
-
-
+#include "PickingMgr.h"
+#include "AttackRange.h"
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -46,7 +46,20 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Equipment"), LEVEL_GAMEPLAY, TEXT("Layer_Equip"), nullptr)))
 		return E_FAIL;
 
+	_bool bPicker = true;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Picker"), LEVEL_GAMEPLAY, TEXT("Layer_Picker"), &bPicker)))
+		return E_FAIL;
+	bPicker = false;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Picker"), LEVEL_GAMEPLAY, TEXT("Layer_Range"),&(bPicker))))
+		return E_FAIL;
+
 	m_Equipment = (CEquip_Animation*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Equip"));
+
+	m_pPicker = (CAttackRange*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Picker"));
+	m_pPicker->Set_Scale(_float3(0.4f, 0.4f, 1.f));
+
+	m_pRange = (CAttackRange*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Range"));
+	m_pRange-> Set_Scale(_float3(7.5f, 7.5f, 1.f));
 
 	Safe_Release(pGameInstance);
 
@@ -72,21 +85,6 @@ int CPlayer::Tick(_float fTimeDelta)
 	//Mouse
 	//if (m_bIsFPS)
 	//{
-	//	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	//	Safe_AddRef(pGameInstance);
-
-	//	_long			MouseMove = 0;
-
-	//	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
-	//	{
-	//		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * MouseMove * 0.1f);
-	//	}
-
-	//	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
-	//	{
-	//		m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * 0.1f);
-	//	}
-	//	Safe_Release(pGameInstance);
 	//}
 
 	//Move
@@ -95,6 +93,9 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	Create_Bullet();
 	m_Equipment->Set_TargetPos(Get_Pos());
+	//TEst
+	RangeCheck(fTimeDelta);
+
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
@@ -418,41 +419,53 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	//Action
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN1]))
 	{
-		/*Test Bomb*/
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-		BULLETDATA BulletData;
-		ZeroMemory(&BulletData, sizeof(BulletData));
-		BulletData.bIsPlayerBullet = true;
-		BulletData.eDirState = DIR_STATE::DIR_DOWN;
-		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
-		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
-		BulletData.vPosition = Get_Pos();
+		if (m_pPicker->Get_IsCorrect())
+		{	
+			/*Test Bomb*/
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-		_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
-		//D3DXVec3Normalize(&temp, &temp);
-		//BulletData.fAdd_X = m_fMaxTime;
-		BulletData.vTargetPos = temp;
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
-			return;
+			BULLETDATA BulletData;
+			ZeroMemory(&BulletData, sizeof(BulletData));
+			BulletData.bIsPlayerBullet = true;
+			BulletData.eDirState = DIR_STATE::DIR_DOWN;
+			BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
+			BulletData.vPosition = Get_Pos();
 
+			_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
+			//D3DXVec3Normalize(&temp, &temp);
+			//BulletData.fAdd_X = m_fMaxTime;
+			BulletData.vTargetPos = temp;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+				return;
+		}
 
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN2]))
 	{
 		Jump(_fTimeDelta);
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN3]))
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN3]))
 	{
-		Test_Func(3);
+		if (m_pPicker->Get_IsShow())
+		{
+			m_pRange->Set_IsShow(false);
+			m_pPicker->Set_IsShow(false);
+		}
+		else 
+		{
+			m_pRange->Set_IsShow(true);
+			m_pPicker->Set_IsShow(true);
+		}
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN4]))
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN4]))
 	{
-		Test_Func(0);
+		
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN5]))
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN5]))
 	{
-		Eatting(_fTimeDelta);
+
 	}
 #pragma endregion Action
 
@@ -1089,6 +1102,32 @@ void CPlayer::Test_Func(_int _iNum)
 void CPlayer::Test_Detect(_float fTImeDelta)
 {
 	
+}
+
+void CPlayer::RangeCheck(_float _fTimeDelta)
+{
+	if (!m_pPicker->Get_IsShow())
+		return;
+
+	CPickingMgr::Get_Instance()->Picking();
+
+	_float Compare_Range = (m_vTargetPicking.x - Get_Pos().x)*(m_vTargetPicking.x - Get_Pos().x)
+		+ (m_vTargetPicking.y - Get_Pos().y)*(m_vTargetPicking.y - Get_Pos().y)
+		+ (m_vTargetPicking.z - Get_Pos().z)*(m_vTargetPicking.z - Get_Pos().z);
+
+	m_pPicker->Set_Pos(m_vTargetPicking);
+	m_pRange->Set_Pos(Get_Pos());
+
+	if (m_AtkRange* m_AtkRange > Compare_Range)
+	{
+		m_pPicker->Set_IsCorrect(true);
+		m_pRange->Set_IsCorrect(true);
+	}
+	else
+	{
+		m_pPicker->Set_IsCorrect(false);
+		m_pRange->Set_IsCorrect(false);
+	}
 }
 
 void CPlayer::Tick_ActStack(_float fTimeDelta)

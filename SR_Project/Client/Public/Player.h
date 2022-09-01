@@ -43,6 +43,7 @@ public:
 		KEY_CAMRIGHT, //e
 		KEY_CAMFPSMODE, // F1
 		KEY_CAMTPSMODE, //F2
+		KEY_ENTER,		//VK_RETURN
 		KEY_END
 	}INTERACTKEY;
 
@@ -156,7 +157,7 @@ private: /**Actions*/
 	
 	void Test_Detect(_float fTImeDelta);
 	
-	
+	void RangeCheck(_float _fTimeDelta);
 	//Interact Check
 	ACTION_STATE Select_Interact_State(INTERACTOBJ_ID _eObjID);
 	
@@ -217,8 +218,14 @@ private: /*for Auto*/
 
 	_bool					m_bMove = true;
 
+	//AtkRange
+	_float						m_AtkRange = 3.f;
+	class CAttackRange*			m_pPicker = nullptr;
+	class CAttackRange*			m_pRange = nullptr;
 private: // Test
 	_float3					m_vTargetPicking;
+
+	
 	public:
 	void Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
 public:
