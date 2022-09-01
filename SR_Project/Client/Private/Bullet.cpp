@@ -70,6 +70,9 @@ void CBullet::Late_Tick(_float fTimeDelta)
 
 	AttackCheck();
 
+	if (Compare_Terrain())
+		m_bDead = true;
+
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
@@ -85,7 +88,11 @@ HRESULT CBullet::Render()
 	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
 		return E_FAIL;
 
+
+
 	Render_TextureState();
+
+
 
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
@@ -126,7 +133,7 @@ HRESULT CBullet::SetUp_Components()
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 	TransformDesc.InitPos = m_tBulletData.vPosition;
-
+	TransformDesc.InitPos.y += 0.2f;
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 	//±ÍÂú¾Æ ¤¾¤¾
@@ -325,6 +332,50 @@ void CBullet::Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamage
 
 }
 
+_bool CBullet::Compare_Terrain(void)
+{
+
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return false;
+
+	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	if (nullptr == pVIBuffer_Terrain)
+		return false;
+
+	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	if (nullptr == pTransform_Terrain)
+		return false;
+
+	_float3			vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+
+	switch (m_tBulletData.eWeaponType)
+	{
+		case WEAPON_TYPE::WEAPON_BOMB:
+		case WEAPON_TYPE::WEAPON_DART:
+		case WEAPON_TYPE::WEAPON_STAFF:
+			/*vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
+
+			if (vPosition.y > m_pTransformCom->Get_State(CTransform::STATE_POSITION).y)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}*/
+			break;
+		case WEAPON_TYPE::WEAPON_HAND:
+			break;
+		case WEAPON_TYPE::WEAPON_SWORD:
+			break;
+
+	}
+
+	return _bool();
+}
+
 void CBullet::SetUp_BillBoard()
 {
 
@@ -407,6 +458,7 @@ HRESULT CBullet::Init_Data(void)
 
 	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_BOMB)
 	{
+		m_pTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
 		Change_Texture(TEXT("Com_Texture_Fireball"));
 	}
 

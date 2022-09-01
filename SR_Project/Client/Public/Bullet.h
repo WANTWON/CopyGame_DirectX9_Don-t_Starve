@@ -55,6 +55,9 @@ private:
 
 	virtual void	Apply_Damage(_float Damage, CGameObject* DamagedObj, void* AttackType = nullptr);
 	virtual void	Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void* AttackType = nullptr);
+
+	//Campare Terrain& Bullets
+	_bool Compare_Terrain(void);
 private:
 	void SetUp_BillBoard();
 private:/*For Components*/
