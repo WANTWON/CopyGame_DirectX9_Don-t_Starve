@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "Inventory.h"
 
+#include "ParticleSystem.h"
+
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
 {
@@ -228,7 +230,7 @@ HRESULT CItem::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 	TextureDesc.m_iEndTex = m_ItemDesc.eItemName;
 
-	if (FAILED(__super::Add_Components(m_ItemDesc.pTextureComponent, LEVEL_GAMEPLAY, m_ItemDesc.pTexturePrototype, (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(m_ItemDesc.pTextureComponent, LEVEL_STATIC, m_ItemDesc.pTexturePrototype, (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 

@@ -88,9 +88,9 @@ HRESULT CWater::SetUp_Components(void* pArg)
 		return E_FAIL;
 
 
-	m_TerrainDesc.m_iNumVerticesX = 50;
-	m_TerrainDesc.m_iNumVerticesZ = 50;
-	m_TerrainDesc.m_fTextureSize = 5.f;
+	m_TerrainDesc.m_iNumVerticesX = 100;
+	m_TerrainDesc.m_iNumVerticesZ = 100;
+	m_TerrainDesc.m_fTextureSize = 15.f;
 	m_TerrainDesc.m_fSizeX = 1;
 	m_TerrainDesc.m_fSizeZ = 1;
 	m_TerrainDesc.m_iTextureNum = 17;
