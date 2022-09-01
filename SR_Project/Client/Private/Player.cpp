@@ -111,16 +111,8 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	{
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
 	}
-
-
-	//추후에 아이템 만들어지고 플레이어가 아이템과 닿았을떄 획득하는 상호작용을 마친후에 인벤토리에 들어오는건 아래코드 그대로 쓰시면 작동합니다!!
-	//#include "Inven.h" 포함하시고
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
-
 	
 	Test_Debug(fTimeDelta);
-	
 }
 
 
