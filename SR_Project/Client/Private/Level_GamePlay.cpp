@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "CameraDynamic.h"
 #include "PickingMgr.h"
+#include "House.h"
 
 CLevel_GamePlay::CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -29,35 +30,35 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_MainInventory"))))
+	if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_MainInventory_back(TEXT("Layer_MainInventory_back"))))
+	if (FAILED(Ready_Layer_MainInventory_back(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_MainInventory_front(TEXT("Layer_MainInventory_front"))))
+	if (FAILED(Ready_Layer_MainInventory_front(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Pont(TEXT("Layer_Pont"))))
+	if (FAILED(Ready_Layer_Pont(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Equipment_back(TEXT("Layer_Equipment_back"))))
+	if (FAILED(Ready_Layer_Equipment_back(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Equipment_front(TEXT("Layer_Equipment_front"))))
+	if (FAILED(Ready_Layer_Equipment_front(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_PlayerStatUI(TEXT("Layer_PlayerStatUI"))))
+	if (FAILED(Ready_Layer_PlayerStatUI(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_StatUIPont(TEXT("Layer_StatUIPont"))))
+	if (FAILED(Ready_Layer_StatUIPont(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_WeaponToolbox"))))
+	if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_UI"))))
 		return E_FAIL;
 
 
-	if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_MainToolbox"))))
+	if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_UI"))))
 		return E_FAIL;
 
 	
@@ -88,14 +89,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_GAMEPLAY, TEXT("Layer_Sky"), nullptr)))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag,
 		TEXT("Prototype_Component_VIBuffer_Terrain_Load0"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Water"), LEVEL_GAMEPLAY, pLayerTag, _float3(-10.f, -1.5f, -10.f))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -124,7 +125,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Tree.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Tree_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -143,7 +144,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Grass.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Grass_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -163,7 +164,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Rock.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Rock_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -182,7 +183,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Berry.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Berry_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -201,8 +202,27 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	Safe_Release(pGameInstance);
+	
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/House_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
 
+	dwByte = 0;
+	CHouse::HOUSEDECS HouseDesc;
+	iNum = 0;
+
+	/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(HouseDesc), sizeof(CHouse::HOUSEDECS), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_GAMEPLAY, TEXT("Layer_House"), &HouseDesc);
+	}
+
+	CloseHandle(hFile);
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 

@@ -39,6 +39,8 @@ HRESULT CTree::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
 	m_fRadius *= fSize;
 
+	WalkingTerrain();
+
 	return S_OK;
 }
 
@@ -90,7 +92,7 @@ int CTree::Tick(_float fTimeDelta)
 		m_ePreState = m_eState;
 	}
 
-	WalkingTerrain();
+	
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	return OBJ_NOEVENT;
@@ -306,78 +308,6 @@ HRESULT CTree::Texture_Clone()
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Tall_STUMP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Tall_STUMP"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
-
-	// Normal
-	//TextureDesc.m_iEndTex = 79;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Normal_IDLE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Normal_IDLE"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//TextureDesc.m_iEndTex = 14;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Normal_CHOP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Normal_CHOP"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//TextureDesc.m_iEndTex = 31;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Normal_SHAKE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Normal_SHAKE"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//TextureDesc.m_iEndTex = 19;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Normal_GROW"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Normal_GROW"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//TextureDesc.m_iEndTex = 37;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Normal_FALL_RIGHT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Normal_FALL_RIGHT"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//TextureDesc.m_iEndTex = 37;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Normal_FALL_LEFT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Normal_FALL_LEFT"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//TextureDesc.m_iEndTex = 0;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Normal_STUMP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Normal_STUMP"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//// Short
-	//TextureDesc.m_iEndTex = 79;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Short_IDLE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Short_IDLE"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//TextureDesc.m_iEndTex = 14;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Short_CHOP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Short_CHOP"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//TextureDesc.m_iEndTex = 30;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Short_SHAKE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Short_SHAKE"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//TextureDesc.m_iEndTex = 19;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Short_GROW"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Short_GROW"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//TextureDesc.m_iEndTex = 37;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Short_FALL_RIGHT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Short_FALL_RIGHT"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//TextureDesc.m_iEndTex = 37;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Short_FALL_LEFT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Short_FALL_LEFT"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
-
-	//TextureDesc.m_iEndTex = 0;
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture_Short_STUMP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Short_STUMP"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-	//	return E_FAIL;
-	//m_vecTexture.push_back(m_pTextureCom);
 
 	return S_OK;
 }

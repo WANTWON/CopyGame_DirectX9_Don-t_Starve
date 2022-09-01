@@ -130,6 +130,12 @@
     <Filter Include="02.GameObject\98.UI\02.Toolbox\01.GatherToolbox">
       <UniqueIdentifier>{efea9d00-707f-4d78-a85a-7011c7cf155c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object">
+      <UniqueIdentifier>{8286f07d-2fe6-41ac-80d3-1dd211518068}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\House">
+      <UniqueIdentifier>{d3ba3ff2-576c-4703-9076-8f697e1f9a60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -297,6 +303,9 @@
     <ClInclude Include="..\Public\ToolboxGather_front.h">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\House.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -451,6 +460,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxGather_front.cpp">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\House.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

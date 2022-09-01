@@ -171,6 +171,8 @@ void CCameraDynamic::FPS_Camera(_float fTimeDelta)
 	m_pTransform->Follow_Target(fTimeDelta, vectargetPos, _float3(0, 0, 0));
 	//m_pTransform->LookAt(PlayerLook);
 	m_pTransform->Set_State(CTransform::STATE_LOOK, _float3(PlayerLook.x, 0.f, PlayerLook.z));
+	m_pTransform->Set_State(CTransform::STATE_LOOK, PlayerLook);
+
 	Safe_Release(pTarget);
 	Safe_Release(pGameInstance);
 }

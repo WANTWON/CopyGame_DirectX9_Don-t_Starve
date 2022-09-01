@@ -45,7 +45,7 @@
 #include "ToolboxGather_back.h"
 #include "ToolboxGather_front.h"
 
-
+#include "House.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -302,7 +302,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	Safe_AddRef(pGameInstance);
 
 	/* �ؽ��� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("텍스처 로딩 중"));
+	lstrcpy(m_szLoadingText, TEXT("�ε��� �Ϸ�Ǿ����ϴ�."));
 
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"),
@@ -548,6 +548,15 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Spider
 
+	/*For. Prototype_Component_Texture_House*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_House"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/PigHouse.png"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spider_House"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/SpiderHouse.png"), 1))))
+		return E_FAIL;
+
 	/* �� �ε� ��. */
 	lstrcpy(m_szLoadingText, TEXT("컴포넌트 생성"));
 
@@ -579,11 +588,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 
 	/* ���̴� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("모델 로딩 중"));
+	lstrcpy(m_szLoadingText, TEXT("�ε��� �Ϸ�Ǿ����ϴ�."));
 
 
 	/* ��ü ���� ��. */
-	lstrcpy(m_szLoadingText, TEXT("객체 생성 중"));
+	lstrcpy(m_szLoadingText, TEXT("�ε��� �Ϸ�Ǿ����ϴ�."));
 
 	/*For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
@@ -752,7 +761,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CParticle::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-
+	/*For.Prototype_GameObject_House */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_House"),
+		CHouse::Create(m_pGraphic_Device))))
+		return E_FAIL;
 	lstrcpy(m_szLoadingText, TEXT("�ε��� �Ϸ�Ǿ����ϴ�."));
 
 	Safe_Release(pGameInstance);
@@ -772,7 +784,7 @@ HRESULT CLoader::Loading_Terrain_ForGamePlayLevel()
 
 	int			iNum;
 	_ulong		dwByte = 0;
-	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Vertex2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Terrain_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
