@@ -302,7 +302,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	Safe_AddRef(pGameInstance);
 
 	/* �ؽ��� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("�ؽ��� �ε� ��."));
+	lstrcpy(m_szLoadingText, TEXT("텍스처 로딩 중"));
 
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"),
@@ -549,7 +549,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 #pragma endregion Add_Texture_Spider
 
 	/* �� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("�� �ε� ��."));
+	lstrcpy(m_szLoadingText, TEXT("컴포넌트 생성"));
 
 	CVIBuffer_Terrain::TERRAINDESC		TerrainDesc;
 	ZeroMemory(&TerrainDesc, sizeof(CVIBuffer_Terrain::TERRAINDESC));
@@ -579,11 +579,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 
 	/* ���̴� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("���̴� �ε� ��."));
+	lstrcpy(m_szLoadingText, TEXT("모델 로딩 중"));
 
 
 	/* ��ü ���� ��. */
-	lstrcpy(m_szLoadingText, TEXT("��ü ���� ��."));
+	lstrcpy(m_szLoadingText, TEXT("객체 생성 중"));
 
 	/*For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
