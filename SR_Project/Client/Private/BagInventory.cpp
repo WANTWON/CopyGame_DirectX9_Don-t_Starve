@@ -234,19 +234,19 @@ HRESULT CBagInventory::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 
 	TextureDesc.m_iStartTex = 1;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BagInventory"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BagInventory"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 
 	// Tall
 	TextureDesc.m_iEndTex = 14;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Bag_open"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bagopen"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Bag_open"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Bagopen"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 10;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Bag_close"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bagclose"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Bag_close"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Bagclose"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
