@@ -159,6 +159,8 @@ HRESULT CTerrain::SetUp_RenderState()
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, true);
+
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
