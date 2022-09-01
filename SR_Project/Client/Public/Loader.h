@@ -36,7 +36,7 @@ public:
 	HRESULT Loading_ForLogoLevel();
 	HRESULT Loading_ForGamePlayLevel();
 	HRESULT Loading_Terrain_ForGamePlayLevel();
-
+	HRESULT Loading_ForHuntLevel();
 
 
 

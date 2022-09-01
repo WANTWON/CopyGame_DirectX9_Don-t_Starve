@@ -133,8 +133,11 @@
     <Filter Include="02.GameObject\04.Interactive_Object\Pig King">
       <UniqueIdentifier>{7a569719-d033-4a90-bd6a-eecfe70825a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00.Player\Attack_Range">
-      <UniqueIdentifier>{e8c146f3-d322-439e-96cf-64101fe7d66f}</UniqueIdentifier>
+    <Filter Include="02.GameObject\05.UnInteractive_Object">
+      <UniqueIdentifier>{c16eb5c4-d616-4ea7-9fef-4a5f5a21b25c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\96.Portal">
+      <UniqueIdentifier>{25f28f92-6d93-4113-890e-d8d88a2fac6d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -306,7 +309,15 @@
     <ClInclude Include="PigKing.h">
       <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AttackRange.h" />
+    <ClInclude Include="..\Public\Level_Hunt.h">
+      <Filter>01.Levels\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\House.h">
+      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Portal.h">
+      <Filter>02.GameObject\96.Portal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -465,7 +476,15 @@
     <ClCompile Include="PigKing.cpp">
       <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AttackRange.cpp" />
+    <ClCompile Include="..\Private\Level_Hunt.cpp">
+      <Filter>01.Levels\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\House.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Portal.cpp">
+      <Filter>02.GameObject\96.Portal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

@@ -168,9 +168,11 @@
     <ClInclude Include="..\Public\Equipment_front.h" />
     <ClInclude Include="..\Public\Equip_Animation.h" />
     <ClInclude Include="..\public\Grass.h" />
+    <ClInclude Include="..\Public\House.h" />
     <ClInclude Include="..\Public\Interactive_Object.h" />
     <ClInclude Include="..\Public\Inventory.h" />
     <ClInclude Include="..\Public\Item.h" />
+    <ClInclude Include="..\Public\Level_Hunt.h" />
     <ClInclude Include="..\Public\MainInventory_back.h" />
     <ClInclude Include="..\Public\MainInventory_front.h" />
     <ClInclude Include="..\Public\Mouse.h" />
@@ -195,6 +197,7 @@
     <ClInclude Include="..\Public\PlayerMentality.h" />
     <ClInclude Include="..\Public\PlayerMentality_pont.h" />
     <ClInclude Include="..\Public\Pont.h" />
+    <ClInclude Include="..\Public\Portal.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Spider.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -226,9 +229,11 @@
     <ClCompile Include="..\Private\Equipment_front.cpp" />
     <ClCompile Include="..\Private\Equip_Animation.cpp" />
     <ClCompile Include="..\private\Grass.cpp" />
+    <ClCompile Include="..\Private\House.cpp" />
     <ClCompile Include="..\Private\Interactive_Object.cpp" />
     <ClCompile Include="..\Private\Inventory.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
+    <ClCompile Include="..\Private\Level_Hunt.cpp" />
     <ClCompile Include="..\Private\MainInventory_back.cpp" />
     <ClCompile Include="..\Private\MainInventory_front.cpp" />
     <ClCompile Include="..\Private\Mouse.cpp" />
@@ -252,6 +257,7 @@
     <ClCompile Include="..\Private\PlayerMentality.cpp" />
     <ClCompile Include="..\Private\PlayerMentality_pont.cpp" />
     <ClCompile Include="..\Private\Pont.cpp" />
+    <ClCompile Include="..\Private\Portal.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Spider.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />

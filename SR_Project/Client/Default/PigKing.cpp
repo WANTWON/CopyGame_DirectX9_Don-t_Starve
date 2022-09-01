@@ -32,7 +32,7 @@ HRESULT CPigKing::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::NPC;
-	m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+	m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
 
 	return S_OK;
 }
@@ -238,11 +238,13 @@ void CPigKing::SetUp_BillBoard()
 {
 	_float4x4 ViewMatrix;
 
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix
+	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
 
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	//m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 
