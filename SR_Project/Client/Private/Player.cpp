@@ -69,6 +69,26 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	//KeyInput
 	GetKeyDown(fTimeDelta);
+	//Mouse
+	//if (m_bIsFPS)
+	//{
+	//	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	//	Safe_AddRef(pGameInstance);
+
+	//	_long			MouseMove = 0;
+
+	//	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+	//	{
+	//		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * MouseMove * 0.1f);
+	//	}
+
+	//	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+	//	{
+	//		m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * 0.1f);
+	//	}
+	//	Safe_Release(pGameInstance);
+	//}
+
 	//Move
 	Move_to_PickingPoint(fTimeDelta);
 	WalkingTerrain();
@@ -193,17 +213,14 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 
 	m_ActStack.push(ACTION_STATE::DAMAGED);
 
-	m_bDamaged = true;
+	m_bMove = false;
 	m_bAutoMode = true;
 
 	return fDamage;
 }
 
-
-
 HRESULT CPlayer::SetUp_Components()
 {
-
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
@@ -360,7 +377,11 @@ HRESULT CPlayer::Test_Setup()
 
 void CPlayer::GetKeyDown(_float _fTimeDelta)
 {
-	
+	/*키입력 불가.*/
+	if (!m_bMove)
+		return;
+
+	//Test Power
 
 #pragma region Debug&CamKey
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_DEBUG]))
@@ -388,8 +409,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		if (Camera->Get_CamMode() == CCameraDynamic::CAM_PLAYER)
 		{
 			Camera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 1);
-		}
-		
+		}	
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
@@ -400,17 +420,30 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			Camera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 2);
 		}
 	}
-#pragma endregion Debug&CamKey
-
-	/*InvenKey를 제외한 나머지키는 불가.*/
-	if (m_bDamaged)
-		return;
+#pragma endregion Debug&CamKey	
 
 #pragma region Action
 	//Action
-	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN1]))
+	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN1]))
 	{
-		Test_Func(1);
+		/*Test Bomb*/
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.eDirState = DIR_STATE::DIR_DOWN;
+		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
+		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
+		BulletData.vPosition = Get_Pos();
+
+		_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
+		//D3DXVec3Normalize(&temp, &temp);
+		//BulletData.fAdd_X = m_fMaxTime;
+		BulletData.vTargetPos = temp;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+			return;
+
+
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN2]))
 	{
@@ -824,6 +857,11 @@ void CPlayer::Eatting(_float _fTimeDelta)
 		}
 		m_ePreState = m_eState;
 	}
+
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iCurrentTex - 1)
+	{
+		m_bMove = true;
+	}
 }
 
 void CPlayer::Pickup(_float _fTimeDelta)
@@ -859,7 +897,7 @@ void CPlayer::Damaged(_float _fTimeDelta)
 
 	if (m_ePreState != m_eState)
 	{
-		m_bDamaged = true;
+		m_bMove = false;
 		switch (m_eDirState)
 		{
 		case DIR_STATE::DIR_DOWN:
@@ -879,7 +917,7 @@ void CPlayer::Damaged(_float _fTimeDelta)
 
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iCurrentTex - 1)
 	{
-		 m_bDamaged = false;
+		 m_bMove = true;
 	}
 }
 
@@ -925,7 +963,6 @@ void CPlayer::Create_Bullet()
 		BulletData.eWeaponType = m_eWeaponType;
 		BulletData.vPosition = Get_Pos();
 		//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-		
 		switch (m_eWeaponType)
 		{
 		case WEAPON_TYPE::WEAPON_HAND:
@@ -1037,12 +1074,6 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 {
 	if (m_bAutoMode)
 	{
-		/*if (m_pTarget == nullptr)
-		{
-			Clear_ActStack();
-			return;
-		}*/
-
 		CInteractive_Object* pObj = (CInteractive_Object*)m_pTarget;
 		INTERACTOBJ_ID eObjID = INTERACTOBJ_ID::ID_END; 
 		if (m_pTarget != nullptr)
@@ -1095,15 +1126,15 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				Cutting_Grass(fTimeDelta);
 			}
 			break;
-		//case ACTION_STATE::EAT:
-		//	if (Check_Action_End())
-		//	{
-		//		m_ActStack.pop();
-		//	}
-		//	else {//false일 시 계속 수행 
-		//		Eatting(fTimeDelta);
-		//	}
-		//	break;
+		case ACTION_STATE::EAT:
+			if (m_bMove)
+			{
+				m_ActStack.pop();
+			}
+			else {//false일 시 계속 수행 
+				Eatting(fTimeDelta);
+			}
+			break;
 		case ACTION_STATE::PICKUP:
 			if (Check_Interact_End())
 			{
@@ -1117,7 +1148,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 		case ACTION_STATE::ATTACK:
 			break;
 		case ACTION_STATE::DAMAGED:
-			if (!m_bDamaged)
+			if (m_bMove)
 			{
 				m_ActStack.pop();
 				//m_pTarget = nullptr;
