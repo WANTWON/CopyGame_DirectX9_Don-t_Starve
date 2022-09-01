@@ -1,19 +1,19 @@
 #include "stdafx.h"
-#include "..\Public\ToolboxWeapon_back.h"
+#include "..\Public\ToolboxGather_back.h"
 #include "GameInstance.h"
 #include "Inventory.h"
 
-CToolboxWeapon_back::CToolboxWeapon_back(LPDIRECT3DDEVICE9 pGraphic_Device)
+CToolboxGather_back::CToolboxGather_back(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CToolboxWeapon_back::CToolboxWeapon_back(const CToolboxWeapon_back & rhs)
+CToolboxGather_back::CToolboxGather_back(const CToolboxGather_back & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CToolboxWeapon_back::Initialize_Prototype()
+HRESULT CToolboxGather_back::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -21,7 +21,7 @@ HRESULT CToolboxWeapon_back::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon_back::Initialize(void* pArg)
+HRESULT CToolboxGather_back::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -50,14 +50,14 @@ HRESULT CToolboxWeapon_back::Initialize(void* pArg)
 	return S_OK;
 }
 
-int CToolboxWeapon_back::Tick(_float fTimeDelta)
+int CToolboxGather_back::Tick(_float fTimeDelta)
 {
 	if (m_bonof == false)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
 
-	
+
 
 	RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
@@ -79,18 +79,18 @@ int CToolboxWeapon_back::Tick(_float fTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 		backtexnum = 0;
 
-		
+
 	}
 
-	if (iNum == 0&&PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON) && iNum == 0)
 	{
 		bool bok = false;
 		CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 		Safe_AddRef(pInventory_Manager);
-		
+
 		auto pinven = pInventory_Manager->Get_Inven_list();
 
-		for (auto iter = pinven->begin(); iter != pinven->end();++iter)
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 		{
 			if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 3)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
 			{
@@ -98,27 +98,34 @@ int CToolboxWeapon_back::Tick(_float fTimeDelta)
 				bok = true;
 				break;
 			}
-			
-			
+
+
 		}
 		if (bok == false)
 			return 0;
 
-		for (auto iter = pinven->begin(); iter != pinven->end();++iter)
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 		{
 			if ((*iter)->get_check() == false)
 			{
-				(*iter)->set_texnum(ITEMNAME_HAMBAT);
-				
+				(*iter)->set_texnum(ITEMNAME_AXE);
+
 				(*iter)->set_check(true);
 
 				break;
 			}
-			
+
 		}
 
 
-}
+
+
+
+
+
+
+
+	}
 
 	/*if (m_bItem)
 	{
@@ -129,11 +136,11 @@ int CToolboxWeapon_back::Tick(_float fTimeDelta)
 	return OBJ_NOEVENT;
 }
 
-void CToolboxWeapon_back::Late_Tick(_float fTimeDelta)
+void CToolboxGather_back::Late_Tick(_float fTimeDelta)
 {
 
 	if (m_bonof == false)
-		return ;
+		return;
 
 	__super::Late_Tick(fTimeDelta);
 	RECT		rcRect;
@@ -164,7 +171,7 @@ void CToolboxWeapon_back::Late_Tick(_float fTimeDelta)
 
 }
 
-HRESULT CToolboxWeapon_back::Render()
+HRESULT CToolboxGather_back::Render()
 {
 
 	if (m_bonof == false)
@@ -198,7 +205,7 @@ HRESULT CToolboxWeapon_back::Render()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon_back::SetUp_Components()
+HRESULT CToolboxGather_back::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -227,7 +234,7 @@ HRESULT CToolboxWeapon_back::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon_back::SetUp_RenderState()
+HRESULT CToolboxGather_back::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -237,43 +244,43 @@ HRESULT CToolboxWeapon_back::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon_back::Release_RenderState()
+HRESULT CToolboxGather_back::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
 	return S_OK;
 }
 
-CToolboxWeapon_back * CToolboxWeapon_back::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CToolboxGather_back * CToolboxGather_back::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CToolboxWeapon_back*	pInstance = new CToolboxWeapon_back(pGraphic_Device);
+	CToolboxGather_back*	pInstance = new CToolboxGather_back(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CToolboxWeapon_back"));
+		ERR_MSG(TEXT("Failed to Created : CToolboxGather_back"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CToolboxWeapon_back::Clone(void* pArg)
+CGameObject * CToolboxGather_back::Clone(void* pArg)
 {
-	CToolboxWeapon_back*	pInstance = new CToolboxWeapon_back(*this);
+	CToolboxGather_back*	pInstance = new CToolboxGather_back(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CToolboxWeapon_back"));
+		ERR_MSG(TEXT("Failed to Cloned : CToolboxGather_back"));
 		Safe_Release(pInstance);
 	}
 
-	CInventory_Manager::Get_Instance()->Get_Toolboxweapon_back_list()->push_back(pInstance);
+	CInventory_Manager::Get_Instance()->Get_Toolboxgather_back_list()->push_back(pInstance);
 
 	return pInstance;
 }
 
 
-void CToolboxWeapon_back::Free()
+void CToolboxGather_back::Free()
 {
 	__super::Free();
 

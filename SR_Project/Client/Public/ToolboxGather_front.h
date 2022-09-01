@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CToolboxMain_front final : public CGameObject
+class CToolboxGather_front final : public CGameObject
 {
 private:
-	CToolboxMain_front(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CToolboxMain_front(const CToolboxMain_front& rhs);
-	virtual ~CToolboxMain_front() = default;
+	CToolboxGather_front(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CToolboxGather_front(const CToolboxGather_front& rhs);
+	virtual ~CToolboxGather_front() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -33,7 +33,7 @@ private: /* For.Components */
 
 private:
 	_float4x4				m_ProjMatrix;
-	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
+	_float					m_fX, m_fY, m_fSizeX, m_fSizeY, m_firstx;
 	_float                  m_pfX, m_pfY;
 
 private:
@@ -42,7 +42,7 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	static CToolboxMain_front* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CToolboxGather_front* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 
@@ -60,6 +60,13 @@ public:
 	//void Use_item(ITEMNAME item);
 	int get_iNum() { return iNum; }
 
+public:
+	void Open_Weapontool(_float time) { m_fX += 20 * time; }
+	bool get_onof() { return m_bonof; }
+	void set_onof(bool tof) { m_bonof = tof; }
+
+	void gobackfirstX() { m_fX = m_firstx; }
+
 private:
 	int* iNumber = nullptr;
 	int iNum = 100;
@@ -72,7 +79,7 @@ private:
 
 	TOOLTYPE  m_tooltype = TOOL_END;
 
-
+	bool m_bonof = false;
 };
 
 END

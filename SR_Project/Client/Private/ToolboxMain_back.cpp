@@ -33,6 +33,15 @@ HRESULT CToolboxMain_back::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
+	/*if (iNum == 0)
+	{
+		m_bfirstclick_W == false;
+	}
+	else if (iNum == 1)
+	{
+		m_bfirstclick_G == false;
+	}*/
+
 	m_fSizeX = 40.0f;
 	m_fSizeY = 40.0f;
 	m_fX = 30.f;
@@ -67,7 +76,7 @@ int CToolboxMain_back::Tick(_float fTimeDelta)
 		m_fSizeY = 55.f;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		backtexnum = 1;
+		
 
 		/*if (GetKeyState(VK_LBUTTON) & 0x8000)
 		{
@@ -99,23 +108,64 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 		m_fSizeX = 40;
 		m_fSizeY = 40;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		backtexnum = 0;
+		
 
 
-		//ERR_MSG(L"Ãæµ¹");
+
 	}
 
-	/*if (m_bItem)
+	if (iNum == 0&&PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON) )
 	{
+		if (m_bfirstclick_G == true)
+		{
+			CInventory_Manager::Get_Instance()->gathertool_on();
+			m_bfirstclick_G = false;
+		}
+		else
+		{
+			CInventory_Manager::Get_Instance()->gathertool_off();
+			m_bfirstclick_G = true;
+		}
 
-	}*/
+	}
 
-	if (nullptr != m_pRendererCom && iNum < 10)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-	else if (nullptr != m_pRendererCom&& iNum >= 10 && m_bcheck_bag)
+	if (iNum == 1 && PtInRect(&rcRect, ptMouse)&& CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+    {
+		if (m_bfirstclick_W == true)
+		{
+			CInventory_Manager::Get_Instance()->weapontool_on();
+			m_bfirstclick_W = false;
+		}
+		else
+		{
+			CInventory_Manager::Get_Instance()->weapontool_off();
+			m_bfirstclick_W = true;
+		}
+			
+	}
+
+
+	
+
+	if (m_bfirstclick_G == true && m_bfirstclick_W == true)
+		backtexnum = 0;
+
+	else if(m_bfirstclick_G == false || m_bfirstclick_W == false)
+		backtexnum = 1;
+
+
+	/*if (m_bfirstclick_W == true && iNum == 1)
+		backtexnum = 0;
+
+	else
+		backtexnum = 1;*/
+
+
+	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 }
+	
 
 HRESULT CToolboxMain_back::Render()
 {

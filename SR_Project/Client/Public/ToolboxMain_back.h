@@ -54,6 +54,10 @@ private:
 	int iNum = 0;
 	bool m_bcheck_bag = false;
 	_uint backtexnum = 0;
+
+	bool m_bfirstclick_W = true;
+	bool m_bfirstclick_G = true;
+	bool m_bfirstclick = true;
 	//bool m_bcheck = true;
 };
 

@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CToolboxWeapon_back final : public CGameObject
+class CToolboxGather_back final : public CGameObject
 {
 private:
-	CToolboxWeapon_back(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CToolboxWeapon_back(const CToolboxWeapon_back& rhs);
-	virtual ~CToolboxWeapon_back() = default;
+	CToolboxGather_back(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CToolboxGather_back(const CToolboxGather_back& rhs);
+	virtual ~CToolboxGather_back() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -37,7 +37,7 @@ private: /* For.Components */
 
 private:
 	_float4x4				m_ProjMatrix;
-	_float					m_fX, m_fY, m_fSizeX, m_fSizeY, m_firstx ;
+	_float					m_fX, m_fY, m_fSizeX, m_fSizeY, m_firstx;
 
 private:
 	HRESULT SetUp_Components();
@@ -45,7 +45,7 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	static CToolboxWeapon_back* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CToolboxGather_back* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 public:
