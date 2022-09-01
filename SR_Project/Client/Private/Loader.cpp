@@ -422,6 +422,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet"),
 		CBullet::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Picker"),
+		CAttackRange::Create(m_pGraphic_Device))))
+		return E_FAIL;
 #pragma region Add_Prototype UI Object
 
 

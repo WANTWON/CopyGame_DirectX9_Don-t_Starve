@@ -46,6 +46,18 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_UI"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Equipment_back(TEXT("Layer_UI"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_PlayerStatUI(TEXT("Layer_UI"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_UI"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_UI"))))
 		return E_FAIL;
 
@@ -60,6 +72,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	if (m_bNextLevel)
+
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		if (pGameInstance->Key_Up(VK_RETURN))
@@ -68,6 +81,21 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 				return;
 		}
 	}
+
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (pGameInstance->Key_Up('P'))
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		if (pGameInstance->Key_Up(VK_RETURN))
+		{
+			if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_HUNT))))
+				return;
+		}
+	}
+	Safe_Release(pGameInstance);
+
 
 	CPickingMgr::Get_Instance()->Picking();
 
@@ -232,6 +260,26 @@ HRESULT CLevel_GamePlay::Ready_Layer_Portal(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 25.f))))
 		return E_FAIL;
+
+	dwByte = 0;
+	CHouse::HOUSEDECS HouseDesc;
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(HouseDesc), sizeof(CHouse::HOUSEDECS), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_GAMEPLAY, TEXT("Layer_House"), &HouseDesc);
+	}
+	CloseHandle(hFile);
+
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig_King"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 30.f))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 25.f))))
+		return E_FAIL;
+
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
