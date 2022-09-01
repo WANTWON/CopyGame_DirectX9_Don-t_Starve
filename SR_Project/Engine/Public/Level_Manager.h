@@ -9,7 +9,7 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CLevel_Manager final : public CBase
+class CLevel_Manager final : public CBase
 {
 	DECLARE_SINGLETON(CLevel_Manager)
 public:
@@ -21,8 +21,6 @@ public:
 	void Tick(_float fTimeDelta);
 	void Late_Tick(_float fTimeDelta);
 	void Render();
-
-	class CLevel* Get_CurrentLevel() { return m_pCurrentLevel; }
 
 private:
 	class CLevel*				m_pCurrentLevel = nullptr;

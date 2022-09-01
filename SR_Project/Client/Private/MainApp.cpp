@@ -5,7 +5,6 @@
 #include "Level_Loading.h"
 #include "Inventory.h"
 #include "PickingMgr.h"
-#include <time.h>
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
@@ -26,8 +25,6 @@ HRESULT CMainApp::Initialize()
 
 	GRAPHIC_DESC		Graphic_Desc;
 	ZeroMemory(&Graphic_Desc, sizeof(GRAPHIC_DESC));
-
-	srand(unsigned int(time(NULL)));
 
 	Graphic_Desc.hWnd = g_hWnd;
 	Graphic_Desc.iWinSizeX = g_iWinSizeX;

@@ -173,6 +173,20 @@ void CCameraDynamic::FPS_Camera(_float fTimeDelta)
 	//m_pTransform->LookAt(PlayerLook);
 	m_pTransform->Set_State(CTransform::STATE_LOOK, _float3(PlayerLook.x, 0.f, PlayerLook.z));
 
+	//_long			MouseMove = 0;
+
+	//if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+	//{
+
+	//	m_pTransform->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * MouseMove * 0.1f);
+	//}
+
+	/*if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+	{
+		m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * 0.1f);
+	}*/
+
+
 	Safe_Release(pTarget);
 	Safe_Release(pGameInstance);
 }

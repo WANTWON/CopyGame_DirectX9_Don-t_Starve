@@ -115,52 +115,52 @@ HRESULT CSpider::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 
 	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Idle"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Idle"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 17;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_MOVE_UP"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Move_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_MOVE_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Move_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 17;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_MOVE_DOWN"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Move_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_MOVE_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Move_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 16;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_MOVE_SIDE"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Move_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_MOVE_SIDE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Move_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 31;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_UP"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Attack_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Attack_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 33;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_DOWN"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Attack_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Attack_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 43;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_SIDE"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Attack_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_SIDE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Attack_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 31;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_TAUNT"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Taunt"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_TAUNT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Taunt"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 16;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 27;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DIE"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Die"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DIE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Die"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 

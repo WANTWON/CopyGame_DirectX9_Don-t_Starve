@@ -72,9 +72,9 @@ HRESULT CPig::SetUp_Components(void* pArg)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	/*if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Pig"))))
+	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Pig"))))
 		return E_FAIL;
-	m_TimerTag = TEXT("Timer_Pig");*/
+	m_TimerTag = TEXT("Timer_Pig");
 
 	Safe_Release(pGameInstance);
 

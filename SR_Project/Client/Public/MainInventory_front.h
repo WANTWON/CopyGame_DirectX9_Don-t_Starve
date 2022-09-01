@@ -46,7 +46,6 @@ public:
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 
-
 	bool get_check() { return m_bcheck; }
 	bool get_pontcheck() { return m_bpontcheck; }
 	bool get_check_bag() { return m_bcheck_bag; }

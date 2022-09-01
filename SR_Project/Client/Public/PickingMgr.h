@@ -21,7 +21,6 @@ public:
 public:
 	void	Add_PickingGroup(CGameObject* pGameObject);
 	void	Out_PickingGroup(CGameObject* pGameObject);
-	void	Mouse_Intersect_UI(_bool Data) {m_bMouseInUI = Data;}
 
 public:
 	_bool	Picking();
@@ -29,8 +28,7 @@ public:
 private:
 	CTerrain*			m_pTerrain = nullptr;
 	list<CGameObject*>	m_GameObjects;
-	_bool				m_bMouseInUI = false;
-
+	
 public:
 	virtual void Free() override;
 };

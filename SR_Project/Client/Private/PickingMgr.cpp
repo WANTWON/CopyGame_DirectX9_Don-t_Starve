@@ -59,48 +59,37 @@ void CPickingMgr::Out_PickingGroup(CGameObject * pGameObject)
 
 _bool CPickingMgr::Picking()
 {
-	if (m_bMouseInUI)
-		return false;
+	vector<CGameObject*> vecPicked;
+	vector<_float3>		vecPos;
+	_float3 vPos;
 
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (pGameInstance->Key_Up('P'))
+	for (auto& pGameObject : m_GameObjects)
 	{
-
-		Safe_Release(pGameInstance);
-		vector<CGameObject*> vecPicked;
-		vector<_float3>		vecPos;
-		_float3 vPos;
-
-		for (auto& pGameObject : m_GameObjects)
+		if (pGameObject->Picking(&vPos) == true)
 		{
-			if (pGameObject->Picking(&vPos) == true)
-			{
-				vecPicked.push_back(pGameObject);
-				vecPos.push_back(vPos);
-			}
+			vecPicked.push_back(pGameObject);
+			vecPos.push_back(vPos);
 		}
 
-		if (!vecPicked.empty()) //가장 z값이 작은 것을 구한다.
+	}
+
+	if (!vecPicked.empty()) //가장 z값이 작은 것을 구한다.
+	{
+		
+		_float3 vecNearPos(0, 0, 999);
+		int NearNum = 0;
+		for (_uint i =0; i < vecPos.size(); ++i)
 		{
-
-			_float3 vecNearPos(0, 0, 999);
-			int NearNum = 0;
-			for (_uint i = 0; i < vecPos.size(); ++i)
+			if (vecPos[i].z <= vecNearPos.z)
 			{
-				if (vecPos[i].z <= vecNearPos.z)
-				{
-					vecNearPos = vecPos[i];
-					NearNum = i;
-				}
-
+				vecNearPos = vecPos[i];
+				NearNum = i;
 			}
-
-			vecPicked[NearNum]->PickingTrue();
-			return true;
+				
 		}
 
+		vecPicked[NearNum]->PickingTrue();
+		return true;
 	}
 
 	return false;
