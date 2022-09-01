@@ -1,18 +1,30 @@
 #pragma once
 #include "Client_Defines.h"
-#include "GameObject.h"
-
-BEGIN(Engine)
-class CRenderer;
-class CVIBuffer_Rect;
-class CTransform;
-class CTexture;
-class CCollider;
-END
+#include "Monster.h"
+#include "Transform.h"
 
 BEGIN(Client)
-class CPig final : public CGameObject
+class CPig final : public CMonster
 {
+	enum class DIR
+	{
+		DIR_UP,
+		DIR_DOWN,
+		DIR_RIGHT,
+		DIR_LEFT,
+		MAX
+	};
+	enum class STATE
+	{
+		IDLE,
+		WALK,
+		RUN,
+		ATTACK,
+		HIT,
+		DIE,
+		MAX
+	};
+
 private:
 	CPig(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CPig(const CPig& rhs);
@@ -25,30 +37,27 @@ public:
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
 
-private: /* For.Components */
-	CTexture*				m_pTextureCom = nullptr;
-	CRenderer*				m_pRendererCom = nullptr;
-	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
-	CTransform*				m_pTransformCom = nullptr;
-	CCollider*				m_pColliderCom = nullptr;
+private:
+	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
+
+private: /*For TextureCom */
+	virtual HRESULT Texture_Clone() override;
+	virtual void Change_Frame() override;
+	virtual void Change_Motion() override;
 
 private:
-	HRESULT SetUp_Components(void* pArg = nullptr);
-	HRESULT SetUp_RenderState();
-	HRESULT Release_RenderState();
-
-private: /* For TransformCom*/
-	void SetUp_BillBoard();
-	void Follow_Player(_float fTimeDelta);
-	void WalkingTerrain();
+	DIR m_eDir = DIR::DIR_DOWN;
+	DIR	m_ePreDir = DIR::MAX;
+	STATE m_eState = STATE::IDLE;
+	STATE m_ePreState = STATE::MAX;
 
 private:
-	_float3			m_TargetPos = { 1, 0, 1 };
-	const _tchar*	m_TimerTag = TEXT("");
-
-private://for Debug
-	_tchar					m_szDebug[MAX_PATH] = TEXT("");
-	_float			m_TestTimer = 0.f;
+	virtual void AI_Behaviour(_float fTimeDelta) override;
+	virtual void Find_Target() override;
+	virtual void Follow_Target(_float fTimeDelta) override;
+	virtual void Interact(_uint iDamage = 0) override;
+	virtual HRESULT Drop_Items() override;
+	virtual _bool IsDead() override;
 
 public:
 	static CPig* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

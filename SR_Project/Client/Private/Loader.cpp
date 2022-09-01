@@ -31,8 +31,20 @@
 #include "BagInventory.h"
 #include "Mouse_item.h"
 #include "Water.h"
+
 #include "ParticleSystem.h"
 #include "Particle.h"
+
+#include "ToolboxMain.h"
+#include "ToolboxMain_back.h"
+#include "ToolboxMain_front.h"
+#include "ToolboxWeapon.h"
+#include "ToolboxWeapon_front.h"
+#include "ToolboxWeapon_back.h"
+#include "ToolboxGather.h"
+#include "ToolboxGather_back.h"
+#include "ToolboxGather_front.h"
+
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -83,8 +95,8 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	Safe_AddRef(pGameInstance);
 
-	/* ÅØ½ºÃÄ ·Îµù Áß. */
-	lstrcpy(m_szLoadingText, TEXT("ÅØ½ºÃÄ ·Îµù Áß."));
+	/* ï¿½Ø½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
+	lstrcpy(m_szLoadingText, TEXT("ï¿½Ø½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½."));
 
 	/* run*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_DebugLine"),
@@ -253,12 +265,12 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		return E_FAIL;
 
 #pragma  endregion Add_Texture_others
-	/* ¼ÎÀÌ´õ ·Îµù Áß. */
-	lstrcpy(m_szLoadingText, TEXT("¼ÎÀÌ´õ ·Îµù Áß."));
+	/* ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
+	lstrcpy(m_szLoadingText, TEXT("ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Îµï¿½ ï¿½ï¿½."));
 
 
-	/* °´Ã¼ ¿øÇü »ý¼º Áß. */
-	lstrcpy(m_szLoadingText, TEXT("°´Ã¼ »ý¼º Áß."));
+	/* ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½. */
+	lstrcpy(m_szLoadingText, TEXT("ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½."));
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"),
 		CPlayer::Create(m_pGraphic_Device))))
 		return E_FAIL;
@@ -272,7 +284,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		return E_FAIL;
 
 
-	lstrcpy(m_szLoadingText, TEXT("·ÎµùÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù."));
+	lstrcpy(m_szLoadingText, TEXT("ï¿½Îµï¿½ï¿½ï¿½ ï¿½Ï·ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½."));
 
 	m_isFinished = true;
 
@@ -289,8 +301,8 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	Safe_AddRef(pGameInstance);
 
-	/* ÅØ½ºÃÄ ·Îµù Áß. */
-	lstrcpy(m_szLoadingText, TEXT("ÅØ½ºÃÄ ·Îµù Áß."));
+	/* ï¿½Ø½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
+	lstrcpy(m_szLoadingText, TEXT("ï¿½Ø½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½."));
 
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"),
@@ -299,6 +311,26 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_Component_Texture_MainInventory */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory.png"), 1))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_WeaponToolbox_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_GatherToolbox_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/gather%d.png"), 2))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_WeaponToolbox_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WeaponToolbox_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/weapon%d.png"), 3))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_MainToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/Toolbox.png"), 1))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_MainToolbox_back */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox_back"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/Toolboxback%d.png"), 3))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_MainToolbox_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/Toolboxfront%d.png"), 4))))
 		return E_FAIL;
 	/*For.Prototype_Component_Texture_BagInventory */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BagInventory"),
@@ -438,14 +470,47 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 #pragma region Add_Texture_Pig
 	/*For. Prototype_Component_Texture_Pig*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_RUN_DOWN"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Run/Pig_RUN_DOWN_%03d.png"), 33))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Idle_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Idle_Up/Idle_Up_%03d.png"), 18))))
 		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_RUN_UP"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Run/Pig_RUN_UP_%03d.png"), 33))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Idle_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Idle_Down/Idle_Down_%03d.png"), 18))))
 		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_RUN_SIDE"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Run/Pig_RUN_SIDE_%03d.png"), 33))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Idle_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Idle_Side/Idle_Side_%03d.png"), 18))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Walk_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Walk_Up/Walk_Up_%03d.png"), 21))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Walk_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Walk_Down/Walk_Down_%03d.png"), 21))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Walk_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Walk_Side/Walk_Side_%03d.png"), 21))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Run_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Run_Up/Run_Up_%03d.png"), 17))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Run_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Run_Down/Run_Down_%03d.png"), 17))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Run_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Run_Side/Run_Side_%03d.png"), 17))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Attack_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Attack_Up/Attack_Up_%03d.png"), 31))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Attack_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Attack_Down/Attack_Down_%03d.png"), 33))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Attack_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Attack_Side/Attack_Side_%03d.png"), 37))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Hit"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Hit/Hit_%03d.png"), 15))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Death"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Death/Death_%03d.png"), 32))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Pig
 
@@ -483,8 +548,8 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Spider
 
-	/* ¸ðµ¨ ·Îµù Áß. */
-	lstrcpy(m_szLoadingText, TEXT("¸ðµ¨ ·Îµù Áß."));
+	/* ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
+	lstrcpy(m_szLoadingText, TEXT("ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½."));
 
 	CVIBuffer_Terrain::TERRAINDESC		TerrainDesc;
 	ZeroMemory(&TerrainDesc, sizeof(CVIBuffer_Terrain::TERRAINDESC));
@@ -513,12 +578,12 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 
 
-	/* ¼ÎÀÌ´õ ·Îµù Áß. */
-	lstrcpy(m_szLoadingText, TEXT("¼ÎÀÌ´õ ·Îµù Áß."));
+	/* ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
+	lstrcpy(m_szLoadingText, TEXT("ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Îµï¿½ ï¿½ï¿½."));
 
 
-	/* °´Ã¼ »ý¼º Áß. */
-	lstrcpy(m_szLoadingText, TEXT("°´Ã¼ »ý¼º Áß."));
+	/* ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½. */
+	lstrcpy(m_szLoadingText, TEXT("ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½."));
 
 	/*For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
@@ -549,10 +614,47 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CCameraDynamic::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	//¿©±â¼­ºÎÅÍ Test ÁÖ¼®
+	//ï¿½ï¿½ï¿½â¼­ï¿½ï¿½ï¿½ï¿½ Test ï¿½Ö¼ï¿½
 	/*For.Prototype_GameObject_MainInventory */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory"),
 		CMainInventory::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox"),
+		CToolboxWeapon::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox_back"),
+		CToolboxWeapon_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox_front"),
+		CToolboxWeapon_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox"),
+		CToolboxGather::Create(m_pGraphic_Device))))				   
+		return E_FAIL;												   
+	/*For.Prototype_GameObject_MainInToolbox */						   
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox_back"),
+		CToolboxGather_back::Create(m_pGraphic_Device))))			  
+		return E_FAIL;												  
+	/*For.Prototype_GameObject_MainInToolbox */						  
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox_front"),
+		CToolboxGather_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+		
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox"),
+		CToolboxMain::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainIToolbox_back */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox_back"),
+		CToolboxMain_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainIToolbox_back */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox_front"),
+		CToolboxMain_front::Create(m_pGraphic_Device))))
 		return E_FAIL;
 	/*For.Prototype_GameObject_BagInventory */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BagInventory"),
@@ -651,7 +753,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 
 
-	lstrcpy(m_szLoadingText, TEXT("·ÎµùÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù."));
+	lstrcpy(m_szLoadingText, TEXT("ï¿½Îµï¿½ï¿½ï¿½ ï¿½Ï·ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½."));
 
 	Safe_Release(pGameInstance);
 

@@ -85,6 +85,9 @@ public:
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
 
+	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
+
+
 public:/*Picking*/
 	_float3 Get_Pos();
 	_float3 Get_Look();

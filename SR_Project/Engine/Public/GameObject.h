@@ -29,7 +29,12 @@ public:
 	virtual _bool Picking(_float3* PickingPoint) { return true; }
 	virtual void PickingTrue() { return; }
 
-
+	//Damage Func
+	//Apply_Damage
+	virtual void	Apply_Damage(_float fDamage, CGameObject* DamagedObj, void* AttackType = nullptr);
+	virtual void	Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void* AttackType = nullptr);
+	
+	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser);
 protected:
 	LPDIRECT3DDEVICE9			m_pGraphic_Device = nullptr;
 

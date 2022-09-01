@@ -9,8 +9,8 @@ namespace Client
 
 	typedef struct ObjectInfo
 	{
-		unsigned int iMaxHp;
-		unsigned int iCurrentHp;
+		float iMaxHp;
+		float iCurrentHp;
 		//vector<Item*> vItemDrops;
 	}OBJINFO;
 
@@ -55,4 +55,5 @@ enum ITEMNAME { ITEMNAME_ARMOR, ITEMNAME_AXE, ITEMNAME_BAG, ITEMNAME_BERRY, ITEM
 	ITEMNAME_PICK, ITEMNAME_PIGTAIL, ITEMNAME_ROCK2, ITEMNAME_ROPE, ITEMNAME_WEB, ITEMNAME_TORCH,ITEMNAME_END
 };
 
+enum TOOLTYPE { TOOL_GATHERING, TOOL_WEAPON, TOOL_TEST1, TOOL_TEST2, TOOL_END };
 

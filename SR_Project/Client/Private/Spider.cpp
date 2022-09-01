@@ -6,13 +6,13 @@
 #include "Item.h"
 
 CSpider::CSpider(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CMonster(pGraphic_Device)
 {
 	ZeroMemory(&m_tInfo, sizeof(OBJINFO));
 }
 
 CSpider::CSpider(const CSpider & rhs)
-	: CGameObject(rhs)
+	: CMonster(rhs)
 {
 }
 
@@ -29,28 +29,20 @@ HRESULT CSpider::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(SetUp_Components(pArg)))
-		return E_FAIL;
-
 	m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
 
 	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	
-
 	return S_OK;
 }
 
 int CSpider::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
-
-	if (IsDead())
+	if (__super::Tick(fTimeDelta))
 		return OBJ_DEAD;
 
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
-
+	// A.I.
 	AI_Behaviour(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -62,17 +54,6 @@ void CSpider::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetUp_BillBoard();
-
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
-	// Testing: 
-	if (CKeyMgr::Get_Instance()->Key_Down('F'))
-		Interact(20);
-
-
-
 	Change_Motion();
 	Change_Frame();
 }
@@ -80,20 +61,6 @@ void CSpider::Late_Tick(_float fTimeDelta)
 HRESULT CSpider::Render()
 {
 	if (FAILED(__super::Render()))
-		return E_FAIL;
-
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-		return E_FAIL;
-
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
-
-	m_pVIBufferCom->Render();
-
-	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
 	return S_OK;
@@ -135,26 +102,6 @@ HRESULT CSpider::SetUp_Components(void* pArg)
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CSpider::SetUp_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-
-	return S_OK;
-}
-
-HRESULT CSpider::Release_RenderState()
-{
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	return S_OK;
 }
@@ -216,16 +163,6 @@ HRESULT CSpider::Texture_Clone()
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DIE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Die"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
-
-	return S_OK;
-}
-
-HRESULT CSpider::Change_Texture(const _tchar * LayerTag)
-{
-	if (FAILED(__super::Change_Component(LayerTag, (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
-
-	m_pTextureCom->Set_ZeroFrame();
 
 	return S_OK;
 }
@@ -342,18 +279,6 @@ void CSpider::Change_Motion()
 	}
 }
 
-void CSpider::SetUp_BillBoard()
-{
-	_float4x4 ViewMatrix;
-
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
-
-	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-}
-
 void CSpider::AI_Behaviour(_float fTimeDelta)
 {
 	if (m_bHit)
@@ -434,8 +359,7 @@ void CSpider::Follow_Target(_float fTimeDelta)
 		else
 			m_eDir = DIR::DIR_DOWN;
 
-	m_pTransformCom->LookAt(fTargetPos);
-	m_pTransformCom->Go_Straight(fTimeDelta * .1f);
+	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
 
 	m_bIsAttacking = false;
 }
@@ -476,10 +400,10 @@ HRESULT CSpider::Drop_Items()
 	_int bSignX = rand() % 2;
 	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * .5f;
 	_int bSignZ = rand() % 2;
-	_float fPosX = bSignX ? (Get_Pos().x + fOffsetX) : (Get_Pos().x - fOffsetX);
-	_float fPosZ = bSignZ ? (Get_Pos().z + fOffsetZ) : (Get_Pos().z - fOffsetZ);
+	_float fPosX = bSignX ? (Get_Position().x + fOffsetX) : (Get_Position().x - fOffsetX);
+	_float fPosZ = bSignZ ? (Get_Position().z + fOffsetZ) : (Get_Position().z - fOffsetZ);
 
-	ItemDesc.fPosition = _float3(fPosX, Get_Pos().y, fPosZ);
+	ItemDesc.fPosition = _float3(fPosX, Get_Position().y, fPosZ);
 	ItemDesc.pTextureComponent = TEXT("Com_Texture_Spider_Meat");
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_MONSTERMEAT;
@@ -539,15 +463,4 @@ CGameObject* CSpider::Clone_Load(const _tchar * VIBufferTag, void * pArg)
 void CSpider::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pColliderCom);
-	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pRendererCom);
-
-	for (auto& iter : m_vecTexture)
-		Safe_Release(iter);
-
-	m_vecTexture.clear();
 }

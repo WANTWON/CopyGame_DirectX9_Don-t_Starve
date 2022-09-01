@@ -66,6 +66,32 @@ bool CCollider::Collision_with_Group(COLLISON_GROUP eGroup, class CGameObject* p
 	return false;
 }
 
+_bool CCollider::Collision_Check_Group_Multi(COLLISON_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, CGameObject * pDamageCauser)
+{
+	for (auto& iter : m_GameObjects[eGroup])
+	{
+		if (nullptr != iter)
+		{
+			//distance <= rb0.radius + rb1.radius
+			_float3 vecDir = pDamageCauser->Get_Position() - iter->Get_Position();
+			_float fDistance = D3DXVec3Length(&vecDir);
+
+			if (fDistance <= pDamageCauser->Get_Radius() + iter->Get_Radius())
+			{
+				vecDamagedObj.push_back(iter);
+			}
+		}
+	}
+	
+	if (vecDamagedObj.size() > 0)
+	{
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 CCollider * CCollider::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
 	CCollider*	pInstance = new CCollider(pGraphic_Device);
