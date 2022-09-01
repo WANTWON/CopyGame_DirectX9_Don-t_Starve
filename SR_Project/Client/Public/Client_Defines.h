@@ -33,8 +33,6 @@ namespace Client
 		//vector<Item*> vItemDrops;
 	}OBJINFO;
 
-	enum LEVEL { LEVEL_STATIC, LEVEL_LOADING, LEVEL_LOGO, LEVEL_GAMEPLAY, LEVEL_END };
-
 	typedef struct tagBulletData {
 		_bool bIsPlayerBullet;
 		WEAPON_TYPE eWeaponType;

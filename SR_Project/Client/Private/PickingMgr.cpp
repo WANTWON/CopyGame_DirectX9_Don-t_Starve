@@ -80,7 +80,6 @@ _bool CPickingMgr::Picking()
 				vecPicked.push_back(pGameObject);
 				vecPos.push_back(vPos);
 			}
-
 		}
 
 		if (!vecPicked.empty()) //가장 z값이 작은 것을 구한다.

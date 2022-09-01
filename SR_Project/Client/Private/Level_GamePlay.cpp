@@ -61,9 +61,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	
 
-	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL_GAMEPLAY);
+	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_GAMEPLAY);
 
 	return S_OK;
 }
@@ -109,11 +108,24 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig"), LEVEL_GAMEPLAY, pLayerTag, _float3(15.f, 1.f, 9.f))))
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Pig_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider"), LEVEL_GAMEPLAY, pLayerTag, _float3(10.f, 1.f, 8.f))))
-		return E_FAIL;
+	_ulong		dwByte = 0;
+	_float3 ObjectPos(0, 0, 0);
+	_uint iNum = 0;
+
+	/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig"), LEVEL_GAMEPLAY, pLayerTag, ObjectPos);
+	}
+
+	CloseHandle(hFile);
 
 	Safe_Release(pGameInstance);
 
