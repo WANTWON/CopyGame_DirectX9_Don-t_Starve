@@ -900,7 +900,7 @@ void CPlayer::Create_Bullet()
 			}
 			break;
 		case WEAPON_TYPE::WEAPON_SWORD:
-			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20)
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 5)
 			{
 				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
 					return;

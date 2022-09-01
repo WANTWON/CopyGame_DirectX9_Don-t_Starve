@@ -314,25 +314,99 @@ void CPig::AI_Behaviour(_float fTimeDelta)
 		m_eState = STATE::HIT;
 
 	// Get Target and Aggro Radius
-	Find_Target();
+	//Find_Target();
 
 	// Check for Target, AggroRadius
-	if (m_pTarget && m_bAggro)
+	if (m_bAggro)
 	{
-		// If in AttackRadius > Attack
-		if (m_fDistanceToTarget < m_fAttackRadius)
+		Find_Target();
+		if (m_pTarget)
 		{
-			if (!m_bIsAttacking && GetTickCount() > m_dwAttackTime + 1500)
+			// If in AttackRadius > Attack
+			if (m_fDistanceToTarget < m_fAttackRadius)
 			{
-				m_eState = STATE::ATTACK;
-				m_bIsAttacking = true;
+				if (!m_bIsAttacking && GetTickCount() > m_dwAttackTime + 1500)
+				{
+					m_eState = STATE::ATTACK;
+					m_bIsAttacking = true;
+				}
+				else if (!m_bIsAttacking)
+					m_eState = STATE::IDLE;
 			}
-			else if (!m_bIsAttacking)
-				m_eState = STATE::IDLE;
+			// If NOT in AttackRadius > Follow Target
+			else
+				Follow_Target(fTimeDelta);
 		}
-		// If NOT in AttackRadius > Follow Target
+	}
+	else
+		Patrol(fTimeDelta);
+}
+
+void CPig::Patrol(_float fTimeDelta)
+{
+	// Switch between Idle and Walk (based on time)
+	if (m_eState == STATE::IDLE)
+	{
+		if (GetTickCount() > m_dwIdleTime + 3000)
+		{
+			m_eState = STATE::WALK;
+			m_dwWalkTime = GetTickCount();
+
+			// Find Random Patroling Position
+			_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
+			_int bSignX = rand() % 2;
+			_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
+			_int bSignZ = rand() % 2;
+			m_fPatrolPosX = bSignX ? (m_pTransformCom->Get_TransformDesc().InitPos.x + fOffsetX) : (m_pTransformCom->Get_TransformDesc().InitPos.x - fOffsetX);
+			m_fPatrolPosZ = bSignZ ? (m_pTransformCom->Get_TransformDesc().InitPos.z + fOffsetZ) : (m_pTransformCom->Get_TransformDesc().InitPos.z - fOffsetZ);
+		}
+	}
+	else if (m_eState == STATE::WALK)
+	{
+		if (GetTickCount() > m_dwWalkTime + 1500)
+		{
+			m_eState = STATE::IDLE;
+			m_dwIdleTime = GetTickCount();
+		}
+	}
+
+	// Movement
+	if (m_eState == STATE::WALK)
+	{
+		// Adjust PatrolPosition Y
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		if (!pGameInstance)
+			return;
+		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+		if (!pVIBuffer_Terrain)
+			return;
+		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+		if (!pTransform_Terrain)
+			return;
+
+		_float3 vPatrolPosition = { m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ };
+		_float3 vScale = m_pTransformCom->Get_Scale();
+
+		vPatrolPosition.y = pVIBuffer_Terrain->Compute_Height(vPatrolPosition, pTransform_Terrain->Get_WorldMatrix(), (1 * vScale.y / 2));
+
+		// Change Direction
+		_float fX = vPatrolPosition.x - Get_Position().x;
+		_float fZ = vPatrolPosition.z - Get_Position().z;
+
+			// Move Horizontally
+		if (abs(fX) > abs(fZ))
+			if (fX > 0)
+				m_eDir = DIR::DIR_RIGHT;
+			else
+				m_eDir = DIR::DIR_LEFT;
+			// Move Vertically
 		else
-			Follow_Target(fTimeDelta);
+			if (fZ > 0)
+				m_eDir = DIR::DIR_UP;
+			else
+				m_eDir = DIR::DIR_DOWN;
+
+		m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, _float3(m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ), _float3{ 0.f, 0.f, 0.f });
 	}
 }
 
@@ -351,10 +425,6 @@ void CPig::Find_Target()
 		{
 			_float3 vTargetPos = pTarget->Get_Position();
 			m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
-
-			if (m_fDistanceToTarget < m_fAggroRadius || m_bAggro)
-				m_bAggro = true;
-
 			m_pTarget = pTarget;
 		}
 		else
@@ -402,11 +472,14 @@ _float CPig::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageC
 		if (!m_bDead)
 			m_bHit = true;
 		
+		m_bAggro = true;
 		m_bIsAttacking = false;
 		m_dwAttackTime = GetTickCount();
+
+		return fDmg;
 	}
 
-	return fDmg;
+	return 0.f;
 }
 
 HRESULT CPig::Drop_Items()
