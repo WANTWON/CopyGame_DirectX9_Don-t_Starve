@@ -158,12 +158,20 @@ HRESULT CBullet::Release_RenderState()
 void CBullet::Excute(_float fTimeDelta)
 {	/*공격이나 칼은 맞는 객체가 몬스터만 있으면되지만 
 	화살, 불마법은 누가 맞았는지에 따른 처리도 필요,
-	또한 화살 불마법은 지속적인 위치 업데이트가 필요하다.
-	*/
-	
+	또한 화살 불마법은 지속적인 위치 업데이트가 필요하다.*/
 
-	switch (m_tBulletData.eWeaponType)
+	if (!m_tBulletData.bIsPlayerBullet)
 	{
+		m_fAccDeadTimer += fTimeDelta;
+		if (m_fAccDeadTimer > 1.f)
+		{
+			m_bDead = OBJ_DEAD;
+		}
+	}
+	else
+	{
+		switch (m_tBulletData.eWeaponType)
+		{
 		case WEAPON_TYPE::WEAPON_HAND:
 		case WEAPON_TYPE::WEAPON_SWORD:
 			m_fAccDeadTimer += fTimeDelta;
@@ -217,15 +225,15 @@ void CBullet::Excute(_float fTimeDelta)
 				break;
 			}
 			break;
+		}
 	}
-
 }
 
 void CBullet::AttackCheck()
 {
 	vector<CGameObject*> vecDamagedActor;
 
-	if (m_pColliderCom->Collision_Check_Group_Multi(CCollider::COLLISION_MONSTER, vecDamagedActor,this))
+	if (m_pColliderCom->Collision_Check_Group_Multi(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, vecDamagedActor, this))
 	{
 		switch (m_tBulletData.eWeaponType)
 		{

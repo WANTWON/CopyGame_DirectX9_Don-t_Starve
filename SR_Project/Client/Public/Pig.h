@@ -6,15 +6,7 @@
 BEGIN(Client)
 class CPig final : public CMonster
 {
-	enum class DIR
-	{
-		DIR_UP,
-		DIR_DOWN,
-		DIR_RIGHT,
-		DIR_LEFT,
-		MAX
-	};
-	enum class STATE
+	enum STATE
 	{
 		IDLE,
 		WALK,
@@ -46,8 +38,8 @@ private: /*For TextureCom */
 	virtual void Change_Motion() override;
 
 private:
-	DIR m_eDir = DIR::DIR_DOWN;
-	DIR	m_ePreDir = DIR::MAX;
+	DIR_STATE m_eDir = DIR_STATE::DIR_DOWN;
+	DIR_STATE m_ePreDir = DIR_STATE::DIR_END;
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
 

@@ -193,7 +193,7 @@ void CPig::Change_Frame()
 	switch (m_eState)
 	{
 	case STATE::IDLE:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
@@ -201,7 +201,7 @@ void CPig::Change_Frame()
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::WALK:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
@@ -209,7 +209,7 @@ void CPig::Change_Frame()
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::ATTACK:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
@@ -219,9 +219,22 @@ void CPig::Change_Frame()
 			m_bIsAttacking = false;
 			m_dwAttackTime = GetTickCount();
 		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+		{
+			BULLETDATA BulletData;
+			ZeroMemory(&BulletData, sizeof(BulletData));
+			BulletData.vPosition = Get_Position();
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+			BulletData.eDirState = m_eDir;
+
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+				return;
+		}
+		break;
 		break;
 	case STATE::HIT:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
@@ -244,14 +257,14 @@ void CPig::Change_Motion()
 		case STATE::IDLE:
 			switch (m_eDir)
 			{
-			case DIR::DIR_UP:
+			case DIR_STATE::DIR_UP:
 				Change_Texture(TEXT("Com_Texture_IDLE_UP"));
 				break;
-			case DIR::DIR_DOWN:
+			case DIR_STATE::DIR_DOWN:
 				Change_Texture(TEXT("Com_Texture_IDLE_DOWN"));
 				break;
-			case DIR::DIR_RIGHT:
-			case DIR::DIR_LEFT:
+			case DIR_STATE::DIR_RIGHT:
+			case DIR_STATE::DIR_LEFT:
 				Change_Texture(TEXT("Com_Texture_IDLE_SIDE"));
 				break;
 			}
@@ -262,14 +275,14 @@ void CPig::Change_Motion()
 		case STATE::WALK:
 			switch (m_eDir)
 			{
-			case DIR::DIR_UP:
+			case DIR_STATE::DIR_UP:
 				Change_Texture(TEXT("Com_Texture_WALK_UP"));
 				break;
-			case DIR::DIR_DOWN:
+			case DIR_STATE::DIR_DOWN:
 				Change_Texture(TEXT("Com_Texture_WALK_DOWN"));
 				break;
-			case DIR::DIR_RIGHT:
-			case DIR::DIR_LEFT:
+			case DIR_STATE::DIR_RIGHT:
+			case DIR_STATE::DIR_LEFT:
 				Change_Texture(TEXT("Com_Texture_WALK_SIDE"));
 				break;
 			}
@@ -280,14 +293,14 @@ void CPig::Change_Motion()
 		case STATE::ATTACK:
 			switch (m_eDir)
 			{
-			case DIR::DIR_UP:
+			case DIR_STATE::DIR_UP:
 				Change_Texture(TEXT("Com_Texture_ATTACK_UP"));
 				break;
-			case DIR::DIR_DOWN:
+			case DIR_STATE::DIR_DOWN:
 				Change_Texture(TEXT("Com_Texture_ATTACK_DOWN"));
 				break;
-			case DIR::DIR_RIGHT:
-			case DIR::DIR_LEFT:
+			case DIR_STATE::DIR_RIGHT:
+			case DIR_STATE::DIR_LEFT:
 				Change_Texture(TEXT("Com_Texture_ATTACK_SIDE"));
 				break;
 			}
@@ -396,15 +409,15 @@ void CPig::Patrol(_float fTimeDelta)
 			// Move Horizontally
 		if (abs(fX) > abs(fZ))
 			if (fX > 0)
-				m_eDir = DIR::DIR_RIGHT;
+				m_eDir = DIR_STATE::DIR_RIGHT;
 			else
-				m_eDir = DIR::DIR_LEFT;
+				m_eDir = DIR_STATE::DIR_LEFT;
 			// Move Vertically
 		else
 			if (fZ > 0)
-				m_eDir = DIR::DIR_UP;
+				m_eDir = DIR_STATE::DIR_UP;
 			else
-				m_eDir = DIR::DIR_DOWN;
+				m_eDir = DIR_STATE::DIR_DOWN;
 
 		m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, _float3(m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ), _float3{ 0.f, 0.f, 0.f });
 	}
@@ -448,15 +461,15 @@ void CPig::Follow_Target(_float fTimeDelta)
 	// Move Horizontally
 	if (abs(fX) > abs(fZ))
 		if (fX > 0)
-			m_eDir = DIR::DIR_RIGHT;
+			m_eDir = DIR_STATE::DIR_RIGHT;
 		else
-			m_eDir = DIR::DIR_LEFT;
+			m_eDir = DIR_STATE::DIR_LEFT;
 	// Move Vertically
 	else
 		if (fZ > 0)
-			m_eDir = DIR::DIR_UP;
+			m_eDir = DIR_STATE::DIR_UP;
 		else
-			m_eDir = DIR::DIR_DOWN;
+			m_eDir = DIR_STATE::DIR_DOWN;
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
 

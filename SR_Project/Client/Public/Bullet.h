@@ -15,13 +15,13 @@ BEGIN(Client)
 class CBullet : public CGameObject
 {
 public:
-	typedef struct tagBulletData {
-			WEAPON_TYPE eWeaponType;
-			_float3		vPosition;
-			DIR_STATE	eDirState;
-			_float3		vLook;
-	//	_bool		bIsFPSMode;
-	}BULLETDATA;
+	//typedef struct tagBulletData {
+	//		WEAPON_TYPE eWeaponType;
+	//		_float3		vPosition;
+	//		DIR_STATE	eDirState;
+	//		_float3		vLook;
+	////	_bool		bIsFPSMode;
+	//}BULLETDATA;
 public:
 	CBullet(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CBullet(const CBullet& rhs);

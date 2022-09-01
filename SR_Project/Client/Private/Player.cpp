@@ -76,7 +76,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	m_Equipment->Set_TargetPos(Get_Pos());
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-	
+	cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
 
 	return OBJ_NOEVENT;
 }
@@ -878,7 +878,6 @@ void CPlayer::Create_Bullet()
 		if (m_bIsFPS)
 		{
 			BulletData.eDirState = DIR_STATE::DIR_END;
-			//BulletData.bIsFPSMode = true;
 			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 		}
 		else
@@ -886,9 +885,9 @@ void CPlayer::Create_Bullet()
 			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 			BulletData.eDirState = m_eDirState;
 		}
+		BulletData.bIsPlayerBullet = true;
 		BulletData.eWeaponType = m_eWeaponType;
 		BulletData.vPosition = Get_Pos();
-		//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 		
 		switch (m_eWeaponType)
 		{

@@ -66,13 +66,13 @@ public:
 	_bool bIsKeyDown;
 	}ACTDATA;*/
 	
-	typedef struct tagBulletData {
-		WEAPON_TYPE eWeaponType;
-		_float3		vPosition;
-		DIR_STATE	eDirState;
-		_float3		vLook;
-		//_bool		bIsFPSMode = false;
-	}BULLETDATA;
+	//typedef struct tagBulletData {
+	//	WEAPON_TYPE eWeaponType;
+	//	_float3		vPosition;
+	//	DIR_STATE	eDirState;
+	//	_float3		vLook;
+	//	//_bool		bIsFPSMode = false;
+	//}BULLETDATA;
 private:
 	CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CPlayer(const CPlayer& rhs);
