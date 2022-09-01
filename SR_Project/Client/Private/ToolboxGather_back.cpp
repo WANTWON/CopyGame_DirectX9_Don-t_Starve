@@ -82,50 +82,25 @@ int CToolboxGather_back::Tick(_float fTimeDelta)
 
 	}
 
-	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON) && iNum == 0)
+	if (iNum == 0 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
 		bool bok = false;
 		CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 		Safe_AddRef(pInventory_Manager);
 
 		pInventory_Manager->craft_on(MAKE_AXE);
-		auto pinven = pInventory_Manager->Get_Inven_list();
 
-		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-		{
-			if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 3)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
-			{
-				(*iter)->minus_material(3);
-				bok = true;
-				break;
-			}
+		Safe_Release(pInventory_Manager);
+	}
+	else if (iNum == 1 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+	{
+		bool bok = false;
+		CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
+		Safe_AddRef(pInventory_Manager);
 
+		pInventory_Manager->craft_on(MAKE_PICK);
 
-		}
-		if (bok == false)
-			return 0;
-
-		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-		{
-			if ((*iter)->get_check() == false)
-			{
-				(*iter)->set_texnum(ITEMNAME_AXE);
-
-				(*iter)->set_check(true);
-
-				break;
-			}
-
-		}
-
-
-
-
-
-
-
-
-
+		Safe_Release(pInventory_Manager);
 	}
 
 	/*if (m_bItem)
@@ -133,7 +108,7 @@ int CToolboxGather_back::Tick(_float fTimeDelta)
 	m_fX = ptMouse.x;
 	m_fY = ptMouse.y;
 	}*/
-
+	
 	return OBJ_NOEVENT;
 }
 

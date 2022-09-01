@@ -313,7 +313,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
     /*For.Prototype_Component_Texture_Craftmain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Craftmain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craft%d.png"), 1))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craft%d.png"), 7))))
 		return E_FAIL;
 	/*For.Prototype_Component_Texture_Craftmain_back */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Craftmain_back"),

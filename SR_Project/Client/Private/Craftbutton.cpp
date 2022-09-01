@@ -42,14 +42,16 @@ HRESULT CCraftbutton::Initialize(void* pArg)
 	m_fSizeX = 130.f;
 	m_fSizeY = 55.f;
 	m_fX = 260;
-	m_fY = 300.f;
+	m_fY = 0;
+   
+	
 
 	m_firstx = m_fX;
 	m_firsty = m_fY;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-
+	
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
@@ -70,6 +72,12 @@ int CCraftbutton::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
+	if (m_makewhat == MAKE_AXE)
+		m_fY = 300.f;
+	else if (m_makewhat == MAKE_PICK)
+		m_fY = 350.f;
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 	/*if (m_fY <= 300.f)
 		Open_Craft(fTimeDelta);*/
@@ -93,7 +101,7 @@ int CCraftbutton::Tick(_float fTimeDelta)
 
 		if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
-			craft();
+			craft(m_makewhat);
 		}
 
 	}
@@ -266,68 +274,139 @@ CGameObject * CCraftbutton::Clone(void* pArg)
 	return pInstance;
 
 }
-void CCraftbutton::craft()
+void CCraftbutton::craft(MAKEWHAT item)
 {
 
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 	Safe_AddRef(pInventory_Manager);
-	_uint checkcount = 0;
-	bool stop1 = false;
-	bool stop2 = false;
-
 	auto pinven = pInventory_Manager->Get_Inven_list();
 
 	auto pcraftback = pInventory_Manager->Get_Craftmainback_list();
 
-	for (auto iter = pcraftback->begin(); iter != pcraftback->end(); ++iter)
-	{
-		if ((*iter)->get_texnum() == 0)
-			++checkcount;
-	}
+	Safe_Release(pInventory_Manager);
+	_uint checkcount = 0;
+	bool stop1 = false;
+	bool stop2 = false;
 
-	if (checkcount == 2)
+	switch (item)
 	{
+
+
+	case MAKE_AXE:
+
+
+
+
+
+		for (auto iter = pcraftback->begin(); iter != pcraftback->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == 0)
+				++checkcount;
+		}
+
+		if (checkcount == 2)
+		{
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					stop1 = true;
+
+				}
+
+				if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 1 && stop2 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					stop2 = true;
+
+				}
+
+				if (stop1 == true && stop2 == true)
+				{
+					break;
+				}
+			}
+		}
+		else
+			return;
+
+
+
 		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 		{
-			if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+			if ((*iter)->get_check() == false)
 			{
-				(*iter)->minus_material(1);
-				stop1 = true;
+				(*iter)->set_texnum(ITEMNAME_AXE);
 
-			}
+				(*iter)->set_check(true);
 
-			if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 1 && stop2 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
-			{
-				(*iter)->minus_material(1);
-				stop2 = true;
-				
-			}
-
-			if (stop1 == true && stop2 == true)
-			{
 				break;
 			}
+
 		}
-	}
-	else
-		return;
 
 
+	case MAKE_PICK:
+		checkcount = 0;
+			stop1 = false;
+		stop2 = false;
 
-	for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-	{
-		if ((*iter)->get_check() == false)
+
+		for (auto iter = pcraftback->begin(); iter != pcraftback->end(); ++iter)
 		{
-			(*iter)->set_texnum(ITEMNAME_AXE);
-
-			(*iter)->set_check(true);
-
-			break;
+			if ((*iter)->get_texnum() == 0)
+				++checkcount;
 		}
 
-	}
+		if (checkcount == 2)
+		{
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					stop1 = true;
 
-	Safe_Release(pInventory_Manager);
+				}
+
+				if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 1 && stop2 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					stop2 = true;
+
+				}
+
+				if (stop1 == true && stop2 == true)
+				{
+					break;
+				}
+			}
+		}
+		else
+			return;
+
+
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_check() == false)
+			{
+				(*iter)->set_texnum(ITEMNAME_PICK);
+
+				(*iter)->set_check(true);
+
+				break;
+			}
+
+		}
+
+
+		break;
+
+	}
+	
+		
 }
 
 

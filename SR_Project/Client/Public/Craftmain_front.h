@@ -51,12 +51,12 @@ public:
 	bool get_check_bag() { return m_bcheck_bag; }
 	void set_check(bool tof) { m_bcheck = tof; }
 	void set_check_bag(bool tof) { m_bcheck_bag = tof; }
-	void plus_itemcount() { ++item_number; }
+	/*void plus_itemcount() { ++item_number; }
 	void minus_itemcount() { --item_number; }
-	void set_itemcount(_uint count) { item_number = count; }
+	void set_itemcount(_uint count) { item_number = count; }*/
 	void set_texnum(ITEMNAME texnumber) { texnum = texnumber; }
 	ITEMNAME get_texnum() { return texnum; }
-	_uint get_item_number() { return item_number; }
+	/*_uint get_item_number() { return item_number; }*/
 	//void Use_item(ITEMNAME item);
 	int get_iNum() { return iNum; }
 
@@ -78,12 +78,12 @@ private:
 	int iNum = 100;
 	ITEMNAME texnum = ITEMNAME_END;
 	ITEMID m_itemtype = ITEM_END;
-	_uint item_number = 1;//æ∆¿Ã≈€∞πºˆ
+	
 	bool m_bcheck = true;
 	bool m_bpontcheck = true;
 	bool m_bcheck_bag = false;
 	MAKEWHAT m_makewhat = MAKE_END;
-
+	/*_uint itemnumber = 0;*/
 	TOOLTYPE  m_tooltype = TOOL_END;
 
 	bool m_bonof = false;

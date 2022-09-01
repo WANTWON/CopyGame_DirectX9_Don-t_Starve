@@ -44,7 +44,8 @@ HRESULT CCraftmain_front::Initialize(void* pArg)
 	m_fSizeX = 55.f;
 	m_fSizeY = 55.f;
 	m_fX = 230.f+(iNum * 65.f);
-	m_fY = 155.f ;
+	m_fY = 0.f;
+	
 
 	m_firsty = m_fY;
 	m_firstx = m_fX;
@@ -71,6 +72,15 @@ int CCraftmain_front::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
+
+
+	if (m_makewhat == MAKE_AXE)
+		m_fY = 155.f;
+	else if (m_makewhat == MAKE_PICK)
+		m_fY = 205.f;
+
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 	if (m_makewhat == MAKE_AXE && iNum == 0)
 	{

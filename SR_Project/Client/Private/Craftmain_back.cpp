@@ -35,7 +35,8 @@ HRESULT CCraftmain_back::Initialize(void* pArg)
 	m_fSizeX = 55.0f;
 	m_fSizeY = 55.0f;
 	m_fX = 230.f + (iNum * 65.f);
-	m_fY = 155.f;
+	m_fY = 0.f;
+	
 
 	m_firstx = m_fX;
 	m_firsty = m_fY;
@@ -57,7 +58,13 @@ int CCraftmain_back::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
+	if (m_makewhat == MAKE_AXE)
+		m_fY = 155.f;
+	else if (m_makewhat == MAKE_PICK)
+		m_fY = 205.f;
 
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 	RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
@@ -88,74 +95,41 @@ int CCraftmain_back::Tick(_float fTimeDelta)
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 	Safe_AddRef(pInventory_Manager);
 
+
 	auto pinven = pInventory_Manager->Get_Inven_list();
 
-	for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_PICK)
 	{
-		if (m_makewhat == MAKE_AXE && iNum == 0)
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 		{
-			if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+			if (iNum == 0)
 			{
-				backtexnum = 0;
-				break;
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
 			}
-			else
-				backtexnum = 1;
-		}
 
-		if (m_makewhat == MAKE_AXE && iNum == 1)
-		{
-			if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+			else if (iNum == 1)
 			{
-				backtexnum = 0;
-				break;
+				if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
 			}
-			else
-				backtexnum = 1;
-		}
 
-		
+
+		}
 	}
+	
 
-
-	/*if (iNum == 0 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
-		bool bok = false;*/
-		
-
-		//pInventory_Manager->craft_on();
-
-		
-
-	//	for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-	//	{
-	//		if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 3)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
-	//		{
-	//			(*iter)->minus_material(3);
-	//			bok = true;
-	//			break;
-	//		}
-
-
-	//	}
-	//	if (bok == false)
-	//		return 0;
-
-	//	for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-	//	{
-	//		if ((*iter)->get_check() == false)
-	//		{
-	//			(*iter)->set_texnum(ITEMNAME_HAMBAT);
-
-	//			(*iter)->set_check(true);
-
-	//			break;
-	//		}
-
-	//	}
-
-
-	//}
 
 	
 	Safe_Release(pInventory_Manager);

@@ -378,22 +378,26 @@ void CInventory_Manager::craft_off()
 	{
 		k->set_onof(false);
 		k->gobackfirstY();
+		k->gobackfirstX();
 	}
 	
 	for (auto& k : m_Craftmainback)
 	{
 		k->set_onof(false);
 		k->gobackfirstY();
+		k->gobackfirstX();
 	}
      for (auto& k : m_Craftmainfront)
 		{
 		 k->set_onof(false);
 		 k->gobackfirstY();
+		 k->gobackfirstX();
 	     }
 	for (auto& k : m_Craftbutton)
 	{
 		k->set_onof(false);
 		k->gobackfirstY();
+		k->gobackfirstX();
 	}
 }
 

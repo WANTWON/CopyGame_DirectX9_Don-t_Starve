@@ -31,8 +31,9 @@ HRESULT CCraftmain::Initialize(void* pArg)
 
 	m_fSizeX = 250.f;
 	m_fSizeY = 325.f;
-	m_fX = 238.f;
-	m_fY = 212.f;
+    m_fX = 238.f;
+	m_fY = 0.f;
+
 
 	m_firsty = m_fY;
 
@@ -56,7 +57,12 @@ int CCraftmain::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 
-
+	if (m_makewhat == MAKE_AXE)
+		m_fY = 212.f;
+	else if (m_makewhat == MAKE_PICK)
+		m_fY = 262.f;
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 	/*if (m_fY <= 212.f)
 		Open_Craft(fTimeDelta);*/
@@ -110,7 +116,7 @@ HRESULT CCraftmain::Render()
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_makewhat)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))

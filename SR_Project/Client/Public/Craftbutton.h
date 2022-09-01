@@ -72,7 +72,7 @@ public:
 	void gobackfirstY() { m_fX = m_firsty; }
 
 	void set_makewhat(MAKEWHAT item) { m_makewhat = item; }
-	void craft();
+	void craft(MAKEWHAT item);
 private:
 	int* iNumber = nullptr;
 	int iNum = 100;
