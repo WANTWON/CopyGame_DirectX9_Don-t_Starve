@@ -55,10 +55,6 @@ void CPig::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	// Testing: 
-	if (CKeyMgr::Get_Instance()->Key_Down('F'))
-		Interact(20);
-
 	Change_Motion();
 	Change_Frame();
 }
@@ -397,27 +393,20 @@ void CPig::Follow_Target(_float fTimeDelta)
 	m_bIsAttacking = false;
 }
 
-void CPig::Interact(_uint iDamage)
+_float CPig::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
-	if (m_tInfo.iCurrentHp > 0)
-	{
-		if (iDamage >= m_tInfo.iCurrentHp)
-		{
-			m_bDead = true;
-			m_tInfo.iCurrentHp = 0;
-		}
-		else
-		{
-			m_bHit = true;
-			m_tInfo.iCurrentHp -= iDamage;
-		}
+	_float fDmg = __super::Take_Damage(fDamage, DamageType, DamageCauser);
 
-		// If Hit/Dead stop and reset Attack
+	if (fDmg > 0)
+	{
+		if (!m_bDead)
+			m_bHit = true;
+		
 		m_bIsAttacking = false;
 		m_dwAttackTime = GetTickCount();
 	}
-	else
-		m_bDead = true;
+
+	return fDmg;
 }
 
 HRESULT CPig::Drop_Items()

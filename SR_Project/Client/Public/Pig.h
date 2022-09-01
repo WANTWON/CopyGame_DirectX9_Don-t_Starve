@@ -55,7 +55,7 @@ private:
 	virtual void AI_Behaviour(_float fTimeDelta) override;
 	virtual void Find_Target() override;
 	virtual void Follow_Target(_float fTimeDelta) override;
-	virtual void Interact(_uint iDamage = 0) override;
+	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 	virtual HRESULT Drop_Items() override;
 	virtual _bool IsDead() override;
 

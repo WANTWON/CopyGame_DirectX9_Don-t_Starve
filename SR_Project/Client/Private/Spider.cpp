@@ -364,27 +364,20 @@ void CSpider::Follow_Target(_float fTimeDelta)
 	m_bIsAttacking = false;
 }
 
-void CSpider::Interact(_uint iDamage)
+_float CSpider::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
-	if (m_tInfo.iCurrentHp > 0)
+	_float fDmg = __super::Take_Damage(fDamage, DamageType, DamageCauser);
+	
+	if (fDmg > 0)
 	{
-		if (iDamage >= m_tInfo.iCurrentHp)
-		{
-			m_bDead = true;
-			m_tInfo.iCurrentHp = 0;
-		}
-		else
-		{
+		if (!m_bDead)
 			m_bHit = true;
-			m_tInfo.iCurrentHp -= iDamage;
-		}
 
-		// If Hit/Dead stop and reset Attack
 		m_bIsAttacking = false;
 		m_dwAttackTime = GetTickCount();
 	}
-	else
-		m_bDead = true;	
+
+	return fDmg;
 }
 
 HRESULT CSpider::Drop_Items()
