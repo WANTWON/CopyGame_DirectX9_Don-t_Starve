@@ -229,6 +229,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig_King"), LEVEL_GAMEPLAY, pLayerTag, _float3(8.f, 1.f, 13.f))))
+		return E_FAIL;
 	Safe_Release(pGameInstance);
 
 	return S_OK;

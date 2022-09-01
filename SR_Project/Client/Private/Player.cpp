@@ -1183,6 +1183,7 @@ CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
 	case INTERACTOBJ_ID::BOULDER:
 		return ACTION_STATE::MINING;
 		break;
+	case INTERACTOBJ_ID::NPC:
 	case INTERACTOBJ_ID::ITEMS:
 		return ACTION_STATE::PICKUP;
 		break;

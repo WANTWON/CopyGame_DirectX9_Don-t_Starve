@@ -177,7 +177,7 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	}
 
 
-	if (texnum == ITEMNAME_BERRY || texnum == ITEMNAME_CARROT || texnum == ITEMNAME_MEAT || texnum == ITEMNAME_MONSTERMEAT)
+	if (texnum == ITEMNAME_BERRY || texnum == ITEMNAME_CARROT || texnum == ITEMNAME_MEAT || texnum == ITEMNAME_SPIDERMEAT)
 	{
 		m_itemtype = ITEM_FOOD;
 	}
