@@ -47,6 +47,7 @@
 #include "ToolboxGather_front.h"
 
 #include "House.h"
+#include "Portal.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -67,6 +68,9 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 		break;
 	case LEVEL_GAMEPLAY:
 		pLoader->Loading_ForGamePlayLevel();
+		break;
+	case LEVEL_HUNT:
+		pLoader->Loading_ForHuntLevel();
 		break;
 	}
 
@@ -97,7 +101,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	Safe_AddRef(pGameInstance);
 
 	/* �ؽ��� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("�ؽ��� �ε� ��."));
+	lstrcpy(m_szLoadingText, TEXT("Loading_Prototype"));
 
 	/* run*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_DebugLine"),
@@ -279,12 +283,96 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		return E_FAIL;
 
 #pragma  endregion Add_Texture_others
-	/* ���̴� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("���̴� �ε� ��."));
 
+#pragma region Add_Texture UI
+	/*For.Prototype_Component_Texture_Terrain*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/tile%03d.png"), 19))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_MainInventory */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainInventory"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory.png"), 1))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_WeaponToolbox_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_GatherToolbox_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/gather%d.png"), 2))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_WeaponToolbox_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_WeaponToolbox_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/weapon%d.png"), 3))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_MainToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainToolbox"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/Toolbox.png"), 1))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_MainToolbox_back */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainToolbox_back"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/Toolboxback%d.png"), 3))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_MainToolbox_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainToolbox_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/Toolboxfront%d.png"), 4))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_BagInventory */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_BagInventory"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/baginven3.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Bagopen"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/bagsprite/BackPackOpen_%03d.png"), 15))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Bagclose"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/bagsprite/BackPackClose_%03d.png"), 11))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_MainInventory_back */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainInventory_back"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory_back.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_MainInventory_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainInventory_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 23))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Equipment_back */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Equipment_back"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/jangbi%d.png"), 4))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Equipment_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Equipment_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 23))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Pont */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pont"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 10))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_HpPont */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_HpPont"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 10))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Playerhp */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Playerhp"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Health/Health_%03d.png"), 50))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_Playerhunger */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Playerhunger"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Hunger/Hunger_%03d.png"), 50))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_Playermentality */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_PlayerMentality"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Sanity/Sanity_%03d.png"), 50))))
+		return E_FAIL;
+
+#pragma endregion Add_Texture UI
+
+	/* ���̴� �ε� ��. */
+	lstrcpy(m_szLoadingText, TEXT("Loading_Model"));
 
 	/* ��ü ���� ���� ��. */
-	lstrcpy(m_szLoadingText, TEXT("��ü ���� ��."));
+	lstrcpy(m_szLoadingText, TEXT("Loading_Object"));
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"),
 		CPlayer::Create(m_pGraphic_Device))))
 		return E_FAIL;
@@ -297,8 +385,116 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CBullet::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+#pragma region Add_Prototype UI Object
 
-	lstrcpy(m_szLoadingText, TEXT("�ε��� �Ϸ�Ǿ����ϴ�."));
+
+	//���⼭���� Test �ּ�
+	/*For.Prototype_GameObject_MainInventory */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory"),
+		CMainInventory::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox"),
+		CToolboxWeapon::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox_back"),
+		CToolboxWeapon_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox_front"),
+		CToolboxWeapon_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox"),
+		CToolboxGather::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox_back"),
+		CToolboxGather_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox_front"),
+		CToolboxGather_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox"),
+		CToolboxMain::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainIToolbox_back */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox_back"),
+		CToolboxMain_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainIToolbox_back */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox_front"),
+		CToolboxMain_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_BagInventory */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BagInventory"),
+		CBagInventory::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInventory_back */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory_back"),
+		CMainInventory_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInventory_front */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory_front"),
+		CMainInventory_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Equipment_back */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Equipment_back"),
+		CEquipment_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInventory_front */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Equipment_front"),
+		CEquipment_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Pont */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pont"),
+		CPont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Playerhp */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Playerhp"),
+		CPlayerhp::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Playerhunger */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Playerhunger"),
+		CPlayerhunger::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_PlayerMentality */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerMentality"),
+		CPlayerMentality::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_HpPont */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HpPont"),
+		CPlayerhp_pont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_hungerPont */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_hungerPont"),
+		CPlayerhunger_pont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_MentalityPont */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MentalityPont"),
+		CPlayerMentality_pont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_MentalityPont */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse_item"),
+		CMouse_item::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+#pragma endregion Add_Prototype UI Object
+
+	lstrcpy(m_szLoadingText, TEXT("Finished_Loading"));
 
 	m_isFinished = true;
 
@@ -316,98 +512,19 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	Safe_AddRef(pGameInstance);
 
 	/* �ؽ��� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("�ε��� �Ϸ�Ǿ����ϴ�."));
-
-	/*For.Prototype_Component_Texture_Terrain*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/tile%03d.png"), 19))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_MainInventory */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory.png"), 1))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_WeaponToolbox_front */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_GatherToolbox_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/gather%d.png"), 2))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_WeaponToolbox_front */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WeaponToolbox_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/weapon%d.png"), 3))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_MainToolbox */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/Toolbox.png"), 1))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_MainToolbox_back */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox_back"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/Toolboxback%d.png"), 3))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_MainToolbox_front */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/Toolboxfront%d.png"), 4))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_BagInventory */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BagInventory"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/baginven3.png"), 1))))
-		return E_FAIL;
-    if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bagopen"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/bagsprite/BackPackOpen_%03d.png"), 15))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bagclose"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/bagsprite/BackPackClose_%03d.png"), 11))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_MainInventory_back */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory_back"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory_back.png"), 1))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_MainInventory_front */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 23))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_Equipment_back */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Equipment_back"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/jangbi%d.png"), 4))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_Equipment_front */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Equipment_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 23))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_Pont */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pont"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 10))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_HpPont */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_HpPont"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 10))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_Playerhp */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Playerhp"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Health/Health_%03d.png"), 50))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_Playerhunger */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Playerhunger"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Hunger/Hunger_%03d.png"), 50))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_Playermentality */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_PlayerMentality"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Sanity/Sanity_%03d.png"), 50))))
-		return E_FAIL;
+	lstrcpy(m_szLoadingText, TEXT("Loading_Texture"));
 
 	/*For.Prototype_Component_Texture_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_RockEffect */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Rock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Roc.png"), 1))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_LeafEffect */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Leaf"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 4))))
 		return E_FAIL;
@@ -528,53 +645,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Pig
 
-#pragma region Add_Texture_Spider
-	/*For. Prototype_Component_Texture_Spider*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Idle"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Idle/Idle_%03d.png"), 1))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Move_Up"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Move_Up/Move_Up_%03d.png"), 18))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Move_Down"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Move_Down/Move_Down_%03d.png"), 18))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Move_Side"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Move_Side/Move_Side_%03d.png"), 17))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Attack_Up"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Attack_Up/Attack_Up_%03d.png"), 32))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Attack_Down"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Attack_Down/Attack_Down_%03d.png"), 34))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Attack_Side"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Attack_Side/Attack_Side_%03d.png"), 44))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Taunt"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Taunt/Taunt_%03d.png"), 32))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Hit"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Hit/Hit_%03d.png"), 17))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Die"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Die/Die_%03d.png"), 28))))
-		return E_FAIL;
-#pragma endregion Add_Texture_Spider
-
-
-	/*For. Prototype_Component_Texture_House*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_House"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/PigHouse.png"), 1))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spider_House"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/SpiderHouse.png"), 1))))
-		return E_FAIL;
-
-	/* �� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("컴포넌트 생성"));
-
 #pragma region Add_Texture_Pig_King
 	/*For. Prototype_Component_Texture_Spider*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_King_Idle"),
@@ -588,9 +658,18 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Pig_King
 
-	/* �� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("�� �ε� ��."));
+	/*For. Prototype_Component_Texture_House*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_House"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/PigHouse.png"), 1))))
+		return E_FAIL;
 
+	/*For. Prototype_Component_Texture_Portal*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Portal/Portal_%03d.png"), 30))))
+		return E_FAIL;
+
+	/* �� �ε� ��. */
+	lstrcpy(m_szLoadingText, TEXT("Loading Model"));
 
 	CVIBuffer_Terrain::TERRAINDESC		TerrainDesc;
 	ZeroMemory(&TerrainDesc, sizeof(CVIBuffer_Terrain::TERRAINDESC));
@@ -618,13 +697,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CVIBuffer_Cube::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-
-	/* ���̴� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("�ε��� �Ϸ�Ǿ����ϴ�."));
-
-
-	/* ��ü ���� ��. */
-	lstrcpy(m_szLoadingText, TEXT("�ε��� �Ϸ�Ǿ����ϴ�."));
+	lstrcpy(m_szLoadingText, TEXT("Loading_Objetct"));
 
 	/*For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
@@ -645,11 +718,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CPig::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	/*For. Prototype_GameObject_Spider */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider"),
-		CSpider::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
 	/*For. Prototype_GameObject_Pig_King */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pig_King"),
 		CPigKing::Create(m_pGraphic_Device))))
@@ -658,110 +726,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_GameObject_Camera_Dynamic */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Dynamic"),
 		CCameraDynamic::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	//���⼭���� Test �ּ�
-	/*For.Prototype_GameObject_MainInventory */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory"),
-		CMainInventory::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainInToolbox */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox"),
-		CToolboxWeapon::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainInToolbox */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox_back"),
-		CToolboxWeapon_back::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainInToolbox */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox_front"),
-		CToolboxWeapon_front::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox"),
-		CToolboxGather::Create(m_pGraphic_Device))))				   
-		return E_FAIL;												   
-	/*For.Prototype_GameObject_MainInToolbox */						   
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox_back"),
-		CToolboxGather_back::Create(m_pGraphic_Device))))			  
-		return E_FAIL;												  
-	/*For.Prototype_GameObject_MainInToolbox */						  
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox_front"),
-		CToolboxGather_front::Create(m_pGraphic_Device))))
-		return E_FAIL;
-		
-	/*For.Prototype_GameObject_MainInToolbox */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox"),
-		CToolboxMain::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainIToolbox_back */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox_back"),
-		CToolboxMain_back::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainIToolbox_back */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox_front"),
-		CToolboxMain_front::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_BagInventory */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BagInventory"),
-		CBagInventory::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainInventory_back */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory_back"),
-		CMainInventory_back::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainInventory_front */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory_front"),
-		CMainInventory_front::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_Equipment_back */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Equipment_back"),
-		CEquipment_back::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainInventory_front */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Equipment_front"),
-		CEquipment_front::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_Pont */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pont"),
-		CPont::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_Playerhp */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Playerhp"),
-		CPlayerhp::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_Playerhunger */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Playerhunger"),
-		CPlayerhunger::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_PlayerMentality */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerMentality"),
-		CPlayerMentality::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_HpPont */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HpPont"),
-		CPlayerhp_pont::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_hungerPont */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_hungerPont"),
-		CPlayerhunger_pont::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_MentalityPont */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MentalityPont"),
-		CPlayerMentality_pont::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_MentalityPont */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse_item"),
-		CMouse_item::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Sky */
@@ -802,7 +766,13 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_House"),
 		CHouse::Create(m_pGraphic_Device))))
 		return E_FAIL;
-	lstrcpy(m_szLoadingText, TEXT("�ε��� �Ϸ�Ǿ����ϴ�."));
+
+	/*For.Prototype_GameObject_House */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Portal"),
+		CPortal::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Loading_Finish"));
 
 	Safe_Release(pGameInstance);
 
@@ -830,25 +800,68 @@ HRESULT CLoader::Loading_Terrain_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load0"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
 		return E_FAIL;
 
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load1"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
-	//	return E_FAIL;
-
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load2"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
-	//	return E_FAIL;
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load3"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
-	//	return E_FAIL;
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load4"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
-	//	return E_FAIL;
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load5"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
-	//	return E_FAIL;
-
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load6"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
-	//	return E_FAIL;
-
 	CloseHandle(hFile);
 
 	Safe_Release(pGameInstance);
 
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ForHuntLevel()
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	Safe_AddRef(pGameInstance);
+
+#pragma region Add_Texture_Spider
+
+	/*For. Prototype_Component_Texture_Spider*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Idle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Idle/Idle_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Move_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Move_Up/Move_Up_%03d.png"), 18))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Move_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Move_Down/Move_Down_%03d.png"), 18))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Move_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Move_Side/Move_Side_%03d.png"), 17))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Attack_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Attack_Up/Attack_Up_%03d.png"), 32))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Attack_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Attack_Down/Attack_Down_%03d.png"), 34))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Attack_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Attack_Side/Attack_Side_%03d.png"), 44))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Taunt"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Taunt/Taunt_%03d.png"), 32))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Hit"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Hit/Hit_%03d.png"), 17))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Die"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Die/Die_%03d.png"), 28))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Spider
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spider_House"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/SpiderHouse.png"), 1))))
+		return E_FAIL;
+
+	/*For. Prototype_GameObject_Spider */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider"),
+		CSpider::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+	SetWindowText(g_hWnd, TEXT("Loading_HunLevel."));
+	m_isFinished = true;
 	return S_OK;
 }
 

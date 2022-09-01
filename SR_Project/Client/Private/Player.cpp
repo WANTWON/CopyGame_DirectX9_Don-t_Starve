@@ -246,7 +246,7 @@ HRESULT CPlayer::SetUp_Components()
 
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
-	TransformDesc.InitPos = _float3(10.f, 2.f, 5.f);
+	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
