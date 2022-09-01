@@ -1,19 +1,19 @@
 #include "stdafx.h"
-#include "..\Public\ToolboxWeapon_back.h"
+#include "..\Public\Craftmain_back.h"
 #include "GameInstance.h"
 #include "Inventory.h"
 
-CToolboxWeapon_back::CToolboxWeapon_back(LPDIRECT3DDEVICE9 pGraphic_Device)
+CCraftmain_back::CCraftmain_back(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CToolboxWeapon_back::CToolboxWeapon_back(const CToolboxWeapon_back & rhs)
+CCraftmain_back::CCraftmain_back(const CCraftmain_back & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CToolboxWeapon_back::Initialize_Prototype()
+HRESULT CCraftmain_back::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -21,7 +21,7 @@ HRESULT CToolboxWeapon_back::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon_back::Initialize(void* pArg)
+HRESULT CCraftmain_back::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -32,13 +32,13 @@ HRESULT CToolboxWeapon_back::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 40.0f;
-	m_fSizeY = 40.0f;
-	m_fX = 30.f;
-	m_fY = 210.f + (iNum * 50.f);
+	m_fSizeX = 55.0f;
+	m_fSizeY = 55.0f;
+	m_fX = 230.f + (iNum * 65.f);
+	m_fY = 155.f;
 
 	m_firstx = m_fX;
-
+	m_firsty = m_fY;
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
@@ -50,14 +50,14 @@ HRESULT CToolboxWeapon_back::Initialize(void* pArg)
 	return S_OK;
 }
 
-int CToolboxWeapon_back::Tick(_float fTimeDelta)
+int CCraftmain_back::Tick(_float fTimeDelta)
 {
 	if (m_bonof == false)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
 
-	
+
 
 	RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
@@ -66,12 +66,15 @@ int CToolboxWeapon_back::Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	if (m_fX <= 100)
-		Open_Weapontool(fTimeDelta);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+	if (m_fY <= 155.f)
+		Open_Craft(fTimeDelta);
+
+	//if (m_fX <= 100)
+	//	Open_Weapontool(fTimeDelta);
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 
-	if (PtInRect(&rcRect, ptMouse))
+	/*if (PtInRect(&rcRect, ptMouse))
 	{
 		m_fSizeX = 55.f;
 		m_fSizeY = 55.f;
@@ -79,36 +82,91 @@ int CToolboxWeapon_back::Tick(_float fTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 		backtexnum = 0;
 
+
+	}*/
+
+	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
+	Safe_AddRef(pInventory_Manager);
+
+	auto pinven = pInventory_Manager->Get_Inven_list();
+
+	for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+	{
+		if (m_makewhat == MAKE_AXE && iNum == 0)
+		{
+			if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+			{
+				backtexnum = 0;
+				break;
+			}
+			else
+				backtexnum = 1;
+		}
+
+		if (m_makewhat == MAKE_AXE && iNum == 1)
+		{
+			if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+			{
+				backtexnum = 0;
+				break;
+			}
+			else
+				backtexnum = 1;
+		}
+
 		
 	}
 
-	if (iNum == 0&&PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
-		bool bok = false;
-		CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-		Safe_AddRef(pInventory_Manager);
 
-		pInventory_Manager->craft_on(MAKE_AXE);
+	/*if (iNum == 0 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+	{
+		bool bok = false;*/
 		
+
+		//pInventory_Manager->craft_on();
+
+		
+
+	//	for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+	//	{
+	//		if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 3)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+	//		{
+	//			(*iter)->minus_material(3);
+	//			bok = true;
+	//			break;
+	//		}
+
+
+	//	}
+	//	if (bok == false)
+	//		return 0;
+
+	//	for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+	//	{
+	//		if ((*iter)->get_check() == false)
+	//		{
+	//			(*iter)->set_texnum(ITEMNAME_HAMBAT);
+
+	//			(*iter)->set_check(true);
+
+	//			break;
+	//		}
+
+	//	}
+
+
+	//}
+
 	
-
-
-}
-
-	/*if (m_bItem)
-	{
-	m_fX = ptMouse.x;
-	m_fY = ptMouse.y;
-	}*/
-
+	Safe_Release(pInventory_Manager);
 	return OBJ_NOEVENT;
 }
 
-void CToolboxWeapon_back::Late_Tick(_float fTimeDelta)
+void CCraftmain_back::Late_Tick(_float fTimeDelta)
 {
 
 	if (m_bonof == false)
-		return ;
+		return;
 
 	__super::Late_Tick(fTimeDelta);
 	RECT		rcRect;
@@ -118,16 +176,16 @@ void CToolboxWeapon_back::Late_Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	if (!PtInRect(&rcRect, ptMouse))
-	{
-		m_fSizeX = 40;
-		m_fSizeY = 40;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		backtexnum = 2;
+	//if (!PtInRect(&rcRect, ptMouse))
+	//{
+	//	m_fSizeX = 40;
+	//	m_fSizeY = 40;
+	//	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	//	backtexnum = 1;
 
 
-		//ERR_MSG(L"충돌");
-	}
+	//	//ERR_MSG(L"충돌");
+	//}
 
 	/*if (m_bItem)
 	{
@@ -139,7 +197,7 @@ void CToolboxWeapon_back::Late_Tick(_float fTimeDelta)
 
 }
 
-HRESULT CToolboxWeapon_back::Render()
+HRESULT CCraftmain_back::Render()
 {
 
 	if (m_bonof == false)
@@ -173,14 +231,14 @@ HRESULT CToolboxWeapon_back::Render()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon_back::SetUp_Components()
+HRESULT CCraftmain_back::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox_back"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Craftmain_back"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -202,7 +260,7 @@ HRESULT CToolboxWeapon_back::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon_back::SetUp_RenderState()
+HRESULT CCraftmain_back::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -212,43 +270,43 @@ HRESULT CToolboxWeapon_back::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon_back::Release_RenderState()
+HRESULT CCraftmain_back::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
 	return S_OK;
 }
 
-CToolboxWeapon_back * CToolboxWeapon_back::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CCraftmain_back * CCraftmain_back::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CToolboxWeapon_back*	pInstance = new CToolboxWeapon_back(pGraphic_Device);
+	CCraftmain_back*	pInstance = new CCraftmain_back(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CToolboxWeapon_back"));
+		ERR_MSG(TEXT("Failed to Created : CCraftmain_back"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CToolboxWeapon_back::Clone(void* pArg)
+CGameObject * CCraftmain_back::Clone(void* pArg)
 {
-	CToolboxWeapon_back*	pInstance = new CToolboxWeapon_back(*this);
+	CCraftmain_back*	pInstance = new CCraftmain_back(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CToolboxWeapon_back"));
+		ERR_MSG(TEXT("Failed to Cloned : CCraftmain_back"));
 		Safe_Release(pInstance);
 	}
 
-	CInventory_Manager::Get_Instance()->Get_Toolboxweapon_back_list()->push_back(pInstance);
+	CInventory_Manager::Get_Instance()->Get_Craftmainback_list()->push_back(pInstance);
 
 	return pInstance;
 }
 
 
-void CToolboxWeapon_back::Free()
+void CCraftmain_back::Free()
 {
 	__super::Free();
 

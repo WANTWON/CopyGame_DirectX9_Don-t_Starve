@@ -124,6 +124,7 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 		else
 		{
 			CInventory_Manager::Get_Instance()->gathertool_off();
+			CInventory_Manager::Get_Instance()->craft_off();
 			m_bfirstclick_G = true;
 		}
 
@@ -140,6 +141,7 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 		else
 		{
 			CInventory_Manager::Get_Instance()->weapontool_off();
+			CInventory_Manager::Get_Instance()->craft_off();
 			m_bfirstclick_W = true;
 		}
 			

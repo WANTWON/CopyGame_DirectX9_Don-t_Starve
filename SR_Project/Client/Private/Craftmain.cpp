@@ -1,19 +1,20 @@
 #include "stdafx.h"
-#include "..\Public\ToolboxWeapon_back.h"
+#include "..\Public\Craftmain.h"
 #include "GameInstance.h"
 #include "Inventory.h"
 
-CToolboxWeapon_back::CToolboxWeapon_back(LPDIRECT3DDEVICE9 pGraphic_Device)
+
+CCraftmain::CCraftmain(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CToolboxWeapon_back::CToolboxWeapon_back(const CToolboxWeapon_back & rhs)
+CCraftmain::CCraftmain(const CCraftmain & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CToolboxWeapon_back::Initialize_Prototype()
+HRESULT CCraftmain::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -21,21 +22,19 @@ HRESULT CToolboxWeapon_back::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon_back::Initialize(void* pArg)
+HRESULT CCraftmain::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	iNumber = (int*)pArg;
-
-	iNum = *iNumber;
-
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 40.0f;
-	m_fSizeY = 40.0f;
-	m_fX = 30.f;
-	m_fY = 210.f + (iNum * 50.f);
+	m_fSizeX = 250.f;
+	m_fSizeY = 325.f;
+	m_fX = 238.f;
+	m_fY = 212.f;
+
+	m_firsty = m_fY;
 
 	m_firstx = m_fX;
 
@@ -45,103 +44,57 @@ HRESULT CToolboxWeapon_back::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
-
-
 	return S_OK;
 }
 
-int CToolboxWeapon_back::Tick(_float fTimeDelta)
+int CCraftmain::Tick(_float fTimeDelta)
 {
+
 	if (m_bonof == false)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
 
-	
 
-	RECT		rcRect;
+
+
+	/*if (m_fY <= 212.f)
+		Open_Craft(fTimeDelta);*/
+	//if (m_fX <= 100)
+		//Open_Weapontool(fTimeDelta);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+	/*RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	if (m_fX <= 100)
-		Open_Weapontool(fTimeDelta);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-
-
 	if (PtInRect(&rcRect, ptMouse))
 	{
-		m_fSizeX = 55.f;
-		m_fSizeY = 55.f;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		backtexnum = 0;
 
-		
-	}
-
-	if (iNum == 0&&PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
-		bool bok = false;
-		CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-		Safe_AddRef(pInventory_Manager);
-
-		pInventory_Manager->craft_on(MAKE_AXE);
-		
-	
-
-
-}
-
-	/*if (m_bItem)
-	{
-	m_fX = ptMouse.x;
-	m_fY = ptMouse.y;
 	}*/
 
 	return OBJ_NOEVENT;
 }
 
-void CToolboxWeapon_back::Late_Tick(_float fTimeDelta)
+void CCraftmain::Late_Tick(_float fTimeDelta)
 {
 
 	if (m_bonof == false)
-		return ;
+		return;
+
 
 	__super::Late_Tick(fTimeDelta);
-	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (!PtInRect(&rcRect, ptMouse))
-	{
-		m_fSizeX = 40;
-		m_fSizeY = 40;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		backtexnum = 2;
 
 
-		//ERR_MSG(L"Ãæµ¹");
-	}
 
-	/*if (m_bItem)
-	{
-
-	}*/
-
-	if (nullptr != m_pRendererCom && iNum < 10)
+	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
-
 }
 
-HRESULT CToolboxWeapon_back::Render()
+HRESULT CCraftmain::Render()
 {
-
 	if (m_bonof == false)
 		return OBJ_NOEVENT;
 
@@ -157,7 +110,7 @@ HRESULT CToolboxWeapon_back::Render()
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(backtexnum)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))
@@ -173,14 +126,14 @@ HRESULT CToolboxWeapon_back::Render()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon_back::SetUp_Components()
+HRESULT CCraftmain::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox_back"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Craftmain"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -202,53 +155,57 @@ HRESULT CToolboxWeapon_back::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon_back::SetUp_RenderState()
+HRESULT CCraftmain::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon_back::Release_RenderState()
+HRESULT CCraftmain::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	return S_OK;
 }
 
-CToolboxWeapon_back * CToolboxWeapon_back::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CCraftmain * CCraftmain::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CToolboxWeapon_back*	pInstance = new CToolboxWeapon_back(pGraphic_Device);
+	CCraftmain*	pInstance = new CCraftmain(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CToolboxWeapon_back"));
+		ERR_MSG(TEXT("Failed to Created : CCraftmain"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CToolboxWeapon_back::Clone(void* pArg)
+CGameObject * CCraftmain::Clone(void* pArg)
 {
-	CToolboxWeapon_back*	pInstance = new CToolboxWeapon_back(*this);
+	CCraftmain*	pInstance = new CCraftmain(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CToolboxWeapon_back"));
+		ERR_MSG(TEXT("Failed to Cloned : CCraftmain"));
 		Safe_Release(pInstance);
 	}
 
-	CInventory_Manager::Get_Instance()->Get_Toolboxweapon_back_list()->push_back(pInstance);
-
+	CInventory_Manager::Get_Instance()->Get_Craftmain_list()->push_back(pInstance);
 	return pInstance;
 }
 
 
-void CToolboxWeapon_back::Free()
+void CCraftmain::Free()
 {
 	__super::Free();
 
@@ -257,4 +214,3 @@ void CToolboxWeapon_back::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
 }
-

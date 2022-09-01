@@ -88,6 +88,7 @@ int CToolboxGather_back::Tick(_float fTimeDelta)
 		CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 		Safe_AddRef(pInventory_Manager);
 
+		pInventory_Manager->craft_on(MAKE_AXE);
 		auto pinven = pInventory_Manager->Get_Inven_list();
 
 		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)

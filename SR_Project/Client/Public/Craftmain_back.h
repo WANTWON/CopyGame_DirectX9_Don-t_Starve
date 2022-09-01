@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CToolboxGather_back final : public CGameObject
+class CCraftmain_back final : public CGameObject
 {
 private:
-	CToolboxGather_back(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CToolboxGather_back(const CToolboxGather_back& rhs);
-	virtual ~CToolboxGather_back() = default;
+	CCraftmain_back(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CCraftmain_back(const CCraftmain_back& rhs);
+	virtual ~CCraftmain_back() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -37,7 +37,7 @@ private: /* For.Components */
 
 private:
 	_float4x4				m_ProjMatrix;
-	_float					m_fX, m_fY, m_fSizeX, m_fSizeY, m_firstx;
+	_float					m_fX, m_fY, m_fSizeX, m_fSizeY, m_firstx, m_firsty;
 
 private:
 	HRESULT SetUp_Components();
@@ -45,20 +45,29 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	static CToolboxGather_back* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CCraftmain_back* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 public:
-	void Open_Weapontool(_float time) { m_fX += 70 * time; }
+	void Open_Weapontool(_float time) { m_fX += 20 * time; }
+
+	void Open_Craft(_float time) { m_fY += 50 * time; }
+
 	bool get_onof() { return m_bonof; }
 	void set_onof(bool tof) { m_bonof = tof; }
 	void gobackfirstX() { m_fX = m_firstx; }
+	void gobackfirstY() { m_fX = m_firsty; }
+
+	_uint get_texnum() { return backtexnum; }
+
+	void set_makewhat(MAKEWHAT item) { m_makewhat = item; }
 private:
 
 	int* iNumber = nullptr;
 	int iNum = 0;
 	bool m_bcheck_bag = false;
 	_uint backtexnum = 0;
+	MAKEWHAT m_makewhat = MAKE_END;
 
 	bool m_bonof = false;
 	//bool m_bcheck = true;

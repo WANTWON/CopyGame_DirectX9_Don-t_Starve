@@ -130,6 +130,9 @@
     <Filter Include="02.GameObject\98.UI\02.Toolbox\01.GatherToolbox">
       <UniqueIdentifier>{efea9d00-707f-4d78-a85a-7011c7cf155c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\02.Toolbox\03.Craft">
+      <UniqueIdentifier>{f0e2454d-3185-4876-83a9-750e5731b10b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -297,6 +300,18 @@
     <ClInclude Include="..\Public\ToolboxGather_front.h">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Craftmain.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.Craft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Craftmain_back.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.Craft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Craftbutton.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.Craft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Craftmain_front.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.Craft</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -451,6 +466,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxGather_front.cpp">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Craftmain.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.Craft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Craftmain_back.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.Craft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Craftmain_front.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.Craft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Craftbutton.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.Craft</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

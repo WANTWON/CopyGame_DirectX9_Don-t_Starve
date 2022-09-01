@@ -342,6 +342,61 @@ void CInventory_Manager::gathertool_off()
 
 }
 
+void CInventory_Manager::craft_on(MAKEWHAT item)
+{
+	for (auto& k : m_Craftmain)
+	{
+		k->set_onof(true);
+		k->set_makewhat(item);
+	}
+		
+	for (auto& k : m_Craftmainback)
+	{
+		k->set_onof(true);
+		k->set_makewhat(item);
+	}
+		
+	for (auto& k : m_Craftmainfront)
+	{
+		k->set_onof(true);
+		k->set_makewhat(item);
+	}
+
+	for (auto& k : m_Craftbutton)
+	{
+		k->set_onof(true);
+		k->set_makewhat(item);
+	}
+		
+
+}
+
+void CInventory_Manager::craft_off()
+{
+
+	for (auto& k : m_Craftmain)
+	{
+		k->set_onof(false);
+		k->gobackfirstY();
+	}
+	
+	for (auto& k : m_Craftmainback)
+	{
+		k->set_onof(false);
+		k->gobackfirstY();
+	}
+     for (auto& k : m_Craftmainfront)
+		{
+		 k->set_onof(false);
+		 k->gobackfirstY();
+	     }
+	for (auto& k : m_Craftbutton)
+	{
+		k->set_onof(false);
+		k->gobackfirstY();
+	}
+}
+
 void CInventory_Manager::Free()
 {
 	for (auto& iter : m_Equipmentlist)
@@ -413,6 +468,26 @@ void CInventory_Manager::Free()
 		Safe_Release(iter);
 
 	m_Toolboxgather_front.clear();
+
+	for (auto& iter : m_Craftmain)
+		Safe_Release(iter);
+
+	m_Craftmain.clear();
+
+	for (auto& iter : m_Craftmainback)
+		Safe_Release(iter);
+
+	m_Craftmainback.clear();
+
+	for (auto& iter : m_Craftmainfront)
+		Safe_Release(iter);
+
+	m_Craftmainfront.clear();
+
+	for (auto& iter : m_Craftbutton)
+		Safe_Release(iter);
+
+	m_Craftbutton.clear();
 
 	for (auto& iter : m_MainInventorylist)
 		Safe_Release(iter);
