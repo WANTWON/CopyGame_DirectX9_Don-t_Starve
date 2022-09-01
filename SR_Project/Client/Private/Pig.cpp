@@ -208,6 +208,14 @@ void CPig::Change_Frame()
 
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
+	case STATE::RUN:
+		if (m_eDir == DIR_STATE::DIR_LEFT)
+			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
+		else
+			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+
+		m_pTextureCom->MoveFrame(m_TimerTag);
+		break;
 	case STATE::ATTACK:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
@@ -243,6 +251,9 @@ void CPig::Change_Frame()
 			m_bHit = false;
 		break;
 	case STATE::DIE:
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 17)
+			Drop_Items();
+
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
 		break;
 	}
@@ -290,6 +301,24 @@ void CPig::Change_Motion()
 			if (m_eDir != m_ePreDir)
 				m_ePreDir = m_eDir;
 			break;
+		case STATE::RUN:
+			switch (m_eDir)
+			{
+			case DIR_STATE::DIR_UP:
+				Change_Texture(TEXT("Com_Texture_RUN_UP"));
+				break;
+			case DIR_STATE::DIR_DOWN:
+				Change_Texture(TEXT("Com_Texture_RUN_DOWN"));
+				break;
+			case DIR_STATE::DIR_RIGHT:
+			case DIR_STATE::DIR_LEFT:
+				Change_Texture(TEXT("Com_Texture_RUN_SIDE"));
+				break;
+			}
+
+			if (m_eDir != m_ePreDir)
+				m_ePreDir = m_eDir;
+			break;
 		case STATE::ATTACK:
 			switch (m_eDir)
 			{
@@ -325,9 +354,6 @@ void CPig::AI_Behaviour(_float fTimeDelta)
 {
 	if (m_bHit)
 		m_eState = STATE::HIT;
-
-	// Get Target and Aggro Radius
-	//Find_Target();
 
 	// Check for Target, AggroRadius
 	if (m_bAggro)
@@ -450,7 +476,7 @@ void CPig::Find_Target()
 void CPig::Follow_Target(_float fTimeDelta)
 {
 	// Set State 
-	m_eState = STATE::WALK;
+	m_eState = STATE::RUN;
 
 	_float3 fTargetPos = m_pTarget->Get_Position();
 
@@ -471,7 +497,7 @@ void CPig::Follow_Target(_float fTimeDelta)
 		else
 			m_eDir = DIR_STATE::DIR_DOWN;
 
-	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
+	m_pTransformCom->Go_PosTarget(fTimeDelta * .2f, fTargetPos, _float3(0, 0, 0));
 
 	m_bIsAttacking = false;
 }
@@ -512,11 +538,11 @@ HRESULT CPig::Drop_Items()
 	_float fPosZ = bSignZ ? (Get_Position().z + fOffsetZ) : (Get_Position().z - fOffsetZ);
 
 	ItemDesc.fPosition = _float3(fPosX, Get_Position().y, fPosZ);
-	ItemDesc.pTextureComponent = TEXT("Com_Texture_Spider_Meat");
+	ItemDesc.pTextureComponent = TEXT("Com_Texture_Pig_Tail");
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
-	ItemDesc.eItemName = ITEMNAME::ITEMNAME_MONSTERMEAT;
+	ItemDesc.eItemName = ITEMNAME::ITEMNAME_PIGTAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Item"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

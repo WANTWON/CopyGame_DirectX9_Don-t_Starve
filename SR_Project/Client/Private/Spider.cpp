@@ -225,6 +225,9 @@ void CSpider::Change_Frame()
 			m_bHit = false;
 		break;
 	case STATE::DIE:
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 9)
+			Drop_Items();
+
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
 		break;
 	}
@@ -411,9 +414,9 @@ HRESULT CSpider::Drop_Items()
 	ItemDesc.fPosition = _float3(fPosX, Get_Position().y, fPosZ);
 	ItemDesc.pTextureComponent = TEXT("Com_Texture_Spider_Meat");
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
-	ItemDesc.eItemName = ITEMNAME::ITEMNAME_MONSTERMEAT;
+	ItemDesc.eItemName = ITEMNAME::ITEMNAME_SPIDERMEAT;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Item"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

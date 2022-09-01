@@ -130,6 +130,9 @@
     <Filter Include="02.GameObject\98.UI\02.Toolbox\01.GatherToolbox">
       <UniqueIdentifier>{efea9d00-707f-4d78-a85a-7011c7cf155c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.Interactive_Object\Pig King">
+      <UniqueIdentifier>{7a569719-d033-4a90-bd6a-eecfe70825a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -297,6 +300,9 @@
     <ClInclude Include="..\Public\ToolboxGather_front.h">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
     </ClInclude>
+    <ClInclude Include="PigKing.h">
+      <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -451,6 +457,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxGather_front.cpp">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="PigKing.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
