@@ -100,6 +100,7 @@ HRESULT CMainInventory::Render()
 
 HRESULT CMainInventory::SetUp_Components()
 {
+	
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;

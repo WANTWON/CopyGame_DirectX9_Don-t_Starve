@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "..\Public\ToolboxWeapon.h"
+#include "..\Public\ToolboxGather.h"
 #include "GameInstance.h"
 #include "Inventory.h"
 
 
-CToolboxWeapon::CToolboxWeapon(LPDIRECT3DDEVICE9 pGraphic_Device)
+CToolboxGather::CToolboxGather(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CToolboxWeapon::CToolboxWeapon(const CToolboxWeapon & rhs)
+CToolboxGather::CToolboxGather(const CToolboxGather & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CToolboxWeapon::Initialize_Prototype()
+HRESULT CToolboxGather::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -22,7 +22,7 @@ HRESULT CToolboxWeapon::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon::Initialize(void* pArg)
+HRESULT CToolboxGather::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -35,7 +35,7 @@ HRESULT CToolboxWeapon::Initialize(void* pArg)
 	m_fY = 360.f;
 
 	m_firstx = m_fX;
-	
+
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
@@ -45,7 +45,7 @@ HRESULT CToolboxWeapon::Initialize(void* pArg)
 	return S_OK;
 }
 
-int CToolboxWeapon::Tick(_float fTimeDelta)
+int CToolboxGather::Tick(_float fTimeDelta)
 {
 
 	if (m_bonof == false)
@@ -53,10 +53,10 @@ int CToolboxWeapon::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	
 
-	if( m_fX <= 100)
-	Open_Weapontool(fTimeDelta);
+
+	if (m_fX <= 100)
+		Open_Weapontool(fTimeDelta);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 	/*RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
@@ -73,7 +73,7 @@ int CToolboxWeapon::Tick(_float fTimeDelta)
 	return OBJ_NOEVENT;
 }
 
-void CToolboxWeapon::Late_Tick(_float fTimeDelta)
+void CToolboxGather::Late_Tick(_float fTimeDelta)
 {
 
 	if (m_bonof == false)
@@ -88,11 +88,11 @@ void CToolboxWeapon::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 }
 
-HRESULT CToolboxWeapon::Render()
+HRESULT CToolboxGather::Render()
 {
 	if (m_bonof == false)
 		return OBJ_NOEVENT;
-	
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -121,7 +121,7 @@ HRESULT CToolboxWeapon::Render()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon::SetUp_Components()
+HRESULT CToolboxGather::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -150,7 +150,7 @@ HRESULT CToolboxWeapon::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon::SetUp_RenderState()
+HRESULT CToolboxGather::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -164,7 +164,7 @@ HRESULT CToolboxWeapon::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CToolboxWeapon::Release_RenderState()
+HRESULT CToolboxGather::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -172,35 +172,35 @@ HRESULT CToolboxWeapon::Release_RenderState()
 	return S_OK;
 }
 
-CToolboxWeapon * CToolboxWeapon::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CToolboxGather * CToolboxGather::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CToolboxWeapon*	pInstance = new CToolboxWeapon(pGraphic_Device);
+	CToolboxGather*	pInstance = new CToolboxGather(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CToolboxWeapon"));
+		ERR_MSG(TEXT("Failed to Created : CToolboxGather"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CToolboxWeapon::Clone(void* pArg)
+CGameObject * CToolboxGather::Clone(void* pArg)
 {
-	CToolboxWeapon*	pInstance = new CToolboxWeapon(*this);
+	CToolboxGather*	pInstance = new CToolboxGather(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CToolboxWeapon"));
+		ERR_MSG(TEXT("Failed to Cloned : CToolboxGather"));
 		Safe_Release(pInstance);
 	}
 
-	CInventory_Manager::Get_Instance()->Get_Toolboxweapon_list()->push_back(pInstance);
+	CInventory_Manager::Get_Instance()->Get_Toolboxgather_list()->push_back(pInstance);
 	return pInstance;
 }
 
 
-void CToolboxWeapon::Free()
+void CToolboxGather::Free()
 {
 	__super::Free();
 

@@ -31,6 +31,7 @@ public:
 	HRESULT Ready_Layer_PlayerStatUI(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_StatUIPont(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_MainToolbox(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_WeaponToolbox(const _tchar* pLayerTag);
 	
 	
 public:

@@ -38,59 +38,11 @@ HRESULT CToolboxMain_front::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
+
 	m_fSizeX = 40.0f;
 	m_fSizeY = 40.0f;
-	m_fX = 300.f + (iNum * 50.f);
-	m_fY = 690.f;
-
-	if (iNum == 10)
-	{
-		m_fX = 1185.f;
-		m_fY = 375.f;
-
-	}
-
-	if (iNum == 11)
-	{
-		m_fX = 1235.f;
-		m_fY = 375.f;
-	}
-
-	if (iNum == 12)
-	{
-		m_fX = 1185.f;
-		m_fY = 425.f;
-	}
-
-	if (iNum == 13)
-	{
-		m_fX = 1235.f;
-		m_fY = 425.f;
-	}
-
-	if (iNum == 14)
-	{
-		m_fX = 1185.f;
-		m_fY = 475.f;
-	}
-
-	if (iNum == 15)
-	{
-		m_fX = 1235.f;
-		m_fY = 475.f;
-	}
-
-	if (iNum == 16)
-	{
-		m_fX = 1185.f;
-		m_fY = 525.f;
-	}
-
-	if (iNum == 17)
-	{
-		m_fX = 1235.f;
-		m_fY = 525.f;
-	}
+	m_fX = 30.f;
+	m_fY = 210.f + (iNum * 50.f);
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
@@ -102,6 +54,7 @@ HRESULT CToolboxMain_front::Initialize(void* pArg)
 	//CInventory_Manager::Get_Instance()->Get_Inven_list()->front.push_back(this);
 	//CInventory_Manager::Get_Instance()->Get_Inven_list().push_back(this);
 	//INVENLIST
+	m_tooltype = (TOOLTYPE)iNum;
 
 	return S_OK;
 }
@@ -118,69 +71,6 @@ int CToolboxMain_front::Tick(_float fTimeDelta)
 	ScreenToClient(g_hWnd, &ptMouse);
 
 
-
-	if (texnum == ITEMNAME_ARMOR)
-	{
-		m_itemtype = ITEM_ARMOR;
-	}
-	if (texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH || texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK || texnum == ITEMNAME_HAMBAT)
-	{
-		m_itemtype = ITEM_HAND;
-	}
-
-	if (texnum == ITEMNAME_HELMET)
-	{
-		m_itemtype = ITEM_HAT;
-	}
-
-	if (texnum == ITEMNAME_BAG)
-	{
-		m_itemtype = ITEM_BAG;
-	}
-
-
-	if (texnum == ITEMNAME_BERRY || texnum == ITEMNAME_CARROT || texnum == ITEMNAME_MEAT || texnum == ITEMNAME_MONSTERMEAT)
-	{
-		m_itemtype = ITEM_FOOD;
-	}
-
-	if (texnum == ITEMNAME_COAL || texnum == ITEMNAME_WOOD || texnum == ITEMNAME_ROCK || texnum == ITEMNAME_GOLD || texnum == ITEMNAME_WOOD2)
-	{
-		m_itemtype = ITEM_MATERIAL;
-	}
-
-	if (texnum == ITEMNAME_PIGTAIL || texnum == ITEMNAME_ROPE || texnum == ITEMNAME_WEB || texnum == ITEMNAME_GRASS || texnum == ITEMNAME_ROCK2)
-	{
-		m_itemtype = ITEM_MATERIAL;
-	}
-
-
-	if (m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT || m_itemtype == ITEM_HAND || m_itemtype == ITEM_ARMOR || texnum == ITEMNAME_END)
-	{
-
-
-		m_bpontcheck = false;
-
-	}
-	else if (m_itemtype == ITEM_FOOD || m_itemtype == ITEM_MATERIAL)
-	{
-		m_bpontcheck = true;
-	}
-
-
-
-	if (texnum == ITEMNAME_END)
-	{
-		m_itemtype == ITEM_END;
-	}
-
-	/*if (texnum == ITEMNAME_BAG || texnum == ITEMNAME_HELMET || texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH
-	|| texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK || texnum == ITEMNAME_HAMBAT || texnum == ITEMNAME_ARMOR || texnum == ITEMNAME_END)
-	{
-	m_bpontcheck = false;
-	}
-	else if(texnum == carrot)
-	m_bpontcheck = true;*/
 
 
 
@@ -233,124 +123,26 @@ void CToolboxMain_front::Late_Tick(_float fTimeDelta)
 
 
 
-	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-
-	{
-
-
-
-		if (false == pMouse->Get_picked())
-		{
-
-			pMouse->Set_Item_name(texnum);   //첫피킹
-			pMouse->Set_index(iNum);
-			pMouse->Set_picked(true);
-			pMouse->Set_Item_count(item_number);
-
-			(*mouse)->set_check(true);
-			(*mouse)->set_texnum(texnum);//마우스이미지
-
-			set_texnum(ITEMNAME_END);
-		}
-
-		else if (true == pMouse->Get_picked())
-		{
-
-			pMouse->Set_Prev_Item_name(texnum);
-			pMouse->Set_Item_prev_count(item_number);
-			texnum = (pMouse->Get_Item_name());
-			set_itemcount(pMouse->Get_Item_count());
-			pMouse->Set_picked(false);
-			m_bcheck = true;
-
-			(*mouse)->set_texnum(ITEMNAME_END);
-			(*mouse)->set_check(false);//마우스이미지
-
-		}
-
-
-	}
-
-
-	/*if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON)&& !PtInRect(&rcRect, ptMouse))
-	{
-	(*mouse)->set_texnum(ITEMNAME_END);
-	(*mouse)->set_check(false);
-	}*/
+//	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+//
+//	{
+//
+//
+//	}
+//
+//if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_RBUTTON)) //마우스 우클릭처리
+//	{
+//		
+//	}
 
 
 
 
-
-
-
-
-	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_RBUTTON)) //마우스 우클릭처리
-	{
-		if (m_itemtype == ITEM_ARMOR || m_itemtype == ITEM_HAND || m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT)
-		{
-			pMouse->Set_Item_type(m_itemtype);
-			pMouse->Set_Equipment_name(texnum);
-			set_texnum(ITEMNAME_END);
-
-
-			if (m_itemtype == ITEM_BAG)
-			{
-				pinv->Late_Tick(fTimeDelta);
-				pinv->Use_bag();
-				Safe_Release(pinv);
-			}
-
-			m_itemtype = ITEM_END;
-		}
-
-		//minus_itemcount();
-
-		else if (m_itemtype == ITEM_FOOD)
-		{
-			//Use_item(texnum);
-		}
-
-	}
-
-
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	Safe_Release(pMouse);
 	Safe_Release(pinv);
-
-
-	if (texnum == ITEMNAME_END)
-	{
-		//set_check(false);
-	}
-	if (m_itemtype == ITEM_HAT && m_itemtype == ITEM_BAG && m_itemtype == ITEM_HAND && m_itemtype == ITEM_ARMOR) // 
-	{
-		item_number = 0;
-	}
-
-	if (item_number <= 0 && m_itemtype != ITEM_HAT && m_itemtype != ITEM_BAG && m_itemtype != ITEM_HAND && m_itemtype != ITEM_ARMOR) // 카운트가 필요한 타입들이면서 
-	{
-		m_bpontcheck = false;
-		m_bcheck = false;
-		item_number = 0;
-		set_texnum(ITEMNAME_END);
-
-	}
-
-
-	if (texnum == ITEMNAME_END)
-	{
-		m_bcheck = false;
-	}
-	else
-		m_bcheck = true;
-
-	if (nullptr != m_pRendererCom&&m_bcheck == true && iNum < 10)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
-
-	else if (nullptr != m_pRendererCom&&m_bcheck == true && iNum >= 10 && m_bcheck_bag)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
-
 	//set_check(false);
 }
 
@@ -370,7 +162,7 @@ HRESULT CToolboxMain_front::Render()
 		m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 		m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_tooltype)))
 			return E_FAIL;
 
 		if (FAILED(SetUp_RenderState()))
@@ -395,7 +187,7 @@ HRESULT CToolboxMain_front::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory_front"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox_front"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -462,7 +254,7 @@ CGameObject * CToolboxMain_front::Clone(void* pArg)
 		ERR_MSG(TEXT("Failed to Cloned : MainInventory_front"));
 		Safe_Release(pInstance);
 	}
-	//CInventory_Manager::Get_Instance()->Get_Inven_list()->push_back(pInstance);//Get_Inven_list().push_back(pInstance);
+	//CInventory_Manager::Get_Instance()->Get_Toolboxweapon_front_list()->push_back(pInstance);//Get_Inven_list().push_back(pInstance);
 	return pInstance;
 
 }
