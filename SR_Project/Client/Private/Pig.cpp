@@ -55,10 +55,6 @@ void CPig::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	// Testing: 
-	if (CKeyMgr::Get_Instance()->Key_Down('F'))
-		Interact(20);
-
 	Change_Motion();
 	Change_Frame();
 }
@@ -197,7 +193,7 @@ void CPig::Change_Frame()
 	switch (m_eState)
 	{
 	case STATE::IDLE:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
@@ -205,7 +201,7 @@ void CPig::Change_Frame()
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::WALK:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
@@ -213,7 +209,7 @@ void CPig::Change_Frame()
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::ATTACK:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
@@ -223,9 +219,22 @@ void CPig::Change_Frame()
 			m_bIsAttacking = false;
 			m_dwAttackTime = GetTickCount();
 		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+		{
+			BULLETDATA BulletData;
+			ZeroMemory(&BulletData, sizeof(BulletData));
+			BulletData.vPosition = Get_Position();
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+			BulletData.eDirState = m_eDir;
+
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+				return;
+		}
+		break;
 		break;
 	case STATE::HIT:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
@@ -248,14 +257,14 @@ void CPig::Change_Motion()
 		case STATE::IDLE:
 			switch (m_eDir)
 			{
-			case DIR::DIR_UP:
+			case DIR_STATE::DIR_UP:
 				Change_Texture(TEXT("Com_Texture_IDLE_UP"));
 				break;
-			case DIR::DIR_DOWN:
+			case DIR_STATE::DIR_DOWN:
 				Change_Texture(TEXT("Com_Texture_IDLE_DOWN"));
 				break;
-			case DIR::DIR_RIGHT:
-			case DIR::DIR_LEFT:
+			case DIR_STATE::DIR_RIGHT:
+			case DIR_STATE::DIR_LEFT:
 				Change_Texture(TEXT("Com_Texture_IDLE_SIDE"));
 				break;
 			}
@@ -266,14 +275,14 @@ void CPig::Change_Motion()
 		case STATE::WALK:
 			switch (m_eDir)
 			{
-			case DIR::DIR_UP:
+			case DIR_STATE::DIR_UP:
 				Change_Texture(TEXT("Com_Texture_WALK_UP"));
 				break;
-			case DIR::DIR_DOWN:
+			case DIR_STATE::DIR_DOWN:
 				Change_Texture(TEXT("Com_Texture_WALK_DOWN"));
 				break;
-			case DIR::DIR_RIGHT:
-			case DIR::DIR_LEFT:
+			case DIR_STATE::DIR_RIGHT:
+			case DIR_STATE::DIR_LEFT:
 				Change_Texture(TEXT("Com_Texture_WALK_SIDE"));
 				break;
 			}
@@ -284,14 +293,14 @@ void CPig::Change_Motion()
 		case STATE::ATTACK:
 			switch (m_eDir)
 			{
-			case DIR::DIR_UP:
+			case DIR_STATE::DIR_UP:
 				Change_Texture(TEXT("Com_Texture_ATTACK_UP"));
 				break;
-			case DIR::DIR_DOWN:
+			case DIR_STATE::DIR_DOWN:
 				Change_Texture(TEXT("Com_Texture_ATTACK_DOWN"));
 				break;
-			case DIR::DIR_RIGHT:
-			case DIR::DIR_LEFT:
+			case DIR_STATE::DIR_RIGHT:
+			case DIR_STATE::DIR_LEFT:
 				Change_Texture(TEXT("Com_Texture_ATTACK_SIDE"));
 				break;
 			}
@@ -318,25 +327,99 @@ void CPig::AI_Behaviour(_float fTimeDelta)
 		m_eState = STATE::HIT;
 
 	// Get Target and Aggro Radius
-	Find_Target();
+	//Find_Target();
 
 	// Check for Target, AggroRadius
-	if (m_pTarget && m_bAggro)
+	if (m_bAggro)
 	{
-		// If in AttackRadius > Attack
-		if (m_fDistanceToTarget < m_fAttackRadius)
+		Find_Target();
+		if (m_pTarget)
 		{
-			if (!m_bIsAttacking && GetTickCount() > m_dwAttackTime + 1500)
+			// If in AttackRadius > Attack
+			if (m_fDistanceToTarget < m_fAttackRadius)
 			{
-				m_eState = STATE::ATTACK;
-				m_bIsAttacking = true;
+				if (!m_bIsAttacking && GetTickCount() > m_dwAttackTime + 1500)
+				{
+					m_eState = STATE::ATTACK;
+					m_bIsAttacking = true;
+				}
+				else if (!m_bIsAttacking)
+					m_eState = STATE::IDLE;
 			}
-			else if (!m_bIsAttacking)
-				m_eState = STATE::IDLE;
+			// If NOT in AttackRadius > Follow Target
+			else
+				Follow_Target(fTimeDelta);
 		}
-		// If NOT in AttackRadius > Follow Target
+	}
+	else
+		Patrol(fTimeDelta);
+}
+
+void CPig::Patrol(_float fTimeDelta)
+{
+	// Switch between Idle and Walk (based on time)
+	if (m_eState == STATE::IDLE)
+	{
+		if (GetTickCount() > m_dwIdleTime + 3000)
+		{
+			m_eState = STATE::WALK;
+			m_dwWalkTime = GetTickCount();
+
+			// Find Random Patroling Position
+			_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
+			_int bSignX = rand() % 2;
+			_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
+			_int bSignZ = rand() % 2;
+			m_fPatrolPosX = bSignX ? (m_pTransformCom->Get_TransformDesc().InitPos.x + fOffsetX) : (m_pTransformCom->Get_TransformDesc().InitPos.x - fOffsetX);
+			m_fPatrolPosZ = bSignZ ? (m_pTransformCom->Get_TransformDesc().InitPos.z + fOffsetZ) : (m_pTransformCom->Get_TransformDesc().InitPos.z - fOffsetZ);
+		}
+	}
+	else if (m_eState == STATE::WALK)
+	{
+		if (GetTickCount() > m_dwWalkTime + 1500)
+		{
+			m_eState = STATE::IDLE;
+			m_dwIdleTime = GetTickCount();
+		}
+	}
+
+	// Movement
+	if (m_eState == STATE::WALK)
+	{
+		// Adjust PatrolPosition Y
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		if (!pGameInstance)
+			return;
+		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+		if (!pVIBuffer_Terrain)
+			return;
+		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+		if (!pTransform_Terrain)
+			return;
+
+		_float3 vPatrolPosition = { m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ };
+		_float3 vScale = m_pTransformCom->Get_Scale();
+
+		vPatrolPosition.y = pVIBuffer_Terrain->Compute_Height(vPatrolPosition, pTransform_Terrain->Get_WorldMatrix(), (1 * vScale.y / 2));
+
+		// Change Direction
+		_float fX = vPatrolPosition.x - Get_Position().x;
+		_float fZ = vPatrolPosition.z - Get_Position().z;
+
+			// Move Horizontally
+		if (abs(fX) > abs(fZ))
+			if (fX > 0)
+				m_eDir = DIR_STATE::DIR_RIGHT;
+			else
+				m_eDir = DIR_STATE::DIR_LEFT;
+			// Move Vertically
 		else
-			Follow_Target(fTimeDelta);
+			if (fZ > 0)
+				m_eDir = DIR_STATE::DIR_UP;
+			else
+				m_eDir = DIR_STATE::DIR_DOWN;
+
+		m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, _float3(m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ), _float3{ 0.f, 0.f, 0.f });
 	}
 }
 
@@ -355,10 +438,6 @@ void CPig::Find_Target()
 		{
 			_float3 vTargetPos = pTarget->Get_Position();
 			m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
-
-			if (m_fDistanceToTarget < m_fAggroRadius || m_bAggro)
-				m_bAggro = true;
-
 			m_pTarget = pTarget;
 		}
 		else
@@ -382,42 +461,38 @@ void CPig::Follow_Target(_float fTimeDelta)
 	// Move Horizontally
 	if (abs(fX) > abs(fZ))
 		if (fX > 0)
-			m_eDir = DIR::DIR_RIGHT;
+			m_eDir = DIR_STATE::DIR_RIGHT;
 		else
-			m_eDir = DIR::DIR_LEFT;
+			m_eDir = DIR_STATE::DIR_LEFT;
 	// Move Vertically
 	else
 		if (fZ > 0)
-			m_eDir = DIR::DIR_UP;
+			m_eDir = DIR_STATE::DIR_UP;
 		else
-			m_eDir = DIR::DIR_DOWN;
+			m_eDir = DIR_STATE::DIR_DOWN;
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
 
 	m_bIsAttacking = false;
 }
 
-void CPig::Interact(_uint iDamage)
+_float CPig::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
-	if (m_tInfo.iCurrentHp > 0)
-	{
-		if (iDamage >= m_tInfo.iCurrentHp)
-		{
-			m_bDead = true;
-			m_tInfo.iCurrentHp = 0;
-		}
-		else
-		{
-			m_bHit = true;
-			m_tInfo.iCurrentHp -= iDamage;
-		}
+	_float fDmg = __super::Take_Damage(fDamage, DamageType, DamageCauser);
 
-		// If Hit/Dead stop and reset Attack
+	if (fDmg > 0)
+	{
+		if (!m_bDead)
+			m_bHit = true;
+		
+		m_bAggro = true;
 		m_bIsAttacking = false;
 		m_dwAttackTime = GetTickCount();
+
+		return fDmg;
 	}
-	else
-		m_bDead = true;
+
+	return 0.f;
 }
 
 HRESULT CPig::Drop_Items()

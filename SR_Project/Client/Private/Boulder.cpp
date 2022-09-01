@@ -100,9 +100,6 @@ void CBoulder::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
-	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('F')))
-		Interact(10);
-
 	if (!m_bPicking)
 	{
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);

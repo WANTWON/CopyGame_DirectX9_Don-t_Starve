@@ -143,12 +143,15 @@ void CMonster::WalkingTerrain()
 
 _float CMonster::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
-	if (m_tInfo.iCurrentHp > fDamage)
-		m_tInfo.iCurrentHp -= fDamage;
-	else if (m_tInfo.iCurrentHp <= fDamage)
+	if (fDamage <= 0 || m_bDead)
+		return 0.f;
+
+	m_tInfo.iCurrentHp -= fDamage;
+
+	if (m_tInfo.iCurrentHp <= 0)
 	{
-		m_bDead = true;
 		m_tInfo.iCurrentHp = 0.f;
+		m_bDead = true;
 	}
 
 	return fDamage;

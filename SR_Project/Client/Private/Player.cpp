@@ -64,20 +64,41 @@ int CPlayer::Tick(_float fTimeDelta)
 	//Collider Add
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
-	//KeyInput
-	GetKeyDown(fTimeDelta);
-	//Move
-	Move_to_PickingPoint(fTimeDelta);
-	WalkingTerrain();
 
 	//Act Auto
 	Tick_ActStack(fTimeDelta);
+
+	//KeyInput
+	GetKeyDown(fTimeDelta);
+	//Mouse
+	//if (m_bIsFPS)
+	//{
+	//	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	//	Safe_AddRef(pGameInstance);
+
+	//	_long			MouseMove = 0;
+
+	//	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+	//	{
+	//		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * MouseMove * 0.1f);
+	//	}
+
+	//	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+	//	{
+	//		m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * 0.1f);
+	//	}
+	//	Safe_Release(pGameInstance);
+	//}
+
+	//Move
+	Move_to_PickingPoint(fTimeDelta);
+	WalkingTerrain();
 
 	Create_Bullet();
 	m_Equipment->Set_TargetPos(Get_Pos());
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-	
+	cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
 
 	return OBJ_NOEVENT;
 }
@@ -90,13 +111,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
-	if (GetKeyState(VK_BACK) & 0x8000)
-	{
-	--m_tStat.fCurrentHealth;
-	--m_tStat.fCurrentHungry;
-	--m_tStat.fCurrentMental;
-	}
 
 	if (m_tStat.fCurrentHealth > m_tStat.fMaxHealth)
 	{
@@ -112,16 +126,8 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	{
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
 	}
-
-
-	//추후에 아이템 만들어지고 플레이어가 아이템과 닿았을떄 획득하는 상호작용을 마친후에 인벤토리에 들어오는건 아래코드 그대로 쓰시면 작동합니다!!
-	//#include "Inven.h" 포함하시고
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
-
 	
 	Test_Debug(fTimeDelta);
-	
 }
 
 
@@ -198,14 +204,16 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 {
 	m_tStat.fCurrentHealth -= fDamage;
 
+	m_ActStack.push(ACTION_STATE::DAMAGED);
+
+	m_bMove = false;
+	m_bAutoMode = true;
+
 	return fDamage;
 }
 
-
-
 HRESULT CPlayer::SetUp_Components()
 {
-
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
@@ -362,6 +370,12 @@ HRESULT CPlayer::Test_Setup()
 
 void CPlayer::GetKeyDown(_float _fTimeDelta)
 {
+	/*키입력 불가.*/
+	if (!m_bMove)
+		return;
+
+	//Test Power
+
 #pragma region Debug&CamKey
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_DEBUG]))
 	{
@@ -388,8 +402,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		if (Camera->Get_CamMode() == CCameraDynamic::CAM_PLAYER)
 		{
 			Camera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 1);
-		}
-		
+		}	
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
@@ -400,13 +413,31 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			Camera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 2);
 		}
 	}
-#pragma endregion Debug&CamKey
+#pragma endregion Debug&CamKey	
 
 #pragma region Action
 	//Action
-	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN1]))
+	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN1]))
 	{
-		Test_Func(1);
+		/*Test Bomb*/
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.bIsPlayerBullet = true;
+		BulletData.eDirState = DIR_STATE::DIR_DOWN;
+		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
+		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
+		BulletData.vPosition = Get_Pos();
+
+		_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
+		//D3DXVec3Normalize(&temp, &temp);
+		//BulletData.fAdd_X = m_fMaxTime;
+		BulletData.vTargetPos = temp;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+			return;
+
+
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN2]))
 	{
@@ -497,6 +528,7 @@ bool CPlayer::ResetAction(_float _fTimeDelta)
 	case Client::CPlayer::ACTION_STATE::WEEDING:
 	case Client::CPlayer::ACTION_STATE::EAT:
 	case Client::CPlayer::ACTION_STATE::PICKUP:
+	case Client::CPlayer::ACTION_STATE::DAMAGED:
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1)
 		{
 			return true;
@@ -863,6 +895,11 @@ void CPlayer::Eatting(_float _fTimeDelta)
 		}
 		m_ePreState = m_eState;
 	}
+
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iCurrentTex - 1)
+	{
+		m_bMove = true;
+	}
 }
 
 void CPlayer::Pickup(_float _fTimeDelta)
@@ -889,6 +926,36 @@ void CPlayer::Pickup(_float _fTimeDelta)
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 2)
 	{
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact();
+	}
+}
+
+void CPlayer::Damaged(_float _fTimeDelta)
+{
+	m_eState = ACTION_STATE::DAMAGED;
+
+	if (m_ePreState != m_eState)
+	{
+		m_bMove = false;
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Damaged_Down"));
+			break;
+		case DIR_STATE::DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Damaged_Up"));
+			break;
+		case DIR_STATE::DIR_LEFT:
+		case DIR_STATE::DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Damaged_Side"));
+			break;
+		}
+		m_ePreState = m_eState;
+
+	}
+
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iCurrentTex - 1)
+	{
+		 m_bMove = true;
 	}
 }
 
@@ -923,7 +990,6 @@ void CPlayer::Create_Bullet()
 		if (m_bIsFPS)
 		{
 			BulletData.eDirState = DIR_STATE::DIR_END;
-			//BulletData.bIsFPSMode = true;
 			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 		}
 		else
@@ -931,10 +997,10 @@ void CPlayer::Create_Bullet()
 			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 			BulletData.eDirState = m_eDirState;
 		}
+		BulletData.bIsPlayerBullet = true;
 		BulletData.eWeaponType = m_eWeaponType;
 		BulletData.vPosition = Get_Pos();
-		//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-		
+
 		switch (m_eWeaponType)
 		{
 		case WEAPON_TYPE::WEAPON_HAND:
@@ -945,7 +1011,7 @@ void CPlayer::Create_Bullet()
 			}
 			break;
 		case WEAPON_TYPE::WEAPON_SWORD:
-			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20)
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 5)
 			{
 				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
 					return;
@@ -1046,14 +1112,12 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 {
 	if (m_bAutoMode)
 	{
-		if (m_pTarget == nullptr)
-		{
-			Clear_ActStack();
-			return;
-		}
-
 		CInteractive_Object* pObj = (CInteractive_Object*)m_pTarget;
-		INTERACTOBJ_ID eObjID = pObj->Get_InteractName();
+		INTERACTOBJ_ID eObjID = INTERACTOBJ_ID::ID_END; 
+		if (m_pTarget != nullptr)
+		{
+			eObjID = pObj->Get_InteractName();
+		}
 
 		switch (m_ActStack.top())
 		{
@@ -1100,15 +1164,15 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				Cutting_Grass(fTimeDelta);
 			}
 			break;
-		//case ACTION_STATE::EAT:
-		//	if (Check_Action_End())
-		//	{
-		//		m_ActStack.pop();
-		//	}
-		//	else {//false일 시 계속 수행 
-		//		Eatting(fTimeDelta);
-		//	}
-		//	break;
+		case ACTION_STATE::EAT:
+			if (m_bMove)
+			{
+				m_ActStack.pop();
+			}
+			else {//false일 시 계속 수행 
+				Eatting(fTimeDelta);
+			}
+			break;
 		case ACTION_STATE::PICKUP:
 			if (Check_Interact_End())
 			{
@@ -1120,6 +1184,17 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 			}
 			break;
 		case ACTION_STATE::ATTACK:
+			break;
+		case ACTION_STATE::DAMAGED:
+			if (m_bMove)
+			{
+				m_ActStack.pop();
+				//m_pTarget = nullptr;
+			}
+			else
+			{
+				Damaged(fTimeDelta);
+			}
 			break;
 		default:
 			break;
@@ -1369,6 +1444,22 @@ HRESULT CPlayer::Texture_Clone()
 	m_vecTexture.push_back(m_pTextureCom);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Pickup_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	/*Damaged*/
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_iEndTex = 29;
+	TextureDesc.m_fSpeed = 60;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Damaged_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Damaged_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Damaged_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Damaged_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Damaged_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Damaged_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 

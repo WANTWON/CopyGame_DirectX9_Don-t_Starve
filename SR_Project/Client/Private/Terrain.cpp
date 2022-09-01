@@ -210,8 +210,9 @@ void CTerrain::PickingTrue()
 	Safe_AddRef(pGameInstance);
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
 
-	pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
-
+	//pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
+	//TestCode
+	pPlayer->Set_PickingTarget(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
 	cout << "Collision Terrain : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
 
 	Safe_Release(pGameInstance);
