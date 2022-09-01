@@ -197,6 +197,9 @@
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Spider.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\Public\ToolboxGather.h" />
+    <ClInclude Include="..\Public\ToolboxGather_back.h" />
+    <ClInclude Include="..\Public\ToolboxGather_front.h" />
     <ClInclude Include="..\Public\ToolboxMain.h" />
     <ClInclude Include="..\Public\ToolboxMain_back.h" />
     <ClInclude Include="..\Public\ToolboxMain_front.h" />
@@ -249,6 +252,9 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Spider.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\ToolboxGather.cpp" />
+    <ClCompile Include="..\Private\ToolboxGather_back.cpp" />
+    <ClCompile Include="..\Private\ToolboxGather_front.cpp" />
     <ClCompile Include="..\Private\ToolboxMain.cpp" />
     <ClCompile Include="..\Private\ToolboxMain_back.cpp" />
     <ClCompile Include="..\Private\ToolboxMain_front.cpp" />
