@@ -116,7 +116,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	_float3 ObjectPos(0, 0, 0);
 	_uint iNum = 0;
 
-	/* Ã¹ÁÙÀº object ¸®½ºÆ®ÀÇ size ¹Þ¾Æ¼­ °¹¼ö¸¸Å­ for¹® µ¹¸®°Ô ÇÏ·Á°í ÀúÀåÇØ³õÀ½*/
+	/* Ã¹ï¿½ï¿½ï¿½ï¿½ object ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ size ï¿½Þ¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å­ forï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø³ï¿½ï¿½ï¿½*/
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -145,7 +145,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	_float3 ObjectPos(0, 0, 0);
 	_uint iNum = 0;
 
-	/* Ã¹ÁÙÀº object ¸®½ºÆ®ÀÇ size ¹Þ¾Æ¼­ °¹¼ö¸¸Å­ for¹® µ¹¸®°Ô ÇÏ·Á°í ÀúÀåÇØ³õÀ½*/
+	/* Ã¹ï¿½ï¿½ï¿½ï¿½ object ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ size ï¿½Þ¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å­ forï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø³ï¿½ï¿½ï¿½*/
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -164,7 +164,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	ObjectPos = _float3(0, 0, 0);
 	iNum = 0;
 
-	/* Ã¹ÁÙÀº object ¸®½ºÆ®ÀÇ size ¹Þ¾Æ¼­ °¹¼ö¸¸Å­ for¹® µ¹¸®°Ô ÇÏ·Á°í ÀúÀåÇØ³õÀ½*/
+	/* Ã¹ï¿½ï¿½ï¿½ï¿½ object ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ size ï¿½Þ¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å­ forï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø³ï¿½ï¿½ï¿½*/
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -184,7 +184,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	ObjectPos = _float3(0, 0, 0);
 	iNum = 0;
 
-	/* Ã¹ÁÙÀº object ¸®½ºÆ®ÀÇ size ¹Þ¾Æ¼­ °¹¼ö¸¸Å­ for¹® µ¹¸®°Ô ÇÏ·Á°í ÀúÀåÇØ³õÀ½*/
+	/* Ã¹ï¿½ï¿½ï¿½ï¿½ object ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ size ï¿½Þ¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å­ forï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø³ï¿½ï¿½ï¿½*/
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -203,7 +203,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	ObjectPos = _float3(0, 0, 0);
 	iNum = 0;
 
-	/* Ã¹ÁÙÀº object ¸®½ºÆ®ÀÇ size ¹Þ¾Æ¼­ °¹¼ö¸¸Å­ for¹® µ¹¸®°Ô ÇÏ·Á°í ÀúÀåÇØ³õÀ½*/
+	/* Ã¹ï¿½ï¿½ï¿½ï¿½ object ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ size ï¿½Þ¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å­ forï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø³ï¿½ï¿½ï¿½*/
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -214,7 +214,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	
 	hFile = CreateFile(TEXT("../Bin/Resources/Data/House_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
@@ -223,7 +222,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	CHouse::HOUSEDECS HouseDesc;
 	iNum = 0;
 
-	/* Ã¹ÁÙÀº object ¸®½ºÆ®ÀÇ size ¹Þ¾Æ¼­ °¹¼ö¸¸Å­ for¹® µ¹¸®°Ô ÇÏ·Á°í ÀúÀåÇØ³õÀ½*/
+	/* Ã¹ï¿½ï¿½ï¿½ï¿½ object ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ size ï¿½Þ¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å­ forï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø³ï¿½ï¿½ï¿½*/
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -233,6 +232,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	}
 
 	CloseHandle(hFile);
+
+
+if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig_King"), LEVEL_GAMEPLAY, pLayerTag, _float3(8.f, 1.f, 13.f))))
+		return E_FAIL;
+	Safe_Release(pGameInstance);
+
 
 	Safe_Release(pGameInstance);
 	return S_OK;

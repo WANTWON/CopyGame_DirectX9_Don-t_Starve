@@ -7,6 +7,7 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "Pig.h"
+#include "PigKing.h"
 #include "Spider.h"
 #include "Terrain.h"
 #include "CameraDynamic.h"
@@ -561,6 +562,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Spider
 
+
 	/*For. Prototype_Component_Texture_House*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_House"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/PigHouse.png"), 1))))
@@ -572,6 +574,23 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/* �� �ε� ��. */
 	lstrcpy(m_szLoadingText, TEXT("컴포넌트 생성"));
+
+#pragma region Add_Texture_Pig_King
+	/*For. Prototype_Component_Texture_Spider*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_King_Idle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Pig_King/Idle/Idle_%03d.png"), 70))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_King_Cointoss"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Pig_King/Cointoss/Cointoss_%03d.png"), 48))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_King_Unimpressed"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Pig_King/Unimpressed/Unimpressed_%03d.png"), 57))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Pig_King
+
+	/* �� �ε� ��. */
+	lstrcpy(m_szLoadingText, TEXT("�� �ε� ��."));
+
 
 	CVIBuffer_Terrain::TERRAINDESC		TerrainDesc;
 	ZeroMemory(&TerrainDesc, sizeof(CVIBuffer_Terrain::TERRAINDESC));
@@ -621,7 +640,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CItem::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	/*For.Prototype_GameObject_Monster*/
+	/*For.Prototype_GameObject_Pig*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pig"),
 		CPig::Create(m_pGraphic_Device))))
 		return E_FAIL;
@@ -629,6 +648,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For. Prototype_GameObject_Spider */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider"),
 		CSpider::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For. Prototype_GameObject_Pig_King */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pig_King"),
+		CPigKing::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Camera_Dynamic */
