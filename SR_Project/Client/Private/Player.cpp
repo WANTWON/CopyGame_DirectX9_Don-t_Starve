@@ -61,7 +61,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pPicker->Set_Scale(_float3(0.4f, 0.4f, 1.f));
 
 	m_pRange = (CAttackRange*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Range"));
-	m_pRange-> Set_Scale(_float3(5.5f, 5.5f, 1.f));
+	m_pRange-> Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
 
 	Safe_Release(pGameInstance);
 
