@@ -31,15 +31,10 @@ HRESULT CBoulder::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(SetUp_Components(pArg)))
-		return E_FAIL;
-
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::BOULDER;
 	m_tInfo.iMaxHp = 60;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_pTransformCom->Set_Scale(1.f, 0.6f, 1.f);
-
-	m_bPicking = false;
 
 	return S_OK;
 }
@@ -47,9 +42,6 @@ HRESULT CBoulder::Initialize(void* pArg)
 int CBoulder::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	// If Hp <= 0 : Drop Items
 	if (m_tInfo.iCurrentHp > 40)
@@ -67,25 +59,6 @@ int CBoulder::Tick(_float fTimeDelta)
 		}
 	}
 
-	// Change Texture based on State
-	if (m_eState != m_ePreState)
-	{
-		switch (m_eState)
-		{
-		case CBoulder::HEALTHY:
-			Change_Texture(TEXT("Com_Texture_HEALTHY"));
-			break;
-		case CBoulder::DAMAGED:
-			Change_Texture(TEXT("Com_Texture_DAMAGED"));
-			break;
-		case CBoulder::BROKEN:
-			Change_Texture(TEXT("Com_Texture_BROKEN"));
-			break;
-		}
-
-		m_ePreState = m_eState;
-	}
-
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	return OBJ_NOEVENT;
@@ -95,39 +68,19 @@ void CBoulder::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetUp_BillBoard();
-
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
 	if (!m_bPicking)
 	{
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
 		m_bPicking = true;
 	}
-		
 
-	// Move Texture Frame
-	m_pTextureCom->MoveFrame(m_TimerTag);
+	Change_Motion();
+	Change_Frame();
 }
 
 HRESULT CBoulder::Render()
 {
 	if (FAILED(__super::Render()))
-		return E_FAIL;
-
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-		return E_FAIL;
-
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
-
-	m_pVIBufferCom->Render();
-
-	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
 	return S_OK;
@@ -157,10 +110,10 @@ HRESULT CBoulder::Drop_Items()
 	_int bSignX = rand() % 2;
 	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * 1;
 	_int bSignZ = rand() % 2;
-	_float fPosX = bSignX ? (Get_Pos().x + fOffsetX) : (Get_Pos().x - fOffsetX);
-	_float fPosZ = bSignZ ? (Get_Pos().z + fOffsetZ) : (Get_Pos().z - fOffsetZ);
+	_float fPosX = bSignX ? (Get_Position().x + fOffsetX) : (Get_Position().x - fOffsetX);
+	_float fPosZ = bSignZ ? (Get_Position().z + fOffsetZ) : (Get_Position().z - fOffsetZ);
 
-	ItemDesc.fPosition = _float3(fPosX, Get_Pos().y, fPosZ);
+	ItemDesc.fPosition = _float3(fPosX, Get_Position().y, fPosZ);
 	ItemDesc.pTextureComponent = TEXT("Com_Texture_Rocks");
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_ROCK2;
@@ -213,29 +166,6 @@ HRESULT CBoulder::SetUp_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CBoulder::SetUp_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-
-	return S_OK;
-}
-
-HRESULT CBoulder::Release_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
-	return S_OK;
-}
-
 HRESULT CBoulder::Texture_Clone()
 {
 	CTexture::TEXTUREDESC TextureDesc;
@@ -262,28 +192,30 @@ HRESULT CBoulder::Texture_Clone()
 	return S_OK;
 }
 
-HRESULT CBoulder::Change_Texture(const _tchar * LayerTag)
+void CBoulder::Change_Frame()
 {
-	if (FAILED(__super::Change_Component(LayerTag, (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
-
-	m_pTextureCom->Set_ZeroFrame();
-
-	return S_OK;
+	m_pTextureCom->MoveFrame(m_TimerTag);
 }
 
-void CBoulder::SetUp_BillBoard()
+void CBoulder::Change_Motion()
 {
-	_float4x4 ViewMatrix;
+	if (m_eState != m_ePreState)
+	{
+		switch (m_eState)
+		{
+		case CBoulder::HEALTHY:
+			Change_Texture(TEXT("Com_Texture_HEALTHY"));
+			break;
+		case CBoulder::DAMAGED:
+			Change_Texture(TEXT("Com_Texture_DAMAGED"));
+			break;
+		case CBoulder::BROKEN:
+			Change_Texture(TEXT("Com_Texture_BROKEN"));
+			break;
+		}
 
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
-
-	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
-	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+		m_ePreState = m_eState;
+	}
 }
 
 _bool CBoulder::Picking(_float3 * PickingPoint)

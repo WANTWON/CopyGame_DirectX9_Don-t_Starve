@@ -27,10 +27,7 @@ HRESULT CTree::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
-	if (FAILED(SetUp_Components(pArg)))
-		return E_FAIL;
-	//Wood1
+	
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::TREE;
 	m_tInfo.iMaxHp = 60;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
@@ -39,17 +36,12 @@ HRESULT CTree::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
 	m_fRadius *= fSize;
 
-	WalkingTerrain();
-
 	return S_OK;
 }
 
 int CTree::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	// If Hp <= 0 : Fall and Drop Items
 	if (m_tInfo.iCurrentHp <= 0 && m_eState < FALL_RIGHT)
@@ -61,37 +53,6 @@ int CTree::Tick(_float fTimeDelta)
 
 		Drop_Items();
 	}
-	// Change Texture based on State
-	if (m_eState != m_ePreState)
-	{
-		switch (m_eState)
-		{
-		case CTree::IDLE:
-			Change_Texture(TEXT("Com_Texture_Tall_IDLE"));
-			break;
-		case CTree::CHOP:
-			Change_Texture(TEXT("Com_Texture_Tall_CHOP"));
-			break;
-		case CTree::SHAKE:
-			Change_Texture(TEXT("Com_Texture_Tall_SHAKE"));
-			break;
-		case CTree::GROW:
-			Change_Texture(TEXT("Com_Texture_Tall_GROW"));
-			break;
-		case CTree::FALL_RIGHT:
-			Change_Texture(TEXT("Com_Texture_Tall_FALL_RIGHT"));
-			break;
-		case CTree::FALL_LEFT:
-			Change_Texture(TEXT("Com_Texture_Tall_FALL_LEFT"));
-			break;
-		case CTree::STUMP:
-			Change_Texture(TEXT("Com_Texture_Tall_STUMP"));
-			break;
-		}
-
-		m_ePreState = m_eState;
-	}
-
 	
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -102,61 +63,13 @@ void CTree::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetUp_BillBoard();
-
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
-	if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this) && (CKeyMgr::Get_Instance()->Key_Down('F')))
-		Interact(10);
-
-	// Move Texture Frame
-	switch (m_eState)
-	{
-	case IDLE:
-		m_pTextureCom->MoveFrame(m_TimerTag);
-		break;
-	case CHOP:
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = IDLE;
-		break;
-	case SHAKE:
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = IDLE;
-		break;
-	case GROW:
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = IDLE;
-		break;
-	case FALL_LEFT:
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-		break;
-	case FALL_RIGHT:
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-		break;
-	case STUMP:
-		m_pTextureCom->MoveFrame(m_TimerTag, false);
-		break;
-	}
+	Change_Motion();
+	Change_Frame();
 }
 
 HRESULT CTree::Render()
 {
 	if (FAILED(__super::Render()))
-		return E_FAIL;
-
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-		return E_FAIL;
-
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
-
-	m_pVIBufferCom->Render();
-
-	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
 	return S_OK;
@@ -191,10 +104,10 @@ HRESULT CTree::Drop_Items()
 	_int bSignX = rand() % 2;
 	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * .5f;
 	_int bSignZ = rand() % 2;
-	_float fPosX = bSignX ? (Get_Pos().x + fOffsetX) : (Get_Pos().x - fOffsetX);
-	_float fPosZ = bSignZ ? (Get_Pos().z + fOffsetZ) : (Get_Pos().z - fOffsetZ);
+	_float fPosX = bSignX ? (Get_Position().x + fOffsetX) : (Get_Position().x - fOffsetX);
+	_float fPosZ = bSignZ ? (Get_Position().z + fOffsetZ) : (Get_Position().z - fOffsetZ);
 
-	ItemDesc.fPosition = _float3(fPosX, Get_Pos().y, fPosZ);
+	ItemDesc.fPosition = _float3(fPosX, Get_Position().y, fPosZ);
 	ItemDesc.pTextureComponent = TEXT("Com_Texture_Log");
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_WOOD;
@@ -247,29 +160,6 @@ HRESULT CTree::SetUp_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CTree::SetUp_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-
-	return S_OK;
-}
-
-HRESULT CTree::Release_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
-	return S_OK;
-}
-
 HRESULT CTree::Texture_Clone()
 {
 	CTexture::TEXTUREDESC TextureDesc;
@@ -312,49 +202,68 @@ HRESULT CTree::Texture_Clone()
 	return S_OK;
 }
 
-HRESULT CTree::Change_Texture(const _tchar * LayerTag)
+void CTree::Change_Frame()
 {
-	if (FAILED(__super::Change_Component(LayerTag, (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
-
-	m_pTextureCom->Set_ZeroFrame();
-
-	return S_OK;
+	switch (m_eState)
+	{
+	case IDLE:
+		m_pTextureCom->MoveFrame(m_TimerTag);
+		break;
+	case CHOP:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = IDLE;
+		break;
+	case SHAKE:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = IDLE;
+		break;
+	case GROW:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = IDLE;
+		break;
+	case FALL_LEFT:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			break;
+	case FALL_RIGHT:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			break;
+	case STUMP:
+		m_pTextureCom->MoveFrame(m_TimerTag, false);
+		break;
+	}
 }
 
-void CTree::SetUp_BillBoard()
+void CTree::Change_Motion()
 {
-	_float4x4 ViewMatrix;
+	if (m_eState != m_ePreState)
+	{
+		switch (m_eState)
+		{
+		case CTree::IDLE:
+			Change_Texture(TEXT("Com_Texture_Tall_IDLE"));
+			break;
+		case CTree::CHOP:
+			Change_Texture(TEXT("Com_Texture_Tall_CHOP"));
+			break;
+		case CTree::SHAKE:
+			Change_Texture(TEXT("Com_Texture_Tall_SHAKE"));
+			break;
+		case CTree::GROW:
+			Change_Texture(TEXT("Com_Texture_Tall_GROW"));
+			break;
+		case CTree::FALL_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Tall_FALL_RIGHT"));
+			break;
+		case CTree::FALL_LEFT:
+			Change_Texture(TEXT("Com_Texture_Tall_FALL_LEFT"));
+			break;
+		case CTree::STUMP:
+			Change_Texture(TEXT("Com_Texture_Tall_STUMP"));
+			break;
+		}
 
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
-
-	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
-	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-}
-
-void CTree::WalkingTerrain()
-{
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	if (nullptr == pGameInstance)
-		return;
-
-	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
-	if (nullptr == pVIBuffer_Terrain)
-		return;
-
-	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
-	if (nullptr == pTransform_Terrain)
-		return;
-
-	_float3			vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
-	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_fRadius);
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+		m_ePreState = m_eState;
+	}
 }
 
 CTree* CTree::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
