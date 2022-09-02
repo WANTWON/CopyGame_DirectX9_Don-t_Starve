@@ -115,6 +115,9 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/DebugLine_%03d.png"), 1))))
 		return E_FAIL;
 
+	lstrcpy(m_szLoadingText, TEXT("Loading_Player Texture"));
+
+
 #pragma region Add_Texture_Player
 	/* run*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Run_Side"),
@@ -327,24 +330,44 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		return E_FAIL;
 #pragma  endregion Add_Texture_Effects
 	/* ¼ÎÀÌ´õ ·Îµù Áß. */
-	lstrcpy(m_szLoadingText, TEXT("¼ÎÀÌ´õ ·Îµù Áß."));
 
-#pragma region Add_Texture UI
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/tile%03d.png"), 19))))
 		return E_FAIL;
+
+	/* ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
+	lstrcpy(m_szLoadingText, TEXT("Loading_UI Texture"));
+
+#pragma region Add_Texture UI
+
 	/*For.Prototype_Component_Texture_MainInventory */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainInventory"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory.png"), 1))))
 		return E_FAIL;
-	/*For.Prototype_Component_Texture_WeaponToolbox_front */
+
+	/*For.Prototype_Component_Texture_Craftmain */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Craftmain"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craft%d.png"), 7))))
+		return E_FAIL;
+
+
+	/*For.Prototype_Component_Texture_Craftmain_back */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Craftmain_back"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craftback%d.png"), 2))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_Craftbutton */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Craftbutton"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craftbutton%d.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Gatherbox_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_GatherToolbox_front"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/gather%d.png"), 2))))
 		return E_FAIL;
 	/*For.Prototype_Component_Texture_WeaponToolbox_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_WeaponToolbox_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/weapon%d.png"), 3))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/weapon%d.png"), 5))))
 		return E_FAIL;
 	/*For.Prototype_Component_Texture_MainToolbox */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainToolbox"),
@@ -413,8 +436,6 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 #pragma endregion Add_Texture UI
 
-	/* ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
-	lstrcpy(m_szLoadingText, TEXT("Loading_Model"));
 
 	/* ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½. */
 	lstrcpy(m_szLoadingText, TEXT("Loading_Object"));
@@ -433,10 +454,30 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Picker"),
 		CAttackRange::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+
+	lstrcpy(m_szLoadingText, TEXT("Loading_UI"));
+
 #pragma region Add_Prototype UI Object
 
 
-	//ï¿½ï¿½ï¿½â¼­ï¿½ï¿½ï¿½ï¿½ Test ï¿½Ö¼ï¿½
+	/*For.Prototype_GameObject_Craftmain */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftmain"),
+		CCraftmain::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftmain_back"),
+		CCraftmain_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftmain_front"),
+		CCraftmain_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftbutton"),
+		CCraftbutton::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/*For.Prototype_GameObject_MainInventory */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory"),
 		CMainInventory::Create(m_pGraphic_Device))))
@@ -559,102 +600,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	Safe_AddRef(pGameInstance);
 
-	/* ÅØ½ºÃÄ ·Îµù Áß. */
-	lstrcpy(m_szLoadingText, TEXT("ÅØ½ºÃÄ ·Îµù Áß."));
-
-	/*For.Prototype_Component_Texture_Terrain*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/tile%03d.png"), 18))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_MainInventory */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory.png"), 1))))
-		return E_FAIL;
-    /*For.Prototype_Component_Texture_Craftmain */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Craftmain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craft%d.png"), 7))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_Craftmain_back */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Craftmain_back"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craftback%d.png"), 2))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_Craftbutton */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Craftbutton"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craftbutton%d.png"), 1))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_WeaponToolbox_front */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_GatherToolbox_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/gather%d.png"), 2))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_WeaponToolbox_front */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WeaponToolbox_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/weapon%d.png"), 5))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_MainToolbox */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/Toolbox.png"), 1))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_MainToolbox_back */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox_back"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/Toolboxback%d.png"), 3))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_MainToolbox_front */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainToolbox_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/Toolboxfront%d.png"), 4))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_BagInventory */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BagInventory"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/baginven3.png"), 1))))
-		return E_FAIL;
-    if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bagopen"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/bagsprite/BackPackOpen_%03d.png"), 15))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bagclose"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/bagsprite/BackPackClose_%03d.png"), 11))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_MainInventory_back */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory_back"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory_back.png"), 1))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_MainInventory_front */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 23))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_Equipment_back */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Equipment_back"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/jangbi%d.png"), 4))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_Equipment_front */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Equipment_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 23))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_Pont */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pont"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 10))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_HpPont */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_HpPont"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 10))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_Playerhp */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Playerhp"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Health/Health_%03d.png"), 50))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_Playerhunger */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Playerhunger"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Hunger/Hunger_%03d.png"), 50))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_Playermentality */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_PlayerMentality"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Sanity/Sanity_%03d.png"), 50))))
-		return E_FAIL;
-
 	/* ï¿½Ø½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
 	lstrcpy(m_szLoadingText, TEXT("Loading_Texture"));
 
@@ -673,6 +618,8 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Leaf"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 4))))
 		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Loading_Interactive Object Texture"));
 
 
 	/*For. Prototype_Component_Texture_Tree*/
@@ -743,6 +690,8 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Berry_Bush/Picked/Picked_%03d.png"), 1))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Berry_Bush
+
+	lstrcpy(m_szLoadingText, TEXT("Loading_Monster Texture"));
 
 #pragma region Add_Texture_Pig
 	/*For. Prototype_Component_Texture_Pig*/
@@ -871,129 +820,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_GameObject_Camera_Dynamic */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Dynamic"),
 		CCameraDynamic::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-
-	//¿©±â¼­ºÎÅÍ Test ÁÖ¼®
-
-	/*For.Prototype_GameObject_Craftmain */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftmain"),
-		CCraftmain::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftmain_back"),
-		CCraftmain_back::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftmain_front"),
-		CCraftmain_front::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftbutton"),
-		CCraftbutton::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_MainInventory */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory"),
-		CMainInventory::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainInToolbox */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox"),
-		CToolboxWeapon::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainInToolbox */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox_back"),
-		CToolboxWeapon_back::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainInToolbox */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox_front"),
-		CToolboxWeapon_front::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox"),
-		CToolboxGather::Create(m_pGraphic_Device))))				   
-		return E_FAIL;												   
-	/*For.Prototype_GameObject_MainInToolbox */						   
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox_back"),
-		CToolboxGather_back::Create(m_pGraphic_Device))))			  
-		return E_FAIL;												  
-	/*For.Prototype_GameObject_MainInToolbox */						  
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox_front"),
-		CToolboxGather_front::Create(m_pGraphic_Device))))
-		return E_FAIL;
-		
-	/*For.Prototype_GameObject_MainInToolbox */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox"),
-		CToolboxMain::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainIToolbox_back */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox_back"),
-		CToolboxMain_back::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainIToolbox_back */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox_front"),
-		CToolboxMain_front::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_BagInventory */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BagInventory"),
-		CBagInventory::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainInventory_back */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory_back"),
-		CMainInventory_back::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainInventory_front */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory_front"),
-		CMainInventory_front::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_Equipment_back */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Equipment_back"),
-		CEquipment_back::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	/*For.Prototype_GameObject_MainInventory_front */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Equipment_front"),
-		CEquipment_front::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_Pont */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pont"),
-		CPont::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_Playerhp */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Playerhp"),
-		CPlayerhp::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_Playerhunger */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Playerhunger"),
-		CPlayerhunger::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_PlayerMentality */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerMentality"),
-		CPlayerMentality::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_HpPont */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HpPont"),
-		CPlayerhp_pont::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_hungerPont */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_hungerPont"),
-		CPlayerhunger_pont::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_MentalityPont */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MentalityPont"),
-		CPlayerMentality_pont::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_MentalityPont */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse_item"),
-		CMouse_item::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 
