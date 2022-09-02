@@ -46,18 +46,6 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Equipment_back(TEXT("Layer_UI"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_PlayerStatUI(TEXT("Layer_UI"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_UI"))))
-		return E_FAIL;
-
 	if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_UI"))))
 		return E_FAIL;
 
