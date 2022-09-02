@@ -18,6 +18,10 @@
 #include "ToolboxGather.h"
 #include "ToolboxGather_back.h"
 #include "ToolboxGather_front.h"
+#include "Craftmain.h"
+#include "Craftmain_back.h"
+#include "Craftmain_front.h"
+#include "Craftbutton.h"
 /*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -52,6 +56,12 @@ public:
 	list<CToolboxGather_back*>*Get_Toolboxgather_back_list(void) { return &m_Toolboxgather_back; }
 	list<CToolboxGather_front*>*Get_Toolboxgather_front_list(void) { return &m_Toolboxgather_front; }
 
+	list<CCraftmain*>*Get_Craftmain_list(void) { return &m_Craftmain; }
+	list<CCraftmain_back*>*Get_Craftmainback_list(void) { return &m_Craftmainback; }
+	list<CCraftmain_front*>*Get_Craftmainfront_list(void) { return &m_Craftmainfront; }
+
+	list<CCraftbutton*>*Get_Craftbutton_list(void) { return &m_Craftbutton; }
+
 	void sethp(_uint hp) { m_ihp = hp; }
 	void sethuger(_uint hunger) { m_ihunger = hunger;}
 	void setmentality(_uint mental) { m_mentality = mental; }
@@ -64,6 +74,9 @@ public:
 
 	void gathertool_on();
 	void gathertool_off();
+
+	void craft_on(MAKEWHAT item);
+	void craft_off();
 
 
 
@@ -90,6 +103,13 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CToolboxGather*>m_Toolboxgather;
 	list<CToolboxGather_back*>m_Toolboxgather_back;
 	list<CToolboxGather_front*>m_Toolboxgather_front;
+
+	
+	list<CCraftmain*>m_Craftmain;
+	list<CCraftmain_back*>m_Craftmainback;
+	list<CCraftmain_front*>m_Craftmainfront;
+
+	list<CCraftbutton*>	m_Craftbutton;
 
 
 	typedef list<CMainInventory_front*> INVENLIST;

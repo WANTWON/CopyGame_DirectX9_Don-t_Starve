@@ -23,6 +23,9 @@ namespace Client
 		ITEMNAME_SPIDERMEAT, ITEMNAME_PICK, ITEMNAME_PIGTAIL, ITEMNAME_ROCK2, ITEMNAME_ROPE, ITEMNAME_WEB, ITEMNAME_TORCH, ITEMNAME_END
 	};
 
+
+	enum MAKEWHAT { MAKE_AXE, MAKE_PICK, MAKE_HAMBAT, MAKE_SHOTTER, MAKE_STAFF, MAKE_ARMOR, MAKE_HELMET, MAKE_END };
+
 	const unsigned int g_iWinSizeX = 1280;
 	const unsigned int g_iWinSizeY = 720;
 
@@ -43,5 +46,13 @@ namespace Client
 	}BULLETDATA;
 
 }
+
+
+#include <process.h>
+
+// Client_Defines.h
+
+extern HWND		g_hWnd;
+extern HINSTANCE g_hInst;
 
 using namespace Client;

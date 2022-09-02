@@ -34,7 +34,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Portal(TEXT("Layer_Portal"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
+	/*if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Equipment_back(TEXT("Layer_UI"))))
@@ -45,7 +45,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_UI"))))
 		return E_FAIL;
-
+*/
 	if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
 		return E_FAIL;
 
@@ -440,7 +440,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WeaponToolbox"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
 
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		int number = i;
 
@@ -449,7 +449,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 
 	}
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		int number = i;
 
@@ -478,6 +478,57 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 			return E_FAIL;
 
 	}
+
+
+	for (int i = 0; i < 1; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftmain"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	for (int i = 0; i < 2; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftmain_back"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	for (int i = 0; i < 2; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftmain_front"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftbutton"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_LayerPont(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	for (int i = 0; i < 10; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
 
 	Safe_Release(pGameInstance);
 

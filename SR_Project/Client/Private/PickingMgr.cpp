@@ -111,8 +111,9 @@ _bool CPickingMgr::Picking()
 void CPickingMgr::Free()
 {
 	Safe_Release(m_pTerrain);
-	for (auto& iter : m_GameObjects)
-		Safe_Release(iter);
+
+	//for (auto& iter : m_GameObjects)
+		//Safe_Release(iter);
 
 	m_GameObjects.clear();
 }

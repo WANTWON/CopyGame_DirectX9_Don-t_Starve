@@ -139,6 +139,9 @@
     <Filter Include="02.GameObject\96.Portal">
       <UniqueIdentifier>{25f28f92-6d93-4113-890e-d8d88a2fac6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\03.Craft">
+      <UniqueIdentifier>{ff25ab13-96f1-4752-a952-2998b210305c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -318,6 +321,19 @@
     <ClInclude Include="..\Public\Portal.h">
       <Filter>02.GameObject\96.Portal</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AttackRange.h" />
+    <ClInclude Include="..\Public\Craftmain_front.h">
+      <Filter>02.GameObject\98.UI\03.Craft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Craftmain_back.h">
+      <Filter>02.GameObject\98.UI\03.Craft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Craftmain.h">
+      <Filter>02.GameObject\98.UI\03.Craft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Craftbutton.h">
+      <Filter>02.GameObject\98.UI\03.Craft</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -484,6 +500,19 @@
     </ClCompile>
     <ClCompile Include="..\Private\Portal.cpp">
       <Filter>02.GameObject\96.Portal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AttackRange.cpp" />
+    <ClCompile Include="..\Private\Craftmain_front.cpp">
+      <Filter>02.GameObject\98.UI\03.Craft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Craftmain_back.cpp">
+      <Filter>02.GameObject\98.UI\03.Craft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Craftmain.cpp">
+      <Filter>02.GameObject\98.UI\03.Craft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Craftbutton.cpp">
+      <Filter>02.GameObject\98.UI\03.Craft</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

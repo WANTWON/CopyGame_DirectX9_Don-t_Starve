@@ -164,6 +164,9 @@
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\public\BerryBush.h" />
     <ClInclude Include="..\public\Boulder.h" />
+    <ClInclude Include="..\Public\Craftbutton.h" />
+    <ClInclude Include="..\Public\Craftmain_back.h" />
+    <ClInclude Include="..\Public\Craftmain_front.h" />
     <ClInclude Include="..\Public\Equipment_back.h" />
     <ClInclude Include="..\Public\Equipment_front.h" />
     <ClInclude Include="..\Public\Equip_Animation.h" />
@@ -175,6 +178,7 @@
     <ClInclude Include="..\Public\Level_Hunt.h" />
     <ClInclude Include="..\Public\MainInventory_back.h" />
     <ClInclude Include="..\Public\MainInventory_front.h" />
+    <ClInclude Include="..\Public\Craftmain.h" />
     <ClInclude Include="..\Public\Mouse.h" />
     <ClInclude Include="..\Public\Mouse_item.h" />
     <ClInclude Include="..\Public\Particle.h" />
@@ -225,6 +229,9 @@
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\private\BerryBush.cpp" />
     <ClCompile Include="..\private\Boulder.cpp" />
+    <ClCompile Include="..\Private\Craftbutton.cpp" />
+    <ClCompile Include="..\Private\Craftmain_back.cpp" />
+    <ClCompile Include="..\Private\Craftmain_front.cpp" />
     <ClCompile Include="..\Private\Equipment_back.cpp" />
     <ClCompile Include="..\Private\Equipment_front.cpp" />
     <ClCompile Include="..\Private\Equip_Animation.cpp" />
@@ -236,6 +243,7 @@
     <ClCompile Include="..\Private\Level_Hunt.cpp" />
     <ClCompile Include="..\Private\MainInventory_back.cpp" />
     <ClCompile Include="..\Private\MainInventory_front.cpp" />
+    <ClCompile Include="..\Private\Craftmain.cpp" />
     <ClCompile Include="..\Private\Mouse.cpp" />
     <ClCompile Include="..\Private\Mouse_item.cpp" />
     <ClCompile Include="..\Private\Particle.cpp" />

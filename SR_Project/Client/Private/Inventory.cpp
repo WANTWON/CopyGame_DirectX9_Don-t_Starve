@@ -342,87 +342,68 @@ void CInventory_Manager::gathertool_off()
 
 }
 
-void CInventory_Manager::Free()
+void CInventory_Manager::craft_on(MAKEWHAT item)
 {
-	for (auto& iter : m_Equipmentlist)
-		Safe_Release(iter);
+	for (auto& k : m_Craftmain)
+	{
+		k->set_onof(true);
+		k->set_makewhat(item);
+	}
+		
+	for (auto& k : m_Craftmainback)
+	{
+		k->set_onof(true);
+		k->set_makewhat(item);
+	}
+		
+	for (auto& k : m_Craftmainfront)
+	{
+		k->set_onof(true);
+		k->set_makewhat(item);
+	}
 
-	m_Equipmentlist.clear();
+	for (auto& k : m_Craftbutton)
+	{
+		k->set_onof(true);
+		k->set_makewhat(item);
+	}
+		
 
-	for (auto& iter : m_Pontlist)
-		Safe_Release(iter);
+}
 
-	m_Pontlist.clear();
+void CInventory_Manager::craft_off()
+{
 
-	for (auto& iter : m_Hppontlist)
-		Safe_Release(iter);
+	for (auto& k : m_Craftmain)
+	{
+		k->set_onof(false);
+		k->gobackfirstY();
+		k->gobackfirstX();
+	}
+	
+	for (auto& k : m_Craftmainback)
+	{
+		k->set_onof(false);
+		k->gobackfirstY();
+		k->gobackfirstX();
+	}
+     for (auto& k : m_Craftmainfront)
+		{
+		 k->set_onof(false);
+		 k->gobackfirstY();
+		 k->gobackfirstX();
+	     }
+	for (auto& k : m_Craftbutton)
+	{
+		k->set_onof(false);
+		k->gobackfirstY();
+		k->gobackfirstX();
+	}
+}
 
-	m_Hppontlist.clear();
-
-
-	for (auto& iter : m_Hungerpontlist)
-		Safe_Release(iter);
-
-	m_Hungerpontlist.clear();
-
-	for (auto& iter : m_Mentalitiypontlist)
-		Safe_Release(iter);
-
-	m_Mentalitiypontlist.clear();
-
-
-	for (auto& iter : m_BagInventorylist)
-		Safe_Release(iter);
-
-	m_BagInventorylist.clear();
-
-	for (auto& iter : m_Mouseitemlist)
-		Safe_Release(iter);
-
-	m_Mouseitemlist.clear();
-
-	for (auto& iter : m_Toolboxweapon)
-		Safe_Release(iter);
-
-	m_Toolboxweapon.clear();
-
-
-	for (auto& iter : m_Toolboxweapon_back)
-		Safe_Release(iter);
-
-	m_Toolboxweapon_back.clear();
-
-	for (auto& iter : m_Toolboxweapon_front)
-		Safe_Release(iter);
-
-	m_Toolboxweapon_front.clear();
-
-
-	for (auto& iter : m_Toolboxgather)
-		Safe_Release(iter);
-
-	m_Toolboxgather.clear();
-
-	for (auto& iter : m_Toolboxgather_back)
-		Safe_Release(iter);
-
-	m_Toolboxgather_back.clear();
-
-
-	for (auto& iter : m_Toolboxgather_front)
-		Safe_Release(iter);
-
-	m_Toolboxgather_front.clear();
-
-	for (auto& iter : m_MainInventorylist)
-		Safe_Release(iter);
-
-	m_MainInventorylist.clear();
-
-	for (auto& iter : m_MainInventorybacklist)
-		Safe_Release(iter);
-
-	m_MainInventorybacklist.clear();
+void CInventory_Manager::Free()
+{ 
+	//__super::Free();
 	
 
 }
