@@ -182,7 +182,7 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	}
 
 
-	if (texnum == ITEMNAME_BERRY || texnum == ITEMNAME_CARROT || texnum == ITEMNAME_MEAT || texnum == ITEMNAME_MONSTERMEAT)
+	if (texnum == ITEMNAME_BERRY || texnum == ITEMNAME_CARROT || texnum == ITEMNAME_MEAT || texnum == ITEMNAME_SPIDERMEAT)
 	{
 		m_itemtype = ITEM_FOOD;
 	}
@@ -438,7 +438,7 @@ HRESULT CMainInventory_front::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_MainInventory_front"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainInventory_front"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -548,7 +548,7 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 
 
 	}
-
+	(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Add_ActStack(CPlayer::ACTION_STATE::EAT));
 
 	Safe_Release(pGameInstance);
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Client_Defines.h"
+#include "Particle.h"
 
 BEGIN(Engine)
 class CRenderer;
@@ -21,6 +22,7 @@ public:
 		LEVEL			eTextureScene;
 		const _tchar*		pTextureKey;
 		_uint				iTextureNum;
+		_float3				vVelocity;
 
 	}STATEDESC;
 
@@ -38,18 +40,20 @@ public:
 
 public:
 	HRESULT SetUp_Components(void* pArg);
+	HRESULT SetUp_RenderState();
+	HRESULT Release_RenderState();
 
 private:
 	CTransform*			m_pTransformCom = nullptr;
 	CVIBuffer_Rect*		m_pVIBufferCom = nullptr;
-	CTexture*				m_pTextureCom = nullptr;
+	CTexture*			m_pTextureCom = nullptr;
 	CRenderer*			m_pRendererCom = nullptr;
 
 
 private:
 	STATEDESC			m_StateDesc;
-	_uint				m_iCurrentFrameIndex;
-	_float				m_fAlpha;
+	_uint				m_iCurrentFrameIndex = 0;
+	_float				m_fAlpha = 0;
 
 public:
 	static CParticle* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

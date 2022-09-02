@@ -8,7 +8,9 @@
 #include "Bullet.h"
 #include "CameraDynamic.h"
 #include "Interactive_Object.h"
-
+#include "PickingMgr.h"
+#include "AttackRange.h"
+#include "ParticleSystem.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -46,7 +48,20 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Equipment"), LEVEL_GAMEPLAY, TEXT("Layer_Equip"), nullptr)))
 		return E_FAIL;
 
+	_bool bPicker = true;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Picker"), LEVEL_GAMEPLAY, TEXT("Layer_Picker"), &bPicker)))
+		return E_FAIL;
+	bPicker = false;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Picker"), LEVEL_GAMEPLAY, TEXT("Layer_Range"),&(bPicker))))
+		return E_FAIL;
+
 	m_Equipment = (CEquip_Animation*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Equip"));
+
+	m_pPicker = (CAttackRange*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Picker"));
+	m_pPicker->Set_Scale(_float3(0.4f, 0.4f, 1.f));
+
+	m_pRange = (CAttackRange*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Range"));
+	m_pRange-> Set_Scale(_float3(7.2f, 7.2f, 1.f));
 
 	Safe_Release(pGameInstance);
 
@@ -63,20 +78,29 @@ int CPlayer::Tick(_float fTimeDelta)
 	//Collider Add
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
-	//KeyInput
-	GetKeyDown(fTimeDelta);
-	//Move
-	Move_to_PickingPoint(fTimeDelta);
-	WalkingTerrain();
 
 	//Act Auto
 	Tick_ActStack(fTimeDelta);
 
+	//KeyInput
+	GetKeyDown(fTimeDelta);
+	//Mouse
+	//if (m_bIsFPS)
+	//{
+	//}
+
+	//Move
+	Move_to_PickingPoint(fTimeDelta);
+	WalkingTerrain();
+
 	Create_Bullet();
 	m_Equipment->Set_TargetPos(Get_Pos());
+	//TEst
+	RangeCheck(fTimeDelta);
+
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-	
+	cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
 
 	return OBJ_NOEVENT;
 }
@@ -89,13 +113,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
-	if (GetKeyState(VK_BACK) & 0x8000)
-	{
-	--m_tStat.fCurrentHealth;
-	--m_tStat.fCurrentHungry;
-	--m_tStat.fCurrentMental;
-	}
 
 	if (m_tStat.fCurrentHealth > m_tStat.fMaxHealth)
 	{
@@ -111,16 +128,8 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	{
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
 	}
-
-
-	//추후에 아이템 만들어지고 플레이어가 아이템과 닿았을떄 획득하는 상호작용을 마친후에 인벤토리에 들어오는건 아래코드 그대로 쓰시면 작동합니다!!
-	//#include "Inven.h" 포함하시고
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
-
 	
 	Test_Debug(fTimeDelta);
-	
 }
 
 
@@ -197,14 +206,16 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 {
 	m_tStat.fCurrentHealth -= fDamage;
 
+	m_ActStack.push(ACTION_STATE::DAMAGED);
+
+	m_bMove = false;
+	m_bAutoMode = true;
+
 	return fDamage;
 }
 
-
-
 HRESULT CPlayer::SetUp_Components()
 {
-
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
@@ -237,7 +248,7 @@ HRESULT CPlayer::SetUp_Components()
 
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
-	TransformDesc.InitPos = _float3(10.f, 2.f, 5.f);
+	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
@@ -361,6 +372,12 @@ HRESULT CPlayer::Test_Setup()
 
 void CPlayer::GetKeyDown(_float _fTimeDelta)
 {
+	/*키입력 불가.*/
+	if (!m_bMove)
+		return;
+
+	//Test Power
+
 #pragma region Debug&CamKey
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_DEBUG]))
 	{
@@ -387,8 +404,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		if (Camera->Get_CamMode() == CCameraDynamic::CAM_PLAYER)
 		{
 			Camera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 1);
-		}
-		
+		}	
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
@@ -399,29 +415,59 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			Camera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 2);
 		}
 	}
-#pragma endregion Debug&CamKey
+#pragma endregion Debug&CamKey	
 
 #pragma region Action
 	//Action
-	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN1]))
+	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN1]))
 	{
-		Test_Func(1);
+
+		if (m_pPicker->Get_IsCorrect())
+		{	
+			/*Test Bomb*/
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+			BULLETDATA BulletData;
+			ZeroMemory(&BulletData, sizeof(BulletData));
+			BulletData.bIsPlayerBullet = true;
+			BulletData.eDirState = DIR_STATE::DIR_DOWN;
+			BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
+			BulletData.vPosition = Get_Pos();
+
+			_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
+			//D3DXVec3Normalize(&temp, &temp);
+			//BulletData.fAdd_X = m_fMaxTime;
+			BulletData.vTargetPos = temp;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+				return;
+		}
+
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN2]))
 	{
-		Test_Func(2);
+		Jump(_fTimeDelta);
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN3]))
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN3]))
 	{
-		Test_Func(3);
+		if (m_pPicker->Get_IsShow())
+		{
+			m_pRange->Set_IsShow(false);
+			m_pPicker->Set_IsShow(false);
+		}
+		else 
+		{
+			m_pRange->Set_IsShow(true);
+			m_pPicker->Set_IsShow(true);
+		}
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN4]))
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN4]))
 	{
-		Test_Func(0);
+		
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN5]))
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN5]))
 	{
-		Eatting(_fTimeDelta);
+
 	}
 #pragma endregion Action
 
@@ -496,6 +542,8 @@ bool CPlayer::ResetAction(_float _fTimeDelta)
 	case Client::CPlayer::ACTION_STATE::WEEDING:
 	case Client::CPlayer::ACTION_STATE::EAT:
 	case Client::CPlayer::ACTION_STATE::PICKUP:
+	case Client::CPlayer::ACTION_STATE::DAMAGED:
+	case Client::CPlayer::ACTION_STATE::TELEPORT:
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1)
 		{
 			return true;
@@ -743,6 +791,28 @@ void CPlayer::Mining(_float _fTimeDelta)
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 24)
 	{
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(10);
+
+
+		CParticleSystem::STATEDESC ParticleDesc;
+		ZeroMemory(&ParticleDesc, sizeof(CParticleSystem::STATEDESC));
+		ParticleDesc.eType = CParticleSystem::PARTICLE_ROCK;
+		ParticleDesc.eTextureScene = LEVEL_GAMEPLAY;
+		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Rock");
+		ParticleDesc.dDuration = 0.2; //파티클 시간
+		ParticleDesc.dParticleLifeTime = 0.2; //수명
+		ParticleDesc.dSpawnTime = 1; //스폰 타임
+		ParticleDesc.fParticlePerSecond = 75;
+		ParticleDesc.fVelocityDeviation = 1.f;
+		ParticleDesc.iMaxParticleCount = 5;
+		ParticleDesc.vParticleScale = _float2(0.5, 0.5);
+		ParticleDesc.vParticleDeviation = _float3(1 * 0.6f, 0.f, 1 * 0.6f);
+		ParticleDesc.iTextureNum = 1;
+		ParticleDesc.vVelocity = _float3((rand() % 10)*0.1f, (rand() % 10) * 0.1f, rand() % 10 * 0.1f);
+		ParticleDesc.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		ParticleDesc.vPosition.z += 0.001;
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Particle"), &ParticleDesc)))
+			return;
 	}
 }
 
@@ -771,6 +841,28 @@ void CPlayer::Chop(_float _fTimeDelta)
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 28)
 	{
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(20);
+
+		CParticleSystem::STATEDESC ParticleDesc;
+		ZeroMemory(&ParticleDesc, sizeof(CParticleSystem::STATEDESC));
+		ParticleDesc.eType = CParticleSystem::PARTICLE_LEAF;
+		ParticleDesc.eTextureScene = LEVEL_GAMEPLAY;
+		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Leaf");
+		ParticleDesc.dDuration = 1; //파티클 시간
+		ParticleDesc.dParticleLifeTime = 1; //수명
+		ParticleDesc.dSpawnTime = 1; //스폰 타임
+		ParticleDesc.fParticlePerSecond = 75;
+		ParticleDesc.fVelocityDeviation = 1.f;
+		ParticleDesc.iMaxParticleCount = 5;
+		ParticleDesc.vParticleScale = _float2(0.5, 0.5);
+		ParticleDesc.vParticleDeviation = _float3(1 * 0.6f, 0.f, 1 * 0.6f);
+		ParticleDesc.iTextureNum = 4;
+		ParticleDesc.vVelocity = _float3(0.01f,-0.5,0.f);
+		ParticleDesc.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		ParticleDesc.vPosition.z -= 0.001;
+		ParticleDesc.vPosition.y += 1;
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Particle"), &ParticleDesc)))
+			return;
 	}
 }
 
@@ -818,6 +910,11 @@ void CPlayer::Eatting(_float _fTimeDelta)
 		}
 		m_ePreState = m_eState;
 	}
+
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iCurrentTex - 1)
+	{
+		m_bMove = true;
+	}
 }
 
 void CPlayer::Pickup(_float _fTimeDelta)
@@ -845,6 +942,63 @@ void CPlayer::Pickup(_float _fTimeDelta)
 	{
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact();
 	}
+}
+
+void CPlayer::Damaged(_float _fTimeDelta)
+{
+	m_eState = ACTION_STATE::DAMAGED;
+
+	if (m_ePreState != m_eState)
+	{
+		m_bMove = false;
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Damaged_Down"));
+			break;
+		case DIR_STATE::DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Damaged_Up"));
+			break;
+		case DIR_STATE::DIR_LEFT:
+		case DIR_STATE::DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Damaged_Side"));
+			break;
+		}
+		m_ePreState = m_eState;
+
+	}
+
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iCurrentTex - 1)
+	{
+		 m_bMove = true;
+	}
+}
+
+void CPlayer::Jump(_float _fTimeDelta)
+{
+	m_eState = ACTION_STATE::TELEPORT;
+
+	//m_bMove = false;
+	if (m_ePreState != m_eState)
+	{
+		//m_bMove = false;
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Jump_Down"));
+			break;
+		case DIR_STATE::DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Jump_Up"));
+			break;
+		case DIR_STATE::DIR_LEFT:
+		case DIR_STATE::DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Jump_Side"));
+			break;
+		}
+		m_ePreState = m_eState;
+	}
+
+
 }
 
 void CPlayer::Multi_Action(_float _fTimeDelta)
@@ -878,7 +1032,6 @@ void CPlayer::Create_Bullet()
 		if (m_bIsFPS)
 		{
 			BulletData.eDirState = DIR_STATE::DIR_END;
-			//BulletData.bIsFPSMode = true;
 			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 		}
 		else
@@ -886,10 +1039,10 @@ void CPlayer::Create_Bullet()
 			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 			BulletData.eDirState = m_eDirState;
 		}
+		BulletData.bIsPlayerBullet = true;
 		BulletData.eWeaponType = m_eWeaponType;
 		BulletData.vPosition = Get_Pos();
-		//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-		
+
 		switch (m_eWeaponType)
 		{
 		case WEAPON_TYPE::WEAPON_HAND:
@@ -900,7 +1053,7 @@ void CPlayer::Create_Bullet()
 			}
 			break;
 		case WEAPON_TYPE::WEAPON_SWORD:
-			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20)
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 5)
 			{
 				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
 					return;
@@ -997,18 +1150,42 @@ void CPlayer::Test_Detect(_float fTImeDelta)
 	
 }
 
+void CPlayer::RangeCheck(_float _fTimeDelta)
+{
+	if (!m_pPicker->Get_IsShow())
+		return;
+
+	CPickingMgr::Get_Instance()->Picking();
+
+	_float Compare_Range = (m_vTargetPicking.x - Get_Pos().x)*(m_vTargetPicking.x - Get_Pos().x)
+		+ (m_vTargetPicking.y - Get_Pos().y)*(m_vTargetPicking.y - Get_Pos().y)
+		+ (m_vTargetPicking.z - Get_Pos().z)*(m_vTargetPicking.z - Get_Pos().z);
+
+	m_pPicker->Set_Pos(m_vTargetPicking);
+	m_pRange->Set_Pos(Get_Pos());
+
+	if (m_AtkRange* m_AtkRange > Compare_Range)
+	{
+		m_pPicker->Set_IsCorrect(true);
+		m_pRange->Set_IsCorrect(true);
+	}
+	else
+	{
+		m_pPicker->Set_IsCorrect(false);
+		m_pRange->Set_IsCorrect(false);
+	}
+}
+
 void CPlayer::Tick_ActStack(_float fTimeDelta)
 {
 	if (m_bAutoMode)
 	{
-		if (m_pTarget == nullptr)
-		{
-			Clear_ActStack();
-			return;
-		}
-
 		CInteractive_Object* pObj = (CInteractive_Object*)m_pTarget;
-		INTERACTOBJ_ID eObjID = pObj->Get_InteractName();
+		INTERACTOBJ_ID eObjID = INTERACTOBJ_ID::ID_END; 
+		if (m_pTarget != nullptr)
+		{
+			eObjID = pObj->Get_InteractName();
+		}
 
 		switch (m_ActStack.top())
 		{
@@ -1055,15 +1232,15 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				Cutting_Grass(fTimeDelta);
 			}
 			break;
-		//case ACTION_STATE::EAT:
-		//	if (Check_Action_End())
-		//	{
-		//		m_ActStack.pop();
-		//	}
-		//	else {//false일 시 계속 수행 
-		//		Eatting(fTimeDelta);
-		//	}
-		//	break;
+		case ACTION_STATE::EAT:
+			if (m_bMove)
+			{
+				m_ActStack.pop();
+			}
+			else {//false일 시 계속 수행 
+				Eatting(fTimeDelta);
+			}
+			break;
 		case ACTION_STATE::PICKUP:
 			if (Check_Interact_End())
 			{
@@ -1075,6 +1252,17 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 			}
 			break;
 		case ACTION_STATE::ATTACK:
+			break;
+		case ACTION_STATE::DAMAGED:
+			if (m_bMove)
+			{
+				m_ActStack.pop();
+				//m_pTarget = nullptr;
+			}
+			else
+			{
+				Damaged(fTimeDelta);
+			}
 			break;
 		default:
 			break;
@@ -1108,6 +1296,7 @@ CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
 	case INTERACTOBJ_ID::BOULDER:
 		return ACTION_STATE::MINING;
 		break;
+	case INTERACTOBJ_ID::NPC:
 	case INTERACTOBJ_ID::ITEMS:
 		return ACTION_STATE::PICKUP;
 		break;
@@ -1129,22 +1318,22 @@ void CPlayer::Test_Debug(_float fTimeDelta)
 	if (!m_bDebugKey)
 		return;
 
-	m_pDebugTransformCom->Set_State(CTransform::STATE_POSITION, Get_Pos());
+	//m_pDebugTransformCom->Set_State(CTransform::STATE_POSITION, Get_Pos());
 
-	CGameInstance* pInstance = CGameInstance::Get_Instance();
-	fTimeAcc += fTimeDelta;
-	if (fTimeAcc > 1.f && m_pColliderCom->Collision_with_Group(CCollider::COLLISION_MONSTER, this))
-	{
-		m_tStat.fCurrentHealth -= 5.f;
+	//CGameInstance* pInstance = CGameInstance::Get_Instance();
+	//fTimeAcc += fTimeDelta;
+	//if (fTimeAcc > 1.f && m_pColliderCom->Collision_with_Group(CCollider::COLLISION_MONSTER, this))
+	//{
+	//	m_tStat.fCurrentHealth -= 5.f;
 
-	}
+	//}
 
-	if (fTimeAcc > 2.f)
-	{
-		//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
-		printf("%f\n ", m_tStat.fCurrentHealth);
-		fTimeAcc = 0.f;
-	}
+	//if (fTimeAcc > 2.f)
+	//{
+	//	//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+	//	printf("%f\n ", m_tStat.fCurrentHealth);
+	//	fTimeAcc = 0.f;
+	//}
 
 }
 
@@ -1181,15 +1370,15 @@ HRESULT CPlayer::Texture_Clone()
 	/*Run*/
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Run_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Run_Side"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Run_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Run_Up"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Run_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Run_Down"), m_pTextureCom));
 
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_iEndTex = 66;
@@ -1197,15 +1386,15 @@ HRESULT CPlayer::Texture_Clone()
 	/*Idle*/
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Idle_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Idle_Side"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Idle_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Idle_Up"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Idle_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Idle_Down"), m_pTextureCom));
 
 	/*Punch*/
 	TextureDesc.m_iStartTex = 0;
@@ -1213,15 +1402,15 @@ HRESULT CPlayer::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Punch_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Punch_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Punch_Up"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Punch_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Punch_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Punch_Down"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Punch_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Punch_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Punch_Side"), m_pTextureCom));
 
 	/*Attack_Weapon*/
 	TextureDesc.m_iStartTex = 0;
@@ -1229,15 +1418,15 @@ HRESULT CPlayer::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Weapon_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Weapon_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Weapon_Up"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Weapon_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Weapon_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Weapon_Down"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Weapon_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Weapon_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Weapon_Side"), m_pTextureCom));
 
 	/*Attack_Dart*/
 	TextureDesc.m_iStartTex = 0;
@@ -1245,15 +1434,15 @@ HRESULT CPlayer::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Dart_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Dart_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Dart_Up"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Dart_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Dart_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Dart_Down"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Dart_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Dart_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Dart_Side"), m_pTextureCom));
 
 	/*Mining*/
 	TextureDesc.m_iStartTex = 0;
@@ -1261,15 +1450,15 @@ HRESULT CPlayer::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Mining_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Mining_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Mining_Up"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Mining_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Mining_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Mining_Down"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Mining_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Mining_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Mining_Side"), m_pTextureCom));
 
 	/*Chop*/
 	TextureDesc.m_iStartTex = 0;
@@ -1277,15 +1466,15 @@ HRESULT CPlayer::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Chop_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Chop_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Chop_Up"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Chop_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Chop_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Chop_Down"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Chop_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Chop_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Chop_Side"), m_pTextureCom));
 
 	/*Build*/
 	TextureDesc.m_iStartTex = 0;
@@ -1293,15 +1482,15 @@ HRESULT CPlayer::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Build_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Build_Up"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Build_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Build_Down"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Build_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Build_Side"), m_pTextureCom));
 
 	/*Eat*/
 	TextureDesc.m_iStartTex = 0;
@@ -1309,7 +1498,7 @@ HRESULT CPlayer::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Eat"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Eat"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Eat"), m_pTextureCom));
 
 	/*Pickup*/
 	TextureDesc.m_iStartTex = 0;
@@ -1317,15 +1506,47 @@ HRESULT CPlayer::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Pickup_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Pickup_Up"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Pickup_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Pickup_Down"), m_pTextureCom));
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Pickup_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Pickup_Side"), m_pTextureCom));
+
+	/*Damaged*/
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_iEndTex = 29;
+	TextureDesc.m_fSpeed = 60;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Damaged_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Damaged_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Damaged_Up"), m_pTextureCom));
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Damaged_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Damaged_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Damaged_Down"), m_pTextureCom));
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Damaged_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Damaged_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Damaged_Side"), m_pTextureCom));
+
+	/*Jump*/
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_iEndTex = 39;
+	TextureDesc.m_fSpeed = 60;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Jump_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Jump_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Jump_Up"), m_pTextureCom));
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Jump_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Jump_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Jump_Down"), m_pTextureCom));
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Jump_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Jump_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Jump_Side"), m_pTextureCom));
 
 	return S_OK;
 }
@@ -1350,7 +1571,9 @@ void CPlayer::SetUp_BillBoard()
 	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
 
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 
@@ -1423,8 +1646,8 @@ void CPlayer::Free()
 	Safe_Release(m_pDebugTransformCom);
 	Safe_Release(m_pDebugTextureCom);
 
-	for (auto& iter : m_vecTexture)
-		Safe_Release(iter);
+	for (auto& iter : m_mapTexture)
+		Safe_Release((iter).second);
 
-	m_vecTexture.clear();
+	m_mapTexture.clear();
 }

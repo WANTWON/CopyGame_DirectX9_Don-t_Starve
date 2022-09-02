@@ -115,52 +115,52 @@ HRESULT CSpider::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 
 	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Idle"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Idle"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 17;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_MOVE_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Move_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_MOVE_UP"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Move_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 17;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_MOVE_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Move_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_MOVE_DOWN"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Move_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 16;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_MOVE_SIDE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Move_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_MOVE_SIDE"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Move_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 31;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Attack_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_UP"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Attack_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 33;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Attack_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_DOWN"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Attack_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 43;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_SIDE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Attack_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_SIDE"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Attack_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 31;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_TAUNT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Taunt"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_TAUNT"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Taunt"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 16;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 27;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DIE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Spider_Die"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DIE"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Die"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
@@ -175,7 +175,7 @@ void CSpider::Change_Frame()
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::MOVE:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-1.2f, 1.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
@@ -183,7 +183,7 @@ void CSpider::Change_Frame()
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::ATTACK:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-1.2f, 1.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
@@ -193,9 +193,21 @@ void CSpider::Change_Frame()
 			m_bIsAttacking = false;
 			m_dwAttackTime = GetTickCount();
 		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20)
+		{
+			BULLETDATA BulletData;
+			ZeroMemory(&BulletData, sizeof(BulletData));
+			BulletData.vPosition = Get_Position();
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+			BulletData.eDirState = m_eDir;
+
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+				return;
+		}
 		break;
 	case STATE::TAUNT:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-1.2f, 1.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
@@ -204,7 +216,7 @@ void CSpider::Change_Frame()
 			m_eState = STATE::IDLE;
 		break;
 	case STATE::HIT:
-		if (m_eDir == DIR::DIR_LEFT)
+		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-1.2f, 1.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
@@ -213,6 +225,9 @@ void CSpider::Change_Frame()
 			m_bHit = false;
 		break;
 	case STATE::DIE:
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 9)
+			Drop_Items();
+
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
 		break;
 	}
@@ -230,14 +245,14 @@ void CSpider::Change_Motion()
 		case STATE::MOVE:
 			switch (m_eDir)
 			{
-			case DIR::DIR_UP:
+			case DIR_STATE::DIR_UP:
 				Change_Texture(TEXT("Com_Texture_MOVE_UP"));
 				break;
-			case DIR::DIR_DOWN:
+			case DIR_STATE::DIR_DOWN:
 				Change_Texture(TEXT("Com_Texture_MOVE_DOWN"));
 				break;
-			case DIR::DIR_RIGHT:
-			case DIR::DIR_LEFT:
+			case DIR_STATE::DIR_RIGHT:
+			case DIR_STATE::DIR_LEFT:
 				Change_Texture(TEXT("Com_Texture_MOVE_SIDE"));
 				break;
 			}
@@ -248,14 +263,14 @@ void CSpider::Change_Motion()
 		case STATE::ATTACK:
 			switch (m_eDir)
 			{
-			case DIR::DIR_UP:
+			case DIR_STATE::DIR_UP:
 				Change_Texture(TEXT("Com_Texture_ATTACK_UP"));
 				break;
-			case DIR::DIR_DOWN:
+			case DIR_STATE::DIR_DOWN:
 				Change_Texture(TEXT("Com_Texture_ATTACK_DOWN"));
 				break;
-			case DIR::DIR_RIGHT:
-			case DIR::DIR_LEFT:
+			case DIR_STATE::DIR_RIGHT:
+			case DIR_STATE::DIR_LEFT:
 				Change_Texture(TEXT("Com_Texture_ATTACK_SIDE"));
 				break;
 			}
@@ -349,42 +364,35 @@ void CSpider::Follow_Target(_float fTimeDelta)
 	// Move Horizontally
 	if (abs(fX) > abs(fZ))
 		if (fX > 0)
-			m_eDir = DIR::DIR_RIGHT;
+			m_eDir = DIR_STATE::DIR_RIGHT;
 		else
-			m_eDir = DIR::DIR_LEFT;
+			m_eDir = DIR_STATE::DIR_LEFT;
 	// Move Vertically
 	else
 		if (fZ > 0)
-			m_eDir = DIR::DIR_UP;
+			m_eDir = DIR_STATE::DIR_UP;
 		else
-			m_eDir = DIR::DIR_DOWN;
+			m_eDir = DIR_STATE::DIR_DOWN;
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
 
 	m_bIsAttacking = false;
 }
 
-void CSpider::Interact(_uint iDamage)
+_float CSpider::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
-	if (m_tInfo.iCurrentHp > 0)
+	_float fDmg = __super::Take_Damage(fDamage, DamageType, DamageCauser);
+	
+	if (fDmg > 0)
 	{
-		if (iDamage >= m_tInfo.iCurrentHp)
-		{
-			m_bDead = true;
-			m_tInfo.iCurrentHp = 0;
-		}
-		else
-		{
+		if (!m_bDead)
 			m_bHit = true;
-			m_tInfo.iCurrentHp -= iDamage;
-		}
 
-		// If Hit/Dead stop and reset Attack
 		m_bIsAttacking = false;
 		m_dwAttackTime = GetTickCount();
 	}
-	else
-		m_bDead = true;	
+
+	return fDmg;
 }
 
 HRESULT CSpider::Drop_Items()
@@ -406,9 +414,9 @@ HRESULT CSpider::Drop_Items()
 	ItemDesc.fPosition = _float3(fPosX, Get_Position().y, fPosZ);
 	ItemDesc.pTextureComponent = TEXT("Com_Texture_Spider_Meat");
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
-	ItemDesc.eItemName = ITEMNAME::ITEMNAME_MONSTERMEAT;
+	ItemDesc.eItemName = ITEMNAME::ITEMNAME_SPIDERMEAT;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Item"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

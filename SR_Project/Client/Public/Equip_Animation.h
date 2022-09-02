@@ -18,7 +18,7 @@ class CEquip_Animation : public CGameObject
 {
 public:
 
-	enum class ACTION_STATE { IDLE, MOVE, ATTACK, ACTION_END };
+	enum class ACTION_STATE { IDLE, MOVE, ATTACK, BUILD, ACTION_END };
 protected:
 	CEquip_Animation(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CEquip_Animation(const CEquip_Animation& rhs);
