@@ -45,9 +45,16 @@
 #include "ToolboxGather.h"
 #include "ToolboxGather_back.h"
 #include "ToolboxGather_front.h"
+
+#include "Craftmain.h"
+#include "Craftmain_back.h"
+#include "Craftmain_front.h"
+#include "Craftbutton.h"
+
 #include "AttackRange.h"
 #include "House.h"
 #include "Portal.h"
+
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -107,6 +114,9 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_DebugLine"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/DebugLine_%03d.png"), 1))))
 		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Loading_Player Texture"));
+
 
 #pragma region Add_Texture_Player
 	/* run*/
@@ -320,24 +330,44 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		return E_FAIL;
 #pragma  endregion Add_Texture_Effects
 	/* ¼ÎÀÌ´õ ·Îµù Áß. */
-	lstrcpy(m_szLoadingText, TEXT("¼ÎÀÌ´õ ·Îµù Áß."));
 
-#pragma region Add_Texture UI
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/tile%03d.png"), 19))))
 		return E_FAIL;
+
+	/* ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
+	lstrcpy(m_szLoadingText, TEXT("Loading_UI Texture"));
+
+#pragma region Add_Texture UI
+
 	/*For.Prototype_Component_Texture_MainInventory */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainInventory"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Inventory/MainInventory.png"), 1))))
 		return E_FAIL;
-	/*For.Prototype_Component_Texture_WeaponToolbox_front */
+
+	/*For.Prototype_Component_Texture_Craftmain */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Craftmain"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craft%d.png"), 7))))
+		return E_FAIL;
+
+
+	/*For.Prototype_Component_Texture_Craftmain_back */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Craftmain_back"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craftback%d.png"), 2))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_Craftbutton */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Craftbutton"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craftbutton%d.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Gatherbox_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_GatherToolbox_front"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/gather%d.png"), 2))))
 		return E_FAIL;
 	/*For.Prototype_Component_Texture_WeaponToolbox_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_WeaponToolbox_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/weapon%d.png"), 3))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/weapon%d.png"), 5))))
 		return E_FAIL;
 	/*For.Prototype_Component_Texture_MainToolbox */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainToolbox"),
@@ -406,8 +436,6 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 #pragma endregion Add_Texture UI
 
-	/* ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
-	lstrcpy(m_szLoadingText, TEXT("Loading_Model"));
 
 	/* ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½. */
 	lstrcpy(m_szLoadingText, TEXT("Loading_Object"));
@@ -426,10 +454,30 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Picker"),
 		CAttackRange::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+
+	lstrcpy(m_szLoadingText, TEXT("Loading_UI"));
+
 #pragma region Add_Prototype UI Object
 
 
-	//ï¿½ï¿½ï¿½â¼­ï¿½ï¿½ï¿½ï¿½ Test ï¿½Ö¼ï¿½
+	/*For.Prototype_GameObject_Craftmain */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftmain"),
+		CCraftmain::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftmain_back"),
+		CCraftmain_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftmain_front"),
+		CCraftmain_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftbutton"),
+		CCraftbutton::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/*For.Prototype_GameObject_MainInventory */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory"),
 		CMainInventory::Create(m_pGraphic_Device))))
@@ -555,6 +603,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/* ï¿½Ø½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
 	lstrcpy(m_szLoadingText, TEXT("Loading_Texture"));
 
+
 	/*For.Prototype_Component_Texture_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
@@ -569,6 +618,8 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Leaf"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 4))))
 		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Loading_Interactive Object Texture"));
 
 
 	/*For. Prototype_Component_Texture_Tree*/
@@ -639,6 +690,8 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Berry_Bush/Picked/Picked_%03d.png"), 1))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Berry_Bush
+
+	lstrcpy(m_szLoadingText, TEXT("Loading_Monster Texture"));
 
 #pragma region Add_Texture_Pig
 	/*For. Prototype_Component_Texture_Pig*/
@@ -768,6 +821,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Dynamic"),
 		CCameraDynamic::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
 
 	/*For.Prototype_GameObject_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),

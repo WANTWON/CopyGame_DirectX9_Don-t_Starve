@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CToolboxGather_front final : public CGameObject
+class CCraftbutton final : public CGameObject
 {
 private:
-	CToolboxGather_front(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CToolboxGather_front(const CToolboxGather_front& rhs);
-	virtual ~CToolboxGather_front() = default;
+	CCraftbutton(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CCraftbutton(const CCraftbutton& rhs);
+	virtual ~CCraftbutton() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -33,7 +33,7 @@ private: /* For.Components */
 
 private:
 	_float4x4				m_ProjMatrix;
-	_float					m_fX, m_fY, m_fSizeX, m_fSizeY, m_firstx;
+	_float					m_fX, m_fY, m_fSizeX, m_fSizeY, m_firstx, m_firsty;
 	_float                  m_pfX, m_pfY;
 
 private:
@@ -42,7 +42,7 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	static CToolboxGather_front* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CCraftbutton* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 
@@ -61,14 +61,18 @@ public:
 	int get_iNum() { return iNum; }
 
 public:
-	void Open_Weapontool(_float time) { m_fX += 70 * time; }
+	void Open_Weapontool(_float time) { m_fX += 20 * time; }
 	bool get_onof() { return m_bonof; }
 	void set_onof(bool tof) { m_bonof = tof; }
 
+	void Open_Craft(_float time) { m_fY += 50 * time; }
+
+
 	void gobackfirstX() { m_fX = m_firstx; }
+	void gobackfirstY() { m_fX = m_firsty; }
 
-	
-
+	void set_makewhat(MAKEWHAT item) { m_makewhat = item; }
+	void craft(MAKEWHAT item);
 private:
 	int* iNumber = nullptr;
 	int iNum = 100;
@@ -78,6 +82,7 @@ private:
 	bool m_bcheck = true;
 	bool m_bpontcheck = true;
 	bool m_bcheck_bag = false;
+	MAKEWHAT m_makewhat = MAKE_END;
 
 	TOOLTYPE  m_tooltype = TOOL_END;
 
