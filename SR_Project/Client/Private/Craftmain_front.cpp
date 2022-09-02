@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\Public\ToolboxGather_front.h"
+#include "..\Public\Craftmain_front.h"
 #include "GameInstance.h"
 #include "Inventory.h"
 #include "Mouse.h"
@@ -9,17 +9,17 @@
 
 
 
-CToolboxGather_front::CToolboxGather_front(LPDIRECT3DDEVICE9 pGraphic_Device)
+CCraftmain_front::CCraftmain_front(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CToolboxGather_front::CToolboxGather_front(const CToolboxGather_front & rhs)
+CCraftmain_front::CCraftmain_front(const CCraftmain_front & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CToolboxGather_front::Initialize_Prototype()
+HRESULT CCraftmain_front::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -29,7 +29,7 @@ HRESULT CToolboxGather_front::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CToolboxGather_front::Initialize(void* pArg)
+HRESULT CCraftmain_front::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -41,11 +41,13 @@ HRESULT CToolboxGather_front::Initialize(void* pArg)
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
 
-	m_fSizeX = 40.0f;
-	m_fSizeY = 40.0f;
-	m_fX = 30.f;
-	m_fY = 210.f + (iNum * 50.f);
+	m_fSizeX = 55.f;
+	m_fSizeY = 55.f;
+	m_fX = 230.f+(iNum * 65.f);
+	m_fY = 0.f;
+	
 
+	m_firsty = m_fY;
 	m_firstx = m_fX;
 
 	if (FAILED(SetUp_Components()))
@@ -63,13 +65,104 @@ HRESULT CToolboxGather_front::Initialize(void* pArg)
 	return S_OK;
 }
 
-int CToolboxGather_front::Tick(_float fTimeDelta)
+int CCraftmain_front::Tick(_float fTimeDelta)
 {
 
 	if (m_bonof == false)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
+
+
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT)
+		m_fY = 155.f;
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER)
+		m_fY = 205.f;
+	else if (m_makewhat == MAKE_STAFF)
+		m_fY = 255.f;
+	else if (m_makewhat == MAKE_ARMOR)
+		m_fY = 305.f;
+	else if (m_makewhat == MAKE_HELMET)
+		m_fY = 355.f;
+
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_PICK)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_WOOD;
+		 }
+	
+	    else
+	   
+		texnum = ITEMNAME_ROCK2;
+	   
+	}
+		
+	else if (m_makewhat == MAKE_HAMBAT)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_WOOD;
+		}
+
+		else
+		
+			texnum = ITEMNAME_MEAT;
+		
+	}
+
+	else if (m_makewhat == MAKE_SHOTTER)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_GRASS;
+		}
+
+		else
+		
+			texnum = ITEMNAME_ROPE;
+		
+	}
+
+	else if (m_makewhat == MAKE_STAFF)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_WOOD;
+		}
+		else
+			texnum = ITEMNAME_GOLD;
+	}
+	
+
+	else if (m_makewhat == MAKE_ARMOR)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_WOOD;
+		}
+
+		else
+		
+			texnum = ITEMNAME_ROCK2;
+		
+	}
+
+	else if (m_makewhat == MAKE_HELMET)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_WOOD;
+		}
+
+		else
+
+			texnum = ITEMNAME_ROCK2;
+
+	}
 
 	RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
@@ -78,23 +171,24 @@ int CToolboxGather_front::Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-
+	/*if (m_fY <= 155.f)
+		Open_Craft(fTimeDelta);*/
 
 	if (m_fX <= 100)
 		Open_Weapontool(fTimeDelta);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 
-	if (PtInRect(&rcRect, ptMouse))
-	{
+	//if (PtInRect(&rcRect, ptMouse))
+//	{
 
-		m_fSizeX = 55.f;
-		m_fSizeY = 55.f;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+		//m_fSizeX = 55.f;
+		//m_fSizeY = 55.f;
+		//m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	//	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 		//set_check(true);
 		//plus_itemcount();
-	}
+	//}
 
 
 
@@ -103,7 +197,7 @@ int CToolboxGather_front::Tick(_float fTimeDelta)
 	return OBJ_NOEVENT;
 }
 
-void CToolboxGather_front::Late_Tick(_float fTimeDelta)
+void CCraftmain_front::Late_Tick(_float fTimeDelta)
 {
 
 	if (m_bonof == false)
@@ -111,7 +205,7 @@ void CToolboxGather_front::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
-	
+
 
 	RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
@@ -154,12 +248,11 @@ void CToolboxGather_front::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-
 	Safe_Release(pinv);
 	//set_check(false);
 }
 
-HRESULT CToolboxGather_front::Render()
+HRESULT CCraftmain_front::Render()
 {
 	if (m_bonof == false)
 		return OBJ_NOEVENT;
@@ -176,7 +269,7 @@ HRESULT CToolboxGather_front::Render()
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(iNum)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))
@@ -194,14 +287,14 @@ HRESULT CToolboxGather_front::Render()
 	return S_OK;
 }
 
-HRESULT CToolboxGather_front::SetUp_Components()
+HRESULT CCraftmain_front::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_GatherToolbox_front"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainInventory_front"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -223,7 +316,7 @@ HRESULT CToolboxGather_front::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CToolboxGather_front::SetUp_RenderState()
+HRESULT CCraftmain_front::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -237,7 +330,7 @@ HRESULT CToolboxGather_front::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CToolboxGather_front::Release_RenderState()
+HRESULT CCraftmain_front::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
@@ -246,35 +339,35 @@ HRESULT CToolboxGather_front::Release_RenderState()
 	return S_OK;
 }
 
-CToolboxGather_front * CToolboxGather_front::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CCraftmain_front * CCraftmain_front::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CToolboxGather_front*	pInstance = new CToolboxGather_front(pGraphic_Device);
+	CCraftmain_front*	pInstance = new CCraftmain_front(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CToolboxGather_front"));
+		ERR_MSG(TEXT("Failed to Created : CCraftmain_front"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CToolboxGather_front::Clone(void* pArg)
+CGameObject * CCraftmain_front::Clone(void* pArg)
 {
-	CToolboxGather_front*	pInstance = new CToolboxGather_front(*this);
+	CCraftmain_front*	pInstance = new CCraftmain_front(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CToolboxGather_front"));
+		ERR_MSG(TEXT("Failed to Cloned : CCraftmain_front"));
 		Safe_Release(pInstance);
 	}
-	CInventory_Manager::Get_Instance()->Get_Toolboxgather_front_list()->push_back(pInstance);
+	CInventory_Manager::Get_Instance()->Get_Craftmainfront_list()->push_back(pInstance);
 	return pInstance;
 
 }
 
 
-void CToolboxGather_front::Free()
+void CCraftmain_front::Free()
 {
 	__super::Free();
 
@@ -284,34 +377,4 @@ void CToolboxGather_front::Free()
 	Safe_Release(m_pTextureCom);
 }
 
-//void CMainInventory_front::Use_item(ITEMNAME item)
-//{
-//	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-//	Safe_AddRef(pGameInstance);
-//	switch (item)
-//	{
-//	case ITEMNAME_CARROT:
-//
-//
-//
-//		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_HP(10));
-//		item_number -= 1;
-//		//minus_itemcount();
-//		break;
-//
-//
-//	case ITEMNAME_BERRY:
-//
-//
-//
-//		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_Hungry(10));
-//		minus_itemcount();
-//		break;
-//
-//
-//
-//	}
-//
-//
-//	Safe_Release(pGameInstance);
-//}
+

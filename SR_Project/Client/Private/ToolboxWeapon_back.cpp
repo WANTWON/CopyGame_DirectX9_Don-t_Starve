@@ -82,49 +82,48 @@ int CToolboxWeapon_back::Tick(_float fTimeDelta)
 		
 	}
 
-	if (iNum == 0&&PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
-		bool bok = false;
-		CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-		Safe_AddRef(pInventory_Manager);
-		
-		auto pinven = pInventory_Manager->Get_Inven_list();
-
-		for (auto iter = pinven->begin(); iter != pinven->end();++iter)
+	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
+	Safe_AddRef(pInventory_Manager);
+		//pInventory_Manager->craft_on(MAKE_AXE);
+		if (iNum == 0 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
-			if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 3)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
-			{
-				(*iter)->minus_material(3);
-				bok = true;
-				break;
-			}
 			
+			
+
+			pInventory_Manager->craft_on(MAKE_HAMBAT);
+
+		}
+		else if (iNum == 1 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+		{
+			
+			pInventory_Manager->craft_on(MAKE_SHOTTER);
+
 			
 		}
-		if (bok == false)
-			return 0;
-
-		for (auto iter = pinven->begin(); iter != pinven->end();++iter)
+		else if (iNum == 2 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
-			if ((*iter)->get_check() == false)
-			{
-				(*iter)->set_texnum(ITEMNAME_HAMBAT);
-				
-				(*iter)->set_check(true);
 
-				break;
-			}
-			
+			pInventory_Manager->craft_on(MAKE_STAFF);
+
+
+		}
+		else if (iNum == 3 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+		{
+
+			pInventory_Manager->craft_on(MAKE_ARMOR);
+
+
+		}
+		else if (iNum == 4 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+		{
+
+			pInventory_Manager->craft_on(MAKE_HELMET);
+
+
 		}
 
 
-}
-
-	/*if (m_bItem)
-	{
-	m_fX = ptMouse.x;
-	m_fY = ptMouse.y;
-	}*/
+		Safe_Release(pInventory_Manager);
 
 	return OBJ_NOEVENT;
 }
@@ -151,13 +150,9 @@ void CToolboxWeapon_back::Late_Tick(_float fTimeDelta)
 		backtexnum = 2;
 
 
-		//ERR_MSG(L"충돌");
 	}
 
-	/*if (m_bItem)
-	{
-
-	}*/
+	
 
 	if (nullptr != m_pRendererCom && iNum < 10)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);

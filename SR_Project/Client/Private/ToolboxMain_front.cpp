@@ -97,8 +97,7 @@ void CToolboxMain_front::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	CMouse*			pMouse = CMouse::Get_Instance();
-	Safe_AddRef(pMouse);
+
 
 	RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
@@ -141,7 +140,7 @@ void CToolboxMain_front::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-	Safe_Release(pMouse);
+	
 	Safe_Release(pinv);
 	//set_check(false);
 }
