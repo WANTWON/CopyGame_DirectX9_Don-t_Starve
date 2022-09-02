@@ -61,7 +61,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pPicker->Set_Scale(_float3(0.4f, 0.4f, 1.f));
 
 	m_pRange = (CAttackRange*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Range"));
-	m_pRange-> Set_Scale(_float3(7.2f, 7.2f, 1.f));
+	m_pRange-> Set_Scale(_float3(5.5f, 5.5f, 1.f));
 
 	Safe_Release(pGameInstance);
 
@@ -100,7 +100,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-	cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
+	//cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
 
 	return OBJ_NOEVENT;
 }
@@ -463,11 +463,13 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN4]))
 	{
-		
+		m_fAtkScale += 0.1f;
+		m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN5]))
 	{
-
+		m_fAtkScale -= 0.1f;
+		m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
 	}
 #pragma endregion Action
 
@@ -869,6 +871,9 @@ void CPlayer::Chop(_float _fTimeDelta)
 void CPlayer::Cutting_Grass(_float _fTimeDelta)
 {
 	m_eState = ACTION_STATE::WEEDING;
+
+	m_Equipment->Set_ActionState((_uint)3);
+	m_Equipment->Set_WeaponType(m_eWeaponType);
 
 	if (m_ePreState != m_eState)
 	{
