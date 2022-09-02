@@ -150,13 +150,9 @@ void CToolboxWeapon_back::Late_Tick(_float fTimeDelta)
 		backtexnum = 2;
 
 
-		//ERR_MSG(L"Ãæµ¹");
 	}
 
-	/*if (m_bItem)
-	{
-
-	}*/
+	
 
 	if (nullptr != m_pRendererCom && iNum < 10)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);

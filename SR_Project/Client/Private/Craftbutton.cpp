@@ -72,10 +72,16 @@ int CCraftbutton::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (m_makewhat == MAKE_AXE)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT)
 		m_fY = 300.f;
-	else if (m_makewhat == MAKE_PICK)
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER)
 		m_fY = 350.f;
+	else if (m_makewhat == MAKE_STAFF)
+		m_fY = 400.f;
+	else if (m_makewhat == MAKE_ARMOR)
+		m_fY = 450.f;
+	else if (m_makewhat == MAKE_HELMET)
+		m_fY = 500.f;
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
@@ -330,18 +336,17 @@ void CCraftbutton::craft(MAKEWHAT item)
 		}
 		else
 			return;
-
-
+		
 
 		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 		{
-			if ((*iter)->get_check() == false)
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
 			{
 				(*iter)->set_texnum(ITEMNAME_AXE);
 
 				(*iter)->set_check(true);
 
-				break;
+				return;
 			}
 
 		}
@@ -390,19 +395,282 @@ void CCraftbutton::craft(MAKEWHAT item)
 
 		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 		{
-			if ((*iter)->get_check() == false)
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
 			{
 				(*iter)->set_texnum(ITEMNAME_PICK);
 
 				(*iter)->set_check(true);
 
-				break;
+				return;
 			}
 
 		}
 
+	case MAKE_HAMBAT:
 
-		break;
+
+
+
+
+		for (auto iter = pcraftback->begin(); iter != pcraftback->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == 0)
+				++checkcount;
+		}
+
+		if (checkcount == 2)
+		{
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					stop1 = true;
+
+				}
+
+				if ((*iter)->get_texnum() == ITEMNAME_MEAT && (*iter)->get_item_number() >= 3 && stop2 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(3);
+					stop2 = true;
+
+				}
+
+				if (stop1 == true && stop2 == true)
+				{
+					break;
+				}
+			}
+		}
+		else
+			return;
+
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(ITEMNAME_HAMBAT);
+
+				(*iter)->set_check(true);
+
+				return;
+			}
+
+		}
+
+	case MAKE_SHOTTER:
+
+
+
+
+
+		for (auto iter = pcraftback->begin(); iter != pcraftback->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == 0)
+				++checkcount;
+		}
+
+		if (checkcount == 2)
+		{
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_GRASS && (*iter)->get_item_number() >= 2 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(2);
+					stop1 = true;
+
+				}
+
+				if ((*iter)->get_texnum() == ITEMNAME_ROPE && (*iter)->get_item_number() >= 2 && stop2 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(2);
+					stop2 = true;
+
+				}
+
+				if (stop1 == true && stop2 == true)
+				{
+					break;
+				}
+			}
+		}
+		else
+			return;
+
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(ITEMNAME_SHOTTER);
+
+				(*iter)->set_check(true);
+
+				return;
+			}
+
+		}
+
+	case MAKE_STAFF:
+
+
+
+
+
+		for (auto iter = pcraftback->begin(); iter != pcraftback->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == 0)
+				++checkcount;
+		}
+
+		if (checkcount == 2)
+		{
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 2 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(2);
+					stop1 = true;
+
+				}
+
+				if ((*iter)->get_texnum() == ITEMNAME_GOLD && (*iter)->get_item_number() >= 2 && stop2 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(2);
+					stop2 = true;
+
+				}
+
+				if (stop1 == true && stop2 == true)
+				{
+					break;
+				}
+			}
+		}
+		else
+			return;
+
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(ITEMNAME_STAFF);
+
+				(*iter)->set_check(true);
+
+				return;
+			}
+
+		}
+
+	case MAKE_ARMOR:
+
+
+
+
+
+		for (auto iter = pcraftback->begin(); iter != pcraftback->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == 0)
+				++checkcount;
+		}
+
+		if (checkcount == 2)
+		{
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					stop1 = true;
+
+				}
+
+				if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 3 && stop2 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(3);
+					stop2 = true;
+
+				}
+
+				if (stop1 == true && stop2 == true)
+				{
+					break;
+				}
+			}
+		}
+		else
+			return;
+
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(ITEMNAME_ARMOR);
+
+				(*iter)->set_check(true);
+
+				return;
+			}
+
+		}
+
+	case MAKE_HELMET:
+
+
+
+
+
+		for (auto iter = pcraftback->begin(); iter != pcraftback->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == 0)
+				++checkcount;
+		}
+
+		if (checkcount == 2)
+		{
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					stop1 = true;
+
+				}
+
+				if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 3 && stop2 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(3);
+					stop2 = true;
+
+				}
+
+				if (stop1 == true && stop2 == true)
+				{
+					break;
+				}
+			}
+		}
+		else
+			return;
+
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(ITEMNAME_HELMET);
+
+				(*iter)->set_check(true);
+
+				return;
+			}
+
+		}
+
 
 	}
 	

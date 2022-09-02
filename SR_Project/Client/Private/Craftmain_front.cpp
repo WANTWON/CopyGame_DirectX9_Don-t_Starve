@@ -74,21 +74,94 @@ int CCraftmain_front::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 
-	if (m_makewhat == MAKE_AXE)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT)
 		m_fY = 155.f;
-	else if (m_makewhat == MAKE_PICK)
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER)
 		m_fY = 205.f;
+	else if (m_makewhat == MAKE_STAFF)
+		m_fY = 255.f;
+	else if (m_makewhat == MAKE_ARMOR)
+		m_fY = 305.f;
+	else if (m_makewhat == MAKE_HELMET)
+		m_fY = 355.f;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
-	if (m_makewhat == MAKE_AXE && iNum == 0)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_PICK)
 	{
-		texnum = ITEMNAME_WOOD;
-	}
-	else if (m_makewhat == MAKE_AXE && iNum == 1)
-	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_WOOD;
+		 }
+	
+	    else
+	   
 		texnum = ITEMNAME_ROCK2;
+	   
+	}
+		
+	else if (m_makewhat == MAKE_HAMBAT)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_WOOD;
+		}
+
+		else
+		
+			texnum = ITEMNAME_MEAT;
+		
+	}
+
+	else if (m_makewhat == MAKE_SHOTTER)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_GRASS;
+		}
+
+		else
+		
+			texnum = ITEMNAME_ROPE;
+		
+	}
+
+	else if (m_makewhat == MAKE_STAFF)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_WOOD;
+		}
+		else
+			texnum = ITEMNAME_GOLD;
+	}
+	
+
+	else if (m_makewhat == MAKE_ARMOR)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_WOOD;
+		}
+
+		else
+		
+			texnum = ITEMNAME_ROCK2;
+		
+	}
+
+	else if (m_makewhat == MAKE_HELMET)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_WOOD;
+		}
+
+		else
+
+			texnum = ITEMNAME_ROCK2;
+
 	}
 
 	RECT		rcRect;

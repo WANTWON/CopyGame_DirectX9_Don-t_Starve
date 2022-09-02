@@ -122,19 +122,24 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	{
 		texnum = ITEMNAME_BERRY;
 	}
-	if (iNum == 5)
-	{
-		texnum = ITEMNAME_ROCK2;
-	}
+	
 
 	if (iNum == 5)
 	{
-		texnum = ITEMNAME_SHOTTER;
+		texnum = ITEMNAME_MEAT;
+		item_number = 6;
+	}
+
+	if (iNum == 6)
+	{
+		texnum = ITEMNAME_GOLD;
+		item_number = 6;
 	}
 
 	if (iNum == 15)
 	{
-		texnum = ITEMNAME_STAFF;
+		texnum = ITEMNAME_ROPE;
+		item_number = 6;
 	}
 
 	//CInventory_Manager::Get_Instance()->Get_Inven_list()->front.push_back(this);

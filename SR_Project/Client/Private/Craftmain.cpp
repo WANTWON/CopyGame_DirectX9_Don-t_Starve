@@ -56,11 +56,16 @@ int CCraftmain::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-
-	if (m_makewhat == MAKE_AXE)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT)
 		m_fY = 212.f;
-	else if (m_makewhat == MAKE_PICK)
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER)
 		m_fY = 262.f;
+	else if (m_makewhat == MAKE_STAFF)
+		m_fY = 312.f;
+	else if (m_makewhat == MAKE_ARMOR)
+		m_fY = 362.f;
+	else if (m_makewhat == MAKE_HELMET)
+		m_fY = 412.f;
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 

@@ -29,6 +29,9 @@ public:
 	void set_check_bag(bool tof) { m_bcheck_bag = tof; }
 	int get_iNum() { return iNum; }
 
+
+	void setcolor();
+
 private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;

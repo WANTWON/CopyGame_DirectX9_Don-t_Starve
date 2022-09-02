@@ -58,10 +58,16 @@ int CCraftmain_back::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (m_makewhat == MAKE_AXE)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT)
 		m_fY = 155.f;
-	else if (m_makewhat == MAKE_PICK)
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER)
 		m_fY = 205.f;
+	else if (m_makewhat == MAKE_STAFF)
+		m_fY = 255.f;
+	else if (m_makewhat == MAKE_ARMOR)
+		m_fY = 305.f;
+	else if (m_makewhat == MAKE_HELMET)
+		m_fY = 355.f;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
@@ -73,8 +79,8 @@ int CCraftmain_back::Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	if (m_fY <= 155.f)
-		Open_Craft(fTimeDelta);
+	//if (m_fY <= 155.f)
+		//Open_Craft(fTimeDelta);
 
 	//if (m_fX <= 100)
 	//	Open_Weapontool(fTimeDelta);
@@ -92,47 +98,9 @@ int CCraftmain_back::Tick(_float fTimeDelta)
 
 	}*/
 
-	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pInventory_Manager);
-
-
-	auto pinven = pInventory_Manager->Get_Inven_list();
-
-
-	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_PICK)
-	{
-		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-		{
-			if (iNum == 0)
-			{
-				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
-				{
-					backtexnum = 0;
-					break;
-				}
-				else
-					backtexnum = 1;
-			}
-
-			else if (iNum == 1)
-			{
-				if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
-				{
-					backtexnum = 0;
-					break;
-				}
-				else
-					backtexnum = 1;
-			}
-
-
-		}
-	}
+	setcolor();
 	
 
-
-	
-	Safe_Release(pInventory_Manager);
 	return OBJ_NOEVENT;
 }
 
@@ -150,21 +118,7 @@ void CCraftmain_back::Late_Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	//if (!PtInRect(&rcRect, ptMouse))
-	//{
-	//	m_fSizeX = 40;
-	//	m_fSizeY = 40;
-	//	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	//	backtexnum = 1;
-
-
-	//	//ERR_MSG(L"충돌");
-	//}
-
-	/*if (m_bItem)
-	{
-
-	}*/
+	
 
 	if (nullptr != m_pRendererCom && iNum < 10)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
@@ -203,6 +157,173 @@ HRESULT CCraftmain_back::Render()
 
 
 	return S_OK;
+}
+
+void CCraftmain_back::setcolor()
+{
+
+	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
+	Safe_AddRef(pInventory_Manager);
+
+
+	auto pinven = pInventory_Manager->Get_Inven_list();
+
+
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_PICK)
+	{
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if (iNum == 0)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+			else if (iNum == 1)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+
+		}
+	}
+
+	else if (m_makewhat == MAKE_ARMOR || m_makewhat == MAKE_HELMET)
+	{
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if (iNum == 0)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+			else if (iNum == 1)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 3) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+
+		}
+	}
+
+	else if (m_makewhat == MAKE_HAMBAT)
+	{
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if (iNum == 0)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+			else if (iNum == 1)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_MEAT && (*iter)->get_item_number() >= 3) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+
+		}
+	}
+
+	else if (m_makewhat == MAKE_SHOTTER)
+	{
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if (iNum == 0)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_GRASS && (*iter)->get_item_number() >= 2) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+			else if (iNum == 1)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_ROPE && (*iter)->get_item_number() >= 2) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+
+		}
+	}
+
+	else if (m_makewhat == MAKE_STAFF)
+	{
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if (iNum == 0)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 2) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+			else if (iNum == 1)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_GOLD && (*iter)->get_item_number() >= 2) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+
+		}
+	}
+
+
+
+
+
+	Safe_Release(pInventory_Manager);
 }
 
 HRESULT CCraftmain_back::SetUp_Components()
