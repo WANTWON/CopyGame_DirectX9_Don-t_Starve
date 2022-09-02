@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CCraftmain final : public CGameObject
+class CCraftPont final : public CGameObject
 {
 private:
-	CCraftmain(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CCraftmain(const CCraftmain& rhs);
-	virtual ~CCraftmain() = default;
+	CCraftPont(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CCraftPont(const CCraftPont& rhs);
+	virtual ~CCraftPont() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -41,28 +41,27 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	static CCraftmain* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CCraftPont* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 
-public:
-	void Open_Weapontool(_float time) { m_fX += 20 * time; }
+	bool get_check() { return m_bcheck; }
+	void set_check(bool tof) { m_bcheck = tof; }
+	int get_pontnum() { return iNum; }
+	void set_pont_num(int num) { texnum = num; }
+	int get_pontex() { return texnum; }
+	void set_makewhat(MAKEWHAT item) { m_makewhat = item; }
 
-	void Open_Craft(_float time) { m_fY += 50 * time; }
-
-	bool get_onof() { return m_bonof; }
-	void set_onof(bool tof) { m_bonof = tof; }
 	void gobackfirstX() { m_fX = m_firstx; }
 	void gobackfirstY() { m_fX = m_firsty; }
 
-	MAKEWHAT get_makewhat() { return m_makewhat; }
-
-	void set_makewhat(MAKEWHAT item) { m_makewhat = item; }
-
 private:
-	MAKEWHAT m_makewhat = MAKE_END;
+	int* iNumber = nullptr;
+	int iNum = 0;
+	int texnum = 0;
 	bool m_bcheck = false;
-	bool m_bonof = false;
+
+	MAKEWHAT m_makewhat = MAKE_END;
 };
 
 END

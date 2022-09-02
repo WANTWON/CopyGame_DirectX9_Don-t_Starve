@@ -334,6 +334,9 @@
     <ClInclude Include="..\Public\Craftbutton.h">
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CraftPont.h">
+      <Filter>02.GameObject\98.UI\03.Craft</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -512,6 +515,9 @@
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Craftbutton.cpp">
+      <Filter>02.GameObject\98.UI\03.Craft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CraftPont.cpp">
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
     </ClCompile>
   </ItemGroup>

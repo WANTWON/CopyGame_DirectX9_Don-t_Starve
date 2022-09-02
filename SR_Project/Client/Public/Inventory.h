@@ -22,6 +22,7 @@
 #include "Craftmain_back.h"
 #include "Craftmain_front.h"
 #include "Craftbutton.h"
+#include "CraftPont.h"
 /*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -62,6 +63,8 @@ public:
 
 	list<CCraftbutton*>*Get_Craftbutton_list(void) { return &m_Craftbutton; }
 
+	list<CCraftPont*>*Get_Craftpont_list(void) { return &m_Craftpont; }
+
 	void sethp(_uint hp) { m_ihp = hp; }
 	void sethuger(_uint hunger) { m_ihunger = hunger;}
 	void setmentality(_uint mental) { m_mentality = mental; }
@@ -77,6 +80,8 @@ public:
 
 	void craft_on(MAKEWHAT item);
 	void craft_off();
+
+	void update_craftpont();
 
 
 
@@ -110,6 +115,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CCraftmain_front*>m_Craftmainfront;
 
 	list<CCraftbutton*>	m_Craftbutton;
+	list<CCraftPont*> m_Craftpont;
 
 
 	typedef list<CMainInventory_front*> INVENLIST;
@@ -117,6 +123,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	_uint m_ihp = 7;
 	_uint m_ihunger = 7;
 	_uint m_mentality = 7;
+	
 
 	//private:
 	//class CGameObject* Find_Prototype(const _tchar* pPrototypeTag);

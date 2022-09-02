@@ -34,18 +34,6 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Portal(TEXT("Layer_Portal"))))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Equipment_back(TEXT("Layer_UI"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_PlayerStatUI(TEXT("Layer_UI"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_UI"))))
-		return E_FAIL;
-*/
 	if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
 		return E_FAIL;
 
@@ -134,7 +122,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	_float3 ObjectPos(0, 0, 0);
 	_uint iNum = 0;
 
-	/* ù���� object ����Ʈ�� size �޾Ƽ� ������ŭ for�� ������ �Ϸ��� �����س���*/
+	
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -506,9 +494,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 			return E_FAIL;
 
 	}
-
+	
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftbutton"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
+
+	for (int i = 0; i < 8; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CraftPont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
 
 	Safe_Release(pGameInstance);
 

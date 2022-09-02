@@ -50,6 +50,7 @@
 #include "Craftmain_back.h"
 #include "Craftmain_front.h"
 #include "Craftbutton.h"
+#include "CraftPont.h"
 
 #include "AttackRange.h"
 #include "House.h"
@@ -413,12 +414,12 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_Pont */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pont"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 10))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 11))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_HpPont */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_HpPont"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 10))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/pont/Pont%d.png"), 11))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Playerhp */
@@ -477,6 +478,12 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftbutton"),
 		CCraftbutton::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_CraftPont"),
+		CCraftPont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 
 	/*For.Prototype_GameObject_MainInventory */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory"),
