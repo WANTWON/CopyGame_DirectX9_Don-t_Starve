@@ -61,7 +61,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pPicker = (CAttackRange*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Picker"));
 	m_pPicker->Set_Scale(_float3(0.4f, 0.4f, 1.f));
 
-	m_pRange = (CAttackRange*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Range"));
+	m_pRange = (CAttackRange*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Range"));
 	m_pRange-> Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
 
 	Safe_Release(pGameInstance);
@@ -463,7 +463,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		BulletData.vPosition = m_vTargetPicking;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 			return;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN2]))
@@ -479,7 +479,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		BulletData.vPosition = m_vTargetPicking;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 			return;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN3]))
@@ -508,7 +508,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		BulletData.vPosition = m_vTargetPicking;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 			return;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN5]))
@@ -524,7 +524,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		BulletData.vPosition = m_vTargetPicking;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 			return;
 	}
 #pragma endregion Action
