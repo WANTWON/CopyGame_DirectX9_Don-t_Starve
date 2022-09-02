@@ -19,8 +19,7 @@ public:
 	enum STATE 
 	{ 
 		IDLE, 
-		PICK, 
-		RUSTLE, 
+		PICK,
 		PICKED, 
 		MAX 
 	};

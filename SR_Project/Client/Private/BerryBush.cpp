@@ -154,11 +154,6 @@ HRESULT CBerryBush::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	TextureDesc.m_iEndTex = 42;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_SHAKE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Berry_Bush_SHAKE"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-
 	TextureDesc.m_iEndTex = 0;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_PICKED"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Berry_Bush_PICKED"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
@@ -178,10 +173,6 @@ void CBerryBush::Change_Frame()
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 			m_eState = PICKED;
 		break;
-	case SHAKE:
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = IDLE;
-		break;
 	case PICKED:
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
 		break;
@@ -199,9 +190,6 @@ void CBerryBush::Change_Motion()
 			break;
 		case CBerryBush::PICK:
 			Change_Texture(TEXT("Com_Texture_PICK"));
-			break;
-		case CBerryBush::SHAKE:
-			Change_Texture(TEXT("Com_Texture_SHAKE"));
 			break;
 		case CBerryBush::PICKED:
 			Change_Texture(TEXT("Com_Texture_PICKED"));

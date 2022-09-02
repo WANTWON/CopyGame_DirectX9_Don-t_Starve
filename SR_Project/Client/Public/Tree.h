@@ -21,7 +21,6 @@ public:
 	{ 
 		IDLE, 
 		CHOP, 
-		SHAKE, 
 		GROW, 
 		FALL_RIGHT, 
 		FALL_LEFT, 

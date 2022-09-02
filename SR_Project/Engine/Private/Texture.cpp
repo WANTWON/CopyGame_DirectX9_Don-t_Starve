@@ -21,14 +21,13 @@ CTexture::CTexture(const CTexture & rhs)
 
 HRESULT CTexture::Initialize_Prototype(TYPE eType, const _tchar * pTextureFilePath, _uint iNumTexture)
 {
-
 	m_iNumTextures = iNumTexture;
 
-	_tchar			szFullPath[MAX_PATH] = TEXT("");
+	_tchar	szFullPath[MAX_PATH] = TEXT("");
 
 	for (_uint i = 0; i < m_iNumTextures; ++i)
 	{
-		IDirect3DBaseTexture9*			pTexture = nullptr;
+		IDirect3DBaseTexture9* pTexture = nullptr;
 
 		wsprintf(szFullPath, pTextureFilePath, i);
 

@@ -128,7 +128,7 @@ void CInteractive_Object::SetUp_BillBoard()
 {
 	_float4x4 ViewMatrix;
 
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);  // Get View Matrix
 	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
 
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];

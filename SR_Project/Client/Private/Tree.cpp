@@ -179,11 +179,6 @@ HRESULT CTree::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	TextureDesc.m_iEndTex = 31;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Tall_SHAKE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Tall_SHAKE"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-
 	TextureDesc.m_iEndTex = 37;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Tall_FALL_RIGHT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Tall_FALL_RIGHT"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
@@ -210,10 +205,6 @@ void CTree::Change_Frame()
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case CHOP:
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = IDLE;
-		break;
-	case SHAKE:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 			m_eState = IDLE;
 		break;
@@ -244,9 +235,6 @@ void CTree::Change_Motion()
 			break;
 		case CTree::CHOP:
 			Change_Texture(TEXT("Com_Texture_Tall_CHOP"));
-			break;
-		case CTree::SHAKE:
-			Change_Texture(TEXT("Com_Texture_Tall_SHAKE"));
 			break;
 		case CTree::GROW:
 			Change_Texture(TEXT("Com_Texture_Tall_GROW"));

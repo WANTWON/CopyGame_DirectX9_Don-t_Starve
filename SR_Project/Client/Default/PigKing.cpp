@@ -196,7 +196,7 @@ HRESULT CPigKing::Drop_Items()
 	// Random Position Drop based on Object Position
 	_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * .5f;
 	_int bSignX = rand() % 2;
-	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * .5f;
+	_float fOffsetZ = (((_float)rand() / (float)(RAND_MAX)) * .5f) + 1.f;
 	/*_int bSignZ = rand() % 2;*/
 	_float fPosX = bSignX ? (Get_Position().x + fOffsetX) : (Get_Position().x - fOffsetX);
 	_float fPosZ = /*bSignZ ? (Get_Position().z + fOffsetZ) : (*/Get_Position().z - fOffsetZ/*)*/;

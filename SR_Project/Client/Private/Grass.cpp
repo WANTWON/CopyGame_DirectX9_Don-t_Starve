@@ -156,11 +156,6 @@ HRESULT CGrass::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	TextureDesc.m_iEndTex = 14;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_RUSTLE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Grass_RUSTLE"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-
 	TextureDesc.m_iEndTex = 0;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_PICKED"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Grass_PICKED"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
@@ -179,10 +174,6 @@ void CGrass::Change_Frame()
 	case PICK:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 			break;
-	case RUSTLE:
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = IDLE;
-		break;
 	case PICKED:
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
 		break;
@@ -201,9 +192,6 @@ void CGrass::Change_Motion()
 			break;
 		case CGrass::PICK:
 			Change_Texture(TEXT("Com_Texture_PICK"));
-			break;
-		case CGrass::RUSTLE:
-			Change_Texture(TEXT("Com_Texture_RUSTLE"));
 			break;
 		case CGrass::PICKED:
 			Change_Texture(TEXT("Com_Texture_PICKED"));
