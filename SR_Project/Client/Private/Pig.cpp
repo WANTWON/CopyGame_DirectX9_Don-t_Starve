@@ -456,7 +456,7 @@ void CPig::Find_Target()
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
-		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
 		Safe_Release(pGameInstance);
 
@@ -589,10 +589,7 @@ CGameObject* CPig::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject* CPig::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
+
 
 void CPig::Free()
 {

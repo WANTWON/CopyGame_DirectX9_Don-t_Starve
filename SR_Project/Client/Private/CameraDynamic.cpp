@@ -84,7 +84,7 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 		m_vDistance.z += (fTimeDelta*m_lMouseWheel*0.01f);
 	}
 
-	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
 	Safe_AddRef(pTarget);
 
@@ -119,7 +119,7 @@ void CCameraDynamic::Turn_Camera(_float fTimeDelta)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 	Safe_AddRef(pTarget);
 
 	_float3 m_TargetPos = pTarget->Get_Pos();
@@ -160,7 +160,7 @@ void CCameraDynamic::FPS_Camera(_float fTimeDelta)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 	Safe_AddRef(pTarget);
 
 	_float3 vecTargetLook = pTarget->Get_Look();

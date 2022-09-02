@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "Inventory.h"
+#include "Level_Manager.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -127,13 +128,15 @@ void CMonster::SetUp_BillBoard()
 
 void CMonster::WalkingTerrain()
 {
+	_uint LevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	if (!pGameInstance)
 		return;
-	CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component((LEVEL)LevelIndex, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
 	if (!pVIBuffer_Terrain)
 		return;
-	CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component((LEVEL)LevelIndex, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
 	if (!pTransform_Terrain)
 		return;
 

@@ -11,6 +11,7 @@
 #include "PickingMgr.h"
 #include "AttackRange.h"
 #include "ParticleSystem.h"
+#include "Level_Manager.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -45,22 +46,22 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Safe_AddRef(pGameInstance);
 
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Equipment"), LEVEL_GAMEPLAY, TEXT("Layer_Equip"), nullptr)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Equipment"), LEVEL_STATIC, TEXT("Layer_Equip"), nullptr)))
 		return E_FAIL;
 
 	_bool bPicker = true;
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Picker"), LEVEL_GAMEPLAY, TEXT("Layer_Picker"), &bPicker)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Picker"), LEVEL_STATIC, TEXT("Layer_Picker"), &bPicker)))
 		return E_FAIL;
 	bPicker = false;
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Picker"), LEVEL_GAMEPLAY, TEXT("Layer_Range"),&(bPicker))))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Picker"), LEVEL_STATIC, TEXT("Layer_Range"),&(bPicker))))
 		return E_FAIL;
 
-	m_Equipment = (CEquip_Animation*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Equip"));
+	m_Equipment = (CEquip_Animation*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Equip"));
 
-	m_pPicker = (CAttackRange*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Picker"));
+	m_pPicker = (CAttackRange*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Picker"));
 	m_pPicker->Set_Scale(_float3(0.4f, 0.4f, 1.f));
 
-	m_pRange = (CAttackRange*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Range"));
+	m_pRange = (CAttackRange*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Range"));
 	m_pRange-> Set_Scale(_float3(7.2f, 7.2f, 1.f));
 
 	Safe_Release(pGameInstance);
@@ -74,6 +75,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
+	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+		return OBJ_NOEVENT;
+
 	__super::Tick(fTimeDelta);
 	//Collider Add
 	if (nullptr != m_pColliderCom)
@@ -107,6 +113,10 @@ int CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
+
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+		return;
+
 	__super::Late_Tick(fTimeDelta);
 
 	SetUp_BillBoard();
@@ -376,6 +386,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	if (!m_bMove)
 		return;
 
+	
 	//Test Power
 
 #pragma region Debug&CamKey
@@ -387,20 +398,20 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	{
 		m_bIsFPS = true;
 		CGameInstance* pInstance = CGameInstance::Get_Instance();
-		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 0);
+		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(m_iCurrentLevelndex, TEXT("Layer_Camera"), 0);
 		Camera->Set_CamMode(CCameraDynamic::CAM_FPS);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMTPSMODE]))
 	{
 		m_bIsFPS = false;
 		CGameInstance* pInstance = CGameInstance::Get_Instance();
-		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 0);
+		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(m_iCurrentLevelndex, TEXT("Layer_Camera"), 0);
 		Camera->Set_CamMode(CCameraDynamic::CAM_PLAYER);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMLEFT]))
 	{
 		CGameInstance* pInstance = CGameInstance::Get_Instance();
-		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 0);
+		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(m_iCurrentLevelndex, TEXT("Layer_Camera"), 0);
 		if (Camera->Get_CamMode() == CCameraDynamic::CAM_PLAYER)
 		{
 			Camera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 1);
@@ -409,7 +420,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
 		CGameInstance* pInstance = CGameInstance::Get_Instance();
-		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), 0);
+		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(m_iCurrentLevelndex, TEXT("Layer_Camera"), 0);
 		if (Camera->Get_CamMode() == CCameraDynamic::CAM_PLAYER)
 		{
 			Camera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 2);
@@ -439,7 +450,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			//D3DXVec3Normalize(&temp, &temp);
 			//BulletData.fAdd_X = m_fMaxTime;
 			BulletData.vTargetPos = temp;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 				return;
 		}
 
@@ -796,7 +807,7 @@ void CPlayer::Mining(_float _fTimeDelta)
 		CParticleSystem::STATEDESC ParticleDesc;
 		ZeroMemory(&ParticleDesc, sizeof(CParticleSystem::STATEDESC));
 		ParticleDesc.eType = CParticleSystem::PARTICLE_ROCK;
-		ParticleDesc.eTextureScene = LEVEL_GAMEPLAY;
+		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
 		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Rock");
 		ParticleDesc.dDuration = 0.2; //파티클 시간
 		ParticleDesc.dParticleLifeTime = 0.2; //수명
@@ -811,7 +822,7 @@ void CPlayer::Mining(_float _fTimeDelta)
 		ParticleDesc.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		ParticleDesc.vPosition.z += 0.001;
 
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Particle"), &ParticleDesc)))
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_ParticleSystem"), ParticleDesc.eTextureScene, TEXT("Layer_Particle"), &ParticleDesc)))
 			return;
 	}
 }
@@ -845,7 +856,7 @@ void CPlayer::Chop(_float _fTimeDelta)
 		CParticleSystem::STATEDESC ParticleDesc;
 		ZeroMemory(&ParticleDesc, sizeof(CParticleSystem::STATEDESC));
 		ParticleDesc.eType = CParticleSystem::PARTICLE_LEAF;
-		ParticleDesc.eTextureScene = LEVEL_GAMEPLAY;
+		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
 		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Leaf");
 		ParticleDesc.dDuration = 1; //파티클 시간
 		ParticleDesc.dParticleLifeTime = 1; //수명
@@ -861,7 +872,7 @@ void CPlayer::Chop(_float _fTimeDelta)
 		ParticleDesc.vPosition.z -= 0.001;
 		ParticleDesc.vPosition.y += 1;
 
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Particle"), &ParticleDesc)))
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_ParticleSystem"), ParticleDesc.eTextureScene, TEXT("Layer_Particle"), &ParticleDesc)))
 			return;
 	}
 }
@@ -1023,7 +1034,7 @@ void CPlayer::Create_Bullet()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	
+
 	
 	if (m_eState == ACTION_STATE::ATTACK)
 	{
@@ -1048,28 +1059,28 @@ void CPlayer::Create_Bullet()
 		case WEAPON_TYPE::WEAPON_HAND:
 			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 10)
 			{	
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 					return;
 			}
 			break;
 		case WEAPON_TYPE::WEAPON_SWORD:
 			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 5)
 			{
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 					return;
 			}
 			break;
 		case WEAPON_TYPE::WEAPON_STAFF:
 			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20)
 			{
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 					return;
 			}
 			break;
 		case WEAPON_TYPE::WEAPON_DART:
 			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 17)
 			{
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 					return;
 			}
 			break;
@@ -1087,7 +1098,7 @@ void CPlayer::Find_Priority()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Object"));
+	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(m_iCurrentLevelndex, TEXT("Layer_Object"));
 
 	_uint iIndex = 0;
 
@@ -1153,6 +1164,9 @@ void CPlayer::Test_Detect(_float fTImeDelta)
 void CPlayer::RangeCheck(_float _fTimeDelta)
 {
 	if (!m_pPicker->Get_IsShow())
+		return;
+
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return;
 
 	CPickingMgr::Get_Instance()->Picking();
@@ -1579,15 +1593,18 @@ void CPlayer::SetUp_BillBoard()
 
 void CPlayer::WalkingTerrain()
 {
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+		return;
+
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	if (nullptr == pGameInstance)
 		return;
 
-	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(m_iCurrentLevelndex, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
 	if (nullptr == pVIBuffer_Terrain)
 		return;
 
-	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(m_iCurrentLevelndex, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
 	if (nullptr == pTransform_Terrain)
 		return;
 
@@ -1625,10 +1642,6 @@ CGameObject * CPlayer::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject * CPlayer::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CPlayer::Free()
 {

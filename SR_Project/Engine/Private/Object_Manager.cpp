@@ -65,7 +65,7 @@ HRESULT CObject_Manager::Add_GameObjectLoad(const _tchar * pPrototypeTag, _uint 
 	if (nullptr == pPrototype)
 		return E_FAIL;
 
-	CGameObject*		pGameObject = pPrototype->Clone_Load(pVIBufferTag, pArg);
+	CGameObject*		pGameObject = pPrototype->Clone_Load(pVIBufferTag, iLevelIndex, pArg);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 

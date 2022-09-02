@@ -224,14 +224,13 @@ private: /*for Auto*/
 	class CAttackRange*			m_pRange = nullptr;
 private: // Test
 	_float3					m_vTargetPicking;
-
+	LEVEL					m_iCurrentLevelndex;
 	
 	public:
 	void Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
-	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 

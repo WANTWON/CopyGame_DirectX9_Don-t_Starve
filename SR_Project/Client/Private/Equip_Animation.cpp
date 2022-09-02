@@ -345,10 +345,6 @@ CGameObject * CEquip_Animation::Clone(void * pArg)
 	return pInstance;
 }
 
-CGameObject * CEquip_Animation::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CEquip_Animation::Free()
 {

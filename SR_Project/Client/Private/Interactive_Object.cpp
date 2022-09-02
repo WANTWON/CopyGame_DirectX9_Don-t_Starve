@@ -61,11 +61,6 @@ CGameObject * CInteractive_Object::Clone(void * pArg)
 	return nullptr;
 }
 
-CGameObject * CInteractive_Object::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
-
 void CInteractive_Object::Free()
 {
 	__super::Free();

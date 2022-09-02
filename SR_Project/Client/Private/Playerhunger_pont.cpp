@@ -212,12 +212,6 @@ CGameObject * CPlayerhunger_pont::Clone(void* pArg)
 	return pInstance;
 }
 
-
-CGameObject * CPlayerhunger_pont::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
-
 void CPlayerhunger_pont::Free()
 {
 	__super::Free();

@@ -71,10 +71,6 @@ HRESULT CSpider::SetUp_Components(void* pArg)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Spider"))))
-		return E_FAIL;
-	m_TimerTag = TEXT("Timer_Spider");
-
 	Safe_Release(pGameInstance);
 
 	/* For.Com_Texture */
@@ -202,7 +198,7 @@ void CSpider::Change_Frame()
 			BulletData.eDirState = m_eDir;
 
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_HUNT, TEXT("Bullet"), &BulletData)))
 				return;
 		}
 		break;
@@ -329,7 +325,7 @@ void CSpider::Find_Target()
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
-		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
 		Safe_Release(pGameInstance);
 
@@ -416,7 +412,7 @@ HRESULT CSpider::Drop_Items()
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_SPIDERMEAT;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_HUNT, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -463,10 +459,6 @@ CGameObject* CSpider::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject* CSpider::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CSpider::Free()
 {

@@ -398,8 +398,3 @@ void CTree::Free()
 
 	m_vecTexture.clear();
 }
-
-CGameObject * CTree::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}

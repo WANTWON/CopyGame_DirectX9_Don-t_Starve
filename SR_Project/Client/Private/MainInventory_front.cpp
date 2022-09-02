@@ -531,7 +531,7 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 
 
 
-		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_HP(10));
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_HP(10));
 		item_number -= 1;
 		//minus_itemcount();
 		break;
@@ -541,14 +541,14 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 
 
 
-		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_Hungry(10));
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(10));
 		minus_itemcount();
 		break;
 
 
 
 	}
-	(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Add_ActStack(CPlayer::ACTION_STATE::EAT));
+	(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Add_ActStack(CPlayer::ACTION_STATE::EAT));
 
 	Safe_Release(pGameInstance);
 }

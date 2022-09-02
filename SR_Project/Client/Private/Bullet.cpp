@@ -2,6 +2,7 @@
 #include "..\Public\Bullet.h"
 #include "GameInstance.h"
 #include "Transform.h"
+#include "Level_Manager.h"
 
 
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -310,6 +311,9 @@ void CBullet::Red_Smoke(_float _fTimeDelta)
 
 void CBullet::Bomb(void)
 {	//y = time* time -power*time ;
+
+	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
 	m_fTime += 0.1f;//m_tBulletData.fAdd_Z;
 					//if (m_fTime >= m_MaxTime) // 시간값을 크게??	
 	m_MaxTime = 2.f * 8.2f;
@@ -336,7 +340,7 @@ void CBullet::Bomb(void)
 
 		CGameInstance*pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 			return;
 		Safe_Release(pGameInstance);
 		m_bDead = true;
@@ -410,16 +414,17 @@ void CBullet::Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamage
 
 _bool CBullet::Compare_Terrain(void)
 {
+	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	if (nullptr == pGameInstance)
 		return false;
 
-	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(iLevelIndex, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
 	if (nullptr == pVIBuffer_Terrain)
 		return false;
 
-	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(iLevelIndex, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
 	if (nullptr == pTransform_Terrain)
 		return false;
 
@@ -594,10 +599,6 @@ CGameObject * CBullet::Clone(void * pArg)
 	return pInstance;
 }
 
-CGameObject * CBullet::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CBullet::Free()
 {

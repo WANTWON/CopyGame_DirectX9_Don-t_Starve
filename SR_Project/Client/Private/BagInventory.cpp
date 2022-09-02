@@ -220,11 +220,6 @@ CInventory_Manager::Get_Instance()->Get_BagInventory_list()->push_back(pInstance
 	return pInstance;
 }
 
-CGameObject * CBagInventory::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
-
 HRESULT CBagInventory::Texture_Clone()
 {
 	CTexture::TEXTUREDESC TextureDesc;

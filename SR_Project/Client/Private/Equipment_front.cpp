@@ -165,7 +165,7 @@ void CEquipment_front::Late_Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 
 	if(iNum == 0)
-	(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_WeaponType(weapontype));
+	(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_WeaponType(weapontype));
 	Safe_Release(pGameInstance);
 }
 
