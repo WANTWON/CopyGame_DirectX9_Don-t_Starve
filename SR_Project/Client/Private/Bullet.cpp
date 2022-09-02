@@ -239,6 +239,10 @@ void CBullet::Excute(_float fTimeDelta)
 			Red_Smoke(fTimeDelta);
 			break;
 		case WEAPON_TYPE::WEAPON_LIGHTNING:
+		case WEAPON_TYPE::WEAPON_ICESPIKE1:
+		case WEAPON_TYPE::WEAPON_ICESPIKE2:
+		case WEAPON_TYPE::WEAPON_ICESPIKE3:
+		case WEAPON_TYPE::WEAPON_ICESPIKE4:
 			m_fAccDeadTimer += fTimeDelta;
 			if (m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex-1 )
 			{
@@ -476,7 +480,9 @@ void CBullet::SetUp_BillBoard()
 	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
 
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 
@@ -542,6 +548,36 @@ HRESULT CBullet::Texture_Clone(void)
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Lightning"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE1:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 27;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceSpike1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE2:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 27;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceSpike2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike2"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE3:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 27;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceSpike3"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike3"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE4:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 25;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceSpike4"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike4"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+
+
 	}
 
 	return S_OK;
@@ -571,6 +607,23 @@ HRESULT CBullet::Init_Data(void)
 		m_pTransformCom->Set_Scale(1.f, 7.f, 1.f);
 		m_fDamage = 0.f;
 		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE1:
+		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_fDamage = 0.f;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE2:
+		m_pTransformCom->Set_Scale(0.75f, 0.75f, 1.f);
+		m_fDamage = 0.f;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE3:
+		m_pTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
+		m_fDamage = 0.f;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE4:
+		m_pTransformCom->Set_Scale(0.3f, 0.3f, 1.f);
+		m_fDamage = 0.f;
+		break;
+
 	default:
 		break;
 
