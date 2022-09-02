@@ -26,35 +26,66 @@ HRESULT CInventory_Manager::Add_GameObject(_uint iLevelIndex, void* pArg)
 
 void CInventory_Manager::Tick(_float fTimeDelta)
 {
+_uint count = 0;
+auto iter = m_MainInventorylist.begin();
+auto iterfont = m_Pontlist.begin();
+bool bcheck = true;
+
+while (bcheck && !m_MainInventorylist.empty() && !m_Pontlist.empty())
+{
 	
-	auto iter = m_MainInventorylist.begin();
-	auto iterfont = m_Pontlist.begin();
-	bool bcheck = true;
-
-	while (bcheck && !m_MainInventorylist.empty() && !m_Pontlist.empty())
-	{
 
 
-
-		(*iterfont)->set_pont_num((*iter)->get_item_number());              //->set_pont_num(iter->get_item_number());
 		
-		if ((*iter)->get_pontcheck() == false)
-		{
-			(*iterfont)->set_check(false);        
-		}
-		else if ((*iter)->get_pontcheck() == true)
-		{
-			(*iterfont)->set_check(true);
-		}
-
-		++iter;
-		++iterfont;
-
-		if (iter == m_MainInventorylist.end() || iterfont == m_Pontlist.end())
-		{
-			bcheck = false;
-		}
+	
+	if ((*iter)->get_pontcheck() == false)  //인벤토리의 폰트가 false면
+	{
+		(*iterfont)->set_check(false);//폰트창을 안뜨게할구야
 	}
+	else if ((*iter)->get_pontcheck() == true)
+	{
+		(*iterfont)->set_check(true);
+	}
+
+	if ((*iterfont)->get_pontnum() % 2 == 0) //10자리
+	{
+		(*iterfont)->set_pont_num(((*iter)->get_item_number() % 100) / 10);      //10의 자리수를 0번에 넣어 (0)
+
+		if ((*iterfont)->get_pontex() == 0)
+		{
+			(*iterfont)->set_check(false);
+		}
+
+
+	}
+	else if ((*iterfont)->get_pontnum() % 2 != 0) // 1의자리                 
+	{
+		(*iterfont)->set_pont_num(((*iter)->get_item_number() % 10));
+
+		//++iterfont;
+	}
+	                                                                           //폰트1사이클 끝
+	++count;                                                                   //카운트증가 폰트처리 끝났으니까 폰트를 1번넘으로넘기자
+	++iterfont;
+
+	if (count == 2)                                                           //다음사이클에 폰트처리 다 끝나고 인벤토리 넘길거
+	{
+		++iter;
+		count = 0;
+	}
+		
+
+	
+	
+
+	//++iter;
+	
+
+	if (iter == m_MainInventorylist.end() || iterfont == m_Pontlist.end())
+	{
+		bcheck = false;
+	}
+}
 
 }
 

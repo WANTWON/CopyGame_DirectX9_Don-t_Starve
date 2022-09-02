@@ -383,7 +383,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainInventory(const _tchar * pLayerTag)
 	}
 
 
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 20; ++i)
 	{
 		int number = i;
 
