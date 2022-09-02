@@ -90,11 +90,7 @@ HRESULT CBullet::Render()
 	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
 		return E_FAIL;
 
-
-
 	Render_TextureState();
-
-
 
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
@@ -242,6 +238,13 @@ void CBullet::Excute(_float fTimeDelta)
 		case WEAPON_TYPE::WEAPON_SMOKE:
 			Red_Smoke(fTimeDelta);
 			break;
+		case WEAPON_TYPE::WEAPON_LIGHTNING:
+			m_fAccDeadTimer += fTimeDelta;
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex-1 )
+			{
+				m_bDead = OBJ_DEAD;
+			}
+			break;
 
 		}
 	}
@@ -374,6 +377,10 @@ HRESULT CBullet::Render_TextureState()
 			break;
 		case DIR_STATE::DIR_END:
 			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(1)))
+				return E_FAIL;
+			break;
+		default:
+			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
 				return E_FAIL;
 			break;
 		}
@@ -528,6 +535,13 @@ HRESULT CBullet::Texture_Clone(void)
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RedSmoke"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_RedSmoke"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
+	case WEAPON_TYPE::WEAPON_LIGHTNING:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 9;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Lightning"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
 	}
 
 	return S_OK;
@@ -536,33 +550,38 @@ HRESULT CBullet::Texture_Clone(void)
 HRESULT CBullet::Init_Data(void)
 {
 	//refactory Func soon
-	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_DART)
+	switch (m_tBulletData.eWeaponType)
 	{
+	case WEAPON_TYPE::WEAPON_DART:
 		m_pTransformCom->Set_Scale(0.3f, 0.3f, 1.f);
 		if (m_tBulletData.eDirState == DIR_STATE::DIR_LEFT)
 		{
 			m_pTransformCom->Set_Scale(-0.3f, 0.3f, 1.f);
 		}
-	}
-
-	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_SMOKE)
-	{
+		break;
+	case WEAPON_TYPE::WEAPON_SMOKE:
 		m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.f);
 		m_fDamage = 3.f;
-	}
-
-	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_BOMB)
-	{
+		break;
+	case WEAPON_TYPE::WEAPON_BOMB:
 		m_pTransformCom->Set_Scale(0.7f, 0.7f, 1.f);
 		m_fDamage = 0.f;
+		break;
+	case WEAPON_TYPE::WEAPON_LIGHTNING:
+		m_pTransformCom->Set_Scale(1.f, 7.f, 1.f);
+		m_fDamage = 0.f;
+		break;
+	default:
+		break;
+
 	}
+
 
 	if (m_tBulletData.eDirState == DIR_STATE::DIR_END)
 	{
 		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.0f);
 
 		//m_pTransformCom->Set_State(CTransform::STATE_LOOK, m_tBulletData.vLook);
-
 	}
 
 	return S_OK;

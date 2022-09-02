@@ -444,9 +444,21 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		}
 
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN2]))
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN2]))
 	{
-		Jump(_fTimeDelta);
+		/*TestLightning*/
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.bIsPlayerBullet = true;
+		BulletData.eDirState = DIR_STATE::DIR_DOWN;
+		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_LIGHTNING;
+		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
+		BulletData.vPosition = m_vTargetPicking;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+			return;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN3]))
 	{
