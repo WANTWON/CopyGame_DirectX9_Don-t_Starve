@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
 #include "Transform.h"
 #include "Interactive_Object.h"
 
@@ -20,8 +19,7 @@ public:
 	enum STATE 
 	{ 
 		IDLE, 
-		PICK, 
-		SHAKE, 
+		PICK,
 		PICKED, 
 		MAX 
 	};
@@ -37,40 +35,21 @@ public:
 	virtual int Tick(_float fTimeDelta)override;
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
-
-public:
-	_float3 Get_Pos() { return m_pTransformCom->Get_State(CTransform::STATE_POSITION); }
-	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
-	//New
-	virtual void Interact(_uint Damage) override;
-	virtual HRESULT Drop_Items() override;
-
 private:
-	HRESULT SetUp_Components(void* pArg);
-	HRESULT SetUp_RenderState();
-	HRESULT Release_RenderState();
+	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
 
 private: /*For TextureCom */
-	HRESULT Texture_Clone();
-	HRESULT Change_Texture(const _tchar* LayerTag);
-
-private: /* For TransformCom*/
-	void SetUp_BillBoard();
-
-private: /* For.Components */
-	CTexture* m_pTextureCom = nullptr;
-	CRenderer* m_pRendererCom = nullptr;
-	CTransform* m_pTransformCom = nullptr;
-	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
-	CCollider* m_pColliderCom = nullptr;
-
-	vector<CTexture*> m_vecTexture;
+	virtual HRESULT Texture_Clone() override;
+	virtual void Change_Frame() override;
+	virtual void Change_Motion() override;
 
 private:
 	STATE m_eState = IDLE;
 	STATE m_ePreState = MAX;
-	const _tchar* m_TimerTag = TEXT("");
-	_float m_fTerrain_Height = 0.f;
+
+public:
+	virtual void Interact(_uint Damage = 0) override;
+	virtual HRESULT Drop_Items() override;
 
 public:
 	static CBerryBush* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

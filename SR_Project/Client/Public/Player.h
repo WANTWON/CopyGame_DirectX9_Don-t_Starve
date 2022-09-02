@@ -224,7 +224,7 @@ private: /*for Auto*/
 	class CAttackRange*			m_pRange = nullptr;
 private: // Test
 	_float3					m_vTargetPicking;
-
+	_float					m_fAtkScale = 6.2f;
 	
 	public:
 	void Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
