@@ -339,6 +339,9 @@
     <ClInclude Include="..\Public\AttackRange.h">
       <Filter>02.GameObject\00.Player\AttackRange</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CraftPont.h">
+      <Filter>02.GameObject\98.UI\03.Craft</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -520,6 +523,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AttackRange.cpp">
       <Filter>02.GameObject\00.Player\AttackRange</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CraftPont.cpp">
+      <Filter>02.GameObject\98.UI\03.Craft</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
