@@ -1,5 +1,0 @@
-1. Image
-2. Idle
-3. Pick
-4. Rustle (Inspect)
-5. Picked

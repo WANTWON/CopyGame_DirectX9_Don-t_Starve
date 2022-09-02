@@ -61,8 +61,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pPicker = (CAttackRange*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Picker"));
 	m_pPicker->Set_Scale(_float3(0.4f, 0.4f, 1.f));
 
-	m_pRange = (CAttackRange*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Range"));
-	m_pRange-> Set_Scale(_float3(7.2f, 7.2f, 1.f));
+	m_pRange = (CAttackRange*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Range"));
+	m_pRange-> Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
 
 	Safe_Release(pGameInstance);
 
@@ -106,7 +106,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-	cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
+	//cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
 
 	return OBJ_NOEVENT;
 }
@@ -382,7 +382,7 @@ HRESULT CPlayer::Test_Setup()
 
 void CPlayer::GetKeyDown(_float _fTimeDelta)
 {
-	/*Å°ÀÔ·Â ºÒ°¡.*/
+	/*Å°ï¿½Ô·ï¿½ ï¿½Ò°ï¿½.*/
 	if (!m_bMove)
 		return;
 
@@ -433,31 +433,54 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN1]))
 	{
 
-		if (m_pPicker->Get_IsCorrect())
-		{	
-			/*Test Bomb*/
-			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		//if (m_pPicker->Get_IsCorrect())
+		//{	
+		//	/*Test Bomb*/
+		//	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-			BULLETDATA BulletData;
-			ZeroMemory(&BulletData, sizeof(BulletData));
-			BulletData.bIsPlayerBullet = true;
-			BulletData.eDirState = DIR_STATE::DIR_DOWN;
-			BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
-			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
-			BulletData.vPosition = Get_Pos();
+		//	BULLETDATA BulletData;
+		//	ZeroMemory(&BulletData, sizeof(BulletData));
+		//	BulletData.bIsPlayerBullet = true;
+		//	BulletData.eDirState = DIR_STATE::DIR_DOWN;
+		//	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
+		//	BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
+		//	BulletData.vPosition = Get_Pos();
 
-			_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
-			//D3DXVec3Normalize(&temp, &temp);
-			//BulletData.fAdd_X = m_fMaxTime;
-			BulletData.vTargetPos = temp;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
-				return;
-		}
+		//	_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
+		//	//D3DXVec3Normalize(&temp, &temp);
+		//	//BulletData.fAdd_X = m_fMaxTime;
+		//	BulletData.vTargetPos = temp;
+		//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+		//		return;
+		//}
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.bIsPlayerBullet = true;
+		BulletData.eDirState = DIR_STATE::DIR_DOWN;
+		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE1;
+		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		BulletData.vPosition = m_vTargetPicking;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+			return;
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_INVEN2]))
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN2]))
 	{
-		Jump(_fTimeDelta);
+		/*TestLightning*/
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.bIsPlayerBullet = true;
+		BulletData.eDirState = DIR_STATE::DIR_DOWN;
+		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE2;
+		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		BulletData.vPosition = m_vTargetPicking;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+			return;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN3]))
 	{
@@ -474,11 +497,35 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN4]))
 	{
-		
+		/*TestLightning*/
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.bIsPlayerBullet = true;
+		BulletData.eDirState = DIR_STATE::DIR_DOWN;
+		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE3;
+		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		BulletData.vPosition = m_vTargetPicking;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+			return;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN5]))
 	{
+		/*TestLightning*/
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.bIsPlayerBullet = true;
+		BulletData.eDirState = DIR_STATE::DIR_DOWN;
+		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE4;
+		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		BulletData.vPosition = m_vTargetPicking;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
+			return;
 	}
 #pragma endregion Action
 
@@ -809,9 +856,9 @@ void CPlayer::Mining(_float _fTimeDelta)
 		ParticleDesc.eType = CParticleSystem::PARTICLE_ROCK;
 		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
 		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Rock");
-		ParticleDesc.dDuration = 0.2; //ÆÄÆ¼Å¬ ½Ã°£
-		ParticleDesc.dParticleLifeTime = 0.2; //¼ö¸í
-		ParticleDesc.dSpawnTime = 1; //½ºÆù Å¸ÀÓ
+		ParticleDesc.dDuration = 0.2; //ï¿½ï¿½Æ¼Å¬ ï¿½Ã°ï¿½
+		ParticleDesc.dParticleLifeTime = 0.2; //ï¿½ï¿½ï¿½ï¿½
+		ParticleDesc.dSpawnTime = 1; //ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½
 		ParticleDesc.fParticlePerSecond = 75;
 		ParticleDesc.fVelocityDeviation = 1.f;
 		ParticleDesc.iMaxParticleCount = 5;
@@ -858,9 +905,9 @@ void CPlayer::Chop(_float _fTimeDelta)
 		ParticleDesc.eType = CParticleSystem::PARTICLE_LEAF;
 		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
 		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Leaf");
-		ParticleDesc.dDuration = 1; //ÆÄÆ¼Å¬ ½Ã°£
-		ParticleDesc.dParticleLifeTime = 1; //¼ö¸í
-		ParticleDesc.dSpawnTime = 1; //½ºÆù Å¸ÀÓ
+		ParticleDesc.dDuration = 1; //ï¿½ï¿½Æ¼Å¬ ï¿½Ã°ï¿½
+		ParticleDesc.dParticleLifeTime = 1; //ï¿½ï¿½ï¿½ï¿½
+		ParticleDesc.dSpawnTime = 1; //ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½
 		ParticleDesc.fParticlePerSecond = 75;
 		ParticleDesc.fVelocityDeviation = 1.f;
 		ParticleDesc.iMaxParticleCount = 5;
@@ -880,6 +927,9 @@ void CPlayer::Chop(_float _fTimeDelta)
 void CPlayer::Cutting_Grass(_float _fTimeDelta)
 {
 	m_eState = ACTION_STATE::WEEDING;
+
+	m_Equipment->Set_ActionState((_uint)3);
+	m_Equipment->Set_WeaponType(m_eWeaponType);
 
 	if (m_ePreState != m_eState)
 	{
@@ -1211,7 +1261,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 			{
 				m_ActStack.push(Select_Interact_State(eObjID));
 			}
-			else if (m_pTarget == nullptr|| Check_Interact_End())//¸ñÇ¥°¡ ¾øÀ¸¸é »èÁ¦.
+			else if (m_pTarget == nullptr|| Check_Interact_End())//ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 			{
 				m_ActStack.pop();
 			}
@@ -1222,7 +1272,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				m_ActStack.pop();
 				//m_pTarget = nullptr;
 			}
-			else {//falseÀÏ ½Ã °è¼Ó ¼öÇà 
+			else {//falseï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 				Mining(fTimeDelta);
 			}
 			break;
@@ -1232,7 +1282,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				m_ActStack.pop();
 				//m_pTarget = nullptr;
 			}
-			else {//falseÀÏ ½Ã °è¼Ó ¼öÇà 
+			else {//falseï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 				Chop(fTimeDelta);
 			}
 			break;
@@ -1242,7 +1292,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				m_ActStack.pop();
 				//m_pTarget = nullptr;
 			}
-			else {//falseÀÏ ½Ã °è¼Ó ¼öÇà 
+			else {//falseï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 				Cutting_Grass(fTimeDelta);
 			}
 			break;
@@ -1251,7 +1301,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 			{
 				m_ActStack.pop();
 			}
-			else {//falseÀÏ ½Ã °è¼Ó ¼öÇà 
+			else {//falseï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 				Eatting(fTimeDelta);
 			}
 			break;
@@ -1261,7 +1311,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				m_ActStack.pop();
 				//m_pTarget = nullptr;
 			}
-			else {//falseÀÏ ½Ã °è¼Ó ¼öÇà 
+			else {//falseï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 				Pickup(fTimeDelta);
 			}
 			break;
@@ -1310,6 +1360,7 @@ CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
 	case INTERACTOBJ_ID::BOULDER:
 		return ACTION_STATE::MINING;
 		break;
+	case INTERACTOBJ_ID::PORTAL:
 	case INTERACTOBJ_ID::NPC:
 	case INTERACTOBJ_ID::ITEMS:
 		return ACTION_STATE::PICKUP;

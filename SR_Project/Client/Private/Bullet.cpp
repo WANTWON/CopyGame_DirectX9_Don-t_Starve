@@ -91,11 +91,7 @@ HRESULT CBullet::Render()
 	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
 		return E_FAIL;
 
-
-
 	Render_TextureState();
-
-
 
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
@@ -243,6 +239,17 @@ void CBullet::Excute(_float fTimeDelta)
 		case WEAPON_TYPE::WEAPON_SMOKE:
 			Red_Smoke(fTimeDelta);
 			break;
+		case WEAPON_TYPE::WEAPON_LIGHTNING:
+		case WEAPON_TYPE::WEAPON_ICESPIKE1:
+		case WEAPON_TYPE::WEAPON_ICESPIKE2:
+		case WEAPON_TYPE::WEAPON_ICESPIKE3:
+		case WEAPON_TYPE::WEAPON_ICESPIKE4:
+			m_fAccDeadTimer += fTimeDelta;
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex-1 )
+			{
+				m_bDead = OBJ_DEAD;
+			}
+			break;
 
 		}
 	}
@@ -380,6 +387,10 @@ HRESULT CBullet::Render_TextureState()
 			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(1)))
 				return E_FAIL;
 			break;
+		default:
+			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
+				return E_FAIL;
+			break;
 		}
 	}
 	return S_OK;
@@ -474,7 +485,9 @@ void CBullet::SetUp_BillBoard()
 	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
 
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 
@@ -533,6 +546,43 @@ HRESULT CBullet::Texture_Clone(void)
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RedSmoke"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_RedSmoke"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
+	case WEAPON_TYPE::WEAPON_LIGHTNING:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 9;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Lightning"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE1:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 27;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceSpike1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE2:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 27;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceSpike2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike2"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE3:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 27;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceSpike3"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike3"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE4:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 25;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceSpike4"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike4"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+
+
 	}
 
 	return S_OK;
@@ -541,33 +591,55 @@ HRESULT CBullet::Texture_Clone(void)
 HRESULT CBullet::Init_Data(void)
 {
 	//refactory Func soon
-	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_DART)
+	switch (m_tBulletData.eWeaponType)
 	{
+	case WEAPON_TYPE::WEAPON_DART:
 		m_pTransformCom->Set_Scale(0.3f, 0.3f, 1.f);
 		if (m_tBulletData.eDirState == DIR_STATE::DIR_LEFT)
 		{
 			m_pTransformCom->Set_Scale(-0.3f, 0.3f, 1.f);
 		}
-	}
-
-	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_SMOKE)
-	{
+		break;
+	case WEAPON_TYPE::WEAPON_SMOKE:
 		m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.f);
 		m_fDamage = 3.f;
-	}
-
-	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_BOMB)
-	{
+		break;
+	case WEAPON_TYPE::WEAPON_BOMB:
 		m_pTransformCom->Set_Scale(0.7f, 0.7f, 1.f);
 		m_fDamage = 0.f;
+		break;
+	case WEAPON_TYPE::WEAPON_LIGHTNING:
+		m_pTransformCom->Set_Scale(1.f, 7.f, 1.f);
+		m_fDamage = 0.f;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE1:
+		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_fDamage = 0.f;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE2:
+		m_pTransformCom->Set_Scale(0.75f, 0.75f, 1.f);
+		m_fDamage = 0.f;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE3:
+		m_pTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
+		m_fDamage = 0.f;
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE4:
+		m_pTransformCom->Set_Scale(0.3f, 0.3f, 1.f);
+		m_fDamage = 0.f;
+		break;
+
+	default:
+		break;
+
 	}
+
 
 	if (m_tBulletData.eDirState == DIR_STATE::DIR_END)
 	{
 		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.0f);
 
 		//m_pTransformCom->Set_State(CTransform::STATE_LOOK, m_tBulletData.vLook);
-
 	}
 
 	return S_OK;

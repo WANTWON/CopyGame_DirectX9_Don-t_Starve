@@ -26,34 +26,26 @@ HRESULT CItem::Initialize_Prototype()
 
 HRESULT CItem::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
-
 	if (pArg)
 		memcpy(&m_ItemDesc, pArg, sizeof(ITEMDESC));
 
-	if (FAILED(SetUp_Components()))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-	//ITEMNAME::
+
 	m_pTransformCom->Set_Scale(.3f, .3f, 1.f);
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::ITEMS;
-
+	
 	return S_OK;
 }
 
 int CItem::Tick(_float fTimeDelta)
-{
+{	
+	__super::Tick(fTimeDelta);
 
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	__super::Tick(fTimeDelta);
-
-	WalkingTerrain();
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	return OBJ_NOEVENT;
 }
@@ -62,29 +54,13 @@ void CItem::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetUp_BillBoard();
-
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	Change_Motion();
+	Change_Frame();
 }
 
 HRESULT CItem::Render()
 {
 	if (FAILED(__super::Render()))
-		return E_FAIL;
-
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-		return E_FAIL;
-
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
-
-	m_pVIBufferCom->Render();
-
-	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
 	return S_OK;
@@ -167,7 +143,7 @@ HRESULT CItem::Drop_Items()
 	return S_OK;
 }
 
-HRESULT CItem::SetUp_Components()
+HRESULT CItem::SetUp_Components(void* pArg)
 {
 	/* For.Com_Texture */
 	Texture_Clone();
@@ -198,29 +174,6 @@ HRESULT CItem::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CItem::SetUp_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-
-	return S_OK;
-}
-
-HRESULT CItem::Release_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
-	return S_OK;
-}
-
 HRESULT CItem::Texture_Clone()
 {
 	CTexture::TEXTUREDESC TextureDesc;
@@ -237,38 +190,12 @@ HRESULT CItem::Texture_Clone()
 	return S_OK;
 }
 
-void CItem::SetUp_BillBoard()
+void CItem::Change_Frame()
 {
-	_float4x4 ViewMatrix;
-
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);	// Get View Matrix
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);		// Get Inverse of View Matrix (World Matrix of Camera)
-
-	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
-
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 
-void CItem::WalkingTerrain()
+void CItem::Change_Motion()
 {
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	if (nullptr == pGameInstance)
-		return;
-
-	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
-	if (nullptr == pVIBuffer_Terrain)
-		return;
-
-	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
-	if (nullptr == pTransform_Terrain)
-		return;
-
-	_float3			vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
-	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.15f);
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
 CItem* CItem::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

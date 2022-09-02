@@ -35,7 +35,8 @@ int CEquip_Animation::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_eState != ACTION_STATE::ATTACK)
+	if (m_eState != ACTION_STATE::ATTACK
+		&& m_eState != ACTION_STATE::BUILD)
 	{
 		m_ePreState = m_eState;
 		m_bIsAttack = false;
@@ -170,6 +171,7 @@ void CEquip_Animation::Select_Animation()
 				case WEAPON_TYPE::WEAPON_DART:
 					m_bIsAttack = false;
 					break;
+
 				}
 				break;
 			case DIR_STATE::DIR_UP:
@@ -216,6 +218,25 @@ void CEquip_Animation::Select_Animation()
 		}
 	}
 
+	if (m_eState == ACTION_STATE::BUILD)
+	{
+		if (m_eState != m_ePreState)
+		{
+			switch (m_eDirState)
+			{
+			case DIR_STATE::DIR_UP:
+			case DIR_STATE::DIR_DOWN:
+			case DIR_STATE::DIR_LEFT:
+			case DIR_STATE::DIR_RIGHT:
+				m_bIsAttack = true;
+				Change_Texture(TEXT("Com_Texture_Build_Effect"));
+				break;
+			}
+		}
+		m_ePreState = m_eState;
+	}
+
+
 }
 
 void CEquip_Animation::Direction_Check()
@@ -238,23 +259,54 @@ void CEquip_Animation::Direction_Check()
 
 void CEquip_Animation::Set_Offset()
 {
-
-	if (m_eDirState == DIR_STATE::DIR_RIGHT)
+	switch (m_eState)
 	{
-		m_MovePos.x += 0.18f;
+	case ACTION_STATE::ATTACK:
+		if (m_eDirState == DIR_STATE::DIR_RIGHT)
+		{
+			m_MovePos.x += 0.18f;
+		}
+		else if (m_eDirState == DIR_STATE::DIR_LEFT)
+		{
+			m_MovePos.x -= 0.18f;
+		}
+		else if (m_eDirState == DIR_STATE::DIR_DOWN)
+		{
+			m_MovePos.x += 0.24f;
+		}
+		else if (m_eDirState == DIR_STATE::DIR_UP)
+		{
+			m_MovePos.x -= 0.22f;
+		}
+		break;
+	case ACTION_STATE::BUILD:
+		if (m_eDirState == DIR_STATE::DIR_RIGHT)
+		{
+			m_MovePos.x += 0.18f;
+			m_MovePos.y -= 0.1f;
+			m_MovePos.z -= 0.15f;
+		}
+		else if (m_eDirState == DIR_STATE::DIR_LEFT)
+		{
+			m_MovePos.x -= 0.18f;
+			m_MovePos.y -= 0.1f;
+			m_MovePos.z -= 0.15f;
+		}
+		else if (m_eDirState == DIR_STATE::DIR_DOWN)
+		{
+			m_MovePos.x += 0.24f;
+			m_MovePos.y -= 0.1f;
+			m_MovePos.z -= 0.1f;
+		}
+		else if (m_eDirState == DIR_STATE::DIR_UP)
+		{
+			m_MovePos.x -= 0.22f;
+		}
+		break;
+	default:
+		break;
 	}
-	else if (m_eDirState == DIR_STATE::DIR_LEFT)
-	{
-		m_MovePos.x -= 0.18f;
-	}
-	else if (m_eDirState == DIR_STATE::DIR_DOWN)
-	{
-		m_MovePos.x += 0.24f;
-	}
-	else if (m_eDirState == DIR_STATE::DIR_UP)
-	{
-		m_MovePos.x -= 0.22f;
-	}
+	
 }
 
 HRESULT CEquip_Animation::Texture_Clone(void)
@@ -289,6 +341,15 @@ HRESULT CEquip_Animation::Texture_Clone(void)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Staff_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Anim_FireStaff_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
+
+	/*Build_Effect*/
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_iEndTex = 25;
+	TextureDesc.m_fSpeed = 60;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Effect"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BuildEffect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
 
 	return S_OK;
 }

@@ -24,41 +24,22 @@ public:
 	virtual int Tick(_float fTimeDelta)override;
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
-
-protected: /* For.Components */
-	CTexture* m_pTextureCom = nullptr;
-	CRenderer* m_pRendererCom = nullptr;
-	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
-	CTransform*	m_pTransformCom = nullptr;
-	CCollider* m_pColliderCom = nullptr;
-
-	vector<CTexture*> m_vecTexture;
-
 private:
-	HRESULT SetUp_Components(void* pArg = nullptr);
-	HRESULT SetUp_RenderState();
-	HRESULT Release_RenderState();
+	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
 
 private: /*For TextureCom */
-	HRESULT Texture_Clone();
-	HRESULT Change_Texture(const _tchar* LayerTag);
-	void Change_Frame();
-	void Change_Motion();
-
-private: /* For TransformCom*/
-	void SetUp_BillBoard();
-	void WalkingTerrain();
+	virtual HRESULT Texture_Clone() override;
+	virtual void Change_Frame() override;
+	virtual void Change_Motion() override;
 
 private:
-	const _tchar* m_TimerTag = TEXT("");
-	STATE m_eState = STATE::IDLE;
-	STATE m_ePreState = STATE::MAX;
+	STATE m_eState = IDLE;
+	STATE m_ePreState = MAX;
 
-private:
+public:
 	virtual void Interact(_uint Damage = 0) override;
+	virtual HRESULT Drop_Items() override;
 	void Find_Target();
-	HRESULT Drop_Items();
-	_bool IsDead();
 
 public:
 	static CPigKing* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

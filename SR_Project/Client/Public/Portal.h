@@ -1,6 +1,7 @@
 #pragma once
+
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Interactive_Object.h"
 #include "Transform.h"
 
 BEGIN(Engine)
@@ -12,8 +13,17 @@ class CCollider;
 END
 
 BEGIN(Client)
-class CPortal final : public CGameObject
+class CPortal final : public CInteractive_Object
 {
+	enum STATE
+	{
+		IDLE_CLOSE,
+		OPENING,
+		IDLE_OPEN,
+		CLOSING,
+		MAX
+	};
+
 private:
 	CPortal(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CPortal(const CPortal& rhs);
@@ -27,23 +37,25 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	HRESULT SetUp_Components(void* pArg);
-	HRESULT SetUp_RenderState();
-	HRESULT Release_RenderState();
+	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
 
-private: /* For TransformCom*/
-	void SetUp_BillBoard();
-	void WalkingTerrain();
-private: /* For.Components */
-	CTexture* m_pTextureCom = nullptr;
-	CRenderer* m_pRendererCom = nullptr;
-	CTransform* m_pTransformCom = nullptr;
-	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
-	CCollider*	m_pColliderCom = nullptr;
+private: /*For TextureCom */
+	virtual HRESULT Texture_Clone() override;
+	virtual void Change_Frame() override;
+	virtual void Change_Motion() override;
 
 private:
-	const _tchar* m_TimerTag = TEXT("");
-	_float m_fTerrain_Height = 0.f;
+	STATE m_eState = IDLE_CLOSE;
+	STATE m_ePreState = MAX;
+	_float m_fOpenRadius = 0.f;
+	_bool m_bShouldClosePortal = false;
+	_bool m_bShouldTeleport = false;
+
+public:
+	void AI_Behaviour();
+	_bool Check_Target();
+	virtual void Interact(_uint Damage = 0) override;
+	virtual HRESULT Drop_Items() override;
 
 public:
 	static CPortal* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

@@ -11,7 +11,6 @@ class CCollider;
 END
 
 BEGIN(Client)
-
 class CMonster abstract : public CGameObject
 {
 protected:

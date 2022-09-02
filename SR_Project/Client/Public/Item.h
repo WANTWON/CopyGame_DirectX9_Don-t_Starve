@@ -37,37 +37,20 @@ public:
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
 
-public:
-	_float3 Get_Pos() { return m_pTransformCom->Get_State(CTransform::STATE_POSITION); }
-	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
-	//New
-	virtual void Interact(_uint Damage = 0) override;
-	virtual HRESULT Drop_Items() override;
-
 private:
-	HRESULT SetUp_Components();
-	HRESULT SetUp_RenderState();
-	HRESULT Release_RenderState();
+	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
 
 private: /*For TextureCom */
-	HRESULT Texture_Clone();
-
-private: /* For TransformCom*/
-	void SetUp_BillBoard();
-	void WalkingTerrain();
-
-private: /* For.Components */
-	CTexture* m_pTextureCom = nullptr;
-	CRenderer* m_pRendererCom = nullptr;
-	CCollider* m_pColliderCom = nullptr;
-	CTransform* m_pTransformCom = nullptr;
-	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
-
-	vector<CTexture*> m_vecTexture;
+	virtual HRESULT Texture_Clone() override;
+	virtual void Change_Frame() override;
+	virtual void Change_Motion() override;
 
 private:
-	_float m_fTerrain_Height = 0.f;
 	ITEMDESC m_ItemDesc;
+
+public:
+	virtual void Interact(_uint Damage = 0) override;
+	virtual HRESULT Drop_Items() override;
 
 public:
 	static CItem* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
