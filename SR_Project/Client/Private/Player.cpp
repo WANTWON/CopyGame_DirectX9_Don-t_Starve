@@ -6,7 +6,7 @@
 #include "Inventory.h"
 #include "Equip_Animation.h"
 #include "Bullet.h"
-#include "CameraDynamic.h"
+#include "CameraManager.h"
 #include "Interactive_Object.h"
 #include "PickingMgr.h"
 #include "AttackRange.h"
@@ -76,7 +76,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 int CPlayer::Tick(_float fTimeDelta)
 {
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-
+	m_iCameraMode = CCameraManager::Get_Instance()->Get_CamState();
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return OBJ_NOEVENT;
 
@@ -402,34 +402,20 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMFPSMODE]))
 	{
 		m_bIsFPS = true;
-		CGameInstance* pInstance = CGameInstance::Get_Instance();
-		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(m_iCurrentLevelndex, TEXT("Layer_Camera"), 0);
-		Camera->Set_CamMode(CCameraDynamic::CAM_FPS);
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_FPS);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMTPSMODE]))
 	{
 		m_bIsFPS = false;
-		CGameInstance* pInstance = CGameInstance::Get_Instance();
-		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(m_iCurrentLevelndex, TEXT("Layer_Camera"), 0);
-		Camera->Set_CamMode(CCameraDynamic::CAM_PLAYER);
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMLEFT]))
 	{
-		CGameInstance* pInstance = CGameInstance::Get_Instance();
-		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(m_iCurrentLevelndex, TEXT("Layer_Camera"), 0);
-		if (Camera->Get_CamMode() == CCameraDynamic::CAM_PLAYER)
-		{
-			Camera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 1);
-		}	
+		CCameraManager::Get_Instance()->PlayerCamera_TurnLeft(m_iCurrentLevelndex);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
-		CGameInstance* pInstance = CGameInstance::Get_Instance();
-		CCameraDynamic* Camera = (CCameraDynamic*)pInstance->Get_Object(m_iCurrentLevelndex, TEXT("Layer_Camera"), 0);
-		if (Camera->Get_CamMode() == CCameraDynamic::CAM_PLAYER)
-		{
-			Camera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 2);
-		}
+		CCameraManager::Get_Instance()->PlayerCamera_TurnRight(m_iCurrentLevelndex);
 	}
 #pragma endregion Debug&CamKey	
 
@@ -658,7 +644,10 @@ void CPlayer::Move_Up(_float _fTimeDelta)
 {
 	if (m_bInputKey)
 	{
-		m_pTransformCom->Go_Straight(_fTimeDelta, m_fTerrain_Height);
+		if(m_iCameraMode == CCameraManager::CAM_PLAYER)
+			m_pTransformCom->Go_Straight(_fTimeDelta*2, m_fTerrain_Height);
+		else
+			m_pTransformCom->Go_Straight(_fTimeDelta, m_fTerrain_Height);
 	}
 	
 
@@ -711,7 +700,10 @@ void CPlayer::Move_Down(_float _fTimeDelta)
 {
 	if (m_bInputKey)
 	{
-		m_pTransformCom->Go_Backward(_fTimeDelta, m_fTerrain_Height);
+		if (m_iCameraMode == CCameraManager::CAM_PLAYER)
+			m_pTransformCom->Go_Backward(_fTimeDelta * 2, m_fTerrain_Height);
+		else
+			m_pTransformCom->Go_Backward(_fTimeDelta, m_fTerrain_Height);
 	}
 	
 	m_eState = ACTION_STATE::MOVE;

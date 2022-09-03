@@ -74,6 +74,9 @@ int CTree::Tick(_float fTimeDelta)
 void CTree::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+	_float3 vPosition = Get_Position();
+	vPosition.y -= 0.5f;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 
 	Change_Motion();
 	Change_Frame();

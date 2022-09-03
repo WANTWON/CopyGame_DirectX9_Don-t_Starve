@@ -57,6 +57,8 @@
 #include "House.h"
 #include "Portal.h"
 
+#include "CameraFPS.h"
+
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
 {
@@ -853,6 +855,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CCameraDynamic::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/*For.Prototype_GameObject_Camera_FPS */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_FPS"),
+		CCameraFPS::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	/*For.Prototype_GameObject_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),

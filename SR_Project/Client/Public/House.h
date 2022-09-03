@@ -59,6 +59,9 @@ private:
 	const _tchar* m_TimerTag = TEXT("");
 	_float m_fTerrain_Height = 0.f;
 
+	_int m_MonsterMaxCount = 4;
+	DWORD m_dwTime;
+
 public:
 	static CHouse* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

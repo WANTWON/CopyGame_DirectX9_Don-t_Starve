@@ -198,6 +198,8 @@ private: /*others*/
 
 	/*CamMode*/
 	_bool			m_bIsFPS = false;
+	_uint			m_iCameraMode;
+
 private:/* for Picking Test */
 	_float3			m_vPickingPoint;
 	_bool			m_bPicked = false;

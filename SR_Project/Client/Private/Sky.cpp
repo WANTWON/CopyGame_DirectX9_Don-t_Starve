@@ -128,6 +128,9 @@ HRESULT CSky::SetUp_RenderState()
 	/*깊이 비교를 통과한 픽셀들의 깊이를 깊이버퍼에 저장하지 않는다. : 하늘 이후에 그려지는 객체들이 하늘과 깊이비교를 못하게 만들어주기 위해서. */
 	m_pGraphic_Device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
+	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
 	return S_OK;
@@ -140,7 +143,9 @@ HRESULT CSky::Release_RenderState()
 	m_pGraphic_Device->SetRenderState(D3DRS_ZENABLE, TRUE);
 	
 	m_pGraphic_Device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-
+	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_NONE);
+	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_NONE);
+	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 	return S_OK;
 }
 

@@ -6,6 +6,8 @@
 #include "Inventory.h"
 #include "PickingMgr.h"
 #include <time.h>
+#include "CameraManager.h"
+#include "Mouse.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
@@ -164,5 +166,7 @@ void CMainApp::Free()
 	CGameInstance::Release_Engine();	
 	CPickingMgr::Get_Instance()->Destroy_Instance();
 	CInventory_Manager::Get_Instance()->Destroy_Instance();
+	CCameraManager::Get_Instance()->Destroy_Instance();
+	CMouse::Get_Instance()->Destroy_Instance();
 }
 
