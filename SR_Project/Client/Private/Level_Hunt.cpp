@@ -102,6 +102,9 @@ HRESULT CLevel_Hunt::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider_Warrior"), LEVEL_HUNT, pLayerTag, _float3(15.f, 0.f, 15.f))))
+		return E_FAIL;
+	
 	Safe_Release(pGameInstance);
 
 	return S_OK;
