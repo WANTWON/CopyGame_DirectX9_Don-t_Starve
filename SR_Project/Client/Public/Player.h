@@ -158,6 +158,8 @@ private: /**Actions*/
 	void Test_Detect(_float fTImeDelta);
 	
 	void RangeCheck(_float _fTimeDelta);
+
+
 	//Interact Check
 	ACTION_STATE Select_Interact_State(INTERACTOBJ_ID _eObjID);
 	

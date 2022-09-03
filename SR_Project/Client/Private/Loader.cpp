@@ -329,6 +329,31 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike4"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/IceSpike/IceSpike4_%03d.png"), 26))))
 		return E_FAIL;
+
+	/*SandSpike_Small_Create*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SandSpike_Small_Create"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/SandSpike/SandSpike_Small_Create_%03d.png"), 17))))
+		return E_FAIL;
+
+	/*SandSpike_Small_Break*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SandSpike_Small_Break"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/SandSpike/SandSpike_Small_Break_%03d.png"), 16))))
+		return E_FAIL;
+
+	/*SandSpike_Small_PreBreak*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SandSpike_Small_PreBreak"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/SandSpike/SandSpike_Small_Pre_%03d.png"), 9))))
+		return E_FAIL;
+
+	/*SandSpike_Tall_Create*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SandSpike_Tall_Create"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/SandSpike/SandSpike_Tall_Create_%03d.png"), 17))))
+		return E_FAIL;
+
+	/*SandSpike_Tall_Break*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SandSpike_Tall_Break"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/SandSpike/SandSpike_Tall_Break_%03d.png"), 16))))
+		return E_FAIL;
 	//BulletEnd
 	
 	/*AttackRange & Picker*/
