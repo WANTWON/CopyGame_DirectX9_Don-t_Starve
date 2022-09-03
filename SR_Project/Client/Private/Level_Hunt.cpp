@@ -4,6 +4,7 @@
 #include "CameraDynamic.h"
 #include "PickingMgr.h"
 #include "House.h"
+#include "Player.h"
 
 CLevel_Hunt::CLevel_Hunt(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -27,6 +28,8 @@ HRESULT CLevel_Hunt::Initialize()
 
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
+
+	
 
 	CPickingMgr::Get_Instance()->Clear_PickingMgr();
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_HUNT);
@@ -56,7 +59,7 @@ HRESULT CLevel_Hunt::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	int iTextNum = 3;
+	int iTextNum = 0;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_HUNT, TEXT("Layer_Sky"), &iTextNum)))
 		return E_FAIL;
@@ -65,8 +68,11 @@ HRESULT CLevel_Hunt::Ready_Layer_BackGround(const _tchar * pLayerTag)
 		TEXT("Prototype_Component_VIBuffer_Terrain_Load0"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Water"), LEVEL_HUNT, pLayerTag, _float3(-10.f, -0.75f, -10.f))))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Water"), LEVEL_HUNT, pLayerTag, _float3(-20.f, -0.01f, -20.f))))
 		return E_FAIL;
+
+	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	pPlayer->Set_Position(_float3(25, 1, 25));
 
 	Safe_Release(pGameInstance);
 
@@ -96,6 +102,9 @@ HRESULT CLevel_Hunt::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider_Warrior"), LEVEL_HUNT, pLayerTag, _float3(15.f, 0.f, 15.f))))
+		return E_FAIL;
+	
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -106,7 +115,7 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Tree_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Tree_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -114,16 +123,15 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 	_float3 ObjectPos(0, 0, 0);
 	_uint iNum = 0;
 
-	///* ù���� object ����Ʈ�� size �޾Ƽ� ������ŭ for�� ������ �Ϸ��� �����س���*/
-	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-	//for (_uint i = 0; i < iNum; ++i)
-	//{
-	//	ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
-	//	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tree"), LEVEL_HUNT, pLayerTag, ObjectPos);
-	//}
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tree"), LEVEL_HUNT, pLayerTag, ObjectPos);
+	}
 
-	//CloseHandle(hFile);
+	CloseHandle(hFile);
 
 	//hFile = CreateFile(TEXT("../Bin/Resources/Data/Grass_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	//if (0 == hFile)
@@ -181,7 +189,7 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 	//	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berry_Bush"), LEVEL_HUNT, pLayerTag, ObjectPos);
 	//}
 
-	CloseHandle(hFile);
+	//CloseHandle(hFile);
 
 	hFile = CreateFile(TEXT("../Bin/Resources/Data/House_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)

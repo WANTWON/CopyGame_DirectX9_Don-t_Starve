@@ -49,6 +49,8 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_GAMEPLAY);
 
+	
+
 	return S_OK;
 }
 
@@ -59,6 +61,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	pGameInstance->PlayBGM(TEXT("Filed.mp3"), 0.1f);
 
 	if (m_bNextLevel)
 	{
