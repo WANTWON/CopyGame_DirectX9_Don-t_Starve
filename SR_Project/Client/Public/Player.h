@@ -104,6 +104,7 @@ public: /*Get&Set*/
 	void	Set_Speed(_float _fSpeed) { m_tStat.fSpeed += _fSpeed; }
 	void	Set_Armor(_float _fArmor) { m_tStat.fArmor += _fArmor; }
 	void	Set_WeaponType(WEAPON_TYPE _eWeapon) { m_eWeaponType = _eWeapon; }
+	void	Set_Position(_float3 Position);
 
 public:
 	void	Add_ActStack(ACTION_STATE _ACT_STATE) { m_ActStack.push(_ACT_STATE); m_bAutoMode = true; m_bMove = false; }

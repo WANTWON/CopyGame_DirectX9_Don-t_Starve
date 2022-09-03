@@ -224,6 +224,11 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 	return fDamage;
 }
 
+void CPlayer::Set_Position(_float3 Position)
+{
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, Position);
+}
+
 HRESULT CPlayer::SetUp_Components()
 {
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();

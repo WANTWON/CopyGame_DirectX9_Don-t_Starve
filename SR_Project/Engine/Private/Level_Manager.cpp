@@ -15,6 +15,7 @@ HRESULT CLevel_Manager::Open_Level(unsigned int iLevelIndex, CLevel * pNewLevel)
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
+		m_iPastLevelIndex = m_iLevelIndex;
 		pGameInstance->Clear(m_iLevelIndex);
 
 		Safe_Release(pGameInstance);

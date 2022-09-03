@@ -142,7 +142,7 @@ void CMonster::WalkingTerrain()
 
 	_float3 vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_float3 vScale = m_pTransformCom->Get_Scale();
-	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), (1 * vScale.y / 2));
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), (vScale.y*0.5f));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 

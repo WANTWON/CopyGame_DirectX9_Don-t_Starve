@@ -966,6 +966,30 @@ HRESULT CLoader::Loading_ForHuntLevel()
 
 	Safe_AddRef(pGameInstance);
 
+	lstrcpy(m_szLoadingText, TEXT("Loading_Texture"));
+
+	/*For. Prototype_Component_Texture_Tree*/
+#pragma region Add_Texture_Tree
+	// Tall
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_IDLE"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/LivingWood/Tall/Idle/Idle_%03d.png"), 80))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_CHOP"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/LivingWood/Tall/Chop/Chop_%03d.png"), 15))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_FALL_RIGHT"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/LivingWood/Tall/Fall_Right/Fall_Right_%03d.png"), 38))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_FALL_LEFT"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/LivingWood/Tall/Fall_Left/Fall_Left_%03d.png"), 38))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_STUMP"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/LivingWood/Tall/Stump/Stump_%03d.png"), 1))))
+		return E_FAIL;
+
+#pragma endregion Add_Texture_Tree
+
+
 #pragma region Add_Texture_Spider
 
 	/*For. Prototype_Component_Texture_Spider*/
@@ -1001,9 +1025,24 @@ HRESULT CLoader::Loading_ForHuntLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Spider
 
+
+	/*For.Prototype_Component_Texture_RockEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Rock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Roc.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_LeafEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Leaf"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 4))))
+		return E_FAIL;
+
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spider_House"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/SpiderHouse.png"), 1))))
 		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Loading_Object & Component"));
+
 
 	/*For. Prototype_GameObject_Spider */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider"),
@@ -1019,7 +1058,7 @@ HRESULT CLoader::Loading_ForHuntLevel()
 	if (FAILED(Loading_Terrain_ForHuntLevel()))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("Loading_Objetct"));
+
 
 	lstrcpy(m_szLoadingText, TEXT("Finished_Loading"));
 
