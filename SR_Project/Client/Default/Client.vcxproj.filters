@@ -145,6 +145,9 @@
     <Filter Include="02.GameObject\00.Player\AttackRange">
       <UniqueIdentifier>{0e69f00a-9b21-4f0c-b868-0ff35163c63a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.Monster\Spider_Warrior">
+      <UniqueIdentifier>{36eaf950-0862-43dd-82e7-a411950c077b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -342,6 +345,9 @@
     <ClInclude Include="..\Public\CraftPont.h">
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
     </ClInclude>
+    <ClInclude Include="SpiderWarrior.h">
+      <Filter>02.GameObject\01.Monster\Spider_Warrior</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -526,6 +532,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CraftPont.cpp">
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
+    </ClCompile>
+    <ClCompile Include="SpiderWarrior.cpp">
+      <Filter>02.GameObject\01.Monster\Spider_Warrior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
