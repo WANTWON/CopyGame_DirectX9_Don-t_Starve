@@ -138,9 +138,9 @@ private: /**Actions*/
 	void	Damaged(_float _fTimeDelta);
 	void	Jump(_float _fTimeDelta);
 
-	void Multi_Action(_float _fTimeDelta); //¸ÖÆ¼Å°
+	void Multi_Action(_float _fTimeDelta); //ï¿½ï¿½Æ¼Å°
 	 //Passive
-	void	Decrease_Stat(void); //ÀÏÁ¤½Ã°£¸¶´Ù Hunger °¨¼Ò
+	void	Decrease_Stat(void); //ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ Hunger ï¿½ï¿½ï¿½ï¿½
 	void	Create_Bullet(void);
 	void	Detect_Enemy(void);
 	_bool	Check_Interact_End(void);
@@ -224,14 +224,15 @@ private: /*for Auto*/
 	class CAttackRange*			m_pRange = nullptr;
 private: // Test
 	_float3					m_vTargetPicking;
+	LEVEL					m_iCurrentLevelndex; //í˜„ì¬ ë ˆë²¨ì— ë”°ë¼ ë¶ˆë › ìƒì„± ë ˆë²¨ì´ ë‹¤ë¥´ê¸° ë•Œë¬¸ì—
 	_float					m_fAtkScale = 6.2f;
+
 	
 	public:
 	void Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
-	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 

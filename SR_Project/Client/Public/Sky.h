@@ -33,14 +33,16 @@ private: /* For.Components */
 	CVIBuffer_Cube*			m_pVIBufferCom = nullptr;
 
 private:
-	HRESULT SetUp_Components();
+	HRESULT SetUp_Components(void* pArg = nullptr);
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
+
+private:
+	int iTextnum = 2;
 
 public:
 	static CSky* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
-	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr);
 	virtual void Free() override;
 };
 

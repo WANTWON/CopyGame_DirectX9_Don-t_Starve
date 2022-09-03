@@ -228,10 +228,7 @@ CGameObject* CGrass::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject* CGrass::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
+
 
 void CGrass::Free()
 {

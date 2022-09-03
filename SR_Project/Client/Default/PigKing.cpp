@@ -240,10 +240,6 @@ CGameObject* CPigKing::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject* CPigKing::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CPigKing::Free()
 {

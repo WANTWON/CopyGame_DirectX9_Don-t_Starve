@@ -23,6 +23,7 @@ public:
 	void Render();
 
 	class CLevel* Get_CurrentLevel() { return m_pCurrentLevel; }
+	_uint Get_CurrentLevelIndex() { return m_iLevelIndex; }
 
 private:
 	class CLevel*				m_pCurrentLevel = nullptr;

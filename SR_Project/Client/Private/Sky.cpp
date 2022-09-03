@@ -26,11 +26,9 @@ HRESULT CSky::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(SetUp_Components()))
+	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15, 0, 15));
-	//m_pTransformCom->Set_Scale(10.f, 10.f, 1.f);
 
 	return S_OK;
 }
@@ -69,7 +67,7 @@ HRESULT CSky::Render()
 	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(2)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(iTextnum)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))
@@ -83,18 +81,23 @@ HRESULT CSky::Render()
 	return S_OK;
 }
 
-HRESULT CSky::SetUp_Components()
+HRESULT CSky::SetUp_Components(void* pArg)
 {
+	if (pArg == nullptr)
+		iTextnum = 2;
+	else
+		iTextnum = *(int*)pArg;
+
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sky"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"), (CComponent**)&m_pVIBufferCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
 
@@ -165,11 +168,6 @@ CGameObject * CSky::Clone(void* pArg)
 	}
 
 	return pInstance;
-}
-
-CGameObject * CSky::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
 }
 
 void CSky::Free()

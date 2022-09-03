@@ -31,18 +31,6 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Equipment_back(TEXT("Layer_UI"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_PlayerStatUI(TEXT("Layer_UI"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_UI"))))
-		return E_FAIL;
-*/
 	if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
 		return E_FAIL;
 
@@ -128,7 +116,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	_float3 ObjectPos(0, 0, 0);
 	_uint iNum = 0;
 
-	/* ù���� object ����Ʈ�� size �޾Ƽ� ������ŭ for�� ������ �Ϸ��� �����س���*/
+	
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -248,7 +236,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BackGround"), LEVEL_GAMEPLAY, pLayerTag, _float3(10.f, 1.f, 5.f))))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BackGround"), LEVEL_STATIC, pLayerTag, _float3(10.f, 1.f, 5.f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -290,16 +278,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_PlayerStatUI(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Playerhp"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Playerhp"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Playerhunger"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Playerhunger"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_PlayerMentality"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_PlayerMentality"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Mouse_item"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Mouse_item"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
 
@@ -308,7 +296,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_PlayerStatUI(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_HpPont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_HpPont"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -317,7 +305,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_PlayerStatUI(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_hungerPont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_hungerPont"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -326,7 +314,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_PlayerStatUI(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MentalityPont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MentalityPont"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -341,10 +329,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainInventory(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainInventory"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainInventory"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BagInventory"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BagInventory"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
 
@@ -352,7 +340,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainInventory(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainInventory_back"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainInventory_back"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -362,16 +350,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainInventory(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainInventory_front"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainInventory_front"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 	}
 
 
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 20; ++i)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pont"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -389,14 +377,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 
 
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainToolbox"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainToolbox"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
 	for (int i = 0; i < 4; ++i)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainToolbox_back"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainToolbox_back"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -405,7 +393,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainToolbox_front"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MainToolbox_front"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -421,14 +409,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WeaponToolbox"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WeaponToolbox"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
 	for (int i = 0; i < 5; ++i)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WeaponToolbox_back"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WeaponToolbox_back"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -437,19 +425,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WeaponToolbox_front"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WeaponToolbox_front"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_GatherToolbox"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_GatherToolbox"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
 	for (int i = 0; i < 4; ++i)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_GatherToolbox_back"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_GatherToolbox_back"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -458,7 +446,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_GatherToolbox_front"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_GatherToolbox_front"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -468,7 +456,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftmain"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftmain"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -477,7 +465,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftmain_back"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftmain_back"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -486,13 +474,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftmain_front"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftmain_front"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftbutton"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Craftbutton"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
+
+	for (int i = 0; i < 8; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CraftPont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
 
 	Safe_Release(pGameInstance);
 
@@ -508,7 +505,7 @@ HRESULT CLevel_GamePlay::Ready_LayerPont(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pont"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -530,7 +527,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Equipment_back(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Equipment_back"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Equipment_back"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -539,7 +536,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Equipment_back(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Equipment_front"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Equipment_front"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 	}
 

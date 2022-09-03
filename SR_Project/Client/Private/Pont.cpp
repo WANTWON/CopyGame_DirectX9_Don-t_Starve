@@ -33,11 +33,63 @@ HRESULT CPont::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, (_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 20.0f;
-	m_fSizeY = 20.0f;
+	m_fSizeX = 10.0f;
+	m_fSizeY = 10.0f;
 	m_fX = 300.f + (iNum * 50.f);
 	m_fY = 660.f;
 
+
+   if (iNum == 0)
+	   m_fX = 290.f;
+   else if (iNum == 1)
+	   m_fX = 310.f;
+
+   else if (iNum == 2)
+	   m_fX = 340.f;
+   else if (iNum == 3)
+	   m_fX = 360.f;
+
+   else if (iNum == 4)
+	   m_fX = 390.f;
+   else if (iNum == 5)
+	   m_fX = 410.f;
+
+   else if (iNum == 6)
+	   m_fX = 440.f;
+   else if (iNum == 7)
+	   m_fX = 460.f;
+
+   else if (iNum == 8)
+	   m_fX = 490.f;
+   else if (iNum == 9)
+	   m_fX = 510.f;
+
+   else if (iNum == 10)
+	   m_fX = 540.f;
+   else if (iNum == 11)
+	   m_fX = 560.f;
+
+   else if (iNum == 12)
+	   m_fX = 590.f;
+   else if (iNum == 13)
+	   m_fX = 610.f;
+
+   else if (iNum == 14)
+	   m_fX = 640.f;
+   else if (iNum == 15)
+	   m_fX = 660.f;
+
+   else if (iNum == 16)
+	   m_fX = 690.f;
+   else if (iNum == 17)
+	   m_fX = 710.f;
+
+   else if (iNum == 18)
+	   m_fX = 740.f;
+   else if (iNum == 19)
+	   m_fX = 760.f;
+   
+			
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 

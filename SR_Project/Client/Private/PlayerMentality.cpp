@@ -54,10 +54,10 @@ int CPlayerMentality::Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 	Safe_AddRef(pinv);
 
-	pinv->setmentality((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentMental));
+	pinv->setmentality((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentMental));
 	
 	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
-	texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentMental) / 2;
+	texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentMental) / 2;
 
 	Safe_Release(pGameInstance);
 	Safe_Release(pinv);
@@ -179,11 +179,6 @@ CGameObject * CPlayerMentality::Clone(void* pArg)
 	}
 
 	return pInstance;
-}
-
-CGameObject * CPlayerMentality::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
 }
 
 void CPlayerMentality::Free()

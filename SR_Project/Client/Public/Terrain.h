@@ -36,7 +36,7 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg)override;
-	HRESULT Initialize_Load(const _tchar* VIBufferTag, void* pArg = nullptr);
+	HRESULT Initialize_Load(const _tchar* VIBufferTag, LEVEL TerrainLevelIndex, void* pArg = nullptr);
 	virtual int Tick(_float fTimeDelta)override;
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
@@ -53,7 +53,7 @@ private: /* For.Components */
 
 private:
 	HRESULT SetUp_Components(void* pArg);
-	HRESULT SetUp_Components(const _tchar* VIBufferTag, void* pArg = nullptr);
+	HRESULT SetUp_Components(const _tchar* VIBufferTag, LEVEL TerrainLevelIndex, void* pArg = nullptr);
 	HRESULT SetUp_RenderState();
 	HRESULT SetUp_SamplerState();
 	HRESULT Release_RenderState();
@@ -69,7 +69,7 @@ private:
 public:
 	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
-	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr);
+	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, _uint LevelIndex, void* pArg = nullptr);
 	virtual void Free() override;
 };
 

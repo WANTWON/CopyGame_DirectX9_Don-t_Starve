@@ -26,40 +26,72 @@ HRESULT CInventory_Manager::Add_GameObject(_uint iLevelIndex, void* pArg)
 
 void CInventory_Manager::Tick(_float fTimeDelta)
 {
+_uint count = 0;
+auto iter = m_MainInventorylist.begin();
+auto iterfont = m_Pontlist.begin();
+bool bcheck = true;
+
+while (bcheck && !m_MainInventorylist.empty() && !m_Pontlist.empty())
+{
 	
-	auto iter = m_MainInventorylist.begin();
-	auto iterfont = m_Pontlist.begin();
-	bool bcheck = true;
-
-	while (bcheck && !m_MainInventorylist.empty() && !m_Pontlist.empty())
-	{
 
 
-
-		(*iterfont)->set_pont_num((*iter)->get_item_number());              //->set_pont_num(iter->get_item_number());
 		
-		if ((*iter)->get_pontcheck() == false)
-		{
-			(*iterfont)->set_check(false);        
-		}
-		else if ((*iter)->get_pontcheck() == true)
-		{
-			(*iterfont)->set_check(true);
-		}
-
-		++iter;
-		++iterfont;
-
-		if (iter == m_MainInventorylist.end() || iterfont == m_Pontlist.end())
-		{
-			bcheck = false;
-		}
+	
+	if ((*iter)->get_pontcheck() == false)  //인벤토리의 폰트가 false면
+	{
+		(*iterfont)->set_check(false);//폰트창을 안뜨게할구야
 	}
+	else if ((*iter)->get_pontcheck() == true)
+	{
+		(*iterfont)->set_check(true);
+	}
+
+	if ((*iterfont)->get_pontnum() % 2 == 0) //10자리
+	{
+		(*iterfont)->set_pont_num(((*iter)->get_item_number() % 100) / 10);      //10의 자리수를 0번에 넣어 (0)
+
+		if ((*iterfont)->get_pontex() == 0)
+		{
+			(*iterfont)->set_check(false);
+		}
+
+
+	}
+	else if ((*iterfont)->get_pontnum() % 2 != 0) // 1의자리                 
+	{
+		(*iterfont)->set_pont_num(((*iter)->get_item_number() % 10));
+
+		//++iterfont;
+	}
+	                                                                           //폰트1사이클 끝
+	++count;                                                                   //카운트증가 폰트처리 끝났으니까 폰트를 1번넘으로넘기자
+	++iterfont;
+
+	if (count == 2)                                                           //다음사이클에 폰트처리 다 끝나고 인벤토리 넘길거
+	{
+		++iter;
+		count = 0;
+	}
+		
+
+	
+	
+
+	//++iter;
+	
+
+	if (iter == m_MainInventorylist.end() || iterfont == m_Pontlist.end())
+	{
+		bcheck = false;
+	}
+}
 
 }
 
 void CInventory_Manager::Late_Tick(_float fTimeDelta)
 {
+	
 
 	CMouse*			pMouse = CMouse::Get_Instance();
 	Safe_AddRef(pMouse);
@@ -367,7 +399,13 @@ void CInventory_Manager::craft_on(MAKEWHAT item)
 		k->set_onof(true);
 		k->set_makewhat(item);
 	}
-		
+	
+	for (auto& k : m_Craftpont)
+	{
+		k->set_check(true);
+		k->set_makewhat(item);
+	}
+	update_craftpont();
 
 }
 
@@ -399,6 +437,219 @@ void CInventory_Manager::craft_off()
 		k->gobackfirstY();
 		k->gobackfirstX();
 	}
+
+	for (auto& k : m_Craftpont)
+	{
+		k->set_check(false);
+		k->gobackfirstY();
+		k->gobackfirstX();
+	}
+}
+
+void CInventory_Manager::update_craftpont()
+{
+	_uint wood = 0;
+	_uint rock2 = 0;
+	_uint meat = 0;
+	_uint grass = 0;
+	_uint gold = 0;
+	_uint rope = 0;
+
+	for (auto& k : m_MainInventorylist)
+	{
+		if (k->get_texnum() == ITEMNAME_WOOD)
+			wood += k->get_item_number();
+		else if (k->get_texnum() == ITEMNAME_ROCK2)
+			rock2 += k->get_item_number();
+		else if (k->get_texnum() == ITEMNAME_MEAT)
+			meat += k->get_item_number();
+		else if (k->get_texnum() == ITEMNAME_GRASS)
+			grass += k->get_item_number();
+		else if (k->get_texnum() == ITEMNAME_GOLD)
+			gold += k->get_item_number();
+		else if (k->get_texnum() == ITEMNAME_ROPE)
+			rope += k->get_item_number();
+	}
+
+
+	for (auto& k : m_Craftpont)
+	{
+		if (m_Craftmain.front()->get_makewhat() == MAKE_AXE || m_Craftmain.front()->get_makewhat() == MAKE_PICK)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((wood % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(wood % 10);
+			}
+
+				
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+				
+			}
+
+			else if (k->get_pontnum() == 4)
+			{
+				k->set_pont_num((rock2 % 100) / 10);
+			}
+			else if (k->get_pontnum() == 5)
+			{
+				k->set_pont_num(rock2 % 10);
+			}
+
+			else if (k->get_pontnum() == 7)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+			
+		}
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_HAMBAT)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((wood % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(wood % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+
+			}
+
+			else if (k->get_pontnum() == 4)
+			{
+				k->set_pont_num((meat % 100) / 10);
+			}
+			else if (k->get_pontnum() == 5)
+			{
+				k->set_pont_num(meat % 10);
+			}
+
+			else if (k->get_pontnum() == 7)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+		}
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_ARMOR || m_Craftmain.front()->get_makewhat() == MAKE_HELMET)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((wood % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(wood % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+
+			}
+
+			else if (k->get_pontnum() == 4)
+			{
+				k->set_pont_num((rock2 % 100) / 10);
+			}
+			else if (k->get_pontnum() == 5)
+			{
+				k->set_pont_num(rock2 % 10);
+			}
+
+			else if (k->get_pontnum() == 7)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+		}
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_SHOTTER )
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((grass % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(grass % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+
+			}
+
+			else if (k->get_pontnum() == 4)
+			{
+				k->set_pont_num((rope % 100) / 10);
+			}
+			else if (k->get_pontnum() == 5)
+			{
+				k->set_pont_num(rope % 10);
+			}
+
+			else if (k->get_pontnum() == 7)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+		}
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_STAFF)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((wood % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(wood % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+
+			}
+
+			else if (k->get_pontnum() == 4)
+			{
+				k->set_pont_num((gold % 100) / 10);
+			}
+			else if (k->get_pontnum() == 5)
+			{
+				k->set_pont_num(gold % 10);
+			}
+
+			else if (k->get_pontnum() == 7)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+		}
+
+
+
+	}
+
+
+
+
+
+
 }
 
 void CInventory_Manager::Free()

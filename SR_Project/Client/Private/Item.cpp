@@ -80,7 +80,7 @@ void CItem::Interact(_uint Damage)
 	if (m_bDead)
 	{
 		CGameInstance* pInstance = CGameInstance::Get_Instance();
-		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 0));
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"), 0));
 		pPlayer->Check_Target(m_bDead);
 	}
 	++equipmentlist;
@@ -222,11 +222,6 @@ CGameObject* CItem::Clone(void* pArg)
 	}
 
 	return pInstance;
-}
-
-CGameObject* CItem::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
 }
 
 void CItem::Free()

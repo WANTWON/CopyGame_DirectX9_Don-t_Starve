@@ -258,10 +258,6 @@ CGameObject * CAttackRange::Clone(void * pArg)
 	return pInstance;
 }
 
-CGameObject * CAttackRange::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CAttackRange::Free()
 {

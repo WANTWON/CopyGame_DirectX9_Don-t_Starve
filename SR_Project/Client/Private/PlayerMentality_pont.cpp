@@ -213,13 +213,6 @@ CGameObject * CPlayerMentality_pont::Clone(void* pArg)
 	CInventory_Manager::Get_Instance()->Get_playermentality_Pont_list()->push_back(pInstance);
 	return pInstance;
 }
-
-
-CGameObject * CPlayerMentality_pont::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
-
 void CPlayerMentality_pont::Free()
 {
 	__super::Free();

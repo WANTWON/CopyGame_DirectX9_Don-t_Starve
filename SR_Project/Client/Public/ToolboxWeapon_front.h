@@ -61,7 +61,7 @@ public:
 	int get_iNum() { return iNum; }
 
 public:
-	void Open_Weapontool(_float time) { m_fX += 20 * time; }
+	void Open_Weapontool(_float time) { m_fX += 70* time; }
 	bool get_onof() { return m_bonof; }
 	void set_onof(bool tof) { m_bonof = tof; }
 

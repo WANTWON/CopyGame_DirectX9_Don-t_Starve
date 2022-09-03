@@ -53,10 +53,10 @@ int CPlayerhunger::Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 	Safe_AddRef(pinv);
 
-	pinv->sethuger((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHungry));
+	pinv->sethuger((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHungry));
 	
 	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
-	texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHungry) / 2;
+	texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHungry) / 2;
 
 	Safe_Release(pGameInstance);
 	Safe_Release(pinv);
@@ -179,10 +179,6 @@ CGameObject * CPlayerhunger::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject * CPlayerhunger::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CPlayerhunger::Free()
 {

@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Picking.h"
 #include "PickingMgr.h"
+#include "Level_Manager.h"
 
 CTerrain::CTerrain(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -37,9 +38,9 @@ HRESULT CTerrain::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
+HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, LEVEL TerrainLevelIndex, void * pArg)
 {
-	if (FAILED(SetUp_Components(VIBufferTag, pArg)))
+	if (FAILED(SetUp_Components(VIBufferTag, TerrainLevelIndex, pArg)))
 		return E_FAIL;
 
 	m_bPicking = false;
@@ -103,8 +104,9 @@ HRESULT CTerrain::SetUp_Components(void* pArg)
 	m_TerrainDesc.m_fSizeZ = 1;
 	m_TerrainDesc.m_iTextureNum = 17;
 
+
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), (CComponent**)&m_pVIBufferCom, &m_TerrainDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"), (CComponent**)&m_pVIBufferCom, &m_TerrainDesc)))
 		return E_FAIL;
 
 
@@ -123,7 +125,7 @@ HRESULT CTerrain::SetUp_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CTerrain::SetUp_Components(const _tchar * VIBufferTag, void * pArg)
+HRESULT CTerrain::SetUp_Components(const _tchar * VIBufferTag, LEVEL TerrainLevelIndex, void * pArg)
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -133,8 +135,9 @@ HRESULT CTerrain::SetUp_Components(const _tchar * VIBufferTag, void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
+
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, VIBufferTag, (CComponent**)&m_pVIBufferCom, pArg)))
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), TerrainLevelIndex, VIBufferTag, (CComponent**)&m_pVIBufferCom, pArg)))
 		return E_FAIL;
 
 
@@ -208,7 +211,7 @@ void CTerrain::PickingTrue()
 {
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
-	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
 	//pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
 	//TestCode
@@ -245,11 +248,11 @@ CGameObject * CTerrain::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject * CTerrain::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+CGameObject * CTerrain::Clone_Load(const _tchar * VIBufferTag, _uint LevelIndex, void * pArg)
 {
 	CTerrain*	pInstance = new CTerrain(*this);
 
-	if (FAILED(pInstance->Initialize_Load(VIBufferTag, pArg)))
+	if (FAILED(pInstance->Initialize_Load(VIBufferTag, (LEVEL)LevelIndex, pArg)))
 	{
 		ERR_MSG(TEXT("Failed to Cloned : CTerrain"));
 		Safe_Release(pInstance);

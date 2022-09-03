@@ -78,6 +78,7 @@ HRESULT CInteractive_Object::Render()
 	return S_OK;
 }
 
+
 void CInteractive_Object::Free()
 {
 	__super::Free();

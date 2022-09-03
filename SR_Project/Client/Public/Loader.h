@@ -35,10 +35,10 @@ public:
 
 	HRESULT Loading_ForLogoLevel();
 	HRESULT Loading_ForGamePlayLevel();
-	HRESULT Loading_Terrain_ForGamePlayLevel();
 	HRESULT Loading_ForHuntLevel();
 
-
+	HRESULT Loading_Terrain_ForGamePlayLevel();
+	HRESULT Loading_Terrain_ForHuntLevel();
 
 private:
 	LEVEL					m_eNextLevel = LEVEL_END;

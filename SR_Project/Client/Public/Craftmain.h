@@ -55,6 +55,8 @@ public:
 	void gobackfirstX() { m_fX = m_firstx; }
 	void gobackfirstY() { m_fX = m_firsty; }
 
+	MAKEWHAT get_makewhat() { return m_makewhat; }
+
 	void set_makewhat(MAKEWHAT item) { m_makewhat = item; }
 
 private:

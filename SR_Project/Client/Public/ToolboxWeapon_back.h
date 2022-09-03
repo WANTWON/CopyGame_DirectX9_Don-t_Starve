@@ -49,7 +49,7 @@ public:
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 public:
-	void Open_Weapontool(_float time) { m_fX += 20 * time; }
+	void Open_Weapontool(_float time) { m_fX += 70 * time; }
 	bool get_onof() { return m_bonof; }
 	void set_onof(bool tof) { m_bonof = tof; }
 	void gobackfirstX() { m_fX = m_firstx; }

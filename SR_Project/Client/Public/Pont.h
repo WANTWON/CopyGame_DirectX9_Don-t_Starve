@@ -47,7 +47,9 @@ public:
 
 	bool get_check() { return m_bcheck; }
 	void set_check(bool tof) { m_bcheck = tof; }
+	int get_pontnum() { return iNum; }
 	void set_pont_num(int num) { texnum = num; }
+	int get_pontex() { return texnum; }
 
 private:
 	int* iNumber = nullptr;

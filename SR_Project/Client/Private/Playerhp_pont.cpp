@@ -211,11 +211,6 @@ CGameObject * CPlayerhp_pont::Clone(void* pArg)
 }
 
 
-CGameObject * CPlayerhp_pont::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
-
 void CPlayerhp_pont::Free()
 {
 	__super::Free();

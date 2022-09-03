@@ -214,10 +214,6 @@ CGameObject * CMouse_item::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject * CMouse_item::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CMouse_item::Free()
 {

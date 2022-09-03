@@ -100,17 +100,20 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 
 	if (iNum == 0)
 	{
-		texnum = ITEMNAME_ARMOR;
+		texnum = ITEMNAME_WOOD;
+		item_number = 9;
 	}
 
 	if (iNum == 1)
 	{
-		texnum = ITEMNAME_HAMBAT;
+		texnum = ITEMNAME_ROCK2;
+		item_number = 9;
 	}
 
 	if (iNum == 2)
 	{
-		texnum = ITEMNAME_HELMET;
+		texnum = ITEMNAME_GOLD;
+		item_number = 9;
 	}
 
 	if (iNum == 3)
@@ -121,6 +124,7 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	if (iNum == 4)
 	{
 		texnum = ITEMNAME_BERRY;
+		item_number = 9;
 	}
 	
 
@@ -130,13 +134,8 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 		item_number = 6;
 	}
 
-	if (iNum == 6)
-	{
-		texnum = ITEMNAME_GOLD;
-		item_number = 6;
-	}
 
-	if (iNum == 15)
+	if (iNum == 7)
 	{
 		texnum = ITEMNAME_ROPE;
 		item_number = 6;
@@ -531,7 +530,7 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 
 
 
-		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_HP(10));
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_HP(10));
 		item_number -= 1;
 		//minus_itemcount();
 		break;
@@ -541,14 +540,14 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 
 
 
-		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_Hungry(10));
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(10));
 		minus_itemcount();
 		break;
 
 
 
 	}
-	(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Add_ActStack(CPlayer::ACTION_STATE::EAT));
+	(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Add_ActStack(CPlayer::ACTION_STATE::EAT));
 
 	Safe_Release(pGameInstance);
 }

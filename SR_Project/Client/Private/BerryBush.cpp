@@ -226,10 +226,6 @@ CGameObject* CBerryBush::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject* CBerryBush::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
-}
 
 void CBerryBush::Free()
 {

@@ -138,7 +138,7 @@ int CCraftmain_front::Tick(_float fTimeDelta)
 	}
 	
 
-	else if (m_makewhat == MAKE_ARMOR)
+	else if (m_makewhat == MAKE_ARMOR||m_makewhat == MAKE_HELMET)
 	{
 		if (iNum == 0)
 		{
@@ -151,18 +151,7 @@ int CCraftmain_front::Tick(_float fTimeDelta)
 		
 	}
 
-	else if (m_makewhat == MAKE_HELMET)
-	{
-		if (iNum == 0)
-		{
-			texnum = ITEMNAME_WOOD;
-		}
-
-		else
-
-			texnum = ITEMNAME_ROCK2;
-
-	}
+	
 
 	RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);

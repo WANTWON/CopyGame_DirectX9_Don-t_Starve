@@ -70,7 +70,6 @@ private: //values
 public:
 	static CAttackRange* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
-	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 
