@@ -488,19 +488,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN4]))
 	{
-		/*TestLightning*/
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-		BULLETDATA BulletData;
-		ZeroMemory(&BulletData, sizeof(BulletData));
-		BulletData.bIsPlayerBullet = true;
-		BulletData.eDirState = DIR_STATE::DIR_DOWN;
-		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE3;
-		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		BulletData.vPosition = m_vTargetPicking;
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
-			return;
+		Test_Func(1);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN5]))
 	{
@@ -1188,19 +1176,38 @@ void CPlayer::Find_Priority()
 
 void CPlayer::Test_Func(_int _iNum)
 {
-	switch (_iNum)
-	{
-	case 1:
-		m_eWeaponType = WEAPON_TYPE::WEAPON_SWORD;
-		break;
-	case 2:
-		m_eWeaponType = WEAPON_TYPE::WEAPON_DART;
-		break;
-	case 3:
-		m_eWeaponType = WEAPON_TYPE::WEAPON_STAFF;
-		break;
-	}
-	m_Equipment->Set_WeaponType(m_eWeaponType);
+	/*TestIceSpike3 Ice Mines*/
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	//BULLETDATA BulletData;
+	//ZeroMemory(&BulletData, sizeof(BulletData));
+	//BulletData.bIsPlayerBullet = true;
+	//BulletData.eDirState = m_eDirState;
+	//BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICEMINES;
+	//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	////_float3 vTempPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//BulletData.vPosition.y -= 0.5f;
+	////FPSMODE일때 생각해보기.
+
+	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+	//	return;
+	////////////////////////////////////////////
+	/*IceSpike*/
+
+	BULLETDATA BulletData;
+	ZeroMemory(&BulletData, sizeof(BulletData));
+	BulletData.bIsPlayerBullet = true;
+	BulletData.eDirState = m_eDirState;
+	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE4;
+	BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	//_float3 vTempPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	BulletData.vPosition.y -= 0.5f;
+	//FPSMODE일때 생각해보기.
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+		return;
 }
 
 void CPlayer::Test_Detect(_float fTImeDelta)
@@ -1269,7 +1276,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				m_ActStack.pop();
 				//m_pTarget = nullptr;
 			}
-			else {//false�� �� ��� ���� 
+			else {
 				Mining(fTimeDelta);
 			}
 			break;
@@ -1279,7 +1286,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				m_ActStack.pop();
 				//m_pTarget = nullptr;
 			}
-			else {//false�� �� ��� ���� 
+			else { 
 				Chop(fTimeDelta);
 			}
 			break;
@@ -1289,7 +1296,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				m_ActStack.pop();
 				//m_pTarget = nullptr;
 			}
-			else {//false�� �� ��� ���� 
+			else {
 				Cutting_Grass(fTimeDelta);
 			}
 			break;
@@ -1298,7 +1305,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 			{
 				m_ActStack.pop();
 			}
-			else {//false�� �� ��� ���� 
+			else {
 				Eatting(fTimeDelta);
 			}
 			break;
@@ -1308,7 +1315,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				m_ActStack.pop();
 				//m_pTarget = nullptr;
 			}
-			else {//false�� �� ��� ���� 
+			else {
 				Pickup(fTimeDelta);
 			}
 			break;
