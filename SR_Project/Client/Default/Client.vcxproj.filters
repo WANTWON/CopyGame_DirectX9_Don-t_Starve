@@ -169,6 +169,9 @@
     <Filter Include="02.GameObject\98.UI\06.Talk">
       <UniqueIdentifier>{248283f7-9c53-45f5-9e12-27e6462a94bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.Monster\Bearger">
+      <UniqueIdentifier>{ce9f80e8-f600-44cf-8ba7-26a2bf49a7a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -330,9 +333,6 @@
     <ClInclude Include="..\Public\ToolboxGather_front.h">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
     </ClInclude>
-    <ClInclude Include="PigKing.h">
-      <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\House.h">
       <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClInclude>
@@ -356,9 +356,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\CraftPont.h">
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
-    </ClInclude>
-    <ClInclude Include="SpiderWarrior.h">
-      <Filter>02.GameObject\01.Monster\Spider_Warrior</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CameraManager.h">
       <Filter>02.GameObject\99.Camera\Manager</Filter>
@@ -389,6 +386,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Line.h">
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PigKing.h">
+      <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpiderWarrior.h">
+      <Filter>02.GameObject\01.Monster\Spider_Warrior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bearger.h">
+      <Filter>02.GameObject\01.Monster\Bearger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -539,9 +545,6 @@
     <ClCompile Include="..\Private\ToolboxGather_front.cpp">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
     </ClCompile>
-    <ClCompile Include="PigKing.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\House.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClCompile>
@@ -565,9 +568,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\CraftPont.cpp">
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
-    </ClCompile>
-    <ClCompile Include="SpiderWarrior.cpp">
-      <Filter>02.GameObject\01.Monster\Spider_Warrior</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CameraManager.cpp">
       <Filter>02.GameObject\99.Camera\Manager</Filter>
@@ -598,6 +598,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Line.cpp">
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PigKing.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpiderWarrior.cpp">
+      <Filter>02.GameObject\01.Monster\Spider_Warrior</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bearger.cpp">
+      <Filter>02.GameObject\01.Monster\Bearger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
