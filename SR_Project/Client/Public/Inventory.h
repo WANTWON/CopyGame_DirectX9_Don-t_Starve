@@ -23,6 +23,10 @@
 #include "Craftmain_front.h"
 #include "Craftbutton.h"
 #include "CraftPont.h"
+#include "Quest.h"
+#include "Questpont.h"
+#include "Line.h"
+#include "Talk.h"
 /*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -65,6 +69,11 @@ public:
 
 	list<CCraftPont*>*Get_Craftpont_list(void) { return &m_Craftpont; }
 
+	list<CQuest*>*Get_Quest_list(void) { return &m_Quest; }
+	list<CQuestpont*>*Get_Questpont_list(void) { return &m_Questpont; }
+	list<CLine*>*Get_Line_list(void) { return &m_Line; }
+	list<CTalk*>*Get_Talk_list(void) { return &m_Talk; }
+
 	void sethp(_uint hp) { m_ihp = hp; }
 	void sethuger(_uint hunger) { m_ihunger = hunger;}
 	void setmentality(_uint mental) { m_mentality = mental; }
@@ -82,6 +91,8 @@ public:
 	void craft_off();
 
 	void update_craftpont();
+
+	void update_questpont();
 
 
 
@@ -116,6 +127,12 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 
 	list<CCraftbutton*>	m_Craftbutton;
 	list<CCraftPont*> m_Craftpont;
+
+	list<CQuest*> m_Quest;
+	list<CQuestpont*> m_Questpont;
+	list<CLine*> m_Line;
+	list<CTalk*>m_Talk;
+	
 
 
 	typedef list<CMainInventory_front*> INVENLIST;

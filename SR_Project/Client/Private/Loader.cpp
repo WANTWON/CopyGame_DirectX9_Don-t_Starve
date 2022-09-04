@@ -57,6 +57,15 @@
 #include "House.h"
 #include "Portal.h"
 
+#include "Daycount.h"
+#include "Quest.h"
+#include "Questpont.h"
+#include "Line.h"
+#include "Talk.h"
+
+#include "CameraFPS.h"
+
+
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
 {
@@ -330,6 +339,31 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike4"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/IceSpike/IceSpike4_%03d.png"), 26))))
 		return E_FAIL;
+
+	/*SandSpike_Small_Create*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SandSpike_Small_Create"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/SandSpike/SandSpike_Small_Create_%03d.png"), 17))))
+		return E_FAIL;
+
+	/*SandSpike_Small_Break*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SandSpike_Small_Break"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/SandSpike/SandSpike_Small_Break_%03d.png"), 16))))
+		return E_FAIL;
+
+	/*SandSpike_Small_PreBreak*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SandSpike_Small_PreBreak"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/SandSpike/SandSpike_Small_Pre_%03d.png"), 9))))
+		return E_FAIL;
+
+	/*SandSpike_Tall_Create*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SandSpike_Tall_Create"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/SandSpike/SandSpike_Tall_Create_%03d.png"), 17))))
+		return E_FAIL;
+
+	/*SandSpike_Tall_Break*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SandSpike_Tall_Break"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Bullet/SandSpike/SandSpike_Tall_Break_%03d.png"), 16))))
+		return E_FAIL;
 	//BulletEnd
 	
 	/*AttackRange & Picker*/
@@ -352,7 +386,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Build_Effect/Build_Effect_%03d.png"), 26))))
 		return E_FAIL;
 #pragma  endregion Add_Texture_Effects
-	/* ¼ÎÀÌ´õ ·Îµù Áß. */
+	/* ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
 
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"),
@@ -421,7 +455,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_MainInventory_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainInventory_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 23))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 26))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Equipment_back */
@@ -431,7 +465,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_Equipment_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Equipment_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 23))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 26))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Pont */
@@ -455,6 +489,25 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	/*For.Prototype_Component_Texture_Playermentality */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_PlayerMentality"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Sanity/Sanity_%03d.png"), 50))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_Playermentality */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Daycount"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Day/Day_%03d.png"), 30))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_quest */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_quest"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/quest/quest%d.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_quest */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Line"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Line/line%d.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_talk */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_talk"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/talk/talk%d.png"), 7))))
 		return E_FAIL;
 
 #pragma endregion Add_Texture UI
@@ -589,6 +642,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerMentality"),
 		CPlayerMentality::Create(m_pGraphic_Device))))
 		return E_FAIL;
+		/*For.Prototype_GameObject_PlayerMentality */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Daycount"),
+		CDaycount::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	/*For.Prototype_GameObject_HpPont */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HpPont"),
@@ -609,6 +666,25 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse_item"),
 		CMouse_item::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	/*For.Prototype_GameObject_quest */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_quest"),
+		CQuest::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_questpont"),
+		CQuestpont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Line"),
+		CLine::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_talk */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_talk"),
+		CTalk::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 
 #pragma endregion Add_Prototype UI Object
 
@@ -853,6 +929,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CCameraDynamic::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/*For.Prototype_GameObject_Camera_FPS */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_FPS"),
+		CCameraFPS::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	/*For.Prototype_GameObject_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
@@ -967,6 +1047,29 @@ HRESULT CLoader::Loading_ForHuntLevel()
 
 	Safe_AddRef(pGameInstance);
 
+	lstrcpy(m_szLoadingText, TEXT("Loading_Texture"));
+
+	/*For. Prototype_Component_Texture_Tree*/
+#pragma region Add_Texture_Tree
+	// Tall
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_IDLE"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/LivingWood/Tall/Idle/Idle_%03d.png"), 80))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_CHOP"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/LivingWood/Tall/Chop/Chop_%03d.png"), 15))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_FALL_RIGHT"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/LivingWood/Tall/Fall_Right/Fall_Right_%03d.png"), 38))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_FALL_LEFT"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/LivingWood/Tall/Fall_Left/Fall_Left_%03d.png"), 38))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_STUMP"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/LivingWood/Tall/Stump/Stump_%03d.png"), 1))))
+		return E_FAIL;
+
+#pragma endregion Add_Texture_Tree
+
 	/*For. Prototype_Component_Texture_Spider*/
 #pragma region Add_Texture_Spider
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Spider_Idle"),
@@ -1000,6 +1103,16 @@ HRESULT CLoader::Loading_ForHuntLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Spider/Die/Die_%03d.png"), 28))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Spider
+
+	/*For.Prototype_Component_Texture_RockEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Rock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Roc.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_LeafEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Leaf"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 4))))
+		return E_FAIL;
 
 	/*For. Prototype_Component_Texture_Spider_Warrior*/
 #pragma region Add_Texture_Spider_Warrior
@@ -1039,6 +1152,9 @@ HRESULT CLoader::Loading_ForHuntLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/SpiderHouse.png"), 1))))
 		return E_FAIL;
 
+	lstrcpy(m_szLoadingText, TEXT("Loading_Object & Component"));
+
+
 	/*For. Prototype_GameObject_Spider */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider"),
 		CSpider::Create(m_pGraphic_Device))))
@@ -1058,7 +1174,7 @@ HRESULT CLoader::Loading_ForHuntLevel()
 	if (FAILED(Loading_Terrain_ForHuntLevel()))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("Loading_Objetct"));
+
 
 	lstrcpy(m_szLoadingText, TEXT("Finished_Loading"));
 

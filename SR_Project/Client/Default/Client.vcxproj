@@ -164,10 +164,13 @@
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\public\BerryBush.h" />
     <ClInclude Include="..\public\Boulder.h" />
+    <ClInclude Include="..\Public\CameraFPS.h" />
+    <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\Craftbutton.h" />
     <ClInclude Include="..\Public\Craftmain_back.h" />
     <ClInclude Include="..\Public\Craftmain_front.h" />
     <ClInclude Include="..\Public\CraftPont.h" />
+    <ClInclude Include="..\Public\Daycount.h" />
     <ClInclude Include="..\Public\Equipment_back.h" />
     <ClInclude Include="..\Public\Equipment_front.h" />
     <ClInclude Include="..\Public\Equip_Animation.h" />
@@ -177,6 +180,7 @@
     <ClInclude Include="..\Public\Inventory.h" />
     <ClInclude Include="..\Public\Item.h" />
     <ClInclude Include="..\Public\Level_Hunt.h" />
+    <ClInclude Include="..\Public\Line.h" />
     <ClInclude Include="..\Public\MainInventory_back.h" />
     <ClInclude Include="..\Public\MainInventory_front.h" />
     <ClInclude Include="..\Public\Craftmain.h" />
@@ -203,8 +207,11 @@
     <ClInclude Include="..\Public\PlayerMentality_pont.h" />
     <ClInclude Include="..\Public\Pont.h" />
     <ClInclude Include="..\Public\Portal.h" />
+    <ClInclude Include="..\Public\Quest.h" />
+    <ClInclude Include="..\Public\Questpont.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Spider.h" />
+    <ClInclude Include="..\Public\Talk.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\ToolboxGather.h" />
     <ClInclude Include="..\Public\ToolboxGather_back.h" />
@@ -231,10 +238,13 @@
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\private\BerryBush.cpp" />
     <ClCompile Include="..\private\Boulder.cpp" />
+    <ClCompile Include="..\Private\CameraFPS.cpp" />
+    <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\Craftbutton.cpp" />
     <ClCompile Include="..\Private\Craftmain_back.cpp" />
     <ClCompile Include="..\Private\Craftmain_front.cpp" />
     <ClCompile Include="..\Private\CraftPont.cpp" />
+    <ClCompile Include="..\Private\Daycount.cpp" />
     <ClCompile Include="..\Private\Equipment_back.cpp" />
     <ClCompile Include="..\Private\Equipment_front.cpp" />
     <ClCompile Include="..\Private\Equip_Animation.cpp" />
@@ -244,6 +254,7 @@
     <ClCompile Include="..\Private\Inventory.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
     <ClCompile Include="..\Private\Level_Hunt.cpp" />
+    <ClCompile Include="..\Private\Line.cpp" />
     <ClCompile Include="..\Private\MainInventory_back.cpp" />
     <ClCompile Include="..\Private\MainInventory_front.cpp" />
     <ClCompile Include="..\Private\Craftmain.cpp" />
@@ -269,8 +280,11 @@
     <ClCompile Include="..\Private\PlayerMentality_pont.cpp" />
     <ClCompile Include="..\Private\Pont.cpp" />
     <ClCompile Include="..\Private\Portal.cpp" />
+    <ClCompile Include="..\Private\Quest.cpp" />
+    <ClCompile Include="..\Private\Questpont.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Spider.cpp" />
+    <ClCompile Include="..\Private\Talk.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\ToolboxGather.cpp" />
     <ClCompile Include="..\Private\ToolboxGather_back.cpp" />

@@ -37,6 +37,8 @@ HRESULT CHouse::Initialize(void* pArg)
 	m_fRadius *= fSize;
 	m_fRadius -= 0.5f;
 
+	m_dwTime = GetTickCount();
+
 	return S_OK;
 }
 
@@ -54,6 +56,34 @@ void CHouse::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	SetUp_BillBoard();
+
+	if (m_HouseDesc.m_eState == SPIDERHOUSE)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+
+		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+
+		_float3 vTargetPos = pTarget->Get_Position();
+		_float m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
+		if (m_fDistanceToTarget < 4.f)
+		{
+			if (m_MonsterMaxCount > 0 && (m_dwTime + 3000 < GetTickCount()))
+			{
+				_float3 vPosition = Get_Pos();
+				vPosition.z -= 0.5f;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider_Warrior"), LEVEL_HUNT, TEXT("Layer_Monster"), vPosition)))
+					return;
+
+				m_dwTime = GetTickCount();
+				m_MonsterMaxCount--;
+			}
+		}
+
+		
+		
+	}
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);

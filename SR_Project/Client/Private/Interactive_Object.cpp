@@ -141,18 +141,21 @@ void CInteractive_Object::SetUp_BillBoard()
 
 void CInteractive_Object::WalkingTerrain()
 {
+
+	_uint iLevelIndex =  CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	if (!pGameInstance)
 		return;
-	CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(iLevelIndex, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
 	if (!pVIBuffer_Terrain)
 		return;
-	CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(iLevelIndex, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
 	if (!pTransform_Terrain)
 		return;
 
 	_float3 vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_float3 vScale = m_pTransformCom->Get_Scale();
-	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), (1 * vScale.y / 2));
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), (1* vScale.y *0.5f));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }

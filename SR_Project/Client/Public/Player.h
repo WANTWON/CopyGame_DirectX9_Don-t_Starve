@@ -84,8 +84,6 @@ public:
 
 
 public:/*Picking*/
-	_float3 Get_Pos();
-	_float3 Get_Look();
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
 	void Move_to_PickingPoint(_float fTimedelta);
 	void Set_PickingPoint(_float3 PickingPoint) { m_vPickingPoint = PickingPoint; m_bPicked = true; m_bInputKey = false; m_bArrive = false; };
@@ -93,7 +91,9 @@ public:/*Picking*/
 
 public: /*Get&Set*/
 		//Gets
-
+	_float3 Get_Pos();
+	_float3 Get_Look();
+	_float3 Get_Right();
 	PLAYERSTAT Get_Player_Stat() { return m_tStat; }
 
 		//Sets
@@ -104,6 +104,7 @@ public: /*Get&Set*/
 	void	Set_Speed(_float _fSpeed) { m_tStat.fSpeed += _fSpeed; }
 	void	Set_Armor(_float _fArmor) { m_tStat.fArmor += _fArmor; }
 	void	Set_WeaponType(WEAPON_TYPE _eWeapon) { m_eWeaponType = _eWeapon; }
+	void	Set_Position(_float3 Position);
 
 public:
 	void	Add_ActStack(ACTION_STATE _ACT_STATE) { m_ActStack.push(_ACT_STATE); m_bAutoMode = true; m_bMove = false; }
@@ -158,6 +159,8 @@ private: /**Actions*/
 	void Test_Detect(_float fTImeDelta);
 	
 	void RangeCheck(_float _fTimeDelta);
+
+
 	//Interact Check
 	ACTION_STATE Select_Interact_State(INTERACTOBJ_ID _eObjID);
 	
@@ -197,6 +200,8 @@ private: /*others*/
 
 	/*CamMode*/
 	_bool			m_bIsFPS = false;
+	_uint			m_iCameraMode;
+
 private:/* for Picking Test */
 	_float3			m_vPickingPoint;
 	_bool			m_bPicked = false;

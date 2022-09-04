@@ -135,11 +135,28 @@ void CTransform::Go_PosLeft(_float fTimeDelta)
 	Set_State(CTransform::STATE_POSITION, vPos);
 }
 
+void CTransform::Go_PosLeft(_float fTimeDelta, _float fHeight)
+{
+	_float3 vPos = Get_State(CTransform::STATE_POSITION);
+	vPos.x -= fTimeDelta*m_TransformDesc.fSpeedPerSec;
+	vPos.y = fHeight;
+
+	Set_State(CTransform::STATE_POSITION, vPos);
+}
+
 void CTransform::Go_PosRight(_float fTimeDelta)
 {
 	_float3 vPos = Get_State(CTransform::STATE_POSITION);
 	vPos.x += fTimeDelta*m_TransformDesc.fSpeedPerSec;
 
+	Set_State(CTransform::STATE_POSITION, vPos);
+}
+
+void CTransform::Go_PosRight(_float fTimeDelta, _float fHeight)
+{
+	_float3 vPos = Get_State(CTransform::STATE_POSITION);
+	vPos.x += fTimeDelta*m_TransformDesc.fSpeedPerSec;
+	vPos.y = fHeight;
 	Set_State(CTransform::STATE_POSITION, vPos);
 }
 

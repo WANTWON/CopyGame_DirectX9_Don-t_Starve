@@ -7,7 +7,7 @@ BEGIN(Client)
 class CCameraDynamic final : public CCamera
 {
 public:
-	enum CAMERAMODE {CAM_DEFAULT, CAM_PLAYER, CAM_TURNMODE, CAM_FPS, CAM_END};
+	enum CAMERAMODE {CAM_PLAYER, CAM_TURNMODE};
 	//Default ÇÊ¿äx , 
 	typedef struct tagCameraDesc_Derived
 	{
@@ -25,7 +25,6 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
-	virtual HRESULT Render();
 
 public: //SetEnum
 	void Set_CamMode(CAMERAMODE _eCamMode, _int _TurnCount = 0) 
@@ -37,18 +36,16 @@ public: //SetEnum
 private:
 	void Player_Camera(_float fTimeDelta);
 	void Turn_Camera(_float fTimeDelta);
-	void FPS_Camera(_float fTimeDelta);
 	void Switch_TurnCnt(_int _TurnCount);
 private:
 	_long			m_lMouseWheel = 0;
-	_float3			m_vDistance = _float3(0, 3, -3);
+	_float3			m_vDistance = _float3(0, 8, -5);
 	CAMERAMODE		m_eCamMode = CAM_PLAYER;
 	_int			m_iTurnCount = 0;
 
 public:
 	static CCameraDynamic* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CCamera* Clone(void* pArg);
-	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr);
 	virtual void Free() override;
 
 };
