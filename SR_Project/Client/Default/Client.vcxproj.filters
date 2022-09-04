@@ -166,6 +166,9 @@
     <Filter Include="02.GameObject\98.UI\05.DayCount">
       <UniqueIdentifier>{93876a52-3e5c-47e7-9aea-6a9150c1bb6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\06.Talk">
+      <UniqueIdentifier>{248283f7-9c53-45f5-9e12-27e6462a94bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -215,9 +218,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Tree.h">
       <Filter>02.GameObject\04.Interactive_Object\Tree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Pont.h">
-      <Filter>02.GameObject\98.UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Inventory.h">
       <Filter>02.GameObject\98.UI\01. Inventory\Manager</Filter>
@@ -381,6 +381,15 @@
     <ClInclude Include="..\Public\Daycount.h">
       <Filter>02.GameObject\98.UI\05.DayCount</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Talk.h">
+      <Filter>02.GameObject\98.UI\06.Talk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Pont.h">
+      <Filter>02.GameObject\98.UI\01. Inventory\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Line.h">
+      <Filter>02.GameObject\98.UI\04.Quest</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -418,9 +427,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Tree.cpp">
       <Filter>02.GameObject\04.Interactive_Object\Tree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Pont.cpp">
-      <Filter>02.GameObject\98.UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Inventory.cpp">
       <Filter>02.GameObject\98.UI\01. Inventory\Manager</Filter>
@@ -583,6 +589,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Daycount.cpp">
       <Filter>02.GameObject\98.UI\05.DayCount</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Talk.cpp">
+      <Filter>02.GameObject\98.UI\06.Talk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Pont.cpp">
+      <Filter>02.GameObject\98.UI\01. Inventory\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Line.cpp">
+      <Filter>02.GameObject\98.UI\04.Quest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

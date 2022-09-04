@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "..\Public\Questpont.h"
+#include "..\Public\Line.h"
 #include "GameInstance.h"
 #include "Inventory.h"
 
 
-CQuestpont::CQuestpont(LPDIRECT3DDEVICE9 pGraphic_Device)
+CLine::CLine(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CQuestpont::CQuestpont(const CQuestpont & rhs)
+CLine::CLine(const CLine & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CQuestpont::Initialize_Prototype()
+HRESULT CLine::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -22,7 +22,7 @@ HRESULT CQuestpont::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CQuestpont::Initialize(void* pArg)
+HRESULT CLine::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -33,23 +33,23 @@ HRESULT CQuestpont::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, (_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 17.0f;
-	m_fSizeY = 17.0f;
-	m_fX = 1210.f;
+	m_fSizeX = 160.0f;
+	m_fSizeY = 2.0f;
+	m_fX = 1190.f;
 	m_fY = 282.f + (iNum * 35.f);
-/*
+	/*
 
 
 
 	if (iNum >= 4)
-		m_fX += 25.f;
+	m_fX += 25.f;
 
 	if (iNum == 3 || iNum == 7)
-		m_fX += 2.5f;
+	m_fX += 2.5f;
 
 	if (iNum == 2 || iNum == 6)
 	{
-		texnum = 10;
+	texnum = 10;
 	}
 
 
@@ -67,18 +67,18 @@ HRESULT CQuestpont::Initialize(void* pArg)
 	return S_OK;
 }
 
-int CQuestpont::Tick(_float fTimeDelta)
+int CLine::Tick(_float fTimeDelta)
 {
-	
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 	Safe_AddRef(pInventory_Manager);
+	set_line();
 	
-
 	if (m_bcheck == true && pInventory_Manager->Get_Quest_list()->front()->get_onoff() == true)
 	{
-
-		__super::Tick(fTimeDelta);
 		
+		__super::Tick(fTimeDelta);
+	
+	
 	RECT		rcRect;
 	SetRect(&rcRect, (_int)(m_fX - m_fSizeX * 0.5f), (_int)(m_fY - m_fSizeY * 0.5f), (_int)(m_fX + m_fSizeX * 0.5f), (_int)(m_fY + m_fSizeY * 0.5f));
 
@@ -86,38 +86,33 @@ int CQuestpont::Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
+	
+
 	/*if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT)
-		m_fY = 185.f;
+	m_fY = 185.f;
 	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER)
-		m_fY = 235.f;
+	m_fY = 235.f;
 	else if (m_makewhat == MAKE_STAFF)
-		m_fY = 285.f;
+	m_fY = 285.f;
 	else if (m_makewhat == MAKE_ARMOR)
-		m_fY = 335.f;
+	m_fY = 335.f;
 	else if (m_makewhat == MAKE_HELMET)
-		m_fY = 385.f;*/
+	m_fY = 385.f;*/
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
-	
-	Safe_Release(pInventory_Manager);
-
-	//if()
 	}
+	Safe_Release(pInventory_Manager);
 	return OBJ_NOEVENT;
 }
 
-void CQuestpont::Late_Tick(_float fTimeDelta)
+void CLine::Late_Tick(_float fTimeDelta)
 {
-
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 	Safe_AddRef(pInventory_Manager);
-
-
+	
 	if (m_bcheck == true && pInventory_Manager->Get_Quest_list()->front()->get_onoff() == true)
 	{
-
-
 		__super::Late_Tick(fTimeDelta);
 
 		RECT		rcRect;
@@ -139,15 +134,15 @@ void CQuestpont::Late_Tick(_float fTimeDelta)
 		if (nullptr != m_pRendererCom&&m_bcheck)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
+		//set_check(false);
 	}
 	Safe_Release(pInventory_Manager);
-
-	//set_check(false);
+	
 }
 
-HRESULT CQuestpont::Render()
+HRESULT CLine::Render()
 {
-	if (m_bcheck)
+	if (m_bcheck == true)
 	{
 		if (FAILED(__super::Render()))
 			return E_FAIL;
@@ -179,14 +174,14 @@ HRESULT CQuestpont::Render()
 	return S_OK;
 }
 
-HRESULT CQuestpont::SetUp_Components()
+HRESULT CLine::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pont"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Line"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -208,7 +203,7 @@ HRESULT CQuestpont::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CQuestpont::SetUp_RenderState()
+HRESULT CLine::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -222,7 +217,7 @@ HRESULT CQuestpont::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CQuestpont::Release_RenderState()
+HRESULT CLine::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
@@ -231,35 +226,35 @@ HRESULT CQuestpont::Release_RenderState()
 	return S_OK;
 }
 
-CQuestpont * CQuestpont::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CLine * CLine::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CQuestpont*	pInstance = new CQuestpont(pGraphic_Device);
+	CLine*	pInstance = new CLine(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : Prototype_Component_Texture_Pont"));
+		ERR_MSG(TEXT("Failed to Created : Prototype_Component_Texture_Line"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CQuestpont::Clone(void* pArg)
+CGameObject * CLine::Clone(void* pArg)
 {
-	CQuestpont*	pInstance = new CQuestpont(*this);
+	CLine*	pInstance = new CLine(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : Prototype_Component_Texture_Pont"));
+		ERR_MSG(TEXT("Failed to Cloned : Prototype_Component_Texture_Line"));
 		Safe_Release(pInstance);
 	}
-	//CInventory_Manager::Get_Instance()->Get_Craftpont_list()->push_back(pInstance);
-	CInventory_Manager::Get_Instance()->Get_Questpont_list()->push_back(pInstance);
+
+	CInventory_Manager::Get_Instance()->Get_Line_list()->push_back(pInstance);
 	return pInstance;
 }
 
 
-void CQuestpont::Free()
+void CLine::Free()
 {
 	__super::Free();
 
@@ -267,4 +262,57 @@ void CQuestpont::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
+}
+
+void CLine::set_line()
+{
+
+	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
+	Safe_AddRef(pInventory_Manager);
+
+
+	auto questpont = pInventory_Manager->Get_Questpont_list();
+
+	Safe_Release(pInventory_Manager);
+	if (questnum == 0)
+	{
+		for (auto iter = questpont->begin(); iter != questpont->end(); ++iter)
+		{
+			if (iNum == 0)
+			{
+				if ((*iter)->get_pontnum() == 0 && (*iter)->get_pontex() >= 3) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					m_bcheck = true;
+					break;
+				}
+				else
+					m_bcheck = false;
+			}
+
+			else if (iNum == 1)
+			{
+				if ((*iter)->get_pontnum() == 1 && (*iter)->get_pontex() >= 2) // 있으면 라인 없으면 노라인
+				{
+					m_bcheck = true;
+					break;
+				}
+				else
+					m_bcheck = false;
+			}
+
+			else if (iNum == 2)
+			{
+				if ((*iter)->get_pontnum() == 2 && (*iter)->get_pontex() >= 1) // 있으면 라인 없으면 노라인
+				{
+					m_bcheck = true;
+					break;
+				}
+				else
+					m_bcheck = false;
+			}
+
+
+
+		}
+	}
 }

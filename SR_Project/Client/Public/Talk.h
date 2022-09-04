@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CQuest final : public CGameObject
+class CTalk final : public CGameObject
 {
 private:
-	CQuest(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CQuest(const CQuest& rhs);
-	virtual ~CQuest() = default;
+	CTalk(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CTalk(const CTalk& rhs);
+	virtual ~CTalk() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -42,15 +42,17 @@ private:
 
 	_uint texnum = 0;
 	_uint m_ihp;
-
-	bool b_onoff = false;
+	bool m_bcheck = false;
 
 public:
-	_uint get_texnum() { return texnum;  }
-	bool get_onoff() { return b_onoff;}
-	void set_onoff(bool tof) { b_onoff = tof; }
+	bool getcheck() { return m_bcheck;  }
+	void setcheck(bool tof) { m_bcheck = tof; }
+
+	_uint gettexnum() { return texnum; }
+	void settexnum(_uint num) { texnum = num; }
+
 public:
-	static CQuest* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CTalk* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

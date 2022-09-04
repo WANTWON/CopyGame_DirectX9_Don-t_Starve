@@ -60,6 +60,8 @@
 #include "Daycount.h"
 #include "Quest.h"
 #include "Questpont.h"
+#include "Line.h"
+#include "Talk.h"
 
 #include "CameraFPS.h"
 
@@ -453,7 +455,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_MainInventory_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainInventory_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 23))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 26))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Equipment_back */
@@ -463,7 +465,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_Equipment_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Equipment_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 23))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 26))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Pont */
@@ -496,6 +498,16 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	/*For.Prototype_Component_Texture_quest */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_quest"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/quest/quest%d.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_quest */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Line"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Line/line%d.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_talk */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_talk"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/talk/talk%d.png"), 7))))
 		return E_FAIL;
 
 #pragma endregion Add_Texture UI
@@ -664,6 +676,14 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CQuestpont::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Line"),
+		CLine::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_talk */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_talk"),
+		CTalk::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 
 #pragma endregion Add_Prototype UI Object

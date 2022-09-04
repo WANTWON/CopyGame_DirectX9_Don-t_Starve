@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "..\Public\Playerhp_pont.h"
+#include "..\Public\Talk.h"
 #include "GameInstance.h"
+#include "Player.h"
 #include "Inventory.h"
 
-
-CPlayerhp_pont::CPlayerhp_pont(LPDIRECT3DDEVICE9 pGraphic_Device)
+CTalk::CTalk(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CPlayerhp_pont::CPlayerhp_pont(const CPlayerhp_pont & rhs)
+CTalk::CTalk(const CTalk & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CPlayerhp_pont::Initialize_Prototype()
+HRESULT CTalk::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -22,89 +22,108 @@ HRESULT CPlayerhp_pont::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CPlayerhp_pont::Initialize(void* pArg)
+HRESULT CTalk::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	iNumber = (int*)pArg;
-
-	iNum = *iNumber;
-
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 20.0f;
-	m_fSizeY = 20.0f;
-	m_fX = 1215.f + (iNum * 15.f);
-	m_fY = 190.f;
+	m_fSizeX = 800.f;
+	m_fSizeY = 250.f;
+	m_fX = 640.f;
+	m_fY = 500.f;
+
+	
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+	texnum = 0;
 
 	return S_OK;
 }
 
-int CPlayerhp_pont::Tick(_float fTimeDelta)
+int CTalk::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
-
-	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (PtInRect(&rcRect, ptMouse))
+	if (m_bcheck == true)
 	{
+		__super::Tick(fTimeDelta);
 
-		m_fSizeX = 35.f;
-		m_fSizeY = 35.f;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		//set_check(true);
+		if (CKeyMgr::Get_Instance()->Key_Up('0'))
+		{
+			if (texnum == 2)
+			{
+				CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+			//	Safe_AddRef(pinv);
+				pinv->Get_Quest_list()->front()->set_onoff(true);
+				m_bcheck = false;
+		//		Safe_Release(pinv);
+				
+					
+			}
+			else if (texnum == 6)
+			{
+				CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+				auto pinven = pinv->Get_Inven_list();
+			//	Safe_AddRef(pinven);
+				for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+				{
+					if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+					{
+						(*iter)->set_texnum(ITEMNAME_QUEST1);
+
+						(*iter)->set_check(true);
+
+						break;;
+					}
+
+				}
+				pinv->Get_Quest_list()->front()->set_onoff(false);
+				m_bcheck = false;
+		//		Safe_Release(pinven);
+			}
+			else
+				++texnum;
+		}
+		//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		//CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+		//Safe_AddRef(pGameInstance);
+		//Safe_AddRef(pinv);
+
+		//pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
+
+		//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
+		//texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth) / 2;
+
+
+		//Safe_Release(pGameInstance);
+		//Safe_Release(pinv);
+
 	}
+	
 
-
-
-
-	//if()
 	return OBJ_NOEVENT;
 }
 
-void CPlayerhp_pont::Late_Tick(_float fTimeDelta)
+void CTalk::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
-
-	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (!PtInRect(&rcRect, ptMouse))
+	if (m_bcheck == true)
 	{
-		m_fSizeX = 20;
-		m_fSizeY = 20;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		__super::Late_Tick(fTimeDelta);
 
-
-		//ERR_MSG(L"Ãæµ¹");
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 	}
-	if (nullptr != m_pRendererCom&&m_bcheck)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
-
-	//set_check(false);
+	
 }
 
-HRESULT CPlayerhp_pont::Render()
+HRESULT CTalk::Render()
 {
-	//if (m_bcheck)
-	//{
+	if (m_bcheck == true)
+	{
 		if (FAILED(__super::Render()))
 			return E_FAIL;
 
@@ -125,21 +144,24 @@ HRESULT CPlayerhp_pont::Render()
 
 		m_pVIBufferCom->Render();
 
-		if(FAILED(Release_RenderState()))
+		if (FAILED(Release_RenderState()))
 			return E_FAIL;
-//	}
 
-	return S_OK;
+
+
+		return S_OK;
+	}
+	
 }
 
-HRESULT CPlayerhp_pont::SetUp_Components()
+HRESULT CTalk::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_HpPont"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_talk"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -161,7 +183,7 @@ HRESULT CPlayerhp_pont::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CPlayerhp_pont::SetUp_RenderState()
+HRESULT CTalk::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -175,43 +197,44 @@ HRESULT CPlayerhp_pont::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CPlayerhp_pont::Release_RenderState()
+HRESULT CTalk::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	return S_OK;
 }
 
-CPlayerhp_pont * CPlayerhp_pont::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CTalk * CTalk::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CPlayerhp_pont*	pInstance = new CPlayerhp_pont(pGraphic_Device);
+	CTalk*	pInstance = new CTalk(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CPlayerhp_pont"));
+		ERR_MSG(TEXT("Failed to Created : CTalk"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CPlayerhp_pont::Clone(void* pArg)
+CGameObject * CTalk::Clone(void* pArg)
 {
-	CPlayerhp_pont*	pInstance = new CPlayerhp_pont(*this);
+	CTalk*	pInstance = new CTalk(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CPlayerhp_pont"));
+		ERR_MSG(TEXT("Failed to Cloned : CTalk"));
 		Safe_Release(pInstance);
 	}
-	CInventory_Manager::Get_Instance()->Get_playerhp_Pont_list()->push_back(pInstance);
+
+	CInventory_Manager::Get_Instance()->Get_Talk_list()->push_back(pInstance);
+
 	return pInstance;
 }
 
 
-void CPlayerhp_pont::Free()
+void CTalk::Free()
 {
 	__super::Free();
 

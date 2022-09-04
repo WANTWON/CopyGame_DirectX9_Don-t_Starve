@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CQuest final : public CGameObject
+class CLine final : public CGameObject
 {
 private:
-	CQuest(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CQuest(const CQuest& rhs);
-	virtual ~CQuest() = default;
+	CLine(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CLine(const CLine& rhs);
+	virtual ~CLine() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -33,26 +33,37 @@ private: /* For.Components */
 
 private:
 	_float4x4				m_ProjMatrix;
-	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
+	_float					m_fX, m_fY, m_fSizeX, m_fSizeY, m_firstx, m_firsty;
 
 private:
 	HRESULT SetUp_Components();
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
-	_uint texnum = 0;
-	_uint m_ihp;
-
-	bool b_onoff = false;
-
 public:
-	_uint get_texnum() { return texnum;  }
-	bool get_onoff() { return b_onoff;}
-	void set_onoff(bool tof) { b_onoff = tof; }
-public:
-	static CQuest* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CLine* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
+
+	bool get_check() { return m_bcheck; }
+	void set_check(bool tof) { m_bcheck = tof; }
+	int get_pontnum() { return iNum; }
+	void set_pont_num(int num) { texnum = num; }
+	int get_pontex() { return texnum; }
+	void set_makewhat(MAKEWHAT item) { m_makewhat = item; }
+
+	void gobackfirstX() { m_fX = m_firstx; }
+	void gobackfirstY() { m_fX = m_firsty; }
+	void set_line();
+
+private:
+	int* iNumber = nullptr;
+	int iNum = 0;
+	int texnum = 0;
+	bool m_bcheck = true;
+	_uint questnum = 0;
+
+	MAKEWHAT m_makewhat = MAKE_END;
 };
 
 END

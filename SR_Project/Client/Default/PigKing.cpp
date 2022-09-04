@@ -176,11 +176,34 @@ void CPigKing::Change_Motion()
 
 void CPigKing::Interact(_uint Damage)
 {
+	_uint count = 0;
 	if (m_bInteract)
 	{
 		m_bInteract = false;
+		CInventory_Manager*         pinven = CInventory_Manager::Get_Instance();
+		Safe_AddRef(pinven);
+
+		pinven->Get_Talk_list()->front()->setcheck(true); //first talking
+		auto line = pinven->Get_Line_list();
+		
+
+		for (auto iter = line->begin(); iter != line->end(); ++iter)
+		{
+			if ((*iter)->get_check() == true)
+				++count;
+			
+		}
+		if (count >= 3)
+		{
+			pinven->Get_Talk_list()->front()->settexnum(3);
+		}
+
+		Safe_Release(pinven);
+
 		m_eState = rand() % 2 ? COINTOSS : UNIMPRESSED;
 	}
+
+
 }
 
 void CPigKing::Find_Target()

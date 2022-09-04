@@ -46,60 +46,79 @@ HRESULT CQuest::Initialize(void* pArg)
 
 int CQuest::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
+	if (b_onoff == true && CKeyMgr::Get_Instance()->Key_Up(VK_ESCAPE))
+	{
+		b_onoff = false;
+	}
+	else if (b_onoff == false && CKeyMgr::Get_Instance()->Key_Up(VK_ESCAPE))
+	{
+		b_onoff = true;
+	}
+
+	if (b_onoff == true);
+	{
+
+		__super::Tick(fTimeDelta);
 
 
-	//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	//CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	//Safe_AddRef(pGameInstance);
-	//Safe_AddRef(pinv);
+		//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		//CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+		//Safe_AddRef(pGameInstance);
+		//Safe_AddRef(pinv);
 
-	//pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
+		//pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
 
-	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
-	//texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth) / 2;
+		//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
+		//texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth) / 2;
 
 
-	//Safe_Release(pGameInstance);
-	//Safe_Release(pinv);
+		//Safe_Release(pGameInstance);
+		//Safe_Release(pinv);
+
+
+		return OBJ_NOEVENT;
+   }
 	
-
-	return OBJ_NOEVENT;
 }
 
 void CQuest::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
+	if (b_onoff == true)
+	{
+		__super::Late_Tick(fTimeDelta);
 
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+	}
 }
 
 HRESULT CQuest::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	if (b_onoff == true)
+	{
+		if (FAILED(__super::Render()))
+			return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
+		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+			return E_FAIL;
 
-	_float4x4		ViewMatrix;
-	D3DXMatrixIdentity(&ViewMatrix);
+		_float4x4		ViewMatrix;
+		D3DXMatrixIdentity(&ViewMatrix);
 
-	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
-		return E_FAIL;
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+			return E_FAIL;
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
+		if (FAILED(SetUp_RenderState()))
+			return E_FAIL;
 
-	m_pVIBufferCom->Render();
+		m_pVIBufferCom->Render();
 
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
-
+		if (FAILED(Release_RenderState()))
+			return E_FAIL;
+	}
 
 
 	return S_OK;
@@ -178,7 +197,7 @@ CGameObject * CQuest::Clone(void* pArg)
 		ERR_MSG(TEXT("Failed to Cloned : CQuest"));
 		Safe_Release(pInstance);
 	}
-
+	CInventory_Manager::Get_Instance()->Get_Quest_list()->push_back(pInstance);
 	return pInstance;
 }
 

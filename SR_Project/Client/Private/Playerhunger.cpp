@@ -32,7 +32,7 @@ HRESULT CPlayerhunger::Initialize(void* pArg)
 	m_fSizeX = 80.f;
 	m_fSizeY = 80.f;
 	m_fX = 1025.f;
-	m_fY = 170.f;
+	m_fY = 140.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
