@@ -6,6 +6,7 @@
 #include "PickingMgr.h"
 #include "House.h"
 #include "Level_Loading.h"
+#include "CameraManager.h"
 
 CLevel_GamePlay::CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -49,6 +50,8 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_GAMEPLAY);
 
+	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_GAMEPLAY);
+
 	return S_OK;
 }
 
@@ -59,6 +62,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	pGameInstance->PlayBGM(TEXT("Filed.mp3"), 0.1f);
 
 	if (m_bNextLevel)
 	{
@@ -223,7 +227,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig_King"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 30.f))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, _float3(45.f, 1.f, 25.f))))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, _float3(45.f, 1.f, 26.f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -257,7 +261,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.CameraDesc.vEye = _float3(0.f, 2.f, -5.f);
 	CameraDesc.CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 
-	CameraDesc.CameraDesc.fFovy = D3DXToRadian(60.0f);
+	CameraDesc.CameraDesc.fFovy = D3DXToRadian(30.0f);
 	CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	CameraDesc.CameraDesc.fNear = 0.2f;
 	CameraDesc.CameraDesc.fFar = 600.f;
@@ -266,6 +270,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

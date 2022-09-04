@@ -24,9 +24,11 @@ public:
 
 	class CLevel* Get_CurrentLevel() { return m_pCurrentLevel; }
 	_uint Get_CurrentLevelIndex() { return m_iLevelIndex; }
+	_uint Get_PastLevelIndex() { return m_iPastLevelIndex; }
 
 private:
 	class CLevel*				m_pCurrentLevel = nullptr;
+	_uint						m_iPastLevelIndex;
 	_uint						m_iLevelIndex;
 public:
 	virtual void Free() override;

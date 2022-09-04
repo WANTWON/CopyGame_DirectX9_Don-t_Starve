@@ -37,7 +37,8 @@ HRESULT CPortal::Initialize(void* pArg)
 	m_fOpenRadius = 3.f;
 
 	m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
-	m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f),1.0);
+	m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
+	
 
 	return S_OK;
 }
@@ -52,8 +53,9 @@ int CPortal::Tick(_float fTimeDelta)
 		pLevelGamePlay->Set_NextLevel(true);
 	}
 
+	
 	AI_Behaviour();
-
+	
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 	
 	return OBJ_NOEVENT;
@@ -61,10 +63,19 @@ int CPortal::Tick(_float fTimeDelta)
 
 void CPortal::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
+	//__super::Late_Tick(fTimeDelta);
+
+	SetUp_BillBoard();
 
 	Change_Motion();
 	Change_Frame();
+	
+	_float3 vPosition = Get_Position();
+	vPosition.y -= m_fRadius-0.1f;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
 HRESULT CPortal::Render()
@@ -113,6 +124,20 @@ HRESULT CPortal::SetUp_Components(void* pArg)
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CPortal::SetUp_BillBoard()
+{
+	_float4x4 ViewMatrix;
+
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);  // Get View Matrix
+	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
+
+	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
+	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	//m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	//m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 
 HRESULT CPortal::Texture_Clone()

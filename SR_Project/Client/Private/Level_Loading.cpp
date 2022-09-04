@@ -53,7 +53,7 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 			if (nullptr == pNewLevel)
 				return;
 
-			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+ 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 			if (nullptr == pGameInstance)
 				return;
 			Safe_AddRef(pGameInstance);

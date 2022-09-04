@@ -164,6 +164,8 @@
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\public\BerryBush.h" />
     <ClInclude Include="..\public\Boulder.h" />
+    <ClInclude Include="..\Public\CameraFPS.h" />
+    <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\Craftbutton.h" />
     <ClInclude Include="..\Public\Craftmain_back.h" />
     <ClInclude Include="..\Public\Craftmain_front.h" />
@@ -224,6 +226,7 @@
     <ClInclude Include="Client.h" />
     <ClInclude Include="PigKing.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SpiderWarrior.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -233,6 +236,8 @@
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\private\BerryBush.cpp" />
     <ClCompile Include="..\private\Boulder.cpp" />
+    <ClCompile Include="..\Private\CameraFPS.cpp" />
+    <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\Craftbutton.cpp" />
     <ClCompile Include="..\Private\Craftmain_back.cpp" />
     <ClCompile Include="..\Private\Craftmain_front.cpp" />
@@ -291,6 +296,7 @@
     <ClCompile Include="..\Private\Water.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="PigKing.cpp" />
+    <ClCompile Include="SpiderWarrior.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

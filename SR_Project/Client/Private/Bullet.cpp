@@ -70,13 +70,14 @@ void CBullet::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	AttackCheck(fTimeDelta);
+	DeadCheck(fTimeDelta);
 
 	if (Compare_Terrain())
 		m_bDead = true;
 
 
 	SetUp_BillBoard();
-	if (nullptr != m_pRendererCom)
+	if (nullptr != m_pRendererCom && m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_MINES)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
@@ -181,11 +182,7 @@ void CBullet::Excute(_float fTimeDelta)
 		{
 		case WEAPON_TYPE::WEAPON_HAND:
 		case WEAPON_TYPE::WEAPON_SWORD:
-			m_fAccDeadTimer += fTimeDelta;
-			if (m_fAccDeadTimer > 1.f)
-			{
-				m_bDead = OBJ_DEAD;
-			}
+
 			break;
 		case WEAPON_TYPE::WEAPON_STAFF:
 			switch (m_tBulletData.eDirState)
@@ -240,17 +237,19 @@ void CBullet::Excute(_float fTimeDelta)
 			Red_Smoke(fTimeDelta);
 			break;
 		case WEAPON_TYPE::WEAPON_LIGHTNING:
+			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE1:
 		case WEAPON_TYPE::WEAPON_ICESPIKE2:
 		case WEAPON_TYPE::WEAPON_ICESPIKE3:
 		case WEAPON_TYPE::WEAPON_ICESPIKE4:
-			m_fAccDeadTimer += fTimeDelta;
-			if (m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex-1 )
-			{
-				m_bDead = OBJ_DEAD;
-			}
+			IceSpikes(fTimeDelta);
 			break;
-
+		case WEAPON_TYPE::WEAPON_MINE:
+			IceMine(fTimeDelta);
+			break;
+		case WEAPON_TYPE::WEAPON_MINES:
+			IceMines(fTimeDelta);
+			break;
 		}
 	}
 }
@@ -267,59 +266,137 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 		case WEAPON_TYPE::WEAPON_HAND:
 		case WEAPON_TYPE::WEAPON_SWORD:
 			m_bDead = OBJ_DEAD;
-			goto Attack;
+			goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_STAFF:
 			m_bDead = OBJ_DEAD;
-			goto Attack;
+			goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_DART:
 			m_bDead = OBJ_DEAD;
-			goto Attack;
+			goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_SMOKE:
 			m_fDamageTimger += _fTimeDelta;
 			if (m_fDamageTimger > 0.5f)
 			{
 				m_fDamage = 0.f;
-				goto Attack;
+				goto AttackMulti;
 			}
 			break;
 
+		case WEAPON_TYPE::WEAPON_ICESPIKE1:
+		case WEAPON_TYPE::WEAPON_ICESPIKE2:
+		case WEAPON_TYPE::WEAPON_ICESPIKE3:
+		case WEAPON_TYPE::WEAPON_ICESPIKE4:
+
+			break;
+		case WEAPON_TYPE::WEAPON_MINE:
+
+			if (!m_bIsAttacked)
+			{
+				m_bIsAttacked = true; // 공격한번적용
+				m_bActivated = true; // 
+				goto AttackMulti;
+			}
 		}
-		Attack:
+	AttackMulti:
 		Apply_Damage_Multi(m_fDamage, vecDamagedActor, nullptr);
+
+
 	}
 
 
 	vecDamagedActor.clear();
 }
 
-void CBullet::Red_Smoke(_float _fTimeDelta)
+void CBullet::DeadCheck(_float _fTimeDelta)
 {
+	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
 	m_fAccDeadTimer += _fTimeDelta;
-	if (m_fAccDeadTimer > 3.f)
+
+	switch (m_tBulletData.eWeaponType)
 	{
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex >= 14)
+	case WEAPON_TYPE::WEAPON_HAND:
+	case WEAPON_TYPE::WEAPON_SWORD:
+		m_fAccDeadTimer += _fTimeDelta;
+		if (m_fAccDeadTimer > 1.f)
 		{
 			m_bDead = OBJ_DEAD;
 		}
-		return;
-	}
-	else {
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex >= 7)
+	case WEAPON_TYPE::WEAPON_STAFF:
+		break;
+	case WEAPON_TYPE::WEAPON_DART:
+		break;
+	case WEAPON_TYPE::WEAPON_BOMB:
+		if (Compare_Terrain())
 		{
-			m_pTextureCom->Set_ZeroFrame();
+			//스모크 생성
+			BULLETDATA BulletData;
+			ZeroMemory(&BulletData, sizeof(BulletData));
+			BulletData.bIsPlayerBullet = true;
+			BulletData.eDirState = DIR_STATE::DIR_DOWN;
+			BulletData.eWeaponType = WEAPON_TYPE::WEAPON_SMOKE;
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
+			BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+			CGameInstance*pGameInstance = CGameInstance::Get_Instance();
+			Safe_AddRef(pGameInstance);
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+			Safe_Release(pGameInstance);
+			m_bDead = true;
+
 		}
+		break;
+	case WEAPON_TYPE::WEAPON_SMOKE:
+		if (m_fAccDeadTimer > 3.f)
+		{
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex >= 14)
+			{
+				m_bDead = OBJ_DEAD;
+			}
+		}
+		break;
+	case WEAPON_TYPE::WEAPON_LIGHTNING:
+	case WEAPON_TYPE::WEAPON_ICESPIKE1:
+	case WEAPON_TYPE::WEAPON_ICESPIKE2:
+	case WEAPON_TYPE::WEAPON_ICESPIKE3:
+	case WEAPON_TYPE::WEAPON_ICESPIKE4:
+		if ((m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1))
+		{
+			m_bDead = OBJ_DEAD;
+		}
+		break;
+
+	case WEAPON_TYPE::WEAPON_MINE:
+		if ((m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1)
+			|| m_fAccDeadTimer > 3.f)
+		{
+			m_bDead = OBJ_DEAD;
+		}
+		break;
+	case WEAPON_TYPE::WEAPON_MINES:
+		if (m_bActivated3)
+			m_bDead = OBJ_DEAD;
+	}
+}
+
+void CBullet::Red_Smoke(_float _fTimeDelta)
+{
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= 7)
+	{
+		m_pTextureCom->Set_ZeroFrame();
 	}
 
-	
+
 }
 
 void CBullet::Bomb(void)
 {	//y = time* time -power*time ;
 
-	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
 
 	m_fTime += 0.1f;//m_tBulletData.fAdd_Z;
 					//if (m_fTime >= m_MaxTime) // 시간값을 크게??	
@@ -334,25 +411,208 @@ void CBullet::Bomb(void)
 	//회전
 	//m_pTransformCom->Turn(_float3(0.f, 0.f, 1.f), fTimeDelta);
 
-	if (Compare_Terrain())
-	{
-		//스모크 생성
-		BULLETDATA BulletData;
-		ZeroMemory(&BulletData, sizeof(BulletData));
-		BulletData.bIsPlayerBullet = true;
-		BulletData.eDirState = DIR_STATE::DIR_DOWN;
-		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_SMOKE;
-		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
-		BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+}
 
-		CGameInstance*pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
+void CBullet::IceSpikes(_float _fTimeDelta)
+{
+	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	_float fRemainTime = 3.f;
+
+	m_fTime += _fTimeDelta;
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+
+
+	switch (m_tBulletData.eWeaponType)
+	{
+	case WEAPON_TYPE::WEAPON_ICESPIKE1:
+		if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+		{
+			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+		}
+		else if (m_fTime > fRemainTime && !m_bActivated2)
+		{
+			m_bActivated2 = true;
+			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+		}
+
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE2:
+		if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+		{
+			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+		}
+		else if (m_fTime > fRemainTime && !m_bActivated2)
+		{
+			m_bActivated2 = true;
+			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+		}
+
+		if (!m_bActivated &&m_fTime > 0.2f)
+		{
+			m_bActivated = true;
+
+			BULLETDATA BulletData;
+			ZeroMemory(&BulletData, sizeof(BulletData));
+			BulletData.bIsPlayerBullet = true;
+			BulletData.eDirState = m_tBulletData.eDirState;
+			BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE1;
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			BulletData.vPosition.z += 0.5f;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+		}
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE3:
+		if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+		{
+			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+		}
+		else if (m_fTime > fRemainTime && !m_bActivated2)
+		{
+			m_bActivated2 = true;
+			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+		}
+
+		if (!m_bActivated &&m_fTime > 0.2f)
+		{
+			m_bActivated = true;
+
+			BULLETDATA BulletData;
+			ZeroMemory(&BulletData, sizeof(BulletData));
+			BulletData.bIsPlayerBullet = true;
+			BulletData.eDirState = m_tBulletData.eDirState;
+			BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE2;
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			BulletData.vPosition.z += 0.5f;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+		}
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE4:
+		if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+		{
+			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+		}
+		else if (m_fTime > fRemainTime && !m_bActivated2)
+		{
+			m_bActivated2 = true;
+			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+		}
+
+		if (!m_bActivated &&m_fTime > 0.2f)
+		{
+			m_bActivated = true;
+
+			BULLETDATA BulletData;
+			ZeroMemory(&BulletData, sizeof(BulletData));
+			BulletData.bIsPlayerBullet = true;
+			BulletData.eDirState = m_tBulletData.eDirState;
+			BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE3;
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			BulletData.vPosition.z += 0.5f;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+		}
+		break;
+	}
+
+	Safe_Release(pGameInstance);
+}
+
+void CBullet::IceMine(_float _fTimeDelta)
+{
+	if (!m_bActivated)
+	{
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 23)
+		{
+			m_pTextureCom->Get_Frame().m_iCurrentTex = 22;
+		}
+	}
+	else {
+		if (!m_bActivated2)
+		{
+			m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+			m_bActivated2 = true;
+			m_pTextureCom->Get_Frame().m_iCurrentTex = 2;
+			
+
+		}
+	}
+}
+
+void CBullet::IceMines(_float _fTimeDelta)
+{
+	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	m_fTime += _fTimeDelta;
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	BULLETDATA BulletData;
+	ZeroMemory(&BulletData, sizeof(BulletData));
+	BulletData.bIsPlayerBullet = true;
+	BulletData.eDirState = m_tBulletData.eDirState;
+	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_MINE;
+	BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//BulletData.vPosition = m_vTargetPicking;
+
+	if (!m_bActivated)
+	{
+		_float3 temp = m_tBulletData.vPosition;
+		temp.x -= 0.2f;
+		temp.z += 0.5f;
+		BulletData.vPosition = temp;
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 			return;
-		Safe_Release(pGameInstance);
-		m_bDead = true;
 
+		temp = m_tBulletData.vPosition;
+		temp.x += 0.2f;
+		temp.z += 0.5f;
+		BulletData.vPosition = temp;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+			return;
+		m_bActivated = true;
 	}
+
+	if (m_fTime > 0.3f && !m_bActivated2)
+	{
+
+		for (int i = 0; i < 3; ++i)
+		{
+			_float3 temp1 = m_tBulletData.vPosition;
+			temp1.x -= 0.4f;
+			temp1.z += 1.f;
+
+			temp1.x += i*0.4f;
+			BulletData.vPosition = temp1;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+		}
+		m_bActivated2 = true;
+	}
+
+	if (m_fTime > 0.6f && !m_bActivated3)
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			_float3 temp1 = m_tBulletData.vPosition;
+			temp1.x -= 0.4f;
+			temp1.z += 2.f;
+
+			temp1.x += i*0.4f;
+			BulletData.vPosition = temp1;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+		}
+		m_bActivated3 = true;
+	}
+
+	Safe_Release(pGameInstance);
 }
 
 HRESULT CBullet::Render_TextureState()
@@ -444,25 +704,25 @@ _bool CBullet::Compare_Terrain(void)
 
 	switch (m_tBulletData.eWeaponType)
 	{
-		case WEAPON_TYPE::WEAPON_BOMB:
-			vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
+	case WEAPON_TYPE::WEAPON_BOMB:
+		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
 
-			if (vPosition.y > m_pTransformCom->Get_State(CTransform::STATE_POSITION).y)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-			break;
-		case WEAPON_TYPE::WEAPON_DART:
-		case WEAPON_TYPE::WEAPON_STAFF:
-			break;
-		case WEAPON_TYPE::WEAPON_HAND:
-			break;
-		case WEAPON_TYPE::WEAPON_SWORD:
-			break;
+		if (vPosition.y > m_pTransformCom->Get_State(CTransform::STATE_POSITION).y)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		break;
+	case WEAPON_TYPE::WEAPON_DART:
+	case WEAPON_TYPE::WEAPON_STAFF:
+		break;
+	case WEAPON_TYPE::WEAPON_HAND:
+		break;
+	case WEAPON_TYPE::WEAPON_SWORD:
+		break;
 
 	}
 
@@ -567,7 +827,7 @@ HRESULT CBullet::Texture_Clone(void)
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceSpike2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike2"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
-	case WEAPON_TYPE::WEAPON_ICESPIKE3:
+	case WEAPON_TYPE::WEAPON_ICESPIKE3:	
 		TextureDesc.m_iStartTex = 0;
 		TextureDesc.m_iEndTex = 27;
 		TextureDesc.m_fSpeed = 60;
@@ -581,8 +841,13 @@ HRESULT CBullet::Texture_Clone(void)
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceSpike4"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike4"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
-
-
+	case WEAPON_TYPE::WEAPON_MINE:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 27;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceSpike3"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_IceSpike3"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 	}
 
 	return S_OK;
@@ -613,22 +878,25 @@ HRESULT CBullet::Init_Data(void)
 		m_fDamage = 0.f;
 		break;
 	case WEAPON_TYPE::WEAPON_ICESPIKE1:
-		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.5f);
 		m_fDamage = 0.f;
 		break;
 	case WEAPON_TYPE::WEAPON_ICESPIKE2:
-		m_pTransformCom->Set_Scale(0.75f, 0.75f, 1.f);
+		m_pTransformCom->Set_Scale(1.2f, 1.2f, 1.f);
 		m_fDamage = 0.f;
 		break;
 	case WEAPON_TYPE::WEAPON_ICESPIKE3:
-		m_pTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
+		m_pTransformCom->Set_Scale(0.9f, 0.9f, 1.f);
 		m_fDamage = 0.f;
 		break;
 	case WEAPON_TYPE::WEAPON_ICESPIKE4:
-		m_pTransformCom->Set_Scale(0.3f, 0.3f, 1.f);
+		m_pTransformCom->Set_Scale(0.6f, 0.6f, 1.f);
 		m_fDamage = 0.f;
 		break;
-
+	case WEAPON_TYPE::WEAPON_MINE:
+		m_pTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
+		m_fDamage = 1.f;
+		break;
 	default:
 		break;
 
@@ -679,11 +947,11 @@ void CBullet::Free()
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pTextureCom);
+	//Safe_Release(m_pTextureCom);
 	Safe_Release(m_pColliderCom);
 
-	//for (auto& iter : m_vecTexture)
-	//	Safe_Release(iter);
+	for (auto& iter : m_vecTexture)
+		Safe_Release(iter);
 
-	//m_vecTexture.clear();
+	m_vecTexture.clear();
 }

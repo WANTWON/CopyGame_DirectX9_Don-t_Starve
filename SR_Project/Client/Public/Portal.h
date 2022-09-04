@@ -38,6 +38,7 @@ public:
 
 private:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
+	void SetUp_BillBoard();
 
 private: /*For TextureCom */
 	virtual HRESULT Texture_Clone() override;

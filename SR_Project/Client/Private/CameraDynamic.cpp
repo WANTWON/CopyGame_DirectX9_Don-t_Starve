@@ -4,6 +4,7 @@
 #include "KeyMgr.h"
 #include "Player.h"
 #include "Transform.h"
+#include "CameraManager.h"
 
 CCameraDynamic::CCameraDynamic(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CCamera(pGraphic_Device)
@@ -33,6 +34,10 @@ HRESULT CCameraDynamic::Initialize(void * pArg)
 
 int CCameraDynamic::Tick(_float fTimeDelta)
 {
+
+	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_PLAYER)
+		return OBJ_NOEVENT;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_eCamMode == CAM_PLAYER)
@@ -41,11 +46,9 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 	}
 	else if (m_eCamMode == CAM_TURNMODE)
 	{
-
 		Turn_Camera(fTimeDelta);
 	}
-	else if (m_eCamMode == CAM_FPS)
-		FPS_Camera(fTimeDelta);
+
 
 	if (FAILED(Bind_OnGraphicDev()))
 		return OBJ_NOEVENT;
@@ -55,17 +58,12 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 
 void CCameraDynamic::Late_Tick(_float fTimeDelta)
 {
+	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_PLAYER)
+		return;
+
 	__super::Late_Tick(fTimeDelta);
 }
 
-HRESULT CCameraDynamic::Render()
-{
-	if (FAILED(__super::Render()))
-		return E_FAIL;
-
-
-	return S_OK;
-}
 
 void CCameraDynamic::Player_Camera(_float fTimeDelta)
 {
@@ -82,6 +80,8 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 	{
 		m_vDistance.y -= (fTimeDelta*m_lMouseWheel*0.01f);
 		m_vDistance.z += (fTimeDelta*m_lMouseWheel*0.01f);
+
+		//m_CameraDesc.fFovy += (fTimeDelta*m_lMouseWheel*0.01f);
 	}
 
 	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
@@ -154,28 +154,6 @@ void CCameraDynamic::Turn_Camera(_float fTimeDelta)
 	Safe_Release(pGameInstance);
 }
 
-void CCameraDynamic::FPS_Camera(_float fTimeDelta)
-{
-
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	Safe_AddRef(pTarget);
-
-	_float3 vecTargetLook = pTarget->Get_Look();
-	D3DXVec3Normalize(&vecTargetLook, &vecTargetLook);
-	_float3 vectargetPos = pTarget->Get_Pos() + _float3(0.f, 0.5f, vecTargetLook.z);
-	_float3 PlayerLook = (pTarget->Get_Look());
-
-	
-	m_pTransform->Follow_Target(fTimeDelta, vectargetPos, _float3(0, 0, 0));
-	//m_pTransform->LookAt(PlayerLook);
-	m_pTransform->Set_State(CTransform::STATE_LOOK, _float3(PlayerLook.x, 0.f, PlayerLook.z));
-
-	Safe_Release(pTarget);
-	Safe_Release(pGameInstance);
-}
 
 void CCameraDynamic::Switch_TurnCnt(_int _TurnCount)
 {
@@ -225,11 +203,6 @@ CCamera * CCameraDynamic::Clone(void * pArg)
 	}
 
 	return pInstance;
-}
-
-CGameObject * CCameraDynamic::Clone_Load(const _tchar * VIBufferTag, void * pArg)
-{
-	return nullptr;
 }
 
 void CCameraDynamic::Free()
