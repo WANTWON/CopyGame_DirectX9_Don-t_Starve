@@ -45,50 +45,50 @@ HRESULT CMainInventory_back::Initialize(void* pArg)
 	if (iNum == 10)
 	{
 		m_fX = 1185.f;
-		m_fY = 375.f;
+		m_fY = 435.f;
 
 	}
 
 	if (iNum == 11)
 	{
 		m_fX = 1235.f;
-		m_fY = 375.f;
+		m_fY = 435.f;
 	}
 
 	if (iNum == 12)
 	{
 		m_fX = 1185.f;
-		m_fY = 425.f;
+		m_fY = 485.f;
 	}
 
 	if (iNum == 13)
 	{
 		m_fX = 1235.f;
-		m_fY = 425.f;
+		m_fY = 485.f;
 	}
 
 	if (iNum == 14)
 	{
 		m_fX = 1185.f;
-		m_fY = 475.f;
+		m_fY = 535.f;
 	}
 
 	if (iNum == 15)
 	{
 		m_fX = 1235.f;
-		m_fY = 475.f;
+		m_fY = 535.f;
 	}
 
 	if (iNum == 16)
 	{
 		m_fX = 1185.f;
-		m_fY = 525.f;
+		m_fY = 585.f;
 	}
 
 	if (iNum == 17)
 	{
 		m_fX = 1235.f;
-		m_fY = 525.f;
+		m_fY = 585.f;
 	}
 
 	if (FAILED(SetUp_Components()))

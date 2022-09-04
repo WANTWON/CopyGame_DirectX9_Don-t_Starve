@@ -55,5 +55,4 @@ HRESULT CCameraManager::Ready_Camera(LEVEL eLevelIndex)
 
 void CCameraManager::Free()
 {
-	Safe_Release(m_pCurrentCamera);
 }

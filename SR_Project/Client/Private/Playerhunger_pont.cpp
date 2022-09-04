@@ -35,7 +35,7 @@ HRESULT CPlayerhunger_pont::Initialize(void* pArg)
 	m_fSizeX = 20.0f;
 	m_fSizeY = 20.0f;
 	m_fX = 1015.f + (iNum * 15.f);
-	m_fY = 250.f;
+	m_fY = 220.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;

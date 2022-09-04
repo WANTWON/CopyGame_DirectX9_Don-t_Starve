@@ -153,6 +153,11 @@ _float3 CPlayer::Get_Look()
 	return (m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 }
 
+_float3 CPlayer::Get_Right()
+{
+	return (m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
+}
+
 void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 {
 	
@@ -411,11 +416,27 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMLEFT]))
 	{
-		CCameraManager::Get_Instance()->PlayerCamera_TurnLeft(m_iCurrentLevelndex);
+		if (m_bIsFPS)
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
+		else
+			CCameraManager::Get_Instance()->PlayerCamera_TurnLeft(m_iCurrentLevelndex);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
-		CCameraManager::Get_Instance()->PlayerCamera_TurnRight(m_iCurrentLevelndex);
+		if (m_bIsFPS)
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), -_fTimeDelta);
+		else
+			CCameraManager::Get_Instance()->PlayerCamera_TurnRight(m_iCurrentLevelndex);
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_CAMLEFT]))
+	{
+		if (m_bIsFPS)
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), -_fTimeDelta);
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
+	{
+		if (m_bIsFPS)
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
 	}
 #pragma endregion Debug&CamKey	
 
@@ -658,7 +679,10 @@ void CPlayer::Move_Right(_float _fTimeDelta)
 {
 	if (m_bInputKey)
 	{
-		m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
+		if (m_bIsFPS)
+			m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
+		else
+			m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
 	}
 	
 	m_eState = ACTION_STATE::MOVE;
@@ -667,7 +691,8 @@ void CPlayer::Move_Right(_float _fTimeDelta)
 	{
 		if (m_ePreDirState != m_eDirState)
 		{
-			m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
+			if (!m_bIsFPS)
+				m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
 			//m_bInverseScale = false;
 		}
 		/*	if (m_bInverseScale)
@@ -712,7 +737,10 @@ void CPlayer::Move_Left(_float _fTimeDelta)
 {
 	if (m_bInputKey)
 	{
-		m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
+		if(m_bIsFPS)
+			m_pTransformCom->Go_Left(_fTimeDelta, m_fTerrain_Height);
+		else
+			m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
 	}	
 	m_eState = ACTION_STATE::MOVE;
 	m_eDirState = DIR_STATE::DIR_LEFT;
@@ -722,7 +750,8 @@ void CPlayer::Move_Left(_float _fTimeDelta)
 
 		if (m_ePreDirState != m_eDirState)
 		{
-			m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
+			if(!m_bIsFPS)
+				m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
 			//m_bInverseScale = false;
 		}
 		/*if (!m_bInverseScale)
@@ -1640,7 +1669,11 @@ HRESULT CPlayer::Change_Texture(const _tchar * LayerTag)
 
 void CPlayer::SetUp_BillBoard()
 {
-	if (m_eDirState == DIR_STATE::DIR_LEFT)
+	if (m_bIsFPS && m_eDirState != DIR_STATE::DIR_RIGHT &&
+		m_bIsFPS && m_eDirState != DIR_STATE::DIR_LEFT)
+		return;
+
+	if (!m_bIsFPS && m_eDirState == DIR_STATE::DIR_LEFT)
 		return;
 	_float4x4 ViewMatrix;
 

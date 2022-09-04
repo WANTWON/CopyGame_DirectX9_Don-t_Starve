@@ -160,6 +160,12 @@
     <Filter Include="01.Levels\Hunt">
       <UniqueIdentifier>{24b4e663-6c81-49b4-9f0d-0b5671f9aa93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\04.Quest">
+      <UniqueIdentifier>{cceba926-7160-4224-b6cc-d3650f2612ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\05.DayCount">
+      <UniqueIdentifier>{93876a52-3e5c-47e7-9aea-6a9150c1bb6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -366,6 +372,15 @@
     <ClInclude Include="..\Public\Level_Hunt.h">
       <Filter>01.Levels\Hunt</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Questpont.h">
+      <Filter>02.GameObject\98.UI\04.Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest.h">
+      <Filter>02.GameObject\98.UI\04.Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Daycount.h">
+      <Filter>02.GameObject\98.UI\05.DayCount</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -559,6 +574,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Hunt.cpp">
       <Filter>01.Levels\Hunt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest.cpp">
+      <Filter>02.GameObject\98.UI\04.Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Questpont.cpp">
+      <Filter>02.GameObject\98.UI\04.Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Daycount.cpp">
+      <Filter>02.GameObject\98.UI\05.DayCount</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

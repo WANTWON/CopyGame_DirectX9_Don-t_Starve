@@ -1,5 +1,6 @@
 #pragma once
 #include "CameraDynamic.h"
+#include "CameraFPS.h"
 
 BEGIN(Client)
 
