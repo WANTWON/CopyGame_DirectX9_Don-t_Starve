@@ -1098,7 +1098,11 @@ void CPlayer::Multi_Action(_float _fTimeDelta)
 
 	if (m_pTarget != nullptr)
 	{
-		Set_PickingPoint(m_pTarget->Get_Position());
+		_float3 vPickPos = m_pTarget->Get_Position();
+		_float3 vOffSet = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		D3DXVec3Normalize(&vOffSet, &vOffSet);
+		vPickPos -= vOffSet*0.5f;
+		Set_PickingPoint(vPickPos);
 		m_bAutoMode = true;
 		m_ActStack.push(ACTION_STATE::MOVE);
 	}

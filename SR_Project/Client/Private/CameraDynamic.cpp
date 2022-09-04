@@ -40,7 +40,15 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (m_eCamMode == CAM_PLAYER)
+	if (m_bTalkingMode && !m_bOutZoom)
+	{
+		Target_Camera(fTimeDelta, m_pTarget);
+	}
+	else if (!m_bTalkingMode && m_bOutZoom)
+	{
+		OutTarget_Camera(fTimeDelta);
+	}
+	else if (m_eCamMode == CAM_PLAYER)
 	{
 		Player_Camera(fTimeDelta);
 	}
@@ -49,6 +57,7 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 		Turn_Camera(fTimeDelta);
 	}
 
+	Update_Position(m_pTransform->Get_State(CTransform::STATE_POSITION));
 
 	if (FAILED(Bind_OnGraphicDev()))
 		return OBJ_NOEVENT;
@@ -177,6 +186,59 @@ void CCameraDynamic::Switch_TurnCnt(_int _TurnCount)
 	{
 		m_iTurnCount = 3;
 	}
+}
+
+void CCameraDynamic::Target_Camera(_float fTimeDelta, CGameObject* pGameObject)
+{
+	if (pGameObject == nullptr)
+		return;
+
+	_float3 m_TargetPos = pGameObject->Get_Position();
+	m_TargetPos.y -= 0.5f;
+	_float3 vCameraPos = Get_Position();
+	
+	_float3 vDir = m_TargetPos - vCameraPos;
+	vDir -= _float3(0.f, 3.5f, 5.f);
+
+	_float3 vDistance = _float3(0, 5, -5);
+	if (fabsf(vDir.y) < vDistance.y)
+		return;
+
+	D3DXVec3Normalize(&vDir, &vDir);
+	vCameraPos += vDir*0.1f;
+
+	m_pTransform->LookAt(m_TargetPos);
+	m_pTransform->Set_State(CTransform::STATE_POSITION, vCameraPos);
+}
+
+void CCameraDynamic::OutTarget_Camera(_float fTimeDelta)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	Safe_AddRef(pTarget);
+
+	_float3 m_TargetPos = pTarget->Get_Pos();
+	Safe_Release(pTarget);
+
+	_float3 vCameraPos = Get_Position();
+	_float3 vDir = (m_TargetPos+m_vDistance)- vCameraPos;
+
+	if (fabsf(m_TargetPos.y + m_vDistance.y - vCameraPos.y) < 0.5f)
+	{
+		m_bOutZoom = false;
+		return;
+	}
+		
+
+	D3DXVec3Normalize(&vDir, &vDir);
+	vCameraPos += vDir*0.1f;
+
+	m_pTransform->LookAt(m_TargetPos);
+	m_pTransform->Set_State(CTransform::STATE_POSITION, vCameraPos);
+
+	Safe_Release(pGameInstance);
 }
 
 CCameraDynamic * CCameraDynamic::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

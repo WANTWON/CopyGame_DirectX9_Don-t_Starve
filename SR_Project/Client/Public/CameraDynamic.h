@@ -32,16 +32,24 @@ public: //SetEnum
 		m_eCamMode = _eCamMode; Switch_TurnCnt(_TurnCount);
 	}
 	CAMERAMODE Get_CamMode() { return m_eCamMode; }
+	void Set_TalkingMode(_bool type) { m_bTalkingMode = type; m_bOutZoom = !type; }
+	void Set_Target(class CGameObject* pGameObject) { m_pTarget = pGameObject; }
 
 private:
 	void Player_Camera(_float fTimeDelta);
 	void Turn_Camera(_float fTimeDelta);
 	void Switch_TurnCnt(_int _TurnCount);
+	void Target_Camera(_float fTimeDelta, CGameObject* pGameObject);
+	void OutTarget_Camera(_float fTimeDelta);
 private:
 	_long			m_lMouseWheel = 0;
 	_float3			m_vDistance = _float3(0, 8, -5);
 	CAMERAMODE		m_eCamMode = CAM_PLAYER;
 	_int			m_iTurnCount = 0;
+	class CGameObject*	m_pTarget = nullptr;
+	_bool			m_bTalkingMode = false;
+	_bool			m_bOutZoom = false;
+
 
 public:
 	static CCameraDynamic* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

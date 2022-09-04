@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "Inventory.h"
+#include "CameraManager.h"
 
 CTalk::CTalk(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -59,6 +60,8 @@ int CTalk::Tick(_float fTimeDelta)
 				CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 			//	Safe_AddRef(pinv);
 				pinv->Get_Quest_list()->front()->set_onoff(true);
+				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
 		//		Safe_Release(pinv);
 				
@@ -82,6 +85,9 @@ int CTalk::Tick(_float fTimeDelta)
 
 				}
 				pinv->Get_Quest_list()->front()->set_onoff(false);
+				m_bcheck = false;
+				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
 		//		Safe_Release(pinven);
 			}

@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Inventory.h"
 
+
 CQuest::CQuest(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -49,6 +50,7 @@ int CQuest::Tick(_float fTimeDelta)
 	if (b_onoff == true && CKeyMgr::Get_Instance()->Key_Up(VK_ESCAPE))
 	{
 		b_onoff = false;
+		
 	}
 	else if (b_onoff == false && CKeyMgr::Get_Instance()->Key_Up(VK_ESCAPE))
 	{
