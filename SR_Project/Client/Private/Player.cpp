@@ -526,6 +526,21 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 			return;
+
+
+		CParticle::STATEDESC ParticleDesc;
+		ZeroMemory(&ParticleDesc, sizeof(CParticle::STATEDESC));
+		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
+		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Snow");
+		ParticleDesc.iTextureNum = 1;
+		ParticleDesc.vVelocity = _float3((rand() % 10)*0.1f, -0.1f, -rand() % 10 * 0.1f);
+
+		for (int i = 0; i < 200; ++i)
+		{
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_Particle"), ParticleDesc.eTextureScene, TEXT("Layer_Particle"), &ParticleDesc)))
+				return;
+		}
+		
 	}
 #pragma endregion Action
 

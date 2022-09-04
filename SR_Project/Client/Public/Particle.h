@@ -42,7 +42,7 @@ public:
 	HRESULT SetUp_Components(void* pArg);
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
-
+	void SetUp_BillBoard();
 private:
 	CTransform*			m_pTransformCom = nullptr;
 	CVIBuffer_Rect*		m_pVIBufferCom = nullptr;
