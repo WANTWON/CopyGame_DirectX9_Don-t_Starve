@@ -287,8 +287,23 @@ HRESULT CLevel_GamePlay::Ready_Layer_PlayerStatUI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_PlayerMentality"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Daycount"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Mouse_item"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_quest"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_questpont"), LEVEL_STATIC, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
 
 
 

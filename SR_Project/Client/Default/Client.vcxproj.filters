@@ -145,6 +145,12 @@
     <Filter Include="02.GameObject\00.Player\AttackRange">
       <UniqueIdentifier>{0e69f00a-9b21-4f0c-b868-0ff35163c63a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\05.Quest">
+      <UniqueIdentifier>{5143ca32-5bd9-4f21-82a3-b19145b31349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\04.Daycount">
+      <UniqueIdentifier>{cf9b7640-d046-4c41-833a-1ed1bf08b781}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -197,9 +203,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Tree.h">
       <Filter>02.GameObject\04.Interactive_Object\Tree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Pont.h">
-      <Filter>02.GameObject\98.UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Inventory.h">
       <Filter>02.GameObject\98.UI\01. Inventory\Manager</Filter>
@@ -342,6 +345,18 @@
     <ClInclude Include="..\Public\CraftPont.h">
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Pont.h">
+      <Filter>02.GameObject\98.UI\01. Inventory\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Daycount.h">
+      <Filter>02.GameObject\98.UI\04.Daycount</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest.h">
+      <Filter>02.GameObject\98.UI\05.Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Questpont.h">
+      <Filter>02.GameObject\98.UI\05.Quest</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -382,9 +397,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Tree.cpp">
       <Filter>02.GameObject\04.Interactive_Object\Tree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Pont.cpp">
-      <Filter>02.GameObject\98.UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Inventory.cpp">
       <Filter>02.GameObject\98.UI\01. Inventory\Manager</Filter>
@@ -526,6 +538,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\CraftPont.cpp">
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Pont.cpp">
+      <Filter>02.GameObject\98.UI\01. Inventory\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Daycount.cpp">
+      <Filter>02.GameObject\98.UI\04.Daycount</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest.cpp">
+      <Filter>02.GameObject\98.UI\05.Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Questpont.cpp">
+      <Filter>02.GameObject\98.UI\05.Quest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

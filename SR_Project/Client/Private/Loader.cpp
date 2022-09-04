@@ -56,6 +56,10 @@
 #include "House.h"
 #include "Portal.h"
 
+#include "Daycount.h"
+#include "Quest.h"
+#include "Questpont.h"
+
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
 {
@@ -455,6 +459,15 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_PlayerMentality"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Sanity/Sanity_%03d.png"), 50))))
 		return E_FAIL;
+	/*For.Prototype_Component_Texture_Playermentality */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Daycount"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Day/Day_%03d.png"), 30))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_quest */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_quest"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/quest/quest%d.png"), 1))))
+		return E_FAIL;
 
 #pragma endregion Add_Texture UI
 
@@ -588,6 +601,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerMentality"),
 		CPlayerMentality::Create(m_pGraphic_Device))))
 		return E_FAIL;
+		/*For.Prototype_GameObject_PlayerMentality */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Daycount"),
+		CDaycount::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	/*For.Prototype_GameObject_HpPont */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HpPont"),
@@ -608,6 +625,17 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse_item"),
 		CMouse_item::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	/*For.Prototype_GameObject_quest */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_quest"),
+		CQuest::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_questpont"),
+		CQuestpont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+
 
 #pragma endregion Add_Prototype UI Object
 

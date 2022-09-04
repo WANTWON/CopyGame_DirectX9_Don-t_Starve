@@ -71,6 +71,9 @@ int CCraftbutton::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
+	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+	Safe_AddRef(pinv);
+
 
 	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT)
 		m_fY = 300.f;
@@ -108,6 +111,9 @@ int CCraftbutton::Tick(_float fTimeDelta)
 		if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
 			craft(m_makewhat);
+			pinv->update_craftpont();
+			Safe_Release(pinv);
+
 		}
 
 	}
