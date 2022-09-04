@@ -31,7 +31,7 @@ HRESULT CBagInventory::Initialize(void* pArg)
 	m_fSizeX = 130.f;
 	m_fSizeY = 280.f;
 	m_fX = 1210.f;
-	m_fY = 450.f;
+	m_fY = 510.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
