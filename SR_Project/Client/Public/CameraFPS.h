@@ -26,6 +26,7 @@ public:
 
 private:
 	void FPS_Camera(_float fTimeDelta);
+	
 
 
 private:
