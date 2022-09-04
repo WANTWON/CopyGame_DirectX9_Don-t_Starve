@@ -1179,27 +1179,19 @@ void CPlayer::Test_Func(_int _iNum)
 	/*TestIceSpike3 Ice Mines*/
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	//BULLETDATA BulletData;
-	//ZeroMemory(&BulletData, sizeof(BulletData));
-	//BulletData.bIsPlayerBullet = true;
-	//BulletData.eDirState = m_eDirState;
-	//BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICEMINES;
-	//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	////_float3 vTempPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	//BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	//BulletData.vPosition.y -= 0.5f;
-	////FPSMODE일때 생각해보기.
-
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
-	//	return;
-	////////////////////////////////////////////
-	/*IceSpike*/
-
 	BULLETDATA BulletData;
 	ZeroMemory(&BulletData, sizeof(BulletData));
 	BulletData.bIsPlayerBullet = true;
-	BulletData.eDirState = m_eDirState;
-	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE4;
+
+	if (m_bIsFPS)
+	{
+		BulletData.eDirState =DIR_STATE::DIR_END;
+	}
+	else {
+		BulletData.eDirState = m_eDirState;
+	}
+
+	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_MINES;
 	BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	//_float3 vTempPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -1208,6 +1200,22 @@ void CPlayer::Test_Func(_int _iNum)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 		return;
+	////////////////////////////////////////////
+	/*IceSpike*/
+
+	//BULLETDATA BulletData;
+	//ZeroMemory(&BulletData, sizeof(BulletData));
+	//BulletData.bIsPlayerBullet = true;
+	//BulletData.eDirState = m_eDirState;
+	//BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE4;
+	//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	////_float3 vTempPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//BulletData.vPosition.y -= 0.5f;
+	////FPSMODE일때 생각해보기.
+
+	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+	//	return;
 }
 
 void CPlayer::Test_Detect(_float fTImeDelta)
