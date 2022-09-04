@@ -213,7 +213,7 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 
 	if (texnum == ITEMNAME_END)
 	{
-		m_itemtype == ITEM_END;
+		m_itemtype = ITEM_END;
 	}
 
 	/*if (texnum == ITEMNAME_BAG || texnum == ITEMNAME_HELMET || texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH
