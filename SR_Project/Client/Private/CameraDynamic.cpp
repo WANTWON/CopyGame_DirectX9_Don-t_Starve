@@ -93,6 +93,17 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 		//m_CameraDesc.fFovy += (fTimeDelta*m_lMouseWheel*0.01f);
 	}
 
+	if (pGameInstance->Key_Pressing(VK_DOWN))
+	{
+		m_vDistance.y -= 0.03f;
+		m_vDistance.z -= 0.06f;
+	}
+	if (pGameInstance->Key_Pressing(VK_UP))
+	{
+		m_vDistance.y += 0.03f;
+		m_vDistance.z += 0.06f;
+	}
+
 	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
 	Safe_AddRef(pTarget);
