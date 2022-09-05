@@ -57,8 +57,11 @@ int CBullet::Tick(_float fTimeDelta)
 	if (m_bDead == true)
 		return OBJ_DEAD;
 
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
+	/*if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);*/
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	Excute(fTimeDelta);
 
@@ -122,8 +125,8 @@ HRESULT CBullet::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-		return E_FAIL;
+	//if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
+	//	return E_FAIL;
 
 	/* For.Com_Texture */
 	if (FAILED(Texture_Clone()))
@@ -278,8 +281,8 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 {
 	vector<CGameObject*> vecDamagedActor;
 
-
-	if (m_pColliderCom->Collision_Check_Group_Multi(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, vecDamagedActor, this))
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	if (pGameInstance->Collision_Check_Group_Multi(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, vecDamagedActor, this))
 	{
 		switch (m_tBulletData.eWeaponType)
 		{
@@ -1194,7 +1197,7 @@ void CBullet::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 
-	Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pColliderCom);
 
 	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_MINE)
 	{

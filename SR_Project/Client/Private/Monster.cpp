@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Monster.h"
 #include "Player.h"
+#include "Inventory.h"
 #include "Level_Manager.h"
 #include "GameInstance.h"
 
@@ -40,8 +41,8 @@ int CMonster::Tick(_float fTimeDelta)
 	if (IsDead())
 		return OBJ_DEAD;
 
-	/*if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);*/
+	//if (nullptr != m_pColliderCom)
+	//	m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
@@ -83,6 +84,10 @@ HRESULT CMonster::Render()
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
+
+	array<_float3, 4> vVerteces = m_pColliderCom->Get_CollisionVerteces();
+	LPD3DXLINE pLine;
+	// TODO: ..
 
 	// For Debug Rendering
 	if (m_pVIDebugBufferCom)

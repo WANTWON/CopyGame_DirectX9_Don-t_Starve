@@ -98,8 +98,8 @@ HRESULT CPortal::SetUp_Components(void* pArg)
 	Safe_Release(pGameInstance);
 
 	/* For.Com_Collider*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-		return E_FAIL;
+	//if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
+	//	return E_FAIL;
 
 	/* For.Com_Texture */
 	Texture_Clone();

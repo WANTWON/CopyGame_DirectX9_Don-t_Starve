@@ -82,10 +82,6 @@ HRESULT CBearger::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	/* For.Com_Collider*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-		return E_FAIL;
-
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
@@ -99,6 +95,17 @@ HRESULT CBearger::SetUp_Components(void* pArg)
 	TransformDesc.InitPos = *(_float3*)pArg;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+		return E_FAIL;
+
+	CCollider_Rect::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+
+	CollRectDesc.fOffsetX = 1.f;
+	CollRectDesc.fOffsetY = 1.f;
+	CollRectDesc.fOffsetOrigin = -1.f;
+
+	/* For.Com_Collider_Rect*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
 	SetUp_DebugComponents(pArg);

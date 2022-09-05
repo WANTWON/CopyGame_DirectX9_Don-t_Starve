@@ -96,8 +96,8 @@ HRESULT CAttackRange::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-		return E_FAIL;
+	/*if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
+		return E_FAIL;*/
 
 	/* For.Com_Texture */
 	if (FAILED(Texture_Clone()))
@@ -267,5 +267,5 @@ void CAttackRange::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pColliderCom);
 }

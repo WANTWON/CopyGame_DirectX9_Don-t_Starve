@@ -55,7 +55,7 @@ private:/*For Components*/
 	CRenderer*				m_pRendererCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
-	CCollider*				m_pColliderCom = nullptr;
+	//CCollider*				m_pColliderCom = nullptr;
 
 private: //values	
 	_bool					m_bIsPicker = false;

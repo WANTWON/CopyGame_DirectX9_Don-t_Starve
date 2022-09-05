@@ -76,7 +76,6 @@ public: /* For. Sound Manager */
 
 public: /* For. Collider Manager */
 	HRESULT Add_CollisionGroup(CCollider::COLLISION_GROUP eCollisionGroup, class CGameObject* pGameObject);
-	HRESULT Update_ColliderGroup();
 
 	_bool Collision_with_Group(CCollider::COLLISION_GROUP eGroup, class CGameObject* pGameObject);
 	_bool Collision_Check_Group_Multi(CCollider::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, class CGameObject* pDamageCauser);

@@ -145,8 +145,8 @@ HRESULT CBoulder::SetUp_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-		return E_FAIL;
+	//if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
+	//	return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
@@ -276,7 +276,7 @@ void CBoulder::Free()
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTextureCom);
 
 	for (auto& iter : m_vecTexture)

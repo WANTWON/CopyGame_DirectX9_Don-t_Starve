@@ -94,8 +94,11 @@ int CPlayer::Tick(_float fTimeDelta)
 
 
 	//Collider Add
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+	//if (nullptr != m_pColliderCom)
+	//	m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
 
 	//Act Auto
 	Tick_ActStack(fTimeDelta);
@@ -259,8 +262,8 @@ HRESULT CPlayer::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-		return E_FAIL;
+	//if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
+	//	return E_FAIL;
 
 	/* For.Com_Texture */
 	if (Texture_Clone())
@@ -1899,7 +1902,7 @@ void CPlayer::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pColliderCom);
 
 	Safe_Release(m_Equipment);
 	//Debug
