@@ -150,6 +150,8 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
 	}
 	
+	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+
 	Test_Debug(fTimeDelta);
 }
 
@@ -222,6 +224,8 @@ HRESULT CPlayer::Render()
 	//Test
 	Debug_Render();
 
+	m_pColliderCom->Render_ColliderBox();
+
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
@@ -264,6 +268,16 @@ HRESULT CPlayer::SetUp_Components()
 	/* For.Com_Collider*/
 	//if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
 	//	return E_FAIL;
+	//CCollider_Rect::COLLRECTDESC CollRectDesc;
+	//ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+
+	
+	//CollRectDesc.fHeight = 1.f;
+	//CollRectDesc.fWidth = 1.f;
+
+	/* For.Com_Collider_Rect*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom)))
+		return E_FAIL;
 
 	/* For.Com_Texture */
 	if (Texture_Clone())

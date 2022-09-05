@@ -75,27 +75,25 @@ HRESULT CMonster::Render()
 		return E_FAIL;
 
 	//if (FAILED(m_pTextureCom->Bind_OnGraphicDev_Debug()))
-	//	return E_FAIL;
+		//return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
 
 	m_pVIBufferCom->Render();
 
+	
+
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
-	array<_float3, 4> vVerteces = m_pColliderCom->Get_CollisionVerteces();
-	LPD3DXLINE pLine;
-	// TODO: ..
-
-	// For Debug Rendering
-	if (m_pVIDebugBufferCom)
-	{
-		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-		m_pVIDebugBufferCom->Render();
-		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	}
+	//// For Debug Rendering
+	//if (m_pVIDebugBufferCom)
+	//{
+	//	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	////	m_pVIDebugBufferCom->Render();
+	//	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	//}
 	
 	return S_OK;
 }

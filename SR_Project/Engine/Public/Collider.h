@@ -18,7 +18,6 @@ private:
 
 public:
 	HRESULT Add_CollisionGroup(COLLISION_GROUP eCollisionGroup, class CGameObject* pGameObject);
-	HRESULT Update_CollisionBox();
 	HRESULT Reset_ColliderGroup();
 
 	_bool Collision_with_Group(COLLISION_GROUP eGroup, class CGameObject* pGameObject);

@@ -20,37 +20,6 @@ HRESULT CCollider::Add_CollisionGroup(COLLISION_GROUP eCollisionGroup, CGameObje
 	return S_OK;
 }
 
-HRESULT CCollider::Update_CollisionBox()
-{
-	for (_uint i = 0; i < COLLISION_END; ++i)
-	{
-		for (auto& pGameObject : m_GameObjects[i])
-		{
-			if (pGameObject)
-			{
-				CTransform* pTransform = dynamic_cast<CTransform*>(pGameObject->Find_Component(TEXT("Com_Transform")));
-				CCollider_Rect* pColliderRect = dynamic_cast<CCollider_Rect*>(pGameObject->Find_Component(TEXT("Com_Collider_Rect")));
-				if (pTransform && pColliderRect)
-				{
-					CCollider_Rect::COLLRECTDESC tCollRectDesc = pColliderRect->Get_CollRectDesc();
-					_float3 pOrigin = pTransform->Get_State(CTransform::STATE_POSITION) + _float3(0.f, tCollRectDesc.fOffsetOrigin, 0.f);
-
-					_float3 pPoint;
-					pPoint = _float3(pOrigin.x - tCollRectDesc.fOffsetX, pOrigin.y + tCollRectDesc.fOffsetY, pOrigin.z);
-					pColliderRect->Set_CollisionBoxVertex(pPoint, 0);
-					pPoint = _float3(pOrigin.x + tCollRectDesc.fOffsetX, pOrigin.y + tCollRectDesc.fOffsetY, pOrigin.z);
-					pColliderRect->Set_CollisionBoxVertex(pPoint, 1);
-					pPoint = _float3(pOrigin.x - tCollRectDesc.fOffsetX, pOrigin.y - tCollRectDesc.fOffsetY, pOrigin.z);
-					pColliderRect->Set_CollisionBoxVertex(pPoint, 2);
-					pPoint = _float3(pOrigin.x + tCollRectDesc.fOffsetX, pOrigin.y - tCollRectDesc.fOffsetY, pOrigin.z);
-					pColliderRect->Set_CollisionBoxVertex(pPoint, 3);
-				}
-			}
-		}
-	}
-
-	return S_OK;
-}
 
 HRESULT CCollider::Reset_ColliderGroup()
 {

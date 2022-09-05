@@ -58,12 +58,18 @@ void CBearger::Late_Tick(_float fTimeDelta)
 
 	Change_Motion();
 	Change_Frame();
+
+	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+
 }
 
 HRESULT CBearger::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
+
+	//m_pColliderCom->Render_ColliderBox();
+
 
 	return S_OK;
 }
@@ -97,15 +103,9 @@ HRESULT CBearger::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
-	CCollider_Rect::COLLRECTDESC CollRectDesc;
-	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
-
-	CollRectDesc.fOffsetX = 1.f;
-	CollRectDesc.fOffsetY = 1.f;
-	CollRectDesc.fOffsetOrigin = -1.f;
 
 	/* For.Com_Collider_Rect*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom)))
 		return E_FAIL;
 
 	SetUp_DebugComponents(pArg);
