@@ -52,25 +52,47 @@ HRESULT CCollider_Rect::Initialize_Prototype()
 
 	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&pVertices, 0);
 
-	pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
+	//_float3 InitPos = _float3(40.f, 5.f, 25.f);
+
+	pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);// + InitPos;
 	pVertices[0].vTexture = _float2(0.0f, 0.f);
 
-	pVertices[1].vPosition = _float3(0.5f, 0.5f, 0.f);
+	pVertices[1].vPosition = _float3(0.5f, 0.5f, 0.f);// +InitPos;
 	pVertices[1].vTexture = _float2(1.f, 0.f);
-	pVertices[2].vPosition = _float3(0.5f, -0.5f, 0.f);
+	pVertices[2].vPosition = _float3(0.5f, -0.5f, 0.f);// +InitPos;
 	pVertices[2].vTexture = _float2(1.f, 1.f);
 
-	pVertices[3].vPosition = _float3(-0.5f, -0.5f, 0.f);
+	pVertices[3].vPosition = _float3(-0.5f, -0.5f, 0.f);// +InitPos;
 	pVertices[3].vTexture = _float2(0.f, 1.f);
 	m_pVB->Unlock();
+
+	m_iIndicesByte = sizeof(FACEINDICES16);
+	m_eIndexFormat = D3DFMT_INDEX16;
+
+	if (FAILED(m_pGraphic_Device->CreateIndexBuffer(m_iNumPrimitive * m_iIndicesByte, 0, m_eIndexFormat, D3DPOOL_MANAGED, &m_pIB, nullptr)))
+		return E_FAIL;
+
+	FACEINDICES16*	pIndices = nullptr;
+
+	m_pIB->Lock(0, 0, (void**)&pIndices, 0);
+
+	pIndices[0]._0 = 0;
+	pIndices[0]._1 = 1;
+	pIndices[0]._2 = 2;
+
+	pIndices[1]._0 = 0;
+	pIndices[1]._1 = 2;
+	pIndices[1]._2 = 3;
+
+	m_pIB->Unlock();
 
 	return S_OK;
 }
 
 HRESULT CCollider_Rect::Initialize(void * pArg)
 {
-	if (pArg)
-		memcpy(&m_StateDesc, pArg, sizeof(COLLRECTDESC));
+	/*if (pArg)
+		memcpy(&m_StateDesc, pArg, sizeof(COLLRECTDESC));*/
 
 	return S_OK;
 }
@@ -96,24 +118,24 @@ HRESULT CCollider_Rect::Update_ColliderBox(_float4x4 WorldMatrix)
 	//	// 1x4 * 4x4
 	//	D3DXVec3TransformCoord(&m_vPoint[i], &m_vOriginalPoint[i], &m_StateDesc.StateMatrix);
 	//}
+	m_StateDesc.StateMatrix = WorldMatrix;
+	//_float3 vPosition = *(_float3*)(&WorldMatrix.m[3][0]);
+	//VTXTEX*			pVertices = nullptr;
+	////m_StateDesc.StateMatrix.m[3][2] -= 1.f;
+	//m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&pVertices, 0);
 
-	_float3 vPosition = *(_float3*)(&WorldMatrix.m[3][0]);
-	VTXTEX*			pVertices = nullptr;
+ // 	pVertices[0].vPosition = vPosition + m_vOriginalPoint[0];
+	//pVertices[0].vTexture = _float2(0.0f, 0.f);
 
-	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&pVertices, 0);
+	//pVertices[1].vPosition = vPosition + m_vOriginalPoint[1];
+	//pVertices[1].vTexture = _float2(1.f, 0.f);
 
-  	pVertices[0].vPosition = vPosition + m_vOriginalPoint[0];
-	pVertices[0].vTexture = _float2(0.0f, 0.f);
+	//pVertices[2].vPosition = vPosition + m_vOriginalPoint[2];
+	//pVertices[2].vTexture = _float2(1.f, 1.f);
 
-	pVertices[1].vPosition = vPosition + m_vOriginalPoint[1];
-	pVertices[1].vTexture = _float2(1.f, 0.f);
-
-	pVertices[2].vPosition = vPosition + m_vOriginalPoint[2];
-	pVertices[2].vTexture = _float2(1.f, 1.f);
-
-	pVertices[3].vPosition = vPosition + m_vOriginalPoint[3];
-	pVertices[3].vTexture = _float2(0.f, 1.f);
-	m_pVB->Unlock();
+	//pVertices[3].vPosition = vPosition + m_vOriginalPoint[3];
+	//pVertices[3].vTexture = _float2(0.f, 1.f);
+	//m_pVB->Unlock();
 
 
 	return S_OK;
@@ -124,6 +146,7 @@ HRESULT CCollider_Rect::Render_ColliderBox()
 	if (nullptr == m_pLine)
 		return E_FAIL;
 
+	m_pGraphic_Device->SetTransform(D3DTS_WORLD, &m_StateDesc.StateMatrix);
 	//_float2		vPoint[5] = {
 	//	{ m_vPoint[0].x, m_vPoint[0].y },
 	//	{ m_vPoint[1].x, m_vPoint[1].y },
@@ -140,12 +163,23 @@ HRESULT CCollider_Rect::Render_ColliderBox()
 	//{
 	//	D3DXVec2TransformCoord(&vPoint[i], &vPoint[i], &InverseViewMatrix);
 	//}
+		
 
-
-	m_pGraphic_Device->SetStreamSource(0, m_pVB, 0, m_iStride);
+	/*m_pGraphic_Device->SetStreamSource(0, m_pVB, 0, m_iStride);
 	m_pGraphic_Device->SetFVF(m_dwFVF);
 
-	m_pGraphic_Device->DrawPrimitive(m_ePrimitiveType, 0, m_iNumPrimitive);
+	m_pGraphic_Device->DrawPrimitive(m_ePrimitiveType, 0, m_iNumPrimitive);*/
+	m_pGraphic_Device->SetRenderState(D3DRS_LIGHTING, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	m_pGraphic_Device->SetStreamSource(0, m_pVB, 0, m_iStride);
+	m_pGraphic_Device->SetFVF(m_dwFVF);
+	m_pGraphic_Device->SetIndices(m_pIB);
+
+	/*m_pGraphic_Device->DrawPrimitive(m_ePrimitiveType, 0, m_iNumPrimitive);*/
+	m_pGraphic_Device->DrawIndexedPrimitive(m_ePrimitiveType, 0, 0, m_iNumVertices, 0, m_iNumPrimitive);
+
+	m_pGraphic_Device->SetRenderState(D3DRS_LIGHTING, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
 	/*m_pLine->SetWidth(2.f);
 	m_pLine->Begin();

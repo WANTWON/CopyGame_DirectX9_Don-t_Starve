@@ -398,7 +398,7 @@ HRESULT CPlayer::Test_Setup()
 	if (FAILED(__super::Add_Components(TEXT("Com_DebugTransform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pDebugTransformCom, &TransformDesc)))
 		return E_FAIL;
 
-	m_pDebugTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
+	//m_pDebugTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
 	//TEXTURE
 	CTexture::TEXTUREDESC		TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
@@ -1590,11 +1590,14 @@ _bool CPlayer::Check_Interact_End(void)
 
 void CPlayer::Test_Debug(_float fTimeDelta)
 {
-	if (!m_bDebugKey)
-		return;
+	/*if (!m_bDebugKey)
+		return;*/
 
-	//m_pDebugTransformCom->Set_State(CTransform::STATE_POSITION, Get_Pos());
-
+	
+	m_pDebugTransformCom->Set_State(CTransform::STATE_RIGHT, m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
+	m_pDebugTransformCom->Set_State(CTransform::STATE_UP, m_pTransformCom->Get_State(CTransform::STATE_UP));
+	m_pDebugTransformCom->Set_State(CTransform::STATE_LOOK, m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+	m_pDebugTransformCom->Set_State(CTransform::STATE_POSITION, Get_Pos());
 	//CGameInstance* pInstance = CGameInstance::Get_Instance();
 	//fTimeAcc += fTimeDelta;
 	//if (fTimeAcc > 1.f && m_pColliderCom->Collision_with_Group(CCollider::COLLISION_MONSTER, this))
@@ -1614,17 +1617,17 @@ void CPlayer::Test_Debug(_float fTimeDelta)
 
 void CPlayer::Debug_Render(void)
 {
-	if (!m_bDebugKey)
-		return;
+	/*if (!m_bDebugKey)
+		return;*/
 
-	m_pDebugTransformCom->Bind_OnGraphicDev();
-	if (FAILED(m_pDebugTextureCom->Bind_OnGraphicDev(0)))
-		return;
+	//m_pDebugTransformCom->Bind_OnGraphicDev();
+	///*if (FAILED(m_pDebugTextureCom->Bind_OnGraphicDev(0)))
+	//	return;*/
 
 	//m_pGraphic_Device->SetRenderState(D3DRS_LIGHTING, TRUE);
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
-	m_pDebugBufferCom->Render();
+	//m_pDebugBufferCom->Render();
 
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	//m_pGraphic_Device->SetRenderState(D3DRS_LIGHTING, FALSE);

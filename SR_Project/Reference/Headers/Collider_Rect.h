@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-
+#include "VIBuffer_Rect.h"
 BEGIN(Engine)
 
 class ENGINE_DLL CCollider_Rect final : public CComponent
@@ -45,6 +45,10 @@ protected:
 	_float4x4			m_ColliderMatrix;
 	LPD3DXLINE			m_pLine;
 
+protected:
+	LPDIRECT3DINDEXBUFFER9		m_pIB = nullptr;
+	_uint						m_iIndicesByte = 0;
+	D3DFORMAT					m_eIndexFormat;
 public:
 	static CCollider_Rect* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CComponent* Clone(void* pArg = nullptr) override;
