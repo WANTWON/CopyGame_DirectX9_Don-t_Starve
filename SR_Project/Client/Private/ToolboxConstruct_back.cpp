@@ -1,20 +1,19 @@
 #include "stdafx.h"
-#include "..\Public\ToolboxMain_back.h"
+#include "..\Public\ToolboxConstruct_back.h"
 #include "GameInstance.h"
 #include "Inventory.h"
 
-
-CToolboxMain_back::CToolboxMain_back(LPDIRECT3DDEVICE9 pGraphic_Device)
+CToolboxConstruct_back::CToolboxConstruct_back(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CToolboxMain_back::CToolboxMain_back(const CToolboxMain_back & rhs)
+CToolboxConstruct_back::CToolboxConstruct_back(const CToolboxConstruct_back & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CToolboxMain_back::Initialize_Prototype()
+HRESULT CToolboxConstruct_back::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -22,7 +21,7 @@ HRESULT CToolboxMain_back::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CToolboxMain_back::Initialize(void* pArg)
+HRESULT CToolboxConstruct_back::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -33,20 +32,12 @@ HRESULT CToolboxMain_back::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	/*if (iNum == 0)
-	{
-		m_bfirstclick_W == false;
-	}
-	else if (iNum == 1)
-	{
-		m_bfirstclick_G == false;
-	}*/
-
 	m_fSizeX = 40.0f;
 	m_fSizeY = 40.0f;
 	m_fX = 30.f;
 	m_fY = 210.f + (iNum * 50.f);
 
+	m_firstx = m_fX;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
@@ -54,14 +45,19 @@ HRESULT CToolboxMain_back::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
-	
+
 
 	return S_OK;
 }
 
-int CToolboxMain_back::Tick(_float fTimeDelta)
+int CToolboxConstruct_back::Tick(_float fTimeDelta)
 {
+	if (m_bonof == false)
+		return OBJ_NOEVENT;
+
 	__super::Tick(fTimeDelta);
+
+
 
 	RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
@@ -70,31 +66,74 @@ int CToolboxMain_back::Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
+	if (m_fX <= 100)
+		Open_Weapontool(fTimeDelta);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+
+
 	if (PtInRect(&rcRect, ptMouse))
 	{
 		m_fSizeX = 55.f;
 		m_fSizeY = 55.f;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		
+		backtexnum = 0;
 
-		/*if (GetKeyState(VK_LBUTTON) & 0x8000)
-		{
-		m_bItem = true;
-		}*/
+
 	}
 
-	/*if (m_bItem)
+	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
+	Safe_AddRef(pInventory_Manager);
+	//pInventory_Manager->craft_on(MAKE_AXE);
+	if (iNum == 0 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
-	m_fX = ptMouse.x;
-	m_fY = ptMouse.y;
+
+
+
+		pInventory_Manager->craft_on(MAKE_FENCE);
+
+	}
+	else if (iNum == 1 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+	{
+
+		pInventory_Manager->craft_on(MAKE_POT);
+
+
+	}
+	/*else if (iNum == 2 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+	{
+
+		pInventory_Manager->craft_on(MAKE_STAFF);
+
+
+	}
+	else if (iNum == 3 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+	{
+
+		pInventory_Manager->craft_on(MAKE_ARMOR);
+
+
+	}
+	else if (iNum == 4 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+	{
+
+		pInventory_Manager->craft_on(MAKE_HELMET);
+
+
 	}*/
+
+
+	Safe_Release(pInventory_Manager);
 
 	return OBJ_NOEVENT;
 }
 
-void CToolboxMain_back::Late_Tick(_float fTimeDelta)
+void CToolboxConstruct_back::Late_Tick(_float fTimeDelta)
 {
+
+	if (m_bonof == false)
+		return;
+
 	__super::Late_Tick(fTimeDelta);
 	RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
@@ -108,85 +147,24 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 		m_fSizeX = 40;
 		m_fSizeY = 40;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		
-
+		backtexnum = 2;
 
 
 	}
 
-	if (iNum == 0&&PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON) )
-	{
-		if (m_bfirstclick_G == true)
-		{
-			CInventory_Manager::Get_Instance()->gathertool_on();
-			m_bfirstclick_G = false;
-		}
-		else
-		{
-			CInventory_Manager::Get_Instance()->gathertool_off();
-			CInventory_Manager::Get_Instance()->craft_off();
-			m_bfirstclick_G = true;
-		}
-
-	}
 
 
-	if (iNum == 1 && PtInRect(&rcRect, ptMouse)&& CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-    {
-		if (m_bfirstclick_W == true)
-		{
-			CInventory_Manager::Get_Instance()->weapontool_on();
-			m_bfirstclick_W = false;
-		}
-		else
-		{
-			CInventory_Manager::Get_Instance()->weapontool_off();
-			CInventory_Manager::Get_Instance()->craft_off();
-			m_bfirstclick_W = true;
-		}
-			
-	}
-
-	if (iNum == 2 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
-		if (m_bfirstclick_C == true)
-		{
-			CInventory_Manager::Get_Instance()->constructtool_on();
-			m_bfirstclick_C = false;
-		}
-		else
-		{
-			CInventory_Manager::Get_Instance()->constructtool_off();
-			CInventory_Manager::Get_Instance()->craft_off();
-			m_bfirstclick_C = true;
-		}
-
-	}
-
-
-	
-
-	if (m_bfirstclick_G == true && m_bfirstclick_W == true)
-		backtexnum = 0;
-
-	else if(m_bfirstclick_G == false || m_bfirstclick_W == false)
-		backtexnum = 1;
-
-
-	/*if (m_bfirstclick_W == true && iNum == 1)
-		backtexnum = 0;
-
-	else
-		backtexnum = 1;*/
-
-
-	if (nullptr != m_pRendererCom)
+	if (nullptr != m_pRendererCom && iNum < 10)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
-}
-	
 
-HRESULT CToolboxMain_back::Render()
+}
+
+HRESULT CToolboxConstruct_back::Render()
 {
+
+	if (m_bonof == false)
+		return OBJ_NOEVENT;
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -215,7 +193,7 @@ HRESULT CToolboxMain_back::Render()
 	return S_OK;
 }
 
-HRESULT CToolboxMain_back::SetUp_Components()
+HRESULT CToolboxConstruct_back::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -244,7 +222,7 @@ HRESULT CToolboxMain_back::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CToolboxMain_back::SetUp_RenderState()
+HRESULT CToolboxConstruct_back::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -254,43 +232,43 @@ HRESULT CToolboxMain_back::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CToolboxMain_back::Release_RenderState()
+HRESULT CToolboxConstruct_back::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
 	return S_OK;
 }
 
-CToolboxMain_back * CToolboxMain_back::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CToolboxConstruct_back * CToolboxConstruct_back::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CToolboxMain_back*	pInstance = new CToolboxMain_back(pGraphic_Device);
+	CToolboxConstruct_back*	pInstance = new CToolboxConstruct_back(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CToolboxMain_back"));
+		ERR_MSG(TEXT("Failed to Created : CToolboxConstruct_back"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CToolboxMain_back::Clone(void* pArg)
+CGameObject * CToolboxConstruct_back::Clone(void* pArg)
 {
-	CToolboxMain_back*	pInstance = new CToolboxMain_back(*this);
+	CToolboxConstruct_back*	pInstance = new CToolboxConstruct_back(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CToolboxMain_back"));
+		ERR_MSG(TEXT("Failed to Cloned : CToolboxConstruct_back"));
 		Safe_Release(pInstance);
 	}
 
-	//CInventory_Manager::Get_Instance()->Get_back_Inven_list()->push_back(pInstance);
+	CInventory_Manager::Get_Instance()->Get_ToolboxConstruct_back_list()->push_back(pInstance);
 
 	return pInstance;
 }
 
 
-void CToolboxMain_back::Free()
+void CToolboxConstruct_back::Free()
 {
 	__super::Free();
 

@@ -124,9 +124,6 @@
     <Filter Include="02.GameObject\98.UI\02.Toolbox\00.MainToolbox">
       <UniqueIdentifier>{2a9ee06d-8c4c-4c91-94a0-4c54b812c3a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\98.UI\02.Toolbox\02WeaponToolbox">
-      <UniqueIdentifier>{42130d4b-f387-4555-8a97-c6a7d3bf4b64}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\98.UI\02.Toolbox\01.GatherToolbox">
       <UniqueIdentifier>{efea9d00-707f-4d78-a85a-7011c7cf155c}</UniqueIdentifier>
     </Filter>
@@ -174,6 +171,12 @@
     </Filter>
     <Filter Include="02.GameObject\98.UI\08.LogoScene">
       <UniqueIdentifier>{ad3553bd-a2d2-447c-9b5d-4056546f163e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox">
+      <UniqueIdentifier>{42130d4b-f387-4555-8a97-c6a7d3bf4b64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox">
+      <UniqueIdentifier>{87e92ec8-6dd8-4460-b23b-91b91e54e15f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -319,13 +322,13 @@
       <Filter>02.GameObject\98.UI\02.Toolbox\00.MainToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxWeapon.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxWeapon_back.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxWeapon_front.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxGather.h">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
@@ -404,6 +407,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Logoscene.h">
       <Filter>02.GameObject\98.UI\08.LogoScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxConstruct.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxConstruct_front.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxConstruct_back.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -537,13 +549,13 @@
       <Filter>02.GameObject\98.UI\02.Toolbox\00.MainToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxWeapon.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxWeapon_back.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxWeapon_front.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxGather.cpp">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
@@ -622,6 +634,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Logoscene.cpp">
       <Filter>02.GameObject\98.UI\08.LogoScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxConstruct.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxConstruct_front.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxConstruct_back.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
