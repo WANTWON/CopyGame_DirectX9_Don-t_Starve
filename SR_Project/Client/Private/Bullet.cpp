@@ -325,6 +325,7 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 		{
 			m_bDead = OBJ_DEAD;
 		}
+		break;
 	case WEAPON_TYPE::WEAPON_STAFF:
 		break;
 	case WEAPON_TYPE::WEAPON_DART:
@@ -351,12 +352,14 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 		}
 		break;
 	case WEAPON_TYPE::WEAPON_SMOKE:
-		if (m_fAccDeadTimer > 3.f)
+		if (m_fAccDeadTimer > 3.f && !m_bActivated)
 		{
-			if (m_pTextureCom->Get_Frame().m_iCurrentTex >= 14)
-			{
-				m_bDead = OBJ_DEAD;
-			}
+			m_bActivated = true;
+		
+		}
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex >= 14)
+		{
+			m_bDead = OBJ_DEAD;
 		}
 		break;
 	case WEAPON_TYPE::WEAPON_LIGHTNING:
@@ -385,11 +388,13 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 
 void CBullet::Red_Smoke(_float _fTimeDelta)
 {
-	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= 7)
+	if (!m_bActivated)
 	{
-		m_pTextureCom->Set_ZeroFrame();
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex >= 7)
+		{
+			m_pTextureCom->Set_ZeroFrame();
+		}
 	}
-
 
 }
 
@@ -419,107 +424,129 @@ void CBullet::IceSpikes(_float _fTimeDelta)
 	_float fRemainTime = 3.f;
 
 	m_fTime += _fTimeDelta;
+
+	_float3 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+	_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+	_float3 vTempLook = m_tBulletData.vLook;
+
+	D3DXVec3Normalize(&vRight, &vRight);
+	D3DXVec3Normalize(&vLook, &vLook);
+	D3DXVec3Normalize(&vTempLook, &vTempLook);
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-
-
-	switch (m_tBulletData.eWeaponType)
+	switch (m_tBulletData.eDirState)
 	{
-	case WEAPON_TYPE::WEAPON_ICESPIKE1:
-		if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
-		{
-			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
-		}
-		else if (m_fTime > fRemainTime && !m_bActivated2)
-		{
-			m_bActivated2 = true;
-			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
-		}
 
+	case DIR_STATE::DIR_END:
+		switch (m_tBulletData.eWeaponType)
+		{
+		case WEAPON_TYPE::WEAPON_ICESPIKE1:
+			if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+			{
+				m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+			}
+			else if (m_fTime > fRemainTime && !m_bActivated2)
+			{
+				m_bActivated2 = true;
+				m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+			}
+
+			break;
+		case WEAPON_TYPE::WEAPON_ICESPIKE2:
+			if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+			{
+				m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+			}
+			else if (m_fTime > fRemainTime && !m_bActivated2)
+			{
+				m_bActivated2 = true;
+				m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+			}
+
+			if (!m_bActivated &&m_fTime > 0.2f)
+			{
+				m_bActivated = true;
+
+				BULLETDATA BulletData;
+				ZeroMemory(&BulletData, sizeof(BulletData));
+				BulletData.bIsPlayerBullet = true;
+				BulletData.eDirState = m_tBulletData.eDirState;
+				BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE1;
+				//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+				BulletData.vLook = m_tBulletData.vLook;//m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+				BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+				BulletData.vPosition += vTempLook*m_fAttackRange;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+			break;
+		case WEAPON_TYPE::WEAPON_ICESPIKE3:
+			if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+			{
+				m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+			}
+			else if (m_fTime > fRemainTime && !m_bActivated2)
+			{
+				m_bActivated2 = true;
+				m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+			}
+
+			if (!m_bActivated &&m_fTime > 0.2f)
+			{
+				m_bActivated = true;
+
+				BULLETDATA BulletData;
+				ZeroMemory(&BulletData, sizeof(BulletData));
+				BulletData.bIsPlayerBullet = true;
+				BulletData.eDirState = m_tBulletData.eDirState;
+				BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE2;
+				//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+				BulletData.vLook = m_tBulletData.vLook;//m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+				BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+				BulletData.vPosition += vTempLook*m_fAttackRange;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+			break;
+		case WEAPON_TYPE::WEAPON_ICESPIKE4:
+			if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+			{
+				m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+			}
+			else if (m_fTime > fRemainTime && !m_bActivated2)
+			{
+				m_bActivated2 = true;
+				m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
+			}
+
+			if (!m_bActivated &&m_fTime > 0.2f)
+			{
+				m_bActivated = true;
+
+				BULLETDATA BulletData;
+				ZeroMemory(&BulletData, sizeof(BulletData));
+				BulletData.bIsPlayerBullet = true;
+				BulletData.eDirState = m_tBulletData.eDirState;
+				BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE3;
+				//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+				BulletData.vLook = m_tBulletData.vLook;//m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+				BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+				BulletData.vPosition += vTempLook*m_fAttackRange;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+			break;
+		}
 		break;
-	case WEAPON_TYPE::WEAPON_ICESPIKE2:
-		if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
-		{
-			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
-		}
-		else if (m_fTime > fRemainTime && !m_bActivated2)
-		{
-			m_bActivated2 = true;
-			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
-		}
-
-		if (!m_bActivated &&m_fTime > 0.2f)
-		{
-			m_bActivated = true;
-
-			BULLETDATA BulletData;
-			ZeroMemory(&BulletData, sizeof(BulletData));
-			BulletData.bIsPlayerBullet = true;
-			BulletData.eDirState = m_tBulletData.eDirState;
-			BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE1;
-			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			BulletData.vPosition.z += 0.5f;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-		}
-		break;
-	case WEAPON_TYPE::WEAPON_ICESPIKE3:
-		if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
-		{
-			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
-		}
-		else if (m_fTime > fRemainTime && !m_bActivated2)
-		{
-			m_bActivated2 = true;
-			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
-		}
-
-		if (!m_bActivated &&m_fTime > 0.2f)
-		{
-			m_bActivated = true;
-
-			BULLETDATA BulletData;
-			ZeroMemory(&BulletData, sizeof(BulletData));
-			BulletData.bIsPlayerBullet = true;
-			BulletData.eDirState = m_tBulletData.eDirState;
-			BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE2;
-			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			BulletData.vPosition.z += 0.5f;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-		}
-		break;
-	case WEAPON_TYPE::WEAPON_ICESPIKE4:
-		if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
-		{
-			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
-		}
-		else if (m_fTime > fRemainTime && !m_bActivated2)
-		{
-			m_bActivated2 = true;
-			m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
-		}
-
-		if (!m_bActivated &&m_fTime > 0.2f)
-		{
-			m_bActivated = true;
-
-			BULLETDATA BulletData;
-			ZeroMemory(&BulletData, sizeof(BulletData));
-			BulletData.bIsPlayerBullet = true;
-			BulletData.eDirState = m_tBulletData.eDirState;
-			BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE3;
-			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			BulletData.vPosition.z += 0.5f;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-		}
+	default:
 		break;
 	}
+
+	
 
 	Safe_Release(pGameInstance);
 }
@@ -565,30 +592,32 @@ void CBullet::IceMines(_float _fTimeDelta)
 	BulletData.eDirState = m_tBulletData.eDirState;
 	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_MINE;
 	BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	_float3 vPositiontemp = m_tBulletData.vPosition;
+
 	//BulletData.vPosition = m_vTargetPicking;
 	//for FPS Mode
 	_float3 vLooktemp = m_tBulletData.vLook;
 	D3DXVec3Normalize(&vLooktemp, &vLooktemp);
 	_float3 vPos = m_tBulletData.vPosition;
 
+	
 	switch (m_tBulletData.eDirState)
 	{
 	case DIR_STATE::DIR_UP:
 		if (!m_bActivated)
-		{
-			_float3 temp = m_tBulletData.vPosition;
-			temp.x -= 0.2f;
-			temp.z += 0.5f;
-			BulletData.vPosition = temp;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
+		{	
+			for (int i = 0; i < 3; ++i)
+			{
+				_float3 temp1 = m_tBulletData.vPosition;
+				temp1.x -= 0.4f;
+				temp1.z += 0.5f;
 
-			temp = m_tBulletData.vPosition;
-			temp.x += 0.2f;
-			temp.z += 0.5f;
-			BulletData.vPosition = temp;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
+				temp1.x += i*0.4f;
+				BulletData.vPosition = temp1;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+			}
 			m_bActivated = true;
 		}
 
@@ -609,7 +638,7 @@ void CBullet::IceMines(_float _fTimeDelta)
 			m_bActivated2 = true;
 		}
 
-		if (m_fTime > 0.6f && !m_bActivated3)
+		if (m_fTime > 0.5f && !m_bActivated3)
 		{
 			for (int i = 0; i < 3; ++i)
 			{
@@ -626,28 +655,19 @@ void CBullet::IceMines(_float _fTimeDelta)
 		}
 		break;
 	case DIR_STATE::DIR_DOWN:
-		break;
-	case DIR_STATE::DIR_RIGHT:
-		break;
-	case DIR_STATE::DIR_LEFT:
-		break;
-	case DIR_STATE::DIR_END:
 		if (!m_bActivated)
 		{
-			vPos.x -= vLooktemp.x * 0.2f;
-			vPos.z += vLooktemp.z * 0.5f;
+			for (int i = 0; i < 3; ++i)
+			{
+				_float3 temp1 = m_tBulletData.vPosition;
+				temp1.x -= 0.4f;
+				temp1.z -= 0.5f;
 
-			BulletData.vPosition = vPos;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-
-			_float3 vPos = m_tBulletData.vPosition;
-
-			vPos.x += vLooktemp.x * 0.2f;
-			vPos.z += vLooktemp.z * 0.5f;
-			BulletData.vPosition = vPos;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
+				temp1.x += i*0.4f;
+				BulletData.vPosition = temp1;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+			}
 			m_bActivated = true;
 		}
 
@@ -656,34 +676,167 @@ void CBullet::IceMines(_float _fTimeDelta)
 
 			for (int i = 0; i < 3; ++i)
 			{
-				_float3 vPos = m_tBulletData.vPosition;
+				_float3 temp1 = m_tBulletData.vPosition;
+				temp1.x -= 0.4f;
+				temp1.z -= 1.f;
 
-				vPos.x -= vLooktemp.x * 0.4f;
-				vPos.z += vLooktemp.z * 1.f;
-				vPos.x += i*0.4f;
-
-				BulletData.vPosition = vPos;
+				temp1.x += i*0.4f;
+				BulletData.vPosition = temp1;
 				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 					return;
 			}
 			m_bActivated2 = true;
 		}
 
-		if (m_fTime > 0.6f && !m_bActivated3)
+		if (m_fTime > 0.5f && !m_bActivated3)
 		{
 			for (int i = 0; i < 3; ++i)
 			{
-				_float3 vPos = m_tBulletData.vPosition;
+				_float3 temp1 = m_tBulletData.vPosition;
+				temp1.x -= 0.4f;
+				temp1.z -= 2.f;
 
-				vPos.x -= vLooktemp.x * 0.4f;
-				vPos.z += vLooktemp.z * 2.f;
-				vPos.x += i*0.4f;
-
-				BulletData.vPosition = vPos;
-
+				temp1.x += i*0.4f;
+				BulletData.vPosition = temp1;
 				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 					return;
 			}
+			m_bActivated3 = true;
+		}
+		break;
+	case DIR_STATE::DIR_RIGHT:
+		if (!m_bActivated)
+		{
+			for (int i = 0; i < 3; ++i)
+			{
+				_float3 temp1 = m_tBulletData.vPosition;
+				temp1.z -= 0.4f;
+				temp1.x += 0.5f;
+
+				temp1.z += i*0.4f;
+				BulletData.vPosition = temp1;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+			m_bActivated = true;
+		}
+
+		if (m_fTime > 0.3f && !m_bActivated2)
+		{
+
+			for (int i = 0; i < 3; ++i)
+			{
+				_float3 temp1 = m_tBulletData.vPosition;
+				temp1.z -= 0.4f;
+				temp1.x += 1.f;
+
+				temp1.z += i*0.4f;
+				BulletData.vPosition = temp1;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+			m_bActivated2 = true;
+		}
+
+		if (m_fTime > 0.5f && !m_bActivated3)
+		{
+			for (int i = 0; i < 3; ++i)
+			{
+				_float3 temp1 = m_tBulletData.vPosition;
+				temp1.z -= 0.4f;
+				temp1.x += 2.f;
+
+				temp1.z += i*0.4f;
+				BulletData.vPosition = temp1;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+			m_bActivated3 = true;
+		}
+		break;
+	case DIR_STATE::DIR_LEFT:
+		if (!m_bActivated)
+		{
+			for (int i = 0; i < 3; ++i)
+			{
+				_float3 temp1 = m_tBulletData.vPosition;
+				temp1.z -= 0.4f;
+				temp1.x -= 0.5f;
+
+				temp1.z += i*0.4f;
+				BulletData.vPosition = temp1;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+			m_bActivated = true;
+		}
+
+		if (m_fTime > 0.3f && !m_bActivated2)
+		{
+
+			for (int i = 0; i < 3; ++i)
+			{
+				_float3 temp1 = m_tBulletData.vPosition;
+				temp1.z -= 0.4f;
+				temp1.x -= 1.f;
+
+				temp1.z += i*0.4f;
+				BulletData.vPosition = temp1;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+			m_bActivated2 = true;
+		}
+
+		if (m_fTime > 0.5f && !m_bActivated3)
+		{
+			for (int i = 0; i < 3; ++i)
+			{
+				_float3 temp1 = m_tBulletData.vPosition;
+				temp1.z -= 0.4f;
+				temp1.x -= 2.f;
+
+				temp1.z += i*0.4f;
+				BulletData.vPosition = temp1;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+			}
+			m_bActivated3 = true;
+		}
+		break;
+	case DIR_STATE::DIR_END:
+		if (!m_bActivated)
+		{
+			vPos += vLooktemp * 4.f;
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+
+			m_bActivated = true;
+		}
+
+		if (m_fTime > 0.3f && !m_bActivated2)
+		{
+			vPos = m_tBulletData.vPosition;
+
+			vPos += vLooktemp * 5.f;
+
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+		
+			m_bActivated2 = true;
+		}
+		if(m_fTime > 0.5f && !m_bActivated3)
+		{
+			vPos = m_tBulletData.vPosition;
+
+			vPos += vLooktemp * 6.f;
+
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+
 			m_bActivated3 = true;
 		}
 		break;
@@ -801,7 +954,16 @@ _bool CBullet::Compare_Terrain(void)
 		break;
 	case WEAPON_TYPE::WEAPON_SWORD:
 		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE1:
+	case WEAPON_TYPE::WEAPON_ICESPIKE2:
+	case WEAPON_TYPE::WEAPON_ICESPIKE3:
+	case WEAPON_TYPE::WEAPON_ICESPIKE4:
+	case WEAPON_TYPE::WEAPON_MINE:
+		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
 
+		_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		vMyPos.y = vPosition.y;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vMyPos);
 	}
 
 	return _bool();
@@ -810,8 +972,8 @@ _bool CBullet::Compare_Terrain(void)
 void CBullet::SetUp_BillBoard()
 {
 
-	if (m_tBulletData.eDirState == DIR_STATE::DIR_END)
-		return;
+	/*if (m_tBulletData.eDirState == DIR_STATE::DIR_END)
+		return;*/
 
 	_float4x4		ViewMatrix;
 
@@ -989,23 +1151,28 @@ HRESULT CBullet::Init_Data(void)
 	case WEAPON_TYPE::WEAPON_ICESPIKE1:
 		m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.5f);
 		m_fDamage = 0.f;
+		Compare_Terrain();
 		break;
 	case WEAPON_TYPE::WEAPON_ICESPIKE2:
 		m_pTransformCom->Set_Scale(1.2f, 1.2f, 1.f);
 		m_fDamage = 0.f;
+		Compare_Terrain();
 		break;
 	case WEAPON_TYPE::WEAPON_ICESPIKE3:
 		m_pTransformCom->Set_Scale(0.9f, 0.9f, 1.f);
 		m_fDamage = 0.f;
+		Compare_Terrain();
 		break;
 	case WEAPON_TYPE::WEAPON_ICESPIKE4:
 		m_pTransformCom->Set_Scale(0.6f, 0.6f, 1.f);
 		m_fDamage = 0.f;
+		Compare_Terrain();
 		break;
 	case WEAPON_TYPE::WEAPON_MINE:
-		m_pTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
+		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 		Change_Texture(TEXT("Com_Texture_Texture_SandSpike_Small_Create"));
 		m_fDamage = 1.f;
+		Compare_Terrain();
 		break;
 	default:
 		break;

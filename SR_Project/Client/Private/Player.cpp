@@ -392,7 +392,6 @@ HRESULT CPlayer::Test_Setup()
 
 void CPlayer::GetKeyDown(_float _fTimeDelta)
 {
-	/*Ű�Է� �Ұ�.*/
 	if (!m_bMove)
 		return;
 
@@ -444,35 +443,21 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	//Action
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN1]))
 	{
-
-		//if (m_pPicker->Get_IsCorrect())
-		//{	
-		//	/*Test Bomb*/
-		//	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-		//	BULLETDATA BulletData;
-		//	ZeroMemory(&BulletData, sizeof(BulletData));
-		//	BulletData.bIsPlayerBullet = true;
-		//	BulletData.eDirState = DIR_STATE::DIR_DOWN;
-		//	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
-		//	BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
-		//	BulletData.vPosition = Get_Pos();
-
-		//	_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
-		//	//D3DXVec3Normalize(&temp, &temp);
-		//	//BulletData.fAdd_X = m_fMaxTime;
-		//	BulletData.vTargetPos = temp;
-		//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
-		//		return;
-		//}
+		
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 		BULLETDATA BulletData;
 		ZeroMemory(&BulletData, sizeof(BulletData));
 		BulletData.bIsPlayerBullet = true;
-		BulletData.eDirState = DIR_STATE::DIR_DOWN;
-		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE1;
-		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE4;
+
+		BulletData.eDirState = DIR_STATE::DIR_END;
+	
+		_float3 vLookTemp = m_vTargetPicking - Get_Pos();
+		
+		BulletData.vLook = vLookTemp; // m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
 		BulletData.vPosition = m_vTargetPicking;
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
@@ -480,52 +465,49 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN2]))
 	{
-		/*TestLightning*/
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-		BULLETDATA BulletData;
-		ZeroMemory(&BulletData, sizeof(BulletData));
-		BulletData.bIsPlayerBullet = true;
-		BulletData.eDirState = DIR_STATE::DIR_DOWN;
-		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE2;
-		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		BulletData.vPosition = m_vTargetPicking;
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
-			return;
+		Test_Func(1);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN3]))
 	{
+		// 폭탄
+		if (m_pPicker->Get_IsCorrect())
+		{
+			/*Test Bomb*/
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+			BULLETDATA BulletData;
+			ZeroMemory(&BulletData, sizeof(BulletData));
+			BulletData.bIsPlayerBullet = true;
+			BulletData.eDirState = DIR_STATE::DIR_DOWN;
+			BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
+			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
+			BulletData.vPosition = Get_Pos();
+
+			_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
+			//D3DXVec3Normalize(&temp, &temp);
+			//BulletData.fAdd_X = m_fMaxTime;
+			BulletData.vTargetPos = temp;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+		}
+
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN4]))
+	{
+
 		if (m_pPicker->Get_IsShow())
 		{
 			m_pRange->Set_IsShow(false);
 			m_pPicker->Set_IsShow(false);
 		}
-		else 
+		else
 		{
 			m_pRange->Set_IsShow(true);
 			m_pPicker->Set_IsShow(true);
 		}
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN4]))
-	{
-		Test_Func(1);
-	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN5]))
 	{
-		/*TestLightning*/
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-		BULLETDATA BulletData;
-		ZeroMemory(&BulletData, sizeof(BulletData));
-		BulletData.bIsPlayerBullet = true;
-		BulletData.eDirState = DIR_STATE::DIR_DOWN;
-		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE4;
-		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		BulletData.vPosition = m_vTargetPicking;
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
-			return;
 	}
 #pragma endregion Action
 
@@ -1212,23 +1194,43 @@ void CPlayer::Test_Func(_int _iNum)
 	ZeroMemory(&BulletData, sizeof(BulletData));
 	BulletData.bIsPlayerBullet = true;
 
-	if (m_bIsFPS)
-	{
-		BulletData.eDirState =DIR_STATE::DIR_END;
-	}
-	else {
-		BulletData.eDirState = m_eDirState;
-	}
-
 	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_MINES;
 	BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	//_float3 vTempPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	BulletData.vPosition.y -= 0.5f;
+
+	_float3 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+	D3DXVec3Normalize(&vRight, &vRight);
+	if (m_bIsFPS)
+	{
+		BulletData.eDirState =DIR_STATE::DIR_END;
+
+		
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+			return;
+
+		BulletData.vPosition += vRight *1.f;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+			return;
+
+		BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+		BulletData.vPosition -= vRight *1.f;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+			return;
+	}
+	else {
+		BulletData.eDirState = m_eDirState;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+			return;
+	}
+
+	
 	//FPSMODE일때 생각해보기.
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
-		return;
+	
 	////////////////////////////////////////////
 	/*IceSpike*/
 
