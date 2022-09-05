@@ -6,6 +6,7 @@
 #include "Level_Logo.h"
 #include "Level_GamePlay.h"
 #include "Level_Hunt.h"
+#include "Loadingscene.h"
 
 CLevel_Loading::CLevel_Loading(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -14,7 +15,36 @@ CLevel_Loading::CLevel_Loading(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 {
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+	Safe_AddRef(pGameInstance);
+
 	if (FAILED(__super::Initialize()))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_loadingscene */
+	if (m_bfirst == true)
+	{
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_loading"),
+			CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/scene3/loading_%03d.png"), 303))));
+		// E_FAIL;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_loadingback"),
+			CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Loading_Scene/loading6.png"), 1))));
+		// E_FAIL;
+
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Loadingscene"),
+			CLoadingscene::Create(m_pGraphic_Device))));
+
+		m_bfirst = false;
+		//	return E_FAIL;
+	}
+	
+	
+	
+
+	if (FAILED(Ready_Layer_Loadingscene(TEXT("Layer_Loadingscene"))))
 		return E_FAIL;
 
 	m_eNextLevel = eNextLevel;
@@ -23,6 +53,8 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 	if (nullptr == m_pLoader)
 		return E_FAIL;
 
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 
@@ -86,6 +118,23 @@ CLevel_Loading * CLevel_Loading::Create(LPDIRECT3DDEVICE9 pGraphic_Device, LEVEL
 	return pInstance;
 }
 
+HRESULT CLevel_Loading::Ready_Layer_Loadingscene(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Loadingscene"), LEVEL_LOADING, pLayerTag)))
+		return E_FAIL;
+
+	
+
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
 void CLevel_Loading::Free()
 {
 	__super::Free();

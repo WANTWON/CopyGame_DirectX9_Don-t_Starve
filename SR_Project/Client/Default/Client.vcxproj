@@ -171,6 +171,7 @@
     <ClInclude Include="..\Public\Craftmain_front.h" />
     <ClInclude Include="..\Public\CraftPont.h" />
     <ClInclude Include="..\Public\Daycount.h" />
+    <ClInclude Include="..\Public\Daycountpont.h" />
     <ClInclude Include="..\Public\Equipment_back.h" />
     <ClInclude Include="..\Public\Equipment_front.h" />
     <ClInclude Include="..\Public\Equip_Animation.h" />
@@ -181,6 +182,8 @@
     <ClInclude Include="..\Public\Item.h" />
     <ClInclude Include="..\Public\Level_Hunt.h" />
     <ClInclude Include="..\Public\Line.h" />
+    <ClInclude Include="..\Public\Loadingscene.h" />
+    <ClInclude Include="..\Public\Logoscene.h" />
     <ClInclude Include="..\Public\MainInventory_back.h" />
     <ClInclude Include="..\Public\MainInventory_front.h" />
     <ClInclude Include="..\Public\Craftmain.h" />
@@ -245,6 +248,7 @@
     <ClCompile Include="..\Private\Craftmain_front.cpp" />
     <ClCompile Include="..\Private\CraftPont.cpp" />
     <ClCompile Include="..\Private\Daycount.cpp" />
+    <ClCompile Include="..\Private\Daycountpont.cpp" />
     <ClCompile Include="..\Private\Equipment_back.cpp" />
     <ClCompile Include="..\Private\Equipment_front.cpp" />
     <ClCompile Include="..\Private\Equip_Animation.cpp" />
@@ -255,6 +259,8 @@
     <ClCompile Include="..\Private\Item.cpp" />
     <ClCompile Include="..\Private\Level_Hunt.cpp" />
     <ClCompile Include="..\Private\Line.cpp" />
+    <ClCompile Include="..\Private\Loadingscene.cpp" />
+    <ClCompile Include="..\Private\Logoscene.cpp" />
     <ClCompile Include="..\Private\MainInventory_back.cpp" />
     <ClCompile Include="..\Private\MainInventory_front.cpp" />
     <ClCompile Include="..\Private\Craftmain.cpp" />
