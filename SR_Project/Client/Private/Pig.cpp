@@ -388,7 +388,7 @@ void CPig::Patrol(_float fTimeDelta)
 	// Switch between Idle and Walk (based on time)
 	if (m_eState == STATE::IDLE)
 	{
-		if (GetTickCount() > m_dwIdleTime + 3000)
+		if (GetTickCount() > m_dwIdleTime + (rand() % 3000)*(rand()%2+1) + 3000)
 		{
 			m_eState = STATE::WALK;
 			m_dwWalkTime = GetTickCount();
@@ -404,7 +404,7 @@ void CPig::Patrol(_float fTimeDelta)
 	}
 	else if (m_eState == STATE::WALK)
 	{
-		if (GetTickCount() > m_dwWalkTime + 1500)
+		if (GetTickCount() > m_dwWalkTime + (rand() % 3000)*(rand() % 2 + 1) + 1500)
 		{
 			m_eState = STATE::IDLE;
 			m_dwIdleTime = GetTickCount();

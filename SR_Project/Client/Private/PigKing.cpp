@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Inventory.h"
 #include "Item.h"
+#include "CameraManager.h"
 
 CPigKing::CPigKing(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -179,6 +180,7 @@ void CPigKing::Interact(_uint Damage)
 	_uint count = 0;
 	if (m_bInteract)
 	{
+		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 		m_bInteract = false;
 		CInventory_Manager*         pinven = CInventory_Manager::Get_Instance();
 		Safe_AddRef(pinven);
@@ -190,16 +192,20 @@ void CPigKing::Interact(_uint Damage)
 		for (auto iter = line->begin(); iter != line->end(); ++iter)
 		{
 			if ((*iter)->get_check() == true)
+			{
+				pCamera->Set_TalkingMode(true);
+				pCamera->Set_Target(this);
 				++count;
-			
+			}
 		}
 		if (count >= 3)
 		{
 			pinven->Get_Talk_list()->front()->settexnum(3);
+			
 		}
 
 		Safe_Release(pinven);
-
+		
 		m_eState = rand() % 2 ? COINTOSS : UNIMPRESSED;
 	}
 

@@ -172,6 +172,12 @@
     <Filter Include="02.GameObject\01.Monster\Bearger">
       <UniqueIdentifier>{ce9f80e8-f600-44cf-8ba7-26a2bf49a7a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\07.Loadingscene">
+      <UniqueIdentifier>{6d32a457-48d4-48b9-ac75-00aaeded858c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\08.LogoScene">
+      <UniqueIdentifier>{ad3553bd-a2d2-447c-9b5d-4056546f163e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -396,6 +402,15 @@
     <ClInclude Include="..\Public\Bearger.h">
       <Filter>02.GameObject\01.Monster\Bearger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Daycountpont.h">
+      <Filter>02.GameObject\98.UI\05.DayCount</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loadingscene.h">
+      <Filter>02.GameObject\98.UI\07.Loadingscene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Logoscene.h">
+      <Filter>02.GameObject\98.UI\08.LogoScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -607,6 +622,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bearger.cpp">
       <Filter>02.GameObject\01.Monster\Bearger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Daycountpont.cpp">
+      <Filter>02.GameObject\98.UI\05.DayCount</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loadingscene.cpp">
+      <Filter>02.GameObject\98.UI\07.Loadingscene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Logoscene.cpp">
+      <Filter>02.GameObject\98.UI\08.LogoScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

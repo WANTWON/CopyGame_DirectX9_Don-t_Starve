@@ -91,7 +91,7 @@ private: //values
 	_float					m_fPower = 2.f;
 	_float					m_MaxTime;
 
-
+	_float					m_fAttackRange = 1.f;
 
 	//for Anim
 	_bool					m_bReversAnim = false;

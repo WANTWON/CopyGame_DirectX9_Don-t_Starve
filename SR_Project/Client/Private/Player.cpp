@@ -70,6 +70,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Change_Texture(TEXT("Com_Texture_Idle_Down"));
 	m_ActStack.push(ACTION_STATE::IDLE);
 
+	
+
+
 	return S_OK;
 }
 
@@ -81,6 +84,15 @@ int CPlayer::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
+
+	//Origin Look Test
+	if (iCnt == 0)
+	{
+		m_pOriginMatrix = m_pTransformCom->Get_WorldMatrix();
+		
+	}
+
+
 	//Collider Add
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
@@ -90,10 +102,6 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	//KeyInput
 	GetKeyDown(fTimeDelta);
-	//Mouse
-	//if (m_bIsFPS)
-	//{
-	//}
 
 	//Move
 	Move_to_PickingPoint(fTimeDelta);
@@ -392,7 +400,6 @@ HRESULT CPlayer::Test_Setup()
 
 void CPlayer::GetKeyDown(_float _fTimeDelta)
 {
-	/*Ű�Է� �Ұ�.*/
 	if (!m_bMove)
 		return;
 
@@ -408,6 +415,8 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	{
 		m_bIsFPS = true;
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_FPS);
+
+		
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMTPSMODE]))
 	{
@@ -419,14 +428,21 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		if (m_bIsFPS)
 			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
 		else
+		{
 			CCameraManager::Get_Instance()->PlayerCamera_TurnLeft(m_iCurrentLevelndex);
+			Turn_OriginMat(false);
+		}
+		
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
 		if (m_bIsFPS)
 			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), -_fTimeDelta);
 		else
+		{
 			CCameraManager::Get_Instance()->PlayerCamera_TurnRight(m_iCurrentLevelndex);
+			Turn_OriginMat(true);
+		}
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_CAMLEFT]))
 	{
@@ -444,72 +460,31 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	//Action
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN1]))
 	{
-
-		//if (m_pPicker->Get_IsCorrect())
-		//{	
-		//	/*Test Bomb*/
-		//	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-		//	BULLETDATA BulletData;
-		//	ZeroMemory(&BulletData, sizeof(BulletData));
-		//	BulletData.bIsPlayerBullet = true;
-		//	BulletData.eDirState = DIR_STATE::DIR_DOWN;
-		//	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
-		//	BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
-		//	BulletData.vPosition = Get_Pos();
-
-		//	_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
-		//	//D3DXVec3Normalize(&temp, &temp);
-		//	//BulletData.fAdd_X = m_fMaxTime;
-		//	BulletData.vTargetPos = temp;
-		//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
-		//		return;
-		//}
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-		BULLETDATA BulletData;
-		ZeroMemory(&BulletData, sizeof(BulletData));
-		BulletData.bIsPlayerBullet = true;
-		BulletData.eDirState = DIR_STATE::DIR_DOWN;
-		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE1;
-		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		BulletData.vPosition = m_vTargetPicking;
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
-			return;
+		Ice_Spike(_fTimeDelta);	
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN2]))
 	{
-		/*TestLightning*/
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-		BULLETDATA BulletData;
-		ZeroMemory(&BulletData, sizeof(BulletData));
-		BulletData.bIsPlayerBullet = true;
-		BulletData.eDirState = DIR_STATE::DIR_DOWN;
-		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE2;
-		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		BulletData.vPosition = m_vTargetPicking;
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
-			return;
+		Sand_Mines(_fTimeDelta);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN3]))
 	{
+		// 폭탄
+		Throw_Bomb(_fTimeDelta);
+
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN4]))
+	{
+
 		if (m_pPicker->Get_IsShow())
 		{
 			m_pRange->Set_IsShow(false);
 			m_pPicker->Set_IsShow(false);
 		}
-		else 
+		else
 		{
 			m_pRange->Set_IsShow(true);
 			m_pPicker->Set_IsShow(true);
 		}
-	}
-	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN4]))
-	{
-		Test_Func(1);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN5]))
 	{
@@ -526,6 +501,21 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 			return;
+
+
+		CParticle::STATEDESC ParticleDesc;
+		ZeroMemory(&ParticleDesc, sizeof(CParticle::STATEDESC));
+		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
+		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Snow");
+		ParticleDesc.iTextureNum = 1;
+		ParticleDesc.vVelocity = _float3((rand() % 10)*0.1f, -0.1f, -rand() % 10 * 0.1f);
+
+		for (int i = 0; i < 200; ++i)
+		{
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_Particle"), ParticleDesc.eTextureScene, TEXT("Layer_Particle"), &ParticleDesc)))
+				return;
+		}
+		
 	}
 #pragma endregion Action
 
@@ -1083,7 +1073,11 @@ void CPlayer::Multi_Action(_float _fTimeDelta)
 
 	if (m_pTarget != nullptr)
 	{
-		Set_PickingPoint(m_pTarget->Get_Position());
+		_float3 vPickPos = m_pTarget->Get_Position();
+		_float3 vOffSet = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		D3DXVec3Normalize(&vOffSet, &vOffSet);
+		vPickPos -= vOffSet*0.5f;
+		Set_PickingPoint(vPickPos);
 		m_bAutoMode = true;
 		m_ActStack.push(ACTION_STATE::MOVE);
 	}
@@ -1092,6 +1086,154 @@ void CPlayer::Multi_Action(_float _fTimeDelta)
 	}
 
 
+}
+
+void CPlayer::Throw_Bomb(_float _fTimeDelta)
+{
+	if (m_pPicker->Get_IsCorrect())
+	{
+		/*Test Bomb*/
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.bIsPlayerBullet = true;
+		BulletData.eDirState = DIR_STATE::DIR_DOWN;
+		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_BOMB;
+		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
+		BulletData.vPosition = Get_Pos();
+
+		_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
+		//D3DXVec3Normalize(&temp, &temp);
+		//BulletData.fAdd_X = m_fMaxTime;
+		BulletData.vTargetPos = temp;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+			return;
+	}
+}
+
+void CPlayer::Ice_Spike(_float _fTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	BULLETDATA BulletData;
+	ZeroMemory(&BulletData, sizeof(BulletData));
+	BulletData.bIsPlayerBullet = true;
+
+	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE4;
+
+	BulletData.eDirState = DIR_STATE::DIR_END;
+
+	_float3 vLookTemp = m_vTargetPicking - Get_Pos();
+
+	BulletData.vLook = vLookTemp; // m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+	BulletData.vPosition = m_vTargetPicking;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+		return;
+}
+
+void CPlayer::Sand_Mines(_float _fTimeDelta)
+{
+	/*Teste Mines*/
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	BULLETDATA BulletData;
+	ZeroMemory(&BulletData, sizeof(BulletData));
+	BulletData.bIsPlayerBullet = true;
+
+	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_MINES;
+	BulletData.vLook = *(_float3*)&m_pOriginMatrix.m[2][0];//m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	//_float3 vTempPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//BulletData.vPosition.y -= 0.5f;
+
+	_float3 vRight = *(_float3*)&m_pOriginMatrix.m[0][0];
+	BulletData.vRight = *(_float3*)&m_pOriginMatrix.m[0][0];// m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+	D3DXVec3Normalize(&vRight, &vRight);
+	if (m_bIsFPS)
+	{
+		BulletData.eDirState = DIR_STATE::DIR_END;
+		vRight= m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+			return;
+
+		BulletData.vPosition += vRight *1.f;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+			return;
+
+		BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+		BulletData.vPosition -= vRight *1.f;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+			return;
+	}
+	else
+	{
+		BulletData.eDirState = m_eDirState;
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_UP:
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+
+			BulletData.vPosition += vRight *1.f;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+
+			BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+			BulletData.vPosition -= vRight *1.f;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+			break;
+		case DIR_STATE::DIR_DOWN:
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+
+			BulletData.vPosition += vRight *1.f;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+
+			BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+			BulletData.vPosition -= vRight *1.f;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+			break;
+		case DIR_STATE::DIR_LEFT:
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+
+			BulletData.vPosition += BulletData.vLook *1.f;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+
+			BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+			BulletData.vPosition -= BulletData.vLook *1.f;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+			break;
+		case DIR_STATE::DIR_RIGHT:
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+
+			BulletData.vPosition += BulletData.vLook *1.f;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+
+			BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+			BulletData.vPosition -= BulletData.vLook *1.f;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+				return;
+			break;
+
+		}
+	}
 }
 
 void CPlayer::Create_Bullet()
@@ -1205,14 +1347,20 @@ void CPlayer::Find_Priority()
 
 void CPlayer::Test_Func(_int _iNum)
 {
-	/*TestIceSpike3 Ice Mines*/
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	
+
+	
+	//FPSMODE일때 생각해보기.
+
+	
+	////////////////////////////////////////////
+	/*IceSpike*/
 
 	//BULLETDATA BulletData;
 	//ZeroMemory(&BulletData, sizeof(BulletData));
 	//BulletData.bIsPlayerBullet = true;
 	//BulletData.eDirState = m_eDirState;
-	//BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICEMINES;
+	//BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE4;
 	//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	////_float3 vTempPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	//BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -1221,22 +1369,6 @@ void CPlayer::Test_Func(_int _iNum)
 
 	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 	//	return;
-	////////////////////////////////////////////
-	/*IceSpike*/
-
-	BULLETDATA BulletData;
-	ZeroMemory(&BulletData, sizeof(BulletData));
-	BulletData.bIsPlayerBullet = true;
-	BulletData.eDirState = m_eDirState;
-	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE4;
-	BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	//_float3 vTempPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	BulletData.vPosition.y -= 0.5f;
-	//FPSMODE일때 생각해보기.
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
-		return;
 }
 
 void CPlayer::Test_Detect(_float fTImeDelta)
@@ -1271,6 +1403,34 @@ void CPlayer::RangeCheck(_float _fTimeDelta)
 		m_pPicker->Set_IsCorrect(false);
 		m_pRange->Set_IsCorrect(false);
 	}
+}
+
+void CPlayer::Turn_OriginMat(_bool _bIsRight)
+{
+	_float3 vRight = *(_float3*)&m_pOriginMatrix.m[0][0];
+	_float3 vUp = *(_float3*)&m_pOriginMatrix.m[1][0];
+	_float3 vLook = *(_float3*)&m_pOriginMatrix.m[2][0];
+
+	_float3 vAxis = { 0.f, 1.f, 0.f };
+	_float4x4 RotateMatrix;
+
+	if (_bIsRight)
+	{
+		D3DXMatrixRotationAxis(&RotateMatrix, &vAxis, 1.f);
+	}
+	else
+	{
+		D3DXMatrixRotationAxis(&RotateMatrix, &vAxis, -1.f);
+	}
+
+	D3DXVec3TransformNormal(&vRight, &vRight, &RotateMatrix);
+	D3DXVec3TransformNormal(&vUp, &vUp, &RotateMatrix);
+	D3DXVec3TransformNormal(&vLook, &vLook, &RotateMatrix);
+
+	memcpy(&m_pOriginMatrix.m[0][0], &vRight, sizeof(_float3));
+	memcpy(&m_pOriginMatrix.m[1][0], &vUp, sizeof(_float3));
+	memcpy(&m_pOriginMatrix.m[2][0], &vLook, sizeof(_float3));
+
 }
 
 void CPlayer::Tick_ActStack(_float fTimeDelta)

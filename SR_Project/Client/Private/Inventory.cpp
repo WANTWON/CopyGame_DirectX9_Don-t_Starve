@@ -540,7 +540,7 @@ void CInventory_Manager::update_craftpont()
 
 			else if (k->get_pontnum() == 7)
 			{
-				k->set_pont_num(1);
+				k->set_pont_num(3);
 				return;
 			}
 		}
@@ -573,7 +573,7 @@ void CInventory_Manager::update_craftpont()
 
 			else if (k->get_pontnum() == 7)
 			{
-				k->set_pont_num(1);
+				k->set_pont_num(3);
 				return;
 			}
 		}
@@ -591,7 +591,7 @@ void CInventory_Manager::update_craftpont()
 
 			else if (k->get_pontnum() == 3)
 			{
-				k->set_pont_num(1);
+				k->set_pont_num(2);
 
 			}
 
@@ -606,7 +606,7 @@ void CInventory_Manager::update_craftpont()
 
 			else if (k->get_pontnum() == 7)
 			{
-				k->set_pont_num(1);
+				k->set_pont_num(2);
 				return;
 			}
 		}
@@ -624,7 +624,7 @@ void CInventory_Manager::update_craftpont()
 
 			else if (k->get_pontnum() == 3)
 			{
-				k->set_pont_num(1);
+				k->set_pont_num(2);
 
 			}
 
@@ -639,7 +639,7 @@ void CInventory_Manager::update_craftpont()
 
 			else if (k->get_pontnum() == 7)
 			{
-				k->set_pont_num(1);
+				k->set_pont_num(2);
 				return;
 			}
 		}

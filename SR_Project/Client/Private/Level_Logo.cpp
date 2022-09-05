@@ -21,6 +21,10 @@ HRESULT CLevel_Logo::Initialize()
 	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		//return E_FAIL;
 
+		if (FAILED(Ready_Layer_logo(TEXT("Layer_Logo"))))
+		return E_FAIL;
+	
+
 	return S_OK;
 }
 
@@ -92,6 +96,21 @@ HRESULT CLevel_Logo::Ready_Layer_Terrain(const _tchar * pLayerTag)
 
 	return S_OK;
 }
+
+HRESULT CLevel_Logo::Ready_Layer_logo (const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_logoscene"), LEVEL_LOGO, pLayerTag, nullptr)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
 
 CLevel_Logo * CLevel_Logo::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
