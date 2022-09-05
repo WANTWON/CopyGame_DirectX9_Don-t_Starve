@@ -163,14 +163,41 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 
 	}
 
+	if (iNum == 0 && m_bfirstclick_G == true)
+	{
+		backtexnum = 0;
+	}
+	else if (iNum == 0 && m_bfirstclick_G == false)
+	{
+		backtexnum = 1;
+	}
+
+	if (iNum == 1 && m_bfirstclick_W == true)
+	{
+		backtexnum = 0;
+	}
+	else if (iNum == 1 && m_bfirstclick_W == false)
+	{
+		backtexnum = 1;
+	}
+
+
+	if (iNum == 2 && m_bfirstclick_C == true)
+	{
+		backtexnum = 0;
+	}
+	else if (iNum == 2 && m_bfirstclick_C == false)
+	{
+		backtexnum = 1;
+	}
 
 	
 
-	if (m_bfirstclick_G == true && m_bfirstclick_W == true)
-		backtexnum = 0;
+	/*if (m_bfirstclick_G == true || m_bfirstclick_W == true || m_bfirstclick_C == true)
+		
 
-	else if(m_bfirstclick_G == false || m_bfirstclick_W == false)
-		backtexnum = 1;
+	else if(m_bfirstclick_G == false || m_bfirstclick_W == false || m_bfirstclick_C == false )
+		backtexnum = 1;*/
 
 
 	/*if (m_bfirstclick_W == true && iNum == 1)
