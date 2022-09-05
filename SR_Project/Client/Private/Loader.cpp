@@ -758,6 +758,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 4))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_LeafEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Snow"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow.png"), 1))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading_Interactive Object Texture"));
 
 
@@ -1143,9 +1148,15 @@ HRESULT CLoader::Loading_ForHuntLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Roc.png"), 1))))
 		return E_FAIL;
 
+
 	/*For.Prototype_Component_Texture_LeafEffect */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Leaf"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 4))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_LeafEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Snow"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow.png"), 1))))
 		return E_FAIL;
 
 	/*For. Prototype_Component_Texture_Spider_Warrior*/

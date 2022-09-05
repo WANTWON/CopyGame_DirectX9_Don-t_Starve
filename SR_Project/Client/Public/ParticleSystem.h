@@ -86,6 +86,7 @@ public:
 public:
 	_bool Check_AllParticleDead();
 	_float Compute_ViewZ(_float3 WorldPos);
+	void SetUp_BillBoard();
 
 private:
 	CTransform*			m_pTransformCom = nullptr;

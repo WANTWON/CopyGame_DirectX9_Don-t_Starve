@@ -35,7 +35,7 @@ HRESULT CParticle::Initialize(void * pArg)
 	float positionX, positionY, positionZ;
 
 	positionX = rand() % 50;
-	positionY = 20;
+	positionY = 5;
 	positionZ = rand() % 50;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(positionX, positionY, positionZ));
 
@@ -67,6 +67,7 @@ void CParticle::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 
+	SetUp_BillBoard();
 }
 
 HRESULT CParticle::Render()
@@ -152,6 +153,20 @@ HRESULT CParticle::Release_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 	return S_OK;
+}
+
+void CParticle::SetUp_BillBoard()
+{
+	_float4x4 ViewMatrix;
+
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);  // Get View Matrix
+	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
+
+	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
+	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 
 CParticle * CParticle::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
