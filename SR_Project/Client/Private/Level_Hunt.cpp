@@ -1,10 +1,10 @@
 ﻿#include "stdafx.h"
 #include "..\Public\Level_Hunt.h"
 #include "GameInstance.h"
-#include "CameraDynamic.h"
 #include "PickingMgr.h"
 #include "House.h"
 #include "Player.h"
+#include "CameraManager.h"
 
 CLevel_Hunt::CLevel_Hunt(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -33,6 +33,8 @@ HRESULT CLevel_Hunt::Initialize()
 
 	CPickingMgr::Get_Instance()->Clear_PickingMgr();
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_HUNT);
+
+	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_HUNT);
 
 	return S_OK;
 }
@@ -239,7 +241,7 @@ HRESULT CLevel_Hunt::Ready_Layer_Camera(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_HUNT, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_HUNT, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

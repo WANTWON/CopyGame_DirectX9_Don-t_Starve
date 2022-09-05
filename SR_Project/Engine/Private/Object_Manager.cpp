@@ -130,6 +130,15 @@ void CObject_Manager::Clear(_uint iLevelIndex)
 	
 }
 
+void CObject_Manager::Clear_Layer(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	if (pLayer == nullptr)
+		return;
+
+	pLayer->Free();
+}
+
 CGameObject * CObject_Manager::Find_Objects(_uint iLevelIndex, const _tchar * pLayerTag, _uint iIndex)
 {
 	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);

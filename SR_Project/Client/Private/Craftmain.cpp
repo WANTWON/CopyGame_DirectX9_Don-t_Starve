@@ -56,9 +56,9 @@ int CCraftmain::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT|| m_makewhat == MAKE_FENCE)
 		m_fY = 212.f;
-	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER)
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT)
 		m_fY = 262.f;
 	else if (m_makewhat == MAKE_STAFF)
 		m_fY = 312.f;

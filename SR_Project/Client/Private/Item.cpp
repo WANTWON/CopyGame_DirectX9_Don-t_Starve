@@ -72,9 +72,11 @@ void CItem::Interact(_uint Damage)
 	int iTestNum = 0;
 
 	CInventory_Manager* pInventory_Manager = CInventory_Manager::Get_Instance();
+	
+	Safe_AddRef(pInventory_Manager);
 	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
 	auto equipmentlist = pInventory_Manager->Get_Equipment_list()->begin();
-
+	//Safe_Release(pInventory_Manager);
 	m_bInteract = false;
 	m_bDead = true;
 	if (m_bDead)
@@ -94,6 +96,8 @@ void CItem::Interact(_uint Damage)
 				if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true && (*iter)->get_item_number() <= 8)
 				{
 					(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
+					pInventory_Manager->update_craftpont();
+					Safe_Release(pInventory_Manager);
 					return;
 				}
 				else if ((*iter)->get_check() == false)
@@ -101,6 +105,8 @@ void CItem::Interact(_uint Damage)
 					(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
 					(*iter)->plus_itemcount();
 					(*iter)->set_check(true);
+					pInventory_Manager->update_craftpont();
+					Safe_Release(pInventory_Manager);
 
 					return;
 				}
@@ -118,6 +124,8 @@ void CItem::Interact(_uint Damage)
 				if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true)
 				{
 					(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
+					pInventory_Manager->update_craftpont();
+					Safe_Release(pInventory_Manager);
 					return;
 				}
 				else if ((*iter)->get_check() == false)
@@ -125,6 +133,8 @@ void CItem::Interact(_uint Damage)
 					(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
 					(*iter)->plus_itemcount();
 					(*iter)->set_check(true);
+					pInventory_Manager->update_craftpont();
+					Safe_Release(pInventory_Manager);
 
 					return;
 				}

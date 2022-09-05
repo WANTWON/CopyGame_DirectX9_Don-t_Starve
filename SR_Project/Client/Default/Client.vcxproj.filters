@@ -124,9 +124,6 @@
     <Filter Include="02.GameObject\98.UI\02.Toolbox\00.MainToolbox">
       <UniqueIdentifier>{2a9ee06d-8c4c-4c91-94a0-4c54b812c3a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\98.UI\02.Toolbox\02WeaponToolbox">
-      <UniqueIdentifier>{42130d4b-f387-4555-8a97-c6a7d3bf4b64}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\98.UI\02.Toolbox\01.GatherToolbox">
       <UniqueIdentifier>{efea9d00-707f-4d78-a85a-7011c7cf155c}</UniqueIdentifier>
     </Filter>
@@ -175,8 +172,17 @@
     <Filter Include="02.GameObject\98.UI\08.LogoScene">
       <UniqueIdentifier>{ad3553bd-a2d2-447c-9b5d-4056546f163e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\Skeleton">
-      <UniqueIdentifier>{971c6562-feea-4dc8-831b-77b0960749c4}</UniqueIdentifier>
+    <Filter Include="02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox">
+      <UniqueIdentifier>{42130d4b-f387-4555-8a97-c6a7d3bf4b64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox">
+      <UniqueIdentifier>{87e92ec8-6dd8-4460-b23b-91b91e54e15f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\House">
+      <UniqueIdentifier>{1688b5e8-f44a-470b-8d20-d55b1312b758}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Wall">
+      <UniqueIdentifier>{acb02a53-95d5-496e-aa08-6e2785f27157}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -322,13 +328,13 @@
       <Filter>02.GameObject\98.UI\02.Toolbox\00.MainToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxWeapon.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxWeapon_back.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxWeapon_front.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxGather.h">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
@@ -341,9 +347,6 @@
     </ClInclude>
     <ClInclude Include="PigKing.h">
       <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\House.h">
-      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Portal.h">
       <Filter>02.GameObject\96.Portal</Filter>
@@ -408,7 +411,21 @@
     <ClInclude Include="..\Public\Logoscene.h">
       <Filter>02.GameObject\98.UI\08.LogoScene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Skeleton.h" />
+    <ClInclude Include="..\Public\ToolboxConstruct.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxConstruct_front.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxConstruct_back.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\House.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WoodWall.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\Wall</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -541,13 +558,13 @@
       <Filter>02.GameObject\98.UI\02.Toolbox\00.MainToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxWeapon.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxWeapon_back.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxWeapon_front.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxGather.cpp">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
@@ -560,9 +577,6 @@
     </ClCompile>
     <ClCompile Include="PigKing.cpp">
       <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\House.cpp">
-      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Portal.cpp">
       <Filter>02.GameObject\96.Portal</Filter>
@@ -627,7 +641,21 @@
     <ClCompile Include="..\Private\Logoscene.cpp">
       <Filter>02.GameObject\98.UI\08.LogoScene</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Skeleton.cpp" />
+    <ClCompile Include="..\Private\ToolboxConstruct.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxConstruct_front.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxConstruct_back.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\House.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WoodWall.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\Wall</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
