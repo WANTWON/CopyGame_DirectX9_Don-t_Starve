@@ -175,6 +175,9 @@
     <Filter Include="02.GameObject\98.UI\08.LogoScene">
       <UniqueIdentifier>{ad3553bd-a2d2-447c-9b5d-4056546f163e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.Interactive_Object\Skeleton">
+      <UniqueIdentifier>{971c6562-feea-4dc8-831b-77b0960749c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -405,6 +408,7 @@
     <ClInclude Include="..\Public\Logoscene.h">
       <Filter>02.GameObject\98.UI\08.LogoScene</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Skeleton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -623,6 +627,7 @@
     <ClCompile Include="..\Private\Logoscene.cpp">
       <Filter>02.GameObject\98.UI\08.LogoScene</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Skeleton.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
