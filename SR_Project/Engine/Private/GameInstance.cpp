@@ -333,6 +333,32 @@ int CGameInstance::Pause(const _uint & eID)
 	return m_pSound_Manager->Pause(eID);
 }
 
+HRESULT CGameInstance::Add_CollisionGroup(CCollider::COLLISION_GROUP eCollisionGroup, CGameObject * pGameObject)
+{
+	if (!m_pCollider_Manager)
+		return E_FAIL; 
+
+	return m_pCollider_Manager->Add_CollisionGroup(eCollisionGroup, pGameObject);
+}
+
+HRESULT CGameInstance::Update_ColliderGroup()
+{
+	if (!m_pCollider_Manager)
+		return E_FAIL;
+
+	return m_pCollider_Manager->Update_ColliderGroup();
+}
+
+_bool CGameInstance::Collision_with_Group(CCollider::COLLISION_GROUP eGroup, CGameObject * pGameObject)
+{
+	return m_pCollider_Manager->Collision_with_Group(eGroup, pGameObject);
+}
+
+_bool CGameInstance::Collision_Check_Group_Multi(CCollider::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, CGameObject * pDamageCauser)
+{
+	return m_pCollider_Manager->Collision_Check_Group_Multi(eGroup, vecDamagedObj, pDamageCauser);
+}
+
 void CGameInstance::Release_Engine()
 {
 

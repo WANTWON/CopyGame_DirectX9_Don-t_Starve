@@ -6,7 +6,7 @@ CCollider::CCollider(/*LPDIRECT3DDEVICE9 pGraphic_Device*/)
 {
 }
 
-HRESULT CCollider::Add_CollisionGroup(COLLISON_GROUP eCollisionGroup, CGameObject * pGameObject)
+HRESULT CCollider::Add_CollisionGroup(COLLISION_GROUP eCollisionGroup, CGameObject * pGameObject)
 {
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -34,7 +34,7 @@ HRESULT CCollider::Update_ColliderGroup()
 	return S_OK;
 }
 
-_bool CCollider::Collision_with_Group(COLLISON_GROUP eGroup, class CGameObject* pGameObject)
+_bool CCollider::Collision_with_Group(COLLISION_GROUP eGroup, class CGameObject* pGameObject)
 {
 	for (auto& iter : m_GameObjects[eGroup])
 	{
@@ -51,7 +51,7 @@ _bool CCollider::Collision_with_Group(COLLISON_GROUP eGroup, class CGameObject* 
 	return false;
 }
 
-_bool CCollider::Collision_Check_Group_Multi(COLLISON_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, CGameObject * pDamageCauser)
+_bool CCollider::Collision_Check_Group_Multi(COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, CGameObject * pDamageCauser)
 {
 	for (auto& iter : m_GameObjects[eGroup])
 	{

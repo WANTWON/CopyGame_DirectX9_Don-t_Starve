@@ -27,3 +27,4 @@ public:
 	virtual CComponent* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
+END

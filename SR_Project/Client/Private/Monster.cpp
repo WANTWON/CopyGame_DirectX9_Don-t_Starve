@@ -1,9 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\Monster.h"
-#include "GameInstance.h"
 #include "Player.h"
-#include "Inventory.h"
 #include "Level_Manager.h"
+#include "GameInstance.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -41,8 +40,11 @@ int CMonster::Tick(_float fTimeDelta)
 	if (IsDead())
 		return OBJ_DEAD;
 
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
+	/*if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);*/
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
 
 	// Match Terrain-Y
 	WalkingTerrain();
@@ -188,7 +190,7 @@ void CMonster::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
