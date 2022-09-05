@@ -70,7 +70,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 			return;
 	}
 
-	if (pGameInstance->Key_Up('P'))
+	if (!m_bNextLevel)
 	{
 		CPickingMgr::Get_Instance()->Picking();
 	}

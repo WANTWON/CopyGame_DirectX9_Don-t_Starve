@@ -178,6 +178,12 @@
     <Filter Include="02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox">
       <UniqueIdentifier>{87e92ec8-6dd8-4460-b23b-91b91e54e15f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\House">
+      <UniqueIdentifier>{1688b5e8-f44a-470b-8d20-d55b1312b758}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Wall">
+      <UniqueIdentifier>{acb02a53-95d5-496e-aa08-6e2785f27157}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -342,9 +348,6 @@
     <ClInclude Include="PigKing.h">
       <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\House.h">
-      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Portal.h">
       <Filter>02.GameObject\96.Portal</Filter>
     </ClInclude>
@@ -416,6 +419,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxConstruct_back.h">
       <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\House.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WoodWall.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\Wall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -569,9 +578,6 @@
     <ClCompile Include="PigKing.cpp">
       <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\House.cpp">
-      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Portal.cpp">
       <Filter>02.GameObject\96.Portal</Filter>
     </ClCompile>
@@ -643,6 +649,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxConstruct_back.cpp">
       <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\House.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WoodWall.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\Wall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

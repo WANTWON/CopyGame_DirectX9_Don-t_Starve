@@ -59,6 +59,7 @@
 #include "AttackRange.h"
 #include "House.h"
 #include "Portal.h"
+#include "WoodWall.h"
 
 #include "Daycount.h"
 #include "Daycountpont.h"
@@ -832,6 +833,19 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Boulder
 
+	/*For. Prototype_Component_Texture_WoodWall*/
+#pragma region Add_Texture_WoodWall
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_HEALTHY"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/WoodWall/Healthy/Healthy_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_DAMAGED"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/WoodWall/Damaged/Damaged_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_BROKEN"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/WoodWall/Broken/Broken_%03d.png"), 1))))
+		return E_FAIL;
+#pragma endregion Add_Texture_WoodWall
+
 	/*For. Prototype_Component_Texture_Berry_Bush*/
 #pragma region Add_Texture_Berry_Bush
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Berry_Bush_IDLE"),
@@ -1010,6 +1024,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_GameObject_Boulder */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boulder"),
 		CBoulder::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_WoodWall */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WoodWall"),
+		CWoodWall::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Berry_Bush */

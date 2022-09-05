@@ -26,6 +26,7 @@ public:
 	_float3 Get_Position() { return m_vPosition; }
 	_float  Get_Radius() { return m_fRadius; }
 	void	Set_Radius(_float _fRadius) { m_fRadius = _fRadius;}
+	void	Set_bConstruct(_bool type) { m_bConstruct = type; }
 	virtual _bool Picking(_float3* PickingPoint) { return true; }
 	virtual void PickingTrue() { return; }
 
@@ -43,6 +44,7 @@ protected:
 	_float3												m_vPosition;
 	_float												m_fRadius = 0.5;
 	_bool												m_bDead = false;
+	_bool												m_bConstruct = false;
 
 protected:
 	HRESULT Add_Components(const _tchar* pComponentTag, _uint iLevelIndex, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg = nullptr);

@@ -21,6 +21,7 @@ public:
 	void Tick(_float fTimeDelta);
 	void Late_Tick(_float fTimeDelta);
 	void Clear(_uint iLevelIndex);
+	void Clear_Layer(_uint iLevelIndex, const _tchar* LayerTag);
 
 public:
 	class CGameObject* Find_Objects(_uint iLevelIndex ,const _tchar* pLayerTag, _uint iIndex = 0);

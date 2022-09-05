@@ -231,6 +231,7 @@
     <ClInclude Include="..\public\Tree.h" />
     <ClInclude Include="..\Public\MainInventory.h" />
     <ClInclude Include="..\Public\Water.h" />
+    <ClInclude Include="..\Public\WoodWall.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="PigKing.h" />
     <ClInclude Include="Resource.h" />
@@ -310,6 +311,7 @@
     <ClCompile Include="..\private\Tree.cpp" />
     <ClCompile Include="..\Private\MainInventory.cpp" />
     <ClCompile Include="..\Private\Water.cpp" />
+    <ClCompile Include="..\Private\WoodWall.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="PigKing.cpp" />
     <ClCompile Include="SpiderWarrior.cpp" />
