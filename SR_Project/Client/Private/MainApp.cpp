@@ -57,7 +57,7 @@ void CMainApp::Tick(_float fTimeDelta)
 		return;
 
 	m_pGameInstance->Tick_Engine(fTimeDelta);
-	m_pCollider->Update_ColliderGroup();
+	//m_pCollider->Update_ColliderGroup();
 	CInventory_Manager::Get_Instance()->Tick(fTimeDelta);
 	CInventory_Manager::Get_Instance()->Late_Tick(fTimeDelta);
 
@@ -122,9 +122,13 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 
 	/* For.Prototype_Component_Collider */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), m_pCollider= CCollider::Create(m_pGraphic_Device))))
-		return E_FAIL;
+	/*if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), m_pCollider= CCollider::Create(m_pGraphic_Device))))
+		return E_FAIL;*/
 	Safe_AddRef(m_pRenderer);
+
+	/* For.Prototype_Component_Collider_Rect */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), CCollider_Rect::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -159,7 +163,7 @@ CMainApp * CMainApp::Create()
 void CMainApp::Free()
 {
 	Safe_Release(m_pRenderer);
-	Safe_Release(m_pCollider);
+	/*Safe_Release(m_pCollider);*/
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pGameInstance);
 

@@ -12,6 +12,7 @@ CGameInstance::CGameInstance()
 	, m_pKey_Manager(CKeyMgr::Get_Instance())
 	, m_pPicking(CPicking::Get_Instance())
 	, m_pSound_Manager(CSound_Manager::Get_Instance())
+	, m_pCollider_Manager(CCollider::Get_Instance())
 {
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pTimer_Manager);
@@ -22,6 +23,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pKey_Manager);
 	Safe_AddRef(m_pPicking);
 	Safe_AddRef(m_pSound_Manager);
+	Safe_AddRef(m_pCollider_Manager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, LPDIRECT3DDEVICE9* ppOut)
@@ -64,7 +66,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 {
 	if (nullptr == m_pLevel_Manager || 
 		nullptr == m_pObject_Manager ||
-		nullptr == m_pInput_Device )
+		nullptr == m_pInput_Device ||
+		nullptr == m_pCollider_Manager)
 		return;
 
 	m_pInput_Device->Update();
@@ -76,6 +79,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pLevel_Manager->Late_Tick(fTimeDelta);
 	m_pObject_Manager->Late_Tick(fTimeDelta);
+
+	m_pCollider_Manager->Update_ColliderGroup(); // Need to be called last
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
@@ -333,6 +338,8 @@ void CGameInstance::Release_Engine()
 
 	CGameInstance::Get_Instance()->Destroy_Instance();
 
+	CCollider::Get_Instance()->Destroy_Instance();
+
 	CSound_Manager::Get_Instance()->Destroy_Instance();
 
 	CPicking::Get_Instance()->Destroy_Instance();
@@ -354,6 +361,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pCollider_Manager);
 	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pPicking);
 	Safe_Release(m_pKey_Manager);

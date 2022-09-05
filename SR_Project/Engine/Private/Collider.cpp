@@ -1,22 +1,9 @@
 #include "..\Public\Collider.h"
-#include "GameObject.h"
 
+IMPLEMENT_SINGLETON(CCollider)
 
-
-CCollider::CCollider(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CComponent(pGraphic_Device)
+CCollider::CCollider(/*LPDIRECT3DDEVICE9 pGraphic_Device*/)
 {
-}
-
-
-HRESULT CCollider::Initialize_Prototype()
-{
-	return S_OK;
-}
-
-HRESULT CCollider::Initialize(void * pArg)
-{
-	return S_OK;
 }
 
 HRESULT CCollider::Add_CollisionGroup(COLLISON_GROUP eCollisionGroup, CGameObject * pGameObject)
@@ -25,7 +12,6 @@ HRESULT CCollider::Add_CollisionGroup(COLLISON_GROUP eCollisionGroup, CGameObjec
 		return E_FAIL;
 
 	m_GameObjects[eCollisionGroup].push_back(pGameObject);
-
 	Safe_AddRef(pGameObject);
 
 	return S_OK;
@@ -48,13 +34,12 @@ HRESULT CCollider::Update_ColliderGroup()
 	return S_OK;
 }
 
-bool CCollider::Collision_with_Group(COLLISON_GROUP eGroup, class CGameObject* pGameObject)
+_bool CCollider::Collision_with_Group(COLLISON_GROUP eGroup, class CGameObject* pGameObject)
 {
 	for (auto& iter : m_GameObjects[eGroup])
 	{
 		if (nullptr != iter)
 		{
-			//distance <= rb0.radius + rb1.radius
 			_float3 vecDir = pGameObject->Get_Position() - iter->Get_Position();
 			_float fDistance = D3DXVec3Length(&vecDir);
 			
@@ -72,7 +57,6 @@ _bool CCollider::Collision_Check_Group_Multi(COLLISON_GROUP eGroup, vector<class
 	{
 		if (nullptr != iter)
 		{
-			//distance <= rb0.radius + rb1.radius
 			_float3 vecDir = pDamageCauser->Get_Position() - iter->Get_Position();
 			_float fDistance = D3DXVec3Length(&vecDir);
 
@@ -92,28 +76,28 @@ _bool CCollider::Collision_Check_Group_Multi(COLLISON_GROUP eGroup, vector<class
 	}
 }
 
-CCollider * CCollider::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
-{
-	CCollider*	pInstance = new CCollider(pGraphic_Device);
+//CCollider * CCollider::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+//{
+//	CCollider*	pInstance = new CCollider(pGraphic_Device);
+//
+//	if (FAILED(pInstance->Initialize_Prototype()))
+//	{
+//		ERR_MSG(TEXT("Failed to Created : CCollider"));
+//		Safe_Release(pInstance);
+//	}
+//
+//	return pInstance;
+//}
 
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		ERR_MSG(TEXT("Failed to Created : CCollider"));
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
-}
-
-CComponent * CCollider::Clone(void * pArg)
-{
-	AddRef();
-
-	return this;
-}
+//CComponent * CCollider::Clone(void * pArg)
+//{
+//	AddRef();
+//
+//	return this;
+//}
 
 void CCollider::Free()
 {
-	__super::Free();
-
+	for (_uint i = 0; i < COLLISION_END; ++i)
+		m_GameObjects[i].clear();
 }

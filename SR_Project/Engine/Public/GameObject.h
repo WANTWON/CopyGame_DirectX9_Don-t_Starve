@@ -24,7 +24,6 @@ public:
 public:
 	void Update_Position(_float3 position) { m_vPosition = position; }
 	_float3 Get_Position() { return m_vPosition; }
-	_float3 Get_SpritePosition() { return m_vSpritePosition; };
 	_float  Get_Radius() { return m_fRadius; }
 	void	Set_Radius(_float _fRadius) { m_fRadius = _fRadius;}
 	virtual _bool Picking(_float3* PickingPoint) { return true; }
@@ -42,7 +41,6 @@ protected:
 protected:
 	map<const _tchar*, class CComponent*>				m_Components;
 	_float3												m_vPosition;
-	_float3												m_vSpritePosition;
 	_float												m_fRadius = 0.5;
 	_bool												m_bDead = false;
 
