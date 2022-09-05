@@ -184,6 +184,9 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Wall">
       <UniqueIdentifier>{acb02a53-95d5-496e-aa08-6e2785f27157}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.Interactive_Object\Skeleton">
+      <UniqueIdentifier>{c645df63-ccfe-430e-9d23-33a5671fbf7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -426,6 +429,9 @@
     <ClInclude Include="..\Public\WoodWall.h">
       <Filter>02.GameObject\05.UnInteractive_Object\Wall</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Skeleton.h">
+      <Filter>02.GameObject\04.Interactive_Object\Skeleton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -655,6 +661,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\WoodWall.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skeleton.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\Skeleton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
