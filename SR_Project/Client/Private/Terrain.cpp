@@ -230,7 +230,17 @@ void CTerrain::PickingTrue()
 				iNum--;
 				pMouse->Set_Item_count(iNum);
 				pMouse->Set_Item_prev_count(iNum);
-				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_UnInteractObject"), pPicking->Get_PickingPos());
+
+				switch (pMouse->Get_Item_name())
+				{
+				case ITEMNAME_FENCE:
+					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_UnInteractObject"), pPicking->Get_PickingPos());
+					break;
+				case ITEMNAME_POT:
+					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPicking->Get_PickingPos());
+					break;
+				}
+					
 			
 				if (iNum == 0)
 				{

@@ -171,6 +171,7 @@
     <ClInclude Include="..\Public\Craftmain_back.h" />
     <ClInclude Include="..\Public\Craftmain_front.h" />
     <ClInclude Include="..\Public\CraftPont.h" />
+    <ClInclude Include="..\public\CookPot.h" />
     <ClInclude Include="..\Public\Daycount.h" />
     <ClInclude Include="..\Public\Daycountpont.h" />
     <ClInclude Include="..\Public\Equipment_back.h" />
@@ -218,6 +219,7 @@
     <ClInclude Include="..\Public\Spider.h" />
     <ClInclude Include="..\Public\SpiderWarrior.h" />
     <ClInclude Include="..\Public\Talk.h" />
+    <ClInclude Include="..\public\Tent.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\ToolboxConstruct.h" />
     <ClInclude Include="..\Public\ToolboxConstruct_back.h" />
@@ -253,6 +255,7 @@
     <ClCompile Include="..\Private\Craftmain_back.cpp" />
     <ClCompile Include="..\Private\Craftmain_front.cpp" />
     <ClCompile Include="..\Private\CraftPont.cpp" />
+    <ClCompile Include="..\private\CookPot.cpp" />
     <ClCompile Include="..\Private\Daycount.cpp" />
     <ClCompile Include="..\Private\Daycountpont.cpp" />
     <ClCompile Include="..\Private\Equipment_back.cpp" />
@@ -299,6 +302,7 @@
     <ClCompile Include="..\Private\Spider.cpp" />
     <ClCompile Include="..\Private\SpiderWarrior.cpp" />
     <ClCompile Include="..\Private\Talk.cpp" />
+    <ClCompile Include="..\private\Tent.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\ToolboxConstruct.cpp" />
     <ClCompile Include="..\Private\ToolboxConstruct_back.cpp" />

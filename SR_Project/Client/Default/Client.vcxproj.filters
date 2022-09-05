@@ -187,6 +187,12 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Wall">
       <UniqueIdentifier>{acb02a53-95d5-496e-aa08-6e2785f27157}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.Interactive_Object\Cook Pot">
+      <UniqueIdentifier>{9c2b6c2b-1a07-4118-9dd6-6f4fef787694}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.Interactive_Object\Tent">
+      <UniqueIdentifier>{4726c1eb-606d-4c1c-ad66-3954ebea0224}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -348,12 +354,6 @@
     <ClInclude Include="..\Public\ToolboxGather_front.h">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\House.h">
-      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
-    </ClInclude>
-    <ClInclude Include="PigKing.h">
-      <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Portal.h">
       <Filter>02.GameObject\96.Portal</Filter>
     </ClInclude>
@@ -437,6 +437,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\WoodWall.h">
       <Filter>02.GameObject\05.UnInteractive_Object\Wall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\House.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CookPot.h">
+      <Filter>02.GameObject\04.Interactive_Object\Cook Pot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Tent.h">
+      <Filter>02.GameObject\04.Interactive_Object\Tent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -587,12 +596,6 @@
     <ClCompile Include="..\Private\ToolboxGather_front.cpp">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\House.cpp">
-      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
-    </ClCompile>
-    <ClCompile Include="PigKing.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Portal.cpp">
       <Filter>02.GameObject\96.Portal</Filter>
     </ClCompile>
@@ -676,6 +679,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\WoodWall.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\House.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CookPot.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\Cook Pot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Tent.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\Tent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -85,8 +85,8 @@ HRESULT CMonster::Render()
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
-	array<_float3, 4> vVerteces = m_pColliderCom->Get_CollisionVerteces();
-	LPD3DXLINE pLine;
+	/*array<_float3, 4> vVerteces = m_pColliderCom->Get_CollisionVerteces();
+	LPD3DXLINE pLine;*/
 	// TODO: ..
 
 	// For Debug Rendering

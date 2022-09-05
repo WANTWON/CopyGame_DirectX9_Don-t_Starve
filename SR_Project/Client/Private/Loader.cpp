@@ -61,6 +61,8 @@
 #include "House.h"
 #include "Portal.h"
 #include "WoodWall.h"
+#include "CookPot.h"
+#include "Tent.h"
 
 #include "Daycount.h"
 #include "Daycountpont.h"
@@ -847,6 +849,41 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_WoodWall
 
+	/*For. Prototype_Component_Texture_Cook_Pot*/
+#pragma region Add_Texture_Cook_Pot
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_CookPot_Idle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Cook_Pot/Idle/Idle_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_CookPot_Place"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Cook_Pot/Place/Place_%03d.png"), 23))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_CookPot_Cooking"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Cook_Pot/Cooking/Cooking_%03d.png"), 18))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Cook_Pot
+
+	/*For. Prototype_Component_Texture_Tent*/
+#pragma region Add_Texture_Tent
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tent_Idle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Tent/Idle/Idle_%03d.png"), 56))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tent_Place"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Tent/Place/Place_%03d.png"), 23))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tent_Enter"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Tent/Enter/Enter_%03d.png"), 23))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tent_Sleep"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Tent/Sleep/Sleep_%03d.png"), 65))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tent_Hit"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Tent/Hit/Hit_%03d.png"), 13))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tent_Destroy"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Tent/Destroy/Destroy_%03d.png"), 68))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Tent
+
 	/*For. Prototype_Component_Texture_Berry_Bush*/
 #pragma region Add_Texture_Berry_Bush
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Berry_Bush_IDLE"),
@@ -1117,6 +1154,16 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_GameObject_WoodWall */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WoodWall"),
 		CWoodWall::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Cook_Pot */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Cook_Pot"),
+		CCookPot::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Tent */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Tent"),
+		CTent::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Berry_Bush */

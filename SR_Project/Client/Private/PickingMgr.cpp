@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Transform.h"
 #include "GameObject.h"
+#include "Mouse.h"
 
 IMPLEMENT_SINGLETON(CPickingMgr)
 
@@ -43,8 +44,20 @@ void CPickingMgr::Add_PickingObject(ITEMID type)
 	}
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	if(type == ITEM_STRUCT)
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"), m_vPickingPos);
+	CMouse* pMouse = CMouse::Get_Instance();
+	if (type == ITEM_STRUCT)
+	{
+		switch (pMouse->Get_Item_name())
+		{
+		case ITEMNAME_FENCE:
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"), m_vPickingPos);
+			break;
+		case ITEMNAME_POT:
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"), m_vPickingPos);
+			break;
+		}	
+	}
+		
 
 	//m_pPickingObject = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"));
 
