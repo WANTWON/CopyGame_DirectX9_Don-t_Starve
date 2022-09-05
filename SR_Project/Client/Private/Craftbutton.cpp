@@ -75,9 +75,9 @@ int CCraftbutton::Tick(_float fTimeDelta)
 	Safe_AddRef(pinv);
 
 
-	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT||m_makewhat == MAKE_FENCE)
 		m_fY = 300.f;
-	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER)
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT)
 		m_fY = 350.f;
 	else if (m_makewhat == MAKE_STAFF)
 		m_fY = 400.f;
@@ -677,8 +677,138 @@ void CCraftbutton::craft(MAKEWHAT item)
 
 		}
 
+	case MAKE_FENCE:
+
+
+
+
+
+		for (auto iter = pcraftback->begin(); iter != pcraftback->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == 0)
+				++checkcount;
+		}
+
+		if (checkcount == 2)
+		{
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					stop1 = true;
+
+				}
+
+				if ((*iter)->get_texnum() == ITEMNAME_ROPE && (*iter)->get_item_number() >= 1 && stop2 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					stop2 = true;
+
+				}
+
+				if (stop1 == true && stop2 == true)
+				{
+					break;
+				}
+			}
+		}
+		else
+			return;
+
+		//bool check = false;
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == (ITEMNAME_FENCE) && (*iter)->get_check() == true)
+			{
+				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가 증가시켰다면 리턴으로 탈출! 못찾았으면? 탐색해야지 새로
+				//check = true;
+				return;
+			}
+		}
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(ITEMNAME_FENCE);
+				(*iter)->plus_itemcount();
+
+				(*iter)->set_check(true);
+
+				return;
+			}
+
+		}
+
+	case MAKE_POT:
+
+
+
+
+
+		for (auto iter = pcraftback->begin(); iter != pcraftback->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == 0)
+				++checkcount;
+		}
+
+		if (checkcount == 2)
+		{
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 1 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					stop1 = true;
+
+				}
+
+				if ((*iter)->get_texnum() == ITEMNAME_PIGTAIL && (*iter)->get_item_number() >= 1 && stop2 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					stop2 = true;
+
+				}
+
+				if (stop1 == true && stop2 == true)
+				{
+					break;
+				}
+			}
+		}
+		else
+			return;
+
+		//bool check = false;
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == (ITEMNAME_POT) && (*iter)->get_check() == true)
+			{
+				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가 증가시켰다면 리턴으로 탈출! 못찾았으면? 탐색해야지 새로
+											 //check = true;
+				return;
+			}
+		}
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(ITEMNAME_POT);
+				(*iter)->plus_itemcount();
+
+				(*iter)->set_check(true);
+
+				return;
+			}
+
+		}
 
 	}
+
+
+	
 	
 		
 }

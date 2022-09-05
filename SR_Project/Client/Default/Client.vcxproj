@@ -219,6 +219,9 @@
     <ClInclude Include="..\Public\SpiderWarrior.h" />
     <ClInclude Include="..\Public\Talk.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\Public\ToolboxConstruct.h" />
+    <ClInclude Include="..\Public\ToolboxConstruct_back.h" />
+    <ClInclude Include="..\Public\ToolboxConstruct_front.h" />
     <ClInclude Include="..\Public\ToolboxGather.h" />
     <ClInclude Include="..\Public\ToolboxGather_back.h" />
     <ClInclude Include="..\Public\ToolboxGather_front.h" />
@@ -231,6 +234,7 @@
     <ClInclude Include="..\public\Tree.h" />
     <ClInclude Include="..\Public\MainInventory.h" />
     <ClInclude Include="..\Public\Water.h" />
+    <ClInclude Include="..\Public\WoodWall.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -296,6 +300,9 @@
     <ClCompile Include="..\Private\SpiderWarrior.cpp" />
     <ClCompile Include="..\Private\Talk.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\ToolboxConstruct.cpp" />
+    <ClCompile Include="..\Private\ToolboxConstruct_back.cpp" />
+    <ClCompile Include="..\Private\ToolboxConstruct_front.cpp" />
     <ClCompile Include="..\Private\ToolboxGather.cpp" />
     <ClCompile Include="..\Private\ToolboxGather_back.cpp" />
     <ClCompile Include="..\Private\ToolboxGather_front.cpp" />
@@ -308,6 +315,7 @@
     <ClCompile Include="..\private\Tree.cpp" />
     <ClCompile Include="..\Private\MainInventory.cpp" />
     <ClCompile Include="..\Private\Water.cpp" />
+    <ClCompile Include="..\Private\WoodWall.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

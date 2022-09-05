@@ -8,6 +8,9 @@
 #include "Level_Hunt.h"
 #include "Loadingscene.h"
 
+
+_bool g_bLoadingfirst = true;
+
 CLevel_Loading::CLevel_Loading(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -24,21 +27,21 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_loadingscene */
-	if (m_bfirst == true)
+	if (g_bLoadingfirst == true)
 	{
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_loading"),
-			CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/scene3/loading_%03d.png"), 303))));
-		// E_FAIL;
+			CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/scene3/loading_%03d.png"), 303))))
+			return E_FAIL;
 
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_loadingback"),
-			CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Loading_Scene/loading6.png"), 1))));
-		// E_FAIL;
+			CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Loading_Scene/loading6.png"), 1))))
+			return E_FAIL;
 
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Loadingscene"),
-			CLoadingscene::Create(m_pGraphic_Device))));
-
-		m_bfirst = false;
-		//	return E_FAIL;
+			CLoadingscene::Create(m_pGraphic_Device))))
+			return E_FAIL;
+		g_bLoadingfirst = false;
+			
 	}
 	
 	
