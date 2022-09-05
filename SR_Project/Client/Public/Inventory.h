@@ -18,6 +18,9 @@
 #include "ToolboxGather.h"
 #include "ToolboxGather_back.h"
 #include "ToolboxGather_front.h"
+#include "ToolboxConstruct.h"
+#include "ToolboxConstruct_back.h"
+#include "ToolboxConstruct_front.h"
 #include "Craftmain.h"
 #include "Craftmain_back.h"
 #include "Craftmain_front.h"
@@ -53,6 +56,7 @@ public:
 	list<CBagInventory*>* Get_BagInventory_list() {return &m_BagInventorylist;}
 	list<CMainInventory_back*>* Get_back_Inven_list(void) { return &m_MainInventorybacklist; }
 	list<CMouse_item*>* Get_Mouse_item_list(void) { return &m_Mouseitemlist; }
+
 	list<CToolboxWeapon*>*Get_Toolboxweapon_list(void) { return &m_Toolboxweapon; }
 	list<CToolboxWeapon_back*>*Get_Toolboxweapon_back_list(void) { return &m_Toolboxweapon_back; }
 	list<CToolboxWeapon_front*>*Get_Toolboxweapon_front_list(void) { return &m_Toolboxweapon_front; }
@@ -60,6 +64,10 @@ public:
 	list<CToolboxGather*>*Get_Toolboxgather_list(void) { return &m_Toolboxgather; }
 	list<CToolboxGather_back*>*Get_Toolboxgather_back_list(void) { return &m_Toolboxgather_back; }
 	list<CToolboxGather_front*>*Get_Toolboxgather_front_list(void) { return &m_Toolboxgather_front; }
+
+	list<CToolboxConstruct*>*Get_ToolboxConstruct_list(void) { return &m_Toolboxconstruct; }
+	list<CToolboxConstruct_back*>*Get_ToolboxConstruct_back_list(void) { return &m_Toolboxconstruct_back; }
+	list<CToolboxConstruct_front*>*Get_ToolboxConstruct_front_list(void) { return &m_Toolboxconstruct_front; }
 
 	list<CCraftmain*>*Get_Craftmain_list(void) { return &m_Craftmain; }
 	list<CCraftmain_back*>*Get_Craftmainback_list(void) { return &m_Craftmainback; }
@@ -87,6 +95,9 @@ public:
 	void gathertool_on();
 	void gathertool_off();
 
+	void constructtool_on();
+	void constructtool_off();
+
 	void craft_on(MAKEWHAT item);
 	void craft_off();
 
@@ -112,6 +123,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CPlayerMentality_pont*>m_Mentalitiypontlist;//
 	list<CBagInventory*>m_BagInventorylist;//
 	list<CMouse_item*>m_Mouseitemlist;//
+
 	list<CToolboxWeapon*>m_Toolboxweapon;//
 	list<CToolboxWeapon_back*>m_Toolboxweapon_back;//
 	list<CToolboxWeapon_front*>m_Toolboxweapon_front;//
@@ -119,6 +131,10 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CToolboxGather*>m_Toolboxgather;
 	list<CToolboxGather_back*>m_Toolboxgather_back;
 	list<CToolboxGather_front*>m_Toolboxgather_front;
+
+	list<CToolboxConstruct*>m_Toolboxconstruct;
+	list<CToolboxConstruct_back*>m_Toolboxconstruct_back;
+	list<CToolboxConstruct_front*>m_Toolboxconstruct_front;
 
 	
 	list<CCraftmain*>m_Craftmain;

@@ -58,9 +58,9 @@ int CCraftmain_back::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT||m_makewhat == MAKE_FENCE)
 		m_fY = 155.f;
-	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER)
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT)
 		m_fY = 205.f;
 	else if (m_makewhat == MAKE_STAFF)
 		m_fY = 255.f;
@@ -307,6 +307,66 @@ void CCraftmain_back::setcolor()
 			else if (iNum == 1)
 			{
 				if ((*iter)->get_texnum() == ITEMNAME_GOLD && (*iter)->get_item_number() >= 2) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+
+		}
+	}
+
+	else if (m_makewhat == MAKE_FENCE)
+	{
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if (iNum == 0)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+			else if (iNum == 1)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_ROPE && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+
+		}
+	}
+
+	else if (m_makewhat == MAKE_POT)
+	{
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if (iNum == 0)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+			else if (iNum == 1)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_PIGTAIL && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
 				{
 					backtexnum = 0;
 					break;

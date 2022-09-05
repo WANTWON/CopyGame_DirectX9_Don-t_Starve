@@ -107,6 +107,8 @@ public: /*Get&Set*/
 	void	Set_Position(_float3 Position);
 
 public:
+	void Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
+public:
 	void	Add_ActStack(ACTION_STATE _ACT_STATE) { m_ActStack.push(_ACT_STATE); m_bAutoMode = true; m_bMove = false; }
 	//Test
 	void Check_Target(_bool _bDead) { if (_bDead) m_pTarget = nullptr; }
@@ -140,6 +142,11 @@ private: /**Actions*/
 	void	Jump(_float _fTimeDelta);
 
 	void Multi_Action(_float _fTimeDelta); //��ƼŰ
+
+	//Skill
+	void Throw_Bomb(_float _fTimeDelta);
+	void Ice_Spike(_float _fTimeDelta);
+	void Sand_Mines(_float _fTimeDelta);
 	 //Passive
 	void	Decrease_Stat(void); //�����ð����� Hunger ����
 	void	Create_Bullet(void);
@@ -160,7 +167,7 @@ private: /**Actions*/
 	
 	void RangeCheck(_float _fTimeDelta);
 
-
+	void Turn_OriginMat(_bool _bIsRight);
 	//Interact Check
 	ACTION_STATE Select_Interact_State(INTERACTOBJ_ID _eObjID);
 	
@@ -233,8 +240,9 @@ private: // Test
 	_float					m_fAtkScale = 6.2f;
 
 	
-	public:
-	void Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
+	_float4x4					m_pOriginMatrix;
+
+	_uint					iCnt = 0;
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

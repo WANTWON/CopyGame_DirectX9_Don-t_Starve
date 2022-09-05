@@ -216,6 +216,9 @@
     <ClInclude Include="..\Public\Spider.h" />
     <ClInclude Include="..\Public\Talk.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\Public\ToolboxConstruct.h" />
+    <ClInclude Include="..\Public\ToolboxConstruct_back.h" />
+    <ClInclude Include="..\Public\ToolboxConstruct_front.h" />
     <ClInclude Include="..\Public\ToolboxGather.h" />
     <ClInclude Include="..\Public\ToolboxGather_back.h" />
     <ClInclude Include="..\Public\ToolboxGather_front.h" />
@@ -292,6 +295,9 @@
     <ClCompile Include="..\Private\Spider.cpp" />
     <ClCompile Include="..\Private\Talk.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\ToolboxConstruct.cpp" />
+    <ClCompile Include="..\Private\ToolboxConstruct_back.cpp" />
+    <ClCompile Include="..\Private\ToolboxConstruct_front.cpp" />
     <ClCompile Include="..\Private\ToolboxGather.cpp" />
     <ClCompile Include="..\Private\ToolboxGather_back.cpp" />
     <ClCompile Include="..\Private\ToolboxGather_front.cpp" />

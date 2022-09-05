@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CToolboxWeapon_front final : public CGameObject
+class CToolboxConstruct_front final : public CGameObject
 {
 private:
-	CToolboxWeapon_front(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CToolboxWeapon_front(const CToolboxWeapon_front& rhs);
-	virtual ~CToolboxWeapon_front() = default;
+	CToolboxConstruct_front(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CToolboxConstruct_front(const CToolboxConstruct_front& rhs);
+	virtual ~CToolboxConstruct_front() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -33,7 +33,7 @@ private: /* For.Components */
 
 private:
 	_float4x4				m_ProjMatrix;
-	_float					m_fX, m_fY, m_fSizeX, m_fSizeY , m_firstx;
+	_float					m_fX, m_fY, m_fSizeX, m_fSizeY, m_firstx;
 	_float                  m_pfX, m_pfY;
 
 private:
@@ -42,7 +42,7 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	static CToolboxWeapon_front* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CToolboxConstruct_front* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 
@@ -61,11 +61,11 @@ public:
 	int get_iNum() { return iNum; }
 
 public:
-	void Open_Weapontool(_float time) { m_fX += 130.f* time; }
+	void Open_Weapontool(_float time) { m_fX += 130.f * time; }
 	bool get_onof() { return m_bonof; }
 	void set_onof(bool tof) { m_bonof = tof; }
 
-	void gobackfirstX () { m_fX = m_firstx; }
+	void gobackfirstX() { m_fX = m_firstx; }
 
 private:
 	int* iNumber = nullptr;

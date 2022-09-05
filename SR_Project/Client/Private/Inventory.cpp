@@ -377,6 +377,38 @@ void CInventory_Manager::gathertool_off()
 
 }
 
+void CInventory_Manager::constructtool_on()
+{
+	for (auto& k : m_Toolboxconstruct)
+		k->set_onof(true);
+	for (auto& k : m_Toolboxconstruct_back)
+		k->set_onof(true);
+	for (auto& k : m_Toolboxconstruct_front)
+		k->set_onof(true);
+}
+
+void CInventory_Manager::constructtool_off()
+{
+	for (auto& k : m_Toolboxconstruct)
+	{
+		k->set_onof(false);
+		k->gobackfirstX();
+	}
+
+	for (auto& k : m_Toolboxconstruct_back)
+	{
+		k->set_onof(false);
+		k->gobackfirstX();
+	}
+
+	for (auto& k : m_Toolboxconstruct_front)
+	{
+		k->set_onof(false);
+		k->gobackfirstX();
+	}
+
+}
+
 void CInventory_Manager::craft_on(MAKEWHAT item)
 {
 	for (auto& k : m_Craftmain)
@@ -457,6 +489,7 @@ void CInventory_Manager::update_craftpont()
 	_uint grass = 0;
 	_uint gold = 0;
 	_uint rope = 0;
+	_uint pigtail = 0;
 
 	for (auto& k : m_MainInventorylist)
 	{
@@ -472,6 +505,8 @@ void CInventory_Manager::update_craftpont()
 			gold += k->get_item_number();
 		else if (k->get_texnum() == ITEMNAME_ROPE)
 			rope += k->get_item_number();
+		else if (k->get_texnum() == ITEMNAME_PIGTAIL)
+			pigtail += k->get_item_number();
 	}
 
 
@@ -640,6 +675,74 @@ void CInventory_Manager::update_craftpont()
 			else if (k->get_pontnum() == 7)
 			{
 				k->set_pont_num(2);
+				return;
+			}
+		}
+
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_FENCE)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((wood % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(wood % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+
+			}
+
+			else if (k->get_pontnum() == 4)
+			{
+				k->set_pont_num((rope % 100) / 10);
+			}
+			else if (k->get_pontnum() == 5)
+			{
+				k->set_pont_num(rope % 10);
+			}
+
+			else if (k->get_pontnum() == 7)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+		}
+
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_POT)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((rock2 % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(rock2 % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+
+			}
+
+			else if (k->get_pontnum() == 4)
+			{
+				k->set_pont_num((pigtail % 100) / 10);
+			}
+			else if (k->get_pontnum() == 5)
+			{
+				k->set_pont_num(pigtail % 10);
+			}
+
+			else if (k->get_pontnum() == 7)
+			{
+				k->set_pont_num(1);
 				return;
 			}
 		}
