@@ -28,6 +28,7 @@ public:
 
 private:
 	HRESULT SetUp_Components();
+	HRESULT SetUp_DebugComponents(void* pArg = nullptr);
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
@@ -65,6 +66,11 @@ private:/*For Components*/
 	CCollider*				m_pColliderCom = nullptr;
 
 	vector<CTexture*> m_vecTexture;
+
+	/* For.Debug */
+	CVIBuffer_Rect* m_pVIDebugBufferCom = nullptr;
+	CTransform*	m_pDebugTransformCom = nullptr;
+
 private: //values		
 	//WEAPON_TYPE				m_eWeaponType = WEAPON_TYPE::WEAPON_HAND;
 	const _tchar*			m_TimerTag = TEXT("");

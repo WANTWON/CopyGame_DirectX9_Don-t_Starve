@@ -34,7 +34,7 @@ HRESULT CBearger::Initialize(void* pArg)
 	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 
-	m_fAttackRadius = 1.f;
+	m_fAttackRadius = 2.f;
 
 	return S_OK;
 }
@@ -100,6 +100,8 @@ HRESULT CBearger::SetUp_Components(void* pArg)
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
+
+	SetUp_DebugComponents(pArg);
 
 	return S_OK;
 }
@@ -255,13 +257,15 @@ void CBearger::Change_Frame()
 		else
 			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
 
+		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::IDLE_AGGRO:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-3.f, 3.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
-
+		
+		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::WALK:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
@@ -302,25 +306,21 @@ void CBearger::Change_Frame()
 			m_dwAttackTime = GetTickCount();
 		}
 		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 33)
-		{
-			BULLETDATA BulletData;
-			ZeroMemory(&BulletData, sizeof(BulletData));
-			BulletData.vPosition = Get_Position();
-			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-			BulletData.eDirState = m_eDir;
-
-			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-		}
+			Attack();
 		break;
 	case STATE::POUND_GROUND:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-3.f, 3.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
-
+		
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		{
+			m_bIsAttacking = false;
+			m_dwAttackTime = GetTickCount();
+		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)
+			Attack(true);
 		break;
 	case STATE::HIT:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
@@ -493,26 +493,106 @@ void CBearger::AI_Behaviour(_float fTimeDelta)
 	if (m_bHit)
 		m_eState = STATE::HIT;
 
-	// Get Target and Aggro Radius
-	Find_Target();
-
 	// Check for Target, AggroRadius
-	if (m_pTarget && m_bAggro)
+	if (m_bAggro)
 	{
-		// If in AttackRadius > Attack
-		if (m_fDistanceToTarget < m_fAttackRadius)
+		Find_Target(); // Find Player
+		if (m_pTarget)
 		{
-			if (!m_bIsAttacking && GetTickCount() > m_dwAttackTime + 1500)
+			// If in AttackRadius: Attack
+			if (m_fDistanceToTarget < m_fAttackRadius)
 			{
-				m_eState = STATE::ATTACK;
-				m_bIsAttacking = true;
+				if (!m_bIsAttacking && GetTickCount() > m_dwAttackTime + 1500)
+				{
+					m_eState = rand() % 2 ? STATE::ATTACK : STATE::POUND_GROUND;
+					m_bIsAttacking = true;
+				}
+				else if (!m_bIsAttacking)
+					m_eState = STATE::IDLE_AGGRO;
 			}
-			else if (!m_bIsAttacking)
-				m_eState = STATE::IDLE;
+			// If NOT in AttackRadius: Follow Target
+			else
+				Follow_Target(fTimeDelta);
 		}
-		// If NOT in AttackRadius > Follow Target
+	}
+	else
+	{
+		Find_Target(); // Find Food
+		if (m_pTarget)
+		{
+			// TODO: Go to Food Position
+		}
 		else
-			Follow_Target(fTimeDelta);
+			Patrol(fTimeDelta);
+	}
+		
+}
+
+void CBearger::Patrol(_float fTimeDelta)
+{
+	// Switch between Idle and Walk (based on time)
+	if (m_eState == STATE::IDLE)
+	{
+		if (GetTickCount() > m_dwIdleTime + 3000)
+		{
+			m_eState = STATE::WALK;
+			m_dwWalkTime = GetTickCount();
+
+			// Find Random Patroling Position
+			_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
+			_int bSignX = rand() % 2;
+			_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
+			_int bSignZ = rand() % 2;
+			m_fPatrolPosX = bSignX ? (m_pTransformCom->Get_TransformDesc().InitPos.x + fOffsetX) : (m_pTransformCom->Get_TransformDesc().InitPos.x - fOffsetX);
+			m_fPatrolPosZ = bSignZ ? (m_pTransformCom->Get_TransformDesc().InitPos.z + fOffsetZ) : (m_pTransformCom->Get_TransformDesc().InitPos.z - fOffsetZ);
+		}
+	}
+	else if (m_eState == STATE::WALK)
+	{
+		if (GetTickCount() > m_dwWalkTime + 1500)
+		{
+			m_eState = STATE::IDLE;
+			m_dwIdleTime = GetTickCount();
+		}
+	}
+
+	// Movement
+	if (m_eState == STATE::WALK)
+	{
+		// Adjust PatrolPosition Y
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		if (!pGameInstance)
+			return;
+		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+		if (!pVIBuffer_Terrain)
+			return;
+		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+		if (!pTransform_Terrain)
+			return;
+
+		_float3 vPatrolPosition = { m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ };
+		_float3 vScale = m_pTransformCom->Get_Scale();
+
+		vPatrolPosition.y = pVIBuffer_Terrain->Compute_Height(vPatrolPosition, pTransform_Terrain->Get_WorldMatrix(), (1 * vScale.y / 2));
+
+		// Change Direction
+		_float fX = vPatrolPosition.x - Get_Position().x;
+		_float fZ = vPatrolPosition.z - Get_Position().z;
+
+		// Move Horizontally
+		if (abs(fX) > abs(fZ))
+			if (fX > 0)
+				m_eDir = DIR_STATE::DIR_RIGHT;
+			else
+				m_eDir = DIR_STATE::DIR_LEFT;
+		// Move Vertically
+		else
+			if (fZ > 0)
+				m_eDir = DIR_STATE::DIR_UP;
+			else
+				m_eDir = DIR_STATE::DIR_DOWN;
+
+		m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, _float3(m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ), _float3{ 0.f, 0.f, 0.f });
 	}
 }
 
@@ -520,25 +600,31 @@ void CBearger::Find_Target()
 {
 	if (!m_bIsAttacking && !m_bHit && !m_bDead)
 	{
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
-
-		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-
-		Safe_Release(pGameInstance);
-
-		if (pTarget)
+		// Look for Player
+		if (m_bAggro)
 		{
-			_float3 vTargetPos = pTarget->Get_Position();
-			m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			Safe_AddRef(pGameInstance);
 
-			if (m_fDistanceToTarget < m_fAggroRadius || m_bAggro)
-				m_bAggro = true;
+			CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
-			m_pTarget = pTarget;
+			Safe_Release(pGameInstance);
+
+			if (pTarget)
+			{
+				_float3 vTargetPos = pTarget->Get_Position();
+				m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
+				m_pTarget = pTarget;
+			}
+			else
+				m_pTarget = nullptr;
 		}
+		// Look for Food
 		else
-			m_pTarget = nullptr;
+		{
+			// TODO: Implement
+			m_pTarget = nullptr; // Remove this line
+		}
 	}
 	else
 		m_pTarget = nullptr;
@@ -547,7 +633,7 @@ void CBearger::Find_Target()
 void CBearger::Follow_Target(_float fTimeDelta)
 {
 	// Set State 
-	m_eState = STATE::RUN;
+	m_eState = m_tInfo.iCurrentHp < (m_tInfo.iMaxHp / 2) ? STATE::CHARGE : STATE::RUN;
 
 	_float3 fTargetPos = m_pTarget->Get_Position();
 
@@ -573,6 +659,20 @@ void CBearger::Follow_Target(_float fTimeDelta)
 	m_bIsAttacking = false;
 }
 
+void CBearger::Attack(_bool bIsSpecial)
+{
+	BULLETDATA BulletData;
+	ZeroMemory(&BulletData, sizeof(BulletData));
+	BulletData.vPosition = Get_Position();
+	BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	BulletData.eDirState = m_eDir;
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+		return;
+}
+
 _float CBearger::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
 	_float fDmg = __super::Take_Damage(fDamage, DamageType, DamageCauser);
@@ -582,6 +682,7 @@ _float CBearger::Take_Damage(float fDamage, void * DamageType, CGameObject * Dam
 		if (!m_bDead)
 			m_bHit = true;
 
+		m_bAggro = true;
 		m_bIsAttacking = false;
 		m_dwAttackTime = GetTickCount();
 	}
@@ -656,7 +757,6 @@ CGameObject* CBearger::Clone(void* pArg)
 
 	return pInstance;
 }
-
 
 void CBearger::Free()
 {

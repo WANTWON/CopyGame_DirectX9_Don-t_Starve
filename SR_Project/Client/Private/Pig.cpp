@@ -104,6 +104,8 @@ HRESULT CPig::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
+	SetUp_DebugComponents(pArg);
+
 	return S_OK;
 }
 

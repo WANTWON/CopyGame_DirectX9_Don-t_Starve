@@ -103,13 +103,19 @@ HRESULT CBullet::Render()
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 	m_pTextureCom->MoveFrame(m_TimerTag);
+
+	if (m_pVIDebugBufferCom)
+	{
+		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		m_pVIDebugBufferCom->Render();
+		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	}
+
 	return S_OK;
 }
 
 HRESULT CBullet::SetUp_Components()
 {
-
-
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
@@ -138,6 +144,19 @@ HRESULT CBullet::SetUp_Components()
 		return E_FAIL;
 	//±ÍÂú¾Æ ¤¾¤¾
 	Init_Data();
+
+	SetUp_DebugComponents();
+
+	return S_OK;
+}
+
+HRESULT CBullet::SetUp_DebugComponents(void * pArg)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Components(TEXT("Com_DebugBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIDebugBufferCom)))
+		return E_FAIL;
 
 	return S_OK;
 }

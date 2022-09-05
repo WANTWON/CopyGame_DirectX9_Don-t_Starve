@@ -71,12 +71,34 @@ HRESULT CMonster::Render()
 	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
 		return E_FAIL;
 
+	//if (FAILED(m_pTextureCom->Bind_OnGraphicDev_Debug()))
+	//	return E_FAIL;
+
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
 
 	m_pVIBufferCom->Render();
 
 	if (FAILED(Release_RenderState()))
+		return E_FAIL;
+
+	// For Debug Rendering
+	if (m_pVIDebugBufferCom)
+	{
+		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		m_pVIDebugBufferCom->Render();
+		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	}
+	
+	return S_OK;
+}
+
+HRESULT CMonster::SetUp_DebugComponents(void * pArg)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Components(TEXT("Com_DebugBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIDebugBufferCom)))
 		return E_FAIL;
 
 	return S_OK;
@@ -89,7 +111,7 @@ HRESULT CMonster::SetUp_RenderState()
 
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
 	return S_OK;

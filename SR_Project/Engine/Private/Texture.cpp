@@ -62,6 +62,11 @@ HRESULT CTexture::Bind_OnGraphicDev(_uint iIndex)
 	return m_pGraphic_Device->SetTexture(0, m_Textures[iIndex]);
 }
 
+HRESULT CTexture::Bind_OnGraphicDev_Debug()
+{
+	return m_pGraphic_Device->SetTexture(0, 0);
+}
+
 bool CTexture::MoveFrame(const _tchar* TimerTag, _bool bLoop)
 {
 	//CGameInstance::Get_Instance()->Update(TimerTag);
