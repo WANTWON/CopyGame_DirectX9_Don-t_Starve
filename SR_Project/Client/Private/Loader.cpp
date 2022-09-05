@@ -58,10 +58,13 @@
 #include "Portal.h"
 
 #include "Daycount.h"
+#include "Daycountpont.h"
 #include "Quest.h"
 #include "Questpont.h"
 #include "Line.h"
 #include "Talk.h"
+#include "Loadingscene.h"
+#include "Logoscene.h"
 
 #include "CameraFPS.h"
 
@@ -494,6 +497,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Daycount"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Day/Day_%03d.png"), 30))))
 		return E_FAIL;
+	/*For.Prototype_Component_Texture_Playermentality */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Daycountpont"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Day/day%d.png"), 20))))
+		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_quest */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_quest"),
@@ -510,6 +517,17 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/talk/talk%d.png"), 7))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_logoscene */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Logoscene"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Logo/logo%d.png"), 1))))
+		return E_FAIL;
+
+	
+
+	///*For.Prototype_Component_Texture_loadingscene */
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_loading"),
+	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/scene2/loading_%03d.png"), 125))))
+	//	return E_FAIL;
 #pragma endregion Add_Texture UI
 
 
@@ -642,10 +660,15 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerMentality"),
 		CPlayerMentality::Create(m_pGraphic_Device))))
 		return E_FAIL;
-		/*For.Prototype_GameObject_PlayerMentality */
+		/*For.Prototype_GameObject_Daycount */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Daycount"),
 		CDaycount::Create(m_pGraphic_Device))))
 		return E_FAIL;
+	/*For.Prototype_GameObject_Daycountpont */
+    if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Daycountpont"),
+		CDaycountpont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	
 
 	/*For.Prototype_GameObject_HpPont */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HpPont"),
@@ -684,6 +707,17 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_talk"),
 		CTalk::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_logoscene"),
+		CLogoscene::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+
+
+	/*For.Prototype_GameObject_talk */
+	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Loadingscene"),
+		CLoadingscene::Create(m_pGraphic_Device))))
+		return E_FAIL;*/
 
 
 #pragma endregion Add_Prototype UI Object

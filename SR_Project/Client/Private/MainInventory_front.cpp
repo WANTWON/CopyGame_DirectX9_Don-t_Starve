@@ -124,7 +124,7 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	if (iNum == 4)
 	{
 		texnum = ITEMNAME_BERRY;
-		item_number = 9;
+		item_number = 1;
 	}
 	
 

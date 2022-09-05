@@ -74,6 +74,29 @@ int CTalk::Tick(_float fTimeDelta)
 			//	Safe_AddRef(pinven);
 				for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 				{
+
+					if ((*iter)->get_texnum() == ITEMNAME_BERRY)
+					{
+						(*iter)->minus_material(3);
+
+
+					}
+
+					if ((*iter)->get_texnum() == ITEMNAME_GRASS)
+					{
+						(*iter)->minus_material(2);
+
+
+					}
+
+					if ((*iter)->get_texnum() == ITEMNAME_WOOD)
+					{
+						(*iter)->minus_material(1);
+					}
+				}
+				for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+				{
+
 					if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
 					{
 						(*iter)->set_texnum(ITEMNAME_QUEST1);
