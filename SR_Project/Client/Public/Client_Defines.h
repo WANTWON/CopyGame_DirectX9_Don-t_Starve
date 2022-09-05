@@ -45,6 +45,7 @@ namespace Client
 		DIR_STATE eDirState;
 		_float3 vLook;
 		_float3	vTargetPos;
+		_float3 vRight;
 	}BULLETDATA;
 
 }

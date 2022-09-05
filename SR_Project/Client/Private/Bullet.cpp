@@ -44,14 +44,15 @@ HRESULT CBullet::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-
-
+	
 	return S_OK;
 }
 
 int CBullet::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	SetUp_BillBoard();
 
 	if (m_bDead == true)
 		return OBJ_DEAD;
@@ -591,7 +592,7 @@ void CBullet::IceMines(_float _fTimeDelta)
 	BulletData.bIsPlayerBullet = true;
 	BulletData.eDirState = m_tBulletData.eDirState;
 	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_MINE;
-	BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	BulletData.vLook = m_tBulletData.vLook;
 
 	_float3 vPositiontemp = m_tBulletData.vPosition;
 
@@ -600,207 +601,155 @@ void CBullet::IceMines(_float _fTimeDelta)
 	_float3 vLooktemp = m_tBulletData.vLook;
 	D3DXVec3Normalize(&vLooktemp, &vLooktemp);
 	_float3 vPos = m_tBulletData.vPosition;
-
+	_float3 vRightTemp = m_tBulletData.vRight; // = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 	
+	D3DXVec3Normalize(&vRightTemp, &vRightTemp);
 	switch (m_tBulletData.eDirState)
 	{
 	case DIR_STATE::DIR_UP:
 		if (!m_bActivated)
-		{	
-			for (int i = 0; i < 3; ++i)
-			{
-				_float3 temp1 = m_tBulletData.vPosition;
-				temp1.x -= 0.4f;
-				temp1.z += 0.5f;
+		{
+			vPos += vLooktemp * 2.f;
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
 
-				temp1.x += i*0.4f;
-				BulletData.vPosition = temp1;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-					return;
-			}
 			m_bActivated = true;
 		}
 
 		if (m_fTime > 0.3f && !m_bActivated2)
 		{
+			vPos = m_tBulletData.vPosition;
 
-			for (int i = 0; i < 3; ++i)
-			{
-				_float3 temp1 = m_tBulletData.vPosition;
-				temp1.x -= 0.4f;
-				temp1.z += 1.f;
+			vPos += vLooktemp * 3.f;
 
-				temp1.x += i*0.4f;
-				BulletData.vPosition = temp1;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-					return;
-			}
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+
 			m_bActivated2 = true;
 		}
-
 		if (m_fTime > 0.5f && !m_bActivated3)
 		{
-			for (int i = 0; i < 3; ++i)
-			{
-				_float3 temp1 = m_tBulletData.vPosition;
-				temp1.x -= 0.4f;
-				temp1.z += 2.f;
+			vPos = m_tBulletData.vPosition;
 
-				temp1.x += i*0.4f;
-				BulletData.vPosition = temp1;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-					return;
-			}
+			vPos += vLooktemp * 4.f;
+
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+
 			m_bActivated3 = true;
 		}
 		break;
 	case DIR_STATE::DIR_DOWN:
 		if (!m_bActivated)
 		{
-			for (int i = 0; i < 3; ++i)
-			{
-				_float3 temp1 = m_tBulletData.vPosition;
-				temp1.x -= 0.4f;
-				temp1.z -= 0.5f;
+			vPos -= vLooktemp * 2.f;
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
 
-				temp1.x += i*0.4f;
-				BulletData.vPosition = temp1;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-					return;
-			}
 			m_bActivated = true;
 		}
 
 		if (m_fTime > 0.3f && !m_bActivated2)
 		{
+			vPos = m_tBulletData.vPosition;
 
-			for (int i = 0; i < 3; ++i)
-			{
-				_float3 temp1 = m_tBulletData.vPosition;
-				temp1.x -= 0.4f;
-				temp1.z -= 1.f;
+			vPos -= vLooktemp * 3.f;
 
-				temp1.x += i*0.4f;
-				BulletData.vPosition = temp1;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-					return;
-			}
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+
 			m_bActivated2 = true;
 		}
-
 		if (m_fTime > 0.5f && !m_bActivated3)
 		{
-			for (int i = 0; i < 3; ++i)
-			{
-				_float3 temp1 = m_tBulletData.vPosition;
-				temp1.x -= 0.4f;
-				temp1.z -= 2.f;
+			vPos = m_tBulletData.vPosition;
 
-				temp1.x += i*0.4f;
-				BulletData.vPosition = temp1;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-					return;
-			}
+			vPos -= vLooktemp * 4.f;
+
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+
 			m_bActivated3 = true;
 		}
 		break;
 	case DIR_STATE::DIR_RIGHT:
 		if (!m_bActivated)
 		{
-			for (int i = 0; i < 3; ++i)
-			{
-				_float3 temp1 = m_tBulletData.vPosition;
-				temp1.z -= 0.4f;
-				temp1.x += 0.5f;
+			vPos = m_tBulletData.vPosition;
+			vPos += vRightTemp * 2.f;
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
 
-				temp1.z += i*0.4f;
-				BulletData.vPosition = temp1;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-					return;
-			}
 			m_bActivated = true;
 		}
 
 		if (m_fTime > 0.3f && !m_bActivated2)
 		{
+			vPos = m_tBulletData.vPosition;
 
-			for (int i = 0; i < 3; ++i)
-			{
-				_float3 temp1 = m_tBulletData.vPosition;
-				temp1.z -= 0.4f;
-				temp1.x += 1.f;
+			vPos += vRightTemp * 3.f;
 
-				temp1.z += i*0.4f;
-				BulletData.vPosition = temp1;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-					return;
-			}
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+
 			m_bActivated2 = true;
 		}
-
 		if (m_fTime > 0.5f && !m_bActivated3)
 		{
-			for (int i = 0; i < 3; ++i)
-			{
-				_float3 temp1 = m_tBulletData.vPosition;
-				temp1.z -= 0.4f;
-				temp1.x += 2.f;
+			vPos = m_tBulletData.vPosition;
 
-				temp1.z += i*0.4f;
-				BulletData.vPosition = temp1;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-					return;
-			}
+			vPos += vRightTemp * 4.f;
+
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+
 			m_bActivated3 = true;
 		}
 		break;
 	case DIR_STATE::DIR_LEFT:
 		if (!m_bActivated)
 		{
-			for (int i = 0; i < 3; ++i)
-			{
-				_float3 temp1 = m_tBulletData.vPosition;
-				temp1.z -= 0.4f;
-				temp1.x -= 0.5f;
+			vPos = m_tBulletData.vPosition;
 
-				temp1.z += i*0.4f;
-				BulletData.vPosition = temp1;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-					return;
-			}
+			vPos += vRightTemp * 2.f;
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+
 			m_bActivated = true;
 		}
 
 		if (m_fTime > 0.3f && !m_bActivated2)
 		{
+			vPos = m_tBulletData.vPosition;
 
-			for (int i = 0; i < 3; ++i)
-			{
-				_float3 temp1 = m_tBulletData.vPosition;
-				temp1.z -= 0.4f;
-				temp1.x -= 1.f;
+			vPos += vRightTemp * 3.f;
 
-				temp1.z += i*0.4f;
-				BulletData.vPosition = temp1;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-					return;
-			}
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+
 			m_bActivated2 = true;
 		}
-
 		if (m_fTime > 0.5f && !m_bActivated3)
 		{
-			for (int i = 0; i < 3; ++i)
-			{
-				_float3 temp1 = m_tBulletData.vPosition;
-				temp1.z -= 0.4f;
-				temp1.x -= 2.f;
+			vPos = m_tBulletData.vPosition;
 
-				temp1.z += i*0.4f;
-				BulletData.vPosition = temp1;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-					return;
-			}
+			vPos += vRightTemp * 4.f;
+
+			BulletData.vPosition = vPos;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+
 			m_bActivated3 = true;
 		}
 		break;
@@ -972,13 +921,14 @@ _bool CBullet::Compare_Terrain(void)
 void CBullet::SetUp_BillBoard()
 {
 
-	/*if (m_tBulletData.eDirState == DIR_STATE::DIR_END)
-		return;*/
+	if (m_tBulletData.eDirState == DIR_STATE::DIR_END
+		&& !m_tBulletData.eWeaponType ==WEAPON_TYPE::WEAPON_MINE)
+		return;
 
 	_float4x4		ViewMatrix;
 
-	if (m_tBulletData.eDirState == DIR_STATE::DIR_LEFT)
-		return;
+	/*if (m_tBulletData.eDirState == DIR_STATE::DIR_LEFT)
+		return;*/
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 
