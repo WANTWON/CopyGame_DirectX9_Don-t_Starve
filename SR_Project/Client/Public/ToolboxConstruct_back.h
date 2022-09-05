@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CToolboxMain_back final : public CGameObject
+class CToolboxConstruct_back final : public CGameObject
 {
 private:
-	CToolboxMain_back(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CToolboxMain_back(const CToolboxMain_back& rhs);
-	virtual ~CToolboxMain_back() = default;
+	CToolboxConstruct_back(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CToolboxConstruct_back(const CToolboxConstruct_back& rhs);
+	virtual ~CToolboxConstruct_back() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -37,7 +37,7 @@ private: /* For.Components */
 
 private:
 	_float4x4				m_ProjMatrix;
-	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
+	_float					m_fX, m_fY, m_fSizeX, m_fSizeY, m_firstx;
 
 private:
 	HRESULT SetUp_Components();
@@ -45,9 +45,14 @@ private:
 	HRESULT Release_RenderState();
 
 public:
-	static CToolboxMain_back* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CToolboxConstruct_back* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
+public:
+	void Open_Weapontool(_float time) { m_fX += 130.f * time; }
+	bool get_onof() { return m_bonof; }
+	void set_onof(bool tof) { m_bonof = tof; }
+	void gobackfirstX() { m_fX = m_firstx; }
 private:
 
 	int* iNumber = nullptr;
@@ -55,10 +60,7 @@ private:
 	bool m_bcheck_bag = false;
 	_uint backtexnum = 0;
 
-	bool m_bfirstclick_W = true;
-	bool m_bfirstclick_G = true;
-	bool m_bfirstclick_C = true;
-	bool m_bfirstclick = true;
+	bool m_bonof = false;
 	//bool m_bcheck = true;
 };
 

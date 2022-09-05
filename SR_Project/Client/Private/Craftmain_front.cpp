@@ -74,9 +74,9 @@ int CCraftmain_front::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 
-	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT||m_makewhat == MAKE_FENCE)
 		m_fY = 155.f;
-	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER)
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT)
 		m_fY = 205.f;
 	else if (m_makewhat == MAKE_STAFF)
 		m_fY = 255.f;
@@ -138,7 +138,7 @@ int CCraftmain_front::Tick(_float fTimeDelta)
 	}
 	
 
-	else if (m_makewhat == MAKE_ARMOR||m_makewhat == MAKE_HELMET)
+	else if (m_makewhat == MAKE_ARMOR || m_makewhat == MAKE_HELMET)
 	{
 		if (iNum == 0)
 		{
@@ -146,9 +146,34 @@ int CCraftmain_front::Tick(_float fTimeDelta)
 		}
 
 		else
-		
+
 			texnum = ITEMNAME_ROCK2;
+	}
+
+	else if (m_makewhat == MAKE_FENCE)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_WOOD;
+		}
+
+		else
+
+			texnum = ITEMNAME_ROPE;
 		
+	}
+
+	else if (m_makewhat == MAKE_POT)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_ROCK2;
+		}
+
+		else
+
+			texnum = ITEMNAME_PIGTAIL;
+
 	}
 
 	
