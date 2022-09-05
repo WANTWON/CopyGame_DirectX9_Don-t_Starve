@@ -1,21 +1,21 @@
 #include "stdafx.h"
-#include "..\Public\Quest.h"
+#include "..\Public\Talk.h"
 #include "GameInstance.h"
 #include "Player.h"
 #include "Inventory.h"
+#include "CameraManager.h"
 
-
-CQuest::CQuest(LPDIRECT3DDEVICE9 pGraphic_Device)
+CTalk::CTalk(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CQuest::CQuest(const CQuest & rhs)
+CTalk::CTalk(const CTalk & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CQuest::Initialize_Prototype()
+HRESULT CTalk::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -23,17 +23,19 @@ HRESULT CQuest::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CQuest::Initialize(void* pArg)
+HRESULT CTalk::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 150.f;
-	m_fSizeY = 120.f;
-	m_fX = 1185.f;
-	m_fY = 300.f;
+	m_fSizeX = 800.f;
+	m_fSizeY = 250.f;
+	m_fX = 640.f;
+	m_fY = 500.f;
+
+	
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
@@ -45,24 +47,53 @@ HRESULT CQuest::Initialize(void* pArg)
 	return S_OK;
 }
 
-int CQuest::Tick(_float fTimeDelta)
+int CTalk::Tick(_float fTimeDelta)
 {
-	if (b_onoff == true && CKeyMgr::Get_Instance()->Key_Up(VK_ESCAPE))
+	if (m_bcheck == true)
 	{
-		b_onoff = false;
-		
-	}
-	else if (b_onoff == false && CKeyMgr::Get_Instance()->Key_Up(VK_ESCAPE))
-	{
-		b_onoff = true;
-	}
-
-	if (b_onoff == true);
-	{
-
 		__super::Tick(fTimeDelta);
 
+		if (CKeyMgr::Get_Instance()->Key_Up('0'))
+		{
+			if (texnum == 2)
+			{
+				CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+			//	Safe_AddRef(pinv);
+				pinv->Get_Quest_list()->front()->set_onoff(true);
+				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				m_bcheck = false;
+		//		Safe_Release(pinv);
+				
+					
+			}
+			else if (texnum == 6)
+			{
+				CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+				auto pinven = pinv->Get_Inven_list();
+			//	Safe_AddRef(pinven);
+				for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+				{
+					if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+					{
+						(*iter)->set_texnum(ITEMNAME_QUEST1);
 
+						(*iter)->set_check(true);
+
+						break;;
+					}
+
+				}
+				pinv->Get_Quest_list()->front()->set_onoff(false);
+				m_bcheck = false;
+				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				m_bcheck = false;
+		//		Safe_Release(pinven);
+			}
+			else
+				++texnum;
+		}
 		//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		//CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 		//Safe_AddRef(pGameInstance);
@@ -77,26 +108,27 @@ int CQuest::Tick(_float fTimeDelta)
 		//Safe_Release(pGameInstance);
 		//Safe_Release(pinv);
 
-
-		return OBJ_NOEVENT;
-   }
+	}
 	
+
+	return OBJ_NOEVENT;
 }
 
-void CQuest::Late_Tick(_float fTimeDelta)
+void CTalk::Late_Tick(_float fTimeDelta)
 {
-	if (b_onoff == true)
+	if (m_bcheck == true)
 	{
 		__super::Late_Tick(fTimeDelta);
 
 		if (nullptr != m_pRendererCom)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 	}
+	
 }
 
-HRESULT CQuest::Render()
+HRESULT CTalk::Render()
 {
-	if (b_onoff == true)
+	if (m_bcheck == true)
 	{
 		if (FAILED(__super::Render()))
 			return E_FAIL;
@@ -120,20 +152,22 @@ HRESULT CQuest::Render()
 
 		if (FAILED(Release_RenderState()))
 			return E_FAIL;
+
+
+
+		return S_OK;
 	}
-
-
-	return S_OK;
+	
 }
 
-HRESULT CQuest::SetUp_Components()
+HRESULT CTalk::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_quest"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_talk"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -155,7 +189,7 @@ HRESULT CQuest::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CQuest::SetUp_RenderState()
+HRESULT CTalk::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -163,13 +197,13 @@ HRESULT CQuest::SetUp_RenderState()
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 20);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
 	return S_OK;
 }
 
-HRESULT CQuest::Release_RenderState()
+HRESULT CTalk::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -177,34 +211,36 @@ HRESULT CQuest::Release_RenderState()
 	return S_OK;
 }
 
-CQuest * CQuest::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CTalk * CTalk::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CQuest*	pInstance = new CQuest(pGraphic_Device);
+	CTalk*	pInstance = new CTalk(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CQuest"));
+		ERR_MSG(TEXT("Failed to Created : CTalk"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CQuest::Clone(void* pArg)
+CGameObject * CTalk::Clone(void* pArg)
 {
-	CQuest*	pInstance = new CQuest(*this);
+	CTalk*	pInstance = new CTalk(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CQuest"));
+		ERR_MSG(TEXT("Failed to Cloned : CTalk"));
 		Safe_Release(pInstance);
 	}
-	CInventory_Manager::Get_Instance()->Get_Quest_list()->push_back(pInstance);
+
+	CInventory_Manager::Get_Instance()->Get_Talk_list()->push_back(pInstance);
+
 	return pInstance;
 }
 
 
-void CQuest::Free()
+void CTalk::Free()
 {
 	__super::Free();
 

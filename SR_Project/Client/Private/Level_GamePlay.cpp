@@ -311,7 +311,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_PlayerStatUI(const _tchar * pLayerTag)
 			return E_FAIL;
 
 	}
+	for (int i = 0; i < 3; ++i)
+	{
+		int number = i;
 
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Line"), LEVEL_STATIC, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+	
 
 
 	for (int i = 0; i < 3; ++i)
@@ -419,6 +427,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 			return E_FAIL;
 
 	}
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_talk"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
 
 
 	Safe_Release(pGameInstance);

@@ -180,6 +180,7 @@
     <ClInclude Include="..\Public\Inventory.h" />
     <ClInclude Include="..\Public\Item.h" />
     <ClInclude Include="..\Public\Level_Hunt.h" />
+    <ClInclude Include="..\Public\Line.h" />
     <ClInclude Include="..\Public\MainInventory_back.h" />
     <ClInclude Include="..\Public\MainInventory_front.h" />
     <ClInclude Include="..\Public\Craftmain.h" />
@@ -210,6 +211,7 @@
     <ClInclude Include="..\Public\Questpont.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Spider.h" />
+    <ClInclude Include="..\Public\Talk.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\ToolboxGather.h" />
     <ClInclude Include="..\Public\ToolboxGather_back.h" />
@@ -252,6 +254,7 @@
     <ClCompile Include="..\Private\Inventory.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
     <ClCompile Include="..\Private\Level_Hunt.cpp" />
+    <ClCompile Include="..\Private\Line.cpp" />
     <ClCompile Include="..\Private\MainInventory_back.cpp" />
     <ClCompile Include="..\Private\MainInventory_front.cpp" />
     <ClCompile Include="..\Private\Craftmain.cpp" />
@@ -281,6 +284,7 @@
     <ClCompile Include="..\Private\Questpont.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Spider.cpp" />
+    <ClCompile Include="..\Private\Talk.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\ToolboxGather.cpp" />
     <ClCompile Include="..\Private\ToolboxGather_back.cpp" />

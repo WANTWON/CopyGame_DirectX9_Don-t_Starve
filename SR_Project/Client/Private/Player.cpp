@@ -508,6 +508,34 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN5]))
 	{
+		/*TestLightning*/
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.bIsPlayerBullet = true;
+		BulletData.eDirState = DIR_STATE::DIR_DOWN;
+		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE4;
+		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		BulletData.vPosition = m_vTargetPicking;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+			return;
+
+
+		CParticle::STATEDESC ParticleDesc;
+		ZeroMemory(&ParticleDesc, sizeof(CParticle::STATEDESC));
+		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
+		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Snow");
+		ParticleDesc.iTextureNum = 1;
+		ParticleDesc.vVelocity = _float3((rand() % 10)*0.1f, -0.1f, -rand() % 10 * 0.1f);
+
+		for (int i = 0; i < 200; ++i)
+		{
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_Particle"), ParticleDesc.eTextureScene, TEXT("Layer_Particle"), &ParticleDesc)))
+				return;
+		}
+		
 	}
 #pragma endregion Action
 
@@ -1065,7 +1093,11 @@ void CPlayer::Multi_Action(_float _fTimeDelta)
 
 	if (m_pTarget != nullptr)
 	{
-		Set_PickingPoint(m_pTarget->Get_Position());
+		_float3 vPickPos = m_pTarget->Get_Position();
+		_float3 vOffSet = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		D3DXVec3Normalize(&vOffSet, &vOffSet);
+		vPickPos -= vOffSet*0.5f;
+		Set_PickingPoint(vPickPos);
 		m_bAutoMode = true;
 		m_ActStack.push(ACTION_STATE::MOVE);
 	}

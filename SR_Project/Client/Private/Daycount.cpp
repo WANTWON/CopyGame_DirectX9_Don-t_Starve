@@ -32,7 +32,7 @@ HRESULT CDaycount::Initialize(void* pArg)
 	m_fSizeX = 80.f;
 	m_fSizeY = 80.f;
 	m_fX = 1230.f;
-	m_fY = 70.f;
+	m_fY = 50.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
