@@ -16,7 +16,7 @@ class CPlayer final : public CGameObject
 {
 public:
 
-	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, DAMAGED, PORTAL, DEAD, REVIVE, ACTION_END };
+	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, DAMAGED, BUILD, PORTAL, DEAD, REVIVE, ANGRY, ACTION_END };
 	typedef enum class InteractionKey {
 		KEY_LBUTTON, //VK_LBUTTON
 		KEY_RBUTTON, //VK_RBUTTON
@@ -96,7 +96,7 @@ public:
 public:/*Picking*/
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
 	void Move_to_PickingPoint(_float fTimedelta);
-	void Set_PickingPoint(_float3 PickingPoint) { m_vPickingPoint = PickingPoint; m_bPicked = true; m_bInputKey = false; m_bArrive = false; };
+	void Set_PickingPoint(_float3 PickingPoint, _bool _bIsBuildTrigger = false) { m_vPickingPoint = PickingPoint; m_bPicked = true; m_bInputKey = false; m_bArrive = false; m_bAutoMode = true; m_bBuildTrigger = _bIsBuildTrigger; };
 
 
 public: /*Get&Set*/
@@ -106,7 +106,9 @@ public: /*Get&Set*/
 	_float3 Get_Right();
 	PLAYERSTAT Get_Player_Stat() { return m_tStat; }
 
-		//Sets
+	_bool	Get_IsBuild(void) { return m_bIsBuild; }
+	_float3 Get_PickingPoint(void) { return m_vPickingPoint; }
+	//Sets
 	void	Set_HP(_float _fHP) { m_tStat.fCurrentHealth += _fHP; }
 	void	Set_Atk(_float _fAtk) { m_tStat.fAtk += _fAtk; }
 	void	Set_Hungry(_float _fHungry) { m_tStat.fCurrentHungry += _fHungry; }
@@ -115,11 +117,12 @@ public: /*Get&Set*/
 	void	Set_Armor(_float _fArmor) { m_tStat.fArmor += _fArmor; }
 	void	Set_WeaponType(WEAPON_TYPE _eWeapon) { m_eWeaponType = _eWeapon; }
 	void	Set_Position(_float3 Position);
-
+	void	Set_IsBuild(_bool _bIsBuild) { m_bIsBuild = _bIsBuild; }
+	void	Set_bMove(_bool _Move) { m_bMove = _Move; }
 public:
 	void	Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
 public:
-	void	Add_ActStack(ACTION_STATE _ACT_STATE) { m_ActStack.push(_ACT_STATE); m_bAutoMode = true; m_bMove = false; }
+	void	Add_ActStack(ACTION_STATE _ACT_STATE) { m_ActStack.push(_ACT_STATE); m_bAutoMode = true; /*m_bMove = false; */}
 	//Test
 	void Check_Target(_bool _bDead) { if (_bDead) m_pTarget = nullptr; }
 private:/*Setup*/
@@ -152,9 +155,11 @@ private: /**Actions*/
 	void	Jump(_float _fTimeDelta);
 	void	Dead(_float _fTimeDelta);
 	void	Revive(_float _fTimeDelta);
+	void	Building(_float _fTImeDelta);
+	void	Angry(_float _fTimeDelta);
 
 
-	void Multi_Action(_float _fTimeDelta); //�
+	void Multi_Action(_float _fTimeDelta); //
 
 	//Skill
 	void Throw_Bomb(_float _fTimeDelta);
@@ -250,17 +255,21 @@ private: /*for Auto*/
 	//for Skills
 	_float4x4				m_pOriginMatrix;
 	_uint					iCnt = 0;
-
+	_float					m_fAtkScale = 6.2f;
 	//Dead
 	_bool					m_bGhost = false;
 	_float					m_fReviveTime = 0.f;
 	//MovePortal
 	_bool					m_bInPortal = false;
+
+	//Building
+	_bool					m_bIsBuild = false;
+	_bool					m_bBuildTrigger = false;
+	_float					m_fBuildTime = 0.f;
 private: // Test
 	_float3					m_vTargetPicking;
 	LEVEL					m_iCurrentLevelndex; //현재 레벨에 따라 불렛 생성 레벨이 다르기 때문에
 	LEVEL					m_iPreLevelIndex;
-	_float					m_fAtkScale = 6.2f;
 	
 
 public:

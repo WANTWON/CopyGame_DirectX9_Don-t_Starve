@@ -47,6 +47,7 @@ private:
 
 public:
 	_uint get_texnum() { return texnum;  }
+	void set_texnum(_uint num) { texnum = num; }
 	bool get_onoff() { return b_onoff;}
 	void set_onoff(bool tof) { b_onoff = tof; }
 public:

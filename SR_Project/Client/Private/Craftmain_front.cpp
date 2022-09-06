@@ -78,7 +78,7 @@ int CCraftmain_front::Tick(_float fTimeDelta)
 		m_fY = 155.f;
 	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT)
 		m_fY = 205.f;
-	else if (m_makewhat == MAKE_STAFF)
+	else if (m_makewhat == MAKE_STAFF|| m_makewhat == MAKE_TENT)
 		m_fY = 255.f;
 	else if (m_makewhat == MAKE_ARMOR)
 		m_fY = 305.f;
@@ -173,6 +173,19 @@ int CCraftmain_front::Tick(_float fTimeDelta)
 		else
 
 			texnum = ITEMNAME_PIGTAIL;
+
+	}
+
+	else if (m_makewhat == MAKE_TENT)
+	{
+		if (iNum == 0)
+		{
+			texnum = ITEMNAME_GRASS;
+		}
+
+		else
+
+			texnum = ITEMNAME_ROPE;
 
 	}
 

@@ -49,28 +49,33 @@ HRESULT CTalk::Initialize(void* pArg)
 
 int CTalk::Tick(_float fTimeDelta)
 {
+	
 	if (m_bcheck == true)
 	{
+		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+		Safe_AddRef(pinv);
 		__super::Tick(fTimeDelta);
 
 		if (CKeyMgr::Get_Instance()->Key_Up('0'))
 		{
 			if (texnum == 2)
 			{
-				CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-			//	Safe_AddRef(pinv);
+				
+			
 				pinv->Get_Quest_list()->front()->set_onoff(true);
+				pinv->Get_Quest_list()->front()->set_texnum(0);
 				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
-		//		Safe_Release(pinv);
+		     	Safe_Release(pinv);
 				
 					
 			}
 			else if (texnum == 6)
 			{
-				CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+				//CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 				auto pinven = pinv->Get_Inven_list();
+				//Safe_Release(pinv);//üũ
 			//	Safe_AddRef(pinven);
 				for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 				{
@@ -112,7 +117,16 @@ int CTalk::Tick(_float fTimeDelta)
 				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
-		//		Safe_Release(pinven);
+				Safe_Release(pinv);
+			}
+			else if (texnum == 8)
+			{
+				pinv->Get_Quest_list()->front()->set_onoff(true);
+				pinv->Get_Quest_list()->front()->set_texnum(1);
+				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				m_bcheck = false;
+				Safe_Release(pinv);
 			}
 			else
 				++texnum;

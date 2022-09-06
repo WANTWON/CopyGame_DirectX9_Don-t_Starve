@@ -325,8 +325,9 @@ void CBearger::Change_Frame()
 			m_bIsAttacking = false;
 			m_dwAttackTime = GetTickCount();
 		}
-		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 33)
+		else
 			Attack();
+			
 		break;
 	case STATE::POUND_GROUND:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
@@ -339,7 +340,7 @@ void CBearger::Change_Frame()
 			m_bIsAttacking = false;
 			m_dwAttackTime = GetTickCount();
 		}
-		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)
+		else 
 			Attack(true);
 		break;
 	case STATE::HIT:
@@ -681,16 +682,75 @@ void CBearger::Follow_Target(_float fTimeDelta)
 
 void CBearger::Attack(_bool bIsSpecial)
 {
-	BULLETDATA BulletData;
-	ZeroMemory(&BulletData, sizeof(BulletData));
-	BulletData.vPosition = Get_Position();
-	BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	BulletData.eDirState = m_eDir;
-
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-		return;
+
+	// Normal Attack
+	if (!bIsSpecial && m_pTextureCom->Get_Frame().m_iCurrentTex == 33)
+	{
+		// Create Standard Bullet
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+
+		BulletData.vPosition = Get_Position();
+		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		BulletData.eDirState = m_eDir;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+			return;
+	}
+	// Special Attack
+	else if (bIsSpecial)
+	{
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+
+		BulletData.eWeaponType = WEAPON_TYPE::BEARGER_SPECIAL;
+		BulletData.eDirState = m_eDir;
+		D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+		D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
+
+		// Create Ring and First Wave of Rocks
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)
+		{
+			// Ring
+			_float3 vPos = Get_Position() + _float3(0.f, (-1 * m_pTransformCom->Get_Scale().y / 2) + .1f, 0.f);
+
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Attack_Special"), LEVEL_STATIC, TEXT("Layer_Attack"), &vPos)))
+				return;
+
+			// Rocks
+			BulletData.vPosition = Get_Position()/* + BulletData.vLook*/;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+			BulletData.vPosition = Get_Position() + BulletData.vRight;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+			BulletData.vPosition = Get_Position() - BulletData.vLook;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+			BulletData.vPosition = Get_Position() - BulletData.vRight;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+		}
+		// Create Second Wave of Rocks
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 30)
+		{
+			// Rocks
+			BulletData.vPosition = Get_Position() + BulletData.vLook * 2;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+			BulletData.vPosition = Get_Position() + BulletData.vRight * 2;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+			BulletData.vPosition = Get_Position() - BulletData.vLook * 2;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+			BulletData.vPosition = Get_Position() - BulletData.vRight * 2;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+				return;
+		}
+	}
 }
 
 _float CBearger::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)

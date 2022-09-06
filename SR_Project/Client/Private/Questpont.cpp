@@ -33,10 +33,10 @@ HRESULT CQuestpont::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, (_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 17.0f;
-	m_fSizeY = 17.0f;
-	m_fX = 1210.f;
-	m_fY = 282.f + (iNum * 35.f);
+	m_fSizeX = 13.0f;
+	m_fSizeY = 13.0f;
+	m_fX = 1214.f;
+	m_fY = 286.f + (iNum * 31.0f);
 /*
 
 
@@ -71,11 +71,13 @@ int CQuestpont::Tick(_float fTimeDelta)
 {
 	
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pInventory_Manager);
 	
+	Safe_AddRef(pInventory_Manager);
 
 	if (m_bcheck == true && pInventory_Manager->Get_Quest_list()->front()->get_onoff() == true)
 	{
+		
+		Safe_Release(pInventory_Manager);
 
 		__super::Tick(fTimeDelta);
 		
@@ -100,7 +102,7 @@ int CQuestpont::Tick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 	
-	Safe_Release(pInventory_Manager);
+	
 
 	//if()
 	}
@@ -114,7 +116,7 @@ void CQuestpont::Late_Tick(_float fTimeDelta)
 	Safe_AddRef(pInventory_Manager);
 
 
-	if (m_bcheck == true && pInventory_Manager->Get_Quest_list()->front()->get_onoff() == true)
+	if (m_bcheck == true && pInventory_Manager->Get_Quest_list()->front()->get_onoff() == true && pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 0)
 	{
 
 

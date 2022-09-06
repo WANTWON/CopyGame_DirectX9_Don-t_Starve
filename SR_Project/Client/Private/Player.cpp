@@ -113,6 +113,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	//cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
 
+
 	return OBJ_NOEVENT;
 }
 
@@ -148,6 +149,18 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	Create_Bullet();
 
+
+	Test_Debug(fTimeDelta);
+
+	if (CKeyMgr::Get_Instance()->Key_Up('9'))
+	{
+		CInventory_Manager::Get_Instance()->Use_pot();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Up('8'))
+	{
+		CInventory_Manager::Get_Instance()->Off_pot();
+	}
+
 }
 
 
@@ -173,6 +186,7 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 
 	if (m_bPicked == false || m_bArrive == true || m_bInputKey == true)
 		return;
+
 	WalkingTerrain();
 	m_vPickingPoint.y = m_fTerrain_Height;
 	m_pTransformCom->Go_PosTarget(fTimedelta, m_vPickingPoint, _float3(0.f, 0.f, 0.f));
@@ -716,6 +730,8 @@ bool CPlayer::ResetAction(_float _fTimeDelta)
 	case Client::CPlayer::ACTION_STATE::PORTAL:
 	case Client::CPlayer::ACTION_STATE::DEAD:
 	case Client::CPlayer::ACTION_STATE::REVIVE:
+	case Client::CPlayer::ACTION_STATE::BUILD:
+	case Client::CPlayer::ACTION_STATE::ANGRY:
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1)
 		{
 			return true;
@@ -1295,6 +1311,75 @@ void CPlayer::Revive(_float _fTimeDelta)
 	}
 }
 
+void CPlayer::Building(_float _fTImeDelta)
+{
+	m_eState = ACTION_STATE::BUILD;
+
+	m_bIsBuild = false;
+	m_bBuildTrigger = true;
+
+	m_fBuildTime += _fTImeDelta;
+
+	m_Equipment->Set_ActionState((_uint)3);
+	m_Equipment->Set_WeaponType(m_eWeaponType);
+
+	if (m_ePreState != m_eState)
+	{
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Build_Down"));
+			break;
+		case DIR_STATE::DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Build_Up"));
+			break;
+		case DIR_STATE::DIR_LEFT:
+		case DIR_STATE::DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Build_Side"));
+			break;
+		}
+		m_ePreState = m_eState;
+	}
+	if (m_fBuildTime > 2.f &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex -2)
+	{
+		m_bIsBuild = true;
+		m_bBuildTrigger = false;
+		m_fBuildTime = 0.f;
+	}
+	else if(m_fBuildTime < 2.f &&m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 2)
+	{
+
+		m_pTextureCom->Get_Frame().m_iCurrentTex = 0;
+	}
+
+}
+
+void CPlayer::Angry(_float _fTimeDelta)
+{
+	m_eState = ACTION_STATE::ANGRY;
+
+	if (m_ePreState != m_eState)
+	{
+		m_bMove = false;
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_DOWN:		
+		case DIR_STATE::DIR_UP:
+		case DIR_STATE::DIR_LEFT:
+		case DIR_STATE::DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Angry"));
+			break;
+		}
+		m_ePreState = m_eState;
+
+	}
+
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iCurrentTex - 1)
+	{
+		m_bMove = true;
+	}
+}
+
 void CPlayer::Multi_Action(_float _fTimeDelta)
 {
 	//Only Objects
@@ -1653,28 +1738,6 @@ void CPlayer::Cooltime_Update(_float _fTimeDelta)
 
 void CPlayer::Test_Func(_int _iNum)
 {
-
-
-
-	//FPSMODE일때 생각해보기.
-
-
-	////////////////////////////////////////////
-	/*IceSpike*/
-
-	//BULLETDATA BulletData;
-	//ZeroMemory(&BulletData, sizeof(BulletData));
-	//BulletData.bIsPlayerBullet = true;
-	//BulletData.eDirState = m_eDirState;
-	//BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICESPIKE4;
-	//BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	////_float3 vTempPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	//BulletData.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	//BulletData.vPosition.y -= 0.5f;
-	////FPSMODE일때 생각해보기.
-
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
-	//	return;
 }
 
 void CPlayer::Test_Detect(_float fTImeDelta)
@@ -1755,14 +1818,18 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 		case ACTION_STATE::IDLE:
 			m_bAutoMode = false;
 			break;
-		case ACTION_STATE::MOVE:
+		case ACTION_STATE::MOVE:	//만약)m_pTarget ==nullptr,automode == true, m_bBuild == false; 빌드로 이동하게 만들기?
 			if (m_bArrive && !Check_Interact_End())
 			{
 				m_ActStack.push(Select_Interact_State(eObjID));
 			}
-			else if (m_pTarget == nullptr || Check_Interact_End())
+			else if ((m_pTarget == nullptr || Check_Interact_End()) && m_bBuildTrigger == false)
 			{
 				m_ActStack.pop();
+			}
+			else if (m_pTarget == nullptr && m_bBuildTrigger == true && m_bArrive == true)
+			{
+				m_ActStack.push(ACTION_STATE::BUILD);
 			}
 			break;
 		case ACTION_STATE::MINING:
@@ -1860,6 +1927,26 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				Jump(fTimeDelta);
 			}
 			break;
+		case ACTION_STATE::BUILD:
+			if (!m_bBuildTrigger)
+			{
+				m_ActStack.pop();
+			}
+			else
+			{
+				Building(fTimeDelta);
+			}
+			break;
+		case ACTION_STATE::ANGRY:
+			if (m_bMove)
+			{
+				m_ActStack.pop();
+			}
+			else
+			{
+				Angry(fTimeDelta);
+			}
+			break;
 		default:
 			break;
 		}
@@ -1875,6 +1962,8 @@ void CPlayer::Clear_ActStack()
 		m_ActStack.pop();
 	}
 	m_bAutoMode = false;
+	m_bIsBuild = false;
+	m_bBuildTrigger = false;
 }
 
 CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
@@ -2133,6 +2222,14 @@ HRESULT CPlayer::Texture_Clone()
 		return E_FAIL;
 	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Revive"), m_pTextureCom));
 
+	/*Angry*/
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_iEndTex = 29;
+	TextureDesc.m_fSpeed = 60;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Angry"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Angry"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Angry"), m_pTextureCom));
+	
 	return S_OK;
 }
 
