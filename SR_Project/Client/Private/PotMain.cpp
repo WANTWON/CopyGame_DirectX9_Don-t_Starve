@@ -248,7 +248,7 @@ HRESULT CPotMain::Texture_Clone()
 
 
 	// Tall
-	TextureDesc.m_iEndTex = 11;
+	TextureDesc.m_iEndTex = 10;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pot_open"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Potopen"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
