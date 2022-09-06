@@ -215,16 +215,42 @@ void CTerrain::PickingTrue()
 	Safe_AddRef(pGameInstance);
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
+	CPickingMgr* pPicking = CPickingMgr::Get_Instance();
+
+	CMouse*			pMouse = CMouse::Get_Instance();
+	int iNum = pMouse->Get_Item_count();
 	//pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
 	//TestCode
 	if (pGameInstance->Key_Up('P'))
-	{
-		CMouse*			pMouse = CMouse::Get_Instance();
+	{	
+		if (iNum == 0)
+		{
+			CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+			pMouse->Set_Item_type(ITEM_END);
+			auto mouse = pinv->Get_Mouse_item_list()->begin();
+			pMouse->Set_picked(false);
+			(*mouse)->set_texnum(ITEMNAME_END);
+			(*mouse)->set_check(false);//마우스이미지
+			pPlayer->Add_ActStack(CPlayer::ACTION_STATE::ANGRY);
+			pPlayer->Set_bMove(false);
+		}
+		else 
+		{		
+			//for BuildPickingPoint
+			pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y, m_vecOutPos.z), true);
+			pPlayer->Set_IsBuild(false);
+			pPlayer->Add_ActStack(CPlayer::ACTION_STATE::MOVE);
+		}
 
-		CPickingMgr* pPicking = CPickingMgr::Get_Instance();
+	}
+	else if (pPlayer->Get_IsBuild())
+	{
+		pPlayer->Set_IsBuild(false);
+		
+
 		if (pPicking->Get_PickingItemType() == ITEM_STRUCT)
 		{
-			int iNum = pMouse->Get_Item_count();
+			
 			if (iNum > 0)
 			{
 				iNum--;
@@ -234,14 +260,14 @@ void CTerrain::PickingTrue()
 				switch (pMouse->Get_Item_name())
 				{
 				case ITEMNAME_FENCE:
-					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_UnInteractObject"), pPicking->Get_PickingPos());
+					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_UnInteractObject"), pPlayer->Get_PickingPoint());
 					break;
 				case ITEMNAME_POT:
-					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPicking->Get_PickingPos());
+					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPlayer->Get_PickingPoint());
 					break;
 				}
-					
-			
+
+
 				if (iNum == 0)
 				{
 					CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
@@ -251,15 +277,14 @@ void CTerrain::PickingTrue()
 					(*mouse)->set_texnum(ITEMNAME_END);
 					(*mouse)->set_check(false);//마우스이미지
 				}
-					
+
 
 			}
 		}
-			
 	}
 		
 
-	pPlayer->Set_PickingTarget(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
+	//pPlayer->Set_PickingTarget(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
 	//cout << "Collision Terrain : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
 
 	Safe_Release(pGameInstance);

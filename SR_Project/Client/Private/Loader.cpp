@@ -297,6 +297,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Revive/Player_Revive_%03d.png"), 17))))
 		return E_FAIL;
 
+	/*Angry*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Angry"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Angry/Player_Angry_%03d.png"), 30))))
+		return E_FAIL;
 #pragma endregion Add_Texture_Player
 
 #pragma  region Add_Texture_others
