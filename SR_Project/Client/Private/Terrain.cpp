@@ -219,6 +219,12 @@ void CTerrain::PickingTrue()
 
 	CMouse*			pMouse = CMouse::Get_Instance();
 	int iNum = pMouse->Get_Item_count();
+	
+	//for Character Skill
+	if (pPlayer->Get_SkillShow())
+	{
+		pPlayer->Set_PickingTarget(m_vecOutPos);
+	}
 	//pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
 	//TestCode
 	if (pGameInstance->Key_Up('P'))
