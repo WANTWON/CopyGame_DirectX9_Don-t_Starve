@@ -57,8 +57,11 @@ int CBullet::Tick(_float fTimeDelta)
 	if (m_bDead == true)
 		return OBJ_DEAD;
 
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
+	/*if (nullptr != m_pColliderCom)
+		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);*/
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	Excute(fTimeDelta);
 
@@ -104,20 +107,26 @@ HRESULT CBullet::Render()
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 	m_pTextureCom->MoveFrame(m_TimerTag);
+
+	if (m_pVIDebugBufferCom)
+	{
+		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		m_pVIDebugBufferCom->Render();
+		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	}
+
 	return S_OK;
 }
 
 HRESULT CBullet::SetUp_Components()
 {
-
-
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-		return E_FAIL;
+	//if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
+	//	return E_FAIL;
 
 	/* For.Com_Texture */
 	if (FAILED(Texture_Clone()))
@@ -139,6 +148,19 @@ HRESULT CBullet::SetUp_Components()
 		return E_FAIL;
 	//±ÍÂú¾Æ ¤¾¤¾
 	Init_Data();
+
+	SetUp_DebugComponents();
+
+	return S_OK;
+}
+
+HRESULT CBullet::SetUp_DebugComponents(void * pArg)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Components(TEXT("Com_DebugBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIDebugBufferCom)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -265,8 +287,8 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 {
 	vector<CGameObject*> vecDamagedActor;
 
-
-	if (m_pColliderCom->Collision_Check_Group_Multi(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, vecDamagedActor, this))
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	if (pGameInstance->Collision_Check_Group_Multi(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, vecDamagedActor, this))
 	{
 		switch (m_tBulletData.eWeaponType)
 		{
@@ -1191,7 +1213,7 @@ void CBullet::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 
-	Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pColliderCom);
 
 	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_MINE)
 	{

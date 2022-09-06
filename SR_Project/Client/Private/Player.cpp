@@ -85,8 +85,11 @@ int CPlayer::Tick(_float fTimeDelta)
 	Cooltime_Update(fTimeDelta);
 
 	//Collider Add
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+	//if (nullptr != m_pColliderCom)
+	//	m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
 
 	//Act Auto
 	Tick_ActStack(fTimeDelta);
@@ -268,8 +271,8 @@ HRESULT CPlayer::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-		return E_FAIL;
+	//if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
+	//	return E_FAIL;
 
 	/* For.Com_Texture */
 	if (Texture_Clone())
@@ -1015,9 +1018,9 @@ void CPlayer::Mining(_float _fTimeDelta)
 		ParticleDesc.eType = CParticleSystem::PARTICLE_ROCK;
 		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
 		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Rock");
-		ParticleDesc.dDuration = 0.2; //��ƼŬ �ð�
-		ParticleDesc.dParticleLifeTime = 0.2; //����
-		ParticleDesc.dSpawnTime = 1; //���� Ÿ��
+		ParticleDesc.dDuration = 0.2; //  ƼŬ  ð 
+		ParticleDesc.dParticleLifeTime = 0.2; //    
+		ParticleDesc.dSpawnTime = 1; //     Ÿ  
 		ParticleDesc.fParticlePerSecond = 75;
 		ParticleDesc.fVelocityDeviation = 1.f;
 		ParticleDesc.iMaxParticleCount = 5;
@@ -1064,9 +1067,9 @@ void CPlayer::Chop(_float _fTimeDelta)
 		ParticleDesc.eType = CParticleSystem::PARTICLE_LEAF;
 		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
 		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Leaf");
-		ParticleDesc.dDuration = 1; //��ƼŬ �ð�
-		ParticleDesc.dParticleLifeTime = 1; //����
-		ParticleDesc.dSpawnTime = 1; //���� Ÿ��
+		ParticleDesc.dDuration = 1; //  ƼŬ  ð 
+		ParticleDesc.dParticleLifeTime = 1; //    
+		ParticleDesc.dSpawnTime = 1; //     Ÿ  
 		ParticleDesc.fParticlePerSecond = 75;
 		ParticleDesc.fVelocityDeviation = 1.f;
 		ParticleDesc.iMaxParticleCount = 5;
@@ -1921,6 +1924,8 @@ CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
 	case INTERACTOBJ_ID::PORTAL:
 		return ACTION_STATE::PORTAL;
 		break;
+	case INTERACTOBJ_ID::COOKPOT:
+	case INTERACTOBJ_ID::TENT:
 	case INTERACTOBJ_ID::NPC:
 	case INTERACTOBJ_ID::ITEMS:
 		return ACTION_STATE::PICKUP;
@@ -2293,7 +2298,7 @@ void CPlayer::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pColliderCom);
 
 	Safe_Release(m_Equipment);
 	//Debug

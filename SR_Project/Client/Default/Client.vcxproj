@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\AttackRange.h" />
     <ClInclude Include="..\Public\BagInventory.h" />
+    <ClInclude Include="..\Public\Bearger.h" />
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\public\BerryBush.h" />
     <ClInclude Include="..\public\Boulder.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="..\Public\Craftmain_back.h" />
     <ClInclude Include="..\Public\Craftmain_front.h" />
     <ClInclude Include="..\Public\CraftPont.h" />
+    <ClInclude Include="..\public\CookPot.h" />
     <ClInclude Include="..\Public\Daycount.h" />
     <ClInclude Include="..\Public\Daycountpont.h" />
     <ClInclude Include="..\Public\Equipment_back.h" />
@@ -193,6 +195,7 @@
     <ClInclude Include="..\Public\ParticleSystem.h" />
     <ClInclude Include="..\Public\PickingMgr.h" />
     <ClInclude Include="..\public\Pig.h" />
+    <ClInclude Include="..\Public\PigKing.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\Public\CameraDynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -214,8 +217,11 @@
     <ClInclude Include="..\Public\Questpont.h" />
     <ClInclude Include="..\Public\Skeleton.h" />
     <ClInclude Include="..\Public\Sky.h" />
+    <ClInclude Include="..\public\Special_Attack.h" />
     <ClInclude Include="..\Public\Spider.h" />
+    <ClInclude Include="..\Public\SpiderWarrior.h" />
     <ClInclude Include="..\Public\Talk.h" />
+    <ClInclude Include="..\public\Tent.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\ToolboxConstruct.h" />
     <ClInclude Include="..\Public\ToolboxConstruct_back.h" />
@@ -234,15 +240,14 @@
     <ClInclude Include="..\Public\Water.h" />
     <ClInclude Include="..\Public\WoodWall.h" />
     <ClInclude Include="Client.h" />
-    <ClInclude Include="PigKing.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="SpiderWarrior.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\AttackRange.cpp" />
     <ClCompile Include="..\Private\BagInventory.cpp" />
+    <ClCompile Include="..\Private\Bearger.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\private\BerryBush.cpp" />
     <ClCompile Include="..\private\Boulder.cpp" />
@@ -252,6 +257,7 @@
     <ClCompile Include="..\Private\Craftmain_back.cpp" />
     <ClCompile Include="..\Private\Craftmain_front.cpp" />
     <ClCompile Include="..\Private\CraftPont.cpp" />
+    <ClCompile Include="..\private\CookPot.cpp" />
     <ClCompile Include="..\Private\Daycount.cpp" />
     <ClCompile Include="..\Private\Daycountpont.cpp" />
     <ClCompile Include="..\Private\Equipment_back.cpp" />
@@ -275,6 +281,7 @@
     <ClCompile Include="..\Private\ParticleSystem.cpp" />
     <ClCompile Include="..\Private\PickingMgr.cpp" />
     <ClCompile Include="..\private\Pig.cpp" />
+    <ClCompile Include="..\Private\PigKing.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\Private\CameraDynamic.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
@@ -295,8 +302,11 @@
     <ClCompile Include="..\Private\Questpont.cpp" />
     <ClCompile Include="..\Private\Skeleton.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
+    <ClCompile Include="..\private\Special_Attack.cpp" />
     <ClCompile Include="..\Private\Spider.cpp" />
+    <ClCompile Include="..\Private\SpiderWarrior.cpp" />
     <ClCompile Include="..\Private\Talk.cpp" />
+    <ClCompile Include="..\private\Tent.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\ToolboxConstruct.cpp" />
     <ClCompile Include="..\Private\ToolboxConstruct_back.cpp" />
@@ -315,8 +325,6 @@
     <ClCompile Include="..\Private\Water.cpp" />
     <ClCompile Include="..\Private\WoodWall.cpp" />
     <ClCompile Include="Client.cpp" />
-    <ClCompile Include="PigKing.cpp" />
-    <ClCompile Include="SpiderWarrior.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

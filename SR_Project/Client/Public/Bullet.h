@@ -7,7 +7,7 @@ class CTexture;
 class CRenderer;
 class CVIBuffer_Rect;
 class CTransform;
-class CCollider;
+//class CCollider;
 END
 
 BEGIN(Client)
@@ -28,6 +28,7 @@ public:
 
 private:
 	HRESULT SetUp_Components();
+	HRESULT SetUp_DebugComponents(void* pArg = nullptr);
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
@@ -62,9 +63,14 @@ private:/*For Components*/
 	CRenderer*				m_pRendererCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
-	CCollider*				m_pColliderCom = nullptr;
+	//CCollider*				m_pColliderCom = nullptr;
 
 	vector<CTexture*> m_vecTexture;
+
+	/* For.Debug */
+	CVIBuffer_Rect* m_pVIDebugBufferCom = nullptr;
+	CTransform*	m_pDebugTransformCom = nullptr;
+
 private: //values		
 	//WEAPON_TYPE				m_eWeaponType = WEAPON_TYPE::WEAPON_HAND;
 	const _tchar*			m_TimerTag = TEXT("");

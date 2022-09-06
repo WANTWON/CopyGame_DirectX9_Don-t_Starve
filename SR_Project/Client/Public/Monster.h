@@ -7,7 +7,7 @@ class CRenderer;
 class CVIBuffer_Rect;
 class CTransform;
 class CTexture;
-class CCollider;
+class CCollider_Rect;
 END
 
 BEGIN(Client)
@@ -30,12 +30,17 @@ protected: /* For.Components */
 	CRenderer* m_pRendererCom = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 	CTransform*	m_pTransformCom = nullptr;
-	CCollider* m_pColliderCom = nullptr;
+	CCollider_Rect* m_pColliderCom = nullptr;
 
 	vector<CTexture*> m_vecTexture;
 
+	/* For.Debug */
+	CVIBuffer_Rect* m_pVIDebugBufferCom = nullptr;
+	CTransform*	m_pDebugTransformCom = nullptr;
+
 protected:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) = 0;
+	virtual HRESULT SetUp_DebugComponents(void* pArg = nullptr);
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 

@@ -19,6 +19,7 @@ using namespace std;
 #include <vector>
 #include <map>
 #include <list>
+#include <array>
 #include <algorithm>
 #include <iostream>
 

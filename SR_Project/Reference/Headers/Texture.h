@@ -29,6 +29,7 @@ public:
 
 public:
 	HRESULT Bind_OnGraphicDev(_uint iIndex = 0);
+	HRESULT Bind_OnGraphicDev_Debug();
 
 public:
 	bool MoveFrame(const _tchar* TimerTag, _bool bLoop = true);
