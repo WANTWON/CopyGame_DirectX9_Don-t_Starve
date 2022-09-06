@@ -93,10 +93,6 @@ int CPlayer::Tick(_float fTimeDelta)
 	//if (nullptr != m_pColliderCom)
 	//	m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
 
-
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
-
 	Sleep_Restore();
 
 	//Act Auto
@@ -239,19 +235,18 @@ HRESULT CPlayer::Render()
 		return E_FAIL;
 
 
-	m_pVIBufferCom->Render();
-	
-	m_pTextureCom->Bind_OnGraphicDev_Debug();
-
-#ifdef _DEBUG
-	m_pColliderCom->Render_ColliderBox();
-#endif // _DEBUG
 
 	if (!m_bSleeping)
 	{
 		m_pVIBufferCom->Render();
 	}
-	
+
+#ifdef _DEBUG
+	m_pTextureCom->Bind_OnGraphicDev_Debug();
+	m_pColliderCom->Render_ColliderBox();
+#endif // _DEBUG
+
+
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
