@@ -81,7 +81,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pObject_Manager->Late_Tick(fTimeDelta);
 
 	//m_pCollider_Manager->Update_CollisionBox();
-	//m_pCollider_Manager->Reset_ColliderGroup(); // Need to be called last
+	m_pCollider_Manager->Reset_ColliderGroup(); // Need to be called last
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
