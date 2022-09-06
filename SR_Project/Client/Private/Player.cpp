@@ -44,11 +44,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 
-
-
-
-
-
 	//Test
 	Change_Texture(TEXT("Com_Texture_Idle_Down"));
 	m_ActStack.push(ACTION_STATE::IDLE);
@@ -150,14 +145,22 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	Create_Bullet();
 
-	if (CKeyMgr::Get_Instance()->Key_Up('9'))
+	
+
+	_float3 vDistance = _float3(0,0,0);
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	if (pGameInstance->Collision_with_Group(CCollider::COLLISION_BLOCK, this, &vDistance))
 	{
-		CInventory_Manager::Get_Instance()->Use_pot();
+		_float3 vPosition = Get_Position();
+
+		if(fabsf(vDistance.x) < fabsf(vDistance.z))
+			vPosition.x -= vDistance.x;
+		else
+			vPosition.z -= vDistance.z;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Up('8'))
-	{
-		CInventory_Manager::Get_Instance()->Off_pot();
-	}
+
 
 }
 

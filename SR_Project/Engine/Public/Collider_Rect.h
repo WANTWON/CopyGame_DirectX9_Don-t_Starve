@@ -24,7 +24,7 @@ public:
 	HRESULT Initialize(void* pArg) override;
 	HRESULT Update_ColliderBox(_float4x4 WorldMatrix);
 	HRESULT Render_ColliderBox();
-	_bool	Collision_Check(CCollider_Rect* pTarget);
+	_bool	Collision_Check(CCollider_Rect* pTarget, _float3* pOutDistance = nullptr);
 
 public:
 	COLLRECTDESC Get_CollRectDesc() { return m_StateDesc; }
