@@ -210,6 +210,7 @@
     <ClInclude Include="..\Public\PlayerMentality_pont.h" />
     <ClInclude Include="..\Public\Pont.h" />
     <ClInclude Include="..\Public\Portal.h" />
+    <ClInclude Include="..\Public\Potbutton.h" />
     <ClInclude Include="..\Public\PotMain.h" />
     <ClInclude Include="..\Public\Pot_back.h" />
     <ClInclude Include="..\Public\Pot_front.h" />
@@ -295,6 +296,7 @@
     <ClCompile Include="..\Private\PlayerMentality_pont.cpp" />
     <ClCompile Include="..\Private\Pont.cpp" />
     <ClCompile Include="..\Private\Portal.cpp" />
+    <ClCompile Include="..\Private\Potbutton.cpp" />
     <ClCompile Include="..\Private\PotMain.cpp" />
     <ClCompile Include="..\Private\Pot_back.cpp" />
     <ClCompile Include="..\Private\Pot_front.cpp" />

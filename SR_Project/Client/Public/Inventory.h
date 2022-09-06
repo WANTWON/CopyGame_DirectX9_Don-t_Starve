@@ -34,6 +34,7 @@
 #include "PotMain.h"
 #include "Pot_back.h"
 #include "Pot_front.h"
+#include "Potbutton.h"
 /*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -89,6 +90,7 @@ public:
 	list<CPotMain*>*Get_Pot_list(void) { return &m_Pot; }
 	list<CPot_back*>*Get_Potback_list(void) { return &m_Potback; }
 	list<CPot_front*>*Get_Potfront_list(void) { return &m_Potfront; }
+	list<CPotbutton*>*Get_Potbutton_list(void) { return &m_Potbutton; }
 
 	void sethp(_uint hp) { m_ihp = hp; }
 	void sethuger(_uint hunger) { m_ihunger = hunger;}
@@ -163,6 +165,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CPotMain*> m_Pot;
 	list<CPot_back*> m_Potback;
 	list<CPot_front*> m_Potfront;
+	list<CPotbutton*> m_Potbutton;
 	
 
 

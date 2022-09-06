@@ -87,7 +87,7 @@ void CPotMain::Late_Tick(_float fTimeDelta)
 	{
 		__super::Late_Tick(fTimeDelta);
 
-		if (nullptr != m_pRendererCom && m_bcheck_pot == true)
+		if (nullptr != m_pRendererCom)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 
@@ -110,7 +110,7 @@ void CPotMain::Late_Tick(_float fTimeDelta)
 		case CLOSE:
 			if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 			{
-				//m_bcheck_bag = false;
+				m_bcheck_pot = false;
 			}
 
 
@@ -239,7 +239,7 @@ HRESULT CPotMain::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 60;
+	TextureDesc.m_fSpeed = 10;
 
 	TextureDesc.m_iStartTex = 1;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pot"), (CComponent**)&m_pTextureCom)))
@@ -248,7 +248,7 @@ HRESULT CPotMain::Texture_Clone()
 
 
 	// Tall
-	TextureDesc.m_iEndTex = 10;
+	TextureDesc.m_iEndTex = 11;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pot_open"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Potopen"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);

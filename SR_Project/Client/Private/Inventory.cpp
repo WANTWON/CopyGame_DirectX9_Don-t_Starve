@@ -107,7 +107,11 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 				i->set_texnum(pMouse->Get_Prev_Item_name());
 			}
 			
-			i->set_itemcount(pMouse->Get_Item_prev_count());
+			if (pMouse->Get_Same() == false)
+			{
+				i->set_itemcount(pMouse->Get_Item_prev_count()); //여기서 같은인덱스 클릭아니면..
+			}
+			
 			pMouse->Set_index(20);
 			break;
 		}
@@ -301,13 +305,30 @@ void CInventory_Manager::Use_pot()
 {
 
 	m_Pot.front()->set_check_pot(true);
+	
+	for (auto& k : m_Potback)
+		k->set_check_pot(true);
+	for (auto& k : m_Potfront)
+		k->set_check_pot(true);
+	m_Potbutton.front()->set_check_pot(true);
+
 	m_Pot.front()->set_openpot();
 
 }
 
 void CInventory_Manager::Off_pot()
 {
-	m_Pot.front()->set_check_pot(true);
+	//m_Pot.front()->set_check_pot(false);
+	
+	for (auto& k : m_Potback)
+		k->set_check_pot(false);
+	for (auto& k : m_Potfront)
+	{
+		k->set_check_pot(false);
+		k->set_texnum(ITEMNAME_END);
+	}
+		
+	m_Potbutton.front()->set_check_pot(false);
 	m_Pot.front()->set_closepot();
 }
 
@@ -761,6 +782,39 @@ void CInventory_Manager::update_craftpont()
 			}
 		}
 
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_TENT)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((grass % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(grass % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(2);
+
+			}
+
+			else if (k->get_pontnum() == 4)
+			{
+				k->set_pont_num((rope % 100) / 10);
+			}
+			else if (k->get_pontnum() == 5)
+			{
+				k->set_pont_num(rope % 10);
+			}
+
+			else if (k->get_pontnum() == 7)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+		}
 
 
 	}

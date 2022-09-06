@@ -187,6 +187,9 @@
     <Filter Include="02.GameObject\04.Interactive_Object\Skeleton">
       <UniqueIdentifier>{c645df63-ccfe-430e-9d23-33a5671fbf7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\09.Pot">
+      <UniqueIdentifier>{86bb6014-7dd9-497c-bfb4-5acb09504ded}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -432,6 +435,21 @@
     <ClInclude Include="..\Public\Skeleton.h">
       <Filter>02.GameObject\04.Interactive_Object\Skeleton</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Startbutton.h">
+      <Filter>01.Levels\Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Pot_back.h">
+      <Filter>02.GameObject\98.UI\09.Pot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Pot_front.h">
+      <Filter>02.GameObject\98.UI\09.Pot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PotMain.h">
+      <Filter>02.GameObject\98.UI\09.Pot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Potbutton.h">
+      <Filter>02.GameObject\98.UI\09.Pot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -664,6 +682,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Skeleton.cpp">
       <Filter>02.GameObject\04.Interactive_Object\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Startbutton.cpp">
+      <Filter>01.Levels\Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Pot_back.cpp">
+      <Filter>02.GameObject\98.UI\09.Pot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Pot_front.cpp">
+      <Filter>02.GameObject\98.UI\09.Pot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PotMain.cpp">
+      <Filter>02.GameObject\98.UI\09.Pot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Potbutton.cpp">
+      <Filter>02.GameObject\98.UI\09.Pot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

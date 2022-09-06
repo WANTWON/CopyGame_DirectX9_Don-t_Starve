@@ -29,7 +29,8 @@ public:
 	bool get_check_pot() { return m_bcheck_pot; }
 	void set_check_pot(bool tof) { m_bcheck_pot = tof; }
 	void set_closepot() { m_eState = CLOSE; }
-	void set_openpot() { m_eState = OPEN; }
+	void set_openpot() { m_eState = OPEN; Change_Texture(TEXT("Com_Texture_Pot_open"));
+	}
 
 public: /*For TextureCom */
 	HRESULT Texture_Clone();

@@ -182,7 +182,9 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	}
 
 
-	else if (texnum == ITEMNAME_BERRY || texnum == ITEMNAME_CARROT || texnum == ITEMNAME_MEAT || texnum == ITEMNAME_SPIDERMEAT)
+	else if (texnum == ITEMNAME_BERRY || texnum == ITEMNAME_CARROT || texnum == ITEMNAME_MEAT || texnum == ITEMNAME_SPIDERMEAT
+		|| texnum == ITEMNAME_MEATBALL || texnum == ITEMNAME_NUGGET || texnum ==ITEMNAME_LASAGNA || texnum == ITEMNAME_BERRYPIE
+		|| texnum == ITEMNAME_TRASH1   || texnum == ITEMNAME_TRASH2)
 	{
 		m_itemtype = ITEM_FOOD;
 	}
@@ -193,7 +195,7 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 		m_itemtype = ITEM_MATERIAL;
 	}
 	
-	else if (texnum == ITEMNAME_FENCE || texnum == ITEMNAME_POT)
+	else if (texnum == ITEMNAME_FENCE || texnum == ITEMNAME_POT || texnum == ITEMNAME_TENT)
 	{
 		m_itemtype = ITEM_STRUCT;
 	}
@@ -330,10 +332,17 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 			else if (true == pMouse->Get_picked())
 			{
+				if (pMouse->Get_index() == iNum)
+				{
+					pMouse->Set_Same(true);
+				}
+				else
+					pMouse->Set_Same(false);
+
 
 				pMouse->Set_Prev_Item_name(texnum);
 
-				if(pMouse->Get_Item_type() == ITEM_STRUCT && m_itemtype == ITEMNAME_END)
+				if(pMouse->Get_Item_type() == ITEM_STRUCT && texnum == ITEMNAME_END)
 					pMouse->Set_Item_prev_count(pMouse->Get_Item_prev_count());
 				else
 					pMouse->Set_Item_prev_count(item_number);
@@ -573,7 +582,7 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 
 
 		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_HP(10));
-		item_number -= 1;
+		minus_itemcount();
 		//minus_itemcount();
 		break;
 
@@ -585,6 +594,62 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(10));
 		minus_itemcount();
 		break;
+
+	case ITEMNAME_BERRYPIE:
+
+
+
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(30));
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_HP(10));
+		minus_itemcount();
+		//minus_itemcount();
+		break;
+
+
+	case ITEMNAME_LASAGNA:
+
+
+
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(50));
+		//(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Take_Damage(20));
+		minus_itemcount();
+		break;
+
+	case ITEMNAME_NUGGET:
+
+
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(40));
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_HP(20));
+		minus_itemcount();
+		//minus_itemcount();
+		break;
+
+
+	case ITEMNAME_MEATBALL:
+
+
+
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(30));
+		minus_itemcount();
+		break;
+
+	case ITEMNAME_TRASH1:
+
+
+
+		//(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Take_Damage());
+		minus_itemcount();
+		break;
+
+	case ITEMNAME_TRASH2:
+
+
+
+//		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(30));
+		minus_itemcount();
+		break;
+
+	
 
 
 

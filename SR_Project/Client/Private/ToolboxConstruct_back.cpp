@@ -100,6 +100,13 @@ int CToolboxConstruct_back::Tick(_float fTimeDelta)
 
 
 	}
+	else if (iNum == 2 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+	{
+
+		pInventory_Manager->craft_on(MAKE_TENT);
+
+
+	}
 	/*else if (iNum == 2 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
 

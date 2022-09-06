@@ -65,14 +65,17 @@ int CStartbutton::Tick(_float fTimeDelta)
 
 		if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
-			CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-			Safe_AddRef(pGameInstance);
 
-			/*if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GAMEPLAY))))
-				return 0;*/
-			pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GAMEPLAY));
+			g_bscenechange = false;
+			//CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+			//Safe_AddRef(pGameInstance);
 
-			Safe_Release(pGameInstance);
+			///*if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GAMEPLAY))))
+			//	return 0;*/
+			//pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GAMEPLAY));
+
+			//Safe_Release(pGameInstance);
+
 		}
 		
 	}

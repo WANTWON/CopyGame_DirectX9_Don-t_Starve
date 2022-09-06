@@ -36,8 +36,8 @@ HRESULT CPot_back::Initialize(void* pArg)
 	m_fSizeX = 40.0f;
 	m_fSizeY = 40.0f;
 	
-		m_fX = 300.f + (iNum * 50.f);
-		m_fY = 690.f;
+		m_fX = 740.0f ;
+		m_fY = 320.0f + (iNum * 43.f);
 	
 
 
@@ -54,94 +54,94 @@ HRESULT CPot_back::Initialize(void* pArg)
 
 int CPot_back::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
-
-	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (PtInRect(&rcRect, ptMouse))
+	if (m_bcheck_pot == true)
 	{
-		m_fSizeX = 55.f;
-		m_fSizeY = 55.f;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+		__super::Tick(fTimeDelta);
 
-		/*if (GetKeyState(VK_LBUTTON) & 0x8000)
+		/*RECT		rcRect;
+		SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+
+		POINT		ptMouse;
+		GetCursorPos(&ptMouse);
+		ScreenToClient(g_hWnd, &ptMouse);
+
+		if (PtInRect(&rcRect, ptMouse))
 		{
-		m_bItem = true;
+			m_fSizeX = 55.f;
+			m_fSizeY = 55.f;
+			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+
 		}*/
 	}
-
-	/*if (m_bItem)
-	{
-	m_fX = ptMouse.x;
-	m_fY = ptMouse.y;
-	}*/
+	
 
 	return OBJ_NOEVENT;
 }
 
 void CPot_back::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
-	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (!PtInRect(&rcRect, ptMouse))
+	if (m_bcheck_pot == true)
 	{
-		m_fSizeX = 40;
-		m_fSizeY = 40;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		__super::Late_Tick(fTimeDelta);
+		RECT		rcRect;
+		SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+
+		POINT		ptMouse;
+		GetCursorPos(&ptMouse);
+		ScreenToClient(g_hWnd, &ptMouse);
+
+		if (!PtInRect(&rcRect, ptMouse))
+		{
+			m_fSizeX = 40;
+			m_fSizeY = 40;
+			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 
 
-		//ERR_MSG(L"충돌");
+			//ERR_MSG(L"충돌");
+		}
+
+		/*if (m_bItem)
+		{
+
+		}*/
+
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 	}
+	
 
-	/*if (m_bItem)
-	{
-
-	}*/
-
-	if (nullptr != m_pRendererCom && iNum < 10)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
-
-	else if (nullptr != m_pRendererCom&& iNum >= 10 && m_bcheck_bag)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 }
 
 HRESULT CPot_back::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	if (m_bcheck_pot == true)
+	{
+		if (FAILED(__super::Render()))
+			return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
+		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+			return E_FAIL;
 
-	_float4x4		ViewMatrix;
-	D3DXMatrixIdentity(&ViewMatrix);
+		_float4x4		ViewMatrix;
+		D3DXMatrixIdentity(&ViewMatrix);
 
-	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
-		return E_FAIL;
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
+			return E_FAIL;
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
+		if (FAILED(SetUp_RenderState()))
+			return E_FAIL;
 
-	m_pVIBufferCom->Render();
+		m_pVIBufferCom->Render();
 
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
+		if (FAILED(Release_RenderState()))
+			return E_FAIL;
 
+	}
+	
 
 
 	return S_OK;
