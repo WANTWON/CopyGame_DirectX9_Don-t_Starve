@@ -181,6 +181,11 @@ _float3 CPlayer::Get_Right()
 	return (m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
 }
 
+_bool CPlayer::Get_SkillShow(void)
+{
+	return m_pPicker->Get_IsShow();
+}
+
 void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 {
 	if (m_eState == ACTION_STATE::DEAD)
@@ -1781,7 +1786,7 @@ void CPlayer::RangeCheck(_float _fTimeDelta)
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return;
 
-	//CPickingMgr::Get_Instance()->Picking();
+	CPickingMgr::Get_Instance()->Picking();
 
 	_float Compare_Range = (m_vTargetPicking.x - Get_Pos().x)*(m_vTargetPicking.x - Get_Pos().x)
 		+ (m_vTargetPicking.y - Get_Pos().y)*(m_vTargetPicking.y - Get_Pos().y)

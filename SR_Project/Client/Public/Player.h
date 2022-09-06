@@ -108,6 +108,8 @@ public: /*Get&Set*/
 
 	_bool	Get_IsBuild(void) { return m_bIsBuild; }
 	_float3 Get_PickingPoint(void) { return m_vPickingPoint; }
+	_bool	Get_SkillShow(void);
+
 	//Sets
 	void	Set_HP(_float _fHP) { m_tStat.fCurrentHealth += _fHP; }
 	void	Set_Atk(_float _fAtk) { m_tStat.fAtk += _fAtk; }
@@ -166,6 +168,7 @@ private: /**Actions*/
 	void Throw_Bomb(_float _fTimeDelta);
 	void Ice_Spike(_float _fTimeDelta);
 	void Sand_Mines(_float _fTimeDelta);
+	void Teleport(_float _fTimeDelta);
 	 //Passive
 	void	Decrease_Stat(void); //
 	void	Create_Bullet(void);
