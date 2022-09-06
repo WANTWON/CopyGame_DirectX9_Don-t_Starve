@@ -149,9 +149,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	Create_Bullet();
 
-
-	Test_Debug(fTimeDelta);
-
 	if (CKeyMgr::Get_Instance()->Key_Up('9'))
 	{
 		CInventory_Manager::Get_Instance()->Use_pot();

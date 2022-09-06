@@ -140,55 +140,6 @@ HRESULT CCollider_Rect::Initialize(void * pArg)
 HRESULT CCollider_Rect::Update_ColliderBox(_float4x4 WorldMatrix)
 {
 
-	//m_iNumVertices = 4;
-	//m_iStride = sizeof(VTXTEX);
-	//m_dwFVF = D3DFVF_XYZ | D3DFVF_TEX1;
-	//m_ePrimitiveType = D3DPT_TRIANGLELIST;
-	//m_iNumPrimitive = 2;
-
-	///* 정점들을 할당했다. */
-	//if (FAILED(m_pGraphic_Device->CreateVertexBuffer(m_iNumVertices * m_iStride, 0, m_dwFVF, D3DPOOL_MANAGED, &m_pVB, 0)))
-	//	return E_FAIL;
-
-	//VTXTEX*			pVertices = nullptr;
-
-	//m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&pVertices, 0);
-
-	//pVertices[0].vPosition = m_vPoint[0] = _float3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);// + InitPos;
-	//pVertices[0].vTexture = _float2(0.0f, 0.f);
-
-	//pVertices[1].vPosition = m_vPoint[1] = _float3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);// +InitPos;
-	//pVertices[1].vTexture = _float2(1.f, 0.f);
-
-	//pVertices[2].vPosition = m_vPoint[2] = _float3(m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, 0.f);// +InitPos;
-	//pVertices[2].vTexture = _float2(1.f, 1.f);
-
-	//pVertices[3].vPosition = m_vPoint[3] = _float3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, 0.f);// +InitPos;
-	//pVertices[3].vTexture = _float2(0.f, 1.f);
-	//m_pVB->Unlock();
-
-
-	//m_iIndicesByte = sizeof(FACEINDICES16);
-	//m_eIndexFormat = D3DFMT_INDEX16;
-
-	//if (FAILED(m_pGraphic_Device->CreateIndexBuffer(m_iNumPrimitive * m_iIndicesByte, 0, m_eIndexFormat, D3DPOOL_MANAGED, &m_pIB, nullptr)))
-	//	return E_FAIL;
-
-
-	//FACEINDICES16*	pIndices = nullptr;
-
-	//m_pIB->Lock(0, 0, (void**)&pIndices, 0);
-
-	//pIndices[0]._0 = 0;
-	//pIndices[0]._1 = 1;
-	//pIndices[0]._2 = 2;
-
-	//pIndices[1]._0 = 0;
-	//pIndices[1]._1 = 2;
-	//pIndices[1]._2 = 3;
-
-	//m_pIB->Unlock();
-
 	 m_vPoint[0] = _float3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);// + InitPos;
 
 	 m_vPoint[1] = _float3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);// +InitPos;
@@ -241,19 +192,24 @@ _bool CCollider_Rect::Collision_Check(CCollider_Rect * pTarget)
 	if (nullptr == pOther)
 		return false;
 
-	_float3		vSourMin, vSourMax;
-	_float3		vDestMin, vDestMax;
+	_float3		vSourMin, vSourMax, vSourCenter;
+	_float3		vDestMin, vDestMax, vDestCenter;
 
 	vSourMin = m_vPoint[3];
 	vSourMax = m_vPoint[1];
+	vSourCenter = (vSourMax + vSourMin)*0.5f;
 
 	vDestMin = pOther->m_vPoint[3];
 	vDestMax = pOther->m_vPoint[1];
+	vDestCenter = (vDestMax + vDestMin)*0.5f;
 
 	if (min(vSourMax.x, vDestMax.x) < max(vSourMin.x, vDestMin.x))
 		return false;
 
 	if (min(vSourMax.y, vDestMax.y) < max(vSourMin.y, vDestMin.y))
+		return false;
+
+	if (fabsf(vDestCenter.z - vSourCenter.z) > 1.f)
 		return false;
 
 	return true;
