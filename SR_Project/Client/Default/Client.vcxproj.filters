@@ -124,9 +124,6 @@
     <Filter Include="02.GameObject\98.UI\02.Toolbox\00.MainToolbox">
       <UniqueIdentifier>{2a9ee06d-8c4c-4c91-94a0-4c54b812c3a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\98.UI\02.Toolbox\02WeaponToolbox">
-      <UniqueIdentifier>{42130d4b-f387-4555-8a97-c6a7d3bf4b64}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\98.UI\02.Toolbox\01.GatherToolbox">
       <UniqueIdentifier>{efea9d00-707f-4d78-a85a-7011c7cf155c}</UniqueIdentifier>
     </Filter>
@@ -177,6 +174,30 @@
     </Filter>
     <Filter Include="02.GameObject\98.UI\08.LogoScene">
       <UniqueIdentifier>{ad3553bd-a2d2-447c-9b5d-4056546f163e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox">
+      <UniqueIdentifier>{42130d4b-f387-4555-8a97-c6a7d3bf4b64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox">
+      <UniqueIdentifier>{87e92ec8-6dd8-4460-b23b-91b91e54e15f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\House">
+      <UniqueIdentifier>{1688b5e8-f44a-470b-8d20-d55b1312b758}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Wall">
+      <UniqueIdentifier>{acb02a53-95d5-496e-aa08-6e2785f27157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.Interactive_Object\Cook Pot">
+      <UniqueIdentifier>{9c2b6c2b-1a07-4118-9dd6-6f4fef787694}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.Interactive_Object\Tent">
+      <UniqueIdentifier>{4726c1eb-606d-4c1c-ad66-3954ebea0224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.Monster\Bearger\Special Attack">
+      <UniqueIdentifier>{65dfa0af-688d-47c7-a3cf-63c23b3c03fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.Interactive_Object\Skeleton">
+      <UniqueIdentifier>{c645df63-ccfe-430e-9d23-33a5671fbf7b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -322,13 +343,13 @@
       <Filter>02.GameObject\98.UI\02.Toolbox\00.MainToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxWeapon.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxWeapon_back.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxWeapon_front.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxGather.h">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
@@ -338,9 +359,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxGather_front.h">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\House.h">
-      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Portal.h">
       <Filter>02.GameObject\96.Portal</Filter>
@@ -410,6 +428,36 @@
     </ClInclude>
     <ClInclude Include="..\Public\Logoscene.h">
       <Filter>02.GameObject\98.UI\08.LogoScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxConstruct.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxConstruct_front.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxConstruct_back.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\House.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WoodWall.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\Wall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\House.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CookPot.h">
+      <Filter>02.GameObject\04.Interactive_Object\Cook Pot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Tent.h">
+      <Filter>02.GameObject\04.Interactive_Object\Tent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Special_Attack.h">
+      <Filter>02.GameObject\01.Monster\Bearger\Special Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skeleton.h">
+      <Filter>02.GameObject\04.Interactive_Object\Skeleton</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -543,13 +591,13 @@
       <Filter>02.GameObject\98.UI\02.Toolbox\00.MainToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxWeapon.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxWeapon_back.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxWeapon_front.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\02WeaponToolbox</Filter>
+      <Filter>02.GameObject\98.UI\02.Toolbox\02.WeaponToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxGather.cpp">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
@@ -559,9 +607,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxGather_front.cpp">
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\House.cpp">
-      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Portal.cpp">
       <Filter>02.GameObject\96.Portal</Filter>
@@ -631,6 +676,36 @@
     </ClCompile>
     <ClCompile Include="..\Private\Logoscene.cpp">
       <Filter>02.GameObject\98.UI\08.LogoScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxConstruct.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxConstruct_front.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxConstruct_back.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\House.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WoodWall.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\House.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CookPot.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\Cook Pot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Tent.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\Tent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Special_Attack.cpp">
+      <Filter>02.GameObject\01.Monster\Bearger\Special Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skeleton.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\Skeleton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

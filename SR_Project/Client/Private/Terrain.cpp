@@ -5,6 +5,8 @@
 #include "Picking.h"
 #include "PickingMgr.h"
 #include "Level_Manager.h"
+#include "Mouse.h"
+#include "Inventory.h"
 
 CTerrain::CTerrain(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -215,8 +217,50 @@ void CTerrain::PickingTrue()
 
 	//pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
 	//TestCode
+	if (pGameInstance->Key_Up('P'))
+	{
+		CMouse*			pMouse = CMouse::Get_Instance();
+
+		CPickingMgr* pPicking = CPickingMgr::Get_Instance();
+		if (pPicking->Get_PickingItemType() == ITEM_STRUCT)
+		{
+			int iNum = pMouse->Get_Item_count();
+			if (iNum > 0)
+			{
+				iNum--;
+				pMouse->Set_Item_count(iNum);
+				pMouse->Set_Item_prev_count(iNum);
+
+				switch (pMouse->Get_Item_name())
+				{
+				case ITEMNAME_FENCE:
+					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_UnInteractObject"), pPicking->Get_PickingPos());
+					break;
+				case ITEMNAME_POT:
+					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPicking->Get_PickingPos());
+					break;
+				}
+					
+			
+				if (iNum == 0)
+				{
+					CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+					pMouse->Set_Item_type(ITEM_END);
+					auto mouse = pinv->Get_Mouse_item_list()->begin();
+					pMouse->Set_picked(false);
+					(*mouse)->set_texnum(ITEMNAME_END);
+					(*mouse)->set_check(false);//마우스이미지
+				}
+					
+
+			}
+		}
+			
+	}
+		
+
 	pPlayer->Set_PickingTarget(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
-	cout << "Collision Terrain : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
+	//cout << "Collision Terrain : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
 
 	Safe_Release(pGameInstance);
 }

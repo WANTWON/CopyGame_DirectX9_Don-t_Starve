@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Transform.h"
 #include "GameObject.h"
+#include "Mouse.h"
 
 IMPLEMENT_SINGLETON(CPickingMgr)
 
@@ -33,6 +34,36 @@ void CPickingMgr::Clear_PickingMgr()
 	Safe_Release(m_pTerrain);
 
 	m_GameObjects.clear();
+}
+
+void CPickingMgr::Add_PickingObject(ITEMID type)
+{
+	if (m_PickingItemType == type &&m_pPickingObject != nullptr)
+	{
+		return;
+	}
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CMouse* pMouse = CMouse::Get_Instance();
+	if (type == ITEM_STRUCT)
+	{
+		switch (pMouse->Get_Item_name())
+		{
+		case ITEMNAME_FENCE:
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"), m_vPickingPos);
+			break;
+		case ITEMNAME_POT:
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"), m_vPickingPos);
+			break;
+		}	
+	}
+		
+
+	//m_pPickingObject = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"));
+
+	m_pPickingObject = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"));
+	m_pPickingObject->Set_bConstruct(true);
+	m_bMouseHasConstruction = true;
 }
 
 void CPickingMgr::Add_PickingGroup(CGameObject * pGameObject)
@@ -93,13 +124,31 @@ _bool CPickingMgr::Picking()
 
 		}
 
+		m_vPickingPos = vecNearPos;
 		vecPicked[NearNum]->PickingTrue();
+
+		/*if (m_pPickingObject != nullptr)
+		{
+			m_pPickingObject->Update_Position(m_vPickingPos);
+		}*/
+			
 		return true;
 	}
 
 
 
 	return false;
+}
+
+void CPickingMgr::Release_PickingObject()
+{
+	if (nullptr != m_pPickingObject)
+	{
+		Safe_Release(m_pPickingObject);
+
+		CGameInstance::Get_Instance()->Clear_Layer(LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"));
+	}
+		
 }
 
 

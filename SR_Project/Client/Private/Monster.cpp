@@ -87,14 +87,7 @@ HRESULT CMonster::Render()
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
-	//// For Debug Rendering
-	//if (m_pVIDebugBufferCom)
-	//{
-	//	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	////	m_pVIDebugBufferCom->Render();
-	//	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	//}
-	
+
 	return S_OK;
 }
 
