@@ -42,8 +42,6 @@ int CTent::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	
-
 	if (m_bConstruct)
 	{
 		_float3 vPickingPos = CPickingMgr::Get_Instance()->Get_PickingPos();

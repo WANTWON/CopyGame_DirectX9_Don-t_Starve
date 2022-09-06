@@ -265,6 +265,9 @@ void CTerrain::PickingTrue()
 				case ITEMNAME_POT:
 					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPlayer->Get_PickingPoint());
 					break;
+				case ITEMNAME_TENT:
+					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tent"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPlayer->Get_PickingPoint());
+					break;
 				}
 
 
