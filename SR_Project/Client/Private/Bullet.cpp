@@ -66,6 +66,7 @@ int CBullet::Tick(_float fTimeDelta)
 	Excute(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+	
 	return OBJ_NOEVENT;
 }
 
@@ -73,16 +74,20 @@ void CBullet::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	AttackCheck(fTimeDelta);
-	DeadCheck(fTimeDelta);
-
-	if (Compare_Terrain())
-		m_bDead = true;
+	
 
 
 	SetUp_BillBoard();
 	if (nullptr != m_pRendererCom && m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_MINES)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
+	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+
+	AttackCheck(fTimeDelta);
+	DeadCheck(fTimeDelta);
+
+	if (Compare_Terrain())
+		m_bDead = true;
 }
 
 HRESULT CBullet::Render()
@@ -108,12 +113,17 @@ HRESULT CBullet::Render()
 		return E_FAIL;
 	m_pTextureCom->MoveFrame(m_TimerTag);
 
-	if (m_pVIDebugBufferCom)
+	/*if (m_pVIDebugBufferCom)
 	{
 		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 		m_pVIDebugBufferCom->Render();
 		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	}
+	}*/
+
+
+#ifdef _DEBUG
+	m_pColliderCom->Render_ColliderBox();
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -125,8 +135,16 @@ HRESULT CBullet::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	//if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-	//	return E_FAIL;
+	CCollider_Rect::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+	CollRectDesc.fRadiusY = 0.5f;
+	CollRectDesc.fRadiusX = 0.5f;
+	CollRectDesc.fOffSetX = 0.f;
+	CollRectDesc.fOffSetY = 0.f;
+
+	/* For.Com_Collider_Rect*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+		return E_FAIL;
 
 	/* For.Com_Texture */
 	if (FAILED(Texture_Clone()))
@@ -289,6 +307,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	if (pGameInstance->Collision_Check_Group_Multi(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, vecDamagedActor, this))
+	//if (pGameInstance->Collision_with_Group(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, this))
 	{
 		switch (m_tBulletData.eWeaponType)
 		{

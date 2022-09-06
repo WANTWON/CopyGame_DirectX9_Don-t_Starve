@@ -128,8 +128,7 @@ private:/*Setup*/
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
-	//Test
-	HRESULT Test_Setup();
+	
 	void Init_Data();
 private: /**Actions*/
 	void GetKeyDown(_float _fTimeDelta);
@@ -174,9 +173,6 @@ private: /**Actions*/
 	void	Tick_ActStack(_float fTimeDelta);
 	void	Clear_ActStack();
 
-	//Debug
-	void Test_Debug(_float fTimeDelta);
-	void Debug_Render(void);
 	//Test
 	void Test_Func(_int _iNum);
 	
@@ -236,9 +232,7 @@ private: /*for Debug*/
 	_float fTimeAcc = 0.f;
 
 	_bool					m_bDebugKey = false;
-	CVIBuffer_Rect*			m_pDebugBufferCom = nullptr;
-	CTransform*				m_pDebugTransformCom = nullptr;
-	CTexture*				m_pDebugTextureCom = nullptr;
+
 private: /*for Auto*/
 	CGameObject*			m_pTarget = nullptr;
 

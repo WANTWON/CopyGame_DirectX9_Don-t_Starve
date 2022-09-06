@@ -7,7 +7,7 @@ class CTexture;
 class CRenderer;
 class CVIBuffer_Rect;
 class CTransform;
-//class CCollider;
+class CCollider_Rect;
 END
 
 BEGIN(Client)
@@ -63,7 +63,7 @@ private:/*For Components*/
 	CRenderer*				m_pRendererCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
-	//CCollider*				m_pColliderCom = nullptr;
+	CCollider_Rect*				m_pColliderCom = nullptr;
 
 	vector<CTexture*> m_vecTexture;
 

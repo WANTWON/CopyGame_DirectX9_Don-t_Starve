@@ -49,6 +49,9 @@ int CBearger::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
+
+	
+
 	return OBJ_NOEVENT;
 }
 
@@ -68,8 +71,9 @@ HRESULT CBearger::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	//m_pColliderCom->Render_ColliderBox();
-
+#ifdef _DEBUG
+	m_pColliderCom->Render_ColliderBox();
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -104,8 +108,17 @@ HRESULT CBearger::SetUp_Components(void* pArg)
 		return E_FAIL;
 
 
+
+	/* For.Com_Collider*/
+	CCollider_Rect::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+	CollRectDesc.fRadiusY = 0.25f;
+	CollRectDesc.fRadiusX = 0.25f;
+	CollRectDesc.fOffSetX = 0.0f;
+	CollRectDesc.fOffSetY = -1.f;
+
 	/* For.Com_Collider_Rect*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
 	SetUp_DebugComponents(pArg);

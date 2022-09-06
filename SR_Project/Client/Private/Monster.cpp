@@ -31,11 +31,19 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
+
+
+
 	return S_OK;
 }
 
 int CMonster::Tick(_float fTimeDelta)
 {
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
+
+
 	__super::Tick(fTimeDelta);
 
 	if (IsDead())
@@ -44,9 +52,9 @@ int CMonster::Tick(_float fTimeDelta)
 	//if (nullptr != m_pColliderCom)
 	//	m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
-
+	
+	
+	
 	// Match Terrain-Y
 	WalkingTerrain();
 
@@ -61,6 +69,8 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
+
 }
 
 HRESULT CMonster::Render()
@@ -81,8 +91,6 @@ HRESULT CMonster::Render()
 		return E_FAIL;
 
 	m_pVIBufferCom->Render();
-
-	
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;

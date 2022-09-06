@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "Transform.h"
 #include "Collider_Rect.h"
+#include "GameInstance.h"
 
 IMPLEMENT_SINGLETON(CCollider)
 
@@ -44,10 +45,12 @@ _bool CCollider::Collision_with_Group(COLLISION_GROUP eGroup, class CGameObject*
 	{
 		if (nullptr != iter)
 		{
-			_float3 vecDir = pGameObject->Get_Position() - iter->Get_Position();
-			_float fDistance = D3DXVec3Length(&vecDir);
-			
-			if (fDistance <= pGameObject->Get_Radius() + iter->Get_Radius())
+			CCollider_Rect*  DamageOwner = (CCollider_Rect*)pGameObject->Find_Component(TEXT("Com_Collider_Rect"));
+			CCollider_Rect*	 Target = (CCollider_Rect*)iter->Find_Component(TEXT("Com_Collider_Rect"));
+			if (Target == nullptr)
+				continue;
+
+			if (true == (DamageOwner->Collision_Check(Target)))
 				return true;
 		}
 	}
@@ -61,12 +64,14 @@ _bool CCollider::Collision_Check_Group_Multi(COLLISION_GROUP eGroup, vector<clas
 	{
 		if (nullptr != iter)
 		{
-			_float3 vecDir = pDamageCauser->Get_Position() - iter->Get_Position();
-			_float fDistance = D3DXVec3Length(&vecDir);
+			CCollider_Rect*  DamageOwner = (CCollider_Rect*)pDamageCauser->Find_Component(TEXT("Com_Collider_Rect"));
+			CCollider_Rect*	 Target = (CCollider_Rect*)iter->Find_Component(TEXT("Com_Collider_Rect"));
+			if (Target == nullptr)
+				continue;
 
-			if (fDistance <= pDamageCauser->Get_Radius() + iter->Get_Radius())
+			if (true == (DamageOwner->Collision_Check(Target)))
 			{
-				vecDamagedObj.push_back(iter);
+			vecDamagedObj.push_back(iter);
 			}
 		}
 	}
@@ -80,25 +85,6 @@ _bool CCollider::Collision_Check_Group_Multi(COLLISION_GROUP eGroup, vector<clas
 	}
 }
 
-//CCollider * CCollider::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
-//{
-//	CCollider*	pInstance = new CCollider(pGraphic_Device);
-//
-//	if (FAILED(pInstance->Initialize_Prototype()))
-//	{
-//		ERR_MSG(TEXT("Failed to Created : CCollider"));
-//		Safe_Release(pInstance);
-//	}
-//
-//	return pInstance;
-//}
-
-//CComponent * CCollider::Clone(void * pArg)
-//{
-//	AddRef();
-//
-//	return this;
-//}
 
 void CCollider::Free()
 {

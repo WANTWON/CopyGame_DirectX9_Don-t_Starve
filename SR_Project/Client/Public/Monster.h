@@ -36,7 +36,6 @@ protected: /* For.Components */
 
 	/* For.Debug */
 	CVIBuffer_Rect* m_pVIDebugBufferCom = nullptr;
-	CTransform*	m_pDebugTransformCom = nullptr;
 
 protected:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) = 0;
@@ -79,6 +78,7 @@ protected:
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser);
 	virtual HRESULT Drop_Items() { return S_OK; };
 	virtual _bool IsDead() = 0;
+	_bool		m_bFirst = false;
 
 public:
 	virtual void Free() override;
