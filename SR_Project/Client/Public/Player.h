@@ -53,9 +53,9 @@ public:
 	{
 		_float fSpeed = 0.f;
 		_float fMaxHealth = 100.f;
-		_float fCurrentHealth = fMaxHealth;
+		_float fCurrentHealth = fMaxHealth / 2;
 		_float fMaxMental = 100.f;
-		_float fCurrentMental = fMaxMental;
+		_float fCurrentMental = fMaxMental / 2;
 		_float fMaxHungry = 100.f;
 		_float fCurrentHungry = 100.f;
 		_float fAtk = 20.f;
@@ -113,6 +113,7 @@ public: /*Get&Set*/
 	void	Set_Mental(_float _fMental) { m_tStat.fCurrentMental += _fMental; }
 	void	Set_Speed(_float _fSpeed) { m_tStat.fSpeed += _fSpeed; }
 	void	Set_Armor(_float _fArmor) { m_tStat.fArmor += _fArmor; }
+	void	Set_Sleeping(_bool _bSleeping) { m_bSleeping = _bSleeping; }
 	void	Set_WeaponType(WEAPON_TYPE _eWeapon) { m_eWeaponType = _eWeapon; }
 	void	Set_Position(_float3 Position);
 
@@ -168,6 +169,7 @@ private: /**Actions*/
 	_bool	Check_Interact_End(void);
 	void	Find_Priority();
 	_bool	Check_Dead();
+	void	Sleep_Restore();
 
 	void	Cooltime_Update(_float _fTimeDelta);
 	//ActStack
@@ -256,6 +258,9 @@ private: /*for Auto*/
 	//for Skills
 	_float4x4				m_pOriginMatrix;
 	_uint					iCnt = 0;
+
+	_bool					m_bSleeping = false;
+	DWORD					m_dwSleepTime = GetTickCount();
 
 	//Dead
 	_bool					m_bGhost = false;
