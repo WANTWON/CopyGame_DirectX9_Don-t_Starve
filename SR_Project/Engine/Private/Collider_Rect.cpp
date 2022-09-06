@@ -59,6 +59,7 @@ HRESULT CCollider_Rect::Initialize_Prototype()
 
 	pVertices[1].vPosition = _float3(0.5f, 0.5f, 0.f);// +InitPos;
 	pVertices[1].vTexture = _float2(1.f, 0.f);
+
 	pVertices[2].vPosition = _float3(0.5f, -0.5f, 0.f);// +InitPos;
 	pVertices[2].vTexture = _float2(1.f, 1.f);
 
@@ -121,7 +122,7 @@ HRESULT CCollider_Rect::Update_ColliderBox(_float4x4 WorldMatrix)
 	m_StateDesc.StateMatrix = WorldMatrix;
 	//_float3 vPosition = *(_float3*)(&WorldMatrix.m[3][0]);
 	//VTXTEX*			pVertices = nullptr;
-	////m_StateDesc.StateMatrix.m[3][2] -= 1.f;
+	//m_StateDesc.StateMatrix.m[3][2] -= 1.f;
 	//m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&pVertices, 0);
 
  // 	pVertices[0].vPosition = vPosition + m_vOriginalPoint[0];
@@ -169,8 +170,12 @@ HRESULT CCollider_Rect::Render_ColliderBox()
 	m_pGraphic_Device->SetFVF(m_dwFVF);
 
 	m_pGraphic_Device->DrawPrimitive(m_ePrimitiveType, 0, m_iNumPrimitive);*/
-	m_pGraphic_Device->SetRenderState(D3DRS_LIGHTING, TRUE);
+	//m_pGraphic_Device->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
 	m_pGraphic_Device->SetStreamSource(0, m_pVB, 0, m_iStride);
 	m_pGraphic_Device->SetFVF(m_dwFVF);
 	m_pGraphic_Device->SetIndices(m_pIB);
@@ -178,9 +183,9 @@ HRESULT CCollider_Rect::Render_ColliderBox()
 	/*m_pGraphic_Device->DrawPrimitive(m_ePrimitiveType, 0, m_iNumPrimitive);*/
 	m_pGraphic_Device->DrawIndexedPrimitive(m_ePrimitiveType, 0, 0, m_iNumVertices, 0, m_iNumPrimitive);
 
-	m_pGraphic_Device->SetRenderState(D3DRS_LIGHTING, FALSE);
+//	m_pGraphic_Device->SetRenderState(D3DRS_LIGHTING, FALSE);
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	/*m_pLine->SetWidth(2.f);
 	m_pLine->Begin();
 	m_pLine->Draw(vPoint, 5, D3DXCOLOR(1.f, 0.f, 0.f, 1.f));

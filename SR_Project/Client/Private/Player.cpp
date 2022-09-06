@@ -222,8 +222,9 @@ HRESULT CPlayer::Render()
 
 	m_pVIBufferCom->Render();
 	//Test
-	Debug_Render();
+	//Debug_Render();
 
+	m_pTextureCom->Bind_OnGraphicDev_Debug();
 	m_pColliderCom->Render_ColliderBox();
 
 	if (FAILED(Release_RenderState()))
