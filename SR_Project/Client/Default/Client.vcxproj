@@ -213,6 +213,10 @@
     <ClInclude Include="..\Public\PlayerMentality_pont.h" />
     <ClInclude Include="..\Public\Pont.h" />
     <ClInclude Include="..\Public\Portal.h" />
+    <ClInclude Include="..\Public\Potbutton.h" />
+    <ClInclude Include="..\Public\PotMain.h" />
+    <ClInclude Include="..\Public\Pot_back.h" />
+    <ClInclude Include="..\Public\Pot_front.h" />
     <ClInclude Include="..\Public\Quest.h" />
     <ClInclude Include="..\Public\Questpont.h" />
     <ClInclude Include="..\Public\Skeleton.h" />
@@ -220,6 +224,7 @@
     <ClInclude Include="..\public\Special_Attack.h" />
     <ClInclude Include="..\Public\Spider.h" />
     <ClInclude Include="..\Public\SpiderWarrior.h" />
+    <ClInclude Include="..\Public\Startbutton.h" />
     <ClInclude Include="..\Public\Talk.h" />
     <ClInclude Include="..\public\Tent.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -298,6 +303,10 @@
     <ClCompile Include="..\Private\PlayerMentality_pont.cpp" />
     <ClCompile Include="..\Private\Pont.cpp" />
     <ClCompile Include="..\Private\Portal.cpp" />
+    <ClCompile Include="..\Private\Potbutton.cpp" />
+    <ClCompile Include="..\Private\PotMain.cpp" />
+    <ClCompile Include="..\Private\Pot_back.cpp" />
+    <ClCompile Include="..\Private\Pot_front.cpp" />
     <ClCompile Include="..\Private\Quest.cpp" />
     <ClCompile Include="..\Private\Questpont.cpp" />
     <ClCompile Include="..\Private\Skeleton.cpp" />
@@ -305,6 +314,7 @@
     <ClCompile Include="..\private\Special_Attack.cpp" />
     <ClCompile Include="..\Private\Spider.cpp" />
     <ClCompile Include="..\Private\SpiderWarrior.cpp" />
+    <ClCompile Include="..\Private\Startbutton.cpp" />
     <ClCompile Include="..\Private\Talk.cpp" />
     <ClCompile Include="..\private\Tent.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
