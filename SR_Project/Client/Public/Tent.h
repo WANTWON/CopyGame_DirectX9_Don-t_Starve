@@ -54,6 +54,7 @@ public: /*For Picking */
 private:
 	STATE m_eState = PLACE;
 	STATE m_ePreState = MAX;
+	_bool m_bIsInsideTent = false;
 
 public:
 	virtual void Interact(_uint Damage = 0) override;
