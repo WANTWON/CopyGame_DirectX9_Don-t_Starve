@@ -123,8 +123,8 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-		return E_FAIL;
+	/*if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
+		return E_FAIL;*/
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
@@ -268,7 +268,7 @@ CWoodWall* CWoodWall::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CBoulder"));
+		ERR_MSG(TEXT("Failed to Created : CWoodWall"));
 		Safe_Release(pInstance);
 	}
 
@@ -281,7 +281,7 @@ CGameObject* CWoodWall::Clone(void* pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CBoulder"));
+		ERR_MSG(TEXT("Failed to Cloned : CWoodWall "));
 		Safe_Release(pInstance);
 	}
 

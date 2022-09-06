@@ -28,7 +28,7 @@ private:
 private:
 	LPDIRECT3DDEVICE9		m_pGraphic_Device = nullptr;
 	CRenderer*				m_pRenderer = nullptr;
-	CCollider*				m_pCollider = nullptr;
+	//CCollider*				m_pCollider = nullptr;
 #ifdef _DEBUG
 private:
 	_uint					m_iNumRender = 0;

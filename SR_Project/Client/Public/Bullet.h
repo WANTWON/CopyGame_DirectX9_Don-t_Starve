@@ -7,7 +7,7 @@ class CTexture;
 class CRenderer;
 class CVIBuffer_Rect;
 class CTransform;
-class CCollider;
+//class CCollider;
 END
 
 BEGIN(Client)
@@ -28,6 +28,7 @@ public:
 
 private:
 	HRESULT SetUp_Components();
+	HRESULT SetUp_DebugComponents(void* pArg = nullptr);
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
@@ -46,7 +47,8 @@ private:/*Act Player`s Bullets*/
 	void IceSpikes(_float _fTimeDelta);
 	void IceMine(_float _fTimeDelta);
 	void IceMines(_float _fTimeDelta);
-	//ApplyDamage
+	
+private://ApplyDamage
 	virtual void	Apply_Damage(_float Damage, CGameObject* DamagedObj, void* AttackType = nullptr);
 	virtual void	Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void* AttackType = nullptr);
 
@@ -62,9 +64,14 @@ private:/*For Components*/
 	CRenderer*				m_pRendererCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
-	CCollider*				m_pColliderCom = nullptr;
+	//CCollider*				m_pColliderCom = nullptr;
 
 	vector<CTexture*> m_vecTexture;
+
+	/* For.Debug */
+	CVIBuffer_Rect* m_pVIDebugBufferCom = nullptr;
+	CTransform*	m_pDebugTransformCom = nullptr;
+
 private: //values		
 	//WEAPON_TYPE				m_eWeaponType = WEAPON_TYPE::WEAPON_HAND;
 	const _tchar*			m_TimerTag = TEXT("");

@@ -131,6 +131,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, pLayerTag, _float3(22.f, 0.f, 22.f))))
+		return E_FAIL;
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -228,6 +231,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, _float3(45.f, 1.f, 26.f))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tent"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 26.f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

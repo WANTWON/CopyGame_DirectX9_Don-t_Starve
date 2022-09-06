@@ -8,7 +8,6 @@
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
-class CCollider;
 class CTransform;
 class CVIBuffer_Rect;
 END
