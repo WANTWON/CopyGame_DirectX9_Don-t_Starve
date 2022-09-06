@@ -91,6 +91,8 @@ int CPlayer::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
 
+	Sleep_Restore();
+
 	//Act Auto
 	Tick_ActStack(fTimeDelta);
 
@@ -109,6 +111,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	//cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
+
 
 	return OBJ_NOEVENT;
 }
@@ -142,6 +145,15 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	}
 
 	Test_Debug(fTimeDelta);
+
+	if (CKeyMgr::Get_Instance()->Key_Up('9'))
+	{
+		CInventory_Manager::Get_Instance()->Use_pot();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Up('8'))
+	{
+		CInventory_Manager::Get_Instance()->Off_pot();
+	}
 }
 
 
@@ -217,10 +229,13 @@ HRESULT CPlayer::Render()
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
 
-	m_pVIBufferCom->Render();
-	//Test
-	Debug_Render();
-
+	if (!m_bSleeping)
+	{
+		m_pVIBufferCom->Render();
+		//Test
+		Debug_Render();
+	}
+	
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
@@ -665,7 +680,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 
 #pragma region Move
 	//Move
-	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_UP]))
+	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_UP]) && !m_bSleeping)
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
@@ -673,14 +688,14 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		Clear_ActStack();
 		Move_Up(_fTimeDelta);
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_RIGHT]))
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_RIGHT]) && !m_bSleeping)
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
 		Clear_ActStack();
 		Move_Right(_fTimeDelta);
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_DOWN]))
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_DOWN]) && !m_bSleeping)
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
@@ -688,7 +703,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		Clear_ActStack();
 		Move_Down(_fTimeDelta);
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_LEFT]))
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_LEFT]) && !m_bSleeping)
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
@@ -697,7 +712,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		Move_Left(_fTimeDelta);
 
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_ATTACK]))
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_ATTACK]) && !m_bSleeping)
 	{
 		if (!m_bGhost)
 		{
@@ -1729,6 +1744,26 @@ _bool CPlayer::Check_Dead()
 	}
 
 
+}
+
+void CPlayer::Sleep_Restore()
+{
+	if (m_bSleeping)
+	{
+		if (GetTickCount() > m_dwSleepTime + 1000)
+		{
+			if (m_tStat.fCurrentHealth < m_tStat.fMaxHealth)
+				m_tStat.fCurrentHealth += 1;
+			
+			if (m_tStat.fCurrentMental < m_tStat.fMaxMental)
+				m_tStat.fCurrentMental += 1;
+			
+			if (m_tStat.fCurrentHungry > 0)
+				m_tStat.fCurrentHungry -= 1;
+
+			m_dwSleepTime = GetTickCount();
+		}
+	}
 }
 
 void CPlayer::Cooltime_Update(_float _fTimeDelta)

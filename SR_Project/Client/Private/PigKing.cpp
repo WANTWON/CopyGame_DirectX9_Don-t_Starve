@@ -198,10 +198,15 @@ void CPigKing::Interact(_uint Damage)
 				++count;
 			}
 		}
-		if (count >= 3)
+		if (count >= 3 && m_iQuestnum == 0)
 		{
+			++m_iQuestnum;
 			pinven->Get_Talk_list()->front()->settexnum(3);
 			
+		}
+        else if (m_iQuestnum == 1)
+		{
+			pinven->Get_Talk_list()->front()->settexnum(7);
 		}
 
 		Safe_Release(pinven);

@@ -62,7 +62,7 @@ int CCraftmain_back::Tick(_float fTimeDelta)
 		m_fY = 155.f;
 	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT)
 		m_fY = 205.f;
-	else if (m_makewhat == MAKE_STAFF)
+	else if (m_makewhat == MAKE_STAFF || m_makewhat == MAKE_TENT)
 		m_fY = 255.f;
 	else if (m_makewhat == MAKE_ARMOR)
 		m_fY = 305.f;
@@ -367,6 +367,36 @@ void CCraftmain_back::setcolor()
 			else if (iNum == 1)
 			{
 				if ((*iter)->get_texnum() == ITEMNAME_PIGTAIL && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+
+		}
+	}
+
+	else if (m_makewhat == MAKE_TENT)
+	{
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if (iNum == 0)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_GRASS && (*iter)->get_item_number() >= 2) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+				{
+					backtexnum = 0;
+					break;
+				}
+				else
+					backtexnum = 1;
+			}
+
+			else if (iNum == 1)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_ROPE && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
 				{
 					backtexnum = 0;
 					break;

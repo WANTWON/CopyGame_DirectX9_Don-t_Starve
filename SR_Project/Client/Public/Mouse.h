@@ -39,8 +39,13 @@ public:
 	ITEMID Get_Item_type() { return m_Itemtype; }
 	void Set_Item_type(ITEMID itemtype) { m_Itemtype = itemtype; }
 
+	void minus_Item_count() { --m_itemcount; }
+
 	ITEMNAME Get_Equipment_name() { return m_Equipment_Name; }
 	void Set_Equipment_name(ITEMNAME itemname) { m_Equipment_Name = itemname; }
+
+	bool Get_Same() { return m_bsame; }
+	void Set_Same(bool tof) { m_bsame = tof; }
 
 
 private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
@@ -53,6 +58,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 
 	ITEMID m_Itemtype;
 	bool m_bpicked = false;
+	bool m_bsame = false;
 
 
 
