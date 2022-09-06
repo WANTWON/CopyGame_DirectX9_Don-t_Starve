@@ -47,7 +47,8 @@ private:/*Act Player`s Bullets*/
 	void IceSpikes(_float _fTimeDelta);
 	void IceMine(_float _fTimeDelta);
 	void IceMines(_float _fTimeDelta);
-	//ApplyDamage
+	
+private://ApplyDamage
 	virtual void	Apply_Damage(_float Damage, CGameObject* DamagedObj, void* AttackType = nullptr);
 	virtual void	Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void* AttackType = nullptr);
 

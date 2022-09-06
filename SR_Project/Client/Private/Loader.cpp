@@ -64,6 +64,7 @@
 #include "WoodWall.h"
 #include "CookPot.h"
 #include "Tent.h"
+#include "Special_Attack.h"
 
 #include "Daycount.h"
 #include "Daycountpont.h"
@@ -416,6 +417,16 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_BuildEffect"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Build_Effect/Build_Effect_%03d.png"), 26))))
 		return E_FAIL;
+
+	/*Bearger_Ring*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Ring"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Bearger_Ring/Bearger_Ring_%03d.png"), 18))))
+		return E_FAIL;
+
+	/*Bearger_Rocks*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Rocks"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Bearger_Rocks/Bearger_Rocks_%03d.png"), 36))))
+		return E_FAIL;
 #pragma  endregion Add_Texture_Effects
 	/* ���̴� �ε� ��. */
 
@@ -581,7 +592,9 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CAttackRange::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Attack_Special"),
+		CSpecial_Attack::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Loading_UI"));
 

@@ -6,7 +6,6 @@
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
-class CCollider;
 class CTransform;
 class CVIBuffer_Rect;
 END
@@ -28,6 +27,7 @@ public:
 
 private:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr);
+	virtual HRESULT SetUp_DebugComponents(void* pArg = nullptr);
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 	void SetUp_BillBoard();
@@ -37,7 +37,6 @@ private:
 private: /*For TextureCom */
 	virtual HRESULT Texture_Clone();
 	virtual void Change_Frame();
-	virtual void Change_Motion();
 
 private:
 	const _tchar* m_TimerTag = TEXT("");
@@ -51,6 +50,9 @@ private:
 	CTransform*	m_pTransformCom = nullptr;
 
 	vector<CTexture*> m_vecTexture;
+
+	/* For.Debug */
+	CVIBuffer_Rect* m_pVIDebugBufferCom = nullptr;
 
 public:
 	static CSpecial_Attack* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

@@ -106,6 +106,7 @@ HRESULT CBullet::Render()
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
+
 	m_pTextureCom->MoveFrame(m_TimerTag);
 
 	if (m_pVIDebugBufferCom)
@@ -123,10 +124,6 @@ HRESULT CBullet::SetUp_Components()
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
-
-	/* For.Com_Collider*/
-	//if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-	//	return E_FAIL;
 
 	/* For.Com_Texture */
 	if (FAILED(Texture_Clone()))
@@ -149,7 +146,7 @@ HRESULT CBullet::SetUp_Components()
 	//±ÍÂú¾Æ ¤¾¤¾
 	Init_Data();
 
-	SetUp_DebugComponents();
+	//SetUp_DebugComponents();
 
 	return S_OK;
 }
@@ -199,13 +196,14 @@ void CBullet::Excute(_float fTimeDelta)
 	//Monster
 	if (!m_tBulletData.bIsPlayerBullet)
 	{
-		m_fAccDeadTimer += fTimeDelta;
-		if (m_fAccDeadTimer > 1.f)
+		switch (m_tBulletData.eWeaponType)
 		{
-			m_bDead = OBJ_DEAD;
+		case WEAPON_TYPE::WEAPON_HAND:
+			break;
 		}
 	}
-	else //Player
+	//Player
+	else 
 	{
 		switch (m_tBulletData.eWeaponType)
 		{
@@ -334,20 +332,21 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 				goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_MINE:
-
 			if (!m_bIsAttacked)
 			{
 				m_bIsAttacked = true; // °ø°ÝÇÑ¹øÀû¿ë
 				m_bActivated = true; // 
 				goto AttackMulti;
 			}
+			break;
+		case WEAPON_TYPE::BEARGER_SPECIAL: // TODO: Fix
+			m_bDead = OBJ_DEAD;
+			break;
 		}
+
 	AttackMulti:
-		Apply_Damage_Multi(m_fDamage, vecDamagedActor, nullptr);
-
-
+			Apply_Damage_Multi(m_fDamage, vecDamagedActor, nullptr);
 	}
-
 
 	vecDamagedActor.clear();
 }
@@ -425,6 +424,10 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 	case WEAPON_TYPE::WEAPON_MINES:
 		if (m_bActivated3)
 			m_bDead = OBJ_DEAD;
+		break;
+	case WEAPON_TYPE::BEARGER_SPECIAL:
+		if ((m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1))
+			m_bDead = true;
 	}
 }
 
@@ -584,8 +587,6 @@ void CBullet::IceSpikes(_float _fTimeDelta)
 	default:
 		break;
 	}
-
-	
 
 	Safe_Release(pGameInstance);
 }
@@ -946,11 +947,13 @@ _bool CBullet::Compare_Terrain(void)
 	case WEAPON_TYPE::WEAPON_ICESPIKE3:
 	case WEAPON_TYPE::WEAPON_ICESPIKE4:
 	case WEAPON_TYPE::WEAPON_MINE:
+	case WEAPON_TYPE::BEARGER_SPECIAL:
 		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
 
 		_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		vMyPos.y = vPosition.y;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vMyPos);
+		break;
 	}
 
 	return _bool();
@@ -1106,6 +1109,15 @@ HRESULT CBullet::Texture_Clone(void)
 		m_vecTexture.push_back(m_pTextureCom);
 
 		break;
+	case WEAPON_TYPE::BEARGER_SPECIAL:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 34;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Bearger_Special"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Rocks"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+
+		break;
 	}
 
 
@@ -1162,6 +1174,11 @@ HRESULT CBullet::Init_Data(void)
 		m_fDamage = 1.f;
 		Compare_Terrain();
 		break;
+	/*case WEAPON_TYPE::BEARGER_SPECIAL:
+		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_fDamage = 1.f;
+		Compare_Terrain();
+		break;*/
 	default:
 		break;
 
@@ -1204,7 +1221,6 @@ CGameObject * CBullet::Clone(void * pArg)
 	return pInstance;
 }
 
-
 void CBullet::Free()
 {
 	__super::Free();
@@ -1212,8 +1228,6 @@ void CBullet::Free()
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
-
-	//Safe_Release(m_pColliderCom);
 
 	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_MINE)
 	{

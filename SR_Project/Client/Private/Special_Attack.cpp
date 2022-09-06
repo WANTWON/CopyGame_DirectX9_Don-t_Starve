@@ -30,11 +30,11 @@ HRESULT CSpecial_Attack::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-	WalkingTerrain();
+	m_pTransformCom->Set_Scale(5.f, 5.f, 1.f);
+	m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
 
 	return S_OK;
 }
-
 
 int CSpecial_Attack::Tick(_float fTimeDelta)
 {
@@ -57,7 +57,6 @@ void CSpecial_Attack::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
-	Change_Motion();
 	Change_Frame();
 }
 
@@ -79,6 +78,14 @@ HRESULT CSpecial_Attack::Render()
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
+
+	// For Debug Rendering
+	if (m_pVIDebugBufferCom)
+	{
+		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		m_pVIDebugBufferCom->Render();
+		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	}
 
 	return S_OK;
 }
@@ -111,10 +118,23 @@ HRESULT CSpecial_Attack::SetUp_Components(void* pArg)
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
 	TransformDesc.fSpeedPerSec = 0.f;
-	TransformDesc.fRotationPerSec = D3DXToRadian(0.f);
+	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
 	TransformDesc.InitPos = *(_float3*)pArg;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+		return E_FAIL;
+
+	//SetUp_DebugComponents(pArg);
+
+	return S_OK;
+}
+
+HRESULT CSpecial_Attack::SetUp_DebugComponents(void * pArg)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Components(TEXT("Com_DebugBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIDebugBufferCom)))
 		return E_FAIL;
 
 	return S_OK;
@@ -150,8 +170,8 @@ void CSpecial_Attack::SetUp_BillBoard()
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+	/*m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);*/
 }
 
 void CSpecial_Attack::WalkingTerrain()
@@ -193,7 +213,7 @@ HRESULT CSpecial_Attack::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 
 	TextureDesc.m_iEndTex = 17;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Attack_Ring"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Attack_Ring"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Attack_Ring"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Ring"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
@@ -204,10 +224,6 @@ void CSpecial_Attack::Change_Frame()
 {
 	if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 		m_bDead = true;
-}
-
-void CSpecial_Attack::Change_Motion()
-{
 }
 
 CSpecial_Attack* CSpecial_Attack::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
