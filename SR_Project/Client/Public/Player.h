@@ -16,7 +16,7 @@ class CPlayer final : public CGameObject
 {
 public:
 
-	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, DAMAGED, PORTAL, DEAD, REVIVE, ACTION_END };
+	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, DAMAGED, BUILD, PORTAL, DEAD, REVIVE, ACTION_END };
 	typedef enum class InteractionKey {
 		KEY_LBUTTON, //VK_LBUTTON
 		KEY_RBUTTON, //VK_RBUTTON
@@ -153,9 +153,9 @@ private: /**Actions*/
 	void	Jump(_float _fTimeDelta);
 	void	Dead(_float _fTimeDelta);
 	void	Revive(_float _fTimeDelta);
+	void	Building(_float _fTImeDelta);
 
-
-	void Multi_Action(_float _fTimeDelta); //�
+	void Multi_Action(_float _fTimeDelta); //
 
 	//Skill
 	void Throw_Bomb(_float _fTimeDelta);
