@@ -5,6 +5,7 @@
 #include "Mouse.h"
 #include "KeyMgr.h"
 #include "Player.h"
+#include "PickingMgr.h"
 
 
 CMainInventory_front::CMainInventory_front(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -277,40 +278,80 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 
 	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-
 	{
-
-
-
-		if (false == pMouse->Get_picked())
+		if (m_itemtype == ITEM_STRUCT)
 		{
+			if (false == pMouse->Get_picked())
+			{
+				pMouse->Set_Item_type(ITEM_STRUCT);
+				pMouse->Set_Item_name(texnum);   //첫피킹
+				pMouse->Set_index(iNum);
+				pMouse->Set_picked(true);
+				pMouse->Set_Item_count(item_number);
+				(*mouse)->set_check(true);
+				//(*mouse)->set_texnum(texnum); //마우스이미지
 
-			pMouse->Set_Item_name(texnum);   //첫피킹
-			pMouse->Set_index(iNum);
-			pMouse->Set_picked(true);
-			pMouse->Set_Item_count(item_number);
+				CPickingMgr* pPickingMgr =  CPickingMgr::Get_Instance();
+				pPickingMgr->Set_PickingItemType(ITEM_STRUCT);
+				set_texnum(ITEMNAME_END);
+			}
+			else if (true == pMouse->Get_picked())
+			{
 
-			(*mouse)->set_check(true);
-			(*mouse)->set_texnum(texnum);//마우스이미지
+				pMouse->Set_Prev_Item_name(texnum);
+				pMouse->Set_Item_prev_count(item_number);
+				texnum = (pMouse->Get_Item_name());
+				set_itemcount(pMouse->Get_Item_count());
+				pMouse->Set_picked(false);
+				m_bcheck = true;
 
-			set_texnum(ITEMNAME_END);
+				(*mouse)->set_texnum(ITEMNAME_END);
+				(*mouse)->set_check(false);//마우스이미지
+				CPickingMgr::Get_Instance()->Release_PickingObject();
+
+			}
+
+		}
+		else
+		{
+			if (false == pMouse->Get_picked())
+			{
+				pMouse->Set_Item_type(ITEM_END);
+				pMouse->Set_Item_name(texnum);   //첫피킹
+				pMouse->Set_index(iNum);
+				pMouse->Set_picked(true);
+				pMouse->Set_Item_count(item_number);
+
+				(*mouse)->set_check(true);
+				(*mouse)->set_texnum(texnum);//마우스이미지
+
+				set_texnum(ITEMNAME_END);
+			}
+
+			else if (true == pMouse->Get_picked())
+			{
+
+				pMouse->Set_Prev_Item_name(texnum);
+
+				if(pMouse->Get_Item_type() == ITEM_STRUCT && m_itemtype == ITEMNAME_END)
+					pMouse->Set_Item_prev_count(pMouse->Get_Item_prev_count());
+				else
+					pMouse->Set_Item_prev_count(item_number);
+				texnum = (pMouse->Get_Item_name());
+				set_itemcount(pMouse->Get_Item_count());
+				pMouse->Set_picked(false);
+				m_bcheck = true;
+				pMouse->Set_Item_type(ITEM_END);
+				(*mouse)->set_texnum(ITEMNAME_END);
+				(*mouse)->set_check(false);//마우스이미지
+				CPickingMgr::Get_Instance()->Release_PickingObject();
+
+			}
+
 		}
 
-		else if (true == pMouse->Get_picked())
-		{
 
-			pMouse->Set_Prev_Item_name(texnum);
-			pMouse->Set_Item_prev_count(item_number);
-			texnum = (pMouse->Get_Item_name());
-			set_itemcount(pMouse->Get_Item_count());
-			pMouse->Set_picked(false);
-			m_bcheck = true;
-
-			(*mouse)->set_texnum(ITEMNAME_END);
-			(*mouse)->set_check(false);//마우스이미지
-
-		}
-
+	
 
 	}
 

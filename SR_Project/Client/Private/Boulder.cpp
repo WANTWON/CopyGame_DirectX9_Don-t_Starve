@@ -237,7 +237,7 @@ void CBoulder::PickingTrue()
 
 	//pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y, m_vecOutPos.z));
 
-	cout << "Collision Rock : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
+	//cout << "Collision Rock : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
 
 	Safe_Release(pGameInstance);
 }

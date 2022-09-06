@@ -224,6 +224,15 @@ CComponent * CGameInstance::Get_Component(_uint iLevelIndex, const _tchar * pLay
 	return m_pObject_Manager->Get_Component(iLevelIndex, pLayerTag, pComponentTag, iIndex);
 }
 
+void CGameInstance::Clear_Layer(_uint iLevelIndex, const _tchar * LayerTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return;
+
+	m_pObject_Manager->Clear_Layer(iLevelIndex, LayerTag);
+}
+
+
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag, CComponent * pPrototype)
 {
 	if (nullptr == m_pComponent_Manager)

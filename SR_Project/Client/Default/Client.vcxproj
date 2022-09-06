@@ -215,6 +215,7 @@
     <ClInclude Include="..\Public\Pot_front.h" />
     <ClInclude Include="..\Public\Quest.h" />
     <ClInclude Include="..\Public\Questpont.h" />
+    <ClInclude Include="..\Public\Skeleton.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Spider.h" />
     <ClInclude Include="..\Public\Startbutton.h" />
@@ -235,6 +236,7 @@
     <ClInclude Include="..\public\Tree.h" />
     <ClInclude Include="..\Public\MainInventory.h" />
     <ClInclude Include="..\Public\Water.h" />
+    <ClInclude Include="..\Public\WoodWall.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="PigKing.h" />
     <ClInclude Include="Resource.h" />
@@ -298,6 +300,7 @@
     <ClCompile Include="..\Private\Pot_front.cpp" />
     <ClCompile Include="..\Private\Quest.cpp" />
     <ClCompile Include="..\Private\Questpont.cpp" />
+    <ClCompile Include="..\Private\Skeleton.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Spider.cpp" />
     <ClCompile Include="..\Private\Startbutton.cpp" />
@@ -318,6 +321,7 @@
     <ClCompile Include="..\private\Tree.cpp" />
     <ClCompile Include="..\Private\MainInventory.cpp" />
     <ClCompile Include="..\Private\Water.cpp" />
+    <ClCompile Include="..\Private\WoodWall.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="PigKing.cpp" />
     <ClCompile Include="SpiderWarrior.cpp" />

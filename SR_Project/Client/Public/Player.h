@@ -16,7 +16,7 @@ class CPlayer final : public CGameObject
 {
 public:
 
-	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, DAMAGED, TELEPORT, ACTION_END };
+	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, DAMAGED, PORTAL, DEAD, REVIVE, ACTION_END };
 	typedef enum class InteractionKey {
 		KEY_LBUTTON, //VK_LBUTTON
 		KEY_RBUTTON, //VK_RBUTTON
@@ -67,6 +67,16 @@ public:
 	_bool bIsKeyDown;
 	}ACTDATA;*/
 	
+	typedef struct tagSkillDesc {
+		_float	fAtkRange;
+		_float	fAtkScale;
+		_int	iCnt;
+		_float	fMaxCoolTime;
+		_float	fCurrent_CoolTime;
+		_bool	bSkillUsed;
+	}SKILLDESC;
+
+
 private:
 	CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CPlayer(const CPlayer& rhs);
@@ -107,6 +117,8 @@ public: /*Get&Set*/
 	void	Set_Position(_float3 Position);
 
 public:
+	void	Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
+public:
 	void	Add_ActStack(ACTION_STATE _ACT_STATE) { m_ActStack.push(_ACT_STATE); m_bAutoMode = true; m_bMove = false; }
 	//Test
 	void Check_Target(_bool _bDead) { if (_bDead) m_pTarget = nullptr; }
@@ -118,6 +130,7 @@ private:/*Setup*/
 
 	//Test
 	HRESULT Test_Setup();
+	void Init_Data();
 private: /**Actions*/
 	void GetKeyDown(_float _fTimeDelta);
 	
@@ -138,14 +151,25 @@ private: /**Actions*/
 	void	Pickup(_float _fTimeDelta);
 	void	Damaged(_float _fTimeDelta);
 	void	Jump(_float _fTimeDelta);
+	void	Dead(_float _fTimeDelta);
+	void	Revive(_float _fTimeDelta);
 
-	void Multi_Action(_float _fTimeDelta); //��ƼŰ
+
+	void Multi_Action(_float _fTimeDelta); //�
+
+	//Skill
+	void Throw_Bomb(_float _fTimeDelta);
+	void Ice_Spike(_float _fTimeDelta);
+	void Sand_Mines(_float _fTimeDelta);
 	 //Passive
-	void	Decrease_Stat(void); //�����ð����� Hunger ����
+	void	Decrease_Stat(void); //
 	void	Create_Bullet(void);
 	void	Detect_Enemy(void);
 	_bool	Check_Interact_End(void);
 	void	Find_Priority();
+	_bool	Check_Dead();
+
+	void	Cooltime_Update(_float _fTimeDelta);
 	//ActStack
 	void	Tick_ActStack(_float fTimeDelta);
 	void	Clear_ActStack();
@@ -160,7 +184,7 @@ private: /**Actions*/
 	
 	void RangeCheck(_float _fTimeDelta);
 
-
+	void Turn_OriginMat(_bool _bIsRight);
 	//Interact Check
 	ACTION_STATE Select_Interact_State(INTERACTOBJ_ID _eObjID);
 	
@@ -224,17 +248,27 @@ private: /*for Auto*/
 	_bool					m_bMove = true;
 
 	//AtkRange
-	_float						m_AtkRange = 3.f;
-	class CAttackRange*			m_pPicker = nullptr;
-	class CAttackRange*			m_pRange = nullptr;
+	vector<SKILLDESC>		m_vecSkillDesc;
+	_float					m_fAtkRange = 0.f;
+	class CAttackRange*		m_pPicker = nullptr;
+	class CAttackRange*		m_pRange = nullptr;
+
+	//for Skills
+	_float4x4				m_pOriginMatrix;
+	_uint					iCnt = 0;
+
+	//Dead
+	_bool					m_bGhost = false;
+	_float					m_fReviveTime = 0.f;
+	//MovePortal
+	_bool					m_bInPortal = false;
 private: // Test
 	_float3					m_vTargetPicking;
 	LEVEL					m_iCurrentLevelndex; //현재 레벨에 따라 불렛 생성 레벨이 다르기 때문에
+	LEVEL					m_iPreLevelIndex;
 	_float					m_fAtkScale = 6.2f;
-
 	
-	public:
-	void Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
+
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
