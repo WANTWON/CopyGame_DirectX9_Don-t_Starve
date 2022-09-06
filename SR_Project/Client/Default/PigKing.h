@@ -36,6 +36,8 @@ private:
 	STATE m_eState = IDLE;
 	STATE m_ePreState = MAX;
 
+	_uint m_iQuestnum = 0;
+
 public:
 	virtual void Interact(_uint Damage = 0) override;
 	virtual HRESULT Drop_Items() override;

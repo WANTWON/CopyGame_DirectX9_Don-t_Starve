@@ -108,6 +108,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	//cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
 
+
 	return OBJ_NOEVENT;
 }
 
@@ -140,6 +141,15 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	}
 	
 	Test_Debug(fTimeDelta);
+
+	if (CKeyMgr::Get_Instance()->Key_Up('9'))
+	{
+		CInventory_Manager::Get_Instance()->Use_pot();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Up('8'))
+	{
+		CInventory_Manager::Get_Instance()->Off_pot();
+	}
 }
 
 

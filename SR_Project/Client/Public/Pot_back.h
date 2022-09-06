@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CQuest final : public CGameObject
+class CPot_back final : public CGameObject
 {
 private:
-	CQuest(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CQuest(const CQuest& rhs);
-	virtual ~CQuest() = default;
+	CPot_back(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CPot_back(const CPot_back& rhs);
+	virtual ~CPot_back() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -24,6 +24,10 @@ public:
 	virtual int Tick(_float fTimeDelta)override;
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
+
+	bool get_check_bag() { return m_bcheck_bag; }
+	void set_check_bag(bool tof) { m_bcheck_bag = tof; }
+	int get_iNum() { return iNum; }
 
 private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
@@ -40,20 +44,16 @@ private:
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
-	_uint texnum = 0;
-	_uint m_ihp;
-
-	bool b_onoff = false;
-
 public:
-	_uint get_texnum() { return texnum;  }
-	void set_texnum(_uint num) { texnum = num; }
-	bool get_onoff() { return b_onoff;}
-	void set_onoff(bool tof) { b_onoff = tof; }
-public:
-	static CQuest* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CPot_back* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
+private:
+
+	int* iNumber = nullptr;
+	int iNum = 0;
+	bool m_bcheck_bag = false;
+	//bool m_bcheck = true;
 };
 
 END

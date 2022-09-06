@@ -297,6 +297,20 @@ void CInventory_Manager::Off_bag()
 	m_BagInventorylist.front()->set_closebag();      //set_check_bag(false);
 }
 
+void CInventory_Manager::Use_pot()
+{
+
+	m_Pot.front()->set_check_pot(true);
+	m_Pot.front()->set_openpot();
+
+}
+
+void CInventory_Manager::Off_pot()
+{
+	m_Pot.front()->set_check_pot(true);
+	m_Pot.front()->set_closepot();
+}
+
 void CInventory_Manager::weapontool_on()
 {
 	

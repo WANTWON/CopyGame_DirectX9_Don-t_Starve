@@ -105,6 +105,10 @@ HRESULT CLevel_Logo::Ready_Layer_logo (const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_logoscene"), LEVEL_LOGO, pLayerTag, nullptr)))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_startbutton"), LEVEL_LOGO, pLayerTag, nullptr)))
+		return E_FAIL;
+
+	
 
 	Safe_Release(pGameInstance);
 

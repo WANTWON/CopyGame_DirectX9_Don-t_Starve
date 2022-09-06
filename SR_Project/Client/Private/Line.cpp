@@ -36,7 +36,7 @@ HRESULT CLine::Initialize(void* pArg)
 	m_fSizeX = 160.0f;
 	m_fSizeY = 2.0f;
 	m_fX = 1190.f;
-	m_fY = 282.f + (iNum * 35.f);
+	m_fY = 286.5f + (iNum * 30.f);
 	/*
 
 
@@ -269,50 +269,78 @@ void CLine::set_line()
 
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 	Safe_AddRef(pInventory_Manager);
-
-
-	auto questpont = pInventory_Manager->Get_Questpont_list();
-
-	Safe_Release(pInventory_Manager);
-	if (questnum == 0)
+	if (pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 0)  // quest 0
 	{
+		auto questpont = pInventory_Manager->Get_Questpont_list();
+   
+			for (auto iter = questpont->begin(); iter != questpont->end(); ++iter)
+			{
+				if (iNum == 0)
+				{
+					if ((*iter)->get_pontnum() == 0 && (*iter)->get_pontex() >= 3) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
+					{
+						m_bcheck = true;
+						break;
+					}
+					else
+						m_bcheck = false;
+				}
+
+				else if (iNum == 1)
+				{
+					if ((*iter)->get_pontnum() == 1 && (*iter)->get_pontex() >= 2) // 있으면 라인 없으면 노라인
+					{
+						m_bcheck = true;
+						break;
+					}
+					else
+						m_bcheck = false;
+				}
+
+				else if (iNum == 2)
+				{
+					if ((*iter)->get_pontnum() == 2 && (*iter)->get_pontex() >= 1) // 있으면 라인 없으면 노라인
+					{
+						m_bcheck = true;
+						break;
+					}
+					else
+						m_bcheck = false;
+				}
+
+				Safe_Release(pInventory_Manager);
+
+			}
+		}
+
+	else if (pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 1)  // quest 1
+	{
+		auto questpont = pInventory_Manager->Get_Questpont_list();
+
 		for (auto iter = questpont->begin(); iter != questpont->end(); ++iter)
 		{
-			if (iNum == 0)
-			{
-				if ((*iter)->get_pontnum() == 0 && (*iter)->get_pontex() >= 3) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
-				{
-					m_bcheck = true;
-					break;
-				}
-				else
-					m_bcheck = false;
-			}
+			
+			if (iNum == 0 || iNum == 2)
+				m_bcheck = false;
 
 			else if (iNum == 1)
 			{
-				if ((*iter)->get_pontnum() == 1 && (*iter)->get_pontex() >= 2) // 있으면 라인 없으면 노라인
-				{
+		//		if ((*iter)->get_pontnum() == 1 && (*iter)->get_pontex() >= 2) // 추후에 조건 추가
+	//			{
 					m_bcheck = true;
-					break;
-				}
-				else
-					m_bcheck = false;
+	//				break;
+	//			}
+	//			else
+//					m_bcheck = false;
 			}
 
-			else if (iNum == 2)
-			{
-				if ((*iter)->get_pontnum() == 2 && (*iter)->get_pontex() >= 1) // 있으면 라인 없으면 노라인
-				{
-					m_bcheck = true;
-					break;
-				}
-				else
-					m_bcheck = false;
-			}
+			
 
-
+			Safe_Release(pInventory_Manager);
 
 		}
 	}
+	
+
+	
 }

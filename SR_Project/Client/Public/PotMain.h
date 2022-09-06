@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Client_Defines.h"
 #include "GameObject.h"
 
@@ -11,12 +12,12 @@ END
 
 BEGIN(Client)
 
-class CQuest final : public CGameObject
+class CPotMain final : public CGameObject
 {
 private:
-	CQuest(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CQuest(const CQuest& rhs);
-	virtual ~CQuest() = default;
+	CPotMain(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CPotMain(const CPotMain& rhs);
+	virtual ~CPotMain() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -25,11 +26,22 @@ public:
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
 
+	bool get_check_pot() { return m_bcheck_pot; }
+	void set_check_pot(bool tof) { m_bcheck_pot = tof; }
+	void set_closepot() { m_eState = CLOSE; }
+	void set_openpot() { m_eState = OPEN; }
+
+public: /*For TextureCom */
+	HRESULT Texture_Clone();
+	HRESULT Change_Texture(const _tchar* LayerTag);
+
 private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
+
+	vector<CTexture*> m_vecTexture;
 
 private:
 	_float4x4				m_ProjMatrix;
@@ -40,20 +52,23 @@ private:
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
-	_uint texnum = 0;
-	_uint m_ihp;
-
-	bool b_onoff = false;
-
 public:
-	_uint get_texnum() { return texnum;  }
-	void set_texnum(_uint num) { texnum = num; }
-	bool get_onoff() { return b_onoff;}
-	void set_onoff(bool tof) { b_onoff = tof; }
-public:
-	static CQuest* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CPotMain* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
+
+private:
+	bool m_bcheck_pot = false;
+
+public:
+	enum STATE
+	{
+		IDLE, OPEN, CLOSE, MAX
+	};
+private:
+	STATE m_eState = IDLE;
+	STATE m_ePreState = MAX;
+	const _tchar*	m_TimerTag = TEXT("");
 };
 
 END

@@ -542,10 +542,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CraftPont"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CraftPont"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Potmain"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+	
 
 	Safe_Release(pGameInstance);
 

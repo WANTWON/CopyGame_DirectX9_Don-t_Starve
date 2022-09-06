@@ -30,8 +30,8 @@ HRESULT CQuest::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 150.f;
-	m_fSizeY = 120.f;
+	m_fSizeX = 220.f;
+	m_fSizeY = 220.f;
 	m_fX = 1185.f;
 	m_fY = 300.f;
 
@@ -59,6 +59,12 @@ int CQuest::Tick(_float fTimeDelta)
 
 	if (b_onoff == true);
 	{
+		if (texnum == 2)
+		{
+			m_fSizeX = 200.f;
+			m_fSizeY = 150.f;
+			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		}
 
 		__super::Tick(fTimeDelta);
 
