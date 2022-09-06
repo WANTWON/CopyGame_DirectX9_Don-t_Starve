@@ -215,6 +215,7 @@
     <ClInclude Include="..\Public\Portal.h" />
     <ClInclude Include="..\Public\Quest.h" />
     <ClInclude Include="..\Public\Questpont.h" />
+    <ClInclude Include="..\Public\Skeleton.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\public\Special_Attack.h" />
     <ClInclude Include="..\Public\Spider.h" />
@@ -299,6 +300,7 @@
     <ClCompile Include="..\Private\Portal.cpp" />
     <ClCompile Include="..\Private\Quest.cpp" />
     <ClCompile Include="..\Private\Questpont.cpp" />
+    <ClCompile Include="..\Private\Skeleton.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\private\Special_Attack.cpp" />
     <ClCompile Include="..\Private\Spider.cpp" />

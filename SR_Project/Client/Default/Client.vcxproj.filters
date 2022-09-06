@@ -196,6 +196,9 @@
     <Filter Include="02.GameObject\01.Monster\Bearger\Special Attack">
       <UniqueIdentifier>{65dfa0af-688d-47c7-a3cf-63c23b3c03fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.Interactive_Object\Skeleton">
+      <UniqueIdentifier>{c645df63-ccfe-430e-9d23-33a5671fbf7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -453,6 +456,9 @@
     <ClInclude Include="..\public\Special_Attack.h">
       <Filter>02.GameObject\01.Monster\Bearger\Special Attack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Skeleton.h">
+      <Filter>02.GameObject\04.Interactive_Object\Skeleton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -697,6 +703,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Special_Attack.cpp">
       <Filter>02.GameObject\01.Monster\Bearger\Special Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skeleton.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\Skeleton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

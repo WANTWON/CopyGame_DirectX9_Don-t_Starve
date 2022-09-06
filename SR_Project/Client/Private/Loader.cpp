@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Equip_Animation.h"
 
+#include "Skeleton.h"
 #include "Bullet.h"
 #include "Player.h"
 #include "Pig.h"
@@ -281,9 +282,29 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Eat/Player_Eat_%03d.png"), 22))))
 		return E_FAIL;
 
+	/*Dead*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Dead"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Dead/Player_Dead_%03d.png"), 56))))
+		return E_FAIL;
+
+	/*Ghost_Idle*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Ghost_Idle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Ghost_Idle/Player_Ghost_Idle_%03d.png"), 65))))
+		return E_FAIL;
+
+	/*Revive*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Revive"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Revive/Player_Revive_%03d.png"), 17))))
+		return E_FAIL;
+
 #pragma endregion Add_Texture_Player
 
 #pragma  region Add_Texture_others
+	/*Skeleton*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Skeleton"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Skeleton/Player_Skeleton_%03d.png"), 1))))
+		return E_FAIL;
+
 	/*Hambat_Anim*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Anim_Hambat_Up"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Weapon_Anim/Hambat/Hambat_Up_%03d.png"), 37))))
@@ -387,8 +408,8 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 #pragma  region Add_Texture_Effects
 	/*Smoke*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_RedSmoke"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Small_Puff/small_puff_%03d.png"), 17))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Laser_Hit1"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Laser_Hit/Laser_Hit1_%03d.png"), 12))))
 		return E_FAIL;
 
 	/*Build_Effect*/
@@ -542,7 +563,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 #pragma endregion Add_Texture UI
 
 
-	/* ��ü ���� ���� ��. */
+	/* Others Prototype */
 	lstrcpy(m_szLoadingText, TEXT("Loading_Object"));
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"),
 		CPlayer::Create(m_pGraphic_Device))))
@@ -560,6 +581,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CAttackRange::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	
 
 	lstrcpy(m_szLoadingText, TEXT("Loading_UI"));
 
@@ -1188,6 +1210,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_GameObject_Portal */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Portal"),
 		CPortal::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_Skeleton*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skeleton"),
+		CSkeleton::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Loading_Finish"));

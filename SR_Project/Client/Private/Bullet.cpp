@@ -171,6 +171,11 @@ HRESULT CBullet::SetUp_RenderState()
 		return E_FAIL;
 
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
@@ -182,6 +187,7 @@ HRESULT CBullet::SetUp_RenderState()
 HRESULT CBullet::Release_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 	return S_OK;
 }
 
@@ -300,19 +306,32 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 			goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_SMOKE:
-			m_fDamageTimger += _fTimeDelta;
-			if (m_fDamageTimger > 0.5f)
+
+			if (m_bIsAttacked)
 			{
-				m_fDamage = 0.f;
+				m_bIsAttacked = false;
+				m_fDamage = 20.f;
 				goto AttackMulti;
 			}
 			break;
 
 		case WEAPON_TYPE::WEAPON_ICESPIKE1:
+				m_fDamage = 4.f;
+				goto AttackMulti;
+			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE2:
+				m_fDamage = 3.f;
+				goto AttackMulti;
+			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE3:
+				m_bIsAttacked = false;
+				m_fDamage = 2.f;
+				goto AttackMulti;
+			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE4:
-
+				m_bIsAttacked = false;
+				m_fDamage = 1.f;
+				goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_MINE:
 
@@ -375,12 +394,12 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 		}
 		break;
 	case WEAPON_TYPE::WEAPON_SMOKE:
-		if (m_fAccDeadTimer > 3.f && !m_bActivated)
+		/*if (m_fAccDeadTimer > 3.f && !m_bActivated)
 		{
 			m_bActivated = true;
 		
-		}
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex >= 14)
+		}*/
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex >= 10)
 		{
 			m_bDead = OBJ_DEAD;
 		}
@@ -411,14 +430,10 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 
 void CBullet::Red_Smoke(_float _fTimeDelta)
 {
-	if (!m_bActivated)
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 7)
 	{
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex >= 7)
-		{
-			m_pTextureCom->Set_ZeroFrame();
-		}
+		m_bIsAttacked = true;
 	}
-
 }
 
 void CBullet::Bomb(void)
@@ -537,6 +552,7 @@ void CBullet::IceSpikes(_float _fTimeDelta)
 		case WEAPON_TYPE::WEAPON_ICESPIKE4:
 			if (m_fTime < fRemainTime && m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
 			{
+				
 				m_pTextureCom->Get_Frame().m_iCurrentTex = 13;
 			}
 			else if (m_fTime > fRemainTime && !m_bActivated2)
@@ -1013,9 +1029,9 @@ HRESULT CBullet::Texture_Clone(void)
 		break;
 	case WEAPON_TYPE::WEAPON_SMOKE:
 		TextureDesc.m_iStartTex = 0;
-		TextureDesc.m_iEndTex = 16;
+		TextureDesc.m_iEndTex = 11;
 		TextureDesc.m_fSpeed = 60;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RedSmoke"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_RedSmoke"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RedSmoke"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Laser_Hit1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
 	case WEAPON_TYPE::WEAPON_LIGHTNING:
@@ -1109,7 +1125,7 @@ HRESULT CBullet::Init_Data(void)
 		}
 		break;
 	case WEAPON_TYPE::WEAPON_SMOKE:
-		m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.f);
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 		m_fDamage = 3.f;
 		break;
 	case WEAPON_TYPE::WEAPON_BOMB:
