@@ -350,9 +350,9 @@ HRESULT CGameInstance::Add_CollisionGroup(CCollider::COLLISION_GROUP eCollisionG
 	return m_pCollider_Manager->Add_CollisionGroup(eCollisionGroup, pGameObject);
 }
 
-_bool CGameInstance::Collision_with_Group(CCollider::COLLISION_GROUP eGroup, CGameObject * pGameObject)
+_bool CGameInstance::Collision_with_Group(CCollider::COLLISION_GROUP eGroup, CGameObject * pGameObject,  _float3* pOutDistance)
 {
-	return m_pCollider_Manager->Collision_with_Group(eGroup, pGameObject);
+	return m_pCollider_Manager->Collision_with_Group(eGroup, pGameObject, pOutDistance);
 }
 
 _bool CGameInstance::Collision_Check_Group_Multi(CCollider::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, CGameObject * pDamageCauser)

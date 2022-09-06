@@ -93,6 +93,7 @@ _bool CPickingMgr::Picking()
 	if (m_bMouseInUI)
 		return false;
 
+
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
@@ -130,10 +131,7 @@ _bool CPickingMgr::Picking()
 		m_vPickingPos = vecNearPos;
 		vecPicked[NearNum]->PickingTrue();
 
-		/*if (m_pPickingObject != nullptr)
-		{
-			m_pPickingObject->Update_Position(m_vPickingPos);
-		}*/
+	
 			
 		return true;
 	}

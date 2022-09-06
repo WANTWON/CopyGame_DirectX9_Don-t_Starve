@@ -62,6 +62,7 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 	if (FAILED(Bind_OnGraphicDev()))
 		return OBJ_NOEVENT;
 
+
 	return OBJ_NOEVENT;
 }
 
