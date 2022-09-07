@@ -47,7 +47,8 @@ private:/*Act Player`s Bullets*/
 	void IceSpikes(_float _fTimeDelta);
 	void IceMine(_float _fTimeDelta);
 	void IceMines(_float _fTimeDelta);
-	
+	void Puff(_float _fTimeDelta);
+
 private://ApplyDamage
 	virtual void	Apply_Damage(_float Damage, CGameObject* DamagedObj, void* AttackType = nullptr);
 	virtual void	Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void* AttackType = nullptr);
@@ -70,7 +71,6 @@ private:/*For Components*/
 
 	/* For.Debug */
 	CVIBuffer_Rect* m_pVIDebugBufferCom = nullptr;
-	CTransform*	m_pDebugTransformCom = nullptr;
 
 private: //values		
 	//WEAPON_TYPE				m_eWeaponType = WEAPON_TYPE::WEAPON_HAND;

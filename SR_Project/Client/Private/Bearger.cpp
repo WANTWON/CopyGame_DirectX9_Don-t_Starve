@@ -34,7 +34,7 @@ HRESULT CBearger::Initialize(void* pArg)
 	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 
-	m_fAttackRadius = 2.f;
+	m_fAttackRadius = 1.5f;
 
 	return S_OK;
 }
@@ -48,9 +48,6 @@ int CBearger::Tick(_float fTimeDelta)
 	AI_Behaviour(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
-
-	
 
 	return OBJ_NOEVENT;
 }
@@ -106,8 +103,6 @@ HRESULT CBearger::SetUp_Components(void* pArg)
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
-
-
 
 	/* For.Com_Collider*/
 	CCollider_Rect::COLLRECTDESC CollRectDesc;
@@ -692,9 +687,11 @@ void CBearger::Attack(_bool bIsSpecial)
 		BULLETDATA BulletData;
 		ZeroMemory(&BulletData, sizeof(BulletData));
 
-		BulletData.vPosition = Get_Position();
-		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		BulletData.vPosition = m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 		BulletData.eDirState = m_eDir;
+		BulletData.fOffsetSide = 1.f;
+		BulletData.fOffsetUp = .5f;
+		BulletData.fOffsetDown = .5f;
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 			return;
@@ -710,26 +707,27 @@ void CBearger::Attack(_bool bIsSpecial)
 		D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 		D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
 
+		_float3 vRingPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .3f, 0.f);
+		_float3 vRocksPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .8f, 0.f);
+
 		// Create Ring and First Wave of Rocks
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)
 		{
 			// Ring
-			_float3 vPos = Get_Position() + _float3(0.f, (-1 * m_pTransformCom->Get_Scale().y / 2) + .1f, 0.f);
-
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Attack_Special"), LEVEL_STATIC, TEXT("Layer_Attack"), &vPos)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Attack_Special"), LEVEL_STATIC, TEXT("Layer_Attack"), &vRingPos)))
 				return;
 
 			// Rocks
-			BulletData.vPosition = Get_Position()/* + BulletData.vLook*/;
+			BulletData.vPosition = vRocksPos + BulletData.vLook;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = Get_Position() + BulletData.vRight;
+			BulletData.vPosition = vRocksPos + BulletData.vRight;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = Get_Position() - BulletData.vLook;
+			BulletData.vPosition = vRocksPos - BulletData.vLook;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = Get_Position() - BulletData.vRight;
+			BulletData.vPosition = vRocksPos - BulletData.vRight;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 		}
@@ -737,16 +735,16 @@ void CBearger::Attack(_bool bIsSpecial)
 		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 30)
 		{
 			// Rocks
-			BulletData.vPosition = Get_Position() + BulletData.vLook * 2;
+			BulletData.vPosition = vRocksPos + BulletData.vLook * 2;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = Get_Position() + BulletData.vRight * 2;
+			BulletData.vPosition = vRocksPos + BulletData.vRight * 2;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = Get_Position() - BulletData.vLook * 2;
+			BulletData.vPosition = vRocksPos - BulletData.vLook * 2;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = Get_Position() - BulletData.vRight * 2;
+			BulletData.vPosition = vRocksPos - BulletData.vRight * 2;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 		}

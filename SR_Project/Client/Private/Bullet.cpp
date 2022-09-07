@@ -37,7 +37,6 @@ HRESULT CBullet::Initialize(void * pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-	//���� �̳Ѱ� �ޱ�, ���� ��ġ�� �ޱ�.
 
 	m_tBulletData = *(BULLETDATA*)(pArg);
 
@@ -56,9 +55,6 @@ int CBullet::Tick(_float fTimeDelta)
 
 	if (m_bDead == true)
 		return OBJ_DEAD;
-
-	/*if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);*/
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
@@ -161,11 +157,28 @@ HRESULT CBullet::SetUp_Components()
 
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
+	
+	switch (m_tBulletData.eDirState)
+	{
+	case DIR_STATE::DIR_LEFT:
+		m_tBulletData.vPosition -= _float3(m_tBulletData.fOffsetSide, 0.f, 0.f);
+		break;
+	case DIR_STATE::DIR_RIGHT:
+		m_tBulletData.vPosition += _float3(m_tBulletData.fOffsetSide, 0.f, 0.f);
+		break;
+	case DIR_STATE::DIR_UP:
+		m_tBulletData.vPosition += _float3(0.f, 0.f, m_tBulletData.fOffsetUp);
+		break;
+	case DIR_STATE::DIR_DOWN:
+		m_tBulletData.vPosition -= _float3(0.f, 0.f, m_tBulletData.fOffsetDown);
+		break;
+	}
+
 	TransformDesc.InitPos = m_tBulletData.vPosition;
-	TransformDesc.InitPos.y += 0.2f;
+	
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
-	//������ ����
+	
 	Init_Data();
 
 	//SetUp_DebugComponents();
@@ -211,10 +224,7 @@ HRESULT CBullet::Release_RenderState()
 }
 
 void CBullet::Excute(_float fTimeDelta)
-{	/*�����̳� Į�� �´� ��ü�� ���͸� �����������
-	ȭ��, �Ҹ����� ���� �¾Ҵ����� ���� ó���� �ʿ�,
-	���� ȭ�� �Ҹ����� �������� ��ġ ������Ʈ�� �ʿ��ϴ�.*/
-
+{	
 	//Monster
 	if (!m_tBulletData.bIsPlayerBullet)
 	{
@@ -448,6 +458,11 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 		if (m_bActivated3)
 			m_bDead = OBJ_DEAD;
 		break;
+	case WEAPON_TYPE::WEAPON_PUFF:
+		if(m_pTextureCom->Get_Frame().m_iCurrentTex >=m_pTextureCom->Get_Frame().m_iEndTex -2)
+			m_bDead = OBJ_DEAD;
+		break;
+
 	case WEAPON_TYPE::BEARGER_SPECIAL:
 		if ((m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1))
 			m_bDead = true;
@@ -857,6 +872,12 @@ void CBullet::IceMines(_float _fTimeDelta)
 	Safe_Release(pGameInstance);
 }
 
+void CBullet::Puff(_float _fTimeDelta)
+{
+
+
+}
+
 HRESULT CBullet::Render_TextureState()
 {
 	switch (m_tBulletData.eWeaponType)
@@ -1057,7 +1078,7 @@ HRESULT CBullet::Texture_Clone(void)
 		TextureDesc.m_iStartTex = 0;
 		TextureDesc.m_iEndTex = 11;
 		TextureDesc.m_fSpeed = 60;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RedSmoke"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Laser_Hit1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_LaserHit"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Laser_Hit1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
 	case WEAPON_TYPE::WEAPON_LIGHTNING:
@@ -1141,6 +1162,16 @@ HRESULT CBullet::Texture_Clone(void)
 		m_vecTexture.push_back(m_pTextureCom);
 
 		break;
+	case WEAPON_TYPE::WEAPON_PUFF:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 16;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Small_Puff"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Small_Puff"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+
+		break;
+
 	}
 
 

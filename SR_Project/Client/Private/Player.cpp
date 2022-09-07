@@ -453,7 +453,7 @@ void CPlayer::Init_Data()
 	//Bomb
 	SkillDesc.bSkillUsed = false;
 	SkillDesc.fAtkRange = 9.f;
-	SkillDesc.fAtkScale = 6.f;
+	SkillDesc.fAtkScale = 6.3f;
 	SkillDesc.fMaxCoolTime = 5.f;
 	SkillDesc.fCurrent_CoolTime = 0.f;
 	SkillDesc.iCnt = 0;
@@ -471,6 +471,15 @@ void CPlayer::Init_Data()
 	SkillDesc.fAtkRange = 3.f;
 	SkillDesc.fAtkScale = 3.f;
 	SkillDesc.fMaxCoolTime = 7.f;
+	SkillDesc.fCurrent_CoolTime = 0.f;
+	SkillDesc.iCnt = 0;
+	m_vecSkillDesc.push_back(SkillDesc);
+
+	//Teleport
+	SkillDesc.bSkillUsed = false;
+	SkillDesc.fAtkRange = 10.f;
+	SkillDesc.fAtkScale = 6.3f;
+	SkillDesc.fMaxCoolTime = 3.f;
 	SkillDesc.fCurrent_CoolTime = 0.f;
 	SkillDesc.iCnt = 0;
 	m_vecSkillDesc.push_back(SkillDesc);
@@ -509,8 +518,10 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
 		else
 		{
+			
 			CCameraManager::Get_Instance()->PlayerCamera_TurnLeft(m_iCurrentLevelndex);
 			Turn_OriginMat(false);
+			SetUp_BillBoard();
 		}
 
 	}
@@ -522,6 +533,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		{
 			CCameraManager::Get_Instance()->PlayerCamera_TurnRight(m_iCurrentLevelndex);
 			Turn_OriginMat(true);
+			SetUp_BillBoard();
 		}
 	}
 
@@ -649,14 +661,50 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		}
 		else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN4]))
 		{
+			if (!m_pPicker->Get_IsShow())
+			{
+				{
+					m_pRange->Set_IsShow(true);
+					m_pPicker->Set_IsShow(true);
+				}
+			}
+
+			if (m_vecSkillDesc[3].iCnt == 0)
+			{
+				for (auto& iter : m_vecSkillDesc)
+				{
+					iter.iCnt = 0;
+				}
+				m_vecSkillDesc[3].iCnt += 1;
+				m_fAtkRange = m_vecSkillDesc[3].fAtkRange;
+				m_fAtkScale = m_vecSkillDesc[3].fAtkScale;
+				m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
+
+			}
+			else if (m_vecSkillDesc[3].iCnt == 1
+				&& m_vecSkillDesc[3].bSkillUsed == false
+				&& m_pPicker->Get_IsCorrect())
+			{
+				Teleport(_fTimeDelta);
+				m_vecSkillDesc[3].bSkillUsed = true;
+				if (m_pPicker->Get_IsShow())
+				{
+					{
+						m_pRange->Set_IsShow(false);
+						m_pPicker->Set_IsShow(false);
+					}
+				}
+			}
+
+		}
+		else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN5]))
+		{
 			if (m_pPicker->Get_IsShow())
 			{
 				m_pRange->Set_IsShow(false);
 				m_pPicker->Set_IsShow(false);
 			}
-
 		}
-
 	}
 
 #pragma endregion Action
@@ -1084,7 +1132,7 @@ void CPlayer::Chop(_float _fTimeDelta)
 		ParticleDesc.iTextureNum = 4;
 		ParticleDesc.vVelocity = _float3(0.01f, -0.5, 0.f);
 		ParticleDesc.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		ParticleDesc.vPosition.z -= 0.001;
+		ParticleDesc.vPosition.z -= 0.001f;
 		ParticleDesc.vPosition.y += 1;
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_ParticleSystem"), ParticleDesc.eTextureScene, TEXT("Layer_Particle"), &ParticleDesc)))
@@ -1351,13 +1399,13 @@ void CPlayer::Building(_float _fTImeDelta)
 		}
 		m_ePreState = m_eState;
 	}
-	if (m_fBuildTime > 2.f &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex -2)
+	if (m_fBuildTime > 1.f/* &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex -2*/)
 	{
 		m_bIsBuild = true;
 		m_bBuildTrigger = false;
 		m_fBuildTime = 0.f;
 	}
-	else if(m_fBuildTime < 2.f &&m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 2)
+	else if(m_fBuildTime < 1.f &&m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 2)
 	{
 
 		m_pTextureCom->Get_Frame().m_iCurrentTex = 0;
@@ -1574,6 +1622,34 @@ void CPlayer::Sand_Mines(_float _fTimeDelta)
 			break;
 
 		}
+	}
+}
+
+void CPlayer::Teleport(_float _fTimeDelta)
+{
+	if (m_pPicker->Get_IsCorrect())
+	{
+		/*Test Bomb*/
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+		BULLETDATA BulletData;
+		ZeroMemory(&BulletData, sizeof(BulletData));
+		BulletData.bIsPlayerBullet = true;
+		BulletData.eDirState = DIR_STATE::DIR_DOWN;
+		BulletData.eWeaponType = WEAPON_TYPE::WEAPON_PUFF;
+		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_UP);
+		BulletData.vPosition = Get_Pos();
+
+		_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
+		
+		BulletData.vTargetPos = temp;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+			return;
+		temp = { m_vTargetPicking.x, m_vTargetPicking.y + 0.5f, m_vTargetPicking.z };
+
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
+
+		SetUp_BillBoard();
 	}
 }
 
@@ -1995,6 +2071,7 @@ void CPlayer::Clear_ActStack()
 	m_bAutoMode = false;
 	m_bIsBuild = false;
 	m_bBuildTrigger = false;
+	m_pTarget = nullptr;
 }
 
 CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)

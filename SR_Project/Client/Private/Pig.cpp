@@ -251,9 +251,12 @@ void CPig::Change_Frame()
 		{
 			BULLETDATA BulletData;
 			ZeroMemory(&BulletData, sizeof(BulletData));
-			BulletData.vPosition = Get_Position();
-			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+			BulletData.vPosition = m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 			BulletData.eDirState = m_eDir;
+			BulletData.fOffsetSide = .5f;
+			BulletData.fOffsetUp = .25f;
+			BulletData.fOffsetDown = .5f;
 
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))
