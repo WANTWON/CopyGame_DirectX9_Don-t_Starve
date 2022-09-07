@@ -128,6 +128,15 @@ int CTalk::Tick(_float fTimeDelta)
 				m_bcheck = false;
 				Safe_Release(pinv);
 			}
+			else if (texnum == 12)
+			{
+				pinv->Get_Quest_list()->front()->set_onoff(true);
+				pinv->Get_Quest_list()->front()->set_texnum(2);
+				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				m_bcheck = false;
+				Safe_Release(pinv);
+			}
 			else
 				++texnum;
 		}

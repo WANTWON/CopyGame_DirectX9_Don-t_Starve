@@ -47,7 +47,7 @@ HRESULT CQuest::Initialize(void* pArg)
 
 int CQuest::Tick(_float fTimeDelta)
 {
-	if (b_onoff == true && CKeyMgr::Get_Instance()->Key_Up(VK_ESCAPE))
+	/*if (b_onoff == true && CKeyMgr::Get_Instance()->Key_Up(VK_ESCAPE))
 	{
 		b_onoff = false;
 		
@@ -55,16 +55,16 @@ int CQuest::Tick(_float fTimeDelta)
 	else if (b_onoff == false && CKeyMgr::Get_Instance()->Key_Up(VK_ESCAPE))
 	{
 		b_onoff = true;
-	}
+	}*/
 
-	if (b_onoff == true);
+	/*if (b_onoff == true);
 	{
 		if (texnum == 2)
 		{
 			m_fSizeX = 200.f;
 			m_fSizeY = 150.f;
 			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		}
+		}*/
 
 		__super::Tick(fTimeDelta);
 
@@ -87,7 +87,7 @@ int CQuest::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
    }
 	
-}
+
 
 void CQuest::Late_Tick(_float fTimeDelta)
 {

@@ -31,8 +31,8 @@ HRESULT CStartbutton::Initialize(void* pArg)
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
 	m_fSizeX = 200.f;
-	m_fSizeY = 100.f;
-	m_fX = 640.f;
+	m_fSizeY = 50;
+	m_fX = 180.f;
 	m_fY = 360.f;
 
 	if (FAILED(SetUp_Components()))
@@ -58,8 +58,8 @@ int CStartbutton::Tick(_float fTimeDelta)
 	if (PtInRect(&rcRect, ptMouse))
 	{
 
-		m_fSizeX = 250.f;
-		m_fSizeY = 150.f;
+		m_fSizeX = 220.f;
+		m_fSizeY = 70.f;
 
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 
@@ -96,7 +96,7 @@ void CStartbutton::Late_Tick(_float fTimeDelta)
 	{
 
 		m_fSizeX = 200.f;
-		m_fSizeY = 100.f;
+		m_fSizeY = 50.f;
 
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	}

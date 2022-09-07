@@ -85,49 +85,24 @@ int CToolboxConstruct_back::Tick(_float fTimeDelta)
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 	Safe_AddRef(pInventory_Manager);
 	//pInventory_Manager->craft_on(MAKE_AXE);
-	if (iNum == 0 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
 
+		if (iNum == 0)
+		{
+			pInventory_Manager->craft_on(MAKE_FENCE);
+		}
+		else if (iNum == 1)
+		{
+			pInventory_Manager->craft_on(MAKE_POT);
 
+		}
+		else
+			pInventory_Manager->craft_on(MAKE_TENT);
 
-		pInventory_Manager->craft_on(MAKE_FENCE);
+		
 
 	}
-	else if (iNum == 1 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
-
-		pInventory_Manager->craft_on(MAKE_POT);
-
-
-	}
-	else if (iNum == 2 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
-
-		pInventory_Manager->craft_on(MAKE_TENT);
-
-
-	}
-	/*else if (iNum == 2 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
-
-		pInventory_Manager->craft_on(MAKE_STAFF);
-
-
-	}
-	else if (iNum == 3 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
-
-		pInventory_Manager->craft_on(MAKE_ARMOR);
-
-
-	}
-	else if (iNum == 4 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
-
-		pInventory_Manager->craft_on(MAKE_HELMET);
-
-
-	}*/
 
 
 	Safe_Release(pInventory_Manager);

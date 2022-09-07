@@ -71,7 +71,7 @@ HRESULT CPot_front::Initialize(void* pArg)
 	{
 		texnum == ITEMNAME_BERRY;
 	}*/
-	texnum = ITEMNAME_BERRY;
+	//texnum = ITEMNAME_BERRY;
 	
 
 	

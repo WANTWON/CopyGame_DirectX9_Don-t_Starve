@@ -315,32 +315,55 @@ void CLine::set_line()
 
 	else if (pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 1)  // quest 1
 	{
-		auto questpont = pInventory_Manager->Get_Questpont_list();
 
-		for (auto iter = questpont->begin(); iter != questpont->end(); ++iter)
-		{
+		
 			
 			if (iNum == 0 || iNum == 2)
 				m_bcheck = false;
 
 			else if (iNum == 1)
-			{
-		//		if ((*iter)->get_pontnum() == 1 && (*iter)->get_pontex() >= 2) // 추후에 조건 추가
-	//			{
+			{  
+				if (quest2count >= 3)
+				
 					m_bcheck = true;
-	//				break;
-	//			}
-	//			else
-//					m_bcheck = false;
+					
 			}
+				else
+					m_bcheck = false;
+			
 
 			
 
 			Safe_Release(pInventory_Manager);
 
 		}
+
+	else if (pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 2)  // quest 1
+	{
+
+
+		m_bcheck = false;
+		/*if (iNum == 0 || iNum == 2)
+			m_bcheck = false;
+
+		else if (iNum == 1)
+		{
+			if (quest2count >= 3)
+
+				m_bcheck = true;
+
+		}
+		else
+			m_bcheck = false;
+
+*/
+
+
+		Safe_Release(pInventory_Manager);
+
+	}
 	}
 	
 
 	
-}
+

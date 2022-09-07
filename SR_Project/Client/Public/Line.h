@@ -51,6 +51,7 @@ public:
 	void set_pont_num(int num) { texnum = num; }
 	int get_pontex() { return texnum; }
 	void set_makewhat(MAKEWHAT item) { m_makewhat = item; }
+	void plus_quest2count() { ++quest2count; }
 
 	void gobackfirstX() { m_fX = m_firstx; }
 	void gobackfirstY() { m_fX = m_firsty; }
@@ -62,6 +63,7 @@ private:
 	int texnum = 0;
 	bool m_bcheck = true;
 	_uint questnum = 0;
+	_uint quest2count = 0;
 
 	MAKEWHAT m_makewhat = MAKE_END;
 };

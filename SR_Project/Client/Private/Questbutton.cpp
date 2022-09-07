@@ -29,8 +29,8 @@ HRESULT CQuestbutton::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 80.f;
-	m_fSizeY = 80.f;
+	m_fSizeX = 46.f;
+	m_fSizeY = 46.f;
 	m_fX = 1230.f;
 	m_fY = 300.f;
 
@@ -58,8 +58,8 @@ int CQuestbutton::Tick(_float fTimeDelta)
 	if (PtInRect(&rcRect, ptMouse))
 	{
 
-		m_fSizeX = 100.f;
-		m_fSizeY = 100.f;
+		m_fSizeX = 70.f;
+		m_fSizeY = 70.f;
 
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 
@@ -83,8 +83,8 @@ int CQuestbutton::Tick(_float fTimeDelta)
 	}
 	else
 	{
-		m_fSizeX = 80.f;
-		m_fSizeY = 80.f;
+		m_fSizeX = 46.f;
+		m_fSizeY = 46.f;
 
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	}
