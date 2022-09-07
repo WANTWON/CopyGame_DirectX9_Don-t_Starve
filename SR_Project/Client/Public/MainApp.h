@@ -5,7 +5,6 @@
 
 BEGIN(Engine)
 class CRenderer;
-class CCollider;
 class CGameInstance;
 END
 

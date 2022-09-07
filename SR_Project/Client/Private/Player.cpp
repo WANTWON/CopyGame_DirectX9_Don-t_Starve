@@ -2433,6 +2433,8 @@ void CPlayer::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pPicker);
+	Safe_Release(m_pRange);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);

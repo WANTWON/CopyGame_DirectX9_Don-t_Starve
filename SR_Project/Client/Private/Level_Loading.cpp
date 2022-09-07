@@ -126,13 +126,8 @@ HRESULT CLevel_Loading::Ready_Layer_Loadingscene(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	
-
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Loadingscene"), LEVEL_LOADING, pLayerTag)))
 		return E_FAIL;
-
-	
-
 
 	Safe_Release(pGameInstance);
 
