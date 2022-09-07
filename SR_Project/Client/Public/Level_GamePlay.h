@@ -29,7 +29,7 @@ public:
 	HRESULT Ready_Layer_WeaponToolbox(const _tchar* pLayerTag);
 	HRESULT Ready_LayerPont(const _tchar* pLayerTag);
 	
-	
+	HRESULT Ready_LayerNPC(const _tchar* pLayerTag);
 public:
 	static CLevel_GamePlay* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;

@@ -2,7 +2,8 @@
 #include "Client_Defines.h"
 #include "Transform.h"
 #include "Interactive_Object.h"
-
+#include "BT_NPC.h"
+#include "NPC.h"
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
@@ -12,7 +13,7 @@ class CCollider;
 END
 
 BEGIN(Client)
-class CWendy : public CInteractive_Object
+class CWendy : public CNPC
 {
 public:
 private:
@@ -38,12 +39,25 @@ public:
 	virtual void Interact(_uint Damage = 0) override;
 	virtual HRESULT Drop_Items() override;
 
+private:/*Func for BT*/
+	CBT_NPC* BehaviorTree = nullptr;
+public:/*for Actions*/
+	virtual void	Move(_float _fTimeDelta) override;
+	virtual void	Idle(_float _fTimeDelta) override;
+	virtual void	Select_Target(_float _fTimeDelta) override;
+	virtual void	Set_RandPos(_float _fTimeDelta) override;
+
 private:
+	virtual void Find_Priority() override;
+
+private:
+
 
 public:
 	static CWendy* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
+
 
 END

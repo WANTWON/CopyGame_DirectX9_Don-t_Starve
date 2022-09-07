@@ -65,6 +65,11 @@ void CBerryBush::Interact(_uint Damage)
 		m_eState = PICK;
 		Drop_Items();
 	}
+	else if (m_bInteract == false)
+	{
+		m_bInteract = true;
+		m_eState = IDLE;
+	}
 }
 
 HRESULT CBerryBush::Drop_Items()
