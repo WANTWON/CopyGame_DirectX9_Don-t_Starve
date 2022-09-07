@@ -122,6 +122,7 @@ public: /*Get&Set*/
 	void	Set_Position(_float3 Position);
 	void	Set_IsBuild(_bool _bIsBuild) { m_bIsBuild = _bIsBuild; }
 	void	Set_bMove(_bool _Move) { m_bMove = _Move; }
+	void	Clear_Target(void) { m_pTarget = nullptr; }
 public:
 	void	Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
 public:

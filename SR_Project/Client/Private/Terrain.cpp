@@ -246,6 +246,7 @@ void CTerrain::PickingTrue()
 			pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y, m_vecOutPos.z), true);
 			pPlayer->Set_IsBuild(false);
 			pPlayer->Add_ActStack(CPlayer::ACTION_STATE::MOVE);
+			pPlayer->Clear_Target();
 		}
 
 	}
