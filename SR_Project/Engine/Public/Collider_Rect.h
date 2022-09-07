@@ -29,6 +29,10 @@ public:
 public:
 	COLLRECTDESC Get_CollRectDesc() { return m_StateDesc; }
 	_float3						m_vPoint[4];
+	_bool						m_bIsInverse = false;
+
+public:
+	void Set_IsInverse(_bool bIsInverse) { m_bIsInverse = bIsInverse; }
 
 protected:
 	COLLRECTDESC		m_StateDesc;

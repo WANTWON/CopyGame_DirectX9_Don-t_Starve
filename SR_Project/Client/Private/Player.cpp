@@ -141,6 +141,10 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
 	}
 	
+	if (m_eDirState == DIR_STATE::DIR_LEFT)
+		m_pColliderCom->Set_IsInverse(true);
+	else
+		m_pColliderCom->Set_IsInverse(false);
 	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
 
 	Create_Bullet();
@@ -265,6 +269,7 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 
 	if (Check_Dead() && !m_bGhost)
 	{
+		m_bDead = true;
 		m_bGhost = true;
 		Clear_ActStack();
 
@@ -1358,6 +1363,7 @@ void CPlayer::Revive(_float _fTimeDelta)
 	if (m_fReviveTime > 3.f &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
 		Change_Texture(TEXT("Com_Texture_Idle_Down"));
+		m_bDead = false;
 		m_bGhost = false;
 		m_bMove = true;
 		//m_bAutoMode = false;
