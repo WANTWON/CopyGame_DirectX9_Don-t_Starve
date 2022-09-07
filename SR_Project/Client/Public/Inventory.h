@@ -35,6 +35,8 @@
 #include "Pot_back.h"
 #include "Pot_front.h"
 #include "Potbutton.h"
+
+#include "Mouse_iteminfo.h"
 /*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -61,6 +63,7 @@ public:
 	list<CBagInventory*>* Get_BagInventory_list() {return &m_BagInventorylist;}
 	list<CMainInventory_back*>* Get_back_Inven_list(void) { return &m_MainInventorybacklist; }
 	list<CMouse_item*>* Get_Mouse_item_list(void) { return &m_Mouseitemlist; }
+	list<CMouse_iteminfo*>* Get_Mouse_iteminfo_list(void) { return &m_Mouseiteminfolist; }
 
 	list<CToolboxWeapon*>*Get_Toolboxweapon_list(void) { return &m_Toolboxweapon; }
 	list<CToolboxWeapon_back*>*Get_Toolboxweapon_back_list(void) { return &m_Toolboxweapon_back; }
@@ -137,6 +140,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CPlayerMentality_pont*>m_Mentalitiypontlist;//
 	list<CBagInventory*>m_BagInventorylist;//
 	list<CMouse_item*>m_Mouseitemlist;//
+	list<CMouse_iteminfo*>m_Mouseiteminfolist;
 
 	list<CToolboxWeapon*>m_Toolboxweapon;//
 	list<CToolboxWeapon_back*>m_Toolboxweapon_back;//

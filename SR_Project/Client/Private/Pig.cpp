@@ -47,9 +47,6 @@ int CPig::Tick(_float fTimeDelta)
 	AI_Behaviour(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
-
-
 	
 	return OBJ_NOEVENT;
 }
@@ -61,7 +58,10 @@ void CPig::Late_Tick(_float fTimeDelta)
 	Change_Motion();
 	Change_Frame();
 
-
+	if (m_eDir == DIR_STATE::DIR_LEFT)
+		m_pColliderCom->Set_IsInverse(true);
+	else
+		m_pColliderCom->Set_IsInverse(false);
 	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
 }
 
@@ -251,9 +251,12 @@ void CPig::Change_Frame()
 		{
 			BULLETDATA BulletData;
 			ZeroMemory(&BulletData, sizeof(BulletData));
-			BulletData.vPosition = Get_Position();
-			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+			BulletData.vPosition = m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 			BulletData.eDirState = m_eDir;
+			BulletData.fOffsetSide = .5f;
+			BulletData.fOffsetUp = .25f;
+			BulletData.fOffsetDown = .5f;
 
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_GAMEPLAY, TEXT("Bullet"), &BulletData)))

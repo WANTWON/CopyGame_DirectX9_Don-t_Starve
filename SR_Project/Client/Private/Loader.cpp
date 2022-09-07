@@ -83,8 +83,10 @@
 #include "Pot_back.h"
 #include "Pot_front.h"
 #include "Potbutton.h"
+#include "Questbutton.h"
 
 #include "CameraFPS.h"
+#include "Mouse_iteminfo.h"
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -603,6 +605,16 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/potbutton/potbutton%d.png"), 2))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_Questbutton */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_questbutton"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/questbutton/questbutton%d.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Questbutton */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Iteminfo"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Iteminfo/Iteminfo%d.png"), 9))))
+		return E_FAIL;
+
 
 
 	
@@ -793,6 +805,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CMouse_item::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/*For.Prototype_GameObject_MentalityPont */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse_iteminfo"),
+		CMouse_iteminfo::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/*For.Prototype_GameObject_quest */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_quest"),
 		CQuest::Create(m_pGraphic_Device))))
@@ -804,6 +821,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Line"),
 		CLine::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_questbutton"),
+		CQuestbutton::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_talk */
@@ -834,6 +855,8 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Potbutton"),
 		CPotbutton::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	
 
 
 

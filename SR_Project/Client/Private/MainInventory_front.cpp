@@ -159,7 +159,38 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
+	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+	Safe_AddRef(pinv);
 
+	auto mouse = pinv->Get_Mouse_item_list()->begin();
+	auto iteminfo = pinv->Get_Mouse_iteminfo_list()->begin();
+	Safe_Release(pinv);
+
+	if (PtInRect(&rcRect, ptMouse)) // for iteminfo
+	{
+
+		m_fSizeX = 55.f;
+		m_fSizeY = 55.f;
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+		if (m_itemtype == ITEM_FOOD)
+		{
+			(*iteminfo)->set_check(true);
+			(*iteminfo)->set_test(true);
+			(*iteminfo)->set_itemname(texnum);
+			whatnum = iNum;
+		}
+	}
+	else if (iNum == whatnum && !PtInRect(&rcRect, ptMouse))
+	{
+		m_fSizeX = 40;
+		m_fSizeY = 40;
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		(*iteminfo)->set_check(false);
+		whatnum = 30;
+	}
+	/*else if (whatnum >= 18)
+		(*iteminfo)->set_check(false);*/
 
 
 	if (texnum == ITEMNAME_ARMOR)
@@ -231,16 +262,15 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 
 
 
-	if (PtInRect(&rcRect, ptMouse))
+	/*if (PtInRect(&rcRect, ptMouse))
 	{
 
 		m_fSizeX = 55.f;
 		m_fSizeY = 55.f;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		//set_check(true);
-		//plus_itemcount();
-	}
+		CInventory_Manager
+	}*/
 
 
 
@@ -267,15 +297,10 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	Safe_AddRef(pinv);
 
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
+	
 
 
-	if (!PtInRect(&rcRect, ptMouse))
-	{
-
-		m_fSizeX = 40;
-		m_fSizeY = 40;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	}
+	
 
 
 
@@ -310,6 +335,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 				(*mouse)->set_texnum(ITEMNAME_END);
 				(*mouse)->set_check(false);//마우스이미지
 				CPickingMgr::Get_Instance()->Release_PickingObject();
+				CPickingMgr::Get_Instance()->Set_Mouse_Has_Construct(false);
 
 			}
 
@@ -354,6 +380,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 				(*mouse)->set_texnum(ITEMNAME_END);
 				(*mouse)->set_check(false);//마우스이미지
 				CPickingMgr::Get_Instance()->Release_PickingObject();
+				CPickingMgr::Get_Instance()->Set_Mouse_Has_Construct(false);
 
 			}
 

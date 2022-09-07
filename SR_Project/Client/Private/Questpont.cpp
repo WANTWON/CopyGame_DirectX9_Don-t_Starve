@@ -33,10 +33,10 @@ HRESULT CQuestpont::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, (_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 13.0f;
-	m_fSizeY = 13.0f;
-	m_fX = 1214.f;
-	m_fY = 286.f + (iNum * 31.0f);
+	m_fSizeX = 24.0f;
+	m_fSizeY = 24.0f;
+	m_fX = 1050.f;
+	m_fY = 380.f + (iNum * 47.0f);
 /*
 
 

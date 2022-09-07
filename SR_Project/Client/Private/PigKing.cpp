@@ -178,6 +178,8 @@ void CPigKing::Change_Motion()
 void CPigKing::Interact(_uint Damage)
 {
 	_uint count = 0;
+	bool success = false;
+	//_uint count1 = 0;
 	if (m_bInteract)
 	{
 		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
@@ -185,6 +187,8 @@ void CPigKing::Interact(_uint Damage)
 		CInventory_Manager*         pinven = CInventory_Manager::Get_Instance();
 		Safe_AddRef(pinven);
 
+		pCamera->Set_TalkingMode(true);
+		pCamera->Set_Target(this);
 		pinven->Get_Talk_list()->front()->setcheck(true); //first talking
 		auto line = pinven->Get_Line_list();
 		
@@ -193,21 +197,44 @@ void CPigKing::Interact(_uint Damage)
 		{
 			if ((*iter)->get_check() == true)
 			{
-				pCamera->Set_TalkingMode(true);
-				pCamera->Set_Target(this);
+				if((*iter)->get_pontnum() == 1)
+			   {
+					success = true;
+			    }
+				/*pCamera->Set_TalkingMode(true);
+				pCamera->Set_Target(this);*/
+				if(m_iQuestnum ==0)
 				++count;
+
+				
 			}
 		}
 		if (count >= 3 && m_iQuestnum == 0)
 		{
 			++m_iQuestnum;
 			pinven->Get_Talk_list()->front()->settexnum(3);
+
 			
 		}
-        else if (m_iQuestnum == 1)
+		else if (m_iQuestnum == 1 )
 		{
 			pinven->Get_Talk_list()->front()->settexnum(7);
+			
+			m_iQuestnum = 2;
+
 		}
+		else if (success && m_iQuestnum == 2 )
+		{
+			
+			pinven->Get_Talk_list()->front()->settexnum(9);
+		}
+		/*else if (m_iQuestnum == 1 && count1 >= 1)
+		{
+			
+		}*/
+			
+		
+		
 
 		Safe_Release(pinven);
 		

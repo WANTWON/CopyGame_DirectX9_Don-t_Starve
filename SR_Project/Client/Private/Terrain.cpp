@@ -7,6 +7,7 @@
 #include "Level_Manager.h"
 #include "Mouse.h"
 #include "Inventory.h"
+#include "Line.h"
 
 CTerrain::CTerrain(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -218,6 +219,10 @@ void CTerrain::PickingTrue()
 	CPickingMgr* pPicking = CPickingMgr::Get_Instance();
 
 	CMouse*			pMouse = CMouse::Get_Instance();
+	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+	Safe_AddRef(pinv);
+	auto line = pinv->Get_Line_list();
+	Safe_Release(pinv);
 	int iNum = pMouse->Get_Item_count();
 	
 	//for Character Skill
@@ -271,19 +276,27 @@ void CTerrain::PickingTrue()
 				{
 				case ITEMNAME_FENCE:
 					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_UnInteractObject"), pPlayer->Get_PickingPoint());
+					for (auto k : *line)
+						k->plus_quest2count();
+					
 					break;
 				case ITEMNAME_POT:
 					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPlayer->Get_PickingPoint());
+					for (auto k : *line)
+						k->plus_quest2count();
 					break;
 				case ITEMNAME_TENT:
 					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tent"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPlayer->Get_PickingPoint());
+					for (auto k : *line)
+						k->plus_quest2count();
 					break;
 				}
 
 
 				if (iNum == 0)
 				{
-					//pPicking->Release_PickingObject();
+					pPicking->Release_PickingObject();
+					pPicking->Set_Mouse_Has_Construct(false);
 					CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 					pMouse->Set_Item_type(ITEM_END);
 					auto mouse = pinv->Get_Mouse_item_list()->begin();

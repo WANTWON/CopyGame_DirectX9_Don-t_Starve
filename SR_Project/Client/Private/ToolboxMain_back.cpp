@@ -108,60 +108,63 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 		m_fSizeX = 40;
 		m_fSizeY = 40;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		
-
-
 
 	}
 
-	if (iNum == 0&&PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON) )
+
+	if (PtInRect(&rcRect, ptMouse)&& CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
-		if (m_bfirstclick_G == true)
+		if (iNum == 0)
 		{
-			CInventory_Manager::Get_Instance()->gathertool_on();
-			m_bfirstclick_G = false;
-		}
-		else
+			if (m_bfirstclick_G == true)
+			{
+				CInventory_Manager::Get_Instance()->gathertool_on();
+				m_bfirstclick_G = false;
+			}
+			else
+			{
+				CInventory_Manager::Get_Instance()->gathertool_off();
+				CInventory_Manager::Get_Instance()->craft_off();
+				m_bfirstclick_G = true;
+			}
+	    }
+		else if (iNum == 1)
 		{
-			CInventory_Manager::Get_Instance()->gathertool_off();
-			CInventory_Manager::Get_Instance()->craft_off();
-			m_bfirstclick_G = true;
+			if (m_bfirstclick_W == true)
+			{
+				CInventory_Manager::Get_Instance()->weapontool_on();
+				m_bfirstclick_W = false;
+			}
+			else
+			{
+				CInventory_Manager::Get_Instance()->weapontool_off();
+				CInventory_Manager::Get_Instance()->craft_off();
+				m_bfirstclick_W = true;
+			}
 		}
-
-	}
-
-
-	if (iNum == 1 && PtInRect(&rcRect, ptMouse)&& CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-    {
-		if (m_bfirstclick_W == true)
+		else if (iNum == 2)
 		{
-			CInventory_Manager::Get_Instance()->weapontool_on();
-			m_bfirstclick_W = false;
+			if (m_bfirstclick_C == true)
+			{
+				CInventory_Manager::Get_Instance()->constructtool_on();
+				m_bfirstclick_C = false;
+			}
+			else
+			{
+				CInventory_Manager::Get_Instance()->constructtool_off();
+				CInventory_Manager::Get_Instance()->craft_off();
+				m_bfirstclick_C = true;
+			}
 		}
-		else
-		{
-			CInventory_Manager::Get_Instance()->weapontool_off();
-			CInventory_Manager::Get_Instance()->craft_off();
-			m_bfirstclick_W = true;
-		}
+		
 			
 	}
 
-	if (iNum == 2 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
+	/*if (iNum == 2 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
-		if (m_bfirstclick_C == true)
-		{
-			CInventory_Manager::Get_Instance()->constructtool_on();
-			m_bfirstclick_C = false;
-		}
-		else
-		{
-			CInventory_Manager::Get_Instance()->constructtool_off();
-			CInventory_Manager::Get_Instance()->craft_off();
-			m_bfirstclick_C = true;
-		}
+		
 
-	}
+	}*/
 
 	if (iNum == 0 && m_bfirstclick_G == true)
 	{
