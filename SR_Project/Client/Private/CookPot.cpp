@@ -57,10 +57,9 @@ void CCookPot::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	if (!m_bPicking && !CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+	if (!CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
 	{
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
-		m_bPicking = true;
 	}
 
 	Change_Motion();
@@ -79,37 +78,11 @@ void CCookPot::Interact(_uint Damage)
 {
 	m_bInteract = false;
 
-	m_eState = COOKING;
-	// TODO: ..
-	// Open Craft Window Here.
+
 }
 
 HRESULT CCookPot::Drop_Items()
 {
-	//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	//Safe_AddRef(pGameInstance);
-
-	//CItem::ITEMDESC ItemDesc;
-	//ZeroMemory(&ItemDesc, sizeof(CItem::ITEMDESC));
-
-	//// Random Position Drop based on Object Position
-	//_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * 1;
-	//_int bSignX = rand() % 2;
-	//_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * 1;
-	//_int bSignZ = rand() % 2;
-	//_float fPosX = bSignX ? (Get_Position().x + fOffsetX) : (Get_Position().x - fOffsetX);
-	//_float fPosZ = bSignZ ? (Get_Position().z + fOffsetZ) : (Get_Position().z - fOffsetZ);
-
-	//ItemDesc.fPosition = _float3(fPosX, Get_Position().y, fPosZ);
-	//ItemDesc.pTextureComponent = TEXT("Com_Texture_Rocks");
-	//ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
-	//ItemDesc.eItemName = ITEMNAME::ITEMNAME_ROCK2;
-
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
-	//	return E_FAIL;
-
-	//Safe_Release(pGameInstance);
-
 	return S_OK;
 }
 
@@ -118,7 +91,7 @@ HRESULT CCookPot::SetUp_Components(void* pArg)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	//m_TimerTag = TEXT("Timer_Boulder");
+	//m_TimerTag = TEXT("Timer_CookPot");
 	//if (FAILED(pGameInstance->Add_Timer(m_TimerTag)))
 	//return E_FAIL;
 

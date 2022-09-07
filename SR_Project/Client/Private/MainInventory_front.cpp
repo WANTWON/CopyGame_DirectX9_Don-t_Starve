@@ -335,6 +335,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 				(*mouse)->set_texnum(ITEMNAME_END);
 				(*mouse)->set_check(false);//마우스이미지
 				CPickingMgr::Get_Instance()->Release_PickingObject();
+				CPickingMgr::Get_Instance()->Set_Mouse_Has_Construct(false);
 
 			}
 
@@ -379,6 +380,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 				(*mouse)->set_texnum(ITEMNAME_END);
 				(*mouse)->set_check(false);//마우스이미지
 				CPickingMgr::Get_Instance()->Release_PickingObject();
+				CPickingMgr::Get_Instance()->Set_Mouse_Has_Construct(false);
 
 			}
 

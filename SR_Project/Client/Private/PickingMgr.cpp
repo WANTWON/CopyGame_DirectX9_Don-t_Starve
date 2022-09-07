@@ -66,9 +66,6 @@ void CPickingMgr::Add_PickingObject(ITEMID type)
 			break;
 		}	
 	}
-		
-
-	//m_pPickingObject = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"));
 
 	m_pPickingObject = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"));
 	m_pPickingObject->Set_bConstruct(true);
