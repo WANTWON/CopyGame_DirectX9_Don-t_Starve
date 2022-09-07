@@ -58,8 +58,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
 
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	if (m_iPreLevelIndex != m_iCurrentLevelndex)
@@ -73,6 +71,11 @@ int CPlayer::Tick(_float fTimeDelta)
 	m_iCameraMode = CCameraManager::Get_Instance()->Get_CamState();
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return OBJ_NOEVENT;
+
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+
 
 	__super::Tick(fTimeDelta);
 

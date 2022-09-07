@@ -8,6 +8,7 @@
 #include "Mouse.h"
 #include "Inventory.h"
 #include "Line.h"
+#include "WoodWall.h"
 
 CTerrain::CTerrain(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -275,11 +276,15 @@ void CTerrain::PickingTrue()
 				switch (pMouse->Get_Item_name())
 				{
 				case ITEMNAME_FENCE:
-					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_UnInteractObject"), pPlayer->Get_PickingPoint());
+				{
+					CWoodWall::WALLDESC  WallDesc;
+					WallDesc.etype = CWoodWall::WALL_WOOD;
+					WallDesc.vecPosition = pPlayer->Get_PickingPoint();
+					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_UnInteractObject"), &WallDesc);
 					for (auto k : *line)
 						k->plus_quest2count();
-					
 					break;
+				}
 				case ITEMNAME_POT:
 					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPlayer->Get_PickingPoint());
 					for (auto k : *line)

@@ -195,7 +195,6 @@ void CMonster::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pTarget);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pTransformCom);

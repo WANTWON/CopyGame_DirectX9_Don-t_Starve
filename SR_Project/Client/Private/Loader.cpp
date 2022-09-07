@@ -109,9 +109,17 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 	case LEVEL_HUNT:
 		pLoader->Loading_ForHuntLevel();
 		break;
+	case LEVEL_BOSS:
+		pLoader->Loading_ForBossLevel();
+		break;
 	}
 
 	LeaveCriticalSection(&pLoader->Get_CriticalSection());
+
+	if (!pLoader->Get_IsFinished())
+	{
+		ERR_MSG(TEXT("Errpr : IsFinished Error"));
+	}
 
 	return 0;
 }
@@ -862,6 +870,66 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	lstrcpy(m_szLoadingText, TEXT("Finished_Loading"));
 
+	/*For.Prototype_Component_Texture_Sky */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sky"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
+		return E_FAIL;
+
+
+	/*For. Prototype_Component_Texture_Portal*/
+#pragma region Add_Texture_Portal
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal_Idle_Open"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Portal/Idle_Open/Idle_Open_%03d.png"), 50))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal_Idle_Close"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Portal/Idle_Close/Idle_Close_%03d.png"), 18))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal_Open"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Portal/Open/Open_%03d.png"), 18))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal_Close"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Portal/Close/Close_%03d.png"), 17))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Portal
+
+
+	/*For.Prototype_Component_SpiderHouse Texture */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spider_House"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/SpiderHouse.png"), 1))))
+		return E_FAIL;
+
+
+
+	/*For. Prototype_Component_Texture_House*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_House"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/PigHouse.png"), 1))))
+		return E_FAIL;
+
+	CVIBuffer_Terrain::TERRAINDESC		TerrainDesc;
+	ZeroMemory(&TerrainDesc, sizeof(CVIBuffer_Terrain::TERRAINDESC));
+
+	TerrainDesc.m_iPosVerticesX = 0;
+	TerrainDesc.m_iPosVerticesZ = 0;
+	TerrainDesc.m_iNumVerticesX = 100;
+	TerrainDesc.m_iNumVerticesZ = 100;
+	TerrainDesc.m_fTextureSize = 1.f;
+	TerrainDesc.m_fSizeX = 1;
+	TerrainDesc.m_fSizeZ = 1;
+	TerrainDesc.m_iTextureNum = 0;
+
+	/*For.Prototype_Component_VIBuffer_Terrain*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"),
+		CVIBuffer_Terrain::Create(m_pGraphic_Device, TerrainDesc))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_VIBuffer_Cube */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"),
+		CVIBuffer_Cube::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	
+
+
 	m_isFinished = true;
 
 	Safe_Release(pGameInstance);
@@ -880,11 +948,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/* �ؽ��� �ε� ��. */
 	lstrcpy(m_szLoadingText, TEXT("Loading_Texture"));
 
-
-	/*For.Prototype_Component_Texture_Sky */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sky"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
-		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_RockEffect */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Rock"),
@@ -961,6 +1024,9 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_BROKEN"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/WoodWall/Broken/Broken_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/RockWall/Healthy/Healthy_%03d.png"), 3))))
 		return E_FAIL;
 #pragma endregion Add_Texture_WoodWall
 
@@ -1213,62 +1279,29 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Bearger
 
-	/*For. Prototype_Component_Texture_Portal*/
-#pragma region Add_Texture_Portal
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Idle_Open"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Portal/Idle_Open/Idle_Open_%03d.png"), 50))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Idle_Close"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Portal/Idle_Close/Idle_Close_%03d.png"), 18))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Open"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Portal/Open/Open_%03d.png"), 18))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Close"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Portal/Close/Close_%03d.png"), 17))))
-		return E_FAIL;
-#pragma endregion Add_Texture_Portal
-
-	/*For. Prototype_Component_Texture_House*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_House"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/PigHouse.png"), 1))))
-		return E_FAIL;
-
 	/* �� �ε� ��. */
 	lstrcpy(m_szLoadingText, TEXT("Loading Model"));
 
-	CVIBuffer_Terrain::TERRAINDESC		TerrainDesc;
-	ZeroMemory(&TerrainDesc, sizeof(CVIBuffer_Terrain::TERRAINDESC));
-
-	TerrainDesc.m_iPosVerticesX = 0;
-	TerrainDesc.m_iPosVerticesZ = 0;
-	TerrainDesc.m_iNumVerticesX = 100;
-	TerrainDesc.m_iNumVerticesZ = 100;
-	TerrainDesc.m_fTextureSize = 1.f;
-	TerrainDesc.m_fSizeX = 1;
-	TerrainDesc.m_fSizeZ = 1;
-	TerrainDesc.m_iTextureNum = 0;
-
-	/*For.Prototype_Component_VIBuffer_Terrain*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pGraphic_Device, TerrainDesc))))
-		return E_FAIL;
+	
 
 	/* For.Prototype_Component_VIBuffer_Terrain by MapTool */
 	if (FAILED(Loading_Terrain_ForGamePlayLevel()))
 		return E_FAIL;
 
-	/*For.Prototype_Component_VIBuffer_Cube */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"),
-		CVIBuffer_Cube::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
 	lstrcpy(m_szLoadingText, TEXT("Loading_Objetct"));
+
+
 
 	/*For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
 		CTerrain::Create(m_pGraphic_Device))))
+	{
+		lstrcpy(m_szLoadingText, TEXT("Loading_Finish"));
+
+		Safe_Release(pGameInstance);
+		m_isFinished = true;
 		return E_FAIL;
+	}
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Water"),
 		CWater::Create(m_pGraphic_Device))))
@@ -1428,6 +1461,12 @@ HRESULT CLoader::Loading_Terrain_ForHuntLevel()
 	return S_OK;
 }
 
+HRESULT CLoader::Loading_Terrain_ForBossLevel()
+{
+	return E_NOTIMPL;
+}
+
+
 HRESULT CLoader::Loading_ForHuntLevel()
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
@@ -1543,23 +1582,6 @@ HRESULT CLoader::Loading_ForHuntLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Spider_Warrior
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spider_House"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/SpiderHouse.png"), 1))))
-		return E_FAIL;
-
-	lstrcpy(m_szLoadingText, TEXT("Loading_Object & Component"));
-
-
-	/*For. Prototype_GameObject_Spider */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider"),
-		CSpider::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/*For. Prototype_GameObject_Spider_Warrior */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider_Warrior"),
-		CSpiderWarrior::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
 	/*For.Prototype_Component_VIBuffer_Cube */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_VIBuffer_Cube"),
 		CVIBuffer_Cube::Create(m_pGraphic_Device))))
@@ -1569,11 +1591,41 @@ HRESULT CLoader::Loading_ForHuntLevel()
 	if (FAILED(Loading_Terrain_ForHuntLevel()))
 		return E_FAIL;
 
+	lstrcpy(m_szLoadingText, TEXT("Loading_Object & Component"));
+
+
+	/*For. Prototype_GameObject_Spider */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider"),
+		CSpider::Create(m_pGraphic_Device))))
+	{
+		lstrcpy(m_szLoadingText, TEXT("Finished_Loading"));
+
+		Safe_Release(pGameInstance);
+		m_isFinished = true;
+		return E_FAIL;
+	}
+		
+
+	/*For. Prototype_GameObject_Spider_Warrior */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider_Warrior"),
+		CSpiderWarrior::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+
 
 
 	lstrcpy(m_szLoadingText, TEXT("Finished_Loading"));
 
 	Safe_Release(pGameInstance);
+	SetWindowText(g_hWnd, TEXT("Loading_HunLevel."));
+	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ForBossLevel()
+{
+	lstrcpy(m_szLoadingText, TEXT("Finished_Loading"));
+
 	SetWindowText(g_hWnd, TEXT("Loading_HunLevel."));
 	m_isFinished = true;
 	return S_OK;

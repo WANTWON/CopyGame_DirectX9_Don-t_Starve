@@ -19,14 +19,14 @@ public:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Monster(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Object(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_MainInventory(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Equipment_back(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_PlayerStatUI(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_MainToolbox(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_WeaponToolbox(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Camera(const _tchar * pLayerTag);
 
+public: //test
+	void Set_NextLevel(_bool _dd) { m_bNextLevel = _dd; }
+	void Set_PastLevel(_bool _dd) { m_bPastLevel = _dd; }
+
+	_bool m_bNextLevel = false;
+	_bool m_bPastLevel = false;
 
 public:
 	static CLevel_Hunt* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

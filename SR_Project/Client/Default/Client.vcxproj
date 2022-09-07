@@ -182,6 +182,7 @@
     <ClInclude Include="..\Public\Interactive_Object.h" />
     <ClInclude Include="..\Public\Inventory.h" />
     <ClInclude Include="..\Public\Item.h" />
+    <ClInclude Include="..\Public\Level_Boss.h" />
     <ClInclude Include="..\Public\Level_Hunt.h" />
     <ClInclude Include="..\Public\Line.h" />
     <ClInclude Include="..\Public\Loadingscene.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="..\Private\Interactive_Object.cpp" />
     <ClCompile Include="..\Private\Inventory.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
+    <ClCompile Include="..\Private\Level_Boss.cpp" />
     <ClCompile Include="..\Private\Level_Hunt.cpp" />
     <ClCompile Include="..\Private\Line.cpp" />
     <ClCompile Include="..\Private\Loadingscene.cpp" />

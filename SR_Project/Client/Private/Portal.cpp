@@ -4,6 +4,7 @@
 #include "Level_Loading.h"
 #include "Level_Manager.h"
 #include "Level_GamePlay.h"
+#include "Level_Hunt.h"
 
 CPortal::CPortal(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -45,12 +46,39 @@ HRESULT CPortal::Initialize(void* pArg)
 
 int CPortal::Tick(_float fTimeDelta)
 {
+
+	LEVEL eLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	if (eLevel == LEVEL_LOADING)
+		return OBJ_NOEVENT;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_bShouldTeleport)
 	{
-		CLevel_GamePlay* pLevelGamePlay = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-		pLevelGamePlay->Set_NextLevel(true);
+		
+
+		switch (eLevel)
+		{
+		case Client::LEVEL_GAMEPLAY:
+		{
+			CLevel_GamePlay* pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			pLevel->Set_NextLevel(true);
+			break;
+		}
+			
+		case Client::LEVEL_HUNT:
+		{
+			CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			pLevel->Set_PastLevel(true);
+			break;
+		}
+			
+		default:
+			break;
+		}
+
+		
 	}
 
 	
@@ -149,22 +177,22 @@ HRESULT CPortal::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 
 	TextureDesc.m_iEndTex = 17;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_CLOSE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Idle_Close"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_CLOSE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal_Idle_Close"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 17;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_OPENING"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Open"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_OPENING"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal_Open"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 49;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_OPEN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Idle_Open"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_OPEN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal_Idle_Open"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 16;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_CLOSING"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Close"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_CLOSING"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal_Close"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 

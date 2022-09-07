@@ -68,10 +68,6 @@ HRESULT CPigKing::SetUp_Components(void* pArg)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Pig_King"))))
-		return E_FAIL;
-	m_TimerTag = TEXT("Timer_Pig_King");
-
 	Safe_Release(pGameInstance);
 
 	/* For.Com_Texture */

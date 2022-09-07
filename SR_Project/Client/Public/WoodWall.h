@@ -16,6 +16,8 @@ BEGIN(Client)
 class CWoodWall final : public CGameObject
 {
 public:
+	enum WALLTYPE { WALL_WOOD, WALL_ROCK, WALL_END };
+
 	enum STATE
 	{
 		HEALTHY,
@@ -23,6 +25,14 @@ public:
 		BROKEN,
 		MAX
 	};
+
+
+	typedef struct WallDesc
+	{
+		WALLTYPE etype = WALL_WOOD;
+		_float3 vecPosition;
+
+	}WALLDESC;
 
 private:
 	CWoodWall(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -52,6 +62,7 @@ private: /*For TextureCom */
 private:
 	STATE m_eState = HEALTHY;
 	STATE m_ePreState = MAX;
+	WALLDESC m_eWallDesc;
 
 	const _tchar* m_TimerTag = TEXT("");
 	OBJINFO m_tInfo;

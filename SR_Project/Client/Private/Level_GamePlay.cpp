@@ -7,6 +7,9 @@
 #include "House.h"
 #include "Level_Loading.h"
 #include "CameraManager.h"
+#include "Player.h"
+
+_bool g_bUIMadefirst = false;
 
 CLevel_GamePlay::CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -33,22 +36,29 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
-		return E_FAIL;
+	if (g_bLoadingfirst == false)
+	{
+		if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
+			return E_FAIL;
 
-	if (FAILED(Ready_Layer_Equipment_back(TEXT("Layer_UI"))))
-		return E_FAIL;
+		if (FAILED(Ready_Layer_Equipment_back(TEXT("Layer_UI"))))
+			return E_FAIL;
 
-	if (FAILED(Ready_Layer_PlayerStatUI(TEXT("Layer_UI"))))
-		return E_FAIL;
+		if (FAILED(Ready_Layer_PlayerStatUI(TEXT("Layer_UI"))))
+			return E_FAIL;
 
-	if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_UI"))))
-		return E_FAIL;
+		if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_UI"))))
+			return E_FAIL;
 
-	if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_UI"))))
-		return E_FAIL;
+		if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_UI"))))
+			return E_FAIL;
 
+		g_bUIMadefirst = true;
+	}
 
+	
+
+	CPickingMgr::Get_Instance()->Clear_PickingMgr();
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_GAMEPLAY);
 
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_GAMEPLAY);
@@ -246,9 +256,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BackGround"), LEVEL_STATIC, pLayerTag, _float3(10.f, 1.f, 5.f))))
-		return E_FAIL;
+	if (pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
+	{
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BackGround"), LEVEL_STATIC, pLayerTag, _float3(10.f, 0.5f, 5.f))))
+			return E_FAIL;
+	}
+	else
+	{
+		CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+		pPlayer->Set_Position(_float3(45.f, 0.5f, 27.f));
+	}
 
 	Safe_Release(pGameInstance);
 

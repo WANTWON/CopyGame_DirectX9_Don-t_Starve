@@ -6,6 +6,7 @@
 #include "Level_Logo.h"
 #include "Level_GamePlay.h"
 #include "Level_Hunt.h"
+#include "Level_Boss.h"
 #include "Loadingscene.h"
 
 
@@ -82,6 +83,9 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 				break;
 			case LEVEL_HUNT:
 				pNewLevel = CLevel_Hunt::Create(m_pGraphic_Device);
+				break;
+			case LEVEL_BOSS:
+				pNewLevel = CLevel_Boss::Create(m_pGraphic_Device);
 				break;
 			}
 
