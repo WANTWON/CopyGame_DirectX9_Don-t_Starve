@@ -202,6 +202,9 @@
     <Filter Include="02.GameObject\98.UI\09.Pot">
       <UniqueIdentifier>{86bb6014-7dd9-497c-bfb4-5acb09504ded}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\01. Inventory\ItemInfo">
+      <UniqueIdentifier>{04d84109-eea3-4179-ad72-de33caf23146}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -329,9 +332,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Particle.h">
       <Filter>02.GameObject\97.ParticleSystem\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Mouse_item.h">
-      <Filter>02.GameObject\98.UI\01. Inventory</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PickingMgr.h">
       <Filter>04.PickingMgr</Filter>
@@ -477,6 +477,15 @@
     <ClInclude Include="..\Public\Startbutton.h">
       <Filter>01.Levels\Logo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Questbutton.h">
+      <Filter>02.GameObject\98.UI\04.Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mouse_item.h">
+      <Filter>02.GameObject\98.UI\01. Inventory\ItemInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mouse_iteminfo.h">
+      <Filter>02.GameObject\98.UI\01. Inventory\ItemInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -592,9 +601,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Particle.cpp">
       <Filter>02.GameObject\97.ParticleSystem\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Mouse_item.cpp">
-      <Filter>02.GameObject\98.UI\01. Inventory</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PickingMgr.cpp">
       <Filter>04.PickingMgr</Filter>
@@ -739,6 +745,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Startbutton.cpp">
       <Filter>01.Levels\Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Questbutton.cpp">
+      <Filter>02.GameObject\98.UI\04.Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mouse_item.cpp">
+      <Filter>02.GameObject\98.UI\01. Inventory\ItemInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mouse_iteminfo.cpp">
+      <Filter>02.GameObject\98.UI\01. Inventory\ItemInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

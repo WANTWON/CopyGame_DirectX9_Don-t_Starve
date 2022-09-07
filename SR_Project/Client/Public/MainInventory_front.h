@@ -71,6 +71,7 @@ private:
 	bool m_bcheck = true;
 	bool m_bpontcheck = true;
 	bool m_bcheck_bag = false;
+	_uint whatnum = 30;
 
 };
 

@@ -30,10 +30,10 @@ HRESULT CQuest::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 220.f;
-	m_fSizeY = 220.f;
-	m_fX = 1185.f;
-	m_fY = 300.f;
+	m_fSizeX = 350.f;
+	m_fSizeY = 350.f;
+	m_fX = 1000.f;
+	m_fY = 400.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;

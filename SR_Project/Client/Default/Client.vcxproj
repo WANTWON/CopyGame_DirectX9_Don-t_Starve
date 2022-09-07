@@ -191,6 +191,7 @@
     <ClInclude Include="..\Public\Craftmain.h" />
     <ClInclude Include="..\Public\Mouse.h" />
     <ClInclude Include="..\Public\Mouse_item.h" />
+    <ClInclude Include="..\Public\Mouse_iteminfo.h" />
     <ClInclude Include="..\Public\Particle.h" />
     <ClInclude Include="..\Public\ParticleSystem.h" />
     <ClInclude Include="..\Public\PickingMgr.h" />
@@ -218,6 +219,7 @@
     <ClInclude Include="..\Public\Pot_back.h" />
     <ClInclude Include="..\Public\Pot_front.h" />
     <ClInclude Include="..\Public\Quest.h" />
+    <ClInclude Include="..\Public\Questbutton.h" />
     <ClInclude Include="..\Public\Questpont.h" />
     <ClInclude Include="..\Public\Skeleton.h" />
     <ClInclude Include="..\Public\Sky.h" />
@@ -282,6 +284,7 @@
     <ClCompile Include="..\Private\Craftmain.cpp" />
     <ClCompile Include="..\Private\Mouse.cpp" />
     <ClCompile Include="..\Private\Mouse_item.cpp" />
+    <ClCompile Include="..\Private\Mouse_iteminfo.cpp" />
     <ClCompile Include="..\Private\Particle.cpp" />
     <ClCompile Include="..\Private\ParticleSystem.cpp" />
     <ClCompile Include="..\Private\PickingMgr.cpp" />
@@ -308,6 +311,7 @@
     <ClCompile Include="..\Private\Pot_back.cpp" />
     <ClCompile Include="..\Private\Pot_front.cpp" />
     <ClCompile Include="..\Private\Quest.cpp" />
+    <ClCompile Include="..\Private\Questbutton.cpp" />
     <ClCompile Include="..\Private\Questpont.cpp" />
     <ClCompile Include="..\Private\Skeleton.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
