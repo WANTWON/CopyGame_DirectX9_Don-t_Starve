@@ -8,7 +8,7 @@ class CTexture;
 class CRenderer;
 class CVIBuffer_Rect;
 class CTransform;
-//class CCollider;
+class CCollider_Rect;
 END
 
 BEGIN(Client)
@@ -135,8 +135,7 @@ private:/*Setup*/
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
-	//Test
-	HRESULT Test_Setup();
+	
 	void Init_Data();
 private: /**Actions*/
 	void GetKeyDown(_float _fTimeDelta);
@@ -185,9 +184,6 @@ private: /**Actions*/
 	void	Tick_ActStack(_float fTimeDelta);
 	void	Clear_ActStack();
 
-	//Debug
-	void Test_Debug(_float fTimeDelta);
-	void Debug_Render(void);
 	//Test
 	void Test_Func(_int _iNum);
 	
@@ -213,7 +209,7 @@ private: /* For.Components */
 	CRenderer*				m_pRendererCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
-	//CCollider*				m_pColliderCom = nullptr;
+	CCollider_Rect*			m_pColliderCom = nullptr;
 	//vector<CTexture*>       m_mapTexture;
 	map<const _tchar*, CTexture*> m_mapTexture;
 private: /*State*/
@@ -247,9 +243,7 @@ private: /*for Debug*/
 	_float fTimeAcc = 0.f;
 
 	_bool					m_bDebugKey = false;
-	CVIBuffer_Rect*			m_pDebugBufferCom = nullptr;
-	CTransform*				m_pDebugTransformCom = nullptr;
-	CTexture*				m_pDebugTextureCom = nullptr;
+
 private: /*for Auto*/
 	CGameObject*			m_pTarget = nullptr;
 
