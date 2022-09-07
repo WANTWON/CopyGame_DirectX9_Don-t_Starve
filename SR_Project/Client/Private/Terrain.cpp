@@ -231,6 +231,8 @@ void CTerrain::PickingTrue()
 	{	
 		if (iNum == 0)
 		{
+			pPicking->Release_PickingObject();
+			pPicking->Set_Mouse_Has_Construct(false);
 			CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 			pMouse->Set_Item_type(ITEM_END);
 			auto mouse = pinv->Get_Mouse_item_list()->begin();
@@ -246,6 +248,7 @@ void CTerrain::PickingTrue()
 			pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y, m_vecOutPos.z), true);
 			pPlayer->Set_IsBuild(false);
 			pPlayer->Add_ActStack(CPlayer::ACTION_STATE::MOVE);
+			pPlayer->Clear_Target();
 		}
 
 	}
@@ -260,6 +263,7 @@ void CTerrain::PickingTrue()
 			if (iNum > 0)
 			{
 				iNum--;
+				
 				pMouse->Set_Item_count(iNum);
 				pMouse->Set_Item_prev_count(iNum);
 
@@ -279,6 +283,7 @@ void CTerrain::PickingTrue()
 
 				if (iNum == 0)
 				{
+					//pPicking->Release_PickingObject();
 					CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 					pMouse->Set_Item_type(ITEM_END);
 					auto mouse = pinv->Get_Mouse_item_list()->begin();

@@ -27,6 +27,7 @@ public:
 public: /*Get*/
 	_float3 Get_PickingPos() { return m_vPickingPos; }
 	_bool Get_Mouse_Has_Construct() { return m_bMouseHasConstruction; }
+	void Set_Mouse_Has_Construct(_bool type) { m_bMouseHasConstruction = type; }
 	void Set_PickingItemType(ITEMID type) { m_PickingItemType = type; Add_PickingObject(type); }
 	ITEMID Get_PickingItemType() { return m_PickingItemType; }
 

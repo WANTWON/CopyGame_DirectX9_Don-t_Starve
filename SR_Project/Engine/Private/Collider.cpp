@@ -38,8 +38,7 @@ HRESULT CCollider::Reset_ColliderGroup()
 
 	return S_OK;
 }
-
-_bool CCollider::Collision_with_Group(COLLISION_GROUP eGroup, class CGameObject* pGameObject)
+_bool  CCollider::Collision_with_Group(COLLISION_GROUP eGroup, class CGameObject* pGameObject, _float3* pOutDistance )
 {
 	for (auto& iter : m_GameObjects[eGroup])
 	{
@@ -50,7 +49,7 @@ _bool CCollider::Collision_with_Group(COLLISION_GROUP eGroup, class CGameObject*
 			if (Target == nullptr)
 				continue;
 
-			if (true == (DamageOwner->Collision_Check(Target)))
+			if (true == (DamageOwner->Collision_Check(Target, pOutDistance)))
 				return true;
 		}
 	}
@@ -84,6 +83,7 @@ _bool CCollider::Collision_Check_Group_Multi(COLLISION_GROUP eGroup, vector<clas
 		return false;
 	}
 }
+
 
 
 void CCollider::Free()

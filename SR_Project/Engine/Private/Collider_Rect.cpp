@@ -186,7 +186,7 @@ HRESULT CCollider_Rect::Render_ColliderBox()
 	return S_OK;
 }
 
-_bool CCollider_Rect::Collision_Check(CCollider_Rect * pTarget)
+_bool CCollider_Rect::Collision_Check(CCollider_Rect * pTarget, _float3* pOutDistance)
 {
 	CCollider_Rect* pOther = pTarget;
 	if (nullptr == pOther)
@@ -194,6 +194,7 @@ _bool CCollider_Rect::Collision_Check(CCollider_Rect * pTarget)
 
 	_float3		vSourMin, vSourMax, vSourCenter;
 	_float3		vDestMin, vDestMax, vDestCenter;
+	_float3		vDistance = _float3(0, 0, 0);
 
 	vSourMin = m_vPoint[3];
 	vSourMax = m_vPoint[1];
@@ -205,12 +206,31 @@ _bool CCollider_Rect::Collision_Check(CCollider_Rect * pTarget)
 
 	if (min(vSourMax.x, vDestMax.x) < max(vSourMin.x, vDestMin.x))
 		return false;
+	else
+	{
+		if (vSourCenter.x > vDestCenter.x)
+		{
+			vDistance.x = -(min(vSourMax.x, vDestMax.x) - max(vSourMin.x, vDestMin.x));
+		}
+		else
+			vDistance.x = (min(vSourMax.x, vDestMax.x) - max(vSourMin.x, vDestMin.x));
+	}
+		
 
-	if (min(vSourMax.y, vDestMax.y) < max(vSourMin.y, vDestMin.y))
+	if (min(vSourMax.z, vDestMax.z) < max(vSourMin.z, vDestMin.z))
 		return false;
-
-	if (fabsf(vDestCenter.z - vSourCenter.z) > 1.f)
-		return false;
+	else
+	{
+		if (vSourCenter.z > vDestCenter.z)
+		{
+			vDistance.z = -(min(vSourMax.z, vDestMax.z) - max(vSourMin.z, vDestMin.z));
+		}
+		else
+			vDistance.z = min(vSourMax.z, vDestMax.z) - max(vSourMin.z, vDestMin.z);
+	}
+		
+	if(pOutDistance != nullptr)
+		*pOutDistance = vDistance;
 
 	return true;
 }

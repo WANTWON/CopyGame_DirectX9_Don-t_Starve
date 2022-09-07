@@ -202,6 +202,12 @@
     <Filter Include="02.GameObject\98.UI\09.Pot">
       <UniqueIdentifier>{86bb6014-7dd9-497c-bfb4-5acb09504ded}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.Interactive_Object\NPC">
+      <UniqueIdentifier>{660946ff-ce1d-4dbc-8ea1-71cf29e5d955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.Interactive_Object\NPC\Wendy">
+      <UniqueIdentifier>{01947dbe-6ca9-4f59-9f6d-89489c9e439a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -477,6 +483,9 @@
     <ClInclude Include="..\Public\Startbutton.h">
       <Filter>01.Levels\Logo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Wendy.h">
+      <Filter>02.GameObject\04.Interactive_Object\NPC\Wendy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -739,6 +748,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Startbutton.cpp">
       <Filter>01.Levels\Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Wendy.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\NPC\Wendy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
