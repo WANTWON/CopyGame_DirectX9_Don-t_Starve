@@ -56,7 +56,7 @@ void CInteractive_Object::Late_Tick(_float fTimeDelta)
 	SetUp_BillBoard();
 
 	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 }
 
 HRESULT CInteractive_Object::Render()
