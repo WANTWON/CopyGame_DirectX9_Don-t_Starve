@@ -28,25 +28,25 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		//return E_FAIL;
-	//if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
-		//return E_FAIL;
+	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;
+	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
+		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
-		//return E_FAIL;
+	if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
+		return E_FAIL;
 
-//	if (FAILED(Ready_Layer_Equipment_back(TEXT("Layer_UI"))))
-		//return E_FAIL
+	if (FAILED(Ready_Layer_Equipment_back(TEXT("Layer_UI"))))
+		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_PlayerStatUI(TEXT("Layer_UI"))))
-		//return E_FAIL;
+	if (FAILED(Ready_Layer_PlayerStatUI(TEXT("Layer_UI"))))
+		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_UI"))))
-		//return E_FAIL;
+	if (FAILED(Ready_Layer_WeaponToolbox(TEXT("Layer_UI"))))
+		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_UI"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_UI"))))
+		return E_FAIL;
 
 
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_GAMEPLAY);

@@ -65,7 +65,7 @@ _bool CCullingMgr::Is_In_Frustum(_float3 pGameObjectPos, _float fRadius)
 	for (int i = 0; i < 6; ++i)
 	{
 		_float distance = m_FrustumPlane[i].a*pGameObjectPos.x + m_FrustumPlane[i].b*pGameObjectPos.y + m_FrustumPlane[i].c*pGameObjectPos.z + m_FrustumPlane[i].d;
-		if (distance > 0 && (distance > fRadius))
+		if (distance > fRadius + 1)
 			return false;
 	}
 
