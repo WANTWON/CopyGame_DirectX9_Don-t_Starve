@@ -1416,13 +1416,13 @@ void CPlayer::Building(_float _fTImeDelta)
 		}
 		m_ePreState = m_eState;
 	}
-	if (m_fBuildTime > 2.f &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex -2)
+	if (m_fBuildTime > 1.f/* &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex -2*/)
 	{
 		m_bIsBuild = true;
 		m_bBuildTrigger = false;
 		m_fBuildTime = 0.f;
 	}
-	else if(m_fBuildTime < 2.f &&m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 2)
+	else if(m_fBuildTime < 1.f &&m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 2)
 	{
 
 		m_pTextureCom->Get_Frame().m_iCurrentTex = 0;
