@@ -42,11 +42,14 @@ namespace Client
 	typedef struct tagBulletData {
 		_bool bIsPlayerBullet;
 		WEAPON_TYPE eWeaponType;
-		_float3 vPosition;
 		DIR_STATE eDirState;
+		_float3 vPosition;
+		_float3	vTargetPos;		
 		_float3 vLook;
-		_float3	vTargetPos;
 		_float3 vRight;
+		_float fOffsetUp;
+		_float fOffsetDown;
+		_float fOffsetSide;
 	}BULLETDATA;
 
 }

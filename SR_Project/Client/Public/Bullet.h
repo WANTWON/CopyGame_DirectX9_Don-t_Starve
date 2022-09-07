@@ -70,7 +70,6 @@ private:/*For Components*/
 
 	/* For.Debug */
 	CVIBuffer_Rect* m_pVIDebugBufferCom = nullptr;
-	CTransform*	m_pDebugTransformCom = nullptr;
 
 private: //values		
 	//WEAPON_TYPE				m_eWeaponType = WEAPON_TYPE::WEAPON_HAND;
