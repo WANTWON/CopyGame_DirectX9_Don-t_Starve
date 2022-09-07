@@ -55,6 +55,9 @@ void CPickingMgr::Add_PickingObject(ITEMID type)
 		case ITEMNAME_POT:
 			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"), m_vPickingPos);
 			break;
+		case ITEMNAME_TENT:
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tent"), LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"), m_vPickingPos);
+			break;
 		}	
 	}
 		
@@ -89,6 +92,7 @@ _bool CPickingMgr::Picking()
 {
 	if (m_bMouseInUI)
 		return false;
+
 
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -127,10 +131,7 @@ _bool CPickingMgr::Picking()
 		m_vPickingPos = vecNearPos;
 		vecPicked[NearNum]->PickingTrue();
 
-		/*if (m_pPickingObject != nullptr)
-		{
-			m_pPickingObject->Update_Position(m_vPickingPos);
-		}*/
+	
 			
 		return true;
 	}

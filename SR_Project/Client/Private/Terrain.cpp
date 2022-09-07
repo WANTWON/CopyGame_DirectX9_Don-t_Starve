@@ -219,12 +219,20 @@ void CTerrain::PickingTrue()
 
 	CMouse*			pMouse = CMouse::Get_Instance();
 	int iNum = pMouse->Get_Item_count();
+	
+	//for Character Skill
+	if (pPlayer->Get_SkillShow())
+	{
+		pPlayer->Set_PickingTarget(m_vecOutPos);
+	}
 	//pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
 	//TestCode
 	if (pGameInstance->Key_Up('P'))
 	{	
 		if (iNum == 0)
 		{
+			pPicking->Release_PickingObject();
+			pPicking->Set_Mouse_Has_Construct(false);
 			CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 			pMouse->Set_Item_type(ITEM_END);
 			auto mouse = pinv->Get_Mouse_item_list()->begin();
@@ -254,6 +262,7 @@ void CTerrain::PickingTrue()
 			if (iNum > 0)
 			{
 				iNum--;
+				
 				pMouse->Set_Item_count(iNum);
 				pMouse->Set_Item_prev_count(iNum);
 
@@ -265,11 +274,15 @@ void CTerrain::PickingTrue()
 				case ITEMNAME_POT:
 					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPlayer->Get_PickingPoint());
 					break;
+				case ITEMNAME_TENT:
+					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tent"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPlayer->Get_PickingPoint());
+					break;
 				}
 
 
 				if (iNum == 0)
 				{
+					//pPicking->Release_PickingObject();
 					CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 					pMouse->Set_Item_type(ITEM_END);
 					auto mouse = pinv->Get_Mouse_item_list()->begin();

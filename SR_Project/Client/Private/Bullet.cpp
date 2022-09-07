@@ -37,7 +37,7 @@ HRESULT CBullet::Initialize(void * pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-	//¹«±â ÀÌ³Ñ°ª ¹Þ±â, »ý¼º À§Ä¡°ª ¹Þ±â.
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½Ì³Ñ°ï¿½ ï¿½Þ±ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Þ±ï¿½.
 
 	m_tBulletData = *(BULLETDATA*)(pArg);
 
@@ -66,6 +66,7 @@ int CBullet::Tick(_float fTimeDelta)
 	Excute(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+	
 	return OBJ_NOEVENT;
 }
 
@@ -73,16 +74,20 @@ void CBullet::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	AttackCheck(fTimeDelta);
-	DeadCheck(fTimeDelta);
-
-	if (Compare_Terrain())
-		m_bDead = true;
+	
 
 
 	SetUp_BillBoard();
 	if (nullptr != m_pRendererCom && m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_MINES)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
+	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+
+	AttackCheck(fTimeDelta);
+	DeadCheck(fTimeDelta);
+
+	if (Compare_Terrain())
+		m_bDead = true;
 }
 
 HRESULT CBullet::Render()
@@ -109,12 +114,17 @@ HRESULT CBullet::Render()
 
 	m_pTextureCom->MoveFrame(m_TimerTag);
 
-	if (m_pVIDebugBufferCom)
+	/*if (m_pVIDebugBufferCom)
 	{
 		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 		m_pVIDebugBufferCom->Render();
 		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	}
+	}*/
+
+
+#ifdef _DEBUG
+	m_pColliderCom->Render_ColliderBox();
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -123,6 +133,18 @@ HRESULT CBullet::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
+		return E_FAIL;
+
+	/* For.Com_Collider*/
+	CCollider_Rect::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+	CollRectDesc.fRadiusY = 0.5f;
+	CollRectDesc.fRadiusX = 0.5f;
+	CollRectDesc.fOffSetX = 0.f;
+	CollRectDesc.fOffSetY = 0.f;
+
+	/* For.Com_Collider_Rect*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -143,7 +165,7 @@ HRESULT CBullet::SetUp_Components()
 	TransformDesc.InitPos.y += 0.2f;
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
-	//±ÍÂú¾Æ ¤¾¤¾
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	Init_Data();
 
 	//SetUp_DebugComponents();
@@ -189,9 +211,9 @@ HRESULT CBullet::Release_RenderState()
 }
 
 void CBullet::Excute(_float fTimeDelta)
-{	/*°ø°ÝÀÌ³ª Ä®Àº ¸Â´Â °´Ã¼°¡ ¸ó½ºÅÍ¸¸ ÀÖÀ¸¸éµÇÁö¸¸
-	È­»ì, ºÒ¸¶¹ýÀº ´©°¡ ¸Â¾Ò´ÂÁö¿¡ µû¸¥ Ã³¸®µµ ÇÊ¿ä,
-	¶ÇÇÑ È­»ì ºÒ¸¶¹ýÀº Áö¼ÓÀûÀÎ À§Ä¡ ¾÷µ¥ÀÌÆ®°¡ ÇÊ¿äÇÏ´Ù.*/
+{	/*ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ Ä®ï¿½ï¿½ ï¿½Â´ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	È­ï¿½ï¿½, ï¿½Ò¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Â¾Ò´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½,
+	ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½Ò¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½Ï´ï¿½.*/
 
 	//Monster
 	if (!m_tBulletData.bIsPlayerBullet)
@@ -287,6 +309,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	if (pGameInstance->Collision_Check_Group_Multi(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, vecDamagedActor, this))
+	//if (pGameInstance->Collision_with_Group(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, this))
 	{
 		switch (m_tBulletData.eWeaponType)
 		{
@@ -334,7 +357,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 		case WEAPON_TYPE::WEAPON_MINE:
 			if (!m_bIsAttacked)
 			{
-				m_bIsAttacked = true; // °ø°ÝÇÑ¹øÀû¿ë
+				m_bIsAttacked = true; // ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½
 				m_bActivated = true; // 
 				goto AttackMulti;
 			}
@@ -374,7 +397,7 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 	case WEAPON_TYPE::WEAPON_BOMB:
 		if (Compare_Terrain())
 		{
-			//½º¸ðÅ© »ý¼º
+			//ï¿½ï¿½ï¿½ï¿½Å© ï¿½ï¿½ï¿½ï¿½
 			BULLETDATA BulletData;
 			ZeroMemory(&BulletData, sizeof(BulletData));
 			BulletData.bIsPlayerBullet = true;
@@ -445,16 +468,16 @@ void CBullet::Bomb(void)
 
 
 	m_fTime += 0.1f;//m_tBulletData.fAdd_Z;
-					//if (m_fTime >= m_MaxTime) // ½Ã°£°ªÀ» Å©°Ô??	
+					//if (m_fTime >= m_MaxTime) // ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½??	
 	m_MaxTime = 2.f * 8.2f;
 
-	float fSpeed = (-0.3f *m_fTime*m_fTime + 0.3f);//m_tBulletData.fAdd_Z); // ((3.f / 2.f)*m_fPower *0.03f); //0.1f º¸°£
+	float fSpeed = (-0.3f *m_fTime*m_fTime + 0.3f);//m_tBulletData.fAdd_Z); // ((3.f / 2.f)*m_fPower *0.03f); //0.1f ï¿½ï¿½ï¿½ï¿½
 	m_tBulletData.vPosition.y += fSpeed;
 	m_tBulletData.vPosition.x += m_tBulletData.vTargetPos.x / m_MaxTime;
 	m_tBulletData.vPosition.z += m_tBulletData.vTargetPos.z / m_MaxTime;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_tBulletData.vPosition);
 
-	//È¸Àü
+	//È¸ï¿½ï¿½
 	//m_pTransformCom->Turn(_float3(0.f, 0.f, 1.f), fTimeDelta);
 
 }
@@ -892,7 +915,7 @@ void CBullet::Apply_Damage(_float Damage, CGameObject * DamagedObj, void * Attac
 
 void CBullet::Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void * AttackType)
 {
-	//Damge_Type ÃßÈÄ ³Ö±â.
+	//Damge_Type ï¿½ï¿½ï¿½ï¿½ ï¿½Ö±ï¿½.
 
 	for (auto& iter = vecDamagedObj.begin(); iter != vecDamagedObj.end();)
 	{

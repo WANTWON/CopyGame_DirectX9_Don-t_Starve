@@ -121,7 +121,8 @@ public:
 
 	void update_questpont();
 
-
+	void Set_PickingPot(_bool type) { m_PickingPot = type; }
+	_bool Get_PickingPot() { return m_PickingPot; }
 
 public:
 	class CGameObject* Find_Objects(_uint iLevelIndex, const _tchar* pLayerTag);
@@ -179,6 +180,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	_uint m_ihunger = 7;
 	_uint m_mentality = 7;
 	
+	_bool m_PickingPot = false;
 
 	//private:
 	//class CGameObject* Find_Prototype(const _tchar* pPrototypeTag);

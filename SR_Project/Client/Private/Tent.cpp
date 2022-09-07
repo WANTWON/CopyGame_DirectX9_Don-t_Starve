@@ -72,11 +72,17 @@ HRESULT CTent::Render()
 
 void CTent::Interact(_uint Damage)
 {
-	m_bInteract = false;
+	if (m_eState == STATE::IDLE || m_eState == STATE::SLEEP)
+	{
+		m_bInteract = false;
+		m_bIsInsideTent = m_eState == STATE::IDLE ? true : false;
 
-	m_eState = ENTER;
-	// TODO: ..
-	// Open Craft Window Here.
+		m_eState = ENTER;
+
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+		pPlayer->Set_Sleeping(m_bIsInsideTent ? true : false);
+	}
 }
 
 HRESULT CTent::Drop_Items()
@@ -89,7 +95,7 @@ HRESULT CTent::SetUp_Components(void* pArg)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	//m_TimerTag = TEXT("Timer_Boulder");
+	//m_TimerTag = TEXT("Timer_Tent");
 	//if (FAILED(pGameInstance->Add_Timer(m_TimerTag)))
 	//return E_FAIL;
 
@@ -166,7 +172,7 @@ void CTent::Change_Frame()
 	switch (m_eState)
 	{
 	case IDLE:
-		m_pTextureCom->MoveFrame(m_TimerTag, false);
+		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case PLACE:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
@@ -174,7 +180,15 @@ void CTent::Change_Frame()
 		break;
 	case ENTER:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = SLEEP;
+		{
+			if (m_bIsInsideTent)
+				m_eState = SLEEP;
+			else
+				m_eState = IDLE;
+
+			m_bInteract = true;
+		}
+			
 		break;
 	case SLEEP:
 		m_pTextureCom->MoveFrame(m_TimerTag);
@@ -194,22 +208,22 @@ void CTent::Change_Motion()
 	{
 		switch (m_eState)
 		{
-		case CTent::IDLE:
+		case STATE::IDLE:
 			Change_Texture(TEXT("Com_Texture_IDLE"));
 			break;
-		case CTent::PLACE:
+		case STATE::PLACE:
 			Change_Texture(TEXT("Com_Texture_PLACE"));
 			break;
-		case CTent::ENTER:
+		case STATE::ENTER:
 			Change_Texture(TEXT("Com_Texture_ENTER"));
 			break;
-		case CTent::SLEEP:
+		case STATE::SLEEP:
 			Change_Texture(TEXT("Com_Texture_SLEEP"));
 			break;
-		case CTent::HIT:
+		case STATE::HIT:
 			Change_Texture(TEXT("Com_Texture_HIT"));
 			break;
-		case CTent::DESTROY:
+		case STATE::DESTROY:
 			Change_Texture(TEXT("Com_Texture_DESTROY"));
 			break;
 		}

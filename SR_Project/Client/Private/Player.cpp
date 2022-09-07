@@ -44,11 +44,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 
-
-
-
-
-
 	//Test
 	Change_Texture(TEXT("Com_Texture_Idle_Down"));
 	m_ActStack.push(ACTION_STATE::IDLE);
@@ -56,11 +51,16 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_iPreLevelIndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
+	
+
 	return S_OK;
 }
 
 int CPlayer::Tick(_float fTimeDelta)
 {
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	if (m_iPreLevelIndex != m_iCurrentLevelndex)
 	{
@@ -88,8 +88,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	//if (nullptr != m_pColliderCom)
 	//	m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+	Sleep_Restore();
 
 	//Act Auto
 	Tick_ActStack(fTimeDelta);
@@ -101,7 +100,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	Move_to_PickingPoint(fTimeDelta);
 	WalkingTerrain();
 
-	Create_Bullet();
+	
 	m_Equipment->Set_TargetPos(Get_Pos());
 	//TEst
 	RangeCheck(fTimeDelta);
@@ -141,17 +140,28 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	{
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
 	}
+	
+	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
 
-	Test_Debug(fTimeDelta);
+	Create_Bullet();
 
-	if (CKeyMgr::Get_Instance()->Key_Up('9'))
+	
+
+	_float3 vDistance = _float3(0,0,0);
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	if (pGameInstance->Collision_with_Group(CCollider::COLLISION_BLOCK, this, &vDistance))
 	{
-		CInventory_Manager::Get_Instance()->Use_pot();
+		_float3 vPosition = Get_Position();
+
+		if(fabsf(vDistance.x) < fabsf(vDistance.z))
+			vPosition.x -= vDistance.x;
+		else
+			vPosition.z -= vDistance.z;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Up('8'))
-	{
-		CInventory_Manager::Get_Instance()->Off_pot();
-	}
+
+
 }
 
 
@@ -168,6 +178,11 @@ _float3 CPlayer::Get_Look()
 _float3 CPlayer::Get_Right()
 {
 	return (m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
+}
+
+_bool CPlayer::Get_SkillShow(void)
+{
+	return m_pPicker->Get_IsShow();
 }
 
 void CPlayer::Move_to_PickingPoint(_float fTimedelta)
@@ -222,9 +237,18 @@ HRESULT CPlayer::Render()
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
 
-	m_pVIBufferCom->Render();
-	//Test
-	Debug_Render();
+
+
+	if (!m_bSleeping)
+	{
+		m_pVIBufferCom->Render();
+	}
+
+#ifdef _DEBUG
+	m_pTextureCom->Bind_OnGraphicDev_Debug();
+	m_pColliderCom->Render_ColliderBox();
+#endif // _DEBUG
+
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
@@ -282,8 +306,16 @@ HRESULT CPlayer::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	//if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-	//	return E_FAIL;
+	CCollider_Rect::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+	CollRectDesc.fRadiusY = 0.4f;
+	CollRectDesc.fRadiusX = 0.3f;
+	CollRectDesc.fOffSetX = 0.f;
+	CollRectDesc.fOffSetY = -0.25f;
+
+	/* For.Com_Collider_Rect*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+		return E_FAIL;
 
 	/* For.Com_Texture */
 	if (Texture_Clone())
@@ -302,9 +334,6 @@ HRESULT CPlayer::SetUp_Components()
 	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
-		return E_FAIL;
-
-	if (Test_Setup())
 		return E_FAIL;
 
 	/*For. Others*/
@@ -396,42 +425,6 @@ HRESULT CPlayer::Release_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	return S_OK;
-}
-
-HRESULT CPlayer::Test_Setup()
-{
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-
-	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_DebugBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pDebugBufferCom)))
-		return E_FAIL;
-
-	/* For.Com_Transform */
-	CTransform::TRANSFORMDESC		TransformDesc;
-	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
-
-	TransformDesc.fSpeedPerSec = 5.f;
-	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
-	TransformDesc.InitPos = _float3(10.f, 2.f, 5.f);
-
-	if (FAILED(__super::Add_Components(TEXT("Com_DebugTransform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pDebugTransformCom, &TransformDesc)))
-		return E_FAIL;
-
-	m_pDebugTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
-	//TEXTURE
-	CTexture::TEXTUREDESC		TextureDesc;
-	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
-
-	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_iEndTex = 1;
-	TextureDesc.m_fSpeed = 60;
-	/*Debug*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Debug"), LEVEL_STATIC, TEXT("Prototype_Component_DebugLine"), (CComponent**)&m_pDebugTextureCom, &TextureDesc)))
-		return E_FAIL;
-
-	Set_Radius(0.25f);
-
 	return S_OK;
 }
 
@@ -670,7 +663,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 
 #pragma region Move
 	//Move
-	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_UP]))
+	if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_UP]) && !m_bSleeping)
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
@@ -678,14 +671,14 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		Clear_ActStack();
 		Move_Up(_fTimeDelta);
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_RIGHT]))
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_RIGHT]) && !m_bSleeping)
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
 		Clear_ActStack();
 		Move_Right(_fTimeDelta);
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_DOWN]))
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_DOWN]) && !m_bSleeping)
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
@@ -693,7 +686,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		Clear_ActStack();
 		Move_Down(_fTimeDelta);
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_LEFT]))
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_LEFT]) && !m_bSleeping)
 	{
 		m_bInputKey = true;
 		m_bPicked = false;
@@ -702,7 +695,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		Move_Left(_fTimeDelta);
 
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_ATTACK]))
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_ATTACK]) && !m_bSleeping)
 	{
 		if (!m_bGhost)
 		{
@@ -1736,6 +1729,26 @@ _bool CPlayer::Check_Dead()
 
 }
 
+void CPlayer::Sleep_Restore()
+{
+	if (m_bSleeping)
+	{
+		if (GetTickCount() > m_dwSleepTime + 1000)
+		{
+			if (m_tStat.fCurrentHealth < m_tStat.fMaxHealth)
+				m_tStat.fCurrentHealth += 1;
+			
+			if (m_tStat.fCurrentMental < m_tStat.fMaxMental)
+				m_tStat.fCurrentMental += 1;
+			
+			if (m_tStat.fCurrentHungry > 0)
+				m_tStat.fCurrentHungry -= 1;
+
+			m_dwSleepTime = GetTickCount();
+		}
+	}
+}
+
 void CPlayer::Cooltime_Update(_float _fTimeDelta)
 {
 	for (auto& iter : m_vecSkillDesc)
@@ -1771,7 +1784,7 @@ void CPlayer::RangeCheck(_float _fTimeDelta)
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return;
 
-	//CPickingMgr::Get_Instance()->Picking();
+	CPickingMgr::Get_Instance()->Picking();
 
 	_float Compare_Range = (m_vTargetPicking.x - Get_Pos().x)*(m_vTargetPicking.x - Get_Pos().x)
 		+ (m_vTargetPicking.y - Get_Pos().y)*(m_vTargetPicking.y - Get_Pos().y)
@@ -2023,49 +2036,6 @@ _bool CPlayer::Check_Interact_End(void)
 		return true;
 
 	return	(dynamic_cast<CInteractive_Object*>(m_pTarget)->Get_CanInteract() ? false : true);
-
-}
-
-void CPlayer::Test_Debug(_float fTimeDelta)
-{
-	if (!m_bDebugKey)
-		return;
-
-	//m_pDebugTransformCom->Set_State(CTransform::STATE_POSITION, Get_Pos());
-
-	//CGameInstance* pInstance = CGameInstance::Get_Instance();
-	//fTimeAcc += fTimeDelta;
-	//if (fTimeAcc > 1.f && m_pColliderCom->Collision_with_Group(CCollider::COLLISION_MONSTER, this))
-	//{
-	//	m_tStat.fCurrentHealth -= 5.f;
-
-	//}
-
-	//if (fTimeAcc > 2.f)
-	//{
-	//	//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
-	//	printf("%f\n ", m_tStat.fCurrentHealth);
-	//	fTimeAcc = 0.f;
-	//}
-
-}
-
-void CPlayer::Debug_Render(void)
-{
-	if (!m_bDebugKey)
-		return;
-
-	m_pDebugTransformCom->Bind_OnGraphicDev();
-	if (FAILED(m_pDebugTextureCom->Bind_OnGraphicDev(0)))
-		return;
-
-	//m_pGraphic_Device->SetRenderState(D3DRS_LIGHTING, TRUE);
-	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-
-	m_pDebugBufferCom->Render();
-
-	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	//m_pGraphic_Device->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 }
 
@@ -2384,13 +2354,9 @@ void CPlayer::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
-	//Safe_Release(m_pColliderCom);
+	Safe_Release(m_pColliderCom);
 
 	Safe_Release(m_Equipment);
-	//Debug
-	Safe_Release(m_pDebugBufferCom);
-	Safe_Release(m_pDebugTransformCom);
-	Safe_Release(m_pDebugTextureCom);
 
 	for (auto& iter : m_mapTexture)
 		Safe_Release((iter).second);

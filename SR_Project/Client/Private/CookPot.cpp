@@ -6,6 +6,7 @@
 #include "PickingMgr.h"
 #include "ParticleSystem.h"
 #include "Particle.h"
+#include "Inventory.h"
 
 CCookPot::CCookPot(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -56,11 +57,11 @@ void CCookPot::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	/*if (!m_bPicking)
+	if (!m_bPicking && !CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
 	{
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
 		m_bPicking = true;
-	}*/
+	}
 
 	Change_Motion();
 	Change_Frame();
@@ -214,13 +215,16 @@ void CCookPot::Change_Motion()
 
 _bool CCookPot::Picking(_float3 * PickingPoint)
 {
-	/*if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
+	if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+		return false;
+
+	if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
 	{
 		m_vecOutPos = *PickingPoint;
 		return true;
 	}
 	else
-		return false;*/
+		return false;
 	return true;
 }
 
@@ -228,10 +232,23 @@ void CCookPot::PickingTrue()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
-	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-
-	//pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y, m_vecOutPos.z));
-
+	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance();
+	
+	if (pGameInstance->Key_Up(VK_LBUTTON))
+	{
+		if (!pInvenManager->Get_PickingPot())
+		{
+			pInvenManager->Use_pot();
+			pInvenManager->Set_PickingPot(true);
+		}
+		else
+		{
+			pInvenManager->Off_pot();
+			pInvenManager->Set_PickingPot(false);
+		}
+			
+	}
+	
 	cout << "Collision CookPot : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
 
 	Safe_Release(pGameInstance);

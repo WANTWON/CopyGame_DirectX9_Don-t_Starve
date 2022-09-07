@@ -80,7 +80,6 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pLevel_Manager->Late_Tick(fTimeDelta);
 	m_pObject_Manager->Late_Tick(fTimeDelta);
 
-	//m_pCollider_Manager->Update_CollisionBox();
 	m_pCollider_Manager->Reset_ColliderGroup(); // Need to be called last
 }
 
@@ -351,9 +350,9 @@ HRESULT CGameInstance::Add_CollisionGroup(CCollider::COLLISION_GROUP eCollisionG
 	return m_pCollider_Manager->Add_CollisionGroup(eCollisionGroup, pGameObject);
 }
 
-_bool CGameInstance::Collision_with_Group(CCollider::COLLISION_GROUP eGroup, CGameObject * pGameObject)
+_bool CGameInstance::Collision_with_Group(CCollider::COLLISION_GROUP eGroup, CGameObject * pGameObject,  _float3* pOutDistance)
 {
-	return m_pCollider_Manager->Collision_with_Group(eGroup, pGameObject);
+	return m_pCollider_Manager->Collision_with_Group(eGroup, pGameObject, pOutDistance);
 }
 
 _bool CGameInstance::Collision_Check_Group_Multi(CCollider::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, CGameObject * pDamageCauser)
