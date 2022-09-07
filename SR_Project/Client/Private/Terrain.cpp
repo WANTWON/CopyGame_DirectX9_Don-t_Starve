@@ -295,7 +295,8 @@ void CTerrain::PickingTrue()
 
 				if (iNum == 0)
 				{
-					//pPicking->Release_PickingObject();
+					pPicking->Release_PickingObject();
+					pPicking->Set_Mouse_Has_Construct(false);
 					CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 					pMouse->Set_Item_type(ITEM_END);
 					auto mouse = pinv->Get_Mouse_item_list()->begin();
