@@ -41,16 +41,16 @@ HRESULT CCollider_Rect::Initialize_Prototype()
 
 	//_float3 InitPos = _float3(40.f, 5.f, 25.f);
 
-	pVertices[0].vPosition = m_vPoint[0] = _float3(-0.5f, 0.f, 0.5f );// + InitPos;
+	pVertices[0].vPosition = m_vPoint[0] = _float3(-0.5f,   0.5f, 0.f );// + InitPos;
 	pVertices[0].vTexture = _float2(0.0f, 0.f);
 
-	pVertices[1].vPosition = m_vPoint[1] = _float3(0.5f, 0.f, 0.5f);// +InitPos;
+	pVertices[1].vPosition = m_vPoint[1] = _float3(0.5f, 0.5f, 0.f );// +InitPos;
 	pVertices[1].vTexture = _float2(1.f, 0.f);
 
-	pVertices[2].vPosition = m_vPoint[2] = _float3(0.5f, 0.f, - 0.5f);// +InitPos;
+	pVertices[2].vPosition = m_vPoint[2] = _float3(0.5f, -0.5f, 0.f );// +InitPos;
 	pVertices[2].vTexture = _float2(1.f, 1.f);
 
-	pVertices[3].vPosition = m_vPoint[3] = _float3(-0.5f, 0.f, - 0.5f);// +InitPos;
+	pVertices[3].vPosition = m_vPoint[3] = _float3(-0.5f, -0.5f, 0.f );// +InitPos;
 	pVertices[3].vTexture = _float2(0.f, 1.f);
 	m_pVB->Unlock();
 
@@ -97,16 +97,16 @@ HRESULT CCollider_Rect::Initialize(void * pArg)
 
 	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&pVertices, 0);
 
-	pVertices[0].vPosition = m_vPoint[0] = _float3(-m_StateDesc.fRadiusX, 0.f, m_StateDesc.fRadiusY);// + InitPos;
+	pVertices[0].vPosition = m_vPoint[0] = _float3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);// + InitPos;
 	pVertices[0].vTexture = _float2(0.0f, 0.f);
 
-	pVertices[1].vPosition = m_vPoint[1] = _float3(m_StateDesc.fRadiusX, 0.f, m_StateDesc.fRadiusY);// +InitPos;
+	pVertices[1].vPosition = m_vPoint[1] = _float3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);// +InitPos;
 	pVertices[1].vTexture = _float2(1.f, 0.f);
 
-	pVertices[2].vPosition = m_vPoint[2] = _float3(m_StateDesc.fRadiusX, 0.f, -m_StateDesc.fRadiusY);// +InitPos;
+	pVertices[2].vPosition = m_vPoint[2] = _float3(m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, 0.f);// +InitPos;
 	pVertices[2].vTexture = _float2(1.f, 1.f);
 
-	pVertices[3].vPosition = m_vPoint[3] = _float3(-m_StateDesc.fRadiusX, 0.f, -m_StateDesc.fRadiusY);// +InitPos;
+	pVertices[3].vPosition = m_vPoint[3] = _float3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, 0.f);// +InitPos;
 	pVertices[3].vTexture = _float2(0.f, 1.f);
 	m_pVB->Unlock();
 
@@ -140,13 +140,13 @@ HRESULT CCollider_Rect::Initialize(void * pArg)
 HRESULT CCollider_Rect::Update_ColliderBox(_float4x4 WorldMatrix)
 {
 
-	 m_vPoint[0] = _float3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);// + InitPos;
+	 m_vPoint[0] = _float3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY  , 0.f );// + InitPos;
 
-	 m_vPoint[1] = _float3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, 0.f);// +InitPos;
+	 m_vPoint[1] = _float3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY   ,0.f );// +InitPos;
 
-	 m_vPoint[2] = _float3(m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, 0.f);// +InitPos;
+	 m_vPoint[2] = _float3(m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, 0.f );// +InitPos;
 
-	 m_vPoint[3] = _float3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, 0.f);// +InitPos;
+	 m_vPoint[3] = _float3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY , 0.f );// +InitPos;
 	
 
 
@@ -204,30 +204,33 @@ _bool CCollider_Rect::Collision_Check(CCollider_Rect * pTarget, _float3* pOutDis
 	vDestMax = pOther->m_vPoint[1];
 	vDestCenter = (vDestMax + vDestMin)*0.5f;
 
-	if (min(vSourMax.x, vDestMax.x) < max(vSourMin.x, vDestMin.x))
-		return false;
-	else
-	{
-		if (vSourCenter.x > vDestCenter.x)
-		{
-			vDistance.x = -(min(vSourMax.x, vDestMax.x) - max(vSourMin.x, vDestMin.x));
-		}
-		else
-			vDistance.x = (min(vSourMax.x, vDestMax.x) - max(vSourMin.x, vDestMin.x));
-	}
-		
 
-	if (min(vSourMax.z, vDestMax.z) < max(vSourMin.z, vDestMin.z))
-		return false;
-	else
-	{
-		if (vSourCenter.z > vDestCenter.z)
-		{
-			vDistance.z = -(min(vSourMax.z, vDestMax.z) - max(vSourMin.z, vDestMin.z));
-		}
+
+		if (min(vSourMax.x, vDestMax.x) < max(vSourMin.x, vDestMin.x))
+			return false;
 		else
-			vDistance.z = min(vSourMax.z, vDestMax.z) - max(vSourMin.z, vDestMin.z);
-	}
+		{
+			if (vSourCenter.x > vDestCenter.x)
+			{
+				vDistance.x = -(min(vSourMax.x, vDestMax.x) - max(vSourMin.x, vDestMin.x));
+			}
+			else
+				vDistance.x = (min(vSourMax.x, vDestMax.x) - max(vSourMin.x, vDestMin.x));
+		}
+
+
+		if (min(vSourMax.z, vDestMax.z) < max(vSourMin.z, vDestMin.z))
+			return false;
+		else
+		{
+			if (vSourCenter.z > vDestCenter.z)
+			{
+				vDistance.z = -(min(vSourMax.z, vDestMax.z) - max(vSourMin.z, vDestMin.z));
+			}
+			else
+				vDistance.z = min(vSourMax.z, vDestMax.z) - max(vSourMin.z, vDestMin.z);
+		}
+	
 		
 	if(pOutDistance != nullptr)
 		*pOutDistance = vDistance;
