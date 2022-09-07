@@ -448,6 +448,11 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 		if (m_bActivated3)
 			m_bDead = OBJ_DEAD;
 		break;
+	case WEAPON_TYPE::WEAPON_PUFF:
+		if(m_pTextureCom->Get_Frame().m_iCurrentTex >=m_pTextureCom->Get_Frame().m_iEndTex -2)
+			m_bDead = OBJ_DEAD;
+		break;
+
 	case WEAPON_TYPE::BEARGER_SPECIAL:
 		if ((m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1))
 			m_bDead = true;
@@ -857,6 +862,12 @@ void CBullet::IceMines(_float _fTimeDelta)
 	Safe_Release(pGameInstance);
 }
 
+void CBullet::Puff(_float _fTimeDelta)
+{
+
+
+}
+
 HRESULT CBullet::Render_TextureState()
 {
 	switch (m_tBulletData.eWeaponType)
@@ -1057,7 +1068,7 @@ HRESULT CBullet::Texture_Clone(void)
 		TextureDesc.m_iStartTex = 0;
 		TextureDesc.m_iEndTex = 11;
 		TextureDesc.m_fSpeed = 60;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RedSmoke"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Laser_Hit1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_LaserHit"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Laser_Hit1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
 	case WEAPON_TYPE::WEAPON_LIGHTNING:
@@ -1141,6 +1152,16 @@ HRESULT CBullet::Texture_Clone(void)
 		m_vecTexture.push_back(m_pTextureCom);
 
 		break;
+	case WEAPON_TYPE::WEAPON_PUFF:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 16;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Small_Puff"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Small_Puff"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+
+		break;
+
 	}
 
 
