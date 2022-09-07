@@ -217,6 +217,9 @@
     <Filter Include="97.BeHavior_Tree\01.BT_NPC">
       <UniqueIdentifier>{de601f57-3fdb-4438-8e76-aa3a85f8c86a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\Boss">
+      <UniqueIdentifier>{5991c2dd-ca0b-4829-8a45-26ad1b7738ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -510,6 +513,9 @@
     <ClInclude Include="..\Public\BT_NPC.h">
       <Filter>97.BeHavior_Tree\01.BT_NPC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_Boss.h">
+      <Filter>01.Levels\Boss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -790,6 +796,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BT_NPC.cpp">
       <Filter>97.BeHavior_Tree\01.BT_NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Boss.cpp">
+      <Filter>01.Levels\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

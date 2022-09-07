@@ -39,8 +39,11 @@ HRESULT CWendy::Initialize(void * pArg)
 
 int CWendy::Tick(_float fTimeDelta)
 {
+	
 	__super::Tick(fTimeDelta);
 
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+		return OBJ_NOEVENT;
 	BehaviorTree->Tick(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -50,12 +53,17 @@ int CWendy::Tick(_float fTimeDelta)
 
 void CWendy::Late_Tick(_float fTimeDelta)
 {
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+		return;
 	__super::Late_Tick(fTimeDelta);
 	m_pTextureCom->MoveFrame(m_TimerTag);
 }
 
 HRESULT CWendy::Render()
 {
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+		return S_OK;
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -249,6 +257,9 @@ void CWendy::Idle(_float _fTimeDelta)
 
 void CWendy::Select_Target(_float _fTimeDelta)
 {
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+		return;
+
 	Find_Priority();
 
 	if (m_pTarget == nullptr)
@@ -278,6 +289,7 @@ void CWendy::Set_RandPos(_float _fTimeDelta)
 
 void CWendy::Find_Priority()
 {
+	
 	//후에 Primary_queue로 각 레이어들중에서 가장 가까운 객체를 m_pTarget
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);

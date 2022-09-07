@@ -36,6 +36,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
+		return E_FAIL;
+
 	if (g_bLoadingfirst == false)
 	{
 		if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
@@ -245,8 +248,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 		return E_FAIL;
 
 
-	if (FAILED(Ready_LayerNPC(pLayerTag)))
-		return E_FAIL;
+
 
 	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tent"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 26.f))))
 	//	return E_FAIL;
@@ -639,10 +641,12 @@ HRESULT CLevel_GamePlay::Ready_LayerNPC(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Wendy"), LEVEL_STATIC, pLayerTag, _float3(10.f, 1.f, 5.f))))
-		return E_FAIL;
-
+	if (pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC")) == nullptr)
+	{
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Wendy"), LEVEL_STATIC, pLayerTag, _float3(10.f, 1.f, 5.f))))
+			return E_FAIL;
+	}
+	
 	Safe_Release(pGameInstance);
 
 	return S_OK;
