@@ -211,6 +211,9 @@
     <Filter Include="02.GameObject\98.UI\01. Inventory\iteminfo">
       <UniqueIdentifier>{7dc8053d-0b09-4953-a915-757aadbf5877}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox">
+      <UniqueIdentifier>{d9ae5046-e79f-417a-acd4-df599dd37aba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -495,6 +498,15 @@
     <ClInclude Include="..\Public\Questbutton.h">
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ToolboxMaterial.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxMaterial_back.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolboxMaterial_front.h">
+      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -766,6 +778,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Questbutton.cpp">
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxMaterial.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxMaterial_back.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxMaterial_front.cpp">
+      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -15,12 +15,19 @@
 #include "ToolboxWeapon.h"
 #include "ToolboxWeapon_back.h"
 #include "ToolboxWeapon_front.h"
+
 #include "ToolboxGather.h"
 #include "ToolboxGather_back.h"
 #include "ToolboxGather_front.h"
+
 #include "ToolboxConstruct.h"
 #include "ToolboxConstruct_back.h"
 #include "ToolboxConstruct_front.h"
+
+#include "ToolboxMaterial.h"
+#include "ToolboxMaterial_back.h"
+#include "ToolboxMaterial_front.h"
+
 #include "Craftmain.h"
 #include "Craftmain_back.h"
 #include "Craftmain_front.h"
@@ -77,6 +84,10 @@ public:
 	list<CToolboxConstruct_back*>*Get_ToolboxConstruct_back_list(void) { return &m_Toolboxconstruct_back; }
 	list<CToolboxConstruct_front*>*Get_ToolboxConstruct_front_list(void) { return &m_Toolboxconstruct_front; }
 
+	list<CToolboxMaterial*>*Get_ToolboxMaterial_list(void) { return &m_Toolboxmaterial; }
+	list<CToolboxMaterial_back*>*Get_ToolboxMaterial_back_list(void) { return &m_Toolboxmaterial_back; }
+	list<CToolboxMaterial_front*>*Get_ToolboxMaterial_front_list(void) { return &m_Toolboxmaterial_front; }
+
 	list<CCraftmain*>*Get_Craftmain_list(void) { return &m_Craftmain; }
 	list<CCraftmain_back*>*Get_Craftmainback_list(void) { return &m_Craftmainback; }
 	list<CCraftmain_front*>*Get_Craftmainfront_list(void) { return &m_Craftmainfront; }
@@ -113,6 +124,9 @@ public:
 
 	void constructtool_on();
 	void constructtool_off();
+
+	void materialtool_on();
+	void materialtool_off();
 
 	void craft_on(MAKEWHAT item);
 	void craft_off();
@@ -153,6 +167,10 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CToolboxConstruct*>m_Toolboxconstruct;
 	list<CToolboxConstruct_back*>m_Toolboxconstruct_back;
 	list<CToolboxConstruct_front*>m_Toolboxconstruct_front;
+
+	list<CToolboxMaterial*> m_Toolboxmaterial;
+	list<CToolboxMaterial_back*>    m_Toolboxmaterial_back;
+	list<CToolboxMaterial_front*> m_Toolboxmaterial_front;
 
 	
 	list<CCraftmain*>m_Craftmain;
