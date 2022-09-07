@@ -1087,24 +1087,24 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	//Wendy PickUp
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Wendy_Pickup_Down"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Build/Wendy_Pickup_Down_%03d.png"), 6))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Pickup/Wendy_Pickup_Down_%03d.png"), 6))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Wendy_Pickup_Up"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Build/Wendy_Pickup_Up_%03d.png"), 6))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Pickup/Wendy_Pickup_Up_%03d.png"), 6))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Wendy_Pickup_Side"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Build/Wendy_Pickup_Side_%03d.png"), 6))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Pickup/Wendy_Pickup_Side_%03d.png"), 6))))
 		return E_FAIL;
 
 	//Wendy Give
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Wendy_Give_Down"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Build/Wendy_Give_Down_%03d.png"), 14))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Give/Wendy_Give_Down_%03d.png"), 14))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Wendy_Give_Up"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Build/Wendy_Give_Up_%03d.png"), 14))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Give/Wendy_Give_Up_%03d.png"), 14))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Wendy_Give_Side"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Build/Wendy_Give_Side_%03d.png"), 14))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Give/Wendy_Give_Side_%03d.png"), 14))))
 		return E_FAIL;
 
 #pragma endregion Add_Texture_Wendy
