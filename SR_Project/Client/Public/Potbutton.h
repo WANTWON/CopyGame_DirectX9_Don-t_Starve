@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "CookPot.h"
 
 BEGIN(Engine)
 class CTexture;
@@ -63,7 +64,7 @@ public:
 public:
 	void Open_Weapontool(_float time) { m_fX += 20 * time; }
 	bool get_check_pot() { return m_bcheck_pot; }
-	void set_check_pot(bool tof) { m_bcheck_pot = tof; }
+	void set_check_pot(bool tof, CCookPot* pCookPot = nullptr) { m_bcheck_pot = tof; m_pCookPot = pCookPot; }
 
 	void Open_Craft(_float time) { m_fY += 50 * time; }
 
@@ -89,6 +90,8 @@ private:
 	TOOLTYPE  m_tooltype = TOOL_END;
 
 	bool m_bcheck_pot = false;
+
+	CCookPot* m_pCookPot = nullptr;
 };
 
 END

@@ -42,6 +42,7 @@
 #include "Pot_back.h"
 #include "Pot_front.h"
 #include "Potbutton.h"
+#include "CookPot.h"
 
 #include "Mouse_iteminfo.h"
 /*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
@@ -113,7 +114,7 @@ public:
 	void Use_bag();
 	void Off_bag();
 
-	void Use_pot();
+	void Use_pot(CCookPot* pCookPot);
 	void Off_pot();
 
 	void weapontool_on();

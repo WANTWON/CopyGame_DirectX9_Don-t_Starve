@@ -121,6 +121,11 @@ int CPotbutton::Tick(_float fTimeDelta)
 				/*craft(m_makewhat);
 				pinv->update_craftpont();
 				Safe_Release(pinv);*/
+				m_pCookPot->Start_Cooking();
+
+				// Timer 2/3 seconds OVER 
+				//m_pCookPot->End_Cooking();
+
 				craft();
 				pinv->Off_pot();
 			//	m_Pot.front()->set_closepot();
