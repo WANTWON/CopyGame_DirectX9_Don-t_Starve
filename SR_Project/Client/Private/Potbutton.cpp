@@ -71,7 +71,7 @@ int CPotbutton::Tick(_float fTimeDelta)
 	{
 		__super::Tick(fTimeDelta);
 		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	//	Safe_AddRef(pinv);
+		Safe_AddRef(pinv);
 
 		auto potfront = pinv->Get_Potfront_list();
 
@@ -102,7 +102,7 @@ int CPotbutton::Tick(_float fTimeDelta)
 
 
 		RECT		rcRect;
-		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+		SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
 		POINT		ptMouse;
 		GetCursorPos(&ptMouse);
@@ -159,17 +159,17 @@ void CPotbutton::Late_Tick(_float fTimeDelta)
 		__super::Late_Tick(fTimeDelta);
 
 		CMouse*			pMouse = CMouse::Get_Instance();
-	//	Safe_AddRef(pMouse);
+		Safe_AddRef(pMouse);
 
 		RECT		rcRect;
-		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+		SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
 		POINT		ptMouse;
 		GetCursorPos(&ptMouse);
 		ScreenToClient(g_hWnd, &ptMouse);
 
 		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	//	Safe_AddRef(pinv);
+		Safe_AddRef(pinv);
 
 		auto mouse = pinv->Get_Mouse_item_list()->begin();
 
@@ -312,12 +312,12 @@ void CPotbutton::craft()
 {
 
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-//	Safe_AddRef(pInventory_Manager);
+	Safe_AddRef(pInventory_Manager);
 	auto potfront = pInventory_Manager->Get_Potfront_list();
 
 	auto pinven = pInventory_Manager->Get_Inven_list();
 
-	//Safe_Release(pInventory_Manager);
+	Safe_Release(pInventory_Manager);
 	
 	bool stop1 = false;
 	bool stop2 = false;

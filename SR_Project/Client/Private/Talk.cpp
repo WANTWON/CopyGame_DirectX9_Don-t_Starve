@@ -53,7 +53,7 @@ int CTalk::Tick(_float fTimeDelta)
 	if (m_bcheck == true)
 	{
 		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	//	Safe_AddRef(pinv);
+		Safe_AddRef(pinv);
 		__super::Tick(fTimeDelta);
 
 		if (CKeyMgr::Get_Instance()->Key_Up('0'))
@@ -67,7 +67,7 @@ int CTalk::Tick(_float fTimeDelta)
 				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
-		//     	Safe_Release(pinv);
+		     	Safe_Release(pinv);
 				
 					
 			}
@@ -117,7 +117,7 @@ int CTalk::Tick(_float fTimeDelta)
 				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
-			//	Safe_Release(pinv);
+				Safe_Release(pinv);
 			}
 			else if (texnum == 8)
 			{
@@ -126,7 +126,7 @@ int CTalk::Tick(_float fTimeDelta)
 				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
-	//			Safe_Release(pinv);
+				Safe_Release(pinv);
 			}
 			else if (texnum == 12)
 			{
@@ -135,7 +135,7 @@ int CTalk::Tick(_float fTimeDelta)
 				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
-		//		Safe_Release(pinv);
+				Safe_Release(pinv);
 			}
 			else
 				++texnum;

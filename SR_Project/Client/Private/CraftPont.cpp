@@ -53,8 +53,9 @@ HRESULT CCraftPont::Initialize(void* pArg)
 	}
 
 	
-     m_firstx = m_fX;
-	 m_firsty = m_fY;
+	m_firsty = m_fY;
+
+	m_firstx = m_fX;
 
 
 	if (FAILED(SetUp_Components()))
@@ -78,17 +79,18 @@ int CCraftPont::Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT || m_makewhat == MAKE_FENCE || m_makewhat == MAKE_ROPE)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT || m_makewhat == MAKE_FENCE)
 		m_fY = 185.f;
-	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT || m_makewhat == MAKE_COAL)
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT)
 		m_fY = 235.f;
-	else if (m_makewhat == MAKE_STAFF || m_makewhat == MAKE_TENT||m_makewhat == MAKE_TORCH)
+	else if (m_makewhat == MAKE_STAFF || m_makewhat == MAKE_TENT)
 		m_fY = 285.f;
 	else if (m_makewhat == MAKE_ARMOR)
 		m_fY = 335.f;
 	else if (m_makewhat == MAKE_HELMET)
 		m_fY = 385.f;
-	
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 	
 	//if (PtInRect(&rcRect, ptMouse))
 	//{
@@ -107,29 +109,7 @@ int CCraftPont::Tick(_float fTimeDelta)
 		
 	}
 
-	if (m_makewhat == MAKE_ROPE || m_makewhat == MAKE_COAL || m_makewhat == MAKE_TORCH)
-	{
-		if (iNum == 0)
-			m_fX = 245.f;
-		else if (iNum == 1)
-			m_fX = 255.f;
-		else if (iNum == 2)
-			m_fX = 265.f;
-		else if (iNum == 3)
-			m_fX = 275.f;
-		else if (iNum == 4)
-			m_fX = 285.f;
-		
-		if (iNum >= 5)
-		{
-			m_bcheck = false;
-			return OBJ_NOEVENT;
-		}
 
-	}
-
-	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 	//if()
 	return OBJ_NOEVENT;
 }

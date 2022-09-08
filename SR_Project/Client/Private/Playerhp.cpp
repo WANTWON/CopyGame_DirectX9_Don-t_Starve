@@ -50,16 +50,16 @@ int CPlayerhp::Tick(_float fTimeDelta)
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	//Safe_AddRef(pGameInstance);
-	//Safe_AddRef(pinv);
+	Safe_AddRef(pGameInstance);
+	Safe_AddRef(pinv);
 
-	pinv->sethp((_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
+	pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
 
 	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
-	texnum = (_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth) / 2;
+	texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth) / 2;
 
-	//Safe_Release(pGameInstance);
-	//Safe_Release(pinv);
+	Safe_Release(pGameInstance);
+	Safe_Release(pinv);
 
 
 	return OBJ_NOEVENT;

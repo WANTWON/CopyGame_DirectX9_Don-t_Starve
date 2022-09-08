@@ -141,7 +141,7 @@ HRESULT CParticleSystem::Particle_Rock_Mining(_float fTimeDelta)
 	m_bStart = true;
 	_bool emitParticle = false;
 	_bool found = false;
-	//float positionX, positionY, positionZ;
+	float positionX, positionY, positionZ;
 	int index, i, j;
 
 	m_dCurrentSpawnTime += fTimeDelta;

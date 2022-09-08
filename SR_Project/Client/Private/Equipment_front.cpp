@@ -62,7 +62,7 @@ int CEquipment_front::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
@@ -81,13 +81,13 @@ int CEquipment_front::Tick(_float fTimeDelta)
 	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_RBUTTON))
 	{
 		CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
-	//	Safe_AddRef(pInventory_Manager);
+		Safe_AddRef(pInventory_Manager);
 		if (texnum == ITEMNAME_BAG)
 		{
 			pInventory_Manager->Off_bag();
 		}
 		auto Maininvenlist = pInventory_Manager->Get_Inven_list();
-	//	Safe_Release(pInventory_Manager);
+		Safe_Release(pInventory_Manager);
 
 		for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
 		{
@@ -141,7 +141,7 @@ void CEquipment_front::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
@@ -162,11 +162,11 @@ void CEquipment_front::Late_Tick(_float fTimeDelta)
 	//set_check(falseB
 
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-//	Safe_AddRef(pGameInstance);
+	Safe_AddRef(pGameInstance);
 
 	if(iNum == 0)
 	(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_WeaponType(weapontype));
-	//Safe_Release(pGameInstance);
+	Safe_Release(pGameInstance);
 }
 
 HRESULT CEquipment_front::Render()
@@ -299,9 +299,9 @@ void CEquipment_front::Use_item(ITEMNAME item)
 	{
 	case ITEMNAME_CARROT:
 		CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	//	Safe_AddRef(pGameInstance);
+		Safe_AddRef(pGameInstance);
 
-	//	Safe_Release(pGameInstance);
+		Safe_Release(pGameInstance);
 
 	}
 
