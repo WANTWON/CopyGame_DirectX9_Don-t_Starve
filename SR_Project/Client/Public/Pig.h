@@ -14,6 +14,7 @@ class CPig final : public CMonster
 		ATTACK,
 		HIT,
 		DIE,
+		HAPPY,
 		MAX
 	};
 
@@ -42,6 +43,10 @@ private:
 	DIR_STATE m_ePreDir = DIR_STATE::DIR_END;
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
+	_float fHappyTimer = 0.f;
+
+public:
+	void Give_Food() { m_eState = STATE::HAPPY; }
 
 private:
 	virtual void AI_Behaviour(_float fTimeDelta) override;
