@@ -210,10 +210,7 @@ HRESULT CTree::Texture_Clone()
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 
-		TextureDesc.m_iEndTex = 0;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Tall_STUMP"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_STUMP"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-			return E_FAIL;
-		m_vecTexture.push_back(m_pTextureCom);
+
 	}
 	else
 	{
@@ -238,10 +235,6 @@ HRESULT CTree::Texture_Clone()
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 
-		TextureDesc.m_iEndTex = 0;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Tall_STUMP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Tall_STUMP"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-			return E_FAIL;
-		m_vecTexture.push_back(m_pTextureCom);
 	}
 
 	
