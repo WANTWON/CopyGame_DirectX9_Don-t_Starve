@@ -26,20 +26,44 @@ HRESULT CPortal::Initialize_Prototype()
 
 HRESULT CPortal::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
+	if (pArg != nullptr)
+	{
+		memcpy(&m_ePortalDesc, pArg, sizeof(PORTALDESC));
+		if (FAILED(__super::Initialize(&m_ePortalDesc.vPosition)))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(__super::Initialize(pArg)))
+			return E_FAIL;
+	}
+
 
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::PORTAL;
 
-	/*_float fSize = 3;
-	m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
-	m_fRadius *= fSize; */
-	m_fRadius = 0.5f;
-	m_fOpenRadius = 3.f;
+	switch (m_ePortalDesc.m_eType)
+	{
+	case PORTAL_NORMAL:
+	{
+		m_eState = IDLE_CLOSE;
+		m_fRadius = 0.5f;
+		m_fOpenRadius = 3.f;
 
-	m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
-	m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
-	
+		m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
+		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
+		break;
+	}
+	case PORTAL_BOSS:
+	{
+		m_eState = IDLE_CLOSE;
+		m_fRadius = 1.f;
+		m_fOpenRadius = 1.f;
+
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+		//m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
+		break;
+	}
+	}
 
 	return S_OK;
 }
@@ -56,7 +80,6 @@ int CPortal::Tick(_float fTimeDelta)
 
 	if (m_bShouldTeleport)
 	{
-		
 
 		switch (eLevel)
 		{
@@ -66,26 +89,32 @@ int CPortal::Tick(_float fTimeDelta)
 			pLevel->Set_NextLevel(true);
 			break;
 		}
-			
 		case Client::LEVEL_HUNT:
 		{
-			CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-			pLevel->Set_PastLevel(true);
+			if (m_ePortalDesc.m_eType == PORTAL_NORMAL)
+			{
+				CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+				pLevel->Set_PastLevel(true);
+			}
+			else if (m_ePortalDesc.m_eType == PORTAL_BOSS)
+			{
+				CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+				pLevel->Set_NextLevel(true);
+			}
 			break;
 		}
-			
 		default:
 			break;
 		}
 
-		
+
 	}
 
-	
+
 	AI_Behaviour();
-	
+
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-	
+
 	return OBJ_NOEVENT;
 }
 
@@ -97,9 +126,9 @@ void CPortal::Late_Tick(_float fTimeDelta)
 
 	Change_Motion();
 	Change_Frame();
-	
+
 	_float3 vPosition = Get_Position();
-	vPosition.y -= m_fRadius-0.1f;
+	vPosition.y -= m_fRadius - 0.1f;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 
 	if (nullptr != m_pRendererCom)
@@ -164,8 +193,12 @@ void CPortal::SetUp_BillBoard()
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-	//m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
-	//m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+
+	if (m_ePortalDesc.m_eType == PORTAL_BOSS)
+	{
+		m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+		m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+	}	
 }
 
 HRESULT CPortal::Texture_Clone()
@@ -196,6 +229,16 @@ HRESULT CPortal::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
+	TextureDesc.m_iEndTex = 39;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BOSS_IDLE_OPEN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossPortal_Idle_Open"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 18;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BOSS_IDLE_CLOSE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossPortal_Idle_Close"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
 	return S_OK;
 }
 
@@ -208,7 +251,7 @@ void CPortal::Change_Frame()
 		break;
 	case STATE::OPENING:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATE::IDLE_OPEN;
+				m_eState = STATE::IDLE_OPEN;
 		break;
 	case STATE::IDLE_OPEN:
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
@@ -216,7 +259,7 @@ void CPortal::Change_Frame()
 	case STATE::CLOSING:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 		{
-			m_eState = STATE::IDLE_CLOSE;
+				m_eState = STATE::IDLE_CLOSE;
 
 			if (!m_bInteract)
 				m_bShouldTeleport = true;
@@ -232,16 +275,16 @@ void CPortal::Change_Motion()
 		switch (m_eState)
 		{
 		case STATE::IDLE_CLOSE:
-			Change_Texture(TEXT("Com_Texture_IDLE_CLOSE"));
+			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_IDLE_CLOSE")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));
 			break;
 		case STATE::OPENING:
-			Change_Texture(TEXT("Com_Texture_OPENING"));
+			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_OPENING")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));;
 			break;
 		case STATE::IDLE_OPEN:
-			Change_Texture(TEXT("Com_Texture_IDLE_OPEN"));
+			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_IDLE_OPEN")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));;
 			break;
 		case STATE::CLOSING:
-			Change_Texture(TEXT("Com_Texture_CLOSING"));
+			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_CLOSING")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_OPEN"));;
 			break;
 		}
 
@@ -251,15 +294,38 @@ void CPortal::Change_Motion()
 
 void CPortal::AI_Behaviour()
 {
-	if (m_bShouldClosePortal)
-		m_eState = STATE::CLOSING;
-	else
+	switch (m_ePortalDesc.m_eType)
 	{
-		if (Check_Target() && m_eState != STATE::IDLE_OPEN && m_eState != STATE::OPENING)
-			m_eState = STATE::OPENING;
-		else if (!Check_Target() && (m_eState == STATE::IDLE_OPEN || m_eState == STATE::OPENING))
+	case PORTAL_NORMAL:
+	{
+		if (m_bShouldClosePortal)
 			m_eState = STATE::CLOSING;
+		else
+		{
+			if (Check_Target() && m_eState != STATE::IDLE_OPEN && m_eState != STATE::OPENING)
+				m_eState = STATE::OPENING;
+			else if (!Check_Target() && (m_eState == STATE::IDLE_OPEN || m_eState == STATE::OPENING))
+				m_eState = STATE::CLOSING;
+		}
+		break;
 	}
+	case PORTAL_BOSS:
+	{
+		if (m_bShouldClosePortal)
+			m_eState = STATE::CLOSING;
+		else
+		{
+			if (Check_Target() && m_eState != STATE::IDLE_OPEN && m_eState != STATE::OPENING)
+				m_eState = STATE::OPENING;
+			else if (!Check_Target() && (m_eState == STATE::IDLE_OPEN || m_eState == STATE::OPENING))
+				m_eState = STATE::CLOSING;
+		}
+		break;
+	}
+	default:
+		break;
+	}
+
 }
 
 _bool CPortal::Check_Target()
@@ -275,7 +341,7 @@ _bool CPortal::Check_Target()
 	{
 		_float3 vTargetPos = pTarget->Get_Position();
 		_float fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
-		
+
 		if (fDistanceToTarget < m_fOpenRadius)
 			return true;
 		else

@@ -15,6 +15,18 @@ END
 BEGIN(Client)
 class CPortal final : public CInteractive_Object
 {
+public: 
+
+	enum  PORTALTYPE { PORTAL_NORMAL, PORTAL_BOSS, PORTAL_END };
+
+	typedef struct PortalDesc
+	{
+		PORTALTYPE m_eType = PORTAL_NORMAL;
+		_float3 vPosition;
+	}PORTALDESC;
+	
+
+
 	enum STATE
 	{
 		IDLE_CLOSE,
@@ -46,7 +58,8 @@ private: /*For TextureCom */
 	virtual void Change_Motion() override;
 
 private:
-	STATE m_eState = IDLE_CLOSE;
+	PORTALDESC m_ePortalDesc;
+	STATE m_eState;
 	STATE m_ePreState = MAX;
 	_float m_fOpenRadius = 0.f;
 	_bool m_bShouldClosePortal = false;

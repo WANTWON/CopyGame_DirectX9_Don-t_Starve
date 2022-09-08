@@ -8,6 +8,7 @@
 #include "Level_Loading.h"
 #include "CameraManager.h"
 #include "Player.h"
+#include "Portal.h"
 
 _bool g_bUIMadefirst = false;
 
@@ -244,7 +245,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig_King"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 30.f))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, _float3(45.f, 1.f, 26.f))))
+
+	CPortal::PORTALDESC PortalDesc;
+	PortalDesc.m_eType = CPortal::PORTAL_NORMAL;
+	PortalDesc.vPosition = _float3(45.f, 1.f, 26.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, &PortalDesc)))
 		return E_FAIL;
 
 
