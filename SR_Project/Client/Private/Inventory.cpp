@@ -444,6 +444,38 @@ void CInventory_Manager::constructtool_off()
 
 }
 
+void CInventory_Manager::materialtool_on()
+{
+	for (auto& k : m_Toolboxmaterial)
+		k->set_onof(true);
+	for (auto& k : m_Toolboxmaterial_back)
+		k->set_onof(true);
+	for (auto& k : m_Toolboxmaterial_front)
+		k->set_onof(true);
+}
+
+void CInventory_Manager::materialtool_off()
+{
+	for (auto& k : m_Toolboxmaterial)
+	{
+		k->set_onof(false);
+		k->gobackfirstX();
+	}
+
+	for (auto& k : m_Toolboxmaterial_back)
+	{
+		k->set_onof(false);
+		k->gobackfirstX();
+	}
+
+	for (auto& k : m_Toolboxmaterial_front)
+	{
+		k->set_onof(false);
+		k->gobackfirstX();
+	}
+
+}
+
 void CInventory_Manager::craft_on(MAKEWHAT item)
 {
 	for (auto& k : m_Craftmain)

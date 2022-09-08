@@ -55,6 +55,19 @@ void CPig::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
+	// Reset Happy Animation
+	if (m_eState == STATE::HAPPY)
+	{
+		fHappyTimer += fTimeDelta;
+		if (fHappyTimer > 3.0f)
+		{
+			m_eState = STATE::IDLE;
+			fHappyTimer = 0.f;
+			m_dwIdleTime = GetTickCount();
+			m_eDir = DIR_STATE::DIR_DOWN;
+		}	
+	}
+
 	Change_Motion();
 	Change_Frame();
 
@@ -205,6 +218,11 @@ HRESULT CPig::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
+	TextureDesc.m_iEndTex = 33;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HAPPY"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Happy"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
 	return S_OK;
 }
 
@@ -263,7 +281,6 @@ void CPig::Change_Frame()
 				return;
 		}
 		break;
-		break;
 	case STATE::HIT:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
@@ -278,6 +295,9 @@ void CPig::Change_Frame()
 			Drop_Items();
 
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
+		break;
+	case STATE::HAPPY:
+		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	}
 }
@@ -366,6 +386,9 @@ void CPig::Change_Motion()
 		case STATE::DIE:
 			Change_Texture(TEXT("Com_Texture_DIE"));
 			break;
+		case STATE::HAPPY:
+			Change_Texture(TEXT("Com_Texture_HAPPY"));
+			break;
 		}
 
 		if (m_eState != m_ePreState)
@@ -400,7 +423,7 @@ void CPig::AI_Behaviour(_float fTimeDelta)
 				Follow_Target(fTimeDelta);
 		}
 	}
-	else
+	else if (m_eState != STATE::HAPPY)
 		Patrol(fTimeDelta);
 }
 
@@ -612,13 +635,10 @@ CGameObject* CPig::Clone(void* pArg)
 	return pInstance;
 }
 
-
-
 void CPig::Free()
 {
 	__super::Free();
 
-	//Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);

@@ -145,7 +145,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	}
 
 	CloseHandle(hFile);
-
+	
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, pLayerTag, _float3(22.f, 0.f, 22.f))))
 		return E_FAIL;
 
@@ -253,11 +253,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, &PortalDesc)))
 		return E_FAIL;
 
-
-
-
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tent"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 26.f))))
-	//	return E_FAIL;
+	// Test: CARROT
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_GAMEPLAY, pLayerTag, _float3(36.f, 1.f, 26.f))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_GAMEPLAY, pLayerTag, _float3(42.f, 1.f, 26.f))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 28.f))))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 	return S_OK;
@@ -538,6 +540,27 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 		int number = i;
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ConstructToolbox_front"), LEVEL_STATIC, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MaterialToolbox"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	for (int i = 0; i < 5; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MaterialToolbox_back"), LEVEL_STATIC, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	for (int i = 0; i < 5; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MaterialToolbox_front"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}

@@ -58,16 +58,27 @@ int CCraftmain_back::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT||m_makewhat == MAKE_FENCE)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT || m_makewhat == MAKE_FENCE || m_makewhat == MAKE_ROPE)
 		m_fY = 155.f;
-	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT)
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT || m_makewhat == MAKE_COAL)
 		m_fY = 205.f;
-	else if (m_makewhat == MAKE_STAFF || m_makewhat == MAKE_TENT)
+	else if (m_makewhat == MAKE_STAFF || m_makewhat == MAKE_TENT|| m_makewhat == MAKE_TORCH)
 		m_fY = 255.f;
 	else if (m_makewhat == MAKE_ARMOR)
 		m_fY = 305.f;
 	else if (m_makewhat == MAKE_HELMET)
 		m_fY = 355.f;
+
+	else if (m_makewhat == MAKE_ROPE || m_makewhat == MAKE_COAL || m_makewhat == MAKE_TORCH)
+	{
+		m_fX = 262.f;
+		if (iNum = 1)
+		{
+			m_bonof == false;
+		}
+		
+	}
+		
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
@@ -120,7 +131,7 @@ void CCraftmain_back::Late_Tick(_float fTimeDelta)
 
 	
 
-	if (nullptr != m_pRendererCom && iNum < 10)
+	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 }

@@ -19,6 +19,7 @@
 #include "Grass.h"
 #include "Boulder.h"
 #include "BerryBush.h"
+#include "Carrot.h"
 #include "Item.h"
 
 #include "Wendy.h"
@@ -54,6 +55,9 @@
 #include "ToolboxConstruct.h"
 #include "ToolboxConstruct_back.h"
 #include "ToolboxConstruct_front.h"
+#include "ToolboxMaterial.h"
+#include "ToolboxMaterial_back.h"
+#include "ToolboxMaterial_front.h"
 
 #include "Craftmain.h"
 #include "Craftmain_back.h"
@@ -480,7 +484,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_Craftmain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Craftmain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craft%d.png"), 10))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Craft/craft%d.png"), 13))))
 		return E_FAIL;
 
 
@@ -504,6 +508,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	/*For.Prototype_Component_Texture_ConstructToolbox_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_ConstructToolbox_front"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/construct%d.png"), 3))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_MaterialToolbox_front */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MaterialToolbox_front"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Toolbox/material%d.png"), 3))))
 		return E_FAIL;
 	/*For.Prototype_Component_Texture_MainToolbox */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainToolbox"),
@@ -728,6 +736,18 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	/*For.Prototype_GameObject_MainInToolbox */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ConstructToolbox_front"),
 		CToolboxConstruct_front::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MaterialToolbox"),
+		CToolboxMaterial::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MaterialToolbox_back"),
+		CToolboxMaterial_back::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_MainInToolbox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MaterialToolbox_front"),
+		CToolboxMaterial_front::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_MainInToolbox */
@@ -1151,6 +1171,13 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Berry_Bush
 
+	/*For. Prototype_Component_Texture_Carrot*/
+#pragma region Add_Texture_Carrot
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Carrot"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carrot/Carrot_%03d.png"), 1))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Carrot
+
 	lstrcpy(m_szLoadingText, TEXT("Loading_Monster Texture"));
 
 	/*For. Prototype_Component_Texture_Pig*/
@@ -1196,6 +1223,9 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Death"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Death/Death_%03d.png"), 32))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Happy"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Happy/Happy_%03d.png"), 34))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Pig
 
@@ -1391,6 +1421,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_GameObject_Berry_Bush */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Berry_Bush"),
 		CBerryBush::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Carrot */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Carrot"),
+		CCarrot::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	// For.GameObject_ParticleSystem

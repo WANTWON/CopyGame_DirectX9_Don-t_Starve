@@ -58,9 +58,7 @@ void CCookPot::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	if (!CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
-	{
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
-	}
 
 	Change_Motion();
 	Change_Frame();
@@ -77,8 +75,6 @@ HRESULT CCookPot::Render()
 void CCookPot::Interact(_uint Damage)
 {
 	m_bInteract = false;
-
-
 }
 
 HRESULT CCookPot::Drop_Items()

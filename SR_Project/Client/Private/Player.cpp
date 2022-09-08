@@ -2117,12 +2117,10 @@ CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
 
 _bool CPlayer::Check_Interact_End(void)
 {
-	//CInteractive_Object* pObj = (CInteractive_Object*)m_pTarget;
 	if (m_pTarget == nullptr)
 		return true;
 
-	return	(dynamic_cast<CInteractive_Object*>(m_pTarget)->Get_CanInteract() ? false : true);
-
+	return dynamic_cast<CInteractive_Object*>(m_pTarget)->Get_CanInteract() ? false : true;
 }
 
 

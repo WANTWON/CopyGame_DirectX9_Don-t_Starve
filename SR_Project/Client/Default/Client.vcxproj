@@ -169,6 +169,7 @@
     <ClInclude Include="..\public\Boulder.h" />
     <ClInclude Include="..\Public\CameraFPS.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
+    <ClInclude Include="..\public\Carrot.h" />
     <ClInclude Include="..\Public\Craftbutton.h" />
     <ClInclude Include="..\Public\Craftmain_back.h" />
     <ClInclude Include="..\Public\Craftmain_front.h" />
@@ -243,6 +244,9 @@
     <ClInclude Include="..\Public\ToolboxMain.h" />
     <ClInclude Include="..\Public\ToolboxMain_back.h" />
     <ClInclude Include="..\Public\ToolboxMain_front.h" />
+    <ClInclude Include="..\Public\ToolboxMaterial.h" />
+    <ClInclude Include="..\Public\ToolboxMaterial_back.h" />
+    <ClInclude Include="..\Public\ToolboxMaterial_front.h" />
     <ClInclude Include="..\Public\ToolboxWeapon.h" />
     <ClInclude Include="..\Public\ToolboxWeapon_back.h" />
     <ClInclude Include="..\Public\ToolboxWeapon_front.h" />
@@ -267,6 +271,7 @@
     <ClCompile Include="..\private\Boulder.cpp" />
     <ClCompile Include="..\Private\CameraFPS.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
+    <ClCompile Include="..\private\Carrot.cpp" />
     <ClCompile Include="..\Private\Craftbutton.cpp" />
     <ClCompile Include="..\Private\Craftmain_back.cpp" />
     <ClCompile Include="..\Private\Craftmain_front.cpp" />
@@ -340,6 +345,9 @@
     <ClCompile Include="..\Private\ToolboxMain.cpp" />
     <ClCompile Include="..\Private\ToolboxMain_back.cpp" />
     <ClCompile Include="..\Private\ToolboxMain_front.cpp" />
+    <ClCompile Include="..\Private\ToolboxMaterial.cpp" />
+    <ClCompile Include="..\Private\ToolboxMaterial_back.cpp" />
+    <ClCompile Include="..\Private\ToolboxMaterial_front.cpp" />
     <ClCompile Include="..\Private\ToolboxWeapon.cpp" />
     <ClCompile Include="..\Private\ToolboxWeapon_back.cpp" />
     <ClCompile Include="..\Private\ToolboxWeapon_front.cpp" />
