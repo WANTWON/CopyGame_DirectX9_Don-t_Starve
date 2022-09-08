@@ -211,6 +211,9 @@
     <Filter Include="02.GameObject\98.UI\01. Inventory\iteminfo">
       <UniqueIdentifier>{7dc8053d-0b09-4953-a915-757aadbf5877}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.Interactive_Object\Carrot">
+      <UniqueIdentifier>{7fd7269d-23a0-4609-9e31-b739e1ac2c8e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -495,6 +498,9 @@
     <ClInclude Include="..\Public\Questbutton.h">
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Carrot.h">
+      <Filter>02.GameObject\04.Interactive_Object\Carrot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -766,6 +772,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Questbutton.cpp">
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Carrot.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\Carrot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

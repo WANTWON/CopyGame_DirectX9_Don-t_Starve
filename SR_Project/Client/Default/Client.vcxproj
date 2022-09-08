@@ -167,6 +167,7 @@
     <ClInclude Include="..\public\Boulder.h" />
     <ClInclude Include="..\Public\CameraFPS.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
+    <ClInclude Include="..\public\Carrot.h" />
     <ClInclude Include="..\Public\Craftbutton.h" />
     <ClInclude Include="..\Public\Craftmain_back.h" />
     <ClInclude Include="..\Public\Craftmain_front.h" />
@@ -261,6 +262,7 @@
     <ClCompile Include="..\private\Boulder.cpp" />
     <ClCompile Include="..\Private\CameraFPS.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
+    <ClCompile Include="..\private\Carrot.cpp" />
     <ClCompile Include="..\Private\Craftbutton.cpp" />
     <ClCompile Include="..\Private\Craftmain_back.cpp" />
     <ClCompile Include="..\Private\Craftmain_front.cpp" />

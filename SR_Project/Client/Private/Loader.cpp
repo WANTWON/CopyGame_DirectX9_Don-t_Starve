@@ -19,6 +19,7 @@
 #include "Grass.h"
 #include "Boulder.h"
 #include "BerryBush.h"
+#include "Carrot.h"
 #include "Item.h"
 #include "MainInventory.h"
 #include "MainInventory_back.h"
@@ -1012,6 +1013,13 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Berry_Bush
 
+	/*For. Prototype_Component_Texture_Carrot*/
+#pragma region Add_Texture_Carrot
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Carrot"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carrot/Carrot_%03d.png"), 1))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Carrot
+
 	lstrcpy(m_szLoadingText, TEXT("Loading_Monster Texture"));
 
 	/*For. Prototype_Component_Texture_Pig*/
@@ -1342,6 +1350,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_GameObject_Berry_Bush */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Berry_Bush"),
 		CBerryBush::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Carrot */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Carrot"),
+		CCarrot::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	// For.GameObject_ParticleSystem
