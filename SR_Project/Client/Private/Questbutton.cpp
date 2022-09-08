@@ -53,7 +53,7 @@ int CQuestbutton::Tick(_float fTimeDelta)
 	ScreenToClient(g_hWnd, &ptMouse);
 
 	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 	if (PtInRect(&rcRect, ptMouse))
 	{
@@ -66,7 +66,7 @@ int CQuestbutton::Tick(_float fTimeDelta)
 		if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
 			CInventory_Manager*         pInv = CInventory_Manager::Get_Instance();
-			Safe_AddRef(pInv);
+		//	Safe_AddRef(pInv);
 			if (pInv->Get_Quest_list()->front()->get_onoff() == true)
 			{
 				pInv->Get_Quest_list()->front()->set_onoff(false);
@@ -75,7 +75,7 @@ int CQuestbutton::Tick(_float fTimeDelta)
 			{
 				pInv->Get_Quest_list()->front()->set_onoff(true);
 			}
-			Safe_Release(pInv);
+	//		Safe_Release(pInv);
 		
 			
 		}
