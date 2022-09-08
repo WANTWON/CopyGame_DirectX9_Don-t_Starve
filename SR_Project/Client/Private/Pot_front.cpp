@@ -86,7 +86,7 @@ int CPot_front::Tick(_float fTimeDelta)
 		__super::Tick(fTimeDelta);
 
 		RECT		rcRect;
-		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+		SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
 		POINT		ptMouse;
 		GetCursorPos(&ptMouse);
@@ -129,17 +129,17 @@ void CPot_front::Late_Tick(_float fTimeDelta)
 
 		
 		CMouse*			pMouse = CMouse::Get_Instance();
-		//Safe_AddRef(pMouse);
+		Safe_AddRef(pMouse);
 
 		RECT		rcRect;
-		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+		SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
 		POINT		ptMouse;
 		GetCursorPos(&ptMouse);
 		ScreenToClient(g_hWnd, &ptMouse);
 
 		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-//Safe_AddRef(pinv);
+		Safe_AddRef(pinv);
 
 		auto mouse = pinv->Get_Mouse_item_list()->begin();
 
@@ -166,11 +166,11 @@ void CPot_front::Late_Tick(_float fTimeDelta)
 				{
 					
 					CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-				//	Safe_AddRef(pInventory_Manager);
+					Safe_AddRef(pInventory_Manager);
 
 					auto pinven = pInventory_Manager->Get_Inven_list();
 
-//Safe_Release(pInventory_Manager);
+					Safe_Release(pInventory_Manager);
 
 
 					

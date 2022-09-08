@@ -69,15 +69,12 @@ int CCraftmain_back::Tick(_float fTimeDelta)
 	else if (m_makewhat == MAKE_HELMET)
 		m_fY = 355.f;
 
-    if (m_makewhat == MAKE_ROPE || m_makewhat == MAKE_COAL || m_makewhat == MAKE_TORCH)
+	else if (m_makewhat == MAKE_ROPE || m_makewhat == MAKE_COAL || m_makewhat == MAKE_TORCH)
 	{
-		//if(iNum == 0)
-	//	setcolor();
-		m_fX = 262.5f;
-		if (iNum == 1)
+		m_fX = 262.f;
+		if (iNum = 1)
 		{
-			m_bonof = false;
-			return OBJ_NOEVENT;
+			m_bonof == false;
 		}
 		
 	}
@@ -87,7 +84,7 @@ int CCraftmain_back::Tick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
@@ -121,23 +118,21 @@ int CCraftmain_back::Tick(_float fTimeDelta)
 void CCraftmain_back::Late_Tick(_float fTimeDelta)
 {
 
-	if (m_bonof == true)
-	{
+	if (m_bonof == false)
+		return;
 
-		__super::Late_Tick(fTimeDelta);
-		RECT		rcRect;
-		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+	__super::Late_Tick(fTimeDelta);
+	RECT		rcRect;
+	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
 
-		POINT		ptMouse;
-		GetCursorPos(&ptMouse);
-		ScreenToClient(g_hWnd, &ptMouse);
+	POINT		ptMouse;
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
 
+	
 
-
-		if (nullptr != m_pRendererCom &&m_bonof == true)
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
-	}
-		
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 }
 
@@ -179,7 +174,7 @@ void CCraftmain_back::setcolor()
 {
 
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-	//Safe_AddRef(pInventory_Manager);
+	Safe_AddRef(pInventory_Manager);
 
 
 	auto pinven = pInventory_Manager->Get_Inven_list();
@@ -424,66 +419,12 @@ void CCraftmain_back::setcolor()
 
 		}
 	}
-	else if (m_makewhat == MAKE_ROPE)
-	{
-		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-		{
-			if (iNum == 0)
-			{
-				if ((*iter)->get_texnum() == ITEMNAME_GRASS && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
-				{
-					backtexnum = 0;
-					return;
-				}
-				
-			}
-
-
-		}
-		backtexnum = 1;
-	}
-	else if (m_makewhat == MAKE_COAL)
-	{
-		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-		{
-			if (iNum == 0)
-			{
-				if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
-				{
-					backtexnum = 0;
-					return;
-				}
-
-			}
-
-
-		}
-		backtexnum = 1;
-	}
-	else if (m_makewhat == MAKE_TORCH)
-	{
-		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-		{
-			if (iNum == 0)
-			{
-				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1) // 있으면 초록! 업승면 빨강! 근데.. 계속돌아서 
-				{
-					backtexnum = 0;
-					return;
-				}
-
-			}
-
-
-		}
-		backtexnum = 1;
-	}
 
 
 
 
 
-	//Safe_Release(pInventory_Manager);
+	Safe_Release(pInventory_Manager);
 }
 
 HRESULT CCraftmain_back::SetUp_Components()
