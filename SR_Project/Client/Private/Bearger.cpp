@@ -29,12 +29,12 @@ HRESULT CBearger::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+	m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
 	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 
-	m_fAttackRadius = 1.5f;
+	m_fAttackRadius = 2.f;
 
 	return S_OK;
 }
@@ -113,7 +113,7 @@ HRESULT CBearger::SetUp_Components(void* pArg)
 	CollRectDesc.fRadiusY = 0.25f;
 	CollRectDesc.fRadiusX = 0.25f;
 	CollRectDesc.fOffSetX = 0.0f;
-	CollRectDesc.fOffSetY = -1.f;
+	CollRectDesc.fOffSetY = -1.4f;
 
 	/* For.Com_Collider_Rect*/
 	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
@@ -271,41 +271,41 @@ void CBearger::Change_Frame()
 	{
 	case STATE::IDLE:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::IDLE_AGGRO:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
-		
+			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::WALK:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::RUN:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::CHARGE:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
@@ -314,9 +314,9 @@ void CBearger::Change_Frame()
 		break;
 	case STATE::ATTACK:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 		{
@@ -329,10 +329,10 @@ void CBearger::Change_Frame()
 		break;
 	case STATE::POUND_GROUND:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
-		
+			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 		{
 			m_bIsAttacking = false;
@@ -343,9 +343,9 @@ void CBearger::Change_Frame()
 		break;
 	case STATE::HIT:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
 			m_bHit = false;
@@ -694,7 +694,7 @@ void CBearger::Attack(_bool bIsSpecial)
 		BulletData.eDirState = m_eDir;
 		BulletData.fOffsetSide = 1.f;
 		BulletData.fOffsetUp = .5f;
-		BulletData.fOffsetDown = .5f;
+		BulletData.fOffsetDown = 1.f;
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 			return;
@@ -710,8 +710,8 @@ void CBearger::Attack(_bool bIsSpecial)
 		D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 		D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
 
-		_float3 vRingPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .3f, 0.f);
-		_float3 vRocksPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .8f, 0.f);
+		_float3 vRingPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .5f, 0.f);
+		_float3 vRocksPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, 1.f, 0.f);
 
 		// Create Ring and First Wave of Rocks
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)
