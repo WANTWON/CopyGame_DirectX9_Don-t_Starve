@@ -48,6 +48,11 @@ public: /*For Picking */
 	virtual _bool Picking(_float3* PickingPoint) override;
 	virtual void PickingTrue() override;
 
+
+public:
+	void Start_Cooking() { m_eState = COOKING; }
+	void End_Cooking() { m_eState = IDLE; }
+
 private:
 	STATE m_eState = PLACE;
 	STATE m_ePreState = MAX;
