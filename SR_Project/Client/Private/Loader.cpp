@@ -1118,9 +1118,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_BROKEN"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/WoodWall/Broken/Broken_%03d.png"), 1))))
 		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/RockWall/Healthy/Healthy_%03d.png"), 3))))
-		return E_FAIL;
+	
 #pragma endregion Add_Texture_WoodWall
 
 	/*For. Prototype_Component_Texture_Cook_Pot*/
@@ -1514,7 +1512,28 @@ HRESULT CLoader::Loading_Terrain_ForHuntLevel()
 
 HRESULT CLoader::Loading_Terrain_ForBossLevel()
 {
-	return E_NOTIMPL;
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	Safe_AddRef(pGameInstance);
+
+	int			iNum;
+	_ulong		dwByte = 0;
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Boss_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_VIBuffer_Terrain_Load0"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
+		return E_FAIL;
+
+	CloseHandle(hFile);
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
 }
 
 
@@ -1672,8 +1691,22 @@ HRESULT CLoader::Loading_ForHuntLevel()
 
 HRESULT CLoader::Loading_ForBossLevel()
 {
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	Safe_AddRef(pGameInstance);
+
 	lstrcpy(m_szLoadingText, TEXT("Finished_Loading"));
 
+	if (FAILED(Loading_Terrain_ForBossLevel()))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/RockWall/Healthy/Healthy_%03d.png"), 3))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 	SetWindowText(g_hWnd, TEXT("Loading_HunLevel."));
 	m_isFinished = true;
 	return S_OK;

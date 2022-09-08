@@ -37,8 +37,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
-		return E_FAIL;
+	//if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
+		//return E_FAIL;
 
 	if (g_bLoadingfirst == false)
 	{

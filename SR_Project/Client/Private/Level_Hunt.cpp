@@ -54,7 +54,7 @@ void CLevel_Hunt::Tick(_float fTimeDelta)
 			return;
 	}
 
-	if (m_bNextLevel)
+	else if (m_bNextLevel)
 	{
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_BOSS))))
 			return;
@@ -178,7 +178,7 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	PortalDesc.m_eType = CPortal::PORTAL_BOSS;
-	PortalDesc.vPosition = _float3(15.f, 2.f, 15.f);
+	PortalDesc.vPosition = _float3(20.f, 2.f, 20.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, &PortalDesc)))
 		return E_FAIL;

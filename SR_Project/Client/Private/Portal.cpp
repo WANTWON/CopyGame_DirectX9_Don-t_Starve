@@ -56,11 +56,11 @@ HRESULT CPortal::Initialize(void* pArg)
 	case PORTAL_BOSS:
 	{
 		m_eState = IDLE_CLOSE;
-		m_fRadius = 1.f;
-		m_fOpenRadius = 1.f;
+		m_fRadius = 0.5f;
+		m_fOpenRadius = 3.f;
 
-		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
-		//m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
+		m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
+		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
 		break;
 	}
 	}
@@ -77,6 +77,8 @@ int CPortal::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
+
+	WalkingTerrain();
 
 	if (m_bShouldTeleport)
 	{
@@ -194,11 +196,11 @@ void CPortal::SetUp_BillBoard()
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 
-	if (m_ePortalDesc.m_eType == PORTAL_BOSS)
-	{
-		m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
-		m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-	}	
+	//if (m_ePortalDesc.m_eType == PORTAL_BOSS)
+	//{
+	//	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	//	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+	//}
 }
 
 HRESULT CPortal::Texture_Clone()
@@ -251,7 +253,7 @@ void CPortal::Change_Frame()
 		break;
 	case STATE::OPENING:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-				m_eState = STATE::IDLE_OPEN;
+			m_eState = STATE::IDLE_OPEN;
 		break;
 	case STATE::IDLE_OPEN:
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
@@ -259,7 +261,7 @@ void CPortal::Change_Frame()
 	case STATE::CLOSING:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 		{
-				m_eState = STATE::IDLE_CLOSE;
+			m_eState = STATE::IDLE_CLOSE;
 
 			if (!m_bInteract)
 				m_bShouldTeleport = true;
@@ -294,36 +296,15 @@ void CPortal::Change_Motion()
 
 void CPortal::AI_Behaviour()
 {
-	switch (m_ePortalDesc.m_eType)
+
+	if (m_bShouldClosePortal)
+		m_eState = STATE::CLOSING;
+	else
 	{
-	case PORTAL_NORMAL:
-	{
-		if (m_bShouldClosePortal)
+		if (Check_Target() && m_eState != STATE::IDLE_OPEN && m_eState != STATE::OPENING)
+			m_eState = STATE::OPENING;
+		else if (!Check_Target() && (m_eState == STATE::IDLE_OPEN || m_eState == STATE::OPENING))
 			m_eState = STATE::CLOSING;
-		else
-		{
-			if (Check_Target() && m_eState != STATE::IDLE_OPEN && m_eState != STATE::OPENING)
-				m_eState = STATE::OPENING;
-			else if (!Check_Target() && (m_eState == STATE::IDLE_OPEN || m_eState == STATE::OPENING))
-				m_eState = STATE::CLOSING;
-		}
-		break;
-	}
-	case PORTAL_BOSS:
-	{
-		if (m_bShouldClosePortal)
-			m_eState = STATE::CLOSING;
-		else
-		{
-			if (Check_Target() && m_eState != STATE::IDLE_OPEN && m_eState != STATE::OPENING)
-				m_eState = STATE::OPENING;
-			else if (!Check_Target() && (m_eState == STATE::IDLE_OPEN || m_eState == STATE::OPENING))
-				m_eState = STATE::CLOSING;
-		}
-		break;
-	}
-	default:
-		break;
 	}
 
 }
@@ -360,6 +341,26 @@ void CPortal::Interact(_uint Damage)
 HRESULT CPortal::Drop_Items()
 {
 	return E_NOTIMPL;
+}
+
+void CPortal::WalkingTerrain()
+{
+	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	if (!pGameInstance)
+		return;
+	CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(iLevelIndex, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	if (!pVIBuffer_Terrain)
+		return;
+	CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(iLevelIndex, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	if (!pTransform_Terrain)
+		return;
+
+	_float3 vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float3 vScale = m_pTransformCom->Get_Scale();
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_fRadius);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
 CPortal* CPortal::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

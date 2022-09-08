@@ -36,7 +36,7 @@ HRESULT CWoodWall::Initialize(void* pArg)
 
 	m_tInfo.iMaxHp = 60;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
-	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+	m_pTransformCom->Set_Scale(1.f, 3.f, 1.f);
 
 	WalkingTerrain();
 
@@ -200,7 +200,7 @@ void CWoodWall::SetUp_BillBoard()
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	//m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 
@@ -264,7 +264,7 @@ HRESULT CWoodWall::Texture_Clone()
 		break;
 	case Client::CWoodWall::WALL_ROCK:
 		TextureDesc.m_iEndTex = 2;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RockHEALTHY"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RockHEALTHY"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
 	default:
