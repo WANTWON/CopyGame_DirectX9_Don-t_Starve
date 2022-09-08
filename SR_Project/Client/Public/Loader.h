@@ -12,7 +12,8 @@ class CLoader final : public CBase
 private:
 	CLoader(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual ~CLoader() = default;
-
+public:
+	_bool Get_IsFinished(void) { return m_isFinished; }
 public:
 	LEVEL Get_NextLevelID() const {
 		return m_eNextLevel;
@@ -36,9 +37,12 @@ public:
 	HRESULT Loading_ForLogoLevel();
 	HRESULT Loading_ForGamePlayLevel();
 	HRESULT Loading_ForHuntLevel();
+	HRESULT Loading_ForBossLevel();
+
 
 	HRESULT Loading_Terrain_ForGamePlayLevel();
 	HRESULT Loading_Terrain_ForHuntLevel();
+	HRESULT Loading_Terrain_ForBossLevel();
 
 private:
 	LEVEL					m_eNextLevel = LEVEL_END;

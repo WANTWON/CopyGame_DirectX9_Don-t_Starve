@@ -10,6 +10,7 @@
 #include "Picking.h"
 #include "Sound_Manager.h"
 #include "Collider.h"
+#include "CullingMgr.h"
 
 BEGIN(Engine)
 
@@ -83,6 +84,9 @@ public: /* For. Collider Manager */
 	_bool Collision_with_Group(CCollider::COLLISION_GROUP eGroup, class CGameObject* pGameObject, _float3* pOutDistance = nullptr);
 	_bool Collision_Check_Group_Multi(CCollider::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, class CGameObject* pDamageCauser);
 
+public: /* For. Culling Manager */
+	_bool Is_In_Frustum(_float3 pGameObjectPos, _float fRadius);
+
 public:
 	static void Release_Engine();
 
@@ -97,6 +101,7 @@ private:
 	CPicking*						m_pPicking = nullptr;
 	CSound_Manager*					m_pSound_Manager = nullptr;
 	CCollider*						m_pCollider_Manager = nullptr;
+	CCullingMgr*					m_pCulling_Manager = nullptr;
 
 public:
 	virtual void Free() override;

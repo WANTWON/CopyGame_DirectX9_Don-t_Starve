@@ -33,7 +33,7 @@ HRESULT CTent::Initialize(void* pArg)
 
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::TENT;
 
-	m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
+	m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
 
 	return S_OK;
 }

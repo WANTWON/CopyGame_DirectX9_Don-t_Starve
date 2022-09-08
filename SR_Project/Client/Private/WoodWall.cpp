@@ -24,6 +24,10 @@ HRESULT CWoodWall::Initialize_Prototype()
 
 HRESULT CWoodWall::Initialize(void* pArg)
 {
+
+	if (pArg != nullptr)
+		memcpy(&m_eWallDesc, pArg, sizeof(WALLDESC));
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -80,9 +84,13 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
-	Change_Motion();
-	Change_Frame();
+	if (m_eWallDesc.etype == WALL_WOOD)
+	{
+		Change_Motion();
+		Change_Frame();
 
+	}
+	
 	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
 }
 
@@ -154,7 +162,7 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 
 	TransformDesc.fSpeedPerSec = 0.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(0.f);
-	TransformDesc.InitPos = *(_float3*)pArg;
+	TransformDesc.InitPos = m_eWallDesc.vecPosition;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
@@ -232,24 +240,36 @@ HRESULT CWoodWall::Texture_Clone()
 	CTexture::TEXTUREDESC TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
-	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 60;
 
-	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HEALTHY"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	switch (m_eWallDesc.etype)
+	{
+	case Client::CWoodWall::WALL_WOOD:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_fSpeed = 60;
 
-	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DAMAGED"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_DAMAGED"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 0;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_HEALTHY"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 
-	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BROKEN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_BROKEN"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 0;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_DAMAGED"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_DAMAGED"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 
+		TextureDesc.m_iEndTex = 0;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_BROKEN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_BROKEN"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		break;
+	case Client::CWoodWall::WALL_ROCK:
+		TextureDesc.m_iEndTex = 2;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RockHEALTHY"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	default:
+		break;
+	}
 	return S_OK;
 }
 
@@ -260,22 +280,26 @@ void CWoodWall::Change_Frame()
 
 void CWoodWall::Change_Motion()
 {
-	if (m_eState != m_ePreState)
-	{
-		switch (m_eState)
-		{
-		case CWoodWall::HEALTHY:
-			Change_Texture(TEXT("Com_Texture_HEALTHY"));
-			break;
-		case CWoodWall::DAMAGED:
-			Change_Texture(TEXT("Com_Texture_DAMAGED"));
-			break;
-		case CWoodWall::BROKEN:
-			Change_Texture(TEXT("Com_Texture_BROKEN"));
-			break;
-		}
 
-		m_ePreState = m_eState;
+	if (m_eWallDesc.etype == WALL_WOOD)
+	{
+		if (m_eState != m_ePreState)
+		{
+			switch (m_eState)
+			{
+			case CWoodWall::HEALTHY:
+				Change_Texture(TEXT("Com_Texture_HEALTHY"));
+				break;
+			case CWoodWall::DAMAGED:
+				Change_Texture(TEXT("Com_Texture_DAMAGED"));
+				break;
+			case CWoodWall::BROKEN:
+				Change_Texture(TEXT("Com_Texture_BROKEN"));
+				break;
+			}
+
+			m_ePreState = m_eState;
+		}
 	}
 }
 

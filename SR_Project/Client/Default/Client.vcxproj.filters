@@ -214,6 +214,15 @@
     <Filter Include="02.GameObject\04.Interactive_Object\Carrot">
       <UniqueIdentifier>{7fd7269d-23a0-4609-9e31-b739e1ac2c8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.BeHavior_Tree">
+      <UniqueIdentifier>{135c86d0-bf70-4ac6-88dc-d15f11ca00fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.BeHavior_Tree\01.BT_NPC">
+      <UniqueIdentifier>{de601f57-3fdb-4438-8e76-aa3a85f8c86a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\Boss">
+      <UniqueIdentifier>{5991c2dd-ca0b-4829-8a45-26ad1b7738ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -501,6 +510,18 @@
     <ClInclude Include="..\public\Carrot.h">
       <Filter>02.GameObject\04.Interactive_Object\Carrot</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\NPC.h">
+      <Filter>02.GameObject\04.Interactive_Object\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Behavior_Tree.h">
+      <Filter>97.BeHavior_Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BT_NPC.h">
+      <Filter>97.BeHavior_Tree\01.BT_NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Boss.h">
+      <Filter>01.Levels\Boss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -775,6 +796,18 @@
     </ClCompile>
     <ClCompile Include="..\private\Carrot.cpp">
       <Filter>02.GameObject\04.Interactive_Object\Carrot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NPC.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Behavior_Tree.cpp">
+      <Filter>97.BeHavior_Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BT_NPC.cpp">
+      <Filter>97.BeHavior_Tree\01.BT_NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Boss.cpp">
+      <Filter>01.Levels\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

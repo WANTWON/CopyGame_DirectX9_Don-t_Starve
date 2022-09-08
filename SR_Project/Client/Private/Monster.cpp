@@ -67,8 +67,11 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	SetUp_BillBoard();
 
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+	{
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	}
 }
 
 HRESULT CMonster::Render()
@@ -102,8 +105,8 @@ HRESULT CMonster::SetUp_DebugComponents(void * pArg)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_DebugBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIDebugBufferCom)))
-		return E_FAIL;
+	//if (FAILED(__super::Add_Components(TEXT("Com_DebugBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIDebugBufferCom)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -192,7 +195,7 @@ void CMonster::Free()
 {
 	__super::Free();
 
-	//Safe_Release(m_pColliderCom);
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
