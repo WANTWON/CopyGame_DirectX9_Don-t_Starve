@@ -13,6 +13,7 @@ CGameInstance::CGameInstance()
 	, m_pPicking(CPicking::Get_Instance())
 	, m_pSound_Manager(CSound_Manager::Get_Instance())
 	, m_pCollider_Manager(CCollider::Get_Instance())
+	, m_pCulling_Manager(CCullingMgr::Get_Instance())
 {
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pTimer_Manager);
@@ -24,6 +25,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pPicking);
 	Safe_AddRef(m_pSound_Manager);
 	Safe_AddRef(m_pCollider_Manager);
+	Safe_AddRef(m_pCulling_Manager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, LPDIRECT3DDEVICE9* ppOut)
@@ -32,7 +34,8 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 		nullptr == m_pObject_Manager ||
 		nullptr == m_pInput_Device	||
 		nullptr == m_pPicking		||
-		nullptr == m_pSound_Manager)
+		nullptr == m_pSound_Manager ||
+		nullptr == m_pCulling_Manager)
 		return E_FAIL;
 
 	/* 그래픽 디바이스를 초기화한다. */
@@ -58,6 +61,9 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 	if (FAILED(m_pComponent_Manager->Reserve_Container(iNumLevels)))
 		return E_FAIL;
 
+	if (FAILED(m_pCulling_Manager->Ready_CullingMgr(*ppOut)))
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -67,15 +73,19 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	if (nullptr == m_pLevel_Manager || 
 		nullptr == m_pObject_Manager ||
 		nullptr == m_pInput_Device ||
-		nullptr == m_pCollider_Manager)
+		nullptr == m_pCollider_Manager ||
+		nullptr == m_pCulling_Manager)
 		return;
 
 	m_pInput_Device->Update();
+	
 
 	m_pLevel_Manager->Tick(fTimeDelta);
 	m_pObject_Manager->Tick(fTimeDelta);
 
 	m_pPicking->Tick();
+	m_pCulling_Manager->Update_CullingMgr();
+
 
 	m_pLevel_Manager->Late_Tick(fTimeDelta);
 	m_pObject_Manager->Late_Tick(fTimeDelta);
@@ -352,18 +362,32 @@ HRESULT CGameInstance::Add_CollisionGroup(CCollider::COLLISION_GROUP eCollisionG
 
 _bool CGameInstance::Collision_with_Group(CCollider::COLLISION_GROUP eGroup, CGameObject * pGameObject,  _float3* pOutDistance)
 {
+	if (nullptr == m_pCollider_Manager)
+		return false;
+
 	return m_pCollider_Manager->Collision_with_Group(eGroup, pGameObject, pOutDistance);
 }
 
 _bool CGameInstance::Collision_Check_Group_Multi(CCollider::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, CGameObject * pDamageCauser)
 {
+	if (nullptr == m_pCollider_Manager)
+		return false;
 	return m_pCollider_Manager->Collision_Check_Group_Multi(eGroup, vecDamagedObj, pDamageCauser);
+}
+
+_bool CGameInstance::Is_In_Frustum(_float3 pGameObjectPos, _float fRadius)
+{
+	if (nullptr == m_pCulling_Manager)
+		return false;
+	return m_pCulling_Manager->Is_In_Frustum( pGameObjectPos,  fRadius);
 }
 
 void CGameInstance::Release_Engine()
 {
 
 	CGameInstance::Get_Instance()->Destroy_Instance();
+
+	CCullingMgr::Get_Instance()->Destroy_Instance();
 
 	CCollider::Get_Instance()->Destroy_Instance();
 
@@ -388,6 +412,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pCulling_Manager);
 	Safe_Release(m_pCollider_Manager);
 	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pPicking);

@@ -88,6 +88,9 @@
     <Filter Include="01.Utility\03.Components\Collider\Manager">
       <UniqueIdentifier>{a4a7e3e8-5eb7-4b8b-a80c-ca2352fdd0b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\95.FrustumCullingMgr">
+      <UniqueIdentifier>{13f8536a-38e8-4955-aaf2-adf953d0b779}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -167,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collider.cpp">
       <Filter>01.Utility\03.Components\Collider\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CullingMgr.cpp">
+      <Filter>01.Utility\95.FrustumCullingMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +268,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Collider.h">
       <Filter>01.Utility\03.Components\Collider\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CullingMgr.h">
+      <Filter>01.Utility\95.FrustumCullingMgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

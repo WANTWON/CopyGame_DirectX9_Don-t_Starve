@@ -12,7 +12,7 @@ HRESULT CLevel_Manager::Open_Level(unsigned int iLevelIndex, CLevel * pNewLevel)
 {
 	if (nullptr != m_pCurrentLevel)
 	{
-		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+ 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
 		m_iPastLevelIndex = m_iLevelIndex;

@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "Mouse.h"
+#include "WoodWall.h"
 
 IMPLEMENT_SINGLETON(CPickingMgr)
 
@@ -50,8 +51,13 @@ void CPickingMgr::Add_PickingObject(ITEMID type)
 		switch (pMouse->Get_Item_name())
 		{
 		case ITEMNAME_FENCE:
-			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"), m_vPickingPos);
+		{
+			CWoodWall::WALLDESC  WallDesc;
+			WallDesc.etype = CWoodWall::WALL_WOOD;
+			WallDesc.vecPosition = m_vPickingPos;
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"), &WallDesc);
 			break;
+		}
 		case ITEMNAME_POT:
 			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"), m_vPickingPos);
 			break;
@@ -60,9 +66,6 @@ void CPickingMgr::Add_PickingObject(ITEMID type)
 			break;
 		}	
 	}
-		
-
-	//m_pPickingObject = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"));
 
 	m_pPickingObject = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"));
 	m_pPickingObject->Set_bConstruct(true);

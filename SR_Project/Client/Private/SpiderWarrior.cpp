@@ -59,9 +59,11 @@ void CSpiderWarrior::Late_Tick(_float fTimeDelta)
 	Change_Motion();
 	Change_Frame();
 
-
+	if (m_eDir == DIR_STATE::DIR_LEFT)
+		m_pColliderCom->Set_IsInverse(true);
+	else
+		m_pColliderCom->Set_IsInverse(false);
 	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
-
 }
 
 HRESULT CSpiderWarrior::Render()

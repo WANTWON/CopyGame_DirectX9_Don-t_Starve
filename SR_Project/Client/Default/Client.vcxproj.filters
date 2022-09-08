@@ -211,8 +211,14 @@
     <Filter Include="02.GameObject\98.UI\01. Inventory\iteminfo">
       <UniqueIdentifier>{7dc8053d-0b09-4953-a915-757aadbf5877}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox">
-      <UniqueIdentifier>{d9ae5046-e79f-417a-acd4-df599dd37aba}</UniqueIdentifier>
+    <Filter Include="97.BeHavior_Tree">
+      <UniqueIdentifier>{135c86d0-bf70-4ac6-88dc-d15f11ca00fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.BeHavior_Tree\01.BT_NPC">
+      <UniqueIdentifier>{de601f57-3fdb-4438-8e76-aa3a85f8c86a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\Boss">
+      <UniqueIdentifier>{5991c2dd-ca0b-4829-8a45-26ad1b7738ba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -498,14 +504,17 @@
     <ClInclude Include="..\Public\Questbutton.h">
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ToolboxMaterial.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
+    <ClInclude Include="..\Public\NPC.h">
+      <Filter>02.GameObject\04.Interactive_Object\NPC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ToolboxMaterial_back.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
+    <ClInclude Include="..\Public\Behavior_Tree.h">
+      <Filter>97.BeHavior_Tree</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ToolboxMaterial_front.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
+    <ClInclude Include="..\Public\BT_NPC.h">
+      <Filter>97.BeHavior_Tree\01.BT_NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Boss.h">
+      <Filter>01.Levels\Boss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -779,14 +788,17 @@
     <ClCompile Include="..\Private\Questbutton.cpp">
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ToolboxMaterial.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
+    <ClCompile Include="..\Private\NPC.cpp">
+      <Filter>02.GameObject\04.Interactive_Object\NPC</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ToolboxMaterial_back.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
+    <ClCompile Include="..\Private\Behavior_Tree.cpp">
+      <Filter>97.BeHavior_Tree</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ToolboxMaterial_front.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
+    <ClCompile Include="..\Private\BT_NPC.cpp">
+      <Filter>97.BeHavior_Tree\01.BT_NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Boss.cpp">
+      <Filter>01.Levels\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

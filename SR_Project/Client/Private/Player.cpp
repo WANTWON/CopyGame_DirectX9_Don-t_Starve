@@ -58,8 +58,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
 
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	if (m_iPreLevelIndex != m_iCurrentLevelndex)
@@ -73,6 +71,11 @@ int CPlayer::Tick(_float fTimeDelta)
 	m_iCameraMode = CCameraManager::Get_Instance()->Get_CamState();
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return OBJ_NOEVENT;
+
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+
 
 	__super::Tick(fTimeDelta);
 
@@ -124,7 +127,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	SetUp_BillBoard();
 
 	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 
 	if (m_tStat.fCurrentHealth > m_tStat.fMaxHealth)
 	{
@@ -141,6 +144,10 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
 	}
 	
+	if (m_eDirState == DIR_STATE::DIR_LEFT)
+		m_pColliderCom->Set_IsInverse(true);
+	else
+		m_pColliderCom->Set_IsInverse(false);
 	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
 
 	Create_Bullet();
@@ -265,6 +272,7 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 
 	if (Check_Dead() && !m_bGhost)
 	{
+		m_bDead = true;
 		m_bGhost = true;
 		Clear_ActStack();
 
@@ -1358,6 +1366,7 @@ void CPlayer::Revive(_float _fTimeDelta)
 	if (m_fReviveTime > 3.f &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
 		Change_Texture(TEXT("Com_Texture_Idle_Down"));
+		m_bDead = false;
 		m_bGhost = false;
 		m_bMove = true;
 		//m_bAutoMode = false;
@@ -2427,6 +2436,8 @@ void CPlayer::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pPicker);
+	Safe_Release(m_pRange);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);

@@ -35,7 +35,7 @@ protected: /* For.Components */
 	vector<CTexture*> m_vecTexture;
 
 	/* For.Debug */
-	CVIBuffer_Rect* m_pVIDebugBufferCom = nullptr;
+	//CVIBuffer_Rect* m_pVIDebugBufferCom = nullptr;
 
 protected:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) = 0;
