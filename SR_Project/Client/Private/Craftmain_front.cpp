@@ -68,160 +68,198 @@ HRESULT CCraftmain_front::Initialize(void* pArg)
 int CCraftmain_front::Tick(_float fTimeDelta)
 {
 
-	if (m_bonof == false)
-		return OBJ_NOEVENT;
-
-	__super::Tick(fTimeDelta);
-
-
-	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT||m_makewhat == MAKE_FENCE)
-		m_fY = 155.f;
-	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT)
-		m_fY = 205.f;
-	else if (m_makewhat == MAKE_STAFF|| m_makewhat == MAKE_TENT)
-		m_fY = 255.f;
-	else if (m_makewhat == MAKE_ARMOR)
-		m_fY = 305.f;
-	else if (m_makewhat == MAKE_HELMET)
-		m_fY = 355.f;
-
-	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-
-	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_PICK)
+	if (m_bonof == true)
 	{
-		if (iNum == 0)
+		__super::Tick(fTimeDelta);
+
+		if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT || m_makewhat == MAKE_FENCE || m_makewhat == MAKE_ROPE)
+			m_fY = 155.f;
+		else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT || m_makewhat == MAKE_COAL)
+			m_fY = 205.f;
+		else if (m_makewhat == MAKE_STAFF || m_makewhat == MAKE_TENT || m_makewhat == MAKE_TORCH)
+			m_fY = 255.f;
+		else if (m_makewhat == MAKE_ARMOR)
+			m_fY = 305.f;
+		else if (m_makewhat == MAKE_HELMET)
+			m_fY = 355.f;
+
+		if (m_makewhat == MAKE_ROPE || m_makewhat == MAKE_COAL || m_makewhat == MAKE_TORCH)
 		{
-			texnum = ITEMNAME_WOOD;
-		 }
-	
-	    else
-	   
-		texnum = ITEMNAME_ROCK2;
-	   
-	}
-		
-	else if (m_makewhat == MAKE_HAMBAT)
-	{
-		if (iNum == 0)
-		{
-			texnum = ITEMNAME_WOOD;
+			//if(iNum == 0)
+			m_fX = 262.5f;
+			if (iNum == 1)
+			{
+				m_bonof = false;
+				return OBJ_NOEVENT;
+			}
+
 		}
 
-		else
-		
-			texnum = ITEMNAME_MEAT;
-		
-	}
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
-	else if (m_makewhat == MAKE_SHOTTER)
-	{
-		if (iNum == 0)
+		if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_PICK)
 		{
-			texnum = ITEMNAME_GRASS;
+			if (iNum == 0)
+			{
+				texnum = ITEMNAME_WOOD;
+			}
+
+			else
+
+				texnum = ITEMNAME_ROCK2;
+
 		}
 
-		else
-		
-			texnum = ITEMNAME_ROPE;
-		
-	}
-
-	else if (m_makewhat == MAKE_STAFF)
-	{
-		if (iNum == 0)
+		else if (m_makewhat == MAKE_HAMBAT)
 		{
-			texnum = ITEMNAME_WOOD;
-		}
-		else
-			texnum = ITEMNAME_GOLD;
-	}
-	
+			if (iNum == 0)
+			{
+				texnum = ITEMNAME_WOOD;
+			}
 
-	else if (m_makewhat == MAKE_ARMOR || m_makewhat == MAKE_HELMET)
-	{
-		if (iNum == 0)
-		{
-			texnum = ITEMNAME_WOOD;
+			else
+
+				texnum = ITEMNAME_MEAT;
+
 		}
 
-		else
-
-			texnum = ITEMNAME_ROCK2;
-	}
-
-	else if (m_makewhat == MAKE_FENCE)
-	{
-		if (iNum == 0)
+		else if (m_makewhat == MAKE_SHOTTER)
 		{
-			texnum = ITEMNAME_WOOD;
+			if (iNum == 0)
+			{
+				texnum = ITEMNAME_GRASS;
+			}
+
+			else
+
+				texnum = ITEMNAME_ROPE;
+
 		}
 
-		else
-
-			texnum = ITEMNAME_ROPE;
-		
-	}
-
-	else if (m_makewhat == MAKE_POT)
-	{
-		if (iNum == 0)
+		else if (m_makewhat == MAKE_STAFF)
 		{
-			texnum = ITEMNAME_ROCK2;
+			if (iNum == 0)
+			{
+				texnum = ITEMNAME_WOOD;
+			}
+			else
+				texnum = ITEMNAME_GOLD;
 		}
 
-		else
 
-			texnum = ITEMNAME_PIGTAIL;
-
-	}
-
-	else if (m_makewhat == MAKE_TENT)
-	{
-		if (iNum == 0)
+		else if (m_makewhat == MAKE_ARMOR || m_makewhat == MAKE_HELMET)
 		{
-			texnum = ITEMNAME_GRASS;
+			if (iNum == 0)
+			{
+				texnum = ITEMNAME_WOOD;
+			}
+
+			else
+
+				texnum = ITEMNAME_ROCK2;
 		}
 
-		else
+		else if (m_makewhat == MAKE_FENCE)
+		{
+			if (iNum == 0)
+			{
+				texnum = ITEMNAME_WOOD;
+			}
 
-			texnum = ITEMNAME_ROPE;
+			else
 
-	}
+				texnum = ITEMNAME_ROPE;
 
-	
+		}
 
-	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+		else if (m_makewhat == MAKE_POT)
+		{
+			if (iNum == 0)
+			{
+				texnum = ITEMNAME_ROCK2;
+			}
 
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
+			else
 
-	/*if (m_fY <= 155.f)
-		Open_Craft(fTimeDelta);*/
+				texnum = ITEMNAME_PIGTAIL;
 
-	if (m_fX <= 100)
-		Open_Weapontool(fTimeDelta);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+		}
+
+		else if (m_makewhat == MAKE_TENT)
+		{
+			if (iNum == 0)
+			{
+				texnum = ITEMNAME_GRASS;
+			}
+
+			else
+
+				texnum = ITEMNAME_ROPE;
+
+		}
+
+		else if (m_makewhat == MAKE_ROPE)
+		{
+			if (iNum == 0)
+			{
+				texnum = ITEMNAME_GRASS;
+			}
 
 
-	//if (PtInRect(&rcRect, ptMouse))
-//	{
+		}
+		else if (m_makewhat == MAKE_COAL)
+		{
+			if (iNum == 0)
+			{
+				texnum = ITEMNAME_ROCK2;
+			}
+
+
+		}
+		else if (m_makewhat == MAKE_TORCH)
+		{
+			if (iNum == 0)
+			{
+				texnum = ITEMNAME_WOOD;
+			}
+
+
+		}
+
+
+		RECT		rcRect;
+		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+
+		POINT		ptMouse;
+		GetCursorPos(&ptMouse);
+		ScreenToClient(g_hWnd, &ptMouse);
+
+		if (m_fX <= 100)
+			Open_Weapontool(fTimeDelta);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+
+
+		//if (PtInRect(&rcRect, ptMouse))
+		//	{
 
 		//m_fSizeX = 55.f;
 		//m_fSizeY = 55.f;
 		//m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	//	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+		//	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 		//set_check(true);
 		//plus_itemcount();
-	//}
+		//}
 
 
 
 
-	//if()
+		//if()
+		
+	}
+		
 	return OBJ_NOEVENT;
+	
 }
 
 void CCraftmain_front::Late_Tick(_float fTimeDelta)
@@ -235,14 +273,14 @@ void CCraftmain_front::Late_Tick(_float fTimeDelta)
 
 
 	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pinv);
+	//Safe_AddRef(pinv);
 
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
 
@@ -272,10 +310,10 @@ void CCraftmain_front::Late_Tick(_float fTimeDelta)
 
 
 
-	if (nullptr != m_pRendererCom)
+	if (nullptr != m_pRendererCom &&m_bonof == true)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-	Safe_Release(pinv);
+//	Safe_Release(pinv);
 	//set_check(false);
 }
 

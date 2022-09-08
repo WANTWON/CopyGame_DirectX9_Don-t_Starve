@@ -244,6 +244,9 @@
     <ClInclude Include="..\Public\ToolboxMain.h" />
     <ClInclude Include="..\Public\ToolboxMain_back.h" />
     <ClInclude Include="..\Public\ToolboxMain_front.h" />
+    <ClInclude Include="..\Public\ToolboxMaterial.h" />
+    <ClInclude Include="..\Public\ToolboxMaterial_back.h" />
+    <ClInclude Include="..\Public\ToolboxMaterial_front.h" />
     <ClInclude Include="..\Public\ToolboxWeapon.h" />
     <ClInclude Include="..\Public\ToolboxWeapon_back.h" />
     <ClInclude Include="..\Public\ToolboxWeapon_front.h" />
@@ -342,6 +345,9 @@
     <ClCompile Include="..\Private\ToolboxMain.cpp" />
     <ClCompile Include="..\Private\ToolboxMain_back.cpp" />
     <ClCompile Include="..\Private\ToolboxMain_front.cpp" />
+    <ClCompile Include="..\Private\ToolboxMaterial.cpp" />
+    <ClCompile Include="..\Private\ToolboxMaterial_back.cpp" />
+    <ClCompile Include="..\Private\ToolboxMaterial_front.cpp" />
     <ClCompile Include="..\Private\ToolboxWeapon.cpp" />
     <ClCompile Include="..\Private\ToolboxWeapon_back.cpp" />
     <ClCompile Include="..\Private\ToolboxWeapon_front.cpp" />

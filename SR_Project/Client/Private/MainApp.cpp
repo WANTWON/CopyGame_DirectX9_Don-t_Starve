@@ -166,6 +166,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pGameInstance);
 
+	//CInventory_Manager::Get_Instance()->Free();
 	CGameInstance::Release_Engine();	
 	CPickingMgr::Get_Instance()->Destroy_Instance();
 	CInventory_Manager::Get_Instance()->Destroy_Instance();

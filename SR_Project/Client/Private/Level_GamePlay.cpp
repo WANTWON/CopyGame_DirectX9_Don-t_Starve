@@ -36,8 +36,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
-		return E_FAIL;
+	//if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
+		//return E_FAIL;
 
 	if (g_bLoadingfirst == false)
 	{
@@ -534,6 +534,27 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 		int number = i;
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ConstructToolbox_front"), LEVEL_STATIC, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MaterialToolbox"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	for (int i = 0; i < 5; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MaterialToolbox_back"), LEVEL_STATIC, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	for (int i = 0; i < 5; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MaterialToolbox_front"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}

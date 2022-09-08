@@ -154,17 +154,17 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pinv);
+	//Safe_AddRef(pinv);
 
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
 	auto iteminfo = pinv->Get_Mouse_iteminfo_list()->begin();
-	Safe_Release(pinv);
+	//Safe_Release(pinv);
 
 	if (PtInRect(&rcRect, ptMouse)) // for iteminfo
 	{
@@ -284,17 +284,17 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	CMouse*			pMouse = CMouse::Get_Instance();
-	Safe_AddRef(pMouse);
+	//Safe_AddRef(pMouse);
 
 	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pinv);
+//	Safe_AddRef(pinv);
 
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
 	
@@ -418,7 +418,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 			{
 				pinv->Late_Tick(fTimeDelta);
 				pinv->Use_bag();
-				Safe_Release(pinv);
+			//	Safe_Release(pinv);
 			}
 
 			m_itemtype = ITEM_END;
@@ -435,8 +435,8 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 
 
-	Safe_Release(pMouse);
-	Safe_Release(pinv);
+	//Safe_Release(pMouse);
+//	Safe_Release(pinv);
 
 
 	if (texnum == ITEMNAME_END)
@@ -601,7 +601,7 @@ void CMainInventory_front::Free()
 void CMainInventory_front::Use_item(ITEMNAME item)
 {
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
+	//Safe_AddRef(pGameInstance);
 	switch (item)
 	{
 	case ITEMNAME_CARROT:
@@ -683,5 +683,5 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 	}
 	dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Add_ActStack(CPlayer::ACTION_STATE::EAT);
 	dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_bMove(false);
-	Safe_Release(pGameInstance);
+//	Safe_Release(pGameInstance);
 }

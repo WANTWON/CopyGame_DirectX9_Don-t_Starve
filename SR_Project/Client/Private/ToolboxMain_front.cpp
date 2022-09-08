@@ -64,7 +64,7 @@ int CToolboxMain_front::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
@@ -100,14 +100,14 @@ void CToolboxMain_front::Late_Tick(_float fTimeDelta)
 
 
 	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pinv);
+	//Safe_AddRef(pinv);
 
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
 
@@ -141,7 +141,7 @@ void CToolboxMain_front::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	
-	Safe_Release(pinv);
+	//Safe_Release(pinv);
 	//set_check(false);
 }
 

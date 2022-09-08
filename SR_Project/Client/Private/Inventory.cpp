@@ -94,7 +94,7 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 	
 
 	CMouse*			pMouse = CMouse::Get_Instance();
-	Safe_AddRef(pMouse);
+	//Safe_AddRef(pMouse);
 
 
 
@@ -229,7 +229,7 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 	update_questpont();
 
 
-	Safe_Release(pMouse);
+	//Safe_Release(pMouse);
 
 
 }
@@ -437,6 +437,38 @@ void CInventory_Manager::constructtool_off()
 	}
 
 	for (auto& k : m_Toolboxconstruct_front)
+	{
+		k->set_onof(false);
+		k->gobackfirstX();
+	}
+
+}
+
+void CInventory_Manager::materialtool_on()
+{
+	for (auto& k : m_Toolboxmaterial)
+		k->set_onof(true);
+	for (auto& k : m_Toolboxmaterial_back)
+		k->set_onof(true);
+	for (auto& k : m_Toolboxmaterial_front)
+		k->set_onof(true);
+}
+
+void CInventory_Manager::materialtool_off()
+{
+	for (auto& k : m_Toolboxmaterial)
+	{
+		k->set_onof(false);
+		k->gobackfirstX();
+	}
+
+	for (auto& k : m_Toolboxmaterial_back)
+	{
+		k->set_onof(false);
+		k->gobackfirstX();
+	}
+
+	for (auto& k : m_Toolboxmaterial_front)
 	{
 		k->set_onof(false);
 		k->gobackfirstX();
@@ -816,6 +848,67 @@ void CInventory_Manager::update_craftpont()
 			}
 		}
 
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_ROPE)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((grass % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(grass % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+
+			
+		}
+
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_COAL)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((rock2 % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(rock2 % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+
+
+		}
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_TORCH)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((wood % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(wood % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+
+
+		}
 
 	}
 
@@ -890,19 +983,19 @@ void CInventory_Manager::Free()
 { 
 	//__super::Free();
 
-	m_MainInventorybacklist.clear();
+//	m_MainInventorybacklist.clear();
 
 
-	for (auto& iter : m_Hppontlist)
-		Safe_Release(iter);
-	m_Hppontlist.clear();
+//	for (auto& iter : m_Hppontlist)
+//		Safe_Release(iter);
+	//m_Hppontlist.clear();
 
-	for (auto& iter : m_Hungerpontlist)
-		Safe_Release(iter);
-	m_Hungerpontlist.clear();
+//	for (auto& iter : m_Hungerpontlist)
+//		Safe_Release(iter);
+//	m_Hungerpontlist.clear();
 
-	for (auto& iter : m_Mentalitiypontlist)
-		Safe_Release(iter);
-	m_Mentalitiypontlist.clear();
+//	for (auto& iter : m_Mentalitiypontlist)
+//		Safe_Release(iter);
+//	m_Mentalitiypontlist.clear();
 
 }

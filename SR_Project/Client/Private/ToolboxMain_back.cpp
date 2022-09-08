@@ -64,7 +64,7 @@ int CToolboxMain_back::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
@@ -97,7 +97,7 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
@@ -156,6 +156,20 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 				m_bfirstclick_C = true;
 			}
 		}
+		else if (iNum == 3)
+		{
+			if (m_bfirstclick_M == true)
+			{
+				CInventory_Manager::Get_Instance()->materialtool_on();
+				m_bfirstclick_M = false;
+			}
+			else
+			{
+				CInventory_Manager::Get_Instance()->materialtool_off();
+				CInventory_Manager::Get_Instance()->craft_off();
+				m_bfirstclick_M = true;
+			}
+		}
 		
 			
 	}
@@ -190,6 +204,15 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 		backtexnum = 0;
 	}
 	else if (iNum == 2 && m_bfirstclick_C == false)
+	{
+		backtexnum = 1;
+	}
+
+	if (iNum == 3 && m_bfirstclick_M == true)
+	{
+		backtexnum = 0;
+	}
+	else if (iNum == 3 && m_bfirstclick_M == false)
 	{
 		backtexnum = 1;
 	}

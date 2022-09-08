@@ -58,6 +58,7 @@ private:
 	bool m_bfirstclick_W = true;
 	bool m_bfirstclick_G = true;
 	bool m_bfirstclick_C = true;
+	bool m_bfirstclick_M = true;
 	bool m_bfirstclick = true;
 	//bool m_bcheck = true;
 };
