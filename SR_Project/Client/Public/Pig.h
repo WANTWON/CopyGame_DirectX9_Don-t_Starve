@@ -38,12 +38,17 @@ private: /*For TextureCom */
 	virtual void Change_Frame() override;
 	virtual void Change_Motion() override;
 
+public: /*For Picking */
+	virtual _bool Picking(_float3* PickingPoint) override;
+	virtual void PickingTrue() override;
+
 private:
 	DIR_STATE m_eDir = DIR_STATE::DIR_DOWN;
 	DIR_STATE m_ePreDir = DIR_STATE::DIR_END;
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
 	_float fHappyTimer = 0.f;
+	_float3 m_vecOutPos; // For Picking
 
 public:
 	void Give_Food() { m_eState = STATE::HAPPY; }

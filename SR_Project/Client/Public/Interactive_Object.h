@@ -58,10 +58,6 @@ protected:
 	_bool m_bPicking;
 	_float3 m_vecOutPos;
 
-public: /*For Picking */
-	virtual _bool Picking(_float3* PickingPoint) { return false; };
-	virtual void PickingTrue() {};
-
 public:
 	INTERACTOBJ_ID Get_InteractName() { return m_eInteract_OBJ_ID; }
 	_bool Get_CanInteract() { return m_bInteract; }
