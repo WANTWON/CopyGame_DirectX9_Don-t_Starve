@@ -44,8 +44,8 @@ _bool  CCollider::Collision_with_Group(COLLISION_GROUP eGroup, class CGameObject
 	{
 		if (nullptr != iter)
 		{
-			CCollider_Rect*  DamageOwner = (CCollider_Rect*)pGameObject->Find_Component(TEXT("Com_Collider_Rect"));
-			CCollider_Rect*	 Target = (CCollider_Rect*)iter->Find_Component(TEXT("Com_Collider_Rect"));
+			CCollider_Cube*  DamageOwner = (CCollider_Cube*)pGameObject->Find_Component(TEXT("Com_Collider_Cube"));
+			CCollider_Cube*	 Target = (CCollider_Cube*)iter->Find_Component(TEXT("Com_Collider_Cube"));
 			if (Target == nullptr)
 				continue;
 
@@ -82,6 +82,25 @@ _bool CCollider::Collision_Check_Group_Multi(COLLISION_GROUP eGroup, vector<clas
 	else {
 		return false;
 	}
+}
+
+_bool CCollider::Collision_with_GroupCube(COLLISION_GROUP eGroup, CGameObject * pGameObject, _float3 * pOutDistance)
+{
+	for (auto& iter : m_GameObjects[eGroup])
+	{
+		if (nullptr != iter)
+		{
+			CCollider_Cube*  DamageOwner = (CCollider_Cube*)pGameObject->Find_Component(TEXT("Com_Collider_Cube"));
+			CCollider_Cube*	 Target = (CCollider_Cube*)iter->Find_Component(TEXT("Com_Collider_Cube"));
+			if (Target == nullptr)
+				continue;
+
+			if (true == (DamageOwner->Collision_Check(Target, pOutDistance)))
+				return true;
+		}
+	}
+
+	return false;
 }
 
 
