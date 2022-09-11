@@ -146,7 +146,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 	
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, pLayerTag, _float3(22.f, 0.f, 22.f))))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, pLayerTag, _float3(10.f, 0.f, 40.f))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boarrior"), LEVEL_GAMEPLAY, pLayerTag, _float3(30.f, 0.f, 22.f))))
@@ -272,14 +272,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_GAMEPLAY, pLayerTag, ObjectPos);
 	}
 	CloseHandle(hFile);
-
-	// Test: CARROT
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_GAMEPLAY, pLayerTag, _float3(36.f, 1.f, 26.f))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_GAMEPLAY, pLayerTag, _float3(42.f, 1.f, 26.f))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 28.f))))
-		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 	return S_OK;

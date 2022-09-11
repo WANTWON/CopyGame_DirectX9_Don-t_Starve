@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "Transform.h"
 #include "Level_Manager.h"
-
+#include "Interactive_Object.h"
 
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CGameObject(pGraphic_Device)
@@ -315,11 +315,10 @@ void CBullet::Excute(_float fTimeDelta)
 
 void CBullet::AttackCheck(_float _fTimeDelta)
 {
-	vector<CGameObject*> vecDamagedActor;
-
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	vector<CGameObject*> vecDamagedActor;
+	
 	if (pGameInstance->Collision_Check_Group_Multi(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, vecDamagedActor, this))
-	//if (pGameInstance->Collision_with_Group(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, this))
 	{
 		switch (m_tBulletData.eWeaponType)
 		{
@@ -380,7 +379,28 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 	AttackMulti:
 			CGameInstance::Apply_Damage_Multi(m_fDamage, vecDamagedActor, this, nullptr);
 	}
+	vecDamagedActor.clear();
 
+	// Collision with Object (if Bearger Special Attack)
+	if (m_tBulletData.eWeaponType == WEAPON_TYPE::BEARGER_SPECIAL)
+	{
+		if (pGameInstance->Collision_Check_Group_Multi(CCollider::COLLISION_OBJECT, vecDamagedActor, this))
+		{
+			for (auto& iter = vecDamagedActor.begin(); iter != vecDamagedActor.end(); ++iter)
+			{
+				CInteractive_Object* pInteractiveObj = dynamic_cast<CInteractive_Object*>((*iter));
+				if (pInteractiveObj)
+				{
+					if (!pInteractiveObj->Get_Destroyed())
+					{
+						pInteractiveObj->Drop_Items();
+						pInteractiveObj->Destroy();
+						m_bDead = OBJ_DEAD;
+					}
+				}
+			}
+		}
+	}
 	vecDamagedActor.clear();
 }
 

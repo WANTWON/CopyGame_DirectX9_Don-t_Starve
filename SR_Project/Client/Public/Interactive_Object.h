@@ -5,9 +5,9 @@
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
-//class CCollider;
 class CTransform;
 class CVIBuffer_Rect;
+class CCollider_Rect;
 END
 
 BEGIN(Client)
@@ -30,7 +30,7 @@ protected: /* For.Components */
 	CRenderer* m_pRendererCom = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 	CTransform*	m_pTransformCom = nullptr;
-	//CCollider* m_pColliderCom = nullptr;
+	CCollider_Rect* m_pColliderCom = nullptr;
 
 	vector<CTexture*> m_vecTexture;
 
@@ -57,14 +57,17 @@ protected:
 	_bool m_bInteract = true;
 	_bool m_bPicking;
 	_float3 m_vecOutPos;
+	_bool m_bIsDestroyed = false;
 
 public:
 	INTERACTOBJ_ID Get_InteractName() { return m_eInteract_OBJ_ID; }
 	_bool Get_CanInteract() { return m_bInteract; }
 	_uint Set_Damage(_uint _iDamage) { m_iDamage = 0; }
+	_bool Get_Destroyed() { return m_bIsDestroyed; }
 	_bool Get_Dead() { return m_bDead; }
 	virtual void Interact(_uint Damage = 0) = 0;
 	virtual HRESULT Drop_Items() = 0;
+	virtual void Destroy() { m_bIsDestroyed = true; }
 
 public:
 	virtual void Free() override;

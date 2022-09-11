@@ -126,6 +126,13 @@ HRESULT CBoulder::Drop_Items()
 	return S_OK;
 }
 
+void CBoulder::Destroy()
+{
+	__super::Destroy();
+
+	m_eState = STATE::BROKEN;
+}
+
 HRESULT CBoulder::SetUp_Components(void* pArg)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();

@@ -51,6 +51,7 @@ private:
 public:
 	virtual void Interact(_uint Damage = 0) override;
 	virtual HRESULT Drop_Items() override;
+	virtual void Destroy() override;
 
 public:
 	static CGrass* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

@@ -26,6 +26,7 @@ public:
 	_float3 Get_Position() { return m_vPosition; }
 	_float  Get_Radius() { return m_fRadius; }
 	_bool	Get_Dead() { return m_bDead; }
+	void	Set_Dead(_bool bDead) { m_bDead = bDead; }
 	void	Set_Radius(_float _fRadius) { m_fRadius = _fRadius;}
 	void	Set_bConstruct(_bool type) { m_bConstruct = type; }
 	virtual _bool Picking(_float3* PickingPoint) { return true; }

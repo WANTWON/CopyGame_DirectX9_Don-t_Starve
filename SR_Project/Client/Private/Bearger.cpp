@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Inventory.h"
 #include "Item.h"
+#include "Carrot.h"
 
 CBearger::CBearger(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -34,7 +35,12 @@ HRESULT CBearger::Initialize(void* pArg)
 	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 
-	m_fAttackRadius = 2.f;
+	m_fAggroRadius = 4.f;
+	m_fAttackRadius = 2.f; 
+	m_fEatRadius = 2.f;
+
+	// Set this as final patrol position
+	vPatrolPosition = _float3(40.f, 1.f, 27.f);
 
 	return S_OK;
 }
@@ -59,6 +65,17 @@ void CBearger::Late_Tick(_float fTimeDelta)
 	Change_Motion();
 	Change_Frame(fTimeDelta);
 
+	// Reset Eat Animation
+	if (m_eState == STATE::EAT)
+	{
+		fEatTimer += fTimeDelta;
+		if (fEatTimer > 1.5f)
+		{
+			m_eState = STATE::POST_EAT;
+			fEatTimer = 0.f;
+		}
+	}
+
 	if (m_eDir == DIR_STATE::DIR_LEFT)
 		m_pColliderCom->Set_IsInverse(true);
 	else
@@ -72,7 +89,7 @@ HRESULT CBearger::Render()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	m_pColliderCom->Render_ColliderBox();
+	//m_pColliderCom->Render_ColliderBox();
 #endif // _DEBUG
 
 	return S_OK;
@@ -309,6 +326,22 @@ void CBearger::Change_Frame(_float fTimeDelta)
 
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
+	case STATE::PRE_EAT:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = STATE::EAT;
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 13)
+			if (m_pTarget)
+				m_pTarget->Set_Dead(true);
+		break;
+	case STATE::POST_EAT:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		{
+			m_eState = STATE::IDLE;
+			m_dwIdleTime = GetTickCount();
+			m_eDir = DIR_STATE::DIR_DOWN;
+			m_bIsEating = false;
+		}
+		break;
 	case STATE::EAT:
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
@@ -455,8 +488,14 @@ void CBearger::Change_Motion()
 			if (m_eDir != m_ePreDir)
 				m_ePreDir = m_eDir;
 			break;
+		case STATE::PRE_EAT:
+			Change_Texture(TEXT("Com_Texture_EAT_PRE"));
+			break;
 		case STATE::EAT:
 			Change_Texture(TEXT("Com_Texture_EAT"));
+			break;
+		case STATE::POST_EAT:
+			Change_Texture(TEXT("Com_Texture_EAT_POST"));
 			break;
 		case STATE::ATTACK:
 			switch (m_eDir)
@@ -536,15 +575,26 @@ void CBearger::AI_Behaviour(_float fTimeDelta)
 	}
 	else
 	{
-		Find_Target(); // Find Food
+		if (!m_bIsEating)
+			Find_Target(); // Find Food
+		
 		if (m_pTarget)
 		{
-			// TODO: Go to Food Position
+			// If in EatRadius: Eat
+			if (m_fDistanceToTarget < m_fEatRadius && !m_bIsEating)
+			{
+				m_eState = STATE::PRE_EAT;
+				m_bIsEating = true;
+			}
+			else if (!m_bIsEating)
+				Follow_Target(fTimeDelta, true);
 		}
 		else
 			Patrol(fTimeDelta);
 	}
-		
+
+	if (D3DXVec3Length(&(Get_Position() - vPatrolPosition)) < 0.1f && !m_bAggro)
+		m_bAggro = true;
 }
 
 void CBearger::Patrol(_float fTimeDelta)
@@ -556,14 +606,6 @@ void CBearger::Patrol(_float fTimeDelta)
 		{
 			m_eState = STATE::WALK;
 			m_dwWalkTime = GetTickCount();
-
-			// Find Random Patroling Position
-			_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
-			_int bSignX = rand() % 2;
-			_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
-			_int bSignZ = rand() % 2;
-			m_fPatrolPosX = bSignX ? (m_pTransformCom->Get_TransformDesc().InitPos.x + fOffsetX) : (m_pTransformCom->Get_TransformDesc().InitPos.x - fOffsetX);
-			m_fPatrolPosZ = bSignZ ? (m_pTransformCom->Get_TransformDesc().InitPos.z + fOffsetZ) : (m_pTransformCom->Get_TransformDesc().InitPos.z - fOffsetZ);
 		}
 	}
 	else if (m_eState == STATE::WALK)
@@ -589,9 +631,7 @@ void CBearger::Patrol(_float fTimeDelta)
 		if (!pTransform_Terrain)
 			return;
 
-		_float3 vPatrolPosition = { m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ };
 		_float3 vScale = m_pTransformCom->Get_Scale();
-
 		vPatrolPosition.y = pVIBuffer_Terrain->Compute_Height(vPatrolPosition, pTransform_Terrain->Get_WorldMatrix(), (1 * vScale.y / 2));
 
 		// Change Direction
@@ -611,7 +651,7 @@ void CBearger::Patrol(_float fTimeDelta)
 			else
 				m_eDir = DIR_STATE::DIR_DOWN;
 
-		m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, _float3(m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ), _float3{ 0.f, 0.f, 0.f });
+		m_pTransformCom->Go_PosTarget(fTimeDelta * .25f, _float3(vPatrolPosition.x, vPatrolPosition.y, vPatrolPosition.z), _float3{ 0.f, 0.f, 0.f });
 	}
 }
 
@@ -632,27 +672,57 @@ void CBearger::Find_Target()
 			if (pTarget)
 			{
 				_float3 vTargetPos = pTarget->Get_Position();
-				m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
+				m_fDistanceToTarget = D3DXVec3Length(&(Get_Position() - vTargetPos));
 				m_pTarget = pTarget;
 			}
 			else
 				m_pTarget = nullptr;
 		}
-		// Look for Food
+		// Look for Food (Carrot)
 		else
 		{
-			// TODO: Implement
-			m_pTarget = nullptr; // Remove this line
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			Safe_AddRef(pGameInstance);
+
+			list<CGameObject*>* pObjects = pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Object")); // Get Objects in GAMEPLAY_LEVEL
+
+			for (auto iter = pObjects->begin(); iter != pObjects->end(); ++iter)
+			{
+				if (!(*iter))
+					continue;
+
+				_float3 vObjPos = (*iter)->Get_Position();
+
+				// Check if Object is in Eat Radius
+				m_fDistanceToTarget = D3DXVec3Length(&(Get_Position() - vObjPos));
+				if (m_fDistanceToTarget < m_fAggroRadius)
+				{
+					// If Object is a Carrot set as Target
+					CCarrot* pCarrot = dynamic_cast<CCarrot*>(*iter);
+					if (pCarrot)
+					{
+						m_pTarget = pCarrot;
+						break;
+					}
+					else
+						m_pTarget = nullptr;
+				}
+				else
+					m_pTarget = nullptr;
+			}
 		}
 	}
 	else
 		m_pTarget = nullptr;
 }
 
-void CBearger::Follow_Target(_float fTimeDelta)
+void CBearger::Follow_Target(_float fTimeDelta, _bool bIsFood)
 {
 	// Set State 
-	m_eState = m_tInfo.iCurrentHp < (m_tInfo.iMaxHp / 2) ? STATE::CHARGE : STATE::RUN;
+	if (bIsFood)
+		m_eState = STATE::WALK;
+	else
+		m_eState = m_tInfo.iCurrentHp < (m_tInfo.iMaxHp / 2) ? STATE::CHARGE : STATE::RUN;
 
 	_float3 fTargetPos = m_pTarget->Get_Position();
 
@@ -673,8 +743,7 @@ void CBearger::Follow_Target(_float fTimeDelta)
 		else
 			m_eDir = DIR_STATE::DIR_DOWN;
 
-	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
-
+	m_pTransformCom->Go_PosTarget(fTimeDelta * .25f, fTargetPos, _float3(0, 0, 0));
 	m_bIsAttacking = false;
 }
 
@@ -690,6 +759,7 @@ void CBearger::Attack(_bool bIsSpecial)
 		BULLETDATA BulletData;
 		ZeroMemory(&BulletData, sizeof(BulletData));
 
+		BulletData.bIsPlayerBullet = false;
 		BulletData.vPosition = m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 		BulletData.eDirState = m_eDir;
 		BulletData.fOffsetSide = 1.f;
@@ -705,13 +775,14 @@ void CBearger::Attack(_bool bIsSpecial)
 		BULLETDATA BulletData;
 		ZeroMemory(&BulletData, sizeof(BulletData));
 
+		BulletData.bIsPlayerBullet = false;
 		BulletData.eWeaponType = WEAPON_TYPE::BEARGER_SPECIAL;
 		BulletData.eDirState = m_eDir;
 		D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 		D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
 
 		_float3 vRingPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .5f, 0.f);
-		_float3 vRocksPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, 1.f, 0.f);
+		_float3 vRocksPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .5f, 0.f);
 
 		// Create Ring and First Wave of Rocks
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)

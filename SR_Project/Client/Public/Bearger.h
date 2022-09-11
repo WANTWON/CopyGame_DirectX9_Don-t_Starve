@@ -15,7 +15,9 @@ class CBearger final : public CMonster
 		CHARGE,
 		ATTACK,
 		POUND_GROUND,
+		PRE_EAT,
 		EAT,
+		POST_EAT,
 		HIT,
 		DIE,
 		MAX
@@ -46,12 +48,16 @@ private:
 	DIR_STATE m_ePreDir = DIR_STATE::DIR_END;
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
+	_float m_fEatRadius;
+	_bool m_bIsEating = false;
+	_float3 vPatrolPosition;
+	_float fEatTimer = 0.f;
 
 private:
 	virtual void AI_Behaviour(_float fTimeDelta) override;
 	void Patrol(_float fTimeDelta);
 	virtual void Find_Target() override;
-	virtual void Follow_Target(_float fTimeDelta) override;
+	void Follow_Target(_float fTimeDelta, _bool bIsFood = false);
 	void Attack(_bool bIsSpecial = false);
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 	virtual HRESULT Drop_Items() override;

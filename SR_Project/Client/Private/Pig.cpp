@@ -60,6 +60,9 @@ void CPig::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
+	Change_Motion();
+	Change_Frame(fTimeDelta);
+
 	// Reset Happy Animation
 	if (m_eState == STATE::HAPPY)
 	{
@@ -70,11 +73,8 @@ void CPig::Late_Tick(_float fTimeDelta)
 			fHappyTimer = 0.f;
 			m_dwIdleTime = GetTickCount();
 			m_eDir = DIR_STATE::DIR_DOWN;
-		}	
+		}
 	}
-
-	Change_Motion();
-	Change_Frame(fTimeDelta);
 
 	if (!CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
