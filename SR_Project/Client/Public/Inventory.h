@@ -42,6 +42,7 @@
 #include "Pot_back.h"
 #include "Pot_front.h"
 #include "Potbutton.h"
+#include "CookPot.h"
 
 #include "Mouse_iteminfo.h"
 #include "Eatitem.h"
@@ -129,7 +130,7 @@ public:
 	void Use_bag();
 	void Off_bag();
 
-	void Use_pot();
+	void Use_pot(CCookPot* pCookPot);
 	void Off_pot();
 
 	void weapontool_on();

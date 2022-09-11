@@ -301,7 +301,7 @@ void CInventory_Manager::Off_bag()
 	m_BagInventorylist.front()->set_closebag();      //set_check_bag(false);
 }
 
-void CInventory_Manager::Use_pot()
+void CInventory_Manager::Use_pot(CCookPot* pCookPot)
 {
 
 	m_Pot.front()->set_check_pot(true);
@@ -310,7 +310,7 @@ void CInventory_Manager::Use_pot()
 		k->set_check_pot(true);
 	for (auto& k : m_Potfront)
 		k->set_check_pot(true);
-	m_Potbutton.front()->set_check_pot(true);
+	m_Potbutton.front()->set_check_pot(true, pCookPot);
 
 	m_Pot.front()->set_openpot();
 

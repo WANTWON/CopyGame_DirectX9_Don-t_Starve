@@ -223,14 +223,14 @@
     <Filter Include="01.Levels\Boss">
       <UniqueIdentifier>{5991c2dd-ca0b-4829-8a45-26ad1b7738ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox">
-      <UniqueIdentifier>{3a7394e3-7eff-465e-b458-137df5fbb652}</UniqueIdentifier>
+    <Filter Include="02.GameObject\01.Monster\Boarrior">
+      <UniqueIdentifier>{7a67c311-4a79-4bb7-aba7-d5868e7a3419}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\98.UI\10.Eateffect">
-      <UniqueIdentifier>{9918b288-eb87-4767-9d6f-6aee8f9f34a0}</UniqueIdentifier>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Torch">
+      <UniqueIdentifier>{e678b83f-4e12-4c45-90e6-f45bcde493d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\98.UI\11.DeadUI">
-      <UniqueIdentifier>{8408dd5b-499b-44c1-963a-24c0db3d230b}</UniqueIdentifier>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\OtherDecoObject">
+      <UniqueIdentifier>{ed772d46-c6be-4144-97e8-935b8df75ff6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -531,26 +531,11 @@
     <ClInclude Include="..\Public\Level_Boss.h">
       <Filter>01.Levels\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ToolboxMaterial.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ToolboxMaterial_back.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ToolboxMaterial_front.h">
-      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Eatitem.h">
-      <Filter>02.GameObject\98.UI\10.Eateffect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Deadmain.h">
-      <Filter>02.GameObject\98.UI\11.DeadUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Daypont.h">
-      <Filter>02.GameObject\98.UI\11.DeadUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Deadcountpont.h">
-      <Filter>02.GameObject\98.UI\11.DeadUI</Filter>
+    <ClInclude Include="..\Public\ToolboxMaterial.h" />
+    <ClInclude Include="..\Public\ToolboxMaterial_back.h" />
+    <ClInclude Include="..\Public\ToolboxMaterial_front.h" />
+    <ClInclude Include="..\public\Boarrior.h">
+      <Filter>02.GameObject\01.Monster\Boarrior</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -839,26 +824,11 @@
     <ClCompile Include="..\Private\Level_Boss.cpp">
       <Filter>01.Levels\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ToolboxMaterial.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ToolboxMaterial_back.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ToolboxMaterial_front.cpp">
-      <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Eatitem.cpp">
-      <Filter>02.GameObject\98.UI\10.Eateffect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Deadmain.cpp">
-      <Filter>02.GameObject\98.UI\11.DeadUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Daypont.cpp">
-      <Filter>02.GameObject\98.UI\11.DeadUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Deadcountpont.cpp">
-      <Filter>02.GameObject\98.UI\11.DeadUI</Filter>
+    <ClCompile Include="..\Private\ToolboxMaterial.cpp" />
+    <ClCompile Include="..\Private\ToolboxMaterial_back.cpp" />
+    <ClCompile Include="..\Private\ToolboxMaterial_front.cpp" />
+    <ClCompile Include="..\private\Boarrior.cpp">
+      <Filter>02.GameObject\01.Monster\Boarrior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

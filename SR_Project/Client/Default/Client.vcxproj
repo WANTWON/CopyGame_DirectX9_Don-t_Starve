@@ -163,6 +163,7 @@
     <ClInclude Include="..\Public\BagInventory.h" />
     <ClInclude Include="..\Public\Bearger.h" />
     <ClInclude Include="..\Public\Behavior_Tree.h" />
+    <ClInclude Include="..\public\Boarrior.h" />
     <ClInclude Include="..\Public\BT_NPC.h" />
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\public\BerryBush.h" />
@@ -269,6 +270,7 @@
     <ClCompile Include="..\Private\BagInventory.cpp" />
     <ClCompile Include="..\Private\Bearger.cpp" />
     <ClCompile Include="..\Private\Behavior_Tree.cpp" />
+    <ClCompile Include="..\private\Boarrior.cpp" />
     <ClCompile Include="..\Private\BT_NPC.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\private\BerryBush.cpp" />

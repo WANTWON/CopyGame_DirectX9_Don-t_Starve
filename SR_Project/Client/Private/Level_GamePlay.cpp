@@ -8,6 +8,7 @@
 #include "Level_Loading.h"
 #include "CameraManager.h"
 #include "Player.h"
+#include "Portal.h"
 
 _bool g_bUIMadefirst = false;
 
@@ -36,8 +37,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
-		return E_FAIL;
+	//if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
+		//return E_FAIL;
 
 	if (g_bLoadingfirst == false)
 	{
@@ -148,6 +149,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, pLayerTag, _float3(22.f, 0.f, 22.f))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boarrior"), LEVEL_GAMEPLAY, pLayerTag, _float3(30.f, 0.f, 22.f))))
+		return E_FAIL;
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -244,8 +248,30 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig_King"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 30.f))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, _float3(45.f, 1.f, 26.f))))
+
+	CPortal::PORTALDESC PortalDesc;
+	PortalDesc.m_eType = CPortal::PORTAL_NORMAL;
+	PortalDesc.vPosition = _float3(45.f, 1.f, 26.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, &PortalDesc)))
 		return E_FAIL;
+
+
+
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Carrot_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	ObjectPos = _float3(0, 0, 0);
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_GAMEPLAY, pLayerTag, ObjectPos);
+	}
+	CloseHandle(hFile);
 
 	// Test: CARROT
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_GAMEPLAY, pLayerTag, _float3(36.f, 1.f, 26.f))))
