@@ -207,7 +207,7 @@ void CCookPot::PickingTrue()
 	{
 		if (!pInvenManager->Get_PickingPot())
 		{
-			pInvenManager->Use_pot();
+			pInvenManager->Use_pot(this);
 			pInvenManager->Set_PickingPot(true);
 		}
 		else

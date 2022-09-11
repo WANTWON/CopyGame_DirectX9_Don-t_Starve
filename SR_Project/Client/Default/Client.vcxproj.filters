@@ -223,6 +223,9 @@
     <Filter Include="01.Levels\Boss">
       <UniqueIdentifier>{5991c2dd-ca0b-4829-8a45-26ad1b7738ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.Monster\Boarrior">
+      <UniqueIdentifier>{7a67c311-4a79-4bb7-aba7-d5868e7a3419}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -522,6 +525,12 @@
     <ClInclude Include="..\Public\Level_Boss.h">
       <Filter>01.Levels\Boss</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ToolboxMaterial.h" />
+    <ClInclude Include="..\Public\ToolboxMaterial_back.h" />
+    <ClInclude Include="..\Public\ToolboxMaterial_front.h" />
+    <ClInclude Include="..\public\Boarrior.h">
+      <Filter>02.GameObject\01.Monster\Boarrior</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -808,6 +817,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Boss.cpp">
       <Filter>01.Levels\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolboxMaterial.cpp" />
+    <ClCompile Include="..\Private\ToolboxMaterial_back.cpp" />
+    <ClCompile Include="..\Private\ToolboxMaterial_front.cpp" />
+    <ClCompile Include="..\private\Boarrior.cpp">
+      <Filter>02.GameObject\01.Monster\Boarrior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
