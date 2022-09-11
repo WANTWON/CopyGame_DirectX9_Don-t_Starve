@@ -64,6 +64,7 @@ private:
 	_float m_fOpenRadius = 0.f;
 	_bool m_bShouldClosePortal = false;
 	_bool m_bShouldTeleport = false;
+	_bool m_bFirst = false;
 
 public:
 	void AI_Behaviour();

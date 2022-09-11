@@ -94,12 +94,12 @@ HRESULT CWater::SetUp_Components(void* pArg)
 	m_TerrainDesc.m_fSizeX = 1;
 	m_TerrainDesc.m_fSizeZ = 1;
 
-	if (CLevel_Manager::Get_Instance()->Get_PastLevelIndex() == LEVEL_GAMEPLAY)
+	if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_HUNT)
 		m_TerrainDesc.m_iTextureNum = 8;
-	else if (CLevel_Manager::Get_Instance()->Get_PastLevelIndex() == LEVEL_HUNT)
+	else if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_BOSS)
 		m_TerrainDesc.m_iTextureNum = 10;
 	else
-		m_TerrainDesc.m_iTextureNum = 10;
+		m_TerrainDesc.m_iTextureNum = 17;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"), (CComponent**)&m_pVIBufferCom, &m_TerrainDesc)))

@@ -226,6 +226,12 @@
     <Filter Include="02.GameObject\01.Monster\Boarrior">
       <UniqueIdentifier>{7a67c311-4a79-4bb7-aba7-d5868e7a3419}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Torch">
+      <UniqueIdentifier>{e678b83f-4e12-4c45-90e6-f45bcde493d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\OtherDecoObject">
+      <UniqueIdentifier>{ed772d46-c6be-4144-97e8-935b8df75ff6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

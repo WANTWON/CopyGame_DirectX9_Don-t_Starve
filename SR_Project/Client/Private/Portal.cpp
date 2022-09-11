@@ -5,6 +5,7 @@
 #include "Level_Manager.h"
 #include "Level_GamePlay.h"
 #include "Level_Hunt.h"
+#include "CameraManager.h"
 
 CPortal::CPortal(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -50,7 +51,8 @@ HRESULT CPortal::Initialize(void* pArg)
 		m_fOpenRadius = 3.f;
 
 		m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
-		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
+		if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)	
+				m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
 		break;
 	}
 	case PORTAL_BOSS:
@@ -60,7 +62,8 @@ HRESULT CPortal::Initialize(void* pArg)
 		m_fOpenRadius = 3.f;
 
 		m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
-		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
+		if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
+			m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
 		break;
 	}
 	}
@@ -89,6 +92,7 @@ int CPortal::Tick(_float fTimeDelta)
 		{
 			CLevel_GamePlay* pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
 			pLevel->Set_NextLevel(true);
+			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_HUNT);
 			break;
 		}
 		case Client::LEVEL_HUNT:
@@ -97,11 +101,15 @@ int CPortal::Tick(_float fTimeDelta)
 			{
 				CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
 				pLevel->Set_PastLevel(true);
+				CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_GAMEPLAY);
+
 			}
 			else if (m_ePortalDesc.m_eType == PORTAL_BOSS)
 			{
 				CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
 				pLevel->Set_NextLevel(true);
+				CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_BOSS);
+
 			}
 			break;
 		}
@@ -195,12 +203,21 @@ void CPortal::SetUp_BillBoard()
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	
+	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
-	//if (m_ePortalDesc.m_eType == PORTAL_BOSS)
-	//{
-	//	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
-	//	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-	//}
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_FPS)
+	{
+		if (!m_bFirst)
+		{
+			m_pTransformCom->Turn(_float3(-1.f, 0.f, 0.f), 1);
+			m_bFirst = true;
+		}
+		
+		m_pTransformCom->Set_State(CTransform::STATE_LOOK, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	}
+		
+	
 }
 
 HRESULT CPortal::Texture_Clone()
@@ -231,12 +248,12 @@ HRESULT CPortal::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	TextureDesc.m_iEndTex = 39;
+	TextureDesc.m_iEndTex = 19;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BOSS_IDLE_OPEN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossPortal_Idle_Open"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	TextureDesc.m_iEndTex = 18;
+	TextureDesc.m_iEndTex = 17;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BOSS_IDLE_CLOSE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossPortal_Idle_Close"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);

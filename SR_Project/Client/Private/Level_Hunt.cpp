@@ -178,7 +178,7 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	PortalDesc.m_eType = CPortal::PORTAL_BOSS;
-	PortalDesc.vPosition = _float3(20.f, 2.f, 20.f);
+	PortalDesc.vPosition = _float3(21.f, 2.f, 21.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, &PortalDesc)))
 		return E_FAIL;
