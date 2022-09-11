@@ -44,6 +44,12 @@
 #include "Potbutton.h"
 
 #include "Mouse_iteminfo.h"
+#include "Eatitem.h"
+
+#include "Daypont.h"
+#include "Deadcountpont.h"
+#include "Deadmain.h" 
+#include "Daycountpont.h"
 /*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -106,6 +112,16 @@ public:
 	list<CPot_front*>*Get_Potfront_list(void) { return &m_Potfront; }
 	list<CPotbutton*>*Get_Potbutton_list(void) { return &m_Potbutton; }
 
+	list<CEatitem*>*Get_Eatitem_list(void) { return &m_Eatitem; }
+
+	list<CDaypont*>*Get_Daypont_list(void) { return &m_Daypont; }
+	list<CDeadmain*>*Get_Deadmain_list(void) { return &m_Deadmain; }
+	list<CDeadcountpont*>*Get_Deadcountpont_list(void) { return &m_Deadcountpont; }
+
+	list<CDaycountpont*>* Get_Daycountpont_list(void) { return &m_Daycountpont; }
+
+
+
 	void sethp(_uint hp) { m_ihp = hp; }
 	void sethuger(_uint hunger) { m_ihunger = hunger;}
 	void setmentality(_uint mental) { m_mentality = mental; }
@@ -127,6 +143,9 @@ public:
 
 	void materialtool_on();
 	void materialtool_off();
+
+	void Dead_on();
+	void Dead_off();
 
 	void craft_on(MAKEWHAT item);
 	void craft_off();
@@ -189,6 +208,14 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CPot_back*> m_Potback;
 	list<CPot_front*> m_Potfront;
 	list<CPotbutton*> m_Potbutton;
+
+	list<CEatitem*> m_Eatitem;
+
+	list<CDaypont*> m_Daypont;
+	list<CDeadmain*>m_Deadmain;
+	list<CDeadcountpont*>m_Deadcountpont;
+
+	list<CDaycountpont*>m_Daycountpont;
 	
 
 

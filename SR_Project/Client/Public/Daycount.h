@@ -42,7 +42,7 @@ private:
 	HRESULT Release_RenderState();
 
 	_uint texnum = 0;
-	_uint m_ihp;
+	//_uint daycount = 0;
 
 public:
 	static CDaycount* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

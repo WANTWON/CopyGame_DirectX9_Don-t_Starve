@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "..\Public\Playerhp_pont.h"
+#include "..\Public\Daypont.h"
 #include "GameInstance.h"
 #include "Inventory.h"
 
 
-CPlayerhp_pont::CPlayerhp_pont(LPDIRECT3DDEVICE9 pGraphic_Device)
+CDaypont::CDaypont(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CPlayerhp_pont::CPlayerhp_pont(const CPlayerhp_pont & rhs)
+CDaypont::CDaypont(const CDaypont & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CPlayerhp_pont::Initialize_Prototype()
+HRESULT CDaypont::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -22,7 +22,7 @@ HRESULT CPlayerhp_pont::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CPlayerhp_pont::Initialize(void* pArg)
+HRESULT CDaypont::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -33,10 +33,10 @@ HRESULT CPlayerhp_pont::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 20.0f;
-	m_fSizeY = 20.0f;
-	m_fX = 1215.f + (iNum * 15.f);
-	m_fY = 190.f;
+	m_fSizeX = 35.0f;
+	m_fSizeY = 35.0f;
+	m_fX = 490.f + (iNum * 35.f);
+	m_fY = 620.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
@@ -47,64 +47,88 @@ HRESULT CPlayerhp_pont::Initialize(void* pArg)
 	return S_OK;
 }
 
-int CPlayerhp_pont::Tick(_float fTimeDelta)
+int CDaypont::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
-
-	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (PtInRect(&rcRect, ptMouse))
+	if (m_bcheck == true)
 	{
+		__super::Tick(fTimeDelta);
 
-		m_fSizeX = 35.f;
-		m_fSizeY = 35.f;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		//set_check(true);
+		//RECT		rcRect;
+		//SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f),(int)( m_fY - m_fSizeY * 0.5f),(int)( m_fX + m_fSizeX * 0.5f),(int)( m_fY + m_fSizeY * 0.5f));
+
+		//POINT		ptMouse;
+		//GetCursorPos(&ptMouse);
+		//ScreenToClient(g_hWnd, &ptMouse);
+
+		//if (PtInRect(&rcRect, ptMouse))
+		//{
+
+		//	m_fSizeX = 35.f;
+		//	m_fSizeY = 35.f;
+		//	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		//	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+		//	//set_check(true);
+		//}
+
+
+
+
+		//if()
 	}
-
-
-
-
-	//if()
+	
 	return OBJ_NOEVENT;
 }
 
-void CPlayerhp_pont::Late_Tick(_float fTimeDelta)
+void CDaypont::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
 
-	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (!PtInRect(&rcRect, ptMouse))
+	if (m_bcheck == true)
 	{
-		m_fSizeX = 20;
-		m_fSizeY = 20;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		__super::Late_Tick(fTimeDelta);
 
 
-		//ERR_MSG(L"충돌");
+
+		if (iNum == 0)
+		{
+			texnum = (daycount % 100) / 10;
+
+			if (texnum <= 0)
+				texnum = 30;
+
+		}
+
+		else if (iNum == 1)
+			texnum = (daycount % 10);
+
+
+
+		//RECT		rcRect;
+		//SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+
+		//POINT		ptMouse;
+		//GetCursorPos(&ptMouse);
+		//ScreenToClient(g_hWnd, &ptMouse);
+
+		//if (!PtInRect(&rcRect, ptMouse))
+		//{
+		//	m_fSizeX = 20;
+		//	m_fSizeY = 20;
+		//	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+
+
+		//	//ERR_MSG(L"충돌");
+		//}
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 	}
-	if (nullptr != m_pRendererCom&&m_bcheck)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	//set_check(false);
 }
 
-HRESULT CPlayerhp_pont::Render()
+HRESULT CDaypont::Render()
 {
-	//if (m_bcheck)
-	//{
+	if (m_bcheck == true)
+	{
 		if (FAILED(__super::Render()))
 			return E_FAIL;
 
@@ -125,14 +149,14 @@ HRESULT CPlayerhp_pont::Render()
 
 		m_pVIBufferCom->Render();
 
-		if(FAILED(Release_RenderState()))
+		if (FAILED(Release_RenderState()))
 			return E_FAIL;
-//	}
-
+		//	}
+	}
 	return S_OK;
 }
 
-HRESULT CPlayerhp_pont::SetUp_Components()
+HRESULT CDaypont::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -161,7 +185,7 @@ HRESULT CPlayerhp_pont::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CPlayerhp_pont::SetUp_RenderState()
+HRESULT CDaypont::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -175,7 +199,7 @@ HRESULT CPlayerhp_pont::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CPlayerhp_pont::Release_RenderState()
+HRESULT CDaypont::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
@@ -184,34 +208,34 @@ HRESULT CPlayerhp_pont::Release_RenderState()
 	return S_OK;
 }
 
-CPlayerhp_pont * CPlayerhp_pont::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CDaypont * CDaypont::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CPlayerhp_pont*	pInstance = new CPlayerhp_pont(pGraphic_Device);
+	CDaypont*	pInstance = new CDaypont(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CPlayerhp_pont"));
+		ERR_MSG(TEXT("Failed to Created : CDaypont"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CPlayerhp_pont::Clone(void* pArg)
+CGameObject * CDaypont::Clone(void* pArg)
 {
-	CPlayerhp_pont*	pInstance = new CPlayerhp_pont(*this);
+	CDaypont*	pInstance = new CDaypont(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CPlayerhp_pont"));
+		ERR_MSG(TEXT("Failed to Cloned : CDaypont"));
 		Safe_Release(pInstance);
 	}
-	CInventory_Manager::Get_Instance()->Get_playerhp_Pont_list()->push_back(pInstance);
+	CInventory_Manager::Get_Instance()->Get_Daypont_list()->push_back(pInstance);
 	return pInstance;
 }
 
 
-void CPlayerhp_pont::Free()
+void CDaypont::Free()
 {
 	__super::Free();
 

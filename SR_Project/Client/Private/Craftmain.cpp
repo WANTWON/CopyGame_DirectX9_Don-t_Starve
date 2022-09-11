@@ -31,7 +31,7 @@ HRESULT CCraftmain::Initialize(void* pArg)
 
 	m_fSizeX = 250.f;
 	m_fSizeY = 325.f;
-    m_fX = 238.f;
+	m_fX = 238.f;
 	m_fY = 0.f;
 
 
@@ -56,11 +56,11 @@ int CCraftmain::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT|| m_makewhat == MAKE_FENCE||m_makewhat == MAKE_ROPE)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT || m_makewhat == MAKE_FENCE || m_makewhat == MAKE_ROPE)
 		m_fY = 212.f;
-	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT||m_makewhat == MAKE_COAL)
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT || m_makewhat == MAKE_COAL)
 		m_fY = 262.f;
-	else if (m_makewhat == MAKE_STAFF|| m_makewhat == MAKE_TENT||m_makewhat == MAKE_TORCH)
+	else if (m_makewhat == MAKE_STAFF || m_makewhat == MAKE_TENT || m_makewhat == MAKE_TORCH)
 		m_fY = 312.f;
 	else if (m_makewhat == MAKE_ARMOR)
 		m_fY = 362.f;
@@ -70,9 +70,9 @@ int CCraftmain::Tick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 	/*if (m_fY <= 212.f)
-		Open_Craft(fTimeDelta);*/
+	Open_Craft(fTimeDelta);*/
 	//if (m_fX <= 100)
-		//Open_Weapontool(fTimeDelta);
+	//Open_Weapontool(fTimeDelta);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 	/*RECT		rcRect;
 	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);

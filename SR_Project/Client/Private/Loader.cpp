@@ -92,6 +92,10 @@
 #include "CameraFPS.h"
 #include "Mouse_iteminfo.h"
 
+#include "Deadcountpont.h"
+#include "Deadmain.h"
+#include "Daypont.h"
+
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -631,6 +635,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Iteminfo/Iteminfo%d.png"), 9))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_DeadUI */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Deadmain"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/DeadUI/dead%d.png"), 1))))
+		return E_FAIL;
+
 
 
 	
@@ -882,6 +891,18 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Potbutton"),
 		CPotbutton::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Deadmain"),
+		CDeadmain::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Deadcount"),
+		CDeadcountpont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Daypont"),
+		CDaypont::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	

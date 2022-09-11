@@ -1,19 +1,20 @@
 #include "stdafx.h"
-#include "..\Public\ToolboxMaterial_back.h"
+#include "..\Public\Eatitem.h"
 #include "GameInstance.h"
 #include "Inventory.h"
 
-CToolboxMaterial_back::CToolboxMaterial_back(LPDIRECT3DDEVICE9 pGraphic_Device)
+
+CEatitem::CEatitem(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CToolboxMaterial_back::CToolboxMaterial_back(const CToolboxMaterial_back & rhs)
+CEatitem::CEatitem(const CEatitem & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CToolboxMaterial_back::Initialize_Prototype()
+HRESULT CEatitem::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -21,23 +22,20 @@ HRESULT CToolboxMaterial_back::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CToolboxMaterial_back::Initialize(void* pArg)
+HRESULT CEatitem::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	iNumber = (int*)pArg;
+	/*iNumber = (int*)pArg;
 
-	iNum = *iNumber;
+	iNum = *iNumber;*/
 
-	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
+	//D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
 	m_fSizeX = 40.0f;
 	m_fSizeY = 40.0f;
-	m_fX = 30.f;
-	m_fY = 210.f + (iNum * 50.f);
 
-	m_firstx = m_fX;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
@@ -45,77 +43,45 @@ HRESULT CToolboxMaterial_back::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
-
-
 	return S_OK;
 }
 
-int CToolboxMaterial_back::Tick(_float fTimeDelta)
+int CEatitem::Tick(_float fTimeDelta)
 {
-	if (m_bonof == false)
-		return OBJ_NOEVENT;
-
 	__super::Tick(fTimeDelta);
-
-
 
 	RECT		rcRect;
 	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
+	//POINT		ptMouse;
+	//GetCursorPos(&ptMouse);
+	//ScreenToClient(g_hWnd, &ptMouse);
+	_float4x4		ViewMatrix, ProjMatrix;
 
-	if (m_fX <= 100)
-		Open_Weapontool(fTimeDelta);
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	D3DXVec3TransformCoord(&pos, &pos, &ViewMatrix);
+
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+	D3DXVec3TransformCoord(&pos, &pos, &ProjMatrix);
+
+
+	m_fX = (float)pos.x;
+	m_fY = (float)pos.y;
+	//m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 
-	if (PtInRect(&rcRect, ptMouse))
-	{
-		m_fSizeX = 55.f;
-		m_fSizeY = 55.f;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		backtexnum = 0;
 
-
-	}
-
-	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pInventory_Manager);
-	//pInventory_Manager->craft_on(MAKE_AXE);
-	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
-	{
-
-		if (iNum == 0)
-		{
-			pInventory_Manager->craft_on(MAKE_ROPE);
-		}
-		else if (iNum == 1)
-		{
-			pInventory_Manager->craft_on(MAKE_COAL);
-
-		}
-		else
-			pInventory_Manager->craft_on(MAKE_TORCH);
-
-
-
-	}
-
-
-	Safe_Release(pInventory_Manager);
+	//if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON) && m_bcheck == true)
+	//{
+	//	m_bcheck = false;
+	//}
 
 	return OBJ_NOEVENT;
 }
 
-void CToolboxMaterial_back::Late_Tick(_float fTimeDelta)
+void CEatitem::Late_Tick(_float fTimeDelta)
 {
-
-	if (m_bonof == false)
-		return;
-
 	__super::Late_Tick(fTimeDelta);
 	RECT		rcRect;
 	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
@@ -129,24 +95,25 @@ void CToolboxMaterial_back::Late_Tick(_float fTimeDelta)
 		m_fSizeX = 40;
 		m_fSizeY = 40;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		backtexnum = 2;
 
 
+		//ERR_MSG(L"Ãæµ¹");
 	}
 
 
 
-	if (nullptr != m_pRendererCom && iNum < 10)
+	/*if (m_bItem)
+	{
+
+	}*/
+
+	if (nullptr != m_pRendererCom && m_bcheck == true)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 }
 
-HRESULT CToolboxMaterial_back::Render()
+HRESULT CEatitem::Render()
 {
-
-	if (m_bonof == false)
-		return OBJ_NOEVENT;
-
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -159,7 +126,7 @@ HRESULT CToolboxMaterial_back::Render()
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(backtexnum)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))
@@ -175,14 +142,14 @@ HRESULT CToolboxMaterial_back::Render()
 	return S_OK;
 }
 
-HRESULT CToolboxMaterial_back::SetUp_Components()
+HRESULT CEatitem::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainToolbox_back"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainInventory_front"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -204,53 +171,57 @@ HRESULT CToolboxMaterial_back::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CToolboxMaterial_back::SetUp_RenderState()
+HRESULT CEatitem::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
 	return S_OK;
 }
 
-HRESULT CToolboxMaterial_back::Release_RenderState()
+HRESULT CEatitem::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	return S_OK;
 }
 
-CToolboxMaterial_back * CToolboxMaterial_back::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CEatitem * CEatitem::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CToolboxMaterial_back*	pInstance = new CToolboxMaterial_back(pGraphic_Device);
+	CEatitem*	pInstance = new CEatitem(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CToolboxMaterial_back"));
+		ERR_MSG(TEXT("Failed to Created : CMouse_item"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CToolboxMaterial_back::Clone(void* pArg)
+CGameObject * CEatitem::Clone(void* pArg)
 {
-	CToolboxMaterial_back*	pInstance = new CToolboxMaterial_back(*this);
+	CEatitem*	pInstance = new CEatitem(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CToolboxMaterial_back"));
+		ERR_MSG(TEXT("Failed to Cloned : CMouse_item"));
 		Safe_Release(pInstance);
 	}
 
-	CInventory_Manager::Get_Instance()->Get_ToolboxMaterial_back_list()->push_back(pInstance);
+	CInventory_Manager::Get_Instance()->Get_Eatitem_list()->push_back(pInstance);
 
 	return pInstance;
 }
 
 
-void CToolboxMaterial_back::Free()
+void CEatitem::Free()
 {
 	__super::Free();
 
