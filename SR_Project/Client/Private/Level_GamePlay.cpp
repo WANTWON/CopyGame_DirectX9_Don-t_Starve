@@ -256,6 +256,23 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, &PortalDesc)))
 		return E_FAIL;
 
+
+
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Carrot_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	ObjectPos = _float3(0, 0, 0);
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_GAMEPLAY, pLayerTag, ObjectPos);
+	}
+	CloseHandle(hFile);
+
 	// Test: CARROT
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_GAMEPLAY, pLayerTag, _float3(36.f, 1.f, 26.f))))
 		return E_FAIL;
