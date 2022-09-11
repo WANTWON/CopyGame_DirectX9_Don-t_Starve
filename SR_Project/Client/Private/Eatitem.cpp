@@ -84,7 +84,7 @@ int CEateffect::Tick(_float fTimeDelta)
 		D3DXVec3Normalize(&vdir, &vdir);
 
 		if (pos1.x != 0 && pos1.y != 0)
-			mypos += vdir * 14.f; // 이거로 이동
+			mypos += vdir * 20.f; // 이거로 이동
 
 		if (pos1.y <= mypos.y)
 			m_bcheck = false;
