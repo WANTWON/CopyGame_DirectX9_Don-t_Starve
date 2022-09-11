@@ -64,12 +64,12 @@ void CPickingMgr::Add_PickingObject(ITEMID type)
 		case ITEMNAME_TENT:
 			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tent"), LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"), m_vPickingPos);
 			break;
-		}	
-	}
+		}
 
-	m_pPickingObject = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"));
-	m_pPickingObject->Set_bConstruct(true);
-	m_bMouseHasConstruction = true;
+		m_pPickingObject = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_PickingObject"));
+		m_pPickingObject->Set_bConstruct(true);
+		m_bMouseHasConstruction = true;
+	}
 }
 
 void CPickingMgr::Add_PickingGroup(CGameObject * pGameObject)
@@ -109,7 +109,7 @@ _bool CPickingMgr::Picking()
 
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if ( pGameObject->Picking(&vPos) == true)
+		if (pGameObject->Picking(&vPos) == true)
 		{
 			vecPicked.push_back(pGameObject);
 			vecPos.push_back(vPos);

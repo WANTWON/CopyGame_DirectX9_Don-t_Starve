@@ -348,7 +348,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 		{
 			if (false == pMouse->Get_picked())
 			{
-				pMouse->Set_Item_type(ITEM_END);
+				pMouse->Set_Item_type(m_itemtype);
 				pMouse->Set_Item_name(texnum);   //Ã¹ÇÇÅ·
 				pMouse->Set_index(iNum);
 				pMouse->Set_picked(true);

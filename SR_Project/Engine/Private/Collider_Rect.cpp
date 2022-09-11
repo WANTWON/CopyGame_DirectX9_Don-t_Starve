@@ -196,8 +196,17 @@ _bool CCollider_Rect::Collision_Check(CCollider_Rect * pTarget, _float3* pOutDis
 	_float3		vDestMin, vDestMax, vDestCenter;
 	_float3		vDistance = _float3(0, 0, 0);
 
-	vSourMin = m_vPoint[3];
-	vSourMax = m_vPoint[1];
+	if (m_bIsInverse)
+	{
+		vSourMin = m_vPoint[2];
+		vSourMax = m_vPoint[0];
+	}
+	else
+	{
+		vSourMin = m_vPoint[3];
+		vSourMax = m_vPoint[1];
+	}
+	
 	vSourCenter = (vSourMax + vSourMin)*0.5f;
 
 	// Flip Min and Max if pOther is Scaled by -1 (X-Axis)

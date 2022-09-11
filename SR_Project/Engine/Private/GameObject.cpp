@@ -40,13 +40,13 @@ HRESULT CGameObject::Render()
 
 
 
-void CGameObject::Apply_Damage(_float fDamage, CGameObject * DamagedObj, void * AttackType)
-{
-}
-
-void CGameObject::Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void * AttackType)
-{
-}
+//void CGameObject::Apply_Damage(_float fDamage, CGameObject * DamagedObj, void * AttackType)
+//{
+//}
+//
+//void CGameObject::Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void * AttackType)
+//{
+//}
 
 
 _float CGameObject::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)

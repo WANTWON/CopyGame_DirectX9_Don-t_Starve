@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\Pig.h"
 #include "GameInstance.h"
+#include "PickingMgr.h"
+#include "Mouse.h"
 #include "Player.h"
 #include "Inventory.h"
 #include "Item.h"
@@ -41,7 +43,10 @@ HRESULT CPig::Initialize(void* pArg)
 int CPig::Tick(_float fTimeDelta)
 {
 	if (__super::Tick(fTimeDelta))
+	{
+		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
 		return OBJ_DEAD;
+	}
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);
@@ -55,6 +60,9 @@ void CPig::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
+	Change_Motion();
+	Change_Frame(fTimeDelta);
+
 	// Reset Happy Animation
 	if (m_eState == STATE::HAPPY)
 	{
@@ -65,11 +73,11 @@ void CPig::Late_Tick(_float fTimeDelta)
 			fHappyTimer = 0.f;
 			m_dwIdleTime = GetTickCount();
 			m_eDir = DIR_STATE::DIR_DOWN;
-		}	
+		}
 	}
 
-	Change_Motion();
-	Change_Frame();
+	if (!CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
 
 	if (m_eDir == DIR_STATE::DIR_LEFT)
 		m_pColliderCom->Set_IsInverse(true);
@@ -226,7 +234,7 @@ HRESULT CPig::Texture_Clone()
 	return S_OK;
 }
 
-void CPig::Change_Frame()
+void CPig::Change_Frame(_float fTimeDelta)
 {
 	switch (m_eState)
 	{
@@ -394,6 +402,48 @@ void CPig::Change_Motion()
 		if (m_eState != m_ePreState)
 			m_ePreState = m_eState;
 	}
+}
+
+_bool CPig::Picking(_float3 * PickingPoint)
+{
+	if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+		return false;
+
+	if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
+	{
+		m_vecOutPos = *PickingPoint;
+		return true;
+	}
+	else
+		return false;
+	return true;
+}
+
+void CPig::PickingTrue()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
+	
+	if (pGameInstance->Key_Up(VK_LBUTTON))
+	{
+		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+		CMouse* pMouse = CMouse::Get_Instance(); Safe_AddRef(pMouse);
+
+		if (pMouse->Get_Item_type() == ITEMID::ITEM_FOOD)
+		{
+			Give_Food();
+
+			// TODO: 
+			// Reset Mouse State
+			// Decrease Item Inventory Counter
+		}
+
+		Safe_Release(pInvenManager);
+		Safe_Release(pMouse);
+	}
+
+	cout << "Collision Pig : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
+
+	Safe_Release(pGameInstance);
 }
 
 void CPig::AI_Behaviour(_float fTimeDelta)

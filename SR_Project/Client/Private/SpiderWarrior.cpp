@@ -33,8 +33,9 @@ HRESULT CSpiderWarrior::Initialize(void* pArg)
 
 	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.fDamage = 10.f;
 
-	m_fAttackRadius = .7f;
+	m_fAttackRadius = 2.f;
 
 	return S_OK;
 }
@@ -57,7 +58,7 @@ void CSpiderWarrior::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	Change_Motion();
-	Change_Frame();
+	Change_Frame(fTimeDelta);
 
 	if (m_eDir == DIR_STATE::DIR_LEFT)
 		m_pColliderCom->Set_IsInverse(true);
@@ -70,6 +71,8 @@ HRESULT CSpiderWarrior::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
+
+	m_pColliderCom->Render_ColliderBox();
 
 	return S_OK;
 }
@@ -88,14 +91,13 @@ HRESULT CSpiderWarrior::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-
 	/* For.Com_Collider*/
 	CCollider_Rect::COLLRECTDESC CollRectDesc;
 	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
-	CollRectDesc.fRadiusY = 0.5f;
-	CollRectDesc.fRadiusX = 0.3f;
+	CollRectDesc.fRadiusY = 0.15f;
+	CollRectDesc.fRadiusX = 0.15f;
 	CollRectDesc.fOffSetX = 0.f;
-	CollRectDesc.fOffSetY = -0.25f;
+	CollRectDesc.fOffSetY = -1.f;
 
 	/* For.Com_Collider_Rect*/
 	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
@@ -180,7 +182,7 @@ HRESULT CSpiderWarrior::Texture_Clone()
 	return S_OK;
 }
 
-void CSpiderWarrior::Change_Frame()
+void CSpiderWarrior::Change_Frame(_float fTimeDelta)
 {
 	switch (m_eState)
 	{
@@ -201,24 +203,7 @@ void CSpiderWarrior::Change_Frame()
 		else
 			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-		{
-			m_bIsAttacking = false;
-			m_dwAttackTime = GetTickCount();
-		}
-		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20)
-		{
-			BULLETDATA BulletData;
-			ZeroMemory(&BulletData, sizeof(BulletData));
-			BulletData.vPosition = Get_Position();
-			BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-			BulletData.eDirState = m_eDir;
-
-			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-		}
+		Attack(fTimeDelta);
 		break;
 	case STATE::TAUNT:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
@@ -338,7 +323,7 @@ void CSpiderWarrior::AI_Behaviour(_float fTimeDelta)
 
 void CSpiderWarrior::Find_Target()
 {
-	if (!m_bIsAttacking && !m_bHit && !m_bDead)
+	if (/*!m_bIsAttacking && */!m_bHit && !m_bDead)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
@@ -353,9 +338,10 @@ void CSpiderWarrior::Find_Target()
 			m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
 
 			if (m_fDistanceToTarget < m_fAggroRadius || m_bAggro)
+			{
 				m_bAggro = true;
-
-			m_pTarget = pTarget;
+				m_pTarget = pTarget;
+			}
 		}
 		else
 			m_pTarget = nullptr;
@@ -391,6 +377,34 @@ void CSpiderWarrior::Follow_Target(_float fTimeDelta)
 	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
 
 	m_bIsAttacking = false;
+}
+
+void CSpiderWarrior::Attack(_float fTimeDelta)
+{
+	if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+	{
+		m_bIsAttacking = false;
+		m_dwAttackTime = GetTickCount();
+		m_bDidDamage = false;
+	}
+	else
+	{ 
+		// Move towards Player
+		m_pTransformCom->Go_PosTarget(fTimeDelta * m_fDistanceToTarget, m_pTarget->Get_Position(), _float3(0, 0, 0));
+
+		// If did NOT Apply Damage yet
+		if (!m_bDidDamage)
+		{
+			// If Spider is Colliding with Player 
+			vector<CGameObject*> vecDamagedActor;
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			if (pGameInstance->Collision_Check_Group_Multi(CCollider::COLLISION_PLAYER, vecDamagedActor, this))
+			{
+				CGameInstance::Apply_Damage_Multi(m_tInfo.fDamage, vecDamagedActor, this, nullptr);
+				m_bDidDamage = true;
+			}
+		}
+	}
 }
 
 _float CSpiderWarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)

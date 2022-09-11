@@ -98,6 +98,13 @@ HRESULT CGrass::Drop_Items()
 	return S_OK;
 }
 
+void CGrass::Destroy()
+{
+	__super::Destroy();
+
+	m_eState = STATE::PICK;
+}
+
 HRESULT CGrass::SetUp_Components(void* pArg)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
