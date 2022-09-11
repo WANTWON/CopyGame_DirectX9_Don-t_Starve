@@ -4,17 +4,17 @@
 #include "Inventory.h"
 
 
-CEatitem::CEatitem(LPDIRECT3DDEVICE9 pGraphic_Device)
+CEateffect::CEateffect(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CEatitem::CEatitem(const CEatitem & rhs)
+CEateffect::CEateffect(const CEateffect & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CEatitem::Initialize_Prototype()
+HRESULT CEateffect::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -22,7 +22,7 @@ HRESULT CEatitem::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CEatitem::Initialize(void* pArg)
+HRESULT CEateffect::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -31,7 +31,7 @@ HRESULT CEatitem::Initialize(void* pArg)
 
 	iNum = *iNumber;*/
 
-	//D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
+	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
 	m_fSizeX = 40.0f;
 	m_fSizeY = 40.0f;
@@ -41,108 +41,140 @@ HRESULT CEatitem::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(mypos.x - g_iWinSizeX * 0.5f, -pos.y + g_iWinSizeY * 0.5f, 0.f));
 
 	return S_OK;
 }
 
-int CEatitem::Tick(_float fTimeDelta)
+int CEateffect::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
-
-	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
-
-	//POINT		ptMouse;
-	//GetCursorPos(&ptMouse);
-	//ScreenToClient(g_hWnd, &ptMouse);
-	_float4x4		ViewMatrix, ProjMatrix;
-
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-	D3DXVec3TransformCoord(&pos, &pos, &ViewMatrix);
-
-	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
-	D3DXVec3TransformCoord(&pos, &pos, &ProjMatrix);
+	if (m_bcheck == true)
+	{
 
 
-	m_fX = (float)pos.x;
-	m_fY = (float)pos.y;
-	//m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+		__super::Tick(fTimeDelta);
+
+
+		//	RECT		rcRect;
+		//	SetRect(&rcRect, (int)(mypos.x - m_fSizeX * 0.5f), (int)(mypos.y - m_fSizeY * 0.5f), (int)(mypos.x + m_fSizeX * 0.5f), (int)(mypos.y + m_fSizeY * 0.5f));
+
+		//POINT		ptMouse;
+		//GetCursorPos(&ptMouse);
+		//ScreenToClient(g_hWnd, &ptMouse);
+		if (m_bfirst == true)
+		{
+			_float4x4		ViewMatrix, ProjMatrix;
+
+			m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+			D3DXVec3TransformCoord(&pos, &pos, &ViewMatrix);
+
+			m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+			D3DXVec3TransformCoord(&pos, &pos, &ProjMatrix);
+
+			mypos.x = (float)pos.x * 640.f + 639.f;
+			mypos.y = (float)pos.y * 359.f + 359.f;
 
 
 
-	//if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON) && m_bcheck == true)
-	//{
-	//	m_bcheck = false;
-	//}
+			m_bfirst = false;
+		}
+
+
+		vdir = pos1 - mypos; // pos1 = inventory position
+		D3DXVec3Normalize(&vdir, &vdir);
+
+		if (pos1.x != 0 && pos1.y != 0)
+			mypos += vdir * 14.f; // 이거로 이동
+
+		if (pos1.y <= mypos.y)
+			m_bcheck = false;
+
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(mypos.x - g_iWinSizeX * 0.5f, -mypos.y + g_iWinSizeY * 0.5f, 0.f));
+
+
+
+
+		//if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON) && m_bcheck == true)
+		//{
+		//	m_bcheck = false;
+		//}
+	}
 
 	return OBJ_NOEVENT;
 }
 
-void CEatitem::Late_Tick(_float fTimeDelta)
+void CEateffect::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
-	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (!PtInRect(&rcRect, ptMouse))
+	if (m_bcheck == true)
 	{
-		m_fSizeX = 40;
-		m_fSizeY = 40;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		__super::Late_Tick(fTimeDelta);
+		//RECT		rcRect;
+		//SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+
+		//POINT		ptMouse;
+		//GetCursorPos(&ptMouse);
+		//ScreenToClient(g_hWnd, &ptMouse);
+
+		//if (!PtInRect(&rcRect, ptMouse))
+		//{
+		//	m_fSizeX = 40;
+		//	m_fSizeY = 40;
+		//	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 
 
-		//ERR_MSG(L"충돌");
+		//	//ERR_MSG(L"충돌");
+		//}
+
+
+
+		/*if (m_bItem)
+		{
+
+		}*/
+
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 	}
-
-
-
-	/*if (m_bItem)
-	{
-
-	}*/
-
-	if (nullptr != m_pRendererCom && m_bcheck == true)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+	
 
 }
 
-HRESULT CEatitem::Render()
+HRESULT CEateffect::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	if (m_bcheck == true)
+	{
+		if (FAILED(__super::Render()))
+			return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
+		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+			return E_FAIL;
 
-	_float4x4		ViewMatrix;
-	D3DXMatrixIdentity(&ViewMatrix);
+		_float4x4		ViewMatrix;
+		D3DXMatrixIdentity(&ViewMatrix);
 
-	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
-		return E_FAIL;
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+			return E_FAIL;
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
+		if (FAILED(SetUp_RenderState()))
+			return E_FAIL;
 
-	m_pVIBufferCom->Render();
+		m_pVIBufferCom->Render();
 
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
+		if (FAILED(Release_RenderState()))
+			return E_FAIL;
+	}
+
 
 
 
 	return S_OK;
 }
 
-HRESULT CEatitem::SetUp_Components()
+HRESULT CEateffect::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -171,7 +203,7 @@ HRESULT CEatitem::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CEatitem::SetUp_RenderState()
+HRESULT CEateffect::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -184,7 +216,7 @@ HRESULT CEatitem::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CEatitem::Release_RenderState()
+HRESULT CEateffect::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -192,9 +224,9 @@ HRESULT CEatitem::Release_RenderState()
 	return S_OK;
 }
 
-CEatitem * CEatitem::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CEateffect * CEateffect::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CEatitem*	pInstance = new CEatitem(pGraphic_Device);
+	CEateffect*	pInstance = new CEateffect(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -205,9 +237,9 @@ CEatitem * CEatitem::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 	return pInstance;
 }
 
-CGameObject * CEatitem::Clone(void* pArg)
+CGameObject * CEateffect::Clone(void* pArg)
 {
-	CEatitem*	pInstance = new CEatitem(*this);
+	CEateffect*	pInstance = new CEateffect(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -221,7 +253,7 @@ CGameObject * CEatitem::Clone(void* pArg)
 }
 
 
-void CEatitem::Free()
+void CEateffect::Free()
 {
 	__super::Free();
 

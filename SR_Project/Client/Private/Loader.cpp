@@ -97,6 +97,8 @@
 #include "Deadmain.h"
 #include "Daypont.h"
 
+#include"Eatitem.h"
+
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -851,6 +853,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	/*For.Prototype_GameObject_MentalityPont */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse_iteminfo"),
 		CMouse_iteminfo::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Eateffect */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Eateffect"),
+		CEateffect::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_quest */

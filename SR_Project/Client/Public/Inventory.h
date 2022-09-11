@@ -113,7 +113,7 @@ public:
 	list<CPot_front*>*Get_Potfront_list(void) { return &m_Potfront; }
 	list<CPotbutton*>*Get_Potbutton_list(void) { return &m_Potbutton; }
 
-	list<CEatitem*>*Get_Eatitem_list(void) { return &m_Eatitem; }
+	list<CEateffect*>*Get_Eatitem_list(void) { return &m_Eateffect; }
 
 	list<CDaypont*>*Get_Daypont_list(void) { return &m_Daypont; }
 	list<CDeadmain*>*Get_Deadmain_list(void) { return &m_Deadmain; }
@@ -210,7 +210,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CPot_front*> m_Potfront;
 	list<CPotbutton*> m_Potbutton;
 
-	list<CEatitem*> m_Eatitem;
+	list<CEateffect*>m_Eateffect;
 
 	list<CDaypont*> m_Daypont;
 	list<CDeadmain*>m_Deadmain;

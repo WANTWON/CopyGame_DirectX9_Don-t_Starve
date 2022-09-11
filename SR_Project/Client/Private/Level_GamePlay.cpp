@@ -677,6 +677,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Mouse_iteminfo"), LEVEL_STATIC, pLayerTag)))
 			return E_FAIL;
 
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Eateffect"), LEVEL_STATIC, pLayerTag)))
+			return E_FAIL;
 		
 		
 	
