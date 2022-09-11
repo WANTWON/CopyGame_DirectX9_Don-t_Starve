@@ -16,7 +16,7 @@ BEGIN(Client)
 class CWoodWall final : public CGameObject
 {
 public:
-	enum WALLTYPE { WALL_WOOD, WALL_ROCK, WALL_TORCH, WALL_END };
+	enum WALLTYPE { WALL_WOOD, WALL_ROCK, WALL_END };
 
 	enum STATE
 	{
