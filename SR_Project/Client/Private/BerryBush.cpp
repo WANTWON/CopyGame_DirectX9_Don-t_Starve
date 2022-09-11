@@ -101,6 +101,13 @@ HRESULT CBerryBush::Drop_Items()
 	return S_OK;
 }
 
+void CBerryBush::Destroy()
+{
+	__super::Destroy();
+
+	m_eState = STATE::PICKED;
+}
+
 HRESULT CBerryBush::SetUp_Components(void* pArg)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();

@@ -86,7 +86,7 @@ int CPot_front::Tick(_float fTimeDelta)
 		__super::Tick(fTimeDelta);
 
 		RECT		rcRect;
-		SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 		POINT		ptMouse;
 		GetCursorPos(&ptMouse);
@@ -132,7 +132,7 @@ void CPot_front::Late_Tick(_float fTimeDelta)
 		Safe_AddRef(pMouse);
 
 		RECT		rcRect;
-		SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 		POINT		ptMouse;
 		GetCursorPos(&ptMouse);

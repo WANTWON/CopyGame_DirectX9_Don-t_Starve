@@ -84,6 +84,10 @@ public: /* For. Collider Manager */
 	_bool Collision_with_Group(CCollider::COLLISION_GROUP eGroup, class CGameObject* pGameObject, _float3* pOutDistance = nullptr);
 	_bool Collision_Check_Group_Multi(CCollider::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, class CGameObject* pDamageCauser);
 
+	/* For. Damage*/
+	static void Apply_Damage(_float fDamage, CGameObject* DamagedObj, CGameObject * DamageCauser, void* AttackType = nullptr);
+	static void	Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, CGameObject * DamageCauser, void* AttackType = nullptr);
+
 public: /* For. Culling Manager */
 	_bool Is_In_Frustum(_float3 pGameObjectPos, _float fRadius);
 

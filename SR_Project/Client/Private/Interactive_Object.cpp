@@ -37,11 +37,8 @@ int CInteractive_Object::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	/*if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);*/
-
-	/*CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);*/
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
 
 	// Match Terrain-Y
 	WalkingTerrain();
@@ -81,15 +78,19 @@ HRESULT CInteractive_Object::Render()
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
+#ifdef _DEBUG
+	if (m_pColliderCom)
+		m_pColliderCom->Render_ColliderBox();
+#endif // _DEBUG
+
 	return S_OK;
 }
-
 
 void CInteractive_Object::Free()
 {
 	__super::Free();
 
-	//Safe_Release(m_pColliderCom);
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);

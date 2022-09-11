@@ -34,7 +34,7 @@ HRESULT CCraftbutton::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	
+
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
@@ -43,15 +43,15 @@ HRESULT CCraftbutton::Initialize(void* pArg)
 	m_fSizeY = 55.f;
 	m_fX = 260;
 	m_fY = 0;
-   
-	
+
+
 
 	m_firstx = m_fX;
 	m_firsty = m_fY;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	
+
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
@@ -59,7 +59,7 @@ HRESULT CCraftbutton::Initialize(void* pArg)
 	//CInventory_Manager::Get_Instance()->Get_Inven_list()->front.push_back(this);
 	//CInventory_Manager::Get_Instance()->Get_Inven_list().push_back(this);
 	//INVENLIST
-//	m_tooltype = (TOOLTYPE)iNum;
+	//	m_tooltype = (TOOLTYPE)iNum;
 
 	return S_OK;
 }
@@ -72,14 +72,14 @@ int CCraftbutton::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pinv);
+	//Safe_AddRef(pinv);
 
 
-	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT||m_makewhat == MAKE_FENCE || m_makewhat == MAKE_ROPE)
+	if (m_makewhat == MAKE_AXE || m_makewhat == MAKE_HAMBAT || m_makewhat == MAKE_FENCE || m_makewhat == MAKE_ROPE)
 		m_fY = 300.f;
-	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT|| m_makewhat == MAKE_COAL)
+	else if (m_makewhat == MAKE_PICK || m_makewhat == MAKE_SHOTTER || m_makewhat == MAKE_POT || m_makewhat == MAKE_COAL)
 		m_fY = 350.f;
-	else if (m_makewhat == MAKE_STAFF || m_makewhat == MAKE_TENT|| m_makewhat == MAKE_TORCH)
+	else if (m_makewhat == MAKE_STAFF || m_makewhat == MAKE_TENT || m_makewhat == MAKE_TORCH)
 		m_fY = 400.f;
 	else if (m_makewhat == MAKE_ARMOR)
 		m_fY = 450.f;
@@ -89,11 +89,11 @@ int CCraftbutton::Tick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 	/*if (m_fY <= 300.f)
-		Open_Craft(fTimeDelta);*/
+	Open_Craft(fTimeDelta);*/
 
 
 	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
@@ -112,7 +112,7 @@ int CCraftbutton::Tick(_float fTimeDelta)
 		{
 			craft(m_makewhat);
 			pinv->update_craftpont();
-			Safe_Release(pinv);
+			//	Safe_Release(pinv);
 
 		}
 
@@ -134,17 +134,17 @@ void CCraftbutton::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	CMouse*			pMouse = CMouse::Get_Instance();
-	Safe_AddRef(pMouse);
+	//Safe_AddRef(pMouse);
 
 	RECT		rcRect;
-	SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 	POINT		ptMouse;
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pinv);
+	//Safe_AddRef(pinv);
 
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
 
@@ -156,8 +156,8 @@ void CCraftbutton::Late_Tick(_float fTimeDelta)
 		m_fSizeY = 55.f;
 
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-        m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+
 	}
 
 
@@ -168,8 +168,8 @@ void CCraftbutton::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-	Safe_Release(pMouse);
-	Safe_Release(pinv);
+	//Safe_Release(pMouse);
+	//Safe_Release(pinv);
 	//set_check(false);
 }
 
@@ -290,12 +290,12 @@ void CCraftbutton::craft(MAKEWHAT item)
 {
 
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pInventory_Manager);
+	//Safe_AddRef(pInventory_Manager);
 	auto pinven = pInventory_Manager->Get_Inven_list();
 
 	auto pcraftback = pInventory_Manager->Get_Craftmainback_list();
 
-	Safe_Release(pInventory_Manager);
+	//Safe_Release(pInventory_Manager);
 	_uint checkcount = 0;
 	bool stop1 = false;
 	bool stop2 = false;
@@ -342,7 +342,7 @@ void CCraftbutton::craft(MAKEWHAT item)
 		}
 		else
 			return;
-		
+
 
 		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 		{
@@ -360,7 +360,7 @@ void CCraftbutton::craft(MAKEWHAT item)
 
 	case MAKE_PICK:
 		/*checkcount = 0;
-			stop1 = false;
+		stop1 = false;
 		stop2 = false;*/
 
 
@@ -722,7 +722,7 @@ void CCraftbutton::craft(MAKEWHAT item)
 			if ((*iter)->get_texnum() == (ITEMNAME_FENCE) && (*iter)->get_check() == true)
 			{
 				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가 증가시켰다면 리턴으로 탈출! 못찾았으면? 탐색해야지 새로
-				//check = true;
+											 //check = true;
 				return;
 			}
 		}
@@ -805,7 +805,7 @@ void CCraftbutton::craft(MAKEWHAT item)
 
 		}
 
-	
+
 
 	case MAKE_TENT:
 
@@ -870,14 +870,168 @@ void CCraftbutton::craft(MAKEWHAT item)
 			}
 
 		}
+	case MAKE_ROPE:
+
+
+
+
+
+		if (pcraftback->front()->get_texnum() == 0)
+		{
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_GRASS && (*iter)->get_item_number() >= 1)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					break;
+
+
+				}
+
+			}
+		}
+		else
+			return;
+
+		//bool check = false;
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == (ITEMNAME_ROPE) && (*iter)->get_check() == true)
+			{
+				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가 증가시켰다면 리턴으로 탈출! 못찾았으면? 탐색해야지 새로
+											 //check = true;
+				return;
+			}
+		}
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(ITEMNAME_ROPE);
+				(*iter)->plus_itemcount();
+
+				(*iter)->set_check(true);
+
+				return;
+			}
+
+		}
+
+
+
+	case MAKE_COAL:
+
+
+
+
+
+		if (pcraftback->front()->get_texnum() == 0)
+		{
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 1)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					break;
+
+
+				}
+
+			}
+		}
+		else
+			return;
+
+		//bool check = false;
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == (ITEMNAME_COAL) && (*iter)->get_check() == true)
+			{
+				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가 증가시켰다면 리턴으로 탈출! 못찾았으면? 탐색해야지 새로
+											 //check = true;
+				return;
+			}
+		}
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(ITEMNAME_COAL);
+				(*iter)->plus_itemcount();
+
+				(*iter)->set_check(true);
+
+				return;
+			}
+
+		}
+
+	case MAKE_TORCH:
+
+
+
+
+
+
+		if (pcraftback->front()->get_texnum() == 0)
+		{
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+			{
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD && (*iter)->get_item_number() >= 1)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
+				{
+					(*iter)->minus_material(1);
+					break;
+
+
+				}
+
+			}
+		}
+
+
+
+
+
+
+
+		else
+			return;
+
+		//bool check = false;
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == (ITEMNAME_TORCH) && (*iter)->get_check() == true)
+			{
+				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가 증가시켰다면 리턴으로 탈출! 못찾았으면? 탐색해야지 새로
+											 //check = true;
+				return;
+			}
+		}
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(ITEMNAME_TORCH);
+				(*iter)->plus_itemcount();
+
+				(*iter)->set_check(true);
+
+				return;
+			}
+
+		}
 
 	}
 
-
-	
-	
-		
 }
+
+
+
+
+
 
 
 

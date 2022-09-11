@@ -35,6 +35,7 @@ private:
 	_float4x4				m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
 	_float                  m_pfX, m_pfY;
+	_float3                 pos;
 
 private:
 	HRESULT SetUp_Components();
@@ -61,6 +62,7 @@ public:
 	_uint get_item_number() { return item_number; }
 	void Use_item(ITEMNAME item);
 	int get_iNum() { return iNum; }
+	_float3 get_pos() { return pos; }
 
 private:
 	int* iNumber = nullptr;

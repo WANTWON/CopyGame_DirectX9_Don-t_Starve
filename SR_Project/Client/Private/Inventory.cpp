@@ -476,6 +476,49 @@ void CInventory_Manager::materialtool_off()
 
 }
 
+void CInventory_Manager::Dead_on()
+{
+	//m_Deadmain.front()->gobackfirstY();
+	m_Deadmain.front()->set_check(true);
+	
+
+	for (auto& k : m_Deadcountpont)
+	{
+		k->set_check(true);
+		k->timeron();
+		//k->gobackfirstY();
+	}
+
+	for (auto& k : m_Daypont)
+	{
+		k->set_check(true);
+		k->set_daycount(m_Daycountpont.front()->get_daycount());
+		//k->gobackfirstX();
+	}
+
+}
+
+void CInventory_Manager::Dead_off()
+{
+	
+	m_Deadmain.front()->set_check(false);
+	//m_Deadmain.front()->gobackfirstY();
+
+		for (auto& k : m_Deadcountpont)
+		{
+			k->set_check(false);
+			//k->gobackfirstY();
+		}
+
+		for (auto& k : m_Daypont)
+		{
+			k->set_check(false);
+			//k->gobackfirstX();
+		}
+
+	
+}
+
 void CInventory_Manager::craft_on(MAKEWHAT item)
 {
 	for (auto& k : m_Craftmain)
@@ -590,11 +633,11 @@ void CInventory_Manager::update_craftpont()
 				k->set_pont_num(wood % 10);
 			}
 
-				
+
 			else if (k->get_pontnum() == 3)
 			{
 				k->set_pont_num(1);
-				
+
 			}
 
 			else if (k->get_pontnum() == 4)
@@ -611,7 +654,7 @@ void CInventory_Manager::update_craftpont()
 				k->set_pont_num(1);
 				return;
 			}
-			
+
 		}
 		else if (m_Craftmain.front()->get_makewhat() == MAKE_HAMBAT)
 		{
@@ -679,7 +722,7 @@ void CInventory_Manager::update_craftpont()
 				return;
 			}
 		}
-		else if (m_Craftmain.front()->get_makewhat() == MAKE_SHOTTER )
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_SHOTTER)
 		{
 			if (k->get_pontnum() == 0)
 			{
@@ -848,6 +891,67 @@ void CInventory_Manager::update_craftpont()
 			}
 		}
 
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_ROPE)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((grass % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(grass % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+
+
+		}
+
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_COAL)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((rock2 % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(rock2 % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+
+
+		}
+		else if (m_Craftmain.front()->get_makewhat() == MAKE_TORCH)
+		{
+			if (k->get_pontnum() == 0)
+			{
+				k->set_pont_num((wood % 100) / 10);
+			}
+			else if (k->get_pontnum() == 1)
+			{
+				k->set_pont_num(wood % 10);
+			}
+
+
+			else if (k->get_pontnum() == 3)
+			{
+				k->set_pont_num(1);
+				return;
+			}
+
+
+		}
 
 	}
 

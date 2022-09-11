@@ -126,6 +126,17 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	SetUp_BillBoard();
 
+	CInventory_Manager* inv = CInventory_Manager::Get_Instance();
+	
+	if (CKeyMgr::Get_Instance()->Key_Up('8'))
+	{
+		inv->Dead_on();
+	}
+	if (CKeyMgr::Get_Instance()->Key_Up('9'))
+	{
+		inv->Dead_off();
+	}
+
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 

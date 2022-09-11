@@ -36,6 +36,7 @@ namespace Client
 	{
 		float iMaxHp;
 		float iCurrentHp;
+		float fDamage;
 		//vector<Item*> vItemDrops;
 	}OBJINFO;
 

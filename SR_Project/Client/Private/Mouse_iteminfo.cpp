@@ -52,7 +52,7 @@ int CMouse_iteminfo::Tick(_float fTimeDelta)
 	if (m_bcheck == true&& test == true)
 	{
 		RECT		rcRect;
-		SetRect(&rcRect, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
 		POINT		ptMouse;
 		GetCursorPos(&ptMouse);
@@ -60,8 +60,8 @@ int CMouse_iteminfo::Tick(_float fTimeDelta)
 
 
 
-		m_fX = ptMouse.x;
-		m_fY = ptMouse.y - 50.f;
+		m_fX = (float)ptMouse.x;
+		m_fY = (float)ptMouse.y - 50.f;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 

@@ -183,6 +183,8 @@ CGameObject * CDaycountpont::Clone(void* pArg)
 		Safe_Release(pInstance);
 	}
 
+	CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->push_back(pInstance);
+
 	return pInstance;
 }
 

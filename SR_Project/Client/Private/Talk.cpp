@@ -201,9 +201,9 @@ HRESULT CTalk::Render()
 
 
 
-		return S_OK;
+		
 	}
-	
+	return S_OK;
 }
 
 HRESULT CTalk::SetUp_Components()

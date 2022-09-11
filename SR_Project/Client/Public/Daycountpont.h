@@ -49,6 +49,8 @@ public:
 	static CDaycountpont* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
+
+	_uint get_daycount() { return texnum; }
 };
 
 END

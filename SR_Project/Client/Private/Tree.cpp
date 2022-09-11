@@ -80,6 +80,8 @@ void CTree::Late_Tick(_float fTimeDelta)
 
 	Change_Motion();
 	Change_Frame();
+
+	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
 }
 
 HRESULT CTree::Render()
@@ -137,6 +139,13 @@ HRESULT CTree::Drop_Items()
 	return S_OK;
 }
 
+void CTree::Destroy()
+{
+	__super::Destroy();
+
+	m_eState = rand() % 2 ? STATE::FALL_RIGHT : STATE::FALL_LEFT;
+}
+
 HRESULT CTree::SetUp_Components(void* pArg)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -155,10 +164,6 @@ HRESULT CTree::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	/* For.Com_Collider*/
-	/*if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-		return E_FAIL;*/
-
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
@@ -172,6 +177,18 @@ HRESULT CTree::SetUp_Components(void* pArg)
 	TransformDesc.InitPos = *(_float3*)pArg;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+		return E_FAIL;
+
+	/* For.Com_Collider*/
+	CCollider_Rect::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+	CollRectDesc.fRadiusY = 0.25f;
+	CollRectDesc.fRadiusX = 0.25f;
+	CollRectDesc.fOffSetX = 0.0f;
+	CollRectDesc.fOffSetY = -.5f;
+
+	/* For.Com_Collider_Rect*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
 	return S_OK;
