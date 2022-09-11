@@ -65,6 +65,8 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_fTimeAcc += fTimeDelta;
 #endif // _DEBUG
 
+	
+
 }
 
 HRESULT CMainApp::Render()
@@ -171,6 +173,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGameInstance);
 
 	CGameInstance::Release_Engine();	
+	CInventory_Manager::Get_Instance()->Free();
 	CPickingMgr::Get_Instance()->Destroy_Instance();
 	CInventory_Manager::Get_Instance()->Destroy_Instance();
 	CCameraManager::Get_Instance()->Destroy_Instance();

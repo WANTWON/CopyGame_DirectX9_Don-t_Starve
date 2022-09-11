@@ -49,6 +49,7 @@ HRESULT CTalk::Initialize(void* pArg)
 
 int CTalk::Tick(_float fTimeDelta)
 {
+
 	
 	if (m_bcheck == true)
 	{
@@ -56,12 +57,31 @@ int CTalk::Tick(_float fTimeDelta)
 		Safe_AddRef(pinv);
 		__super::Tick(fTimeDelta);
 
+		
+////////////////////////////// Bearger 등장 카메라 테스트 //////////////////////////
+		if (m_SetTargetBearger)
+		{
+			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+			pCamera->Set_TalkingMode(true);
+			CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
+			pCamera->Set_Target(pGameObject);
+		}
+		
+		if (CGameInstance::Get_Instance()->Key_Up(VK_F3))
+		{
+			if (!m_SetTargetBearger)
+			{
+				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				m_SetTargetBearger = true;
+			}
+		}
+
+///////////////////////////////////////////////////////////////////////////////////////////
 		if (CKeyMgr::Get_Instance()->Key_Up('0'))
 		{
 			if (texnum == 2)
 			{
-				
-			
 				pinv->Get_Quest_list()->front()->set_onoff(true);
 				pinv->Get_Quest_list()->front()->set_texnum(0);
 				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();

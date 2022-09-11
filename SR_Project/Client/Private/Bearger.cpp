@@ -5,6 +5,7 @@
 #include "Inventory.h"
 #include "Item.h"
 #include "Carrot.h"
+#include "CameraManager.h"
 
 CBearger::CBearger(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -55,12 +56,15 @@ int CBearger::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
+
+
 	return OBJ_NOEVENT;
 }
 
 void CBearger::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
 
 	Change_Motion();
 	Change_Frame(fTimeDelta);
@@ -688,7 +692,7 @@ void CBearger::Find_Target()
 			Safe_AddRef(pGameInstance);
 
 			list<CGameObject*>* pObjects = pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Object")); // Get Objects in GAMEPLAY_LEVEL
-
+			Safe_Release(pGameInstance);
 			for (auto iter = pObjects->begin(); iter != pObjects->end(); ++iter)
 			{
 				if (!(*iter))

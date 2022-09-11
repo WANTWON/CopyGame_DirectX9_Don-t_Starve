@@ -11,7 +11,7 @@ CInventory_Manager::CInventory_Manager()
 
 HRESULT CInventory_Manager::Reserve_Container(_uint iNumLevels)
 {
-	
+
 
 	return S_OK;
 }
@@ -26,72 +26,72 @@ HRESULT CInventory_Manager::Add_GameObject(_uint iLevelIndex, void* pArg)
 
 void CInventory_Manager::Tick(_float fTimeDelta)
 {
-_uint count = 0;
-auto iter = m_MainInventorylist.begin();
-auto iterfont = m_Pontlist.begin();
-bool bcheck = true;
+	_uint count = 0;
+	auto iter = m_MainInventorylist.begin();
+	auto iterfont = m_Pontlist.begin();
+	bool bcheck = true;
 
-while (bcheck && !m_MainInventorylist.empty() && !m_Pontlist.empty())
-{
-	
-
-
-		
-	
-	if ((*iter)->get_pontcheck() == false)  //인벤토리의 폰트가 false면
+	while (bcheck && !m_MainInventorylist.empty() && !m_Pontlist.empty())
 	{
-		(*iterfont)->set_check(false);//폰트창을 안뜨게할구야
-	}
-	else if ((*iter)->get_pontcheck() == true)
-	{
-		(*iterfont)->set_check(true);
-	}
 
-	if ((*iterfont)->get_pontnum() % 2 == 0) //10자리
-	{
-		(*iterfont)->set_pont_num(((*iter)->get_item_number() % 100) / 10);      //10의 자리수를 0번에 넣어 (0)
 
-		if ((*iterfont)->get_pontex() == 0)
+
+
+
+		if ((*iter)->get_pontcheck() == false)  //인벤토리의 폰트가 false면
 		{
-			(*iterfont)->set_check(false);
+			(*iterfont)->set_check(false);//폰트창을 안뜨게할구야
+		}
+		else if ((*iter)->get_pontcheck() == true)
+		{
+			(*iterfont)->set_check(true);
+		}
+
+		if ((*iterfont)->get_pontnum() % 2 == 0) //10자리
+		{
+			(*iterfont)->set_pont_num(((*iter)->get_item_number() % 100) / 10);      //10의 자리수를 0번에 넣어 (0)
+
+			if ((*iterfont)->get_pontex() == 0)
+			{
+				(*iterfont)->set_check(false);
+			}
+
+
+		}
+		else if ((*iterfont)->get_pontnum() % 2 != 0) // 1의자리                 
+		{
+			(*iterfont)->set_pont_num(((*iter)->get_item_number() % 10));
+
+			//++iterfont;
+		}
+		//폰트1사이클 끝
+		++count;                                                                   //카운트증가 폰트처리 끝났으니까 폰트를 1번넘으로넘기자
+		++iterfont;
+
+		if (count == 2)                                                           //다음사이클에 폰트처리 다 끝나고 인벤토리 넘길거
+		{
+			++iter;
+			count = 0;
 		}
 
 
+
+
+
+		//++iter;
+
+
+		if (iter == m_MainInventorylist.end() || iterfont == m_Pontlist.end())
+		{
+			bcheck = false;
+		}
 	}
-	else if ((*iterfont)->get_pontnum() % 2 != 0) // 1의자리                 
-	{
-		(*iterfont)->set_pont_num(((*iter)->get_item_number() % 10));
-
-		//++iterfont;
-	}
-	                                                                           //폰트1사이클 끝
-	++count;                                                                   //카운트증가 폰트처리 끝났으니까 폰트를 1번넘으로넘기자
-	++iterfont;
-
-	if (count == 2)                                                           //다음사이클에 폰트처리 다 끝나고 인벤토리 넘길거
-	{
-		++iter;
-		count = 0;
-	}
-		
-
-	
-	
-
-	//++iter;
-	
-
-	if (iter == m_MainInventorylist.end() || iterfont == m_Pontlist.end())
-	{
-		bcheck = false;
-	}
-}
 
 }
 
 void CInventory_Manager::Late_Tick(_float fTimeDelta)
 {
-	
+
 
 	CMouse*			pMouse = CMouse::Get_Instance();
 	Safe_AddRef(pMouse);
@@ -100,18 +100,18 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 
 	for (auto& i : m_MainInventorylist)
 	{
-		if (i->get_iNum() == pMouse->Get_index() && pMouse->Get_picked() == false )
+		if (i->get_iNum() == pMouse->Get_index() && pMouse->Get_picked() == false)
 		{
 			if (pMouse->Get_Prev_Item_name() != ITEMNAME_END)
 			{
 				i->set_texnum(pMouse->Get_Prev_Item_name());
 			}
-			
+
 			if (pMouse->Get_Same() == false)
 			{
 				i->set_itemcount(pMouse->Get_Item_prev_count()); //여기서 같은인덱스 클릭아니면..
 			}
-			
+
 			pMouse->Set_index(20);
 			break;
 		}
@@ -149,24 +149,24 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 
 	}
 
-	
+
 
 	for (auto& p : m_Hppontlist)
 	{
-		if ( p->get_iNum() == 0)
+		if (p->get_iNum() == 0)
 		{
-			
-			p->set_pont_num(m_ihp/100);
+
+			p->set_pont_num(m_ihp / 100);
 		}
 
-		if ( p->get_iNum() == 1)
+		if (p->get_iNum() == 1)
 		{
-			p->set_pont_num((m_ihp%100)/10);
+			p->set_pont_num((m_ihp % 100) / 10);
 		}
 
 		if (p->get_iNum() == 2)
 		{
-			p->set_pont_num(m_ihp%10);
+			p->set_pont_num(m_ihp % 10);
 		}
 
 	}
@@ -175,7 +175,7 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 
 	for (auto& i : m_Hungerpontlist)
 	{
-		
+
 		if (i->get_iNum() == 0)
 		{
 
@@ -194,14 +194,14 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 		if (i->get_iNum() == 2)
 		{
 			i->set_pont_num(m_ihunger % 10);
-        }
+		}
 
 	}
 
 
 	for (auto& k : m_Mentalitiypontlist)
 	{
-		
+
 		if (k->get_iNum() == 0)
 		{
 
@@ -225,7 +225,7 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 
 	}
 
-//	if (m_Questpont.front() != nullptr && m_Questpont.front()->get_check() == true)
+	//	if (m_Questpont.front() != nullptr && m_Questpont.front()->get_check() == true)
 	update_questpont();
 
 
@@ -242,11 +242,11 @@ void CInventory_Manager::Clear(_uint iLevelIndex)
 
 void CInventory_Manager::Use_bag()
 {
-	
+
 	auto p = m_Equipmentlist.begin();
 
 	++p;
-	
+
 	if ((*p)->get_texnum() == ITEMNAME_BAG)
 	{
 
@@ -275,7 +275,7 @@ void CInventory_Manager::Use_bag()
 
 	}
 
-		
+
 }
 
 void CInventory_Manager::Off_bag()
@@ -305,7 +305,7 @@ void CInventory_Manager::Use_pot(CCookPot* pCookPot)
 {
 
 	m_Pot.front()->set_check_pot(true);
-	
+
 	for (auto& k : m_Potback)
 		k->set_check_pot(true);
 	for (auto& k : m_Potfront)
@@ -319,7 +319,7 @@ void CInventory_Manager::Use_pot(CCookPot* pCookPot)
 void CInventory_Manager::Off_pot()
 {
 	//m_Pot.front()->set_check_pot(false);
-	
+
 	for (auto& k : m_Potback)
 		k->set_check_pot(false);
 	for (auto& k : m_Potfront)
@@ -327,25 +327,25 @@ void CInventory_Manager::Off_pot()
 		k->set_check_pot(false);
 		k->set_texnum(ITEMNAME_END);
 	}
-		
+
 	m_Potbutton.front()->set_check_pot(false);
 	m_Pot.front()->set_closepot();
 }
 
 void CInventory_Manager::weapontool_on()
 {
-	
-
-		for (auto& k : m_Toolboxweapon)
-			k->set_onof(true);
-		for (auto& k : m_Toolboxweapon_back)
-			k->set_onof(true);
-		for (auto& k : m_Toolboxweapon_front)
-			k->set_onof(true);
-		
 
 
-	
+	for (auto& k : m_Toolboxweapon)
+		k->set_onof(true);
+	for (auto& k : m_Toolboxweapon_back)
+		k->set_onof(true);
+	for (auto& k : m_Toolboxweapon_front)
+		k->set_onof(true);
+
+
+
+
 }
 
 void CInventory_Manager::weapontool_off()
@@ -357,25 +357,25 @@ void CInventory_Manager::weapontool_off()
 		k->set_onof(false);
 		k->gobackfirstX();
 	}
-		
+
 	for (auto& k : m_Toolboxweapon_back)
 	{
 		k->set_onof(false);
 		k->gobackfirstX();
 	}
-		
+
 	for (auto& k : m_Toolboxweapon_front)
 	{
 		k->set_onof(false);
 		k->gobackfirstX();
 	}
-		
+
 }
 
 void CInventory_Manager::gathertool_on()
 {
 
-	
+
 	for (auto& k : m_Toolboxgather)
 		k->set_onof(true);
 	for (auto& k : m_Toolboxgather_back)
@@ -480,7 +480,7 @@ void CInventory_Manager::Dead_on()
 {
 	//m_Deadmain.front()->gobackfirstY();
 	m_Deadmain.front()->set_check(true);
-	
+
 
 	for (auto& k : m_Deadcountpont)
 	{
@@ -500,23 +500,23 @@ void CInventory_Manager::Dead_on()
 
 void CInventory_Manager::Dead_off()
 {
-	
+
 	m_Deadmain.front()->set_check(false);
 	//m_Deadmain.front()->gobackfirstY();
 
-		for (auto& k : m_Deadcountpont)
-		{
-			k->set_check(false);
-			//k->gobackfirstY();
-		}
+	for (auto& k : m_Deadcountpont)
+	{
+		k->set_check(false);
+		//k->gobackfirstY();
+	}
 
-		for (auto& k : m_Daypont)
-		{
-			k->set_check(false);
-			//k->gobackfirstX();
-		}
+	for (auto& k : m_Daypont)
+	{
+		k->set_check(false);
+		//k->gobackfirstX();
+	}
 
-	
+
 }
 
 void CInventory_Manager::craft_on(MAKEWHAT item)
@@ -526,13 +526,13 @@ void CInventory_Manager::craft_on(MAKEWHAT item)
 		k->set_onof(true);
 		k->set_makewhat(item);
 	}
-		
+
 	for (auto& k : m_Craftmainback)
 	{
 		k->set_onof(true);
 		k->set_makewhat(item);
 	}
-		
+
 	for (auto& k : m_Craftmainfront)
 	{
 		k->set_onof(true);
@@ -544,7 +544,7 @@ void CInventory_Manager::craft_on(MAKEWHAT item)
 		k->set_onof(true);
 		k->set_makewhat(item);
 	}
-	
+
 	for (auto& k : m_Craftpont)
 	{
 		k->set_check(true);
@@ -563,19 +563,19 @@ void CInventory_Manager::craft_off()
 		k->gobackfirstY();
 		k->gobackfirstX();
 	}
-	
+
 	for (auto& k : m_Craftmainback)
 	{
 		k->set_onof(false);
 		k->gobackfirstY();
 		k->gobackfirstX();
 	}
-     for (auto& k : m_Craftmainfront)
-		{
-		 k->set_onof(false);
-		 k->gobackfirstY();
-		 k->gobackfirstX();
-	     }
+	for (auto& k : m_Craftmainfront)
+	{
+		k->set_onof(false);
+		k->gobackfirstY();
+		k->gobackfirstX();
+	}
 	for (auto& k : m_Craftbutton)
 	{
 		k->set_onof(false);
@@ -1023,11 +1023,20 @@ void CInventory_Manager::update_questpont() //for questpont
 }
 
 void CInventory_Manager::Free()
-{ 
+{
 	//__super::Free();
 
+	m_MainInventorylist.clear();
 	m_MainInventorybacklist.clear();
-
+	m_Equipmentlist.clear();
+	m_Pontlist.clear();
+	m_BagInventorylist.clear();
+	m_Mouseitemlist.clear();
+	m_Mouseiteminfolist.clear();
+	m_Toolboxweapon.clear();
+	m_Toolboxweapon_back.clear();
+	m_Toolboxweapon_front.clear();
+	m_Toolboxgather.clear();
 
 	for (auto& iter : m_Hppontlist)
 		Safe_Release(iter);
@@ -1040,5 +1049,42 @@ void CInventory_Manager::Free()
 	for (auto& iter : m_Mentalitiypontlist)
 		Safe_Release(iter);
 	m_Mentalitiypontlist.clear();
+
+
+
+
+	m_Toolboxconstruct.clear();
+	m_Toolboxconstruct_back.clear();
+	m_Toolboxconstruct_front.clear();
+
+	m_Toolboxmaterial.clear();
+	m_Toolboxmaterial_back.clear();
+	m_Toolboxmaterial_front.clear();
+
+
+	m_Craftmain.clear();
+	m_Craftmainback.clear();
+	m_Craftmainfront.clear();
+
+	m_Craftbutton.clear();
+	m_Craftpont.clear();
+
+	m_Quest.clear();
+	m_Questpont.clear();
+	m_Line.clear();
+	m_Talk.clear();
+
+	m_Pot.clear();
+	m_Potback.clear();
+	m_Potfront.clear();
+	m_Potbutton.clear();
+
+	m_Eateffect.clear();
+
+	m_Daypont.clear();
+	m_Deadmain.clear();
+	m_Deadcountpont.clear();
+
+	m_Daycountpont.clear();
 
 }
