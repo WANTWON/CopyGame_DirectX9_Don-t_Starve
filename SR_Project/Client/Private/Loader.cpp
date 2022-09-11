@@ -924,6 +924,13 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal_Close"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Portal/Close/Close_%03d.png"), 17))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossPortal_Idle_Close"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/BossPortal/Idle/Idle_%03d.png"), 20))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossPortal_Idle_Open"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/BossPortal/Close/Close_%03d.png"), 18))))
+		return E_FAIL;
 #pragma endregion Add_Texture_Portal
 
 	/*For. Prototype_Component_Texture_Wendy*/
@@ -1051,7 +1058,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 4))))
 		return E_FAIL;
 
-	/*For.Prototype_Component_Texture_LeafEffect */
+	/*For.Prototype_Component_Texture_SnowEffect */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Snow"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow.png"), 1))))
 		return E_FAIL;
@@ -1117,9 +1124,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_BROKEN"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/WoodWall/Broken/Broken_%03d.png"), 1))))
 		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/RockWall/Healthy/Healthy_%03d.png"), 3))))
-		return E_FAIL;
+	
 #pragma endregion Add_Texture_WoodWall
 
 	/*For. Prototype_Component_Texture_Cook_Pot*/
@@ -1584,7 +1589,28 @@ HRESULT CLoader::Loading_Terrain_ForHuntLevel()
 
 HRESULT CLoader::Loading_Terrain_ForBossLevel()
 {
-	return E_NOTIMPL;
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	Safe_AddRef(pGameInstance);
+
+	int			iNum;
+	_ulong		dwByte = 0;
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Boss_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_VIBuffer_Terrain_Load0"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
+		return E_FAIL;
+
+	CloseHandle(hFile);
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
 }
 
 
@@ -1612,9 +1638,6 @@ HRESULT CLoader::Loading_ForHuntLevel()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_FALL_LEFT"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/LivingWood/Tall/Fall_Left/Fall_Left_%03d.png"), 38))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_STUMP"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/LivingWood/Tall/Stump/Stump_%03d.png"), 1))))
 		return E_FAIL;
 
 #pragma endregion Add_Texture_Tree
@@ -1745,8 +1768,37 @@ HRESULT CLoader::Loading_ForHuntLevel()
 
 HRESULT CLoader::Loading_ForBossLevel()
 {
-	lstrcpy(m_szLoadingText, TEXT("Finished_Loading"));
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
 
+	Safe_AddRef(pGameInstance);
+
+	lstrcpy(m_szLoadingText, TEXT("Loading Texture"));
+
+	/*For.Prototype_Component_Texture_RockEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Rock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Roc.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_LeafEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Leaf"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 4))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_SnowEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Snow"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow.png"), 1))))
+		return E_FAIL;
+
+	if (FAILED(Loading_Terrain_ForBossLevel()))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/RockWall/Healthy/Healthy_%03d.png"), 3))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 	SetWindowText(g_hWnd, TEXT("Loading_HunLevel."));
 	m_isFinished = true;
 	return S_OK;

@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "CameraManager.h"
 #include "Level_Loading.h"
+#include "Portal.h"
 
 CLevel_Hunt::CLevel_Hunt(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -50,6 +51,12 @@ void CLevel_Hunt::Tick(_float fTimeDelta)
 	if (m_bPastLevel)
 	{
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GAMEPLAY))))
+			return;
+	}
+
+	else if (m_bNextLevel)
+	{
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_BOSS))))
 			return;
 	}
 
@@ -163,7 +170,17 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, _float3(25.f, 2.f, 27.f))))
+	CPortal::PORTALDESC PortalDesc;
+	PortalDesc.m_eType = CPortal::PORTAL_NORMAL;
+	PortalDesc.vPosition = _float3(25.f, 2.f, 27.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, &PortalDesc)))
+		return E_FAIL;
+
+	PortalDesc.m_eType = CPortal::PORTAL_BOSS;
+	PortalDesc.vPosition = _float3(21.f, 2.f, 21.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, &PortalDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

@@ -5,6 +5,7 @@
 #include "Level_Manager.h"
 #include "Level_GamePlay.h"
 #include "Level_Hunt.h"
+#include "CameraManager.h"
 
 CPortal::CPortal(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -26,20 +27,46 @@ HRESULT CPortal::Initialize_Prototype()
 
 HRESULT CPortal::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
+	if (pArg != nullptr)
+	{
+		memcpy(&m_ePortalDesc, pArg, sizeof(PORTALDESC));
+		if (FAILED(__super::Initialize(&m_ePortalDesc.vPosition)))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(__super::Initialize(pArg)))
+			return E_FAIL;
+	}
+
 
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::PORTAL;
 
-	/*_float fSize = 3;
-	m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
-	m_fRadius *= fSize; */
-	m_fRadius = 0.5f;
-	m_fOpenRadius = 3.f;
+	switch (m_ePortalDesc.m_eType)
+	{
+	case PORTAL_NORMAL:
+	{
+		m_eState = IDLE_CLOSE;
+		m_fRadius = 0.5f;
+		m_fOpenRadius = 3.f;
 
-	m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
-	m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
-	
+		m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
+		if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)	
+				m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
+		break;
+	}
+	case PORTAL_BOSS:
+	{
+		m_eState = IDLE_CLOSE;
+		m_fRadius = 0.5f;
+		m_fOpenRadius = 3.f;
+
+		m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
+		if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
+			m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
+		break;
+	}
+	}
 
 	return S_OK;
 }
@@ -54,9 +81,10 @@ int CPortal::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
+	WalkingTerrain();
+
 	if (m_bShouldTeleport)
 	{
-		
 
 		switch (eLevel)
 		{
@@ -64,28 +92,39 @@ int CPortal::Tick(_float fTimeDelta)
 		{
 			CLevel_GamePlay* pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
 			pLevel->Set_NextLevel(true);
+			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_HUNT);
 			break;
 		}
-			
 		case Client::LEVEL_HUNT:
 		{
-			CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-			pLevel->Set_PastLevel(true);
+			if (m_ePortalDesc.m_eType == PORTAL_NORMAL)
+			{
+				CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+				pLevel->Set_PastLevel(true);
+				CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_GAMEPLAY);
+
+			}
+			else if (m_ePortalDesc.m_eType == PORTAL_BOSS)
+			{
+				CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+				pLevel->Set_NextLevel(true);
+				CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_BOSS);
+
+			}
 			break;
 		}
-			
 		default:
 			break;
 		}
 
-		
+
 	}
 
-	
+
 	AI_Behaviour();
-	
+
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-	
+
 	return OBJ_NOEVENT;
 }
 
@@ -97,9 +136,9 @@ void CPortal::Late_Tick(_float fTimeDelta)
 
 	Change_Motion();
 	Change_Frame();
-	
+
 	_float3 vPosition = Get_Position();
-	vPosition.y -= m_fRadius-0.1f;
+	vPosition.y -= m_fRadius - 0.1f;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 
 	if (nullptr != m_pRendererCom)
@@ -164,8 +203,21 @@ void CPortal::SetUp_BillBoard()
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-	//m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
-	//m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+	
+	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_FPS)
+	{
+		if (!m_bFirst)
+		{
+			m_pTransformCom->Turn(_float3(-1.f, 0.f, 0.f), 1);
+			m_bFirst = true;
+		}
+		
+		m_pTransformCom->Set_State(CTransform::STATE_LOOK, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	}
+		
+	
 }
 
 HRESULT CPortal::Texture_Clone()
@@ -193,6 +245,16 @@ HRESULT CPortal::Texture_Clone()
 
 	TextureDesc.m_iEndTex = 16;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_CLOSING"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal_Close"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 19;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BOSS_IDLE_OPEN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossPortal_Idle_Open"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 17;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BOSS_IDLE_CLOSE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossPortal_Idle_Close"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
@@ -232,16 +294,16 @@ void CPortal::Change_Motion()
 		switch (m_eState)
 		{
 		case STATE::IDLE_CLOSE:
-			Change_Texture(TEXT("Com_Texture_IDLE_CLOSE"));
+			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_IDLE_CLOSE")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));
 			break;
 		case STATE::OPENING:
-			Change_Texture(TEXT("Com_Texture_OPENING"));
+			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_OPENING")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));;
 			break;
 		case STATE::IDLE_OPEN:
-			Change_Texture(TEXT("Com_Texture_IDLE_OPEN"));
+			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_IDLE_OPEN")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));;
 			break;
 		case STATE::CLOSING:
-			Change_Texture(TEXT("Com_Texture_CLOSING"));
+			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_CLOSING")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_OPEN"));;
 			break;
 		}
 
@@ -251,6 +313,7 @@ void CPortal::Change_Motion()
 
 void CPortal::AI_Behaviour()
 {
+
 	if (m_bShouldClosePortal)
 		m_eState = STATE::CLOSING;
 	else
@@ -260,6 +323,7 @@ void CPortal::AI_Behaviour()
 		else if (!Check_Target() && (m_eState == STATE::IDLE_OPEN || m_eState == STATE::OPENING))
 			m_eState = STATE::CLOSING;
 	}
+
 }
 
 _bool CPortal::Check_Target()
@@ -275,7 +339,7 @@ _bool CPortal::Check_Target()
 	{
 		_float3 vTargetPos = pTarget->Get_Position();
 		_float fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
-		
+
 		if (fDistanceToTarget < m_fOpenRadius)
 			return true;
 		else
@@ -294,6 +358,26 @@ void CPortal::Interact(_uint Damage)
 HRESULT CPortal::Drop_Items()
 {
 	return E_NOTIMPL;
+}
+
+void CPortal::WalkingTerrain()
+{
+	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	if (!pGameInstance)
+		return;
+	CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(iLevelIndex, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	if (!pVIBuffer_Terrain)
+		return;
+	CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(iLevelIndex, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	if (!pTransform_Terrain)
+		return;
+
+	_float3 vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float3 vScale = m_pTransformCom->Get_Scale();
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_fRadius);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
 CPortal* CPortal::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

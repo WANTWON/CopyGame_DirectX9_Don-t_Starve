@@ -36,7 +36,13 @@ HRESULT CWoodWall::Initialize(void* pArg)
 
 	m_tInfo.iMaxHp = 60;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
-	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+
+	if (m_eWallDesc.etype == WALL_WOOD)
+		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+	if (m_eWallDesc.etype == WALL_ROCK)
+		m_pTransformCom->Set_Scale(1.f, 3.f, 1.f);
+
+
 
 	WalkingTerrain();
 
@@ -264,7 +270,7 @@ HRESULT CWoodWall::Texture_Clone()
 		break;
 	case Client::CWoodWall::WALL_ROCK:
 		TextureDesc.m_iEndTex = 2;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RockHEALTHY"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RockHEALTHY"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
 	default:

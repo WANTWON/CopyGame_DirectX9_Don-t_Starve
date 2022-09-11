@@ -8,6 +8,7 @@
 #include "Level_Hunt.h"
 #include "Level_Boss.h"
 #include "Loadingscene.h"
+#include "Level_Manager.h"
 
 
 _bool g_bLoadingfirst = true;
@@ -50,7 +51,6 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 
 	if (FAILED(Ready_Layer_Loadingscene(TEXT("Layer_Loadingscene"))))
 		return E_FAIL;
-
 	m_eNextLevel = eNextLevel;
 
 	m_pLoader = CLoader::Create(m_pGraphic_Device, eNextLevel);
