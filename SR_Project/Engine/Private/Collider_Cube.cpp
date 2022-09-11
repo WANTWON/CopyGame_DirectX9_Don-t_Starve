@@ -250,6 +250,8 @@ HRESULT CCollider_Cube::Render_ColliderBox()
 
 _bool CCollider_Cube::Collision_Check(CCollider_Cube * pTarget, _float3* pOutDistance)
 {
+	//AABB Collision Check
+
 	CCollider_Cube* pOther = pTarget;
 	if (nullptr == pOther)
 		return false;
@@ -263,11 +265,10 @@ _bool CCollider_Cube::Collision_Check(CCollider_Cube * pTarget, _float3* pOutDis
 	vSourMax = m_vPoint[5];
 	vSourCenter = (vSourMax + vSourMin)*0.5f;
 
-	// Flip Min and Max if pOther is Scaled by -1 (X-Axis)
 	if (pTarget->m_bIsInverse)
 	{
-		vDestMin = pOther->m_vPoint[3];
-		vDestMax = pOther->m_vPoint[5];
+		vDestMin = pOther->m_vPoint[6];
+		vDestMax = pOther->m_vPoint[0];
 	}
 	else
 	{

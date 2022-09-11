@@ -53,7 +53,7 @@ HRESULT CWoodWall::Initialize(void* pArg)
 int CWoodWall::Tick(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_BLOCK, this);
+	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_BLOCK, this);
 
 	__super::Tick(fTimeDelta);
 

@@ -171,9 +171,6 @@
     <ClCompile Include="..\Private\Sound_Manager.cpp">
       <Filter>01.Utility\96.SoundMgr</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Collider.cpp">
-      <Filter>01.Utility\03.Components\Collider\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\CullingMgr.cpp">
       <Filter>01.Utility\95.FrustumCullingMgr</Filter>
     </ClCompile>
@@ -182,6 +179,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collider_Cube.cpp">
       <Filter>01.Utility\03.Components\Collider\Collider_Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collider_Manager.cpp">
+      <Filter>01.Utility\03.Components\Collider\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -272,9 +272,6 @@
     <ClInclude Include="..\Public\Sound_Manager.h">
       <Filter>01.Utility\96.SoundMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Collider.h">
-      <Filter>01.Utility\03.Components\Collider\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\CullingMgr.h">
       <Filter>01.Utility\95.FrustumCullingMgr</Filter>
     </ClInclude>
@@ -283,6 +280,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Collider_Cube.h">
       <Filter>01.Utility\03.Components\Collider\Collider_Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collider_Manager.h">
+      <Filter>01.Utility\03.Components\Collider\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

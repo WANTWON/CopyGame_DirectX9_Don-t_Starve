@@ -92,15 +92,17 @@ HRESULT CSpiderWarrior::SetUp_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	CCollider_Rect::COLLRECTDESC CollRectDesc;
-	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+	CCollider_Cube::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
 	CollRectDesc.fRadiusY = 0.15f;
 	CollRectDesc.fRadiusX = 0.15f;
+	CollRectDesc.fRadiusZ = 0.5f;
 	CollRectDesc.fOffSetX = 0.f;
 	CollRectDesc.fOffSetY = -1.f;
+	CollRectDesc.fOffsetZ = 0.f;
 
 	/* For.Com_Collider_Rect*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -398,7 +400,7 @@ void CSpiderWarrior::Attack(_float fTimeDelta)
 			// If Spider is Colliding with Player 
 			vector<CGameObject*> vecDamagedActor;
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			if (pGameInstance->Collision_Check_Group_Multi(CCollider::COLLISION_PLAYER, vecDamagedActor, this))
+			if (pGameInstance->Collision_Check_Group_Multi(CCollider_Manager::COLLISION_PLAYER, vecDamagedActor,  this, CCollider_Manager::COLLSIION_BOX))
 			{
 				CGameInstance::Apply_Damage_Multi(m_tInfo.fDamage, vecDamagedActor, this, nullptr);
 				m_bDidDamage = true;

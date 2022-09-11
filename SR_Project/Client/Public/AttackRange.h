@@ -7,7 +7,7 @@ class CTexture;
 class CRenderer;
 class CVIBuffer_Rect;
 class CTransform;
-class CCollider;
+class CCollider_Manager;
 END
 
 BEGIN(Client)

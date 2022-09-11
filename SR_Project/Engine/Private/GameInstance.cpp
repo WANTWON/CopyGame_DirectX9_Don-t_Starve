@@ -12,7 +12,7 @@ CGameInstance::CGameInstance()
 	, m_pKey_Manager(CKeyMgr::Get_Instance())
 	, m_pPicking(CPicking::Get_Instance())
 	, m_pSound_Manager(CSound_Manager::Get_Instance())
-	, m_pCollider_Manager(CCollider::Get_Instance())
+	, m_pCollider_Manager(CCollider_Manager::Get_Instance())
 	, m_pCulling_Manager(CCullingMgr::Get_Instance())
 {
 	Safe_AddRef(m_pComponent_Manager);
@@ -352,7 +352,7 @@ int CGameInstance::Pause(const _uint & eID)
 	return m_pSound_Manager->Pause(eID);
 }
 
-HRESULT CGameInstance::Add_CollisionGroup(CCollider::COLLISION_GROUP eCollisionGroup, CGameObject * pGameObject)
+HRESULT CGameInstance::Add_CollisionGroup(CCollider_Manager::COLLISION_GROUP eCollisionGroup, CGameObject * pGameObject)
 {
 	if (!m_pCollider_Manager)
 		return E_FAIL; 
@@ -360,19 +360,19 @@ HRESULT CGameInstance::Add_CollisionGroup(CCollider::COLLISION_GROUP eCollisionG
 	return m_pCollider_Manager->Add_CollisionGroup(eCollisionGroup, pGameObject);
 }
 
-_bool CGameInstance::Collision_with_Group(CCollider::COLLISION_GROUP eGroup, CGameObject * pGameObject,  _float3* pOutDistance)
+_bool CGameInstance::Collision_with_Group(CCollider_Manager::COLLISION_GROUP eGroup, CGameObject * pGameObject, CCollider_Manager::COLLISION_TYPE eType, _float3* pOutDistance)
 {
 	if (nullptr == m_pCollider_Manager)
 		return false;
 
-	return m_pCollider_Manager->Collision_with_Group(eGroup, pGameObject, pOutDistance);
+	return m_pCollider_Manager->Collision_with_Group(eGroup, pGameObject, eType, pOutDistance);
 }
 
-_bool CGameInstance::Collision_Check_Group_Multi(CCollider::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, CGameObject * pDamageCauser)
+_bool CGameInstance::Collision_Check_Group_Multi(CCollider_Manager::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, CGameObject * pDamageCauser, CCollider_Manager::COLLISION_TYPE eType)
 {
 	if (nullptr == m_pCollider_Manager)
 		return false;
-	return m_pCollider_Manager->Collision_Check_Group_Multi(eGroup, vecDamagedObj, pDamageCauser);
+	return m_pCollider_Manager->Collision_Check_Group_Multi(eGroup, vecDamagedObj, pDamageCauser, eType);
 }
 
 void CGameInstance::Apply_Damage(_float fDamage, CGameObject * DamagedObj, CGameObject * DamageCauser, void * AttackType)
@@ -403,7 +403,7 @@ void CGameInstance::Release_Engine()
 
 	CCullingMgr::Get_Instance()->Destroy_Instance();
 
-	CCollider::Get_Instance()->Destroy_Instance();
+	CCollider_Manager::Get_Instance()->Destroy_Instance();
 
 	CSound_Manager::Get_Instance()->Destroy_Instance();
 

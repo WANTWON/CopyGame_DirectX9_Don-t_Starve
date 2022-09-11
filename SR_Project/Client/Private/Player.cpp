@@ -74,7 +74,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PLAYER, this);
 
 
 	__super::Tick(fTimeDelta);
@@ -168,7 +168,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	_float3 vDistance = _float3(0,0,0);
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (pGameInstance->Collision_with_Group(CCollider::COLLISION_BLOCK, this, &vDistance))
+	if (pGameInstance->Collision_with_Group(CCollider_Manager::COLLISION_BLOCK, this, CCollider_Manager::COLLSIION_BOX,  &vDistance))
 	{
 		_float3 vPosition = Get_Position();
 

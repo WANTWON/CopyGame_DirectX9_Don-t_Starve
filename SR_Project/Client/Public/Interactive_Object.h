@@ -55,7 +55,7 @@ protected:
 	INTERACTOBJ_ID m_eInteract_OBJ_ID;
 	_uint m_iDamage = 0;
 	_bool m_bInteract = true;
-	_bool m_bPicking;
+	_bool m_bPicking = false;
 	_float3 m_vecOutPos;
 	_bool m_bIsDestroyed = false;
 

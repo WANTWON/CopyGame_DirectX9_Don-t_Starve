@@ -57,7 +57,7 @@ namespace Client
 
 
 #include <process.h>
-
+#pragma warning (disable : 4819)
 // Client_Defines.h
 
 extern HWND		g_hWnd;

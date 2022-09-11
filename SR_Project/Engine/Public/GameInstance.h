@@ -9,7 +9,7 @@
 #include "KeyMgr.h"
 #include "Picking.h"
 #include "Sound_Manager.h"
-#include "Collider.h"
+#include "Collider_Manager.h"
 #include "CullingMgr.h"
 
 BEGIN(Engine)
@@ -79,10 +79,10 @@ public: /* For. Sound Manager */
 	int  Pause(const _uint& eID);
 
 public: /* For. Collider Manager */
-	HRESULT Add_CollisionGroup(CCollider::COLLISION_GROUP eCollisionGroup, class CGameObject* pGameObject);
+	HRESULT Add_CollisionGroup(CCollider_Manager::COLLISION_GROUP eCollisionGroup, class CGameObject* pGameObject);
 
-	_bool Collision_with_Group(CCollider::COLLISION_GROUP eGroup, class CGameObject* pGameObject, _float3* pOutDistance = nullptr);
-	_bool Collision_Check_Group_Multi(CCollider::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, class CGameObject* pDamageCauser);
+	_bool Collision_with_Group(CCollider_Manager::COLLISION_GROUP eGroup, class CGameObject* pGameObject, CCollider_Manager::COLLISION_TYPE eType, _float3* pOutDistance = nullptr);
+	_bool Collision_Check_Group_Multi(CCollider_Manager::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, class CGameObject* pDamageCauser, CCollider_Manager::COLLISION_TYPE eType);
 
 	/* For. Damage*/
 	static void Apply_Damage(_float fDamage, CGameObject* DamagedObj, CGameObject * DamageCauser, void* AttackType = nullptr);
@@ -104,7 +104,7 @@ private:
 	CKeyMgr*						m_pKey_Manager = nullptr;
 	CPicking*						m_pPicking = nullptr;
 	CSound_Manager*					m_pSound_Manager = nullptr;
-	CCollider*						m_pCollider_Manager = nullptr;
+	CCollider_Manager*					m_pCollider_Manager = nullptr;
 	CCullingMgr*					m_pCulling_Manager = nullptr;
 
 public:

@@ -76,8 +76,11 @@ void CPig::Late_Tick(_float fTimeDelta)
 		}
 	}
 
-	if (!CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+	if (m_bPicking && !CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+	{
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
+		m_bPicking = true;
+	}
 
 	if (m_eDir == DIR_STATE::DIR_LEFT)
 		m_pColliderCom->Set_IsInverse(true);
@@ -117,15 +120,17 @@ HRESULT CPig::SetUp_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	CCollider_Rect::COLLRECTDESC CollRectDesc;
-	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+	CCollider_Cube::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
 	CollRectDesc.fRadiusY = 0.35f;
 	CollRectDesc.fRadiusX = 0.3f;
+	CollRectDesc.fRadiusZ = 0.5f;
 	CollRectDesc.fOffSetX = 0.f;
 	CollRectDesc.fOffSetY = -0.25f;
+	CollRectDesc.fOffsetZ = 0.0f;
 
 	/* For.Com_Collider_Rect*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */

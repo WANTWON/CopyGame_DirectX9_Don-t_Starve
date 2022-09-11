@@ -38,7 +38,7 @@ int CInteractive_Object::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
+	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_OBJECT, this);
 
 	// Match Terrain-Y
 	WalkingTerrain();

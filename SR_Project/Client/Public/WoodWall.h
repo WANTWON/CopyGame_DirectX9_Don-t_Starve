@@ -6,7 +6,7 @@
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
-class CCollider;
+class CCollider_Manager;
 class CTransform;
 class CVIBuffer_Rect;
 class CCollider_Cube;
