@@ -34,7 +34,7 @@ private:
 
 private: /*For TextureCom */
 	virtual HRESULT Texture_Clone() override;
-	virtual void Change_Frame() override;
+	virtual void Change_Frame(_float fTimeDelta = 0) override;
 	virtual void Change_Motion() override;
 
 private:
@@ -42,11 +42,13 @@ private:
 	DIR_STATE m_ePreDir = DIR_STATE::DIR_END;
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
+	_bool m_bDidDamage = false;
 
 private:
 	virtual void AI_Behaviour(_float fTimeDelta) override;
 	virtual void Find_Target() override;
 	virtual void Follow_Target(_float fTimeDelta) override;
+	void Attack(_float fTimeDelta);
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 	virtual HRESULT Drop_Items() override;
 	virtual _bool IsDead() override;

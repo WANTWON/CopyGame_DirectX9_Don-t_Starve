@@ -55,7 +55,7 @@ void CSpider::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	Change_Motion();
-	Change_Frame();
+	Change_Frame(fTimeDelta);
 
 	if (m_eDir == DIR_STATE::DIR_LEFT)
 		m_pColliderCom->Set_IsInverse(true);
@@ -90,10 +90,10 @@ HRESULT CSpider::SetUp_Components(void* pArg)
 	/* For.Com_Collider*/
 	CCollider_Rect::COLLRECTDESC CollRectDesc;
 	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
-	CollRectDesc.fRadiusY = 0.5f;
-	CollRectDesc.fRadiusX = 0.3f;
+	CollRectDesc.fRadiusY = 0.15f;
+	CollRectDesc.fRadiusX = 0.15f;
 	CollRectDesc.fOffSetX = 0.f;
-	CollRectDesc.fOffSetY = -0.25f;
+	CollRectDesc.fOffSetY = -1.f;
 
 	/* For.Com_Collider_Rect*/
 	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
@@ -178,7 +178,7 @@ HRESULT CSpider::Texture_Clone()
 	return S_OK;
 }
 
-void CSpider::Change_Frame()
+void CSpider::Change_Frame(_float fTimeDelta)
 {
 	switch (m_eState)
 	{

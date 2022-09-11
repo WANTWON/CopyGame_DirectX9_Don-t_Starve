@@ -378,7 +378,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 		}
 
 	AttackMulti:
-			Apply_Damage_Multi(m_fDamage, vecDamagedActor, nullptr);
+			CGameInstance::Apply_Damage_Multi(m_fDamage, vecDamagedActor, this, nullptr);
 	}
 
 	vecDamagedActor.clear();
@@ -929,22 +929,22 @@ HRESULT CBullet::Change_Texture(const _tchar * LayerTag)
 	return S_OK;
 }
 
-void CBullet::Apply_Damage(_float Damage, CGameObject * DamagedObj, void * AttackType)
-{
-	DamagedObj->Take_Damage(Damage, nullptr, this);
-}
-
-void CBullet::Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void * AttackType)
-{
-	//Damge_Type ���� �ֱ�.
-
-	for (auto& iter = vecDamagedObj.begin(); iter != vecDamagedObj.end();)
-	{
-		(*iter)->Take_Damage(fDamage, nullptr, this);
-		iter++;
-	}
-
-}
+//void CBullet::Apply_Damage(_float Damage, CGameObject * DamagedObj, void * AttackType)
+//{
+//	DamagedObj->Take_Damage(Damage, nullptr, this);
+//}
+//
+//void CBullet::Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void * AttackType)
+//{
+//	Damge_Type ���� �ֱ�.
+//
+//	for (auto& iter = vecDamagedObj.begin(); iter != vecDamagedObj.end();)
+//	{
+//		(*iter)->Take_Damage(fDamage, nullptr, this);
+//		iter++;
+//	}
+//
+//}
 
 _bool CBullet::Compare_Terrain(void)
 {

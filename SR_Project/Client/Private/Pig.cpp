@@ -43,7 +43,10 @@ HRESULT CPig::Initialize(void* pArg)
 int CPig::Tick(_float fTimeDelta)
 {
 	if (__super::Tick(fTimeDelta))
+	{
+		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
 		return OBJ_DEAD;
+	}
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);
@@ -71,7 +74,7 @@ void CPig::Late_Tick(_float fTimeDelta)
 	}
 
 	Change_Motion();
-	Change_Frame();
+	Change_Frame(fTimeDelta);
 
 	if (!CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
@@ -231,7 +234,7 @@ HRESULT CPig::Texture_Clone()
 	return S_OK;
 }
 
-void CPig::Change_Frame()
+void CPig::Change_Frame(_float fTimeDelta)
 {
 	switch (m_eState)
 	{

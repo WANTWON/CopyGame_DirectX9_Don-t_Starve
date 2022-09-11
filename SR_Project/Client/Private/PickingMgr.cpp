@@ -109,7 +109,7 @@ _bool CPickingMgr::Picking()
 
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if ( pGameObject->Picking(&vPos) == true)
+		if (pGameObject->Picking(&vPos) == true)
 		{
 			vecPicked.push_back(pGameObject);
 			vecPos.push_back(vPos);

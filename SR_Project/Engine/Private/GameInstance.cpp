@@ -375,6 +375,20 @@ _bool CGameInstance::Collision_Check_Group_Multi(CCollider::COLLISION_GROUP eGro
 	return m_pCollider_Manager->Collision_Check_Group_Multi(eGroup, vecDamagedObj, pDamageCauser);
 }
 
+void CGameInstance::Apply_Damage(_float fDamage, CGameObject * DamagedObj, CGameObject * DamageCauser, void * AttackType)
+{
+	DamagedObj->Take_Damage(fDamage, nullptr, DamageCauser);
+}
+
+void CGameInstance::Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, CGameObject * DamageCauser, void * AttackType)
+{
+	for (auto& iter = vecDamagedObj.begin(); iter != vecDamagedObj.end();)
+	{
+		(*iter)->Take_Damage(fDamage, nullptr, DamageCauser);
+		iter++;
+	}
+}
+
 _bool CGameInstance::Is_In_Frustum(_float3 pGameObjectPos, _float fRadius)
 {
 	if (nullptr == m_pCulling_Manager)
