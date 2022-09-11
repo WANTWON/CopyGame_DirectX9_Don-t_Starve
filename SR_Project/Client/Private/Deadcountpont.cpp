@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "..\Public\Daycountpont.h"
+#include "..\Public\Deadcountpont.h"
 #include "GameInstance.h"
-#include "Player.h"
 #include "Inventory.h"
 
-CDaycountpont::CDaycountpont(LPDIRECT3DDEVICE9 pGraphic_Device)
+
+CDeadcountpont::CDeadcountpont(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CDaycountpont::CDaycountpont(const CDaycountpont & rhs)
+CDeadcountpont::CDeadcountpont(const CDeadcountpont & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CDaycountpont::Initialize_Prototype()
+HRESULT CDeadcountpont::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -22,17 +22,21 @@ HRESULT CDaycountpont::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CDaycountpont::Initialize(void* pArg)
+HRESULT CDeadcountpont::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	iNumber = (int*)pArg;
+
+	iNum = *iNumber;
+
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 60.f;
-	m_fSizeY = 60.f;
-	m_fX = 1230.f;
-	m_fY = 54.f;
+	m_fSizeX = 35.0f;
+	m_fSizeY = 35.0f;
+	m_fX = 320.f + (iNum * 35.f);
+	m_fY = 680.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
@@ -43,44 +47,90 @@ HRESULT CDaycountpont::Initialize(void* pArg)
 	return S_OK;
 }
 
-int CDaycountpont::Tick(_float fTimeDelta)
+int CDeadcountpont::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
-
-
-	/*CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pGameInstance);
-	Safe_AddRef(pinv);
-*/
-
-	if (GetTickCount() > m_dwdaytime + 15000)
+	if (m_bcheck == true)
 	{
-		++texnum;
-		m_dwdaytime = GetTickCount();
+		__super::Tick(fTimeDelta);
+
+		//RECT		rcRect;
+		//SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+
+		//POINT		ptMouse;
+		//GetCursorPos(&ptMouse);
+		//ScreenToClient(g_hWnd, &ptMouse);
+
+		//if (PtInRect(&rcRect, ptMouse))
+		//{
+
+		//	m_fSizeX = 35.f;
+		//	m_fSizeY = 35.f;
+		//	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		//	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+		//	//set_check(true);
+		//}
+
+
+
+
+		//if()
 	}
-	//pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
-
-	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
-	//texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth) / 2;
-
-	/*Safe_Release(pGameInstance);
-	Safe_Release(pinv);
-*/
-
 	return OBJ_NOEVENT;
 }
 
-void CDaycountpont::Late_Tick(_float fTimeDelta)
+void CDeadcountpont::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
+	if (m_bcheck == true)
+	{
+		__super::Late_Tick(fTimeDelta);
 
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+		//RECT		rcRect;
+		//SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+
+		//POINT		ptMouse;
+		//GetCursorPos(&ptMouse);
+		//ScreenToClient(g_hWnd, &ptMouse);
+
+		//if (!PtInRect(&rcRect, ptMouse))
+		//{
+		//	m_fSizeX = 20;
+		//	m_fSizeY = 20;
+		//	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+
+
+		//	//ERR_MSG(L"Ãæµ¹");
+		//}
+
+		if (GetTickCount() > m_dwdeadcount + 1000)
+		{
+			--count;
+			m_dwdeadcount = GetTickCount();
+		}
+
+
+		if (iNum == 0)
+		{
+			texnum = (count % 100) / 10;
+
+			if (texnum <= 0)
+				texnum = 30;
+
+		}
+
+		else if (iNum == 1)
+			texnum = (count % 10);
+
+		if (nullptr != m_pRendererCom&&m_bcheck)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+	}
+
+	//set_check(false);
 }
 
-HRESULT CDaycountpont::Render()
+HRESULT CDeadcountpont::Render()
 {
+	if (m_bcheck == true)
+	{
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -103,20 +153,19 @@ HRESULT CDaycountpont::Render()
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
-
-
+	}
 
 	return S_OK;
 }
 
-HRESULT CDaycountpont::SetUp_Components()
+HRESULT CDeadcountpont::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Daycountpont"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_HpPont"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -138,7 +187,7 @@ HRESULT CDaycountpont::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CDaycountpont::SetUp_RenderState()
+HRESULT CDeadcountpont::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -152,44 +201,43 @@ HRESULT CDaycountpont::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CDaycountpont::Release_RenderState()
+HRESULT CDeadcountpont::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	return S_OK;
 }
 
-CDaycountpont * CDaycountpont::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CDeadcountpont * CDeadcountpont::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CDaycountpont*	pInstance = new CDaycountpont(pGraphic_Device);
+	CDeadcountpont*	pInstance = new CDeadcountpont(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CDaycountpont"));
+		ERR_MSG(TEXT("Failed to Created : CDeadcountpont"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CDaycountpont::Clone(void* pArg)
+CGameObject * CDeadcountpont::Clone(void* pArg)
 {
-	CDaycountpont*	pInstance = new CDaycountpont(*this);
+	CDeadcountpont*	pInstance = new CDeadcountpont(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CDaycountpont"));
+		ERR_MSG(TEXT("Failed to Cloned : CDeadcountpont"));
 		Safe_Release(pInstance);
 	}
-
-	CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->push_back(pInstance);
-
+	CInventory_Manager::Get_Instance()->Get_Deadcountpont_list()->push_back(pInstance);
 	return pInstance;
 }
 
 
-void CDaycountpont::Free()
+void CDeadcountpont::Free()
 {
 	__super::Free();
 

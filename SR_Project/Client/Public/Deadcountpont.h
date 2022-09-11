@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CDaycountpont final : public CGameObject
+class CDeadcountpont final : public CGameObject
 {
 private:
-	CDaycountpont(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CDaycountpont(const CDaycountpont& rhs);
-	virtual ~CDaycountpont() = default;
+	CDeadcountpont(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CDeadcountpont(const CDeadcountpont& rhs);
+	virtual ~CDeadcountpont() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -33,24 +33,35 @@ private: /* For.Components */
 
 private:
 	_float4x4				m_ProjMatrix;
-	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
+	_float					m_fX, m_fY, m_fSizeX, m_fSizeY , m_firsty;
 
 private:
 	HRESULT SetUp_Components();
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
-	_uint texnum = 0;
-	_uint m_ihp;
-
-	DWORD m_dwdaytime = GetTickCount();
-
 public:
-	static CDaycountpont* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CDeadcountpont* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 
-	_uint get_daycount() { return texnum; }
+	bool get_check() { return m_bcheck; }
+	int get_iNum() { return iNum; }
+	void set_check(bool tof) { m_bcheck = tof; }
+	void set_pont_num(int num) { texnum = num; }
+	void timeron() { count = 30; }
+
+
+
+private:
+	int* iNumber = nullptr;
+	int iNum = 0;
+	int texnum = 0;
+	bool m_bcheck = false;
+
+	_uint count = 30;
+
+	DWORD m_dwdeadcount = GetTickCount();
 };
 
 END

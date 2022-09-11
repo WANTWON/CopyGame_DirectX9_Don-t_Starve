@@ -78,7 +78,7 @@ private:
 	int iNum = 100;
 	ITEMNAME texnum = ITEMNAME_END;
 	ITEMID m_itemtype = ITEM_END;
-	
+
 	bool m_bcheck = true;
 	bool m_bpontcheck = true;
 	bool m_bcheck_bag = false;

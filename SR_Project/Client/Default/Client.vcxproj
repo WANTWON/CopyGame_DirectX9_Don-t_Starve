@@ -178,6 +178,10 @@
     <ClInclude Include="..\public\CookPot.h" />
     <ClInclude Include="..\Public\Daycount.h" />
     <ClInclude Include="..\Public\Daycountpont.h" />
+    <ClInclude Include="..\Public\Daypont.h" />
+    <ClInclude Include="..\Public\Deadcountpont.h" />
+    <ClInclude Include="..\Public\Deadmain.h" />
+    <ClInclude Include="..\Public\Eatitem.h" />
     <ClInclude Include="..\Public\Equipment_back.h" />
     <ClInclude Include="..\Public\Equipment_front.h" />
     <ClInclude Include="..\Public\Equip_Animation.h" />
@@ -281,6 +285,10 @@
     <ClCompile Include="..\private\CookPot.cpp" />
     <ClCompile Include="..\Private\Daycount.cpp" />
     <ClCompile Include="..\Private\Daycountpont.cpp" />
+    <ClCompile Include="..\Private\Daypont.cpp" />
+    <ClCompile Include="..\Private\Deadcountpont.cpp" />
+    <ClCompile Include="..\Private\Deadmain.cpp" />
+    <ClCompile Include="..\Private\Eatitem.cpp" />
     <ClCompile Include="..\Private\Equipment_back.cpp" />
     <ClCompile Include="..\Private\Equipment_front.cpp" />
     <ClCompile Include="..\Private\Equip_Animation.cpp" />
