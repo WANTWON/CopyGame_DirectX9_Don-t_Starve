@@ -76,7 +76,7 @@ void CPig::Late_Tick(_float fTimeDelta)
 		}
 	}
 
-	if (m_bPicking && !CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+	if (!m_bPicking && !CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
 	{
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
 		m_bPicking = true;

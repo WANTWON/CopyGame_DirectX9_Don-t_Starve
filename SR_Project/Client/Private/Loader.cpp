@@ -14,7 +14,6 @@
 #include "Bearger.h"
 #include "Boarrior.h"
 #include "Terrain.h"
-#include "CameraDynamic.h"
 #include "Sky.h"
 #include "Tree.h"
 #include "Grass.h"
@@ -90,14 +89,14 @@
 #include "Potbutton.h"
 #include "Questbutton.h"
 
-#include "CameraFPS.h"
 #include "Mouse_iteminfo.h"
 
 #include "Deadcountpont.h"
 #include "Deadmain.h"
 #include "Daypont.h"
 
-#include"Eatitem.h"
+#include "Eatitem.h"
+#include "CameraManager.h"
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -1485,6 +1484,13 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_FPS"),
 		CCameraFPS::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+
+	/*For.Prototype_GameObject_Camera_Target */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Target"),
+		CCameraTarget::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 
 	/*For.Prototype_GameObject_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),

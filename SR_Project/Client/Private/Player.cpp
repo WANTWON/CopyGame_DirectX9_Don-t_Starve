@@ -1383,9 +1383,12 @@ void CPlayer::Revive(_float _fTimeDelta)
 			break;
 		}
 		m_ePreState = m_eState;
+
+		CCamera* pCamera =  CCameraManager::Get_Instance()->Get_CurrentCamera();
+		dynamic_cast<CCameraDynamic*>(pCamera)->Set_CamMode(CCameraDynamic::CAM_REVIVE);
 	}
 
-	if (m_fReviveTime > 3.f &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	if (m_fReviveTime > 1.5f &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
 		Change_Texture(TEXT("Com_Texture_Idle_Down"));
 		m_bDead = false;
@@ -1395,7 +1398,7 @@ void CPlayer::Revive(_float _fTimeDelta)
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(10);
 		m_fReviveTime = 0.f;
 	}
-	else if (m_fReviveTime < 3.f && m_pTextureCom->Get_Frame().m_iCurrentTex == 15)
+	else if (m_fReviveTime < 1.5f && m_pTextureCom->Get_Frame().m_iCurrentTex == 15)
 	{
 		m_pTextureCom->Get_Frame().m_iCurrentTex = 9;
 	}

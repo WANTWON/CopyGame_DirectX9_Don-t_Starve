@@ -241,6 +241,9 @@
     <Filter Include="02.GameObject\98.UI\10.Eateffect">
       <UniqueIdentifier>{2accb40e-9c59-45c5-8192-2abe12a9d912}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.Camera\TargetCamera">
+      <UniqueIdentifier>{7bdda24a-3af3-4f56-8421-aeafb2bf0636}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -564,6 +567,9 @@
     <ClInclude Include="..\Public\Eatitem.h">
       <Filter>02.GameObject\98.UI\10.Eateffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CameraTarget.h">
+      <Filter>02.GameObject\99.Camera\TargetCamera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -874,6 +880,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Eatitem.cpp">
       <Filter>02.GameObject\98.UI\10.Eateffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraTarget.cpp">
+      <Filter>02.GameObject\99.Camera\TargetCamera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
