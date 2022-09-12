@@ -45,7 +45,7 @@ HRESULT CWoodWall::Initialize(void* pArg)
 
 
 	WalkingTerrain();
-
+	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 	return S_OK;
 }
 
@@ -97,7 +97,7 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 
 	}
 	
-	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 }
 
 HRESULT CWoodWall::Render()
@@ -272,7 +272,7 @@ HRESULT CWoodWall::Texture_Clone()
 		break;
 	case Client::CWoodWall::WALL_ROCK:
 		TextureDesc.m_iEndTex = 2;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RockHEALTHY"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RockHEALTHY"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
 	default:

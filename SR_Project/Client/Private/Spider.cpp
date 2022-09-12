@@ -33,7 +33,7 @@ HRESULT CSpider::Initialize(void* pArg)
 
 	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
-	
+	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 	return S_OK;
 }
 
@@ -57,11 +57,9 @@ void CSpider::Late_Tick(_float fTimeDelta)
 	Change_Motion();
 	Change_Frame(fTimeDelta);
 
-	if (m_eDir == DIR_STATE::DIR_LEFT)
-		m_pColliderCom->Set_IsInverse(true);
-	else
-		m_pColliderCom->Set_IsInverse(false);
-	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+
 }
 
 HRESULT CSpider::Render()

@@ -45,7 +45,8 @@ HRESULT CBullet::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	
+	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+
 	return S_OK;
 }
 
@@ -79,7 +80,8 @@ void CBullet::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom && m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_MINES)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
-	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 
 	AttackCheck(fTimeDelta);
 	DeadCheck(fTimeDelta);

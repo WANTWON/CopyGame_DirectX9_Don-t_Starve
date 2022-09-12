@@ -42,7 +42,7 @@ HRESULT CBearger::Initialize(void* pArg)
 
 	// Set this as final patrol position
 	vPatrolPosition = _float3(40.f, 1.f, 27.f);
-
+	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 	return S_OK;
 }
 
@@ -85,11 +85,9 @@ void CBearger::Late_Tick(_float fTimeDelta)
 		}
 	}
 
-	if (m_eDir == DIR_STATE::DIR_LEFT)
-		m_pColliderCom->Set_IsInverse(true);
-	else
-		m_pColliderCom->Set_IsInverse(false);
-	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+
 }
 
 HRESULT CBearger::Render()
