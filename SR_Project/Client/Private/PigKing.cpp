@@ -189,6 +189,9 @@ void CPigKing::Interact(_uint Damage)
 		auto line = pinven->Get_Line_list();
 		
 
+		
+
+
 		for (auto iter = line->begin(); iter != line->end(); ++iter)
 		{
 			if ((*iter)->get_check() == true)
@@ -197,8 +200,6 @@ void CPigKing::Interact(_uint Damage)
 			   {
 					success = true;
 			    }
-				/*pCamera->Set_TalkingMode(true);
-				pCamera->Set_Target(this);*/
 				if(m_iQuestnum ==0)
 				++count;
 

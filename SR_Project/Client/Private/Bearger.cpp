@@ -5,6 +5,7 @@
 #include "Inventory.h"
 #include "Item.h"
 #include "Carrot.h"
+#include "CameraManager.h"
 
 CBearger::CBearger(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -55,12 +56,15 @@ int CBearger::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
+
+
 	return OBJ_NOEVENT;
 }
 
 void CBearger::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
 
 	Change_Motion();
 	Change_Frame(fTimeDelta);
@@ -89,7 +93,7 @@ HRESULT CBearger::Render()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	//m_pColliderCom->Render_ColliderBox();
+	m_pColliderCom->Render_ColliderBox();
 #endif // _DEBUG
 
 	return S_OK;
@@ -125,16 +129,19 @@ HRESULT CBearger::SetUp_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	CCollider_Rect::COLLRECTDESC CollRectDesc;
-	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+	CCollider_Cube::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
 	CollRectDesc.fRadiusY = 0.25f;
 	CollRectDesc.fRadiusX = 0.25f;
+	CollRectDesc.fRadiusZ = 0.5f;
 	CollRectDesc.fOffSetX = 0.0f;
 	CollRectDesc.fOffSetY = -1.4f;
+	CollRectDesc.fOffsetZ = 0.0f;
 
 	/* For.Com_Collider_Rect*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
+
 
 	SetUp_DebugComponents(pArg);
 
@@ -685,7 +692,7 @@ void CBearger::Find_Target()
 			Safe_AddRef(pGameInstance);
 
 			list<CGameObject*>* pObjects = pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Object")); // Get Objects in GAMEPLAY_LEVEL
-
+			Safe_Release(pGameInstance);
 			for (auto iter = pObjects->begin(); iter != pObjects->end(); ++iter)
 			{
 				if (!(*iter))

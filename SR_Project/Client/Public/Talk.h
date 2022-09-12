@@ -43,6 +43,7 @@ private:
 	_uint texnum = 0;
 	_uint m_ihp;
 	bool m_bcheck = false;
+	bool m_SetTargetBearger = false;
 
 public:
 	bool getcheck() { return m_bcheck;  }

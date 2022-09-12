@@ -41,7 +41,7 @@ int CMonster::Tick(_float fTimeDelta)
 {
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
+	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_MONSTER, this);
 
 
 	__super::Tick(fTimeDelta);

@@ -3,31 +3,31 @@
 #include "Component.h"
 BEGIN(Engine)
 
-class ENGINE_DLL CCollider_Rect final : public CComponent
+class ENGINE_DLL CCollider_Cube final : public CComponent
 {
 public:
 	typedef struct tagCollisionRectDesc
 	{
-		_float	fRadiusX = 0.f, fRadiusY = 0.f;
-		_float	fOffSetX = 0.f, fOffSetY = 0.f;
+		_float	fRadiusX = 0.5f, fRadiusY = 0.5f,  fRadiusZ = 0.5f;
+		_float	fOffSetX = 0.f, fOffSetY = 0.f,  fOffsetZ = 0.f;
 		_float4x4		StateMatrix;
 	}COLLRECTDESC;
 
 public:
-	CCollider_Rect(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CCollider_Rect(const CCollider_Rect& rhs);
-	virtual ~CCollider_Rect() = default;
+	CCollider_Cube(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CCollider_Cube(const CCollider_Cube& rhs);
+	virtual ~CCollider_Cube() = default;
 
 public:
 	HRESULT Initialize_Prototype();
 	HRESULT Initialize(void* pArg) override;
 	HRESULT Update_ColliderBox(_float4x4 WorldMatrix);
 	HRESULT Render_ColliderBox();
-	_bool	Collision_Check(CCollider_Rect* pTarget, _float3* pOutDistance = nullptr);
+	_bool	Collision_Check(CCollider_Cube* pTarget, _float3* pOutDistance = nullptr);
 
 public:
 	COLLRECTDESC Get_CollRectDesc() { return m_StateDesc; }
-	_float3						m_vPoint[4];
+	_float3						m_vPoint[8];
 	_bool						m_bIsInverse = false;
 
 public:
@@ -35,7 +35,7 @@ public:
 
 protected:
 	COLLRECTDESC		m_StateDesc;
-	
+
 protected:
 	LPDIRECT3DVERTEXBUFFER9  m_pVB = nullptr;
 	_uint						m_iNumVertices = 0;
@@ -51,7 +51,7 @@ protected:
 
 
 public:
-	static CCollider_Rect* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CCollider_Cube* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CComponent* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

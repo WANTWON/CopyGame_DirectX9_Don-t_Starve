@@ -57,7 +57,7 @@ int CBullet::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_OBJECT, this);
+	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_OBJECT, this);
 
 	Excute(fTimeDelta);
 
@@ -140,7 +140,9 @@ HRESULT CBullet::SetUp_Components()
 	CollRectDesc.fOffSetY = 0.f;
 
 	/* For.Com_Collider_Rect*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+	/*if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+		return E_FAIL;*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -318,7 +320,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	vector<CGameObject*> vecDamagedActor;
 	
-	if (pGameInstance->Collision_Check_Group_Multi(m_tBulletData.bIsPlayerBullet ? CCollider::COLLISION_MONSTER : CCollider::COLLISION_PLAYER, vecDamagedActor, this))
+	if (pGameInstance->Collision_Check_Group_Multi(m_tBulletData.bIsPlayerBullet ? CCollider_Manager::COLLISION_MONSTER : CCollider_Manager::COLLISION_PLAYER, vecDamagedActor, this, CCollider_Manager::COLLSIION_BOX))
 	{
 		switch (m_tBulletData.eWeaponType)
 		{
@@ -384,7 +386,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 	// Collision with Object (if Bearger Special Attack)
 	if (m_tBulletData.eWeaponType == WEAPON_TYPE::BEARGER_SPECIAL)
 	{
-		if (pGameInstance->Collision_Check_Group_Multi(CCollider::COLLISION_OBJECT, vecDamagedActor, this))
+		if (pGameInstance->Collision_Check_Group_Multi(CCollider_Manager::COLLISION_OBJECT, vecDamagedActor, this, CCollider_Manager::COLLSIION_BOX))
 		{
 			for (auto& iter = vecDamagedActor.begin(); iter != vecDamagedActor.end(); ++iter)
 			{

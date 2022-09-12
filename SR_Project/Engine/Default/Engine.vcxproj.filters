@@ -91,6 +91,12 @@
     <Filter Include="01.Utility\95.FrustumCullingMgr">
       <UniqueIdentifier>{13f8536a-38e8-4955-aaf2-adf953d0b779}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\Collider_Rect">
+      <UniqueIdentifier>{c52c9a2e-82f4-45d1-81af-e802b3e7fbf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\Collider_Cube">
+      <UniqueIdentifier>{3fbf911b-d544-4cc0-b4cc-bf562f0288b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -165,14 +171,17 @@
     <ClCompile Include="..\Private\Sound_Manager.cpp">
       <Filter>01.Utility\96.SoundMgr</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Collider_Rect.cpp">
-      <Filter>01.Utility\03.Components\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Collider.cpp">
-      <Filter>01.Utility\03.Components\Collider\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\CullingMgr.cpp">
       <Filter>01.Utility\95.FrustumCullingMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Collider_Rect.cpp">
+      <Filter>01.Utility\03.Components\Collider\Collider_Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collider_Cube.cpp">
+      <Filter>01.Utility\03.Components\Collider\Collider_Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collider_Manager.cpp">
+      <Filter>01.Utility\03.Components\Collider\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -263,14 +272,17 @@
     <ClInclude Include="..\Public\Sound_Manager.h">
       <Filter>01.Utility\96.SoundMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Collider_Rect.h">
-      <Filter>01.Utility\03.Components\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Collider.h">
-      <Filter>01.Utility\03.Components\Collider\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\CullingMgr.h">
       <Filter>01.Utility\95.FrustumCullingMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Collider_Rect.h">
+      <Filter>01.Utility\03.Components\Collider\Collider_Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collider_Cube.h">
+      <Filter>01.Utility\03.Components\Collider\Collider_Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collider_Manager.h">
+      <Filter>01.Utility\03.Components\Collider\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

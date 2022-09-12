@@ -57,8 +57,12 @@ void CCookPot::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	if (!CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+	if (m_bPicking && !CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+	{
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
+		m_bPicking = true;
+	}
+	
 
 	Change_Motion();
 	Change_Frame();

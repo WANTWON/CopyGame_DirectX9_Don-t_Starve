@@ -53,7 +53,7 @@ HRESULT CWoodWall::Initialize(void* pArg)
 int CWoodWall::Tick(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_BLOCK, this);
+	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_BLOCK, this);
 
 	__super::Tick(fTimeDelta);
 
@@ -146,16 +146,18 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	/* For.Com_Collider*/
-	CCollider_Rect::COLLRECTDESC CollRectDesc;
-	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
-	CollRectDesc.fRadiusY = 0.5f;
-	CollRectDesc.fRadiusX = 0.5f;
-	CollRectDesc.fOffSetX = 0.f;
-	CollRectDesc.fOffSetY = -0.0f;
+	///* For.Com_Collider*/
+	//CCollider_Rect::COLLRECTDESC CollRectDesc;
+	//ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+	//CollRectDesc.fRadiusY = 0.5f;
+	//CollRectDesc.fRadiusX = 0.5f;
+	//CollRectDesc.fOffSetX = 0.f;
+	//CollRectDesc.fOffSetY = -0.0f;
 
 	/* For.Com_Collider_Rect*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+	/*if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+		return E_FAIL;*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */

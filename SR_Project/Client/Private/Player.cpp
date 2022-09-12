@@ -74,7 +74,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
+	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PLAYER, this);
 
 
 	__super::Tick(fTimeDelta);
@@ -168,7 +168,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	_float3 vDistance = _float3(0,0,0);
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (pGameInstance->Collision_with_Group(CCollider::COLLISION_BLOCK, this, &vDistance))
+	if (pGameInstance->Collision_with_Group(CCollider_Manager::COLLISION_BLOCK, this, CCollider_Manager::COLLSIION_BOX,  &vDistance))
 	{
 		_float3 vPosition = Get_Position();
 
@@ -325,15 +325,26 @@ HRESULT CPlayer::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	CCollider_Rect::COLLRECTDESC CollRectDesc;
+	/*CCollider_Rect::COLLRECTDESC CollRectDesc;
 	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
 	CollRectDesc.fRadiusY = 0.4f;
 	CollRectDesc.fRadiusX = 0.3f;
 	CollRectDesc.fOffSetX = 0.f;
+	CollRectDesc.fOffSetY = -0.25f;*/
+
+	CCollider_Cube::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
+	CollRectDesc.fRadiusY = 0.4f;
+	CollRectDesc.fRadiusX = 0.3f;
+	CollRectDesc.fRadiusZ = 0.5f;
+	CollRectDesc.fOffSetX = 0.f;
 	CollRectDesc.fOffSetY = -0.25f;
+	CollRectDesc.fOffsetZ = 0.f;
 
 	/* For.Com_Collider_Rect*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+	/*if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+		return E_FAIL;*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
 	/* For.Com_Texture */

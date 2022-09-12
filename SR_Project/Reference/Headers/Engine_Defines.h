@@ -2,6 +2,7 @@
 
 #pragma warning (disable : 4005)
 #pragma warning (disable : 4251)
+#pragma warning (disable : 4819)
 
 #include <d3d9.h>
 #include <d3dx9.h>

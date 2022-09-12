@@ -65,6 +65,8 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_fTimeAcc += fTimeDelta;
 #endif // _DEBUG
 
+	
+
 }
 
 HRESULT CMainApp::Render()
@@ -130,6 +132,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), CCollider_Rect::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Collider_Rect */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), CCollider_Cube::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -167,6 +173,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGameInstance);
 
 	CGameInstance::Release_Engine();	
+	CInventory_Manager::Get_Instance()->Free();
 	CPickingMgr::Get_Instance()->Destroy_Instance();
 	CInventory_Manager::Get_Instance()->Destroy_Instance();
 	CCameraManager::Get_Instance()->Destroy_Instance();

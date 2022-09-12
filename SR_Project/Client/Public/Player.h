@@ -8,7 +8,7 @@ class CTexture;
 class CRenderer;
 class CVIBuffer_Rect;
 class CTransform;
-class CCollider_Rect;
+class CCollider_Cube;
 END
 
 BEGIN(Client)
@@ -209,7 +209,7 @@ private: /* For.Components */
 	CRenderer*				m_pRendererCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
-	CCollider_Rect*			m_pColliderCom = nullptr;
+	CCollider_Cube*			m_pColliderCom = nullptr;
 	//vector<CTexture*>       m_mapTexture;
 	map<const _tchar*, CTexture*> m_mapTexture;
 private: /*State*/

@@ -8,6 +8,7 @@
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_Cube.h"
 #include "Collider_Rect.h"
+#include "Collider_Cube.h"
 
 BEGIN(Engine)
 

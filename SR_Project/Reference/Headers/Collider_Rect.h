@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Component.h"
-#include "VIBuffer_Rect.h"
 BEGIN(Engine)
 
 class ENGINE_DLL CCollider_Rect final : public CComponent

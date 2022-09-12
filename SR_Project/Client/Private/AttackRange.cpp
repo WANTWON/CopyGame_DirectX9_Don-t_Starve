@@ -197,6 +197,7 @@ HRESULT CAttackRange::Check_Picker()
 			return E_FAIL;
 	}
 
+	return S_OK;
 }
 
 void CAttackRange::WalkingTerrain()
