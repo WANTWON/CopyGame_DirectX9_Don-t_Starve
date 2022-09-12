@@ -786,44 +786,63 @@ void CBearger::Attack(_bool bIsSpecial)
 		D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 		D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
 
-		_float3 vRingPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .5f, 0.f);
-		_float3 vRocksPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .5f, 0.f);
+		// Bullet Spawn Location
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		if (!pGameInstance)
+			return;
+		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+		if (!pVIBuffer_Terrain)
+			return;
+		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+		if (!pTransform_Terrain)
+			return;
+
+		_float3 vSpawnPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
+		vSpawnPos.y = pVIBuffer_Terrain->Compute_Height(vSpawnPos, pTransform_Terrain->Get_WorldMatrix());
 
 		// Create Ring and First Wave of Rocks
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)
 		{
 			// Ring
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Attack_Special"), LEVEL_STATIC, TEXT("Layer_Attack"), &vRingPos)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Attack_Special"), LEVEL_STATIC, TEXT("Layer_Attack"), &vSpawnPos)))
 				return;
 
 			// Rocks
-			BulletData.vPosition = vRocksPos + BulletData.vLook;
+			BulletData.vPosition = vSpawnPos + BulletData.vLook;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = vRocksPos + BulletData.vRight;
+			BulletData.vPosition = vSpawnPos + BulletData.vRight;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = vRocksPos - BulletData.vLook;
+			BulletData.vPosition = vSpawnPos - BulletData.vLook;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = vRocksPos - BulletData.vRight;
+			BulletData.vPosition = vSpawnPos - BulletData.vRight;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 		}
 		// Create Second Wave of Rocks
-		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 30)
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 33)
 		{
 			// Rocks
-			BulletData.vPosition = vRocksPos + BulletData.vLook * 2;
+			BulletData.vPosition = vSpawnPos + BulletData.vLook * 2;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = vRocksPos + BulletData.vRight * 2;
+			BulletData.vPosition = vSpawnPos + BulletData.vRight * 2;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = vRocksPos - BulletData.vLook * 2;
+			BulletData.vPosition = vSpawnPos - BulletData.vLook * 2;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = vRocksPos - BulletData.vRight * 2;
+			BulletData.vPosition = vSpawnPos - BulletData.vRight * 2;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 		}
