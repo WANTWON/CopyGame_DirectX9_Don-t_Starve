@@ -148,8 +148,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	}
 
 	CloseHandle(hFile);
-	
-	
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boarrior"), LEVEL_GAMEPLAY, pLayerTag, _float3(30.f, 0.f, 22.f))))
 		return E_FAIL;

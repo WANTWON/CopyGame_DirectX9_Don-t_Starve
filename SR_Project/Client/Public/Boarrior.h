@@ -51,7 +51,7 @@ private:
 	void Patrol(_float fTimeDelta);
 	virtual void Find_Target() override;
 	virtual void Follow_Target(_float fTimeDelta) override;
-	void Attack(_bool bIsSpecial = false);
+	void Attack(STATE eAttack = STATE::ATTACK_1);
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 	virtual HRESULT Drop_Items() override;
 	virtual _bool IsDead() override;
