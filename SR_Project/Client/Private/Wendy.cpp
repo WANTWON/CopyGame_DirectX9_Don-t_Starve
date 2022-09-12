@@ -262,7 +262,7 @@ void CWendy::Move(_float _fTimeDelta)
 
 	if (m_pTarget)
 	{
-		m_pTransformCom->Go_PosTarget(_fTimeDelta * .1f,m_vTargetPos, _float3{ 0.f, 0.f, 0.f });
+		m_pTransformCom->Go_PosTarget(_fTimeDelta, m_vTargetPos, _float3{ 0.f, 0.f, 0.f });
 		if ((abs(vMyPos.x - m_vTargetPos.x) < 0.1 &&
 			abs(vMyPos.z - m_vTargetPos.z) < 0.1))
 		{
@@ -272,7 +272,7 @@ void CWendy::Move(_float _fTimeDelta)
 	}
 	else
 	{
-		m_pTransformCom->Go_PosTarget(_fTimeDelta * .1f, _float3(m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ), _float3{ 0.f, 0.f, 0.f });
+		m_pTransformCom->Go_PosTarget(_fTimeDelta, _float3(m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ), _float3{ 0.f, 0.f, 0.f });
 		if ((abs(vMyPos.x - m_fPatrolPosX) < 0.1 &&
 			abs(vMyPos.z - m_fPatrolPosZ) < 0.1))
 		{
@@ -282,15 +282,16 @@ void CWendy::Move(_float _fTimeDelta)
 	}
 	
 	SetUp_BillBoard();
-	if (m_eCur_Dir == DIR_STATE::DIR_LEFT)
+	/*if (m_eCur_Dir == DIR_STATE::DIR_LEFT)
 	{
 		m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
-	}
+	}*/
 }
 
 void CWendy::Idle(_float _fTimeDelta)
 {
 	m_fInteractTIme += _fTimeDelta;
+
 }
 
 void CWendy::Select_Target(_float _fTimeDelta)
@@ -336,7 +337,7 @@ DIR_STATE CWendy::Check_Direction(void)
 
 
 	//Turn
-	D3DXMatrixRotationAxis(&RotateMat, &_float3(0.f, 1.f, 0.f), D3DXToRadian(45.f));
+	D3DXMatrixRotationAxis(&RotateMat, &_float3(0.f, 1.f, 0.f), D3DXToRadian(90.f));
 	D3DXVec3TransformNormal(&vRot45, &vRot45, &RotateMat);
 	//vRot45 = *(_float3*)&RotateMat.m[2][0];
 	D3DXMatrixRotationAxis(&RotateMat, &_float3(0.f, 1.f, 0.f), D3DXToRadian(135.f));
@@ -375,17 +376,17 @@ DIR_STATE CWendy::Check_Direction(void)
 	{
 		if (fDegreeTarget > 0.f && fDegreeTarget <= 90.f)
 		{
-			cout << "y+, UP" << endl;
+			cout << "y+, UP, Degree: " << fDegreeTarget << endl;
 			return DIR_UP;
 		}
 		else if (fDegreeTarget > 90.f && fDegreeTarget <= 135.f)
 		{
-			cout << "y+, Right" << endl;
+			cout << "y+, Right, Degree: " << fDegreeTarget << endl;
 			return DIR_RIGHT;
 		}
 		else if (fDegreeTarget > 135.f && fDegreeTarget <= 180.f)
 		{
-			cout << "y+, Down" << endl;
+			cout << "y+, Down, Degree: " << fDegreeTarget << endl;
 			return DIR_DOWN;
 		}
 	}
@@ -393,22 +394,22 @@ DIR_STATE CWendy::Check_Direction(void)
 	{
 		if (fDegreeTarget > 0.f && fDegreeTarget <= 90.f)
 		{
-			cout << "y-, UP" << endl;
+			cout << "y-, UP, Degree: " << fDegreeTarget << endl;
 			return DIR_UP;
 		}
 		else if (fDegreeTarget > 90.f && fDegreeTarget <= 135.f)
 		{
-			cout << "y-, Left" << endl;
+			cout << "y-, Left, Degree: " << fDegreeTarget << endl;
 			return DIR_LEFT;
 		}
 		else if (fDegreeTarget > 135.f && fDegreeTarget <= 180.f)
 		{
-			cout << "y-, Down" << endl;
+			cout << "y-, Down, Degree: " << fDegreeTarget << endl;
 			return DIR_DOWN;
 		}
 	}
 
-
+	cout << "Error " << fDegreeTarget << endl;
 	return DIR_DOWN;
 
 }

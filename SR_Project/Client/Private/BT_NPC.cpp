@@ -40,8 +40,8 @@ void CBT_NPC::Init_Nodes()
 	BTTask_HasTarget->Set_DecoratorNodes(Selector_OnTarget, Sequence_NonTarget);
 	//Add InSequence_NoneTarget 
 	Sequence_NonTarget->Add_Node(BTTask_Idle);
-	Sequence_NonTarget->Add_Node(BTTask_SetRandPos);
 	Sequence_NonTarget->Add_Node(BTTask_Move);
+	Sequence_NonTarget->Add_Node(BTTask_SetRandPos);
 	Sequence_NonTarget->Add_Node(BTTask_SelectTarget);
 	//----------------------
 	Selector_OnTarget->Add_Node(BTTask_Interact);
