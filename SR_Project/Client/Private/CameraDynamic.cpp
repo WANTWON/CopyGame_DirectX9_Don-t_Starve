@@ -176,7 +176,7 @@ void CCameraDynamic::Turn_Camera(_float fTimeDelta)
 }
 
 
-void CCameraDynamic::Switch_TurnCnt(_int _TurnCount)
+_int CCameraDynamic::Switch_TurnCnt(_int _TurnCount)
 {
 	switch (_TurnCount)
 	{
@@ -198,6 +198,8 @@ void CCameraDynamic::Switch_TurnCnt(_int _TurnCount)
 	{
 		m_iTurnCount = 3;
 	}
+
+	return m_iTurnCount;
 }
 
 void CCameraDynamic::Target_Camera(_float fTimeDelta, CGameObject* pGameObject)

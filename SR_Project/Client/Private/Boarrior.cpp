@@ -292,7 +292,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 			m_dwAttackTime = GetTickCount();
 		}
 		else
-			Attack();
+			Attack(m_eState);
 		break;
 	case STATE::ATTACK_3:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
@@ -306,7 +306,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 			m_dwAttackTime = GetTickCount();
 		}
 		else
-			Attack(true);
+			Attack(m_eState);
 		break;
 	case STATE::STUN:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
@@ -466,39 +466,25 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 	if (m_bHit)
 		m_eState = STATE::HIT;
 
-	// Check for Target, AggroRadius
-	if (m_bAggro)
-	{
-		Find_Target(); // Find Player
-		if (m_pTarget)
-		{
-			// If in AttackRadius: Attack
-			if (m_fDistanceToTarget < m_fAttackRadius)
-			{
-				if (!m_bIsAttacking && GetTickCount() > m_dwAttackTime + 1500)
-				{
-					m_eState = rand() % 2 ? STATE::ATTACK_1 : STATE::ATTACK_3;
-					m_bIsAttacking = true;
-				}
-				else if (!m_bIsAttacking)
-					m_eState = STATE::IDLE;
-			}
-			// If NOT in AttackRadius: Follow Target
-			else
-				Follow_Target(fTimeDelta);
-		}
-	}
-	else
-	{
-		Find_Target(); // Find Food
-		if (m_pTarget)
-		{
-			// TODO: Go to Food Position
-		}
-		else
-			Patrol(fTimeDelta);
-	}
+	Find_Target(); // Check for Target, Aggro and AggroRadius
 
+	if (m_pTarget && m_bAggro)
+	{
+		// If in AttackRadius: Attack
+		if (m_fDistanceToTarget < m_fAttackRadius)
+		{
+			if (!m_bIsAttacking && GetTickCount() > m_dwAttackTime + 1500)
+			{
+				m_eState = rand() % 2 ? STATE::ATTACK_1 : STATE::ATTACK_3;
+				m_bIsAttacking = true;
+			}
+			else if (!m_bIsAttacking)
+				m_eState = STATE::IDLE;
+		}
+		// If NOT in AttackRadius: Follow Target
+		else
+			Follow_Target(fTimeDelta);
+	}
 }
 
 void CBoarrior::Patrol(_float fTimeDelta)
@@ -555,15 +541,15 @@ void CBoarrior::Patrol(_float fTimeDelta)
 		// Move Horizontally
 		if (abs(fX) > abs(fZ))
 			if (fX > 0)
-				m_eDir = DIR_STATE::DIR_RIGHT;
+				m_eDir = Get_Processed_Dir(DIR_STATE::DIR_RIGHT);
 			else
-				m_eDir = DIR_STATE::DIR_LEFT;
+				m_eDir = Get_Processed_Dir(DIR_STATE::DIR_LEFT);
 		// Move Vertically
 		else
 			if (fZ > 0)
-				m_eDir = DIR_STATE::DIR_UP;
+				m_eDir = Get_Processed_Dir(DIR_STATE::DIR_UP);
 			else
-				m_eDir = DIR_STATE::DIR_DOWN;
+				m_eDir = Get_Processed_Dir(DIR_STATE::DIR_DOWN);
 
 		m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, _float3(m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ), _float3{ 0.f, 0.f, 0.f });
 	}
@@ -573,31 +559,26 @@ void CBoarrior::Find_Target()
 {
 	if (!m_bIsAttacking && !m_bHit && !m_bDead)
 	{
-		// Look for Player
-		if (m_bAggro)
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+		Safe_Release(pGameInstance);
+
+		if (pTarget)
 		{
-			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			Safe_AddRef(pGameInstance);
-
-			CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-
-			Safe_Release(pGameInstance);
-
-			if (pTarget)
+			_float3 vTargetPos = pTarget->Get_Position();
+			m_fDistanceToTarget = D3DXVec3Length(&(vTargetPos - Get_Position()));
+				
+			if (m_fDistanceToTarget < m_fAggroRadius || m_bAggro)
 			{
-				_float3 vTargetPos = pTarget->Get_Position();
-				m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
 				m_pTarget = pTarget;
+				m_bAggro = true;
 			}
 			else
 				m_pTarget = nullptr;
 		}
-		// Look for Food
 		else
-		{
-			// TODO: Implement
-			m_pTarget = nullptr; // Remove this line
-		}
+			m_pTarget = nullptr;
 	}
 	else
 		m_pTarget = nullptr;
@@ -617,95 +598,101 @@ void CBoarrior::Follow_Target(_float fTimeDelta)
 	// Move Horizontally
 	if (abs(fX) > abs(fZ))
 		if (fX > 0)
-			m_eDir = DIR_STATE::DIR_RIGHT;
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_RIGHT);
 		else
-			m_eDir = DIR_STATE::DIR_LEFT;
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_LEFT);
 	// Move Vertically
 	else
 		if (fZ > 0)
-			m_eDir = DIR_STATE::DIR_UP;
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_UP);
 		else
-			m_eDir = DIR_STATE::DIR_DOWN;
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_DOWN);
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
 
 	m_bIsAttacking = false;
 }
 
-void CBoarrior::Attack(_bool bIsSpecial)
+void CBoarrior::Attack(STATE eAttack)
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	//_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
-	// Normal Attack
-	if (!bIsSpecial && m_pTextureCom->Get_Frame().m_iCurrentTex == 33)
-	{
-		// Create Standard Bullet
-		BULLETDATA BulletData;
-		ZeroMemory(&BulletData, sizeof(BulletData));
+	//switch (eAttack)
+	//{
+	//case STATE::ATTACK_1:
+	//	// Normal Attack
+	//	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 33)
+	//	{
+	//		// Create Standard Bullet
+	//		BULLETDATA BulletData;
+	//		ZeroMemory(&BulletData, sizeof(BulletData));
 
-		BulletData.vPosition = m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
-		BulletData.eDirState = m_eDir;
-		BulletData.fOffsetSide = 1.f;
-		BulletData.fOffsetUp = .5f;
-		BulletData.fOffsetDown = 1.f;
+	//		BulletData.vPosition = m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
+	//		BulletData.eDirState = m_eDir;
+	//		BulletData.fOffsetSide = 1.f;
+	//		BulletData.fOffsetUp = .5f;
+	//		BulletData.fOffsetDown = 1.f;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-			return;
-	}
-	// Special Attack
-	else if (bIsSpecial)
-	{
-		BULLETDATA BulletData;
-		ZeroMemory(&BulletData, sizeof(BulletData));
+	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+	//			return;
+	//	}
+	//	break;
+	//case STATE::ATTACK_2:
+	//	break;
+	//case STATE::ATTACK_3:
+	//	// Special Attack
+	//	BULLETDATA BulletData;
+	//	ZeroMemory(&BulletData, sizeof(BulletData));
 
-		BulletData.eWeaponType = WEAPON_TYPE::BEARGER_SPECIAL;
-		BulletData.eDirState = m_eDir;
-		D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
-		D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
+	//	BulletData.eWeaponType = WEAPON_TYPE::BOARRIOR_SPECIAL;
+	//	BulletData.eDirState = m_eDir;
+	//	D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+	//	D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
 
-		_float3 vRingPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .3f, 0.f);
-		_float3 vRocksPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .8f, 0.f);
+	//	_float3 vRingPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .3f, 0.f);
+	//	_float3 vRocksPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .8f, 0.f);
 
-		// Create Ring and First Wave of Rocks
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)
-		{
-			// Ring
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Attack_Special"), LEVEL_STATIC, TEXT("Layer_Attack"), &vRingPos)))
-				return;
+	//	// Create Ring and First Wave of Rocks
+	//	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)
+	//	{
+	//		// Ring
+	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Attack_Special"), LEVEL_STATIC, TEXT("Layer_Attack"), &vRingPos)))
+	//			return;
 
-			// Rocks
-			BulletData.vPosition = vRocksPos + BulletData.vLook;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-			BulletData.vPosition = vRocksPos + BulletData.vRight;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-			BulletData.vPosition = vRocksPos - BulletData.vLook;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-			BulletData.vPosition = vRocksPos - BulletData.vRight;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-		}
-		// Create Second Wave of Rocks
-		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 30)
-		{
-			// Rocks
-			BulletData.vPosition = vRocksPos + BulletData.vLook * 2;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-			BulletData.vPosition = vRocksPos + BulletData.vRight * 2;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-			BulletData.vPosition = vRocksPos - BulletData.vLook * 2;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-			BulletData.vPosition = vRocksPos - BulletData.vRight * 2;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-		}
-	}
+	//		// Rocks
+	//		BulletData.vPosition = vRocksPos + BulletData.vLook;
+	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+	//			return;
+	//		BulletData.vPosition = vRocksPos + BulletData.vRight;
+	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+	//			return;
+	//		BulletData.vPosition = vRocksPos - BulletData.vLook;
+	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+	//			return;
+	//		BulletData.vPosition = vRocksPos - BulletData.vRight;
+	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+	//			return;
+	//	}
+	//	// Create Second Wave of Rocks
+	//	else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 30)
+	//	{
+	//		// Rocks
+	//		BulletData.vPosition = vRocksPos + BulletData.vLook * 2;
+	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+	//			return;
+	//		BulletData.vPosition = vRocksPos + BulletData.vRight * 2;
+	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+	//			return;
+	//		BulletData.vPosition = vRocksPos - BulletData.vLook * 2;
+	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+	//			return;
+	//		BulletData.vPosition = vRocksPos - BulletData.vRight * 2;
+	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+	//			return;
+	//	}
+	//	break;
+	//}
 }
 
 _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)

@@ -26,7 +26,11 @@ void CCameraManager::PlayerCamera_TurnLeft(LEVEL LevelIndex)
 {
 	if (m_eCamState == CAM_PLAYER )
 	{
-		dynamic_cast<CCameraDynamic*>(m_pCurrentCamera)->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 1);
+		CCameraDynamic* pDynamicCamera = dynamic_cast<CCameraDynamic*>(m_pCurrentCamera);
+		if (pDynamicCamera)
+		{
+			m_eCamDir = (CAM_DIR)pDynamicCamera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 1);
+		}	
 	}
 }
 
@@ -34,7 +38,11 @@ void CCameraManager::PlayerCamera_TurnRight(LEVEL LevelIndex)
 {
 	if (m_eCamState == CAM_PLAYER)
 	{
-		dynamic_cast<CCameraDynamic*>(m_pCurrentCamera)->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 2);
+		CCameraDynamic* pDynamicCamera = dynamic_cast<CCameraDynamic*>(m_pCurrentCamera);
+		if (pDynamicCamera)
+		{
+			m_eCamDir = (CAM_DIR)pDynamicCamera->Set_CamMode(CCameraDynamic::CAM_TURNMODE, 2);
+		}
 	}
 }
 
@@ -49,6 +57,7 @@ HRESULT CCameraManager::Ready_Camera(LEVEL eLevelIndex)
 
 	m_pCurrentCamera = pCamera;
 	m_eCamState = CAM_PLAYER;
+	m_eCamDir = DIR_DEFAULT;
 	m_eCurrentLevel = eLevelIndex;
 	return S_OK;
 }

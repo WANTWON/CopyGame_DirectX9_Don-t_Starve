@@ -377,15 +377,15 @@ void CSpider::Follow_Target(_float fTimeDelta)
 	// Move Horizontally
 	if (abs(fX) > abs(fZ))
 		if (fX > 0)
-			m_eDir = DIR_STATE::DIR_RIGHT;
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_RIGHT);
 		else
-			m_eDir = DIR_STATE::DIR_LEFT;
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_LEFT);
 	// Move Vertically
 	else
 		if (fZ > 0)
-			m_eDir = DIR_STATE::DIR_UP;
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_UP);
 		else
-			m_eDir = DIR_STATE::DIR_DOWN;
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_DOWN);
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
 

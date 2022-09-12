@@ -27,9 +27,10 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 
 public: //SetEnum
-	void Set_CamMode(CAMERAMODE _eCamMode, _int _TurnCount = 0) 
+	_int Set_CamMode(CAMERAMODE _eCamMode, _int _TurnCount = 0) 
 	{
-		m_eCamMode = _eCamMode; Switch_TurnCnt(_TurnCount);
+		m_eCamMode = _eCamMode; 
+		return Switch_TurnCnt(_TurnCount);
 	}
 	CAMERAMODE Get_CamMode() { return m_eCamMode; }
 	void Set_TalkingMode(_bool type) { m_bTalkingMode = type; m_bOutZoom = !type; }
@@ -38,7 +39,7 @@ public: //SetEnum
 private:
 	void Player_Camera(_float fTimeDelta);
 	void Turn_Camera(_float fTimeDelta);
-	void Switch_TurnCnt(_int _TurnCount);
+	_int Switch_TurnCnt(_int _TurnCount);
 	void Target_Camera(_float fTimeDelta, CGameObject* pGameObject);
 	void OutTarget_Camera(_float fTimeDelta);
 private:

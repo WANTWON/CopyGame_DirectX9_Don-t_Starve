@@ -55,6 +55,7 @@ protected: /* For TransformCom*/
 
 protected:
 	const _tchar* m_TimerTag = TEXT("");
+	_uint m_iDirOffset = 0;
 	OBJINFO m_tInfo;
 	CGameObject* m_pTarget = nullptr;
 	_float m_fDistanceToTarget = 0.f;
@@ -73,6 +74,7 @@ protected:
 	DWORD m_dwDeathTime = GetTickCount();
 
 protected:
+	DIR_STATE Get_Processed_Dir(DIR_STATE eDir);
 	virtual void AI_Behaviour(_float fTimeDelta) { };
 	virtual void Find_Target() { };
 	virtual void Follow_Target(_float fTimeDelta) { };
