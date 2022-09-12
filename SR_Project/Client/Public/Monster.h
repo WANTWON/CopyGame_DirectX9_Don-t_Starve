@@ -1,6 +1,6 @@
 #pragma once
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Pawn.h"
 
 BEGIN(Engine)
 class CRenderer;
@@ -11,7 +11,7 @@ class CCollider_Cube;
 END
 
 BEGIN(Client)
-class CMonster abstract : public CGameObject
+class CMonster abstract : public CPawn
 {
 protected:
 	CMonster(LPDIRECT3DDEVICE9 pGraphic_Device);

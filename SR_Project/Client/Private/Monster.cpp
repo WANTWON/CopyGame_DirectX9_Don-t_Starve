@@ -7,12 +7,12 @@
 #include "CameraManager.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CPawn(pGraphic_Device)
 {
 }
 
 CMonster::CMonster(const CMonster & rhs)
-	: CGameObject(rhs)
+	: CPawn(rhs)
 {
 }
 
@@ -32,7 +32,7 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-
+	m_eObjID = OBJID::OBJ_MONSTER;
 
 
 	return S_OK;

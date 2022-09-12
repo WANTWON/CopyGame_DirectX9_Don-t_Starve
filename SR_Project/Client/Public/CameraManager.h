@@ -1,6 +1,7 @@
 #pragma once
 #include "CameraDynamic.h"
 #include "CameraFPS.h"
+#include "CameraTarget.h"
 
 BEGIN(Client)
 
@@ -8,8 +9,10 @@ class CCameraManager final : public CBase
 {
 	DECLARE_SINGLETON(CCameraManager)
 public:
-	enum CAM_STATE { CAM_PLAYER, CAM_FPS, CAM_END };
+
+	enum CAM_STATE { CAM_PLAYER, CAM_FPS, CAM_TARGET, CAM_END };
 	enum CAM_DIR { DIR_DEFAULT, DIR_1, DIR_2, DIR_3, DIR_MAX };
+
 public:
 	CCameraManager();
 	virtual ~CCameraManager() = default;

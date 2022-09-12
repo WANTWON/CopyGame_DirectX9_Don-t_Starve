@@ -59,24 +59,27 @@ int CTalk::Tick(_float fTimeDelta)
 
 		
 ////////////////////////////// Bearger 등장 카메라 테스트 //////////////////////////
-		if (m_SetTargetBearger)
-		{
-			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-			pCamera->Set_TalkingMode(true);
-			CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
-			pCamera->Set_Target(pGameObject);
-		}
 		
 		if (CGameInstance::Get_Instance()->Key_Up(VK_F3))
 		{
 			if (!m_SetTargetBearger)
 			{
-				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-				pCamera->Set_TalkingMode(false);
+				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+				CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(true);
+				CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
+				pCamera->Set_Target(pGameObject);
 				m_SetTargetBearger = true;
 			}
+			else
+			{
+				CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+				m_SetTargetBearger = false;
+			}
+				
 		}
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 		if (CKeyMgr::Get_Instance()->Key_Up('0'))
 		{

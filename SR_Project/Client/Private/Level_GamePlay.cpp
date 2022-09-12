@@ -37,8 +37,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
-		//return E_FAIL;
+	if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
+		return E_FAIL;
 
 	if (g_bLoadingfirst == false)
 	{
@@ -323,6 +323,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Target"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

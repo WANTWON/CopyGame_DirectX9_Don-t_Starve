@@ -56,6 +56,13 @@ int CBearger::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
+	if (CGameInstance::Get_Instance()->Key_Up(VK_F5))
+	{
+		CCamera* pCamera =	CCameraManager::Get_Instance()->Get_CurrentCamera();
+		dynamic_cast<CCameraDynamic*>(pCamera)->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.5f, 0.1f, 0.01f);
+		/*   CamMode , Power, Velocity, Reduce_Velocity  */
+	}
+
 	return OBJ_NOEVENT;
 }
 

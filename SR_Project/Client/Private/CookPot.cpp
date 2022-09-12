@@ -32,6 +32,7 @@ HRESULT CCookPot::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_eObjID = OBJID::OBJ_OBJECT;
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::COOKPOT;
 
 	return S_OK;
@@ -57,7 +58,7 @@ void CCookPot::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	if (m_bPicking && !CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+	if (!m_bPicking && !CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
 	{
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
 		m_bPicking = true;

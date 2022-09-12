@@ -21,6 +21,8 @@ HRESULT CCameraDynamic::Initialize_Prototype()
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
 
+
+
 	return S_OK;
 }
 
@@ -34,19 +36,26 @@ HRESULT CCameraDynamic::Initialize(void * pArg)
 
 int CCameraDynamic::Tick(_float fTimeDelta)
 {
-
 	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_PLAYER)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
 
-	if (m_bTalkingMode && !m_bOutZoom)
+	if(m_eCamMode == CAM_SHAKING)
 	{
-		Target_Camera(fTimeDelta, m_pTarget);
+		Shaking_Camera(fTimeDelta, m_fPower);
 	}
-	else if (!m_bTalkingMode && m_bOutZoom)
+	else if (m_eCamMode == CAM_ZOOMIN)
 	{
-		OutTarget_Camera(fTimeDelta);
+		ZoomIn_Camera(fTimeDelta, m_pTarget);
+	}
+	else if (m_eCamMode == CAM_ZOOMOUT)
+	{
+		ZoomOut_Camera(fTimeDelta);
+	}
+	else if (m_eCamMode == CAM_REVIVE)
+	{
+		Revive_Camera(fTimeDelta);
 	}
 	else if (m_eCamMode == CAM_PLAYER)
 	{
@@ -85,13 +94,13 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 	if (m_lMouseWheel < 0)
 		m_lMouseWheel += 0.001;
 
-
 	if (m_lMouseWheel += (_long)(pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
 	{
+		if (m_vDistance.y > 15 || m_vDistance.y < 3)
+			return;
+
 		m_vDistance.y -= (fTimeDelta*m_lMouseWheel*0.01f);
 		m_vDistance.z += (fTimeDelta*m_lMouseWheel*0.01f);
-
-		//m_CameraDesc.fFovy += (fTimeDelta*m_lMouseWheel*0.01f);
 	}
 
 	if (pGameInstance->Key_Pressing(VK_DOWN))
@@ -202,7 +211,44 @@ _int CCameraDynamic::Switch_TurnCnt(_int _TurnCount)
 	return m_iTurnCount;
 }
 
-void CCameraDynamic::Target_Camera(_float fTimeDelta, CGameObject* pGameObject)
+void CCameraDynamic::Revive_Camera(_float fTimeDelta)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	_float3 m_TargetPos = pTarget->Get_Pos();
+	//m_lMouseWheel += 0.001;
+
+	m_vDistance.y -= 0.03;
+	m_vDistance.z += 0.03;
+	m_pTransform->LookAt(m_TargetPos);
+
+	switch (m_iTurnCount % 4)
+	{
+	case 0:
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
+		break;
+	case 1:
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		break;
+	case 2:
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, -m_vDistance.z));
+		break;
+	case 3:
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(-m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		break;
+	}
+
+	if (m_vDistance.y < 5)
+	{
+		m_eCamMode = CAM_ZOOMOUT;
+		m_vDistance = _float3(0, 8, -6);
+		return;
+	}
+	Safe_Release(pGameInstance);
+}
+
+void CCameraDynamic::ZoomIn_Camera(_float fTimeDelta, CGameObject* pGameObject)
 {
 	if (pGameObject == nullptr)
 		return;
@@ -225,7 +271,7 @@ void CCameraDynamic::Target_Camera(_float fTimeDelta, CGameObject* pGameObject)
 	m_pTransform->Set_State(CTransform::STATE_POSITION, vCameraPos);
 }
 
-void CCameraDynamic::OutTarget_Camera(_float fTimeDelta)
+void CCameraDynamic::ZoomOut_Camera(_float fTimeDelta)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -239,9 +285,9 @@ void CCameraDynamic::OutTarget_Camera(_float fTimeDelta)
 	_float3 vCameraPos = Get_Position();
 	_float3 vDir = (m_TargetPos+m_vDistance)- vCameraPos;
 
-	if (fabsf(m_TargetPos.y + m_vDistance.y - vCameraPos.y) < 0.5f)
+	if (fabsf(m_TargetPos.y + m_vDistance.y - vCameraPos.y) < 0.3f)
 	{
-		m_bOutZoom = false;
+		m_eCamMode = CAM_PLAYER;
 		return;
 	}
 		
@@ -251,6 +297,80 @@ void CCameraDynamic::OutTarget_Camera(_float fTimeDelta)
 
 	m_pTransform->LookAt(m_TargetPos);
 	m_pTransform->Set_State(CTransform::STATE_POSITION, vCameraPos);
+
+	Safe_Release(pGameInstance);
+}
+
+void CCameraDynamic::Shaking_Camera(_float fTimeDelta, _float fPower)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	Safe_AddRef(pTarget);
+
+	_float3 m_TargetPos = pTarget->Get_Pos();
+
+	++m_iShakingCount;
+	if (m_iShakingCount % 4 == 0)
+	{
+		m_TargetPos.y += fPower*m_fVelocity;
+		if (rand() % 2 == 0)
+			m_TargetPos.z -= fPower*m_fVelocity;
+		else
+			m_TargetPos.z += fPower*m_fVelocity;
+
+		if(rand()%2 == 0)
+			m_TargetPos.x -= fPower*m_fVelocity;
+		else
+			m_TargetPos.x += fPower*m_fVelocity;
+	}
+	else if (m_iShakingCount % 4 == 1)
+	{
+		m_TargetPos.y -= fPower*m_fVelocity;
+		if (rand() % 2 == 0)
+			m_TargetPos.z -= fPower*m_fVelocity;
+		else
+			m_TargetPos.z += fPower*m_fVelocity;
+
+		if (rand() % 2 == 0)
+			m_TargetPos.x -= fPower*m_fVelocity;
+		else
+			m_TargetPos.x += fPower*m_fVelocity;
+
+	}
+
+	m_fVelocity -= m_fMinusVelocity;
+	if (m_fVelocity < 0.0f)
+	{
+		m_eCamMode = CAM_PLAYER;
+		Safe_Release(pTarget);
+		Safe_Release(pGameInstance);
+		return;
+	}
+		
+
+	Safe_Release(pTarget);
+
+	m_pTransform->LookAt(m_TargetPos);
+
+	switch (m_iTurnCount % 4)
+	{
+	case 0:
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
+		break;
+	case 1:
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		break;
+	case 2:
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, -m_vDistance.z));
+		break;
+	case 3:
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(-m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		break;
+	}
+
 
 	Safe_Release(pGameInstance);
 }

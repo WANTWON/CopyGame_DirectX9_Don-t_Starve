@@ -31,24 +31,6 @@
     <Filter Include="03.Mouse">
       <UniqueIdentifier>{22e28144-0102-4609-9f9e-e6c0be621428}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00.Player">
-      <UniqueIdentifier>{338d1323-c14f-4477-a3c9-89e249b58e75}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\00.Player\Equip_Anim">
-      <UniqueIdentifier>{55813ade-5830-4af6-ac26-f780a6c7363a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\00.Player\Bullet">
-      <UniqueIdentifier>{d7427aa0-c24d-4580-858b-52ddbc1476ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.Monster">
-      <UniqueIdentifier>{04b114f1-fbdb-4517-a19d-e416023815d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.Monster\Pig">
-      <UniqueIdentifier>{c2ba77b3-594b-4b1e-b0f8-323d91d764ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.Monster\Spider">
-      <UniqueIdentifier>{2245b0c7-c591-466d-b491-b61ae6bd9526}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\03.BackGround">
       <UniqueIdentifier>{9f91e1df-e215-4151-8805-e3414e76dade}</UniqueIdentifier>
     </Filter>
@@ -57,24 +39,6 @@
     </Filter>
     <Filter Include="02.GameObject\03.BackGround\Terrain">
       <UniqueIdentifier>{766736ac-cf5c-45ad-94f6-40d5bd86f420}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object">
-      <UniqueIdentifier>{52574d39-d2d4-4693-aa57-e50a3b1fd890}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\Boulder">
-      <UniqueIdentifier>{6221d872-9563-42ff-8ea3-17b1ed0ad709}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\Grass">
-      <UniqueIdentifier>{f8894d0b-65b2-404a-9db2-d23f0476fe57}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\Item">
-      <UniqueIdentifier>{715ff672-5fe2-4be2-b9f8-37e47a3991cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\Tree">
-      <UniqueIdentifier>{2346487a-7d5d-4f93-80ff-5dc4b98ec1dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\Berry Bush">
-      <UniqueIdentifier>{3218fc99-aa20-40ce-b2c6-3740becc227a}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\99.Camera">
       <UniqueIdentifier>{107d5aff-84f1-4289-b6c9-bff96bfa8fe6}</UniqueIdentifier>
@@ -127,23 +91,8 @@
     <Filter Include="02.GameObject\98.UI\02.Toolbox\01.GatherToolbox">
       <UniqueIdentifier>{efea9d00-707f-4d78-a85a-7011c7cf155c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\Pig King">
-      <UniqueIdentifier>{7a569719-d033-4a90-bd6a-eecfe70825a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\05.UnInteractive_Object">
-      <UniqueIdentifier>{c16eb5c4-d616-4ea7-9fef-4a5f5a21b25c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\96.Portal">
-      <UniqueIdentifier>{25f28f92-6d93-4113-890e-d8d88a2fac6d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\98.UI\03.Craft">
       <UniqueIdentifier>{ff25ab13-96f1-4752-a952-2998b210305c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\00.Player\AttackRange">
-      <UniqueIdentifier>{0e69f00a-9b21-4f0c-b868-0ff35163c63a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.Monster\Spider_Warrior">
-      <UniqueIdentifier>{36eaf950-0862-43dd-82e7-a411950c077b}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\99.Camera\Manager">
       <UniqueIdentifier>{04dd6a26-f0ea-486a-8d44-cdb23aafc560}</UniqueIdentifier>
@@ -166,9 +115,6 @@
     <Filter Include="02.GameObject\98.UI\06.Talk">
       <UniqueIdentifier>{248283f7-9c53-45f5-9e12-27e6462a94bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\01.Monster\Bearger">
-      <UniqueIdentifier>{ce9f80e8-f600-44cf-8ba7-26a2bf49a7a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\98.UI\07.Loadingscene">
       <UniqueIdentifier>{6d32a457-48d4-48b9-ac75-00aaeded858c}</UniqueIdentifier>
     </Filter>
@@ -181,38 +127,11 @@
     <Filter Include="02.GameObject\98.UI\02.Toolbox\03.ConstructToolbox">
       <UniqueIdentifier>{87e92ec8-6dd8-4460-b23b-91b91e54e15f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\05.UnInteractive_Object\House">
-      <UniqueIdentifier>{1688b5e8-f44a-470b-8d20-d55b1312b758}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\05.UnInteractive_Object\Wall">
-      <UniqueIdentifier>{acb02a53-95d5-496e-aa08-6e2785f27157}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\Cook Pot">
-      <UniqueIdentifier>{9c2b6c2b-1a07-4118-9dd6-6f4fef787694}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\Tent">
-      <UniqueIdentifier>{4726c1eb-606d-4c1c-ad66-3954ebea0224}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\01.Monster\Bearger\Special Attack">
-      <UniqueIdentifier>{65dfa0af-688d-47c7-a3cf-63c23b3c03fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\Skeleton">
-      <UniqueIdentifier>{c645df63-ccfe-430e-9d23-33a5671fbf7b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\98.UI\09.Pot">
       <UniqueIdentifier>{86bb6014-7dd9-497c-bfb4-5acb09504ded}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\NPC">
-      <UniqueIdentifier>{660946ff-ce1d-4dbc-8ea1-71cf29e5d955}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\NPC\Wendy">
-      <UniqueIdentifier>{01947dbe-6ca9-4f59-9f6d-89489c9e439a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\98.UI\01. Inventory\iteminfo">
       <UniqueIdentifier>{7dc8053d-0b09-4953-a915-757aadbf5877}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Interactive_Object\Carrot">
-      <UniqueIdentifier>{7fd7269d-23a0-4609-9e31-b739e1ac2c8e}</UniqueIdentifier>
     </Filter>
     <Filter Include="97.BeHavior_Tree">
       <UniqueIdentifier>{135c86d0-bf70-4ac6-88dc-d15f11ca00fd}</UniqueIdentifier>
@@ -223,15 +142,6 @@
     <Filter Include="01.Levels\Boss">
       <UniqueIdentifier>{5991c2dd-ca0b-4829-8a45-26ad1b7738ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\01.Monster\Boarrior">
-      <UniqueIdentifier>{7a67c311-4a79-4bb7-aba7-d5868e7a3419}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\05.UnInteractive_Object\Torch">
-      <UniqueIdentifier>{e678b83f-4e12-4c45-90e6-f45bcde493d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\05.UnInteractive_Object\OtherDecoObject">
-      <UniqueIdentifier>{ed772d46-c6be-4144-97e8-935b8df75ff6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox">
       <UniqueIdentifier>{b90caa5e-ff37-4d35-bc94-4f7dca98e450}</UniqueIdentifier>
     </Filter>
@@ -240,6 +150,102 @@
     </Filter>
     <Filter Include="02.GameObject\98.UI\10.Eateffect">
       <UniqueIdentifier>{2accb40e-9c59-45c5-8192-2abe12a9d912}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn">
+      <UniqueIdentifier>{38c179d6-78e1-41ee-8077-a302b162f100}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object">
+      <UniqueIdentifier>{52574d39-d2d4-4693-aa57-e50a3b1fd890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\Boulder">
+      <UniqueIdentifier>{6221d872-9563-42ff-8ea3-17b1ed0ad709}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\Grass">
+      <UniqueIdentifier>{f8894d0b-65b2-404a-9db2-d23f0476fe57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\Item">
+      <UniqueIdentifier>{715ff672-5fe2-4be2-b9f8-37e47a3991cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\Tree">
+      <UniqueIdentifier>{2346487a-7d5d-4f93-80ff-5dc4b98ec1dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\Berry Bush">
+      <UniqueIdentifier>{3218fc99-aa20-40ce-b2c6-3740becc227a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\Cook Pot">
+      <UniqueIdentifier>{9c2b6c2b-1a07-4118-9dd6-6f4fef787694}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\Tent">
+      <UniqueIdentifier>{4726c1eb-606d-4c1c-ad66-3954ebea0224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\Skeleton">
+      <UniqueIdentifier>{c645df63-ccfe-430e-9d23-33a5671fbf7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\NPC">
+      <UniqueIdentifier>{660946ff-ce1d-4dbc-8ea1-71cf29e5d955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\NPC\Wendy">
+      <UniqueIdentifier>{01947dbe-6ca9-4f59-9f6d-89489c9e439a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\Carrot">
+      <UniqueIdentifier>{7fd7269d-23a0-4609-9e31-b739e1ac2c8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\96.Portal">
+      <UniqueIdentifier>{25f28f92-6d93-4113-890e-d8d88a2fac6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\01.Monster">
+      <UniqueIdentifier>{04b114f1-fbdb-4517-a19d-e416023815d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\01.Monster\Pig">
+      <UniqueIdentifier>{c2ba77b3-594b-4b1e-b0f8-323d91d764ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\01.Monster\Spider">
+      <UniqueIdentifier>{2245b0c7-c591-466d-b491-b61ae6bd9526}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\01.Monster\Spider_Warrior">
+      <UniqueIdentifier>{36eaf950-0862-43dd-82e7-a411950c077b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\01.Monster\Bearger">
+      <UniqueIdentifier>{ce9f80e8-f600-44cf-8ba7-26a2bf49a7a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\01.Monster\Bearger\Special Attack">
+      <UniqueIdentifier>{65dfa0af-688d-47c7-a3cf-63c23b3c03fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\01.Monster\Boarrior">
+      <UniqueIdentifier>{7a67c311-4a79-4bb7-aba7-d5868e7a3419}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\00.Player">
+      <UniqueIdentifier>{338d1323-c14f-4477-a3c9-89e249b58e75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\00.Player\Equip_Anim">
+      <UniqueIdentifier>{55813ade-5830-4af6-ac26-f780a6c7363a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\00.Player\AttackRange">
+      <UniqueIdentifier>{0e69f00a-9b21-4f0c-b868-0ff35163c63a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\Bullet">
+      <UniqueIdentifier>{d7427aa0-c24d-4580-858b-52ddbc1476ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object">
+      <UniqueIdentifier>{c16eb5c4-d616-4ea7-9fef-4a5f5a21b25c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\House">
+      <UniqueIdentifier>{1688b5e8-f44a-470b-8d20-d55b1312b758}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Wall">
+      <UniqueIdentifier>{acb02a53-95d5-496e-aa08-6e2785f27157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Torch">
+      <UniqueIdentifier>{e678b83f-4e12-4c45-90e6-f45bcde493d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\OtherDecoObject">
+      <UniqueIdentifier>{ed772d46-c6be-4144-97e8-935b8df75ff6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\04.Interactive_Object\NPC\Pig King">
+      <UniqueIdentifier>{7a569719-d033-4a90-bd6a-eecfe70825a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.Camera\TargetCamera">
+      <UniqueIdentifier>{53bab0ad-d3bd-4347-a01d-4870a2b3b26c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -277,31 +283,31 @@
       <Filter>01.Levels\Loading\Loader</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
-      <Filter>02.GameObject\01.Monster</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02.GameObject\03.BackGround\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Player.h">
-      <Filter>02.GameObject\00.Player</Filter>
+      <Filter>02.GameObject\Pawn\00.Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sky.h">
       <Filter>02.GameObject\03.BackGround\Sky</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Tree.h">
-      <Filter>02.GameObject\04.Interactive_Object\Tree</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Tree</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Inventory.h">
       <Filter>02.GameObject\98.UI\01. Inventory\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Grass.h">
-      <Filter>02.GameObject\04.Interactive_Object\Grass</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Grass</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Boulder.h">
-      <Filter>02.GameObject\04.Interactive_Object\Boulder</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Boulder</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BerryBush.h">
-      <Filter>02.GameObject\04.Interactive_Object\Berry Bush</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Berry Bush</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Mouse.h">
       <Filter>03.Mouse</Filter>
@@ -310,7 +316,7 @@
       <Filter>02.GameObject\03.BackGround\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Equip_Animation.h">
-      <Filter>02.GameObject\00.Player\Equip_Anim</Filter>
+      <Filter>02.GameObject\Pawn\00.Player\Equip_Anim</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Playerhp.h">
       <Filter>02.GameObject\98.UI\00. Player State\Playerhp</Filter>
@@ -331,19 +337,19 @@
       <Filter>02.GameObject\98.UI\00. Player State\Playerhunger</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Item.h">
-      <Filter>02.GameObject\04.Interactive_Object\Item</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Spider.h">
-      <Filter>02.GameObject\01.Monster\Spider</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster\Spider</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Bullet.h">
-      <Filter>02.GameObject\00.Player\Bullet</Filter>
+      <Filter>02.GameObject\Pawn\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Pig.h">
-      <Filter>02.GameObject\01.Monster\Pig</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster\Pig</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Interactive_Object.h">
-      <Filter>02.GameObject\04.Interactive_Object</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MainInventory_front.h">
       <Filter>02.GameObject\98.UI\01. Inventory\Main</Filter>
@@ -400,7 +406,7 @@
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Portal.h">
-      <Filter>02.GameObject\96.Portal</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\96.Portal</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Craftmain_front.h">
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
@@ -415,7 +421,7 @@
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AttackRange.h">
-      <Filter>02.GameObject\00.Player\AttackRange</Filter>
+      <Filter>02.GameObject\Pawn\00.Player\AttackRange</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CraftPont.h">
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
@@ -451,13 +457,13 @@
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PigKing.h">
-      <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\NPC\Pig King</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SpiderWarrior.h">
-      <Filter>02.GameObject\01.Monster\Spider_Warrior</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster\Spider_Warrior</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Bearger.h">
-      <Filter>02.GameObject\01.Monster\Bearger</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster\Bearger</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Daycountpont.h">
       <Filter>02.GameObject\98.UI\05.DayCount</Filter>
@@ -487,16 +493,16 @@
       <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
     </ClInclude>
     <ClInclude Include="..\public\CookPot.h">
-      <Filter>02.GameObject\04.Interactive_Object\Cook Pot</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Cook Pot</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Tent.h">
-      <Filter>02.GameObject\04.Interactive_Object\Tent</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Tent</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Special_Attack.h">
-      <Filter>02.GameObject\01.Monster\Bearger\Special Attack</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster\Bearger\Special Attack</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Skeleton.h">
-      <Filter>02.GameObject\04.Interactive_Object\Skeleton</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Skeleton</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Pot_back.h">
       <Filter>02.GameObject\98.UI\09.Pot</Filter>
@@ -514,7 +520,7 @@
       <Filter>01.Levels\Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Wendy.h">
-      <Filter>02.GameObject\04.Interactive_Object\NPC\Wendy</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\NPC\Wendy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Mouse_item.h">
       <Filter>02.GameObject\98.UI\01. Inventory\iteminfo</Filter>
@@ -526,10 +532,10 @@
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Carrot.h">
-      <Filter>02.GameObject\04.Interactive_Object\Carrot</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Carrot</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\NPC.h">
-      <Filter>02.GameObject\04.Interactive_Object\NPC</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\NPC</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Behavior_Tree.h">
       <Filter>97.BeHavior_Tree</Filter>
@@ -541,7 +547,7 @@
       <Filter>01.Levels\Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Boarrior.h">
-      <Filter>02.GameObject\01.Monster\Boarrior</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster\Boarrior</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolboxMaterial.h">
       <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
@@ -563,6 +569,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Eatitem.h">
       <Filter>02.GameObject\98.UI\10.Eateffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Pawn.h">
+      <Filter>02.GameObject\Pawn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CameraTarget.h">
+      <Filter>02.GameObject\99.Camera\TargetCamera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -588,31 +600,31 @@
       <Filter>01.Levels\Loading\Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
-      <Filter>02.GameObject\01.Monster</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>02.GameObject\03.BackGround\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Player.cpp">
-      <Filter>02.GameObject\00.Player</Filter>
+      <Filter>02.GameObject\Pawn\00.Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sky.cpp">
       <Filter>02.GameObject\03.BackGround\Sky</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Tree.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\Tree</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Tree</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Inventory.cpp">
       <Filter>02.GameObject\98.UI\01. Inventory\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Grass.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\Grass</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Grass</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boulder.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\Boulder</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Boulder</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BerryBush.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\Berry Bush</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Berry Bush</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Mouse.cpp">
       <Filter>03.Mouse</Filter>
@@ -621,7 +633,7 @@
       <Filter>02.GameObject\03.BackGround\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Equip_Animation.cpp">
-      <Filter>02.GameObject\00.Player\Equip_Anim</Filter>
+      <Filter>02.GameObject\Pawn\00.Player\Equip_Anim</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Playerhp.cpp">
       <Filter>02.GameObject\98.UI\00. Player State\Playerhp</Filter>
@@ -642,19 +654,19 @@
       <Filter>02.GameObject\98.UI\00. Player State\Playerhunger</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Item.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\Item</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Spider.cpp">
-      <Filter>02.GameObject\01.Monster\Spider</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster\Spider</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Bullet.cpp">
-      <Filter>02.GameObject\00.Player\Bullet</Filter>
+      <Filter>02.GameObject\Pawn\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Pig.cpp">
-      <Filter>02.GameObject\01.Monster\Pig</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster\Pig</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Interactive_Object.cpp">
-      <Filter>02.GameObject\04.Interactive_Object</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MainInventory.cpp">
       <Filter>02.GameObject\98.UI\01. Inventory\Main</Filter>
@@ -711,7 +723,7 @@
       <Filter>02.GameObject\98.UI\02.Toolbox\01.GatherToolbox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Portal.cpp">
-      <Filter>02.GameObject\96.Portal</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\96.Portal</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Craftmain_front.cpp">
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
@@ -726,7 +738,7 @@
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AttackRange.cpp">
-      <Filter>02.GameObject\00.Player\AttackRange</Filter>
+      <Filter>02.GameObject\Pawn\00.Player\AttackRange</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CraftPont.cpp">
       <Filter>02.GameObject\98.UI\03.Craft</Filter>
@@ -762,13 +774,13 @@
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PigKing.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\Pig King</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\NPC\Pig King</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SpiderWarrior.cpp">
-      <Filter>02.GameObject\01.Monster\Spider_Warrior</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster\Spider_Warrior</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Bearger.cpp">
-      <Filter>02.GameObject\01.Monster\Bearger</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster\Bearger</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Daycountpont.cpp">
       <Filter>02.GameObject\98.UI\05.DayCount</Filter>
@@ -798,16 +810,16 @@
       <Filter>02.GameObject\05.UnInteractive_Object\House</Filter>
     </ClCompile>
     <ClCompile Include="..\private\CookPot.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\Cook Pot</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Cook Pot</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Tent.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\Tent</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Tent</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Special_Attack.cpp">
-      <Filter>02.GameObject\01.Monster\Bearger\Special Attack</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster\Bearger\Special Attack</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Skeleton.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\Skeleton</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Skeleton</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Pot_back.cpp">
       <Filter>02.GameObject\98.UI\09.Pot</Filter>
@@ -825,7 +837,7 @@
       <Filter>01.Levels\Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Wendy.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\NPC\Wendy</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\NPC\Wendy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Mouse_item.cpp">
       <Filter>02.GameObject\98.UI\01. Inventory\iteminfo</Filter>
@@ -837,10 +849,10 @@
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Carrot.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\Carrot</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\Carrot</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NPC.cpp">
-      <Filter>02.GameObject\04.Interactive_Object\NPC</Filter>
+      <Filter>02.GameObject\Pawn\04.Interactive_Object\NPC</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Behavior_Tree.cpp">
       <Filter>97.BeHavior_Tree</Filter>
@@ -852,7 +864,7 @@
       <Filter>01.Levels\Boss</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Boarrior.cpp">
-      <Filter>02.GameObject\01.Monster\Boarrior</Filter>
+      <Filter>02.GameObject\Pawn\01.Monster\Boarrior</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolboxMaterial.cpp">
       <Filter>02.GameObject\98.UI\02.Toolbox\04.MaterialToolbox</Filter>
@@ -874,6 +886,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Eatitem.cpp">
       <Filter>02.GameObject\98.UI\10.Eateffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Pawn.cpp">
+      <Filter>02.GameObject\Pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraTarget.cpp">
+      <Filter>02.GameObject\99.Camera\TargetCamera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

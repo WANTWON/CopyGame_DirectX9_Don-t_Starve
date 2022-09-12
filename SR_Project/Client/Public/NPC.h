@@ -74,6 +74,7 @@ protected:
 	_float m_fPatrolPosZ = 0.f;
 	_float3			m_vTargetPos;
 	_bool			m_bArrive = true;
+	_bool			m_bDirChanged = false;
 	//for PlayerPos
 	_float3			m_vPlayerPos;
 	
@@ -84,6 +85,12 @@ protected:
 	map<NPC_STATE, _bool>	m_NPCStates;
 	//Level
 	LEVEL					m_iCurrentLevelndex;
+
+	DIR_STATE				m_eCur_Dir;
+	DIR_STATE				m_ePre_Dir;
+
+	//NPCTYPE
+	NPCID					m_eNPCID;
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) =0;
 	virtual void Free() override;

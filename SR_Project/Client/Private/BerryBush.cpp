@@ -28,7 +28,7 @@ HRESULT CBerryBush::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::BERRYBUSH;
-
+	m_eObjID = OBJID::OBJ_OBJECT;
 	return S_OK;
 }
 
