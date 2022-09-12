@@ -151,6 +151,7 @@ void CCameraTarget::OutTarget_Camera(_float fTimeDelta)
 	if (fabsf(m_TargetPos.y + m_vDistance.y - vCameraPos.y) < 0.5f)
 	{
 		m_bOutZoom = false;
+		Safe_Release(pGameInstance);
 		return;
 	}
 

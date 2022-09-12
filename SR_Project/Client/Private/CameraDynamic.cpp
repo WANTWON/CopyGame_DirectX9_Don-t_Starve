@@ -98,8 +98,8 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 	{
 		if (m_vDistance.y > 15 || m_vDistance.y <3)
 		{
-			m_vDistance.y += (fTimeDelta*m_lMouseWheel*0.01f);
-			m_vDistance.z -= (fTimeDelta*m_lMouseWheel*0.01f);
+			m_vDistance.y += (fTimeDelta*m_lMouseWheel*0.05f);
+			m_vDistance.z -= (fTimeDelta*m_lMouseWheel*0.05f);
 		}
 
 		m_vDistance.y -= (fTimeDelta*m_lMouseWheel*0.01f);
@@ -242,10 +242,11 @@ void CCameraDynamic::Revive_Camera(_float fTimeDelta)
 		break;
 	}
 
-	if (m_vDistance.y < 5)
+	if (m_vDistance.y < 3)
 	{
 		m_eCamMode = CAM_ZOOMOUT;
 		m_vDistance = _float3(0, 6, -8);
+		Safe_Release(pGameInstance);
 		return;
 	}
 	Safe_Release(pGameInstance);
@@ -291,6 +292,7 @@ void CCameraDynamic::ZoomOut_Camera(_float fTimeDelta)
 	if (fabsf(m_TargetPos.y + m_vDistance.y - vCameraPos.y) < 0.3f)
 	{
 		m_eCamMode = CAM_PLAYER;
+		Safe_Release(pGameInstance);
 		return;
 	}
 		
