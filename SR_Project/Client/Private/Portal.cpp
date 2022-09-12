@@ -39,7 +39,7 @@ HRESULT CPortal::Initialize(void* pArg)
 			return E_FAIL;
 	}
 
-
+	m_eObjID = OBJID::OBJ_PORTAL;
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::PORTAL;
 
 	switch (m_ePortalDesc.m_eType)

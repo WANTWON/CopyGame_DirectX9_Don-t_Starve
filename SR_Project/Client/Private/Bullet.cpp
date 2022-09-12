@@ -6,13 +6,15 @@
 #include "Interactive_Object.h"
 
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphic_Device)
-	:CGameObject(pGraphic_Device)
+	:CPawn(pGraphic_Device)
 {
+
 }
 
 CBullet::CBullet(const CBullet & rhs)
-	: CGameObject(rhs)
+	: CPawn(rhs)
 {
+
 }
 
 HRESULT CBullet::Initialize_Prototype()

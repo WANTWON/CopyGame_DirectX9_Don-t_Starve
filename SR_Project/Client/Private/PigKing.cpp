@@ -7,12 +7,12 @@
 #include "CameraManager.h"
 
 CPigKing::CPigKing(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CInteractive_Object(pGraphic_Device)
+	: CNPC(pGraphic_Device)
 {
 }
 
 CPigKing::CPigKing(const CPigKing & rhs)
-	: CInteractive_Object(rhs)
+	: CNPC(rhs)
 {
 }
 
@@ -29,9 +29,12 @@ HRESULT CPigKing::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_eObjID = OBJID::OBJ_NPC;
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::NPC;
-	m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+	
+	m_eNPCID = NPCID::NPC_PIGKING;
 
+	m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
 	return S_OK;
 }
 
@@ -244,6 +247,22 @@ void CPigKing::Interact(_uint Damage)
 void CPigKing::Find_Target()
 {
 	// TODO: Find Target is used to find the Player Position in order to throw the reward at the correct location.
+}
+
+void CPigKing::Move(_float _fTimeDelta)
+{
+}
+
+void CPigKing::Idle(_float _fTimeDelta)
+{
+}
+
+void CPigKing::Select_Target(_float _fTimeDelta)
+{
+}
+
+void CPigKing::Set_RandPos(_float _fTimeDelta)
+{
 }
 
 HRESULT CPigKing::Drop_Items()

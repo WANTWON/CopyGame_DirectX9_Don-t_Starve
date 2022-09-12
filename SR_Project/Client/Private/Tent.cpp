@@ -31,6 +31,7 @@ HRESULT CTent::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_eObjID = OBJID::OBJ_OBJECT;
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::TENT;
 
 	m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);

@@ -37,8 +37,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
-		//return E_FAIL;
+	if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
+		return E_FAIL;
 
 	if (g_bLoadingfirst == false)
 	{
@@ -148,8 +148,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	}
 
 	CloseHandle(hFile);
-	
-	
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boarrior"), LEVEL_GAMEPLAY, pLayerTag, _float3(30.f, 0.f, 22.f))))
 		return E_FAIL;

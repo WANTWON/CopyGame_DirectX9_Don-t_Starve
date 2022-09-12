@@ -54,11 +54,13 @@ public:
 	{
 		for (CNode* iter : Get_VecNodes())
 		{
-			if (iter->Excute(_Obj, _fTimeDelta) == STATUS::FAIL)
+			STATUS eResult = iter->Excute(_Obj, _fTimeDelta);
+
+			if (eResult == STATUS::FAIL)
 			{
 				return STATUS::FAIL;
 			}
-			else if (iter->Excute(_Obj, _fTimeDelta) == STATUS::RUNNING)
+			else if (eResult == STATUS::RUNNING)
 			{
 				return STATUS::RUNNING;
 			}
@@ -80,11 +82,13 @@ public:
 	{
 		for (CNode* iter : Get_VecNodes())
 		{
-			if (iter->Excute(_Obj, _fTimeDelta) == STATUS::SUCCESS)
+
+			STATUS eResult = iter->Excute(_Obj, _fTimeDelta);
+			if (eResult == STATUS::SUCCESS)
 			{
 				return  STATUS::SUCCESS;
 			}
-			else if (iter->Excute(_Obj, _fTimeDelta) == STATUS::RUNNING)
+			else if (eResult == STATUS::RUNNING)
 			{
 				return STATUS::RUNNING;
 			}
@@ -106,11 +110,13 @@ public:
 	{
 		for (CNode* iter : Get_ShuffeldNodes())
 		{
-			if (iter->Excute(_Obj, _fTimeDelta) == STATUS::SUCCESS)
+			STATUS eResult = iter->Excute(_Obj, _fTimeDelta);
+
+			if (eResult == STATUS::SUCCESS)
 			{
 				return  STATUS::SUCCESS;
 			}
-			else if (iter->Excute(_Obj, _fTimeDelta) == STATUS::RUNNING)
+			else if (eResult == STATUS::RUNNING)
 			{
 				return STATUS::RUNNING;
 			}

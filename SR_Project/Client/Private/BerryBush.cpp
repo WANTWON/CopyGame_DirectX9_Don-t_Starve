@@ -28,7 +28,7 @@ HRESULT CBerryBush::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::BERRYBUSH;
-
+	m_eObjID = OBJID::OBJ_OBJECT;
 	return S_OK;
 }
 
@@ -143,6 +143,20 @@ HRESULT CBerryBush::SetUp_Components(void* pArg)
 	TransformDesc.InitPos = *(_float3*)pArg;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+		return E_FAIL;
+
+	/* For.Com_Collider*/
+	CCollider_Cube::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
+	CollRectDesc.fRadiusY = 0.25f;
+	CollRectDesc.fRadiusX = 0.25f;
+	CollRectDesc.fRadiusZ = 0.5f;
+	CollRectDesc.fOffSetX = 0.0f;
+	CollRectDesc.fOffSetY = -.5f;
+	CollRectDesc.fOffsetZ = 0.f;
+
+	/* For.Com_Collider_Rect*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
 	return S_OK;

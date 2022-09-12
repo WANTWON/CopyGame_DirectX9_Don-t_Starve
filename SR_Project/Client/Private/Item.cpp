@@ -32,6 +32,7 @@ HRESULT CItem::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_eObjID = OBJID::OBJ_ITEM;
 	m_pTransformCom->Set_Scale(.3f, .3f, 1.f);
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::ITEMS;
 	

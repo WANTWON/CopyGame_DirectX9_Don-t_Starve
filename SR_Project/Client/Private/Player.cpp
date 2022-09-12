@@ -15,12 +15,12 @@
 #include "Skeleton.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CPawn(pGraphic_Device)
 {
 }
 
 CPlayer::CPlayer(const CPlayer & rhs)
-	: CGameObject(rhs)
+	: CPawn(rhs)
 {
 }
 
@@ -48,6 +48,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Change_Texture(TEXT("Com_Texture_Idle_Down"));
 	m_ActStack.push(ACTION_STATE::IDLE);
 
+
+	m_eObjID = OBJID::OBJ_PLAYER;
 
 	m_iPreLevelIndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 

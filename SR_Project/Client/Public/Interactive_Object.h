@@ -1,17 +1,17 @@
 #pragma once
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Pawn.h"
 
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
 class CTransform;
 class CVIBuffer_Rect;
-class CCollider_Rect;
+class CCollider_Cube;
 END
 
 BEGIN(Client)
-class CInteractive_Object abstract : public CGameObject
+class CInteractive_Object abstract : public CPawn
 {
 protected:
 	CInteractive_Object(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -30,7 +30,7 @@ protected: /* For.Components */
 	CRenderer* m_pRendererCom = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 	CTransform*	m_pTransformCom = nullptr;
-	CCollider_Rect* m_pColliderCom = nullptr;
+	CCollider_Cube* m_pColliderCom = nullptr;
 
 	vector<CTexture*> m_vecTexture;
 

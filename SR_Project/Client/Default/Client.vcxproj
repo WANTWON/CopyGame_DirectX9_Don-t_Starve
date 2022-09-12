@@ -205,6 +205,7 @@
     <ClInclude Include="..\Public\NPC.h" />
     <ClInclude Include="..\Public\Particle.h" />
     <ClInclude Include="..\Public\ParticleSystem.h" />
+    <ClInclude Include="..\Public\Pawn.h" />
     <ClInclude Include="..\Public\PickingMgr.h" />
     <ClInclude Include="..\public\Pig.h" />
     <ClInclude Include="..\Public\PigKing.h" />
@@ -313,6 +314,7 @@
     <ClCompile Include="..\Private\NPC.cpp" />
     <ClCompile Include="..\Private\Particle.cpp" />
     <ClCompile Include="..\Private\ParticleSystem.cpp" />
+    <ClCompile Include="..\Private\Pawn.cpp" />
     <ClCompile Include="..\Private\PickingMgr.cpp" />
     <ClCompile Include="..\private\Pig.cpp" />
     <ClCompile Include="..\Private\PigKing.cpp" />

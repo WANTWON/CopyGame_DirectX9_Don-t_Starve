@@ -38,18 +38,18 @@ void CInventory_Manager::Tick(_float fTimeDelta)
 
 
 
-		if ((*iter)->get_pontcheck() == false)  //ÀÎº¥Åä¸®ÀÇ ÆùÆ®°¡ false¸é
+		if ((*iter)->get_pontcheck() == false)  //ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ falseï¿½ï¿½
 		{
-			(*iterfont)->set_check(false);//ÆùÆ®Ã¢À» ¾È¶ß°ÔÇÒ±¸¾ß
+			(*iterfont)->set_check(false);//ï¿½ï¿½Æ®Ã¢ï¿½ï¿½ ï¿½È¶ß°ï¿½ï¿½Ò±ï¿½ï¿½ï¿½
 		}
 		else if ((*iter)->get_pontcheck() == true)
 		{
 			(*iterfont)->set_check(true);
 		}
 
-		if ((*iterfont)->get_pontnum() % 2 == 0) //10ÀÚ¸®
+		if ((*iterfont)->get_pontnum() % 2 == 0) //10ï¿½Ú¸ï¿½
 		{
-			(*iterfont)->set_pont_num(((*iter)->get_item_number() % 100) / 10);      //10ÀÇ ÀÚ¸®¼ö¸¦ 0¹ø¿¡ ³Ö¾î (0)
+			(*iterfont)->set_pont_num(((*iter)->get_item_number() % 100) / 10);      //10ï¿½ï¿½ ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ (0)
 
 			if ((*iterfont)->get_pontex() == 0)
 			{
@@ -58,17 +58,17 @@ void CInventory_Manager::Tick(_float fTimeDelta)
 
 
 		}
-		else if ((*iterfont)->get_pontnum() % 2 != 0) // 1ÀÇÀÚ¸®                 
+		else if ((*iterfont)->get_pontnum() % 2 != 0) // 1ï¿½ï¿½ï¿½Ú¸ï¿½                 
 		{
 			(*iterfont)->set_pont_num(((*iter)->get_item_number() % 10));
 
 			//++iterfont;
 		}
-		//ÆùÆ®1»çÀÌÅ¬ ³¡
-		++count;                                                                   //Ä«¿îÆ®Áõ°¡ ÆùÆ®Ã³¸® ³¡³µÀ¸´Ï±î ÆùÆ®¸¦ 1¹ø³ÑÀ¸·Î³Ñ±âÀÚ
+		//ï¿½ï¿½Æ®1ï¿½ï¿½ï¿½ï¿½Å¬ ï¿½ï¿½
+		++count;                                                                   //Ä«ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ 1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î³Ñ±ï¿½ï¿½ï¿½
 		++iterfont;
 
-		if (count == 2)                                                           //´ÙÀ½»çÀÌÅ¬¿¡ ÆùÆ®Ã³¸® ´Ù ³¡³ª°í ÀÎº¥Åä¸® ³Ñ±æ°Å
+		if (count == 2)                                                           //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¬ï¿½ï¿½ ï¿½ï¿½Æ®Ã³ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½Ñ±ï¿½ï¿½
 		{
 			++iter;
 			count = 0;
@@ -109,7 +109,7 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 
 			if (pMouse->Get_Same() == false)
 			{
-				i->set_itemcount(pMouse->Get_Item_prev_count()); //¿©±â¼­ °°ÀºÀÎµ¦½º Å¬¸¯¾Æ´Ï¸é..
+				i->set_itemcount(pMouse->Get_Item_prev_count()); //ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Æ´Ï¸ï¿½..
 			}
 
 			pMouse->Set_index(20);
@@ -1037,18 +1037,10 @@ void CInventory_Manager::Free()
 	m_Toolboxweapon_back.clear();
 	m_Toolboxweapon_front.clear();
 	m_Toolboxgather.clear();
-
 	
 	m_Hppontlist.clear();
-
-	
 	m_Hungerpontlist.clear();
-
-
 	m_Mentalitiypontlist.clear();
-
-
-
 
 	m_Toolboxconstruct.clear();
 	m_Toolboxconstruct_back.clear();

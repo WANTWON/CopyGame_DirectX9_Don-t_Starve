@@ -29,7 +29,8 @@ HRESULT CWendy::Initialize(void * pArg)
 		return E_FAIL;
 	//Test
 	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
-
+	m_eObjID = OBJID::OBJ_NPC;
+	m_eNPCID = NPCID::NPC_WENDY;
 	//Init BehavirvTree
 	BehaviorTree = new CBT_NPC(this);
 
@@ -44,6 +45,7 @@ int CWendy::Tick(_float fTimeDelta)
 
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return OBJ_NOEVENT;
+
 	BehaviorTree->Tick(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -229,30 +231,68 @@ HRESULT CWendy::Drop_Items()
 void CWendy::Move(_float _fTimeDelta)
 {
 	_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	if (!m_bDirChanged)
+	{
+		m_eCur_Dir = Check_Direction();
+		m_bDirChanged = true;
+	}
+	
+	if (m_ePre_Dir != m_eCur_Dir)
+	{
+		switch (m_eCur_Dir)
+		{
+		case DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Run_Up"));
+			break;
+
+		case DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Run_Down"));
+			break;
+
+		case DIR_LEFT:
+			Change_Texture(TEXT("Com_Texture_Run_Side"));
+			break;
+
+		case DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Run_Side"));
+			break;
+
+		}
+		m_ePre_Dir = m_eCur_Dir;
+	}
 
 	if (m_pTarget)
 	{
-		m_pTransformCom->Go_PosTarget(_fTimeDelta * .1f,m_vTargetPos, _float3{ 0.f, 0.f, 0.f });
+		m_pTransformCom->Go_PosTarget(_fTimeDelta, m_vTargetPos, _float3{ 0.f, 0.f, 0.f });
 		if ((abs(vMyPos.x - m_vTargetPos.x) < 0.1 &&
 			abs(vMyPos.z - m_vTargetPos.z) < 0.1))
 		{
 			m_bArrive = true;
+			m_bDirChanged = false;
 		}
 	}
 	else
 	{
-		m_pTransformCom->Go_PosTarget(_fTimeDelta * .1f, _float3(m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ), _float3{ 0.f, 0.f, 0.f });
+		m_pTransformCom->Go_PosTarget(_fTimeDelta, _float3(m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ), _float3{ 0.f, 0.f, 0.f });
 		if ((abs(vMyPos.x - m_fPatrolPosX) < 0.1 &&
 			abs(vMyPos.z - m_fPatrolPosZ) < 0.1))
 		{
 			m_bArrive = true;
+			m_bDirChanged = false;
 		}
 	}
+	
+	SetUp_BillBoard();
+	/*if (m_eCur_Dir == DIR_STATE::DIR_LEFT)
+	{
+		m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
+	}*/
 }
 
 void CWendy::Idle(_float _fTimeDelta)
 {
 	m_fInteractTIme += _fTimeDelta;
+
 }
 
 void CWendy::Select_Target(_float _fTimeDelta)
@@ -284,6 +324,94 @@ void CWendy::Set_RandPos(_float _fTimeDelta)
 		m_vTargetPos = _float3(m_fPatrolPosX, 0.5f, m_fPatrolPosZ);
 		m_bArrive = false;
 	}
+
+}
+
+DIR_STATE CWendy::Check_Direction(void)
+{
+	//내 자신의 Look에서 3번 변환한 값
+	_float3 vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	_float4x4 OriginMat = m_pTransformCom->Get_WorldMatrix();
+	_float4x4 RotateMat = OriginMat;
+	_float3 vRot45 = *(_float3*)&OriginMat.m[2][0];
+	_float3 vRot135 = *(_float3*)&OriginMat.m[2][0];
+
+
+	//Turn
+	D3DXMatrixRotationAxis(&RotateMat, &_float3(0.f, 1.f, 0.f), D3DXToRadian(90.f));
+	D3DXVec3TransformNormal(&vRot45, &vRot45, &RotateMat);
+	//vRot45 = *(_float3*)&RotateMat.m[2][0];
+	D3DXMatrixRotationAxis(&RotateMat, &_float3(0.f, 1.f, 0.f), D3DXToRadian(135.f));
+	D3DXVec3TransformNormal(&vRot135, &vRot135, &RotateMat);
+	//vRot135 = *(_float3*)&RotateMat.m[2][0];;
+	///////
+	_float3 vTargetLook = m_vTargetPos - Get_Pos();
+
+	D3DXVec3Normalize(&vRot45, &vRot45);
+	D3DXVec3Normalize(&vRot135, &vRot135);
+	D3DXVec3Normalize(&vMyLook, &vMyLook);
+	D3DXVec3Normalize(&vTargetLook, &vTargetLook);
+
+	//각 내적값들 구하기
+	_float fTargetDot = D3DXVec3Dot(&vMyLook, &vRot45);
+	fTargetDot = acos(fTargetDot);
+	_float fDegree45 = D3DXToDegree(fTargetDot);
+
+	fTargetDot = D3DXVec3Dot(&vMyLook, &vRot135);
+	fTargetDot = acos(fTargetDot);
+	_float fDegree135 = D3DXToDegree(fTargetDot);
+
+	fTargetDot = D3DXVec3Dot(&vMyLook, &vTargetLook);
+	fTargetDot = acos(fTargetDot);
+	_float fDegreeTarget = D3DXToDegree(fTargetDot);
+
+	//외적하기
+	_float3 vCrossOut;
+	//D3DXVec3Cross(&vCrossOut, &vMyLook, &vTargetLook);
+	D3DXVec3Cross(&vCrossOut, &vMyLook, &vTargetLook);
+
+
+	DIR_STATE eDir = DIR_END;
+	//Check Left Or Right
+	if (vCrossOut.y > 0.f)//Right
+	{
+		if (fDegreeTarget > 0.f && fDegreeTarget <= 90.f)
+		{
+			cout << "y+, UP, Degree: " << fDegreeTarget << endl;
+			return DIR_UP;
+		}
+		else if (fDegreeTarget > 90.f && fDegreeTarget <= 135.f)
+		{
+			cout << "y+, Right, Degree: " << fDegreeTarget << endl;
+			return DIR_RIGHT;
+		}
+		else if (fDegreeTarget > 135.f && fDegreeTarget <= 180.f)
+		{
+			cout << "y+, Down, Degree: " << fDegreeTarget << endl;
+			return DIR_DOWN;
+		}
+	}
+	else//Left
+	{
+		if (fDegreeTarget > 0.f && fDegreeTarget <= 90.f)
+		{
+			cout << "y-, UP, Degree: " << fDegreeTarget << endl;
+			return DIR_UP;
+		}
+		else if (fDegreeTarget > 90.f && fDegreeTarget <= 135.f)
+		{
+			cout << "y-, Left, Degree: " << fDegreeTarget << endl;
+			return DIR_LEFT;
+		}
+		else if (fDegreeTarget > 135.f && fDegreeTarget <= 180.f)
+		{
+			cout << "y-, Down, Degree: " << fDegreeTarget << endl;
+			return DIR_DOWN;
+		}
+	}
+
+	cout << "Error " << fDegreeTarget << endl;
+	return DIR_DOWN;
 
 }
 
@@ -384,4 +512,6 @@ void CWendy::Free()
 		Safe_Release(iter);
 
 	m_vecTexture.clear();
+
+	Safe_Release(BehaviorTree);
 }

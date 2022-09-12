@@ -1,14 +1,15 @@
 #include "stdafx.h"
 #include "..\Public\Interactive_Object.h"
 #include "GameInstance.h"
+#include "Pawn.h"
 
 CInteractive_Object::CInteractive_Object(LPDIRECT3DDEVICE9 pGraphic_Device)
-	:CGameObject(pGraphic_Device)
+	:CPawn(pGraphic_Device)
 {
 }
 
 CInteractive_Object::CInteractive_Object(const CInteractive_Object & rhs)
-	:CGameObject(rhs)
+	:CPawn(rhs)
 {
 }
 
@@ -28,6 +29,7 @@ HRESULT CInteractive_Object::Initialize(void * pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
+	m_eObjID = OBJID::OBJ_OBJECT;
 	m_bPicking = false;
 
 	return S_OK;
@@ -57,6 +59,9 @@ void CInteractive_Object::Late_Tick(_float fTimeDelta)
 		if (nullptr != m_pRendererCom)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
+
+	if (m_pColliderCom)
+		m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
 }
 
 HRESULT CInteractive_Object::Render()

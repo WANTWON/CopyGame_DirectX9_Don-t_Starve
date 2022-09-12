@@ -4,14 +4,15 @@
 #include "Inventory.h"
 #include "Level_Manager.h"
 #include "GameInstance.h"
+#include "CameraManager.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CPawn(pGraphic_Device)
 {
 }
 
 CMonster::CMonster(const CMonster & rhs)
-	: CGameObject(rhs)
+	: CPawn(rhs)
 {
 }
 
@@ -31,7 +32,7 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-
+	m_eObjID = OBJID::OBJ_MONSTER;
 
 
 	return S_OK;
@@ -39,21 +40,15 @@ HRESULT CMonster::Initialize(void* pArg)
 
 int CMonster::Tick(_float fTimeDelta)
 {
-
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_MONSTER, this);
 
+	m_iDirOffset = CCameraManager::Get_Instance()->Get_CamDir();
 
 	__super::Tick(fTimeDelta);
 
 	if (IsDead())
 		return OBJ_DEAD;
-
-	//if (nullptr != m_pColliderCom)
-	//	m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
-
-	
-	
 	
 	// Match Terrain-Y
 	WalkingTerrain();
@@ -173,6 +168,18 @@ void CMonster::WalkingTerrain()
 	_float3 vScale = m_pTransformCom->Get_Scale();
 	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), (vScale.y*0.5f));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+}
+
+DIR_STATE CMonster::Get_Processed_Dir(DIR_STATE eDir)
+{
+	DIR_STATE eNewDir = (DIR_STATE)((int)eDir + m_iDirOffset);
+	if (eNewDir > 3)
+	{
+		eDir = (DIR_STATE)((int)eNewDir - 4);
+		return eDir;
+	}
+	
+	return eNewDir;
 }
 
 _float CMonster::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
