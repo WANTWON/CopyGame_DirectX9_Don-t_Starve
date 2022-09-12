@@ -80,8 +80,6 @@ void CTree::Late_Tick(_float fTimeDelta)
 
 	Change_Motion();
 	Change_Frame();
-
-	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
 }
 
 HRESULT CTree::Render()
@@ -180,15 +178,17 @@ HRESULT CTree::SetUp_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	CCollider_Rect::COLLRECTDESC CollRectDesc;
-	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+	CCollider_Cube::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
 	CollRectDesc.fRadiusY = 0.25f;
 	CollRectDesc.fRadiusX = 0.25f;
+	CollRectDesc.fRadiusZ = 0.5f;
 	CollRectDesc.fOffSetX = 0.0f;
 	CollRectDesc.fOffSetY = -.5f;
+	CollRectDesc.fOffsetZ = 0.f;
 
 	/* For.Com_Collider_Rect*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
 	return S_OK;

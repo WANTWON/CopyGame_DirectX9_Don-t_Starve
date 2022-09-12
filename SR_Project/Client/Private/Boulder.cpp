@@ -44,18 +44,21 @@ int CBoulder::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	// If Hp <= 0 : Drop Items
-	if (m_tInfo.iCurrentHp > 40)
-		m_eState = HEALTHY;
-	else if (m_tInfo.iCurrentHp <= 40 && m_tInfo.iCurrentHp > 0)
-		m_eState = DAMAGED;
-	else if (m_tInfo.iCurrentHp <= 0)
+	if (!m_bIsDestroyed)
 	{
-		if (m_eState < BROKEN)
+		if (m_tInfo.iCurrentHp > 40)
+			m_eState = HEALTHY;
+		else if (m_tInfo.iCurrentHp <= 40 && m_tInfo.iCurrentHp > 0)
+			m_eState = DAMAGED;
+		else if (m_tInfo.iCurrentHp <= 0)
 		{
-			m_bInteract = false;
-			m_eState = BROKEN;
-			
-			Drop_Items();
+			if (m_eState < BROKEN)
+			{
+				m_bInteract = false;
+				m_eState = BROKEN;
+
+				Drop_Items();
+			}
 		}
 	}
 
@@ -168,6 +171,20 @@ HRESULT CBoulder::SetUp_Components(void* pArg)
 	TransformDesc.InitPos = *(_float3*)pArg;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+		return E_FAIL;
+
+	/* For.Com_Collider*/
+	CCollider_Cube::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
+	CollRectDesc.fRadiusY = 0.25f;
+	CollRectDesc.fRadiusX = 0.25f;
+	CollRectDesc.fRadiusZ = 0.5f;
+	CollRectDesc.fOffSetX = 0.f;
+	CollRectDesc.fOffSetY = 0.f;
+	CollRectDesc.fOffsetZ = 0.f;
+
+	/* For.Com_Collider_Rect*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
 	return S_OK;

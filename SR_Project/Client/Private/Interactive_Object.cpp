@@ -57,6 +57,9 @@ void CInteractive_Object::Late_Tick(_float fTimeDelta)
 		if (nullptr != m_pRendererCom)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
+
+	if (m_pColliderCom)
+		m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
 }
 
 HRESULT CInteractive_Object::Render()
