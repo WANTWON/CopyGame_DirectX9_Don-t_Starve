@@ -766,9 +766,9 @@ void CBearger::Attack(_bool bIsSpecial)
 
 		BulletData.bIsPlayerBullet = false;
 		BulletData.vPosition = m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
-		BulletData.eDirState = m_eDir;
+		BulletData.eDirState = Get_Unprocessed_Dir(m_eDir);
 		BulletData.fOffsetSide = 1.f;
-		BulletData.fOffsetUp = .5f;
+		BulletData.fOffsetUp = 1.f;
 		BulletData.fOffsetDown = 1.f;
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
@@ -782,7 +782,7 @@ void CBearger::Attack(_bool bIsSpecial)
 
 		BulletData.bIsPlayerBullet = false;
 		BulletData.eWeaponType = WEAPON_TYPE::BEARGER_SPECIAL;
-		BulletData.eDirState = m_eDir;
+		BulletData.eDirState = Get_Unprocessed_Dir(m_eDir);
 		D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 		D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
 
