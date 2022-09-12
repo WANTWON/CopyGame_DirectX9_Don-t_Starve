@@ -27,6 +27,7 @@ HRESULT CGrass::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 	//Test
+	m_eObjID = OBJID::OBJ_OBJECT;
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::GRASS;
 
 	m_pTransformCom->Set_Scale(0.6f, 1.f, 1.f);

@@ -1,6 +1,6 @@
 #pragma once
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Pawn.h"
 
 BEGIN(Engine)
 class CTexture;
@@ -11,7 +11,7 @@ class CCollider_Rect;
 END
 
 BEGIN(Client)
-class CInteractive_Object abstract : public CGameObject
+class CInteractive_Object abstract : public CPawn
 {
 protected:
 	CInteractive_Object(LPDIRECT3DDEVICE9 pGraphic_Device);

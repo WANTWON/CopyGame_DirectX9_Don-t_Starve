@@ -1,6 +1,6 @@
 #pragma once
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Pawn.h"
 
 BEGIN(Engine)
 class CTexture;
@@ -12,7 +12,7 @@ END
 
 BEGIN(Client)
 
-class CBullet : public CGameObject
+class CBullet : public CPawn
 {
 public:
 	CBullet(LPDIRECT3DDEVICE9 pGraphic_Device);

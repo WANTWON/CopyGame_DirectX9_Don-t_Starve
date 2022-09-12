@@ -1038,20 +1038,11 @@ void CInventory_Manager::Free()
 	m_Toolboxweapon_front.clear();
 	m_Toolboxgather.clear();
 
-	for (auto& iter : m_Hppontlist)
-		Safe_Release(iter);
 	m_Hppontlist.clear();
 
-	for (auto& iter : m_Hungerpontlist)
-		Safe_Release(iter);
 	m_Hungerpontlist.clear();
 
-	for (auto& iter : m_Mentalitiypontlist)
-		Safe_Release(iter);
 	m_Mentalitiypontlist.clear();
-
-
-
 
 	m_Toolboxconstruct.clear();
 	m_Toolboxconstruct_back.clear();

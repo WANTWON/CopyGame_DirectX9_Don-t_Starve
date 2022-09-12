@@ -29,7 +29,8 @@ HRESULT CWendy::Initialize(void * pArg)
 		return E_FAIL;
 	//Test
 	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
-
+	m_eObjID = OBJID::OBJ_NPC;
+	m_eNPCID = NPCID::NPC_WENDY;
 	//Init BehavirvTree
 	BehaviorTree = new CBT_NPC(this);
 

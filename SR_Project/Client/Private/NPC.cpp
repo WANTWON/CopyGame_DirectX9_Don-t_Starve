@@ -26,6 +26,7 @@ HRESULT CNPC::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 	//Test
+	m_eObjID = OBJID::OBJ_NPC;
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::NPC;
 
 	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);

@@ -88,6 +88,9 @@ protected:
 
 	DIR_STATE				m_eCur_Dir;
 	DIR_STATE				m_ePre_Dir;
+
+	//NPCTYPE
+	NPCID					m_eNPCID;
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) =0;
 	virtual void Free() override;

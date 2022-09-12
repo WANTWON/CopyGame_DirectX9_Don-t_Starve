@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Pawn.h"
 
 BEGIN(Engine)
 class CTexture;
@@ -12,7 +12,7 @@ class CCollider_Cube;
 END
 
 BEGIN(Client)
-class CPlayer final : public CGameObject
+class CPlayer final : public CPawn
 {
 public:
 

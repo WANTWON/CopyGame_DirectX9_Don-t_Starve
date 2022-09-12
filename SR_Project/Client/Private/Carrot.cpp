@@ -29,6 +29,7 @@ HRESULT CCarrot::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_eObjID = OBJID::OBJ_OBJECT;
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::CARROT;
 
 	m_pTransformCom->Set_Scale(.5f, .5f, .5f);
