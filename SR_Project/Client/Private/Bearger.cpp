@@ -39,6 +39,7 @@ HRESULT CBearger::Initialize(void* pArg)
 	m_fAggroRadius = 4.f;
 	m_fAttackRadius = 2.f; 
 	m_fEatRadius = 2.f;
+	m_fCameraShakeRadius = 7.f;
 
 	// Set this as final patrol position
 	vPatrolPosition = _float3(40.f, 1.f, 27.f);
@@ -55,13 +56,6 @@ int CBearger::Tick(_float fTimeDelta)
 	AI_Behaviour(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
-	if (CGameInstance::Get_Instance()->Key_Up(VK_F5))
-	{
-		CCamera* pCamera =	CCameraManager::Get_Instance()->Get_CurrentCamera();
-		dynamic_cast<CCameraDynamic*>(pCamera)->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.5f, 0.1f, 0.01f);
-		/*   CamMode , Power, Velocity, Reduce_Velocity  */
-	}
 
 	return OBJ_NOEVENT;
 }
@@ -320,6 +314,7 @@ void CBearger::Change_Frame(_float fTimeDelta)
 		else
 			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
+		Check_CameraShake(m_eState);
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::RUN:
@@ -328,6 +323,7 @@ void CBearger::Change_Frame(_float fTimeDelta)
 		else
 			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
+		Check_CameraShake(m_eState);
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::CHARGE:
@@ -336,6 +332,7 @@ void CBearger::Change_Frame(_float fTimeDelta)
 		else
 			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
+		Check_CameraShake(m_eState);
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::PRE_EAT:
@@ -810,6 +807,10 @@ void CBearger::Attack(_bool bIsSpecial)
 		// Create Ring and First Wave of Rocks
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)
 		{
+			CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			if (pCamera)
+				pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.7f, 0.2f, 0.01f);
+
 			// Ring
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Attack_Special"), LEVEL_STATIC, TEXT("Layer_Attack"), &vSpawnPos)))
 				return;
@@ -854,6 +855,80 @@ void CBearger::Attack(_bool bIsSpecial)
 				return;
 		}
 	}
+}
+
+void CBearger::Check_CameraShake(STATE eState)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+	if (pPlayer)
+	{
+		_float fDistance = D3DXVec3Length(&(Get_Position() - pPlayer->Get_Position()));
+		if (fDistance < m_fCameraShakeRadius)
+		{
+			CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			if (pCamera)
+			{
+				switch (eState)
+				{
+				case STATE::WALK:
+					switch (m_eDir)
+					{
+					case DIR_STATE::DIR_DOWN:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 37)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					case DIR_STATE::DIR_UP:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 7 || m_pTextureCom->Get_Frame().m_iCurrentTex == 44)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					case DIR_STATE::DIR_LEFT:
+					case DIR_STATE::DIR_RIGHT:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 29)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					}
+					break;
+				case STATE::RUN:
+					switch (m_eDir)
+					{
+					case DIR_STATE::DIR_DOWN:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 2|| m_pTextureCom->Get_Frame().m_iCurrentTex == 16)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					case DIR_STATE::DIR_UP:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 22)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					case DIR_STATE::DIR_LEFT:
+					case DIR_STATE::DIR_RIGHT:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1 || m_pTextureCom->Get_Frame().m_iCurrentTex == 15)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					}
+					break;
+				case STATE::CHARGE:
+					switch (m_eDir)
+					{
+					case DIR_STATE::DIR_DOWN:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 2 || m_pTextureCom->Get_Frame().m_iCurrentTex == 10)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					case DIR_STATE::DIR_UP:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 4 || m_pTextureCom->Get_Frame().m_iCurrentTex == 11)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					case DIR_STATE::DIR_LEFT:
+					case DIR_STATE::DIR_RIGHT:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 2 || m_pTextureCom->Get_Frame().m_iCurrentTex == 10)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					}
+					break;
+				}
+			}
+		}
+	}	
 }
 
 _float CBearger::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
