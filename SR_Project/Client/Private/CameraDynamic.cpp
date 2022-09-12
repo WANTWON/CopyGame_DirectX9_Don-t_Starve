@@ -341,7 +341,7 @@ void CCameraDynamic::Shaking_Camera(_float fTimeDelta, _float fPower)
 
 	}
 
-	m_fVelocity -= 0.01f;
+	m_fVelocity -= m_fMinusVelocity;
 	if (m_fVelocity < 0.0f)
 	{
 		m_eCamMode = CAM_PLAYER;
