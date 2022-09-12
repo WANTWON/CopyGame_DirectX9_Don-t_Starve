@@ -49,6 +49,7 @@ private:
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
 	_float m_fEatRadius;
+	_float m_fCameraShakeRadius;
 	_bool m_bIsEating = false;
 	_float3 vPatrolPosition;
 	_float fEatTimer = 0.f;
@@ -59,6 +60,7 @@ private:
 	virtual void Find_Target() override;
 	void Follow_Target(_float fTimeDelta, _bool bIsFood = false);
 	void Attack(_bool bIsSpecial = false);
+	void Check_CameraShake(STATE eState);
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 	virtual HRESULT Drop_Items() override;
 	virtual _bool IsDead() override;

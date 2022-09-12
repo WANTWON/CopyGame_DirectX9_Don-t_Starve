@@ -39,6 +39,7 @@ HRESULT CBearger::Initialize(void* pArg)
 	m_fAggroRadius = 4.f;
 	m_fAttackRadius = 2.f; 
 	m_fEatRadius = 2.f;
+	m_fCameraShakeRadius = 7.f;
 
 	// Set this as final patrol position
 	vPatrolPosition = _float3(40.f, 1.f, 27.f);
@@ -55,13 +56,6 @@ int CBearger::Tick(_float fTimeDelta)
 	AI_Behaviour(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
-	if (CGameInstance::Get_Instance()->Key_Up(VK_F5))
-	{
-		CCamera* pCamera =	CCameraManager::Get_Instance()->Get_CurrentCamera();
-		dynamic_cast<CCameraDynamic*>(pCamera)->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.5f, 0.1f, 0.01f);
-		/*   CamMode , Power, Velocity, Reduce_Velocity  */
-	}
 
 	return OBJ_NOEVENT;
 }
@@ -318,6 +312,7 @@ void CBearger::Change_Frame(_float fTimeDelta)
 		else
 			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
+		Check_CameraShake(m_eState);
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::RUN:
@@ -326,6 +321,7 @@ void CBearger::Change_Frame(_float fTimeDelta)
 		else
 			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
+		Check_CameraShake(m_eState);
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::CHARGE:
@@ -334,6 +330,7 @@ void CBearger::Change_Frame(_float fTimeDelta)
 		else
 			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
+		Check_CameraShake(m_eState);
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::PRE_EAT:
@@ -771,9 +768,9 @@ void CBearger::Attack(_bool bIsSpecial)
 
 		BulletData.bIsPlayerBullet = false;
 		BulletData.vPosition = m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
-		BulletData.eDirState = m_eDir;
+		BulletData.eDirState = Get_Unprocessed_Dir(m_eDir);
 		BulletData.fOffsetSide = 1.f;
-		BulletData.fOffsetUp = .5f;
+		BulletData.fOffsetUp = 1.f;
 		BulletData.fOffsetDown = 1.f;
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
@@ -787,52 +784,149 @@ void CBearger::Attack(_bool bIsSpecial)
 
 		BulletData.bIsPlayerBullet = false;
 		BulletData.eWeaponType = WEAPON_TYPE::BEARGER_SPECIAL;
-		BulletData.eDirState = m_eDir;
+		BulletData.eDirState = Get_Unprocessed_Dir(m_eDir);
 		D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 		D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
 
-		_float3 vRingPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .5f, 0.f);
-		_float3 vRocksPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - _float3(0.f, .5f, 0.f);
+		// Bullet Spawn Location
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		if (!pGameInstance)
+			return;
+		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+		if (!pVIBuffer_Terrain)
+			return;
+		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+		if (!pTransform_Terrain)
+			return;
+
+		_float3 vSpawnPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
+		vSpawnPos.y = pVIBuffer_Terrain->Compute_Height(vSpawnPos, pTransform_Terrain->Get_WorldMatrix());
 
 		// Create Ring and First Wave of Rocks
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)
 		{
+			CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			if (pCamera)
+				pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.7f, 0.2f, 0.01f);
+
 			// Ring
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Attack_Special"), LEVEL_STATIC, TEXT("Layer_Attack"), &vRingPos)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Attack_Special"), LEVEL_STATIC, TEXT("Layer_Attack"), &vSpawnPos)))
 				return;
 
 			// Rocks
-			BulletData.vPosition = vRocksPos + BulletData.vLook;
+			BulletData.vPosition = vSpawnPos + BulletData.vLook;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = vRocksPos + BulletData.vRight;
+			BulletData.vPosition = vSpawnPos + BulletData.vRight;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = vRocksPos - BulletData.vLook;
+			BulletData.vPosition = vSpawnPos - BulletData.vLook;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = vRocksPos - BulletData.vRight;
+			BulletData.vPosition = vSpawnPos - BulletData.vRight;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 		}
 		// Create Second Wave of Rocks
-		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 30)
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 33)
 		{
 			// Rocks
-			BulletData.vPosition = vRocksPos + BulletData.vLook * 2;
+			BulletData.vPosition = vSpawnPos + BulletData.vLook * 2;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = vRocksPos + BulletData.vRight * 2;
+			BulletData.vPosition = vSpawnPos + BulletData.vRight * 2;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = vRocksPos - BulletData.vLook * 2;
+			BulletData.vPosition = vSpawnPos - BulletData.vLook * 2;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
-			BulletData.vPosition = vRocksPos - BulletData.vRight * 2;
+			BulletData.vPosition = vSpawnPos - BulletData.vRight * 2;
+			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 		}
 	}
+}
+
+void CBearger::Check_CameraShake(STATE eState)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+	if (pPlayer)
+	{
+		_float fDistance = D3DXVec3Length(&(Get_Position() - pPlayer->Get_Position()));
+		if (fDistance < m_fCameraShakeRadius)
+		{
+			CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			if (pCamera)
+			{
+				switch (eState)
+				{
+				case STATE::WALK:
+					switch (m_eDir)
+					{
+					case DIR_STATE::DIR_DOWN:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 37)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					case DIR_STATE::DIR_UP:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 7 || m_pTextureCom->Get_Frame().m_iCurrentTex == 44)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					case DIR_STATE::DIR_LEFT:
+					case DIR_STATE::DIR_RIGHT:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 29)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					}
+					break;
+				case STATE::RUN:
+					switch (m_eDir)
+					{
+					case DIR_STATE::DIR_DOWN:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 2|| m_pTextureCom->Get_Frame().m_iCurrentTex == 16)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					case DIR_STATE::DIR_UP:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 22)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					case DIR_STATE::DIR_LEFT:
+					case DIR_STATE::DIR_RIGHT:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1 || m_pTextureCom->Get_Frame().m_iCurrentTex == 15)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					}
+					break;
+				case STATE::CHARGE:
+					switch (m_eDir)
+					{
+					case DIR_STATE::DIR_DOWN:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 2 || m_pTextureCom->Get_Frame().m_iCurrentTex == 10)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					case DIR_STATE::DIR_UP:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 4 || m_pTextureCom->Get_Frame().m_iCurrentTex == 11)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					case DIR_STATE::DIR_LEFT:
+					case DIR_STATE::DIR_RIGHT:
+						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 2 || m_pTextureCom->Get_Frame().m_iCurrentTex == 10)
+							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						break;
+					}
+					break;
+				}
+			}
+		}
+	}	
 }
 
 _float CBearger::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)

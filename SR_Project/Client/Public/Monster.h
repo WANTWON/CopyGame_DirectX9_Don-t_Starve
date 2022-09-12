@@ -74,6 +74,7 @@ protected:
 	DWORD m_dwDeathTime = GetTickCount();
 
 protected:
+	DIR_STATE Get_Unprocessed_Dir(DIR_STATE eDir);
 	DIR_STATE Get_Processed_Dir(DIR_STATE eDir);
 	virtual void AI_Behaviour(_float fTimeDelta) { };
 	virtual void Find_Target() { };

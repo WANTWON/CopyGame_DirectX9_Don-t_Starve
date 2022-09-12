@@ -61,7 +61,7 @@ void CTimer_Manager::Delete_Timer(const _tchar * pTimerTag)
 
 CTimer * CTimer_Manager::Find_Timer(const _tchar * pTimerTag)
 {
-	auto	iter = find_if(m_Timers.begin(), m_Timers.end(), CTag_Finder(pTimerTag));
+	auto iter = find_if(m_Timers.begin(), m_Timers.end(), CTag_Finder(pTimerTag));
 
 	if (iter == m_Timers.end())
 		return nullptr;
