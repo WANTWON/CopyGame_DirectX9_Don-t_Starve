@@ -178,6 +178,13 @@ void CPigKing::Interact(_uint Damage)
 {
 	_uint count = 0;
 	bool success = false;
+
+	if (Damage == 2)
+	{
+		m_bInteract = true;
+	}
+	
+
 	//_uint count1 = 0;
 	if (m_bInteract)
 	{
@@ -186,14 +193,19 @@ void CPigKing::Interact(_uint Damage)
 		CInventory_Manager*         pinven = CInventory_Manager::Get_Instance();
 		Safe_AddRef(pinven);
 
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+		pPlayer->Set_bOnlyActionKey(true);
+		pPlayer->Set_TalkMode(true);
 		pCamera->Set_TalkingMode(true);
 		pCamera->Set_Target(this);
 		pinven->Get_Talk_list()->front()->setcheck(true); //first talking
+
+		pinven->Get_Talk_list()->front()->Set_Activated(true);
+
 		auto line = pinven->Get_Line_list();
 		
-
-		
-
 
 		for (auto iter = line->begin(); iter != line->end(); ++iter)
 		{
@@ -209,11 +221,10 @@ void CPigKing::Interact(_uint Damage)
 				
 			}
 		}
-		if (count >= 3 && m_iQuestnum == 0)
+		if (count >= 3 && m_iQuestnum == 0 )
 		{
 			++m_iQuestnum;
 			pinven->Get_Talk_list()->front()->settexnum(3);
-
 			
 		}
 		else if (m_iQuestnum == 1 )
@@ -227,12 +238,12 @@ void CPigKing::Interact(_uint Damage)
 		{
 			
 			pinven->Get_Talk_list()->front()->settexnum(9);
+			m_iQuestnum = 3;
 		}
 		/*else if (m_iQuestnum == 1 && count1 >= 1)
 		{
 			
 		}*/
-			
 		
 		
 

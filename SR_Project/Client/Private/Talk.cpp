@@ -78,8 +78,12 @@ int CTalk::Tick(_float fTimeDelta)
 		}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-		if (CKeyMgr::Get_Instance()->Key_Up('0'))
+		//if (CKeyMgr::Get_Instance()->Key_Up('0'))
+		if(m_bActivated)
 		{
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
 			if (texnum == 2)
 			{
 				pinv->Get_Quest_list()->front()->set_onoff(true);
@@ -87,6 +91,11 @@ int CTalk::Tick(_float fTimeDelta)
 				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
+				m_bActivated = false;
+
+				pPlayer->Set_TalkMode(false);
+				pPlayer->Set_bOnlyActionKey(false);
+
 		     	Safe_Release(pinv);
 				
 					
@@ -128,7 +137,7 @@ int CTalk::Tick(_float fTimeDelta)
 
 						(*iter)->set_check(true);
 
-						break;;
+						break;
 					}
 
 				}
@@ -137,6 +146,11 @@ int CTalk::Tick(_float fTimeDelta)
 				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
+				m_bActivated = false;
+
+				pPlayer->Set_TalkMode(false);
+				pPlayer->Set_bOnlyActionKey(false);
+
 				Safe_Release(pinv);
 			}
 			else if (texnum == 8)
@@ -146,6 +160,10 @@ int CTalk::Tick(_float fTimeDelta)
 				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
+				m_bActivated = false;
+
+				pPlayer->Set_TalkMode(false);
+				pPlayer->Set_bOnlyActionKey(false);
 				Safe_Release(pinv);
 			}
 			else if (texnum == 12)
@@ -155,10 +173,17 @@ int CTalk::Tick(_float fTimeDelta)
 				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
+				m_bActivated = false;
+
+				pPlayer->Set_TalkMode(false);
+				pPlayer->Set_bOnlyActionKey(false);
 				Safe_Release(pinv);
 			}
-			else
+			else {
 				++texnum;
+				m_bActivated = false;
+			}
+				
 		}
 		//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		//CInventory_Manager* pinv = CInventory_Manager::Get_Instance();

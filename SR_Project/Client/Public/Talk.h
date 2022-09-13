@@ -44,13 +44,15 @@ private:
 	_uint m_ihp;
 	bool m_bcheck = false;
 	bool m_SetTargetBearger = false;
-
+	_bool m_bActivated = false;
 public:
 	bool getcheck() { return m_bcheck;  }
 	void setcheck(bool tof) { m_bcheck = tof; }
+	_bool Get_Activated(void) { return m_bActivated; }
 
 	_uint gettexnum() { return texnum; }
 	void settexnum(_uint num) { texnum = num; }
+	void Set_Activated(_bool _Activated) { m_bActivated = _Activated; }
 
 public:
 	static CTalk* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

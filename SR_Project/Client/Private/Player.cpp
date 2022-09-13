@@ -93,19 +93,20 @@ int CPlayer::Tick(_float fTimeDelta)
 	//if (nullptr != m_pColliderCom)
 	//	m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
 
-	Sleep_Restore();
+	//Sleep_Restore(fTimeDelta);
+
+	//KeyInput
+	GetKeyDown(fTimeDelta);
 
 	//Act Auto
 	Tick_ActStack(fTimeDelta);
 
-	//KeyInput
-	GetKeyDown(fTimeDelta);
+	
 
 	//Move
 	Move_to_PickingPoint(fTimeDelta);
 	WalkingTerrain();
 
-	
 	m_Equipment->Set_TargetPos(Get_Pos());
 	//TEst
 	RangeCheck(fTimeDelta);
@@ -128,18 +129,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	SetUp_BillBoard();
 
-	CInventory_Manager* inv = CInventory_Manager::Get_Instance();
-	
-	if (CKeyMgr::Get_Instance()->Key_Up('8'))
-	{
-		inv->Dead_on();
-	}
-	if (CKeyMgr::Get_Instance()->Key_Up('9'))
-	{
-		inv->Dead_off();
-	}
-
-	if (nullptr != m_pRendererCom)
+	if (nullptr != m_pRendererCom/* && !m_bSleeping*/)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 
 	if (m_tStat.fCurrentHealth > m_tStat.fMaxHealth)
@@ -157,31 +147,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
 	}
 	
-	if (m_eDirState == DIR_STATE::DIR_LEFT)
-		m_pColliderCom->Set_IsInverse(true);
-	else
-		m_pColliderCom->Set_IsInverse(false);
-	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+	Setup_Collider();
 
 	Create_Bullet();
-
-	
-
-	_float3 vDistance = _float3(0,0,0);
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-	if (pGameInstance->Collision_with_Group(CCollider_Manager::COLLISION_BLOCK, this, CCollider_Manager::COLLSIION_BOX,  &vDistance))
-	{
-		_float3 vPosition = Get_Position();
-
-		if(fabsf(vDistance.x) < fabsf(vDistance.z))
-			vPosition.x -= vDistance.x;
-		else
-			vPosition.z -= vDistance.z;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
-	}
-
-
 }
 
 
@@ -526,8 +494,18 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	if (!m_bMove)
 		return;
 
+	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_ACTION]))
+	{
+		if (!m_bTalkMode)
+		{
+			Clear_ActStack();
+			Multi_Action(_fTimeDelta);
+		}
+		m_bActivated = true;
+	}
 
-	//Test Power
+	if (m_bOnlyActionKey)
+		return;
 
 #pragma region Debug&CamKey
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_DEBUG]))
@@ -611,8 +589,6 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 					}
 				}
 			}
-
-
 
 		}
 		else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN2]))
@@ -787,11 +763,6 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		}
 
 
-	}
-	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_ACTION]))
-	{
-		Clear_ActStack();
-		Multi_Action(_fTimeDelta);
 	}
 	else
 	{
@@ -1333,7 +1304,6 @@ void CPlayer::Jump(_float _fTimeDelta)
 
 void CPlayer::Dead(_float _fTimeDelta)
 {
-
 	m_eState = ACTION_STATE::DEAD;
 
 	if (m_ePreState != m_eState)
@@ -1362,6 +1332,9 @@ void CPlayer::Dead(_float _fTimeDelta)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skeleton"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), vPos)))
 			return;
 
+		CInventory_Manager* inv = CInventory_Manager::Get_Instance();
+
+		inv->Dead_on();
 		m_bMove = true;
 	}
 }
@@ -1373,6 +1346,9 @@ void CPlayer::Revive(_float _fTimeDelta)
 	m_fReviveTime += _fTimeDelta;
 	if (m_ePreState != m_eState)
 	{
+		CInventory_Manager* inv = CInventory_Manager::Get_Instance();
+		inv->Dead_off();
+
 		m_bAutoMode = true;
 		m_bMove = false;
 		switch (m_eDirState)
@@ -1389,6 +1365,7 @@ void CPlayer::Revive(_float _fTimeDelta)
 
 	if (m_fReviveTime > 3.f &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
+		
 		Change_Texture(TEXT("Com_Texture_Idle_Down"));
 		m_bDead = false;
 		m_bGhost = false;
@@ -1838,11 +1815,38 @@ _bool CPlayer::Check_Dead()
 
 }
 
-void CPlayer::Sleep_Restore()
+void CPlayer::Setup_Collider(void)
+{
+	if (m_eDirState == DIR_STATE::DIR_LEFT)
+		m_pColliderCom->Set_IsInverse(true);
+	else
+		m_pColliderCom->Set_IsInverse(false);
+	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+
+
+	//Block Collision
+	_float3 vDistance = _float3(0, 0, 0);
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	if (pGameInstance->Collision_with_Group(CCollider_Manager::COLLISION_BLOCK, this, CCollider_Manager::COLLSIION_BOX, &vDistance))
+	{
+		_float3 vPosition = Get_Position();
+
+		if (fabsf(vDistance.x) < fabsf(vDistance.z))
+			vPosition.x -= vDistance.x;
+		else
+			vPosition.z -= vDistance.z;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+	}
+
+}
+
+void CPlayer::Sleep_Restore(_float _fTimeDelta)
 {
 	if (m_bSleeping)
 	{
-		if (GetTickCount() > m_dwSleepTime + 1000)
+		m_fSleepTime += _fTimeDelta;
+		if (1.f > m_fSleepTime)
 		{
 			if (m_tStat.fCurrentHealth < m_tStat.fMaxHealth)
 				m_tStat.fCurrentHealth += 1;
@@ -1853,8 +1857,42 @@ void CPlayer::Sleep_Restore()
 			if (m_tStat.fCurrentHungry > 0)
 				m_tStat.fCurrentHungry -= 1;
 
-			m_dwSleepTime = GetTickCount();
+			m_fSleepTime = 0.f;
 		}
+	}
+
+	if(m_bActivated)
+	{
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact();
+		m_bActivated = false;
+	}
+
+}
+
+void CPlayer::Talk_NPC(_float _fTimeDelta)
+{
+	//움직임 봉쇄 코드 넣기.
+	if (m_bActivated)
+	{
+		//m_bTalkMode = true;
+
+		switch (m_eDirState)
+		{
+		case DIR_STATE::DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Idle_Down"));
+			break;
+		case DIR_STATE::DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Idle_Up"));
+			break;
+		case DIR_STATE::DIR_LEFT:
+		case DIR_STATE::DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Idle_Side"));
+			break;
+		}
+
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(2);
+		m_bActivated = false;
+		
 	}
 }
 
@@ -2087,6 +2125,18 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 				Angry(fTimeDelta);
 			}
 			break;
+		case ACTION_STATE::SLEEP:
+			Sleep_Restore(fTimeDelta);
+			if (!m_bSleeping)
+			{
+				m_ActStack.pop();
+			}
+		case ACTION_STATE::TALK:
+			Talk_NPC(fTimeDelta);
+			if (!m_bTalkMode)
+			{
+				m_ActStack.pop();
+			}
 		default:
 			break;
 		}
@@ -2101,6 +2151,7 @@ void CPlayer::Clear_ActStack()
 	{
 		m_ActStack.pop();
 	}
+	m_bActivated = false;
 	m_bAutoMode = false;
 	m_bIsBuild = false;
 	m_bBuildTrigger = false;
@@ -2126,13 +2177,18 @@ CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
 		return ACTION_STATE::PORTAL;
 		break;
 	case INTERACTOBJ_ID::COOKPOT:
-	case INTERACTOBJ_ID::TENT:
-	case INTERACTOBJ_ID::NPC:
+
 	case INTERACTOBJ_ID::ITEMS:
 		return ACTION_STATE::PICKUP;
 		break;
 	case INTERACTOBJ_ID::SKELETON:
 		return ACTION_STATE::REVIVE;
+		break;
+	case INTERACTOBJ_ID::TENT:
+		return ACTION_STATE::SLEEP;
+		break;
+	case INTERACTOBJ_ID::NPC:
+		return ACTION_STATE::TALK;
 		break;
 	default:
 		return ACTION_STATE::ACTION_END;
