@@ -707,7 +707,7 @@ HRESULT CLevel_GamePlay::Ready_LayerNPC(const _tchar * pLayerTag)
 
 	if (pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC")) == nullptr)
 	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Wendy"), LEVEL_GAMEPLAY, pLayerTag, _float3(10.f, 1.f, 5.f))))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Wendy"), LEVEL_STATIC, pLayerTag, _float3(10.f, 1.f, 5.f))))
 			return E_FAIL;
 	}
 	

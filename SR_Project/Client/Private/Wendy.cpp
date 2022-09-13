@@ -35,15 +35,20 @@ HRESULT CWendy::Initialize(void * pArg)
 	BehaviorTree = new CBT_NPC(this);
 
 	BehaviorTree->Initialize();
+
+	Change_Texture(TEXT("Com_Texture_Idle_Down"));
 	return S_OK;
 }
 
 int CWendy::Tick(_float fTimeDelta)
 {
-	
+
 	__super::Tick(fTimeDelta);
 
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
+		return OBJ_NOEVENT;
+
+	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
 		return OBJ_NOEVENT;
 
 	BehaviorTree->Tick(fTimeDelta);
@@ -57,8 +62,17 @@ void CWendy::Late_Tick(_float fTimeDelta)
 {
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return;
+
+	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
+		return;
+
 	__super::Late_Tick(fTimeDelta);
 	m_pTextureCom->MoveFrame(m_TimerTag);
+
+	if (m_eCur_Dir == DIR_STATE::DIR_LEFT)
+	{
+		m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
+	}
 }
 
 HRESULT CWendy::Render()
@@ -214,13 +228,7 @@ void CWendy::Change_Motion()
 
 void CWendy::Interact(_uint Damage)
 {
-	//Test Only Berry
-	if (m_pTarget == nullptr)
-		return;
-
-	dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(0);
-
-	m_bInteract = false;
+	
 }
 
 HRESULT CWendy::Drop_Items()
@@ -236,9 +244,14 @@ void CWendy::Move(_float _fTimeDelta)
 		m_eCur_Dir = Check_Direction();
 		m_bDirChanged = true;
 	}
-	
-	if (m_ePre_Dir != m_eCur_Dir)
+
+	m_eState = CNPC::MOVE;
+
+	//if (m_eCur_Dir != m_ePre_Dir)
+	//{
+	if (m_ePreState != m_eState)
 	{
+		cout << "Move" << endl;
 		switch (m_eCur_Dir)
 		{
 		case DIR_UP:
@@ -256,9 +269,8 @@ void CWendy::Move(_float _fTimeDelta)
 		case DIR_RIGHT:
 			Change_Texture(TEXT("Com_Texture_Run_Side"));
 			break;
-
 		}
-		m_ePre_Dir = m_eCur_Dir;
+		m_ePreState = m_eState;
 	}
 
 	if (m_pTarget)
@@ -281,20 +293,50 @@ void CWendy::Move(_float _fTimeDelta)
 			m_bDirChanged = false;
 		}
 	}
-	
+
 	SetUp_BillBoard();
-	/*if (m_eCur_Dir == DIR_STATE::DIR_LEFT)
-	{
-		m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
-	}*/
+
 }
 
 void CWendy::Idle(_float _fTimeDelta)
 {
 	m_fInteractTIme += _fTimeDelta;
 
+	m_eState = CNPC::IDLE;
+
+	if (m_ePreState != m_eState)
+	{
+		cout << "Idle" << endl;
+		switch (m_eCur_Dir)
+		{
+		case DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Idle_Up"));
+			break;
+
+		case DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Idle_Down"));
+			break;
+
+		case DIR_LEFT:
+		case DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Idle_Side"));
+			break;
+
+		}
+		m_ePreState = m_eState;
+	}
 }
 
+void CWendy::Interaction(_float _fTimedelta)
+{
+	//Test Only Berry
+	if (m_pTarget == nullptr)
+		return;
+
+	Revive_Berry(_fTimedelta);
+
+
+}
 void CWendy::Select_Target(_float _fTimeDelta)
 {
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
@@ -324,6 +366,44 @@ void CWendy::Set_RandPos(_float _fTimeDelta)
 		m_vTargetPos = _float3(m_fPatrolPosX, 0.5f, m_fPatrolPosZ);
 		m_bArrive = false;
 	}
+
+}
+
+void CWendy::Revive_Berry(_float _fTimeDelta)
+{
+	m_eState = CNPC::INTERACT;
+
+	if (m_ePreState != m_eState)
+	{
+		switch (m_eCur_Dir)
+		{
+		case DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Build_Up"));
+			break;
+
+		case DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Build_Down"));
+			break;
+
+		case DIR_LEFT:
+		case DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Build_Side"));
+			break;
+
+		}
+		m_ePreState = m_eState;
+	}
+
+	m_fInteractTIme += _fTimeDelta;
+
+	if (1.5f < m_fInteractTIme)
+	{
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(0);
+		m_fInteractTIme = 0.f;
+
+		m_bInteract = false;
+	}
+	
 
 }
 
@@ -417,7 +497,7 @@ DIR_STATE CWendy::Check_Direction(void)
 
 void CWendy::Find_Priority()
 {
-	
+
 	//후에 Primary_queue로 각 레이어들중에서 가장 가까운 객체를 m_pTarget
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -462,7 +542,7 @@ void CWendy::Find_Priority()
 			++iIndex;
 			iter_Obj++;
 		}
-		else 
+		else
 		{
 			++iIndex;
 			iter_Obj++;
@@ -501,17 +581,6 @@ CGameObject * CWendy::Clone(void * pArg)
 void CWendy::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pRendererCom);
-	//Safe_Release(m_pColliderCom);
-	Safe_Release(m_pTextureCom);
-
-	for (auto& iter : m_vecTexture)
-		Safe_Release(iter);
-
-	m_vecTexture.clear();
 
 	Safe_Release(BehaviorTree);
 }

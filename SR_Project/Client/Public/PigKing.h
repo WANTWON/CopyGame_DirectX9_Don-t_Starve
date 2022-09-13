@@ -37,7 +37,8 @@ private:
 	STATE m_eState = IDLE;
 	STATE m_ePreState = MAX;
 
-	//_uint g_iQuestnum = 0;
+	//Test
+	_bool bTest = true;
 
 public:
 	virtual void Interact(_uint Damage = 0) override;
