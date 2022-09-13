@@ -61,8 +61,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
-	cout << Get_Position().x << " " << Get_Position().y << " " << Get_Position().z << endl;
-
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	if (m_iPreLevelIndex != m_iCurrentLevelndex)
 	{

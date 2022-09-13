@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Inventory.h"
 #include "Item.h"
+#include "CameraManager.h"
 
 CBoarrior::CBoarrior(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -543,10 +544,10 @@ void CBoarrior::Patrol(_float fTimeDelta)
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		if (!pGameInstance)
 			return;
-		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_BOSS, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
 		if (!pVIBuffer_Terrain)
 			return;
-		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_BOSS, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
 		if (!pTransform_Terrain)
 			return;
 
@@ -685,8 +686,14 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 		break;
 		case STATE::ATTACK_3:
 		{
-			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 38)
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 38 && !m_bShouldSpawnBullet)
+			{
 				m_bShouldSpawnBullet = true;
+
+				CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+				if (pCamera)
+					pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.7f, 0.2f, 0.01f);
+			}
 
 			break;
 		}
