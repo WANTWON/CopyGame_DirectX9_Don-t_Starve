@@ -190,8 +190,16 @@ void CPigKing::Interact(_uint Damage)
 	//_uint count1 = 0;
 	if (m_bInteract)
 	{
-		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-		m_bInteract = false;
+		CCameraManager::CAM_STATE eState = CCameraManager::Get_Instance()->Get_CamState();
+
+		if (eState == CCameraManager::CAM_PLAYER)
+		{
+			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+			pCamera->Set_TalkingMode(true);
+			pCamera->Set_Target(this);
+		}
+		
+		//m_bInteract = false;
 		CInventory_Manager*         pinven = CInventory_Manager::Get_Instance();
 		Safe_AddRef(pinven);
 
@@ -200,8 +208,8 @@ void CPigKing::Interact(_uint Damage)
 
 		pPlayer->Set_bOnlyActionKey(true);
 		pPlayer->Set_TalkMode(true);
-		pCamera->Set_TalkingMode(true);
-		pCamera->Set_Target(this);
+		
+
 		pinven->Get_Talk_list()->front()->setcheck(true); //first talking
 
 		pinven->Get_Talk_list()->front()->Set_Activated(true);
@@ -223,57 +231,80 @@ void CPigKing::Interact(_uint Damage)
 			}
 		}
 
-		if (count >= 3 && g_iQuestnum == 0)
+
+		/*if (bTest)
+		{
+			g_iQuestnum = 4;
+			pinven->Get_Talk_list()->front()->Set_TalkEnd(true);
+			bTest = false;
+		}*/
+	
+
+		if (count >= 3 && g_iQuestnum == 0
+			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
 		{
 			++g_iQuestnum;
 			pinven->Get_Talk_list()->front()->settexnum(3);
-			
+			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
+			pinven->Get_Talk_list()->front()->Set_StartText(true);
 		}
-		else if (g_iQuestnum == 1 )
+		else if (g_iQuestnum == 1 
+			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
 		{
-			pinven->Get_Talk_list()->front()->settexnum(7);
-			
+			pinven->Get_Talk_list()->front()->settexnum(7);	
 			g_iQuestnum = 2;
-
+			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
+			pinven->Get_Talk_list()->front()->Set_StartText(true);
 		}
-		else if (success && g_iQuestnum == 2 )
+		else if (success && g_iQuestnum == 2 
+			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
 		{
 			
 			pinven->Get_Talk_list()->front()->settexnum(9);
 			g_iQuestnum = 3;
+			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
+			pinven->Get_Talk_list()->front()->Set_StartText(true);
 		}
-		else if (count >=3 && g_iQuestnum == 3)
+		else if (count >=3 && g_iQuestnum == 3
+			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
 		{
 
 			pinven->Get_Talk_list()->front()->settexnum(13);
 			g_iQuestnum = 4;
+			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
+			pinven->Get_Talk_list()->front()->Set_StartText(true);
 		}
-		else if (g_iQuestnum == 4)
+		else if (g_iQuestnum == 4
+			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
 		{
 			pinven->Get_Talk_list()->front()->settexnum(16);
 			g_iQuestnum = 5;
+			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
+			pinven->Get_Talk_list()->front()->Set_StartText(true);
 		}
-		else if (g_iQuestnum == 5&& success )
+		else if (g_iQuestnum == 5&& success 
+			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
 		{
 			pinven->Get_Talk_list()->front()->settexnum(19);
 			g_iQuestnum = 6;
+			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
+			pinven->Get_Talk_list()->front()->Set_StartText(true);
 			
 		}
-		else if (g_iQuestnum == 6 && pinven->Get_Quest_list()->front()->get_spidercount() >= 30)
+		else if (g_iQuestnum == 6 && pinven->Get_Quest_list()->front()->get_spidercount() >= 30
+			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
 		{
 			pinven->Get_Talk_list()->front()->settexnum(26);
-			m_iQuestnum = 7;
+			g_iQuestnum = 7;
+			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
+			pinven->Get_Talk_list()->front()->Set_StartText(true);
 		}
-		/*else if (g_iQuestnum == 1 && count1 >= 1)
-		{
-			
-		}*/
 		
-		
+		pinven->Get_Talk_list()->front()->Excute();
 
 		Safe_Release(pinven);
 		
-		m_eState = rand() % 2 ? COINTOSS : UNIMPRESSED;
+		//m_eState = rand() % 2 ? COINTOSS : UNIMPRESSED;
 	}
 
 

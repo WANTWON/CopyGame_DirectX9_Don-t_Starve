@@ -46,14 +46,16 @@ public:/*for Actions*/
 	virtual void	Idle(_float _fTimeDelta) override;
 	virtual void	Select_Target(_float _fTimeDelta) override;
 	virtual void	Set_RandPos(_float _fTimeDelta) override;
-	
+private:
+	void Revive_Berry(_float _fTimeDelta);
+
 public:
 	DIR_STATE Check_Direction(void);
 private:
 	virtual void Find_Priority() override;
 
 private:
-
+	_bool		m_bOwner = false;
 
 public:
 	static CWendy* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

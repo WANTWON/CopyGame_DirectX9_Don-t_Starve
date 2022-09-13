@@ -1347,7 +1347,7 @@ void CPlayer::Dead(_float _fTimeDelta)
 
 		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skeleton"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), vPos)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skeleton"), m_iCurrentLevelndex, TEXT("Layer_Object"), vPos)))
 			return;
 
 		CInventory_Manager* inv = CInventory_Manager::Get_Instance();

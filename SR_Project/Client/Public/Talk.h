@@ -34,7 +34,10 @@ private: /* For.Components */
 private:
 	_float4x4				m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
-
+	
+public:
+	void	Check_Quest(void);
+	HRESULT	Excute(void);
 private:
 	HRESULT SetUp_Components();
 	HRESULT SetUp_RenderState();
@@ -45,15 +48,23 @@ private:
 	bool m_bcheck = false;
 	bool m_SetTargetBearger = false;
 	_bool m_bActivated = false;
+	_bool	m_bTalkEnd = false;
+	_bool	m_bIsStartText = true;
 public:
 	bool getcheck() { return m_bcheck;  }
 	void setcheck(bool tof) { m_bcheck = tof; }
-	_bool Get_Activated(void) { return m_bActivated; }
-
+	
 	_uint gettexnum() { return texnum; }
 	void settexnum(_uint num) { texnum = num; }
-	void Set_Activated(_bool _Activated) { m_bActivated = _Activated; }
 
+	void Set_Activated(_bool _Activated) { m_bActivated = _Activated; }
+	_bool Get_Activated(void) { return m_bActivated; }
+
+	void Set_TalkEnd(_bool _Activated) { m_bTalkEnd = _Activated; }
+	_bool Get_TalkEnd(void) { return m_bTalkEnd; }
+
+	void Set_StartText(_bool _Activated) { m_bIsStartText = _Activated; }
+	_bool Get_StartText(void) { return m_bIsStartText; }
 public:
 	static CTalk* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

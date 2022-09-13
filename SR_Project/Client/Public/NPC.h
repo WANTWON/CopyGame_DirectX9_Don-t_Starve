@@ -91,6 +91,10 @@ protected:
 
 	//NPCTYPE
 	NPCID					m_eNPCID;
+
+	//NPC_STATE
+	NPC_STATE				m_eState;
+	NPC_STATE				m_ePreState;
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) =0;
 	virtual void Free() override;
