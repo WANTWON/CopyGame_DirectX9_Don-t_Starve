@@ -323,6 +323,10 @@ void CPigKing::Idle(_float _fTimeDelta)
 {
 }
 
+void CPigKing::Interaction(_float _fTimedelta)
+{
+}
+
 void CPigKing::Select_Target(_float _fTimeDelta)
 {
 }
