@@ -47,6 +47,8 @@ public:
 public:/*for Actions*/
 	virtual void	Move(_float _fTimeDelta) override;
 	virtual void	Idle(_float _fTimeDelta) override;
+	virtual void	Interaction(_float _fTimedelta) override;
+
 	virtual void	Select_Target(_float _fTimeDelta) override;
 	virtual void	Set_RandPos(_float _fTimeDelta) override;
 
