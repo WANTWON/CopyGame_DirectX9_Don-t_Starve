@@ -96,9 +96,7 @@ int CTalk::Tick(_float fTimeDelta)
 				m_bActivated = false;
 				pPlayer->Set_TalkMode(false);
 				pPlayer->Set_bOnlyActionKey(false);
-		     	Safe_Release(pinv);
-				
-					
+		     	//Safe_Release(pinv);	
 			}
 			else if (texnum == 6)
 			{
@@ -151,7 +149,7 @@ int CTalk::Tick(_float fTimeDelta)
 				pPlayer->Set_TalkMode(false);
 				pPlayer->Set_bOnlyActionKey(false);
 
-				Safe_Release(pinv);
+				//Safe_Release(pinv);
 			}
 			else if (texnum == 8)
 			{
@@ -163,7 +161,7 @@ int CTalk::Tick(_float fTimeDelta)
 				m_bActivated = false;
 				pPlayer->Set_TalkMode(false);
 				pPlayer->Set_bOnlyActionKey(false);
-				Safe_Release(pinv);
+			//	Safe_Release(pinv);
 			}
 			else if (texnum == 12)
 			{
@@ -175,7 +173,7 @@ int CTalk::Tick(_float fTimeDelta)
 				m_bActivated = false;
 				pPlayer->Set_TalkMode(false);
 				pPlayer->Set_bOnlyActionKey(false);
-				Safe_Release(pinv);			
+				//Safe_Release(pinv);			
 			}
 
 			else if (texnum == 15)
