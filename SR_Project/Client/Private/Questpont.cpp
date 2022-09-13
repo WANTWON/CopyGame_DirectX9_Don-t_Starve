@@ -93,13 +93,13 @@ int CQuestpont::Tick(_float fTimeDelta)
 		{
 			if (iNum == 0)
 			{
-				m_fX = 955.f;
+				m_fX = 952.f;
 				m_fY = 427.f;
 			}
 
 			else if (iNum == 1)
 			{
-				m_fX = 979.f;
+				m_fX = 976.f;
 				m_fY = 427.f;
 			}
 

@@ -71,5 +71,6 @@ extern HINSTANCE g_hInst;
 extern _bool		g_bLoadingfirst;
 extern _bool		g_bUIMadefirst;
 extern _bool        g_bscenechange;
+extern _uint       g_iQuestnum;
 
 using namespace Client;
