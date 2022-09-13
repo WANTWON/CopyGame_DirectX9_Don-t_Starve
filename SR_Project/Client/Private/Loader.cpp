@@ -13,6 +13,7 @@
 #include "SpiderWarrior.h"
 #include "Bearger.h"
 #include "Boarrior.h"
+#include "Boaron.h"
 #include "Terrain.h"
 #include "Sky.h"
 #include "Tree.h"
@@ -1032,8 +1033,6 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/SpiderHouse.png"), 1))))
 		return E_FAIL;
 
-
-
 	/*For. Prototype_Component_Texture_House*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_House"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/PigHouse.png"), 1))))
@@ -1412,11 +1411,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CBearger::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	/*For.Prototype_GameObject_Boarrior*/
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boarrior"),
-		CBoarrior::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
 	/*For.Prototype_GameObject_Camera_Dynamic */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Dynamic"),
 		CCameraDynamic::Create(m_pGraphic_Device))))
@@ -1786,13 +1780,13 @@ HRESULT CLoader::Loading_ForBossLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Spawner/Spawner_%03d.png"), 1))))
 		return E_FAIL;
 	/*For.Prototype_Component_Texture_Spawner_Effect */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Spawner_Effect"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Spawner_Effect/Spawner_Effect_%03d.png"), 50))))
-		return E_FAIL;
-	/*For.Prototype_Component_Texture_Spawner_Effect_Smoke */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Spawner_Effect_Smoke"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Spawner_Effect_Smoke/Spawner_Effect_Smoke_%03d.png"), 51))))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Spawner_Effect"),
+	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Spawner_Effect/Spawner_Effect_%03d.png"), 50))))
+	//	return E_FAIL;
+	///*For.Prototype_Component_Texture_Spawner_Effect_Smoke */
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Spawner_Effect_Smoke"),
+	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Spawner_Effect_Smoke/Spawner_Effect_Smoke_%03d.png"), 51))))
+	//	return E_FAIL;
 
 #pragma region Add_Texture_Boaron
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boaron_Attack_Down"),
@@ -1829,6 +1823,11 @@ HRESULT CLoader::Loading_ForBossLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Boaron/Run_Up/Run_Up_%03d.png"), 13))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Boaron
+
+	/*For.Prototype_GameObject_Boaron*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boaron"),
+		CBoaron::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 #pragma region Add_Texture_Boarrior
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boarrior_Attack_1_Down"),
@@ -1895,6 +1894,11 @@ HRESULT CLoader::Loading_ForBossLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Boarrior/Walk_Up/Walk_Up_%03d.png"), 37))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Boarrior
+
+	/*For.Prototype_GameObject_Boarrior*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boarrior"),
+		CBoarrior::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	if (FAILED(Loading_Terrain_ForBossLevel()))
 		return E_FAIL;
