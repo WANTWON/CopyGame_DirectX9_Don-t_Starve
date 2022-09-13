@@ -47,8 +47,6 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 	}
 	
 	
-	
-
 	if (FAILED(Ready_Layer_Loadingscene(TEXT("Layer_Loadingscene"))))
 		return E_FAIL;
 	m_eNextLevel = eNextLevel;

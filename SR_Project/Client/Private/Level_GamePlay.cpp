@@ -40,7 +40,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
 		return E_FAIL;
 
-	if (g_bLoadingfirst == false)
+	if (g_bUIMadefirst == false)
 	{
 		if (FAILED(Ready_Layer_MainInventory(TEXT("Layer_UI"))))
 			return E_FAIL;

@@ -164,6 +164,13 @@ HRESULT CBerryBush::SetUp_Components(void* pArg)
 
 HRESULT CBerryBush::Texture_Clone()
 {
+
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
+	if (iLevel == LEVEL_HUNT)
+		iLevel = LEVEL_HUNT;
+	else
+		iLevel = LEVEL_GAMEPLAY;
+
 	CTexture::TEXTUREDESC TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
@@ -171,17 +178,17 @@ HRESULT CBerryBush::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 
 	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Berry_Bush_IDLE"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE"), iLevel, TEXT("Prototype_Component_Texture_Berry_Bush_IDLE"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 13;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_PICK"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Berry_Bush_PICK"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_PICK"), iLevel, TEXT("Prototype_Component_Texture_Berry_Bush_PICK"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_PICKED"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Berry_Bush_PICKED"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_PICKED"), iLevel, TEXT("Prototype_Component_Texture_Berry_Bush_PICKED"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 

@@ -41,6 +41,8 @@ HRESULT CWoodWall::Initialize(void* pArg)
 		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 	if (m_eWallDesc.etype == WALL_ROCK)
 		m_pTransformCom->Set_Scale(1.f, 3.f, 1.f);
+	if (m_eWallDesc.etype == WALL_END)
+		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
 
 	if (m_eWallDesc.eDir == SIDE)
 		m_pTransformCom->Turn(_float3(0, 1, 0), 1.f);
@@ -127,7 +129,7 @@ HRESULT CWoodWall::Render()
 		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
 			return E_FAIL;
 	}
-	else
+	else if (m_eWallDesc.etype == WALL_ROCK)
 	{
 		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
 			return E_FAIL;
@@ -137,7 +139,8 @@ HRESULT CWoodWall::Render()
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
 
-	m_pVIBufferCom->Render();
+	if(m_eWallDesc.etype != WALL_END)
+		m_pVIBufferCom->Render();
 
 #ifdef _DEBUG
 	if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct() == false)
@@ -178,6 +181,9 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 	CollRectDesc.fRadiusY = 0.5f;
 	CollRectDesc.fRadiusX = 0.5f;
 	CollRectDesc.fRadiusZ = 0.2f;
+
+	if(m_eWallDesc.etype == WALL_END)
+		CollRectDesc.fRadiusZ = 0.5f;
 	CollRectDesc.fOffSetX = 0.f;
 	CollRectDesc.fOffSetY = 0.f;
 	CollRectDesc.fOffsetZ = 0.f;
@@ -295,6 +301,11 @@ HRESULT CWoodWall::Texture_Clone()
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
 	case Client::CWoodWall::WALL_ROCK:
+		TextureDesc.m_iEndTex = 2;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RockHEALTHY"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case Client::CWoodWall::WALL_END:
 		TextureDesc.m_iEndTex = 2;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RockHEALTHY"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;

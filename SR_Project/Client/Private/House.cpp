@@ -32,10 +32,21 @@ HRESULT CHouse::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	_float fSize = 3;
-	m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
-	m_fRadius *= fSize;
-	m_fRadius -= 0.5f;
+	if (m_HouseDesc.m_eState == SPIDERHOUSE)
+	{
+		_float fSize = 3;
+		m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
+		m_fRadius *= fSize;
+		m_fRadius -= 0.4f;
+	}
+
+	if (m_HouseDesc.m_eState == PIGHOUSE)
+	{
+		_float fSize = 2;
+		m_pTransformCom->Set_Scale(fSize*0.9f, fSize, 1.f);
+		m_fRadius *= fSize;
+		m_fRadius -= 0.4f;
+	}
 
 	m_dwTime = GetTickCount();
 
@@ -44,6 +55,9 @@ HRESULT CHouse::Initialize(void* pArg)
 
 int CHouse::Tick(_float fTimeDelta)
 {
+	if (m_bDead)
+		return OBJ_DEAD;
+
 	__super::Tick(fTimeDelta);
 	WalkingTerrain();
 
@@ -67,7 +81,7 @@ void CHouse::Late_Tick(_float fTimeDelta)
 
 		_float3 vTargetPos = pTarget->Get_Position();
 		_float m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
-		if (m_fDistanceToTarget < 4.f)
+		if (m_fDistanceToTarget < 3.f)
 		{
 			if (m_MonsterMaxCount > 0 && (m_dwTime + 3000 < GetTickCount()))
 			{
@@ -78,6 +92,9 @@ void CHouse::Late_Tick(_float fTimeDelta)
 
 				m_dwTime = GetTickCount();
 				m_MonsterMaxCount--;
+
+				if (m_MonsterMaxCount == 0)
+					m_bDead = true;
 			}
 		}
 
@@ -97,9 +114,18 @@ HRESULT CHouse::Render()
 	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 		return E_FAIL;
 
-
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
-		return E_FAIL;
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	if (iLevel == LEVEL_HUNT && m_HouseDesc.m_eState == PIGHOUSE)
+	{
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(1)))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
+			return E_FAIL;
+	}
+	
 
 	m_pTextureCom->MoveFrame(m_TimerTag);
 
@@ -202,15 +228,17 @@ void CHouse::SetUp_BillBoard()
 
 void CHouse::WalkingTerrain()
 {
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	if (nullptr == pGameInstance)
 		return;
 
-	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(iLevel, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
 	if (nullptr == pVIBuffer_Terrain)
 		return;
 
-	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(iLevel, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
 	if (nullptr == pTransform_Terrain)
 		return;
 
