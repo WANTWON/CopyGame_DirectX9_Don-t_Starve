@@ -34,6 +34,7 @@ public:
 	COLLRECTDESC Get_CollRectDesc() { return m_StateDesc; }
 	_float3						m_vPoint[8];
 	_bool						m_bIsInverse = false;
+	_bool						m_bRender = true;
 
 public:
 	void Set_IsInverse(_bool bIsInverse) { m_bIsInverse = bIsInverse; }

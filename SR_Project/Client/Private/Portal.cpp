@@ -44,7 +44,7 @@ HRESULT CPortal::Initialize(void* pArg)
 
 	switch (m_ePortalDesc.m_eType)
 	{
-	case PORTAL_NORMAL:
+	case PORTAL_HUNT:
 	{
 		m_eState = IDLE_CLOSE;
 		m_fRadius = 0.5f;
@@ -85,39 +85,36 @@ int CPortal::Tick(_float fTimeDelta)
 
 	if (m_bShouldTeleport)
 	{
+		CLevel_GamePlay* pLevel = nullptr;
+		
+		switch (m_ePortalDesc.m_eType)
+		{
+		case PORTAL_GAMEPLAY:
+			pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			pLevel->Set_NextLevel(true);
+			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_GAMEPLAY);
+			break;
 
-		switch (eLevel)
-		{
-		case Client::LEVEL_GAMEPLAY:
-		{
-			CLevel_GamePlay* pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+		case PORTAL_HUNT:
+			pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
 			pLevel->Set_NextLevel(true);
 			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_HUNT);
 			break;
-		}
-		case Client::LEVEL_HUNT:
-		{
-			if (m_ePortalDesc.m_eType == PORTAL_NORMAL)
-			{
-				CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-				pLevel->Set_PastLevel(true);
-				CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_GAMEPLAY);
 
-			}
-			else if (m_ePortalDesc.m_eType == PORTAL_BOSS)
-			{
-				CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-				pLevel->Set_NextLevel(true);
-				CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_BOSS);
-
-			}
+		case PORTAL_BOSS:
+			 pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			pLevel->Set_NextLevel(true);
+			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_BOSS);
 			break;
-		}
+
+		case PORTAL_MAZE:
+			pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			pLevel->Set_NextLevel(true);
+			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_MAZE);
+			break;
 		default:
 			break;
 		}
-
-
 	}
 
 
@@ -294,16 +291,16 @@ void CPortal::Change_Motion()
 		switch (m_eState)
 		{
 		case STATE::IDLE_CLOSE:
-			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_IDLE_CLOSE")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));
+			m_ePortalDesc.m_eType == PORTAL_HUNT ? Change_Texture(TEXT("Com_Texture_IDLE_CLOSE")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));
 			break;
 		case STATE::OPENING:
-			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_OPENING")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));;
+			m_ePortalDesc.m_eType == PORTAL_HUNT ? Change_Texture(TEXT("Com_Texture_OPENING")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));;
 			break;
 		case STATE::IDLE_OPEN:
-			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_IDLE_OPEN")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));;
+			m_ePortalDesc.m_eType == PORTAL_HUNT ? Change_Texture(TEXT("Com_Texture_IDLE_OPEN")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));;
 			break;
 		case STATE::CLOSING:
-			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_CLOSING")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_OPEN"));;
+			m_ePortalDesc.m_eType == PORTAL_HUNT ? Change_Texture(TEXT("Com_Texture_CLOSING")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_OPEN"));;
 			break;
 		}
 

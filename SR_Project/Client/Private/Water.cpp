@@ -98,6 +98,8 @@ HRESULT CWater::SetUp_Components(void* pArg)
 		m_TerrainDesc.m_iTextureNum = 8;
 	else if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_BOSS)
 		m_TerrainDesc.m_iTextureNum = 10;
+	else if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_MAZE)
+		m_TerrainDesc.m_iTextureNum = 22;
 	else
 		m_TerrainDesc.m_iTextureNum = 17;
 

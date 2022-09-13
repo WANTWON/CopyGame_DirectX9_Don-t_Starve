@@ -49,15 +49,11 @@ void CLevel_Hunt::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (m_bPastLevel)
-	{
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GAMEPLAY))))
-			return;
-	}
 
-	else if (m_bNextLevel)
+	if (m_bNextLevel)
 	{
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_BOSS))))
+		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, iLevel))))
 			return;
 	}
 
@@ -241,7 +237,7 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 	CPortal::PORTALDESC PortalDesc;
-	PortalDesc.m_eType = CPortal::PORTAL_NORMAL;
+	PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
 	PortalDesc.vPosition = _float3(55.5f, 2.f, 20.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, &PortalDesc)))
@@ -281,6 +277,9 @@ HRESULT CLevel_Hunt::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_HUNT, pLayerTag, &CameraDesc)))
 		return E_FAIL;
+
+	CameraDesc.CameraDesc.fFovy = D3DXToRadian(45.0f);
+
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_HUNT, pLayerTag, &CameraDesc)))
 		return E_FAIL;

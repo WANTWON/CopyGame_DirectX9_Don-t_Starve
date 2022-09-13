@@ -44,11 +44,20 @@ HRESULT CWoodWall::Initialize(void* pArg)
 	if (m_eWallDesc.etype == WALL_END)
 		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
 
-	if (m_eWallDesc.eDir == SIDE)
-		m_pTransformCom->Turn(_float3(0, 1, 0), 1.f);
+	if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_MAZE)
+	{
+		m_pTransformCom->Set_Scale(2.f, 3.f, 1.f);
+	}
+
 
 	//WalkingTerrain();
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+
+
+	if (m_eWallDesc.eDir == SIDE)
+		m_pTransformCom->Turn(_float3(0, 1, 0), 1.f);
+
+	
 	return S_OK;
 }
 
@@ -56,11 +65,15 @@ HRESULT CWoodWall::Initialize(void* pArg)
 int CWoodWall::Tick(_float fTimeDelta)
 {
 
-	if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct() == false)
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
 	{
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_BLOCK, this);
 
+		if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct() == false)
+		{
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_BLOCK, this);
+
+		}
 	}
 		
 	__super::Tick(fTimeDelta);
@@ -94,7 +107,7 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
-	//if (m_eWallDesc.eDir == WALL_DIREND)
+	if (m_eWallDesc.eDir == WALL_DIREND)
 		SetUp_BillBoard();
 
 
@@ -180,10 +193,19 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
 	CollRectDesc.fRadiusY = 0.5f;
 	CollRectDesc.fRadiusX = 0.5f;
-	CollRectDesc.fRadiusZ = 0.2f;
+	CollRectDesc.fRadiusZ = 0.1f;
 
 	if(m_eWallDesc.etype == WALL_END)
 		CollRectDesc.fRadiusZ = 0.5f;
+	if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_MAZE)
+	{
+		CollRectDesc.fRadiusZ = 0.5f;
+	}
+	if (m_eWallDesc.eDir == SIDE)
+	{
+		CollRectDesc.fRadiusZ = 0.8f;
+		CollRectDesc.fRadiusX = 0.1f;
+	}
 	CollRectDesc.fOffSetX = 0.f;
 	CollRectDesc.fOffSetY = 0.f;
 	CollRectDesc.fOffsetZ = 0.f;

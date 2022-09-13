@@ -125,6 +125,9 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 	case LEVEL_BOSS:
 		pLoader->Loading_ForBossLevel();
 		break;
+	case LEVEL_MAZE:
+		pLoader->Loading_ForMazeLevel();
+		break;
 	}
 
 	LeaveCriticalSection(&pLoader->Get_CriticalSection());
@@ -475,7 +478,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/tile%03d.png"), 19))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/tile%03d.png"),23))))
 		return E_FAIL;
 
 	/* ���̴� �ε� ��. */
@@ -936,7 +939,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sky"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 3))))
 		return E_FAIL;
 
 
@@ -1648,6 +1651,32 @@ HRESULT CLoader::Loading_Terrain_ForBossLevel()
 	return S_OK;
 }
 
+HRESULT CLoader::Loading_Terrain_ForMazeLevel()
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	Safe_AddRef(pGameInstance);
+
+	int			iNum;
+	_ulong		dwByte = 0;
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Terrain_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_VIBuffer_Terrain_Load0"), CVIBuffer_Terrain::Create(m_pGraphic_Device, hFile, dwByte))))
+		return E_FAIL;
+
+	CloseHandle(hFile);
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
 
 HRESULT CLoader::Loading_ForHuntLevel()
 {
@@ -1857,9 +1886,46 @@ HRESULT CLoader::Loading_ForBossLevel()
 	if (FAILED(Loading_Terrain_ForBossLevel()))
 		return E_FAIL;
 
+	lstrcpy(m_szLoadingText, TEXT("Finished Loading"));
 
 	Safe_Release(pGameInstance);
-	SetWindowText(g_hWnd, TEXT("Loading_HunLevel."));
+	SetWindowText(g_hWnd, TEXT("Loading BossLevel."));
+	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ForMazeLevel()
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	Safe_AddRef(pGameInstance);
+
+	lstrcpy(m_szLoadingText, TEXT("Loading Texture"));
+
+	/*For.Prototype_Component_Texture_RockEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Rock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Roc.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_LeafEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Leaf"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 4))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_SnowEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Snow"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow.png"), 1))))
+		return E_FAIL;
+
+	if (FAILED(Loading_Terrain_ForMazeLevel()))
+		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Finished Loading"));
+
+	Safe_Release(pGameInstance);
+	SetWindowText(g_hWnd, TEXT("Loading MazeLevel."));
 	m_isFinished = true;
 	return S_OK;
 }
