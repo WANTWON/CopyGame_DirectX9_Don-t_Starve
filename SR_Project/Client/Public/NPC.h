@@ -55,6 +55,7 @@ public:/*for Actions*/
 
 	virtual void	Move(_float _fTimeDelta) = 0;
 	virtual void	Idle(_float _fTimeDelta) = 0;
+	virtual void	Interaction(_float _fTimedelta) = 0;
 	virtual void	Select_Target(_float _fTimeDelta) = 0;
 	virtual void	Set_RandPos(_float _fTimeDelta) = 0;
 
@@ -95,6 +96,9 @@ protected:
 	//NPC_STATE
 	NPC_STATE				m_eState;
 	NPC_STATE				m_ePreState;
+
+	//time
+	//_float					m_fInteractTime = 0.f;
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) =0;
 	virtual void Free() override;

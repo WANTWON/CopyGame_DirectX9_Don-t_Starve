@@ -228,14 +228,7 @@ void CWendy::Change_Motion()
 
 void CWendy::Interact(_uint Damage)
 {
-	//Test Only Berry
-	if (m_pTarget == nullptr)
-		return;
-
-	Revive_Berry(0.f);
-	dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(0);
-
-	m_bInteract = false;
+	
 }
 
 HRESULT CWendy::Drop_Items()
@@ -254,8 +247,11 @@ void CWendy::Move(_float _fTimeDelta)
 
 	m_eState = CNPC::MOVE;
 
-	if (m_eCur_Dir != m_ePre_Dir)
+	//if (m_eCur_Dir != m_ePre_Dir)
+	//{
+	if (m_ePreState != m_eState)
 	{
+		cout << "Move" << endl;
 		switch (m_eCur_Dir)
 		{
 		case DIR_UP:
@@ -274,9 +270,8 @@ void CWendy::Move(_float _fTimeDelta)
 			Change_Texture(TEXT("Com_Texture_Run_Side"));
 			break;
 		}
-		m_ePre_Dir = m_eCur_Dir;
+		m_ePreState = m_eState;
 	}
-
 
 	if (m_pTarget)
 	{
@@ -309,25 +304,39 @@ void CWendy::Idle(_float _fTimeDelta)
 
 	m_eState = CNPC::IDLE;
 
-	switch (m_eCur_Dir)
+	if (m_ePreState != m_eState)
 	{
-	case DIR_UP:
-		Change_Texture(TEXT("Com_Texture_Idle_Up"));
-		break;
+		cout << "Idle" << endl;
+		switch (m_eCur_Dir)
+		{
+		case DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Idle_Up"));
+			break;
 
-	case DIR_DOWN:
-		Change_Texture(TEXT("Com_Texture_Idle_Down"));
-		break;
+		case DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Idle_Down"));
+			break;
 
-	case DIR_LEFT:
-	case DIR_RIGHT:
-		Change_Texture(TEXT("Com_Texture_Run_Side"));
-		break;
+		case DIR_LEFT:
+		case DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Idle_Side"));
+			break;
 
+		}
+		m_ePreState = m_eState;
 	}
-
 }
 
+void CWendy::Interaction(_float _fTimedelta)
+{
+	//Test Only Berry
+	if (m_pTarget == nullptr)
+		return;
+
+	Revive_Berry(_fTimedelta);
+
+
+}
 void CWendy::Select_Target(_float _fTimeDelta)
 {
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
@@ -382,7 +391,19 @@ void CWendy::Revive_Berry(_float _fTimeDelta)
 			break;
 
 		}
+		m_ePreState = m_eState;
 	}
+
+	m_fInteractTIme += _fTimeDelta;
+
+	if (1.5f < m_fInteractTIme)
+	{
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(0);
+		m_fInteractTIme = 0.f;
+
+		m_bInteract = false;
+	}
+	
 
 }
 

@@ -157,7 +157,7 @@ class CBTTask_Interact : public CNode
 			|| dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::INTERACT) == true)
 		{
 			dynamic_cast<CNPC*>(_Obj)->Set_Activate(CNPC::INTERACT, true);
-			dynamic_cast<CNPC*>(_Obj)->Interact(_fTimeDelta);
+			dynamic_cast<CNPC*>(_Obj)->Interaction(_fTimeDelta);
 			return STATUS::RUNNING;
 		}
 	}

@@ -256,45 +256,7 @@ HRESULT CTalk::Excute(void)
 		}
 		else if (texnum == 6)
 		{
-			//CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-			//auto pinven = pinv->Get_Inven_list();
-			////Safe_Release(pinv);//üũ
-			////	Safe_AddRef(pinven);
-			//for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-			//{
-
-			//	if ((*iter)->get_texnum() == ITEMNAME_BERRY)
-			//	{
-			//		(*iter)->minus_material(3);
-
-
-			//	}
-
-			//	if ((*iter)->get_texnum() == ITEMNAME_GRASS)
-			//	{
-			//		(*iter)->minus_material(2);
-
-
-			//	}
-
-			//	if ((*iter)->get_texnum() == ITEMNAME_WOOD)
-			//	{
-			//		(*iter)->minus_material(1);
-			//	}
-			//}
-			//for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-			//{
-
-			//	if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
-			//	{
-			//		(*iter)->set_texnum(ITEMNAME_QUEST1);
-
-			//		(*iter)->set_check(true);
-
-			//		break;
-			//	}
-
-			//}
+			
 			pinv->Get_Quest_list()->front()->set_onoff(false);
 			m_bcheck = false;
 			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
@@ -374,8 +336,6 @@ HRESULT CTalk::Excute(void)
 			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 			pCamera->Set_TalkingMode(false);
 			m_bcheck = false;*/
-
-			
 
 			if (!m_SetTargetBearger)
 			{
