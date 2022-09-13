@@ -163,6 +163,7 @@
     <ClInclude Include="..\Public\BagInventory.h" />
     <ClInclude Include="..\Public\Bearger.h" />
     <ClInclude Include="..\Public\Behavior_Tree.h" />
+    <ClInclude Include="..\public\Boaron.h" />
     <ClInclude Include="..\public\Boarrior.h" />
     <ClInclude Include="..\Public\BT_NPC.h" />
     <ClInclude Include="..\Public\Bullet.h" />
@@ -228,6 +229,7 @@
     <ClInclude Include="..\Public\Pont.h" />
     <ClInclude Include="..\Public\Portal.h" />
     <ClInclude Include="..\Public\Potbutton.h" />
+    <ClInclude Include="..\Public\Poteffect.h" />
     <ClInclude Include="..\Public\PotMain.h" />
     <ClInclude Include="..\Public\Pot_back.h" />
     <ClInclude Include="..\Public\Pot_front.h" />
@@ -273,6 +275,7 @@
     <ClCompile Include="..\Private\BagInventory.cpp" />
     <ClCompile Include="..\Private\Bearger.cpp" />
     <ClCompile Include="..\Private\Behavior_Tree.cpp" />
+    <ClCompile Include="..\private\Boaron.cpp" />
     <ClCompile Include="..\private\Boarrior.cpp" />
     <ClCompile Include="..\Private\BT_NPC.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
@@ -337,6 +340,7 @@
     <ClCompile Include="..\Private\Pont.cpp" />
     <ClCompile Include="..\Private\Portal.cpp" />
     <ClCompile Include="..\Private\Potbutton.cpp" />
+    <ClCompile Include="..\Private\Poteffect.cpp" />
     <ClCompile Include="..\Private\PotMain.cpp" />
     <ClCompile Include="..\Private\Pot_back.cpp" />
     <ClCompile Include="..\Private\Pot_front.cpp" />

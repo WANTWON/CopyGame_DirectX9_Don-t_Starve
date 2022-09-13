@@ -47,27 +47,23 @@ HRESULT CQuest::Initialize(void* pArg)
 
 int CQuest::Tick(_float fTimeDelta)
 {
-	/*if (b_onoff == true && CKeyMgr::Get_Instance()->Key_Up(VK_ESCAPE))
-	{
-		b_onoff = false;
-		
-	}
-	else if (b_onoff == false && CKeyMgr::Get_Instance()->Key_Up(VK_ESCAPE))
-	{
-		b_onoff = true;
-	}*/
-
-	/*if (b_onoff == true);
-	{
-		if (texnum == 2)
-		{
-			m_fSizeX = 200.f;
-			m_fSizeY = 150.f;
-			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		}*/
+	
 
 		__super::Tick(fTimeDelta);
+		if (CKeyMgr::Get_Instance()->Key_Up('7'))
+		{
+			plus_spidercount();
+		}
 
+		if (spidercount >= 30)
+		{
+			auto line = CInventory_Manager::Get_Instance()->Get_Line_list();
+
+			for (auto k : *line)
+			{
+				k->set_quest4(true);
+			}
+		}
 
 		//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		//CInventory_Manager* pinv = CInventory_Manager::Get_Instance();

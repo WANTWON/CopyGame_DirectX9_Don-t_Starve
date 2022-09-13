@@ -128,8 +128,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, pLayerTag, _float3(10.f, 0.f, 40.f))))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, pLayerTag, _float3(10.f, 0.f, 40.f))))
+		return E_FAIL;*/
 
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Pig_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
@@ -149,9 +149,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	}
 
 	CloseHandle(hFile);
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boarrior"), LEVEL_GAMEPLAY, pLayerTag, _float3(30.f, 0.f, 22.f))))
-		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 
@@ -717,7 +714,7 @@ HRESULT CLevel_GamePlay::Ready_LayerNPC(const _tchar * pLayerTag)
 
 	if (pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC")) == nullptr)
 	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Wendy"), LEVEL_STATIC, pLayerTag, _float3(10.f, 1.f, 5.f))))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Wendy"), LEVEL_GAMEPLAY, pLayerTag, _float3(10.f, 1.f, 5.f))))
 			return E_FAIL;
 	}
 	

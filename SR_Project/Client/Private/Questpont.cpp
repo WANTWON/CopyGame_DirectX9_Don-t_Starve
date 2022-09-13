@@ -37,9 +37,16 @@ HRESULT CQuestpont::Initialize(void* pArg)
 	m_fSizeY = 24.0f;
 	m_fX = 1050.f;
 	m_fY = 380.f + (iNum * 47.0f);
+
+
+
+
+
+	
 /*
 
-
+    
+	
 
 	if (iNum >= 4)
 		m_fX += 25.f;
@@ -71,15 +78,41 @@ int CQuestpont::Tick(_float fTimeDelta)
 {
 	
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
+
+	if (pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 0 || pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 4)
+		m_bcheck = true;
+	else
+		m_bcheck = false;
 	
-	Safe_AddRef(pInventory_Manager);
 
 	if (m_bcheck == true && pInventory_Manager->Get_Quest_list()->front()->get_onoff() == true)
 	{
-		
-		Safe_Release(pInventory_Manager);
-
 		__super::Tick(fTimeDelta);
+
+		if (pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 4)
+		{
+			if (iNum == 0)
+			{
+				m_fX = 952.f;
+				m_fY = 427.f;
+			}
+
+			else if (iNum == 1)
+			{
+				m_fX = 976.f;
+				m_fY = 427.f;
+			}
+
+			else if (iNum == 2)
+			{
+				m_bcheck = false;
+			}
+		}
+		
+		
+		
+
+		
 		
 	RECT		rcRect;
 	SetRect(&rcRect, (_int)(m_fX - m_fSizeX * 0.5f), (_int)(m_fY - m_fSizeY * 0.5f), (_int)(m_fX + m_fSizeX * 0.5f), (_int)(m_fY + m_fSizeY * 0.5f));
@@ -116,7 +149,7 @@ void CQuestpont::Late_Tick(_float fTimeDelta)
 	Safe_AddRef(pInventory_Manager);
 
 
-	if (m_bcheck == true && pInventory_Manager->Get_Quest_list()->front()->get_onoff() == true && pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 0)
+	if (m_bcheck == true && pInventory_Manager->Get_Quest_list()->front()->get_onoff() == true )
 	{
 
 

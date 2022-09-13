@@ -1,3 +1,4 @@
+#pragma once
 #include "stdafx.h"
 #include "..\Public\Inventory.h"
 #include "Mouse.h"
@@ -964,62 +965,83 @@ void CInventory_Manager::update_craftpont()
 
 void CInventory_Manager::update_questpont() //for questpont
 {
-	_uint berry = 0;
-
-	_uint grass = 0;
-	_uint wood = 0;
-
-	//_uint rope = 0;
-
-	for (auto& k : m_MainInventorylist)
+	
+	for (auto& k : m_Quest)
 	{
-		if (k->get_texnum() == ITEMNAME_WOOD)
-			wood += k->get_item_number();
-		//	else if (k->get_texnum() == ITEMNAME_ROCK2)
-		//		rock2 += k->get_item_number();
-		//	else if (k->get_texnum() == ITEMNAME_MEAT)
-		//		meat += k->get_item_number();
-		else if (k->get_texnum() == ITEMNAME_GRASS)
-			grass += k->get_item_number();
+		if (k->get_texnum() == 0)
+		{
 
-		else if (k->get_texnum() == ITEMNAME_BERRY)
-			berry += k->get_item_number();
-		//	else if (k->get_texnum() == ITEMNAME_GOLD)
-		//		gold += k->get_item_number();
-		//	else if (k->get_texnum() == ITEMNAME_ROPE)
-		//		rope += k->get_item_number();
-	}
+			_uint berry = 0;
+
+			_uint grass = 0;
+			_uint wood = 0;
+
+			//_uint rope = 0;
+
+			for (auto& k : m_MainInventorylist)
+			{
+				if (k->get_texnum() == ITEMNAME_WOOD)
+					wood += k->get_item_number();
+				else if (k->get_texnum() == ITEMNAME_GRASS)
+					grass += k->get_item_number();
+
+				else if (k->get_texnum() == ITEMNAME_BERRY)
+					berry += k->get_item_number();
+
+			}
 
 
-	for (auto& k : m_Questpont)
-	{
-		if (m_Quest.front()->get_texnum() == 0)
+			for (auto& k : m_Questpont)
+			{
+
+
+				if (k->get_pontnum() == 0)
+				{
+					k->set_pont_num(berry % 10);
+				}
+
+
+				else if (k->get_pontnum() == 1)
+				{
+					k->set_pont_num(grass % 10);
+
+				}
+
+
+				else if (k->get_pontnum() == 2)
+				{
+					k->set_pont_num(wood % 10);
+				}
+			}
+		}
+		
+		else if (k->get_texnum() == 4)
 		{
 
 
-			if (k->get_pontnum() == 0)
-			{
-				k->set_pont_num(berry % 10);
+				for (auto& k : m_Questpont)
+				{
+					if (k->get_pontnum() == 0)
+					{
+						k->set_pont_num((m_Quest.front()->get_spidercount() % 100) / 10);
+						k->set_check(true);
+					
+					}
+
+					if (k->get_pontnum() == 1)
+					{
+						k->set_pont_num(m_Quest.front()->get_spidercount() % 10);
+						k->set_check(true);
+					}
+				}
+
 			}
-
-
-			else if (k->get_pontnum() == 1)
-			{
-				k->set_pont_num(grass % 10);
-
-			}
-
-
-			else if (k->get_pontnum() == 2)
-			{
-				k->set_pont_num(wood % 10);
-			}
-
-
-
 
 		}
-	}
+
+		
+	
+	
 }
 
 void CInventory_Manager::Free()

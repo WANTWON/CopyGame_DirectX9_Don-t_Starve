@@ -213,6 +213,12 @@ void CCookPot::PickingTrue()
 		if (!pInvenManager->Get_PickingPot())
 		{
 			pInvenManager->Use_pot(this);
+			/*CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			_float3 pos = Get_Position();
+			pos.y += 1.f;
+
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Poteffect"), LEVEL_HUNT, TEXT("Layer_Poteffect"), (_float3*)&pos)))
+				return;*/
 			pInvenManager->Set_PickingPot(true);
 		}
 		else

@@ -378,6 +378,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 			}
 			break;
 		case WEAPON_TYPE::BEARGER_SPECIAL: // TODO: Fix
+		case WEAPON_TYPE::BOARRIOR_SPECIAL:
 			m_bDead = OBJ_DEAD;
 			break;
 		}
@@ -490,6 +491,7 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 		break;
 
 	case WEAPON_TYPE::BEARGER_SPECIAL:
+	case WEAPON_TYPE::BOARRIOR_SPECIAL:
 		if ((m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1))
 			m_bDead = true;
 	}
@@ -1018,6 +1020,7 @@ _bool CBullet::Compare_Terrain(void)
 	case WEAPON_TYPE::WEAPON_ICESPIKE4:
 	case WEAPON_TYPE::WEAPON_MINE:
 	case WEAPON_TYPE::BEARGER_SPECIAL:
+	case WEAPON_TYPE::BOARRIOR_SPECIAL:
 		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
 
 		_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -1182,8 +1185,17 @@ HRESULT CBullet::Texture_Clone(void)
 	case WEAPON_TYPE::BEARGER_SPECIAL:
 		TextureDesc.m_iStartTex = 0;
 		TextureDesc.m_iEndTex = 34;
-		TextureDesc.m_fSpeed = 60;
+		TextureDesc.m_fSpeed = 30;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Bearger_Special"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Rocks"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+
+		break;
+	case WEAPON_TYPE::BOARRIOR_SPECIAL:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 31;
+		TextureDesc.m_fSpeed = 20;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Boarrior_Special"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Eruption"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 
@@ -1254,11 +1266,6 @@ HRESULT CBullet::Init_Data(void)
 		m_fDamage = 1.f;
 		Compare_Terrain();
 		break;
-	/*case WEAPON_TYPE::BEARGER_SPECIAL:
-		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
-		m_fDamage = 1.f;
-		Compare_Terrain();
-		break;*/
 	default:
 		break;
 

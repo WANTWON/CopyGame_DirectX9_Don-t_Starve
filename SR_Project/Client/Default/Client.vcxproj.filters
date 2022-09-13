@@ -247,8 +247,11 @@
     <Filter Include="02.GameObject\99.Camera\TargetCamera">
       <UniqueIdentifier>{53bab0ad-d3bd-4347-a01d-4870a2b3b26c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\Maze">
-      <UniqueIdentifier>{200b185f-4243-44a0-a4d7-ef5bcb9c9abf}</UniqueIdentifier>
+    <Filter Include="02.GameObject\98.UI\12.Poteffect">
+      <UniqueIdentifier>{542e39b6-6deb-4710-b8c8-e56ff05c1b83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Pawn\01.Monster\Boaron">
+      <UniqueIdentifier>{c52fab07-ab75-4164-9892-a7a9a90a7316}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -579,8 +582,11 @@
     <ClInclude Include="..\Public\CameraTarget.h">
       <Filter>02.GameObject\99.Camera\TargetCamera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_Maze.h">
-      <Filter>01.Levels\Maze</Filter>
+    <ClInclude Include="..\Public\Poteffect.h">
+      <Filter>02.GameObject\98.UI\12.Poteffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boaron.h">
+      <Filter>02.GameObject\Pawn\01.Monster\Boaron</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -899,8 +905,11 @@
     <ClCompile Include="..\Private\CameraTarget.cpp">
       <Filter>02.GameObject\99.Camera\TargetCamera</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Level_Maze.cpp">
-      <Filter>01.Levels\Maze</Filter>
+    <ClCompile Include="..\Private\Poteffect.cpp">
+      <Filter>02.GameObject\98.UI\12.Poteffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boaron.cpp">
+      <Filter>02.GameObject\Pawn\01.Monster\Boaron</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

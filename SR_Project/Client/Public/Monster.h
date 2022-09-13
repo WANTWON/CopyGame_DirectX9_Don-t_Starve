@@ -55,6 +55,8 @@ protected: /* For TransformCom*/
 
 protected:
 	const _tchar* m_TimerTag = TEXT("");
+	DIR_STATE m_eDir = DIR_STATE::DIR_DOWN;
+	DIR_STATE m_ePreDir = DIR_STATE::DIR_END;
 	_uint m_iDirOffset = 0;
 	OBJINFO m_tInfo;
 	CGameObject* m_pTarget = nullptr;
@@ -66,16 +68,19 @@ protected:
 	_float m_fAttackRadius = .5f;
 	_bool m_bAggro = false;
 	_bool m_bIsAttacking = false;
+	_bool m_bDidDamage = false;
 	_bool m_bHit = false;
 	_bool m_bPicking = false;
 	DWORD m_dwIdleTime = GetTickCount();
 	DWORD m_dwWalkTime = GetTickCount();
 	DWORD m_dwAttackTime = GetTickCount();
 	DWORD m_dwDeathTime = GetTickCount();
+	_bool m_bDeadAnimExpired = false;
 
 protected:
 	DIR_STATE Get_Unprocessed_Dir(DIR_STATE eDir);
 	DIR_STATE Get_Processed_Dir(DIR_STATE eDir);
+	void Calculate_Direction(_float3 vTargetPos);
 	virtual void AI_Behaviour(_float fTimeDelta) { };
 	virtual void Find_Target() { };
 	virtual void Follow_Target(_float fTimeDelta) { };

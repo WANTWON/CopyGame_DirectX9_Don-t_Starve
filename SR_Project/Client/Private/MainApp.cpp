@@ -32,8 +32,8 @@ HRESULT CMainApp::Initialize()
 	srand(unsigned int(time(NULL)));
 
 	Graphic_Desc.hWnd = g_hWnd;
-	Graphic_Desc.iWinSizeX = g_iWinSizeX;
-	Graphic_Desc.iWinSizeY = g_iWinSizeY;
+	Graphic_Desc.iWinSizeX = (_uint)g_iWinSizeX;
+	Graphic_Desc.iWinSizeY =(_uint) g_iWinSizeY;
 	Graphic_Desc.eWinMode = GRAPHIC_DESC::MODE_WIN;
 
 	if (FAILED(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, Graphic_Desc, &m_pGraphic_Device)))

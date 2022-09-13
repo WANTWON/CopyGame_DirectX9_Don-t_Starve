@@ -26,8 +26,8 @@ HRESULT CLevel_Boss::Initialize()
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Terrain"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
@@ -84,7 +84,13 @@ HRESULT CLevel_Boss::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 HRESULT CLevel_Boss::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
-	
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boarrior"), LEVEL_BOSS, pLayerTag, _float3(19.f, 0.f, 26.f))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
@@ -118,6 +124,20 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	
 	CloseHandle(hFile);
 
+	CHouse::HOUSEDECS HouseDesc;
+	HouseDesc.m_eState = CHouse::HOUSETYPE::BOARONSPAWNER;
+
+	HouseDesc.vInitPosition = _float3(13.f, 0.f, 26.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
+	HouseDesc.vInitPosition = _float3(25.f, 0.f, 26.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
+	HouseDesc.vInitPosition = _float3(19.f, 0.f, 20.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
+	HouseDesc.vInitPosition = _float3(19.f, 0.f, 32.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
+
+
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boaron"), LEVEL_BOSS, TEXT("Layer_Wall"), _float3(19.f, 0.f, 20.f));
 
 	Safe_Release(pGameInstance);
 	return S_OK;

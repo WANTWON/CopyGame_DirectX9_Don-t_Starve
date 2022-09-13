@@ -40,7 +40,11 @@ HRESULT CSpider::Initialize(void* pArg)
 int CSpider::Tick(_float fTimeDelta)
 {
 	if (__super::Tick(fTimeDelta))
+	{
+		CInventory_Manager::Get_Instance()->Get_Quest_list()->front()->plus_spidercount();
 		return OBJ_DEAD;
+	}
+		
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);
@@ -331,6 +335,8 @@ void CSpider::AI_Behaviour(_float fTimeDelta)
 		else
 			Follow_Target(fTimeDelta);
 	}
+	else
+		Patrol(fTimeDelta);
 }
 
 void CSpider::Find_Target()
@@ -338,24 +344,35 @@ void CSpider::Find_Target()
 	if (!m_bIsAttacking && !m_bHit && !m_bDead)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
-
 		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pTarget);
 
-		Safe_Release(pGameInstance);
-
-		if (pTarget)
+		if (pPlayer)
 		{
-			_float3 vTargetPos = pTarget->Get_Position();
-			m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
+			if (pPlayer->Get_Dead())
+			{
+				if (m_bAggro)
+				{
+					m_pTarget = nullptr;
+					m_eState = STATE::IDLE;
+					m_bAggro = false;
+				}
+				return;
+			}
 
-			if (m_fDistanceToTarget < m_fAggroRadius || m_bAggro)
-				m_bAggro = true;
+			if (pTarget)
+			{
+				_float3 vTargetPos = pTarget->Get_Position();
+				m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
 
-			m_pTarget = pTarget;
+				if (m_fDistanceToTarget < m_fAggroRadius || m_bAggro)
+					m_bAggro = true;
+
+				m_pTarget = pTarget;
+			}
+			else
+				m_pTarget = nullptr;
 		}
-		else
-			m_pTarget = nullptr;
 	}
 	else
 		m_pTarget = nullptr;
@@ -368,26 +385,64 @@ void CSpider::Follow_Target(_float fTimeDelta)
 
 	_float3 fTargetPos = m_pTarget->Get_Position();
 
-	// Set Direction
-	_float fX = fTargetPos.x - Get_Position().x;
-	_float fZ = fTargetPos.z - Get_Position().z;
-
-	// Move Horizontally
-	if (abs(fX) > abs(fZ))
-		if (fX > 0)
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_RIGHT);
-		else
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_LEFT);
-	// Move Vertically
-	else
-		if (fZ > 0)
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_UP);
-		else
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_DOWN);
+	Calculate_Direction(fTargetPos);
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
 
 	m_bIsAttacking = false;
+}
+
+void CSpider::Patrol(_float fTimeDelta)
+{
+	// Switch between Idle and Walk (based on time)
+	if (m_eState == STATE::IDLE)
+	{
+		if (GetTickCount() > m_dwIdleTime + 3000)
+		{
+			m_eState = STATE::MOVE;
+			m_dwWalkTime = GetTickCount();
+
+			// Find Random Patroling Position
+			_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
+			_int bSignX = rand() % 2;
+			_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
+			_int bSignZ = rand() % 2;
+			m_fPatrolPosX = bSignX ? (m_pTransformCom->Get_TransformDesc().InitPos.x + fOffsetX) : (m_pTransformCom->Get_TransformDesc().InitPos.x - fOffsetX);
+			m_fPatrolPosZ = bSignZ ? (m_pTransformCom->Get_TransformDesc().InitPos.z + fOffsetZ) : (m_pTransformCom->Get_TransformDesc().InitPos.z - fOffsetZ);
+		}
+	}
+	else if (m_eState == STATE::MOVE)
+	{
+		if (GetTickCount() > m_dwWalkTime + 1500)
+		{
+			m_eState = STATE::IDLE;
+			m_dwIdleTime = GetTickCount();
+		}
+	}
+
+	// Movement
+	if (m_eState == STATE::MOVE)
+	{
+		// Adjust PatrolPosition Y
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		if (!pGameInstance)
+			return;
+		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_HUNT, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+		if (!pVIBuffer_Terrain)
+			return;
+		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_HUNT, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+		if (!pTransform_Terrain)
+			return;
+
+		_float3 vPatrolPosition = { m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ };
+		_float3 vScale = m_pTransformCom->Get_Scale();
+
+		vPatrolPosition.y = pVIBuffer_Terrain->Compute_Height(vPatrolPosition, pTransform_Terrain->Get_WorldMatrix(), (1 * vScale.y / 2));
+
+		Calculate_Direction(vPatrolPosition);
+
+		m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, vPatrolPosition, _float3{ 0.f, 0.f, 0.f });
+	}
 }
 
 _float CSpider::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)

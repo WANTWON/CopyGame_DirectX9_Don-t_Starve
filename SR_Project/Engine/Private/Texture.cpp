@@ -72,37 +72,39 @@ bool CTexture::MoveFrame(const _tchar* TimerTag, _bool bLoop)
 	//CGameInstance::Get_Instance()->Update(TimerTag);
 	//m_fTimeAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TimerTag);
 
+	m_fTimeAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+
 	// Looping Animation
 	if (bLoop)
 	{
-		//if (m_fTimeAcc > 1.f / m_TextureDesc.m_fSpeed)
-		//{
+		if (m_fTimeAcc > 1.f / m_TextureDesc.m_fSpeed)
+		{
 			m_TextureDesc.m_iCurrentTex++;
 
 			if (m_TextureDesc.m_iCurrentTex >= m_TextureDesc.m_iEndTex)
 				m_TextureDesc.m_iCurrentTex = m_TextureDesc.m_iStartTex;
 
 			//CGameInstance::Get_Instance()->Set_ZeroTimeDelta(TimerTag);
-			//m_fTimeAcc = 0.f;
+			m_fTimeAcc = 0.f;
 
 			return false;
-		//}
+		}
 	}
 	// One-Time Animation
 	else
 	{
-		//if (m_fTimeAcc > 1.f / m_TextureDesc.m_fSpeed)
-		//{
+		if (m_fTimeAcc > 1.f / m_TextureDesc.m_fSpeed)
+		{
 			if (m_TextureDesc.m_iCurrentTex < m_TextureDesc.m_iEndTex)
 				m_TextureDesc.m_iCurrentTex++;
 			else
 				return true;
 
 			//CGameInstance::Get_Instance()->Set_ZeroTimeDelta(TimerTag);
-			//m_fTimeAcc = 0.f;
+			m_fTimeAcc = 0.f;
 
 			return false;
-		//}
+		}
 	}
 }
 

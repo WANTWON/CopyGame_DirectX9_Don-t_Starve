@@ -210,7 +210,7 @@ HRESULT CSpecial_Attack::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 60;
+	TextureDesc.m_fSpeed = 30;
 
 	TextureDesc.m_iEndTex = 17;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Attack_Ring"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Ring"), (CComponent**)&m_pTextureCom, &TextureDesc)))

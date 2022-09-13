@@ -12,7 +12,7 @@ namespace Client
 {
 	enum LEVEL { LEVEL_STATIC, LEVEL_LOADING, LEVEL_LOGO, LEVEL_GAMEPLAY, LEVEL_HUNT, LEVEL_MAZE, LEVEL_BOSS, LEVEL_END };
 	enum OBJID { OBJ_PLAYER, OBJ_MOUSE, OBJ_BUTTON, OBJ_MONSTER, OBJ_BULLET, OBJ_ITEM, OBJ_OBJECT, OBJ_NPC, OBJ_PORTAL, OBJ_BACKGROUND, OBJ_END };
-	enum DIR_STATE { DIR_UP, DIR_RIGHT, DIR_DOWN, DIR_LEFT, DIR_END };
+	enum DIR_STATE { DIR_DOWN, DIR_RIGHT, DIR_UP, DIR_LEFT, DIR_END };
 	enum WEAPON_TYPE { WEAPON_HAND, WEAPON_SWORD, WEAPON_STAFF, WEAPON_DART, WEAPON_BOMB, WEAPON_SMOKE, WEAPON_LIGHTNING, WEAPON_ICESPIKE1, WEAPON_ICESPIKE2, WEAPON_ICESPIKE3, WEAPON_ICESPIKE4,
 		WEAPON_MINES, WEAPON_MINE, WEAPON_PUFF, BEARGER_SPECIAL, BOARRIOR_SPECIAL, WEAPON_END };
 	enum TOOLTYPE { TOOL_GATHERING, TOOL_WEAPON, TOOL_TEST1, TOOL_TEST2, TOOL_END };
@@ -40,6 +40,12 @@ namespace Client
 		//vector<Item*> vItemDrops;
 	}OBJINFO;
 
+	typedef struct foreffect
+	{
+		_float3 pos;
+		ITEMNAME itemname;
+	}Poteffect;
+
 	typedef struct tagBulletData {
 		_bool bIsPlayerBullet;
 		WEAPON_TYPE eWeaponType;
@@ -65,5 +71,6 @@ extern HINSTANCE g_hInst;
 extern _bool		g_bLoadingfirst;
 extern _bool		g_bUIMadefirst;
 extern _bool        g_bscenechange;
+extern _uint       g_iQuestnum;
 
 using namespace Client;
