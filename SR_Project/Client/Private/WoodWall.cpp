@@ -49,6 +49,11 @@ HRESULT CWoodWall::Initialize(void* pArg)
 		m_pTransformCom->Set_Scale(2.f, 3.f, 1.f);
 	}
 
+	if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_BOSS)
+	{
+		m_pTransformCom->Set_Scale(1.5f, 3.f, 1.f);
+	}
+
 
 	//WalkingTerrain();
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -116,6 +121,7 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 			if (nullptr != m_pRendererCom)
 				m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
+			m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 	}
 		
 	
@@ -126,7 +132,7 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 
 	}
 	
-	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	
 }
 
 HRESULT CWoodWall::Render()
@@ -201,6 +207,10 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 	{
 		CollRectDesc.fRadiusZ = 0.5f;
 	}
+	if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_BOSS)
+	{
+		CollRectDesc.fRadiusZ = 0.5f;
+	}
 	if (m_eWallDesc.eDir == SIDE)
 	{
 		CollRectDesc.fRadiusZ = 0.8f;
@@ -260,7 +270,9 @@ void CWoodWall::SetUp_BillBoard()
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-	//m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+
+	if(m_eWallDesc.etype == WALL_WOOD)
+		m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 

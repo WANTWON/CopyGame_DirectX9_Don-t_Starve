@@ -34,7 +34,7 @@ public:
 	HRESULT Ready_Camera(LEVEL eLevelIndex);
 private:
 	CCamera*					m_pCurrentCamera = nullptr;
-	CAM_STATE					m_eCamState = CAM_END;
+	CAM_STATE					m_eCamState = CAM_PLAYER;
 	CAM_DIR						m_eCamDir = DIR_MAX;
 	LEVEL						m_eCurrentLevel;
 public:

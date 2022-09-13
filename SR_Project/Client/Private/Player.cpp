@@ -969,6 +969,7 @@ void CPlayer::Move_Down(_float _fTimeDelta)
 			Change_Texture(TEXT("Com_Texture_Run_Down"));
 		}
 
+
 		m_ePreState = m_eState;
 		m_ePreDirState = m_eDirState;
 
@@ -1371,7 +1372,7 @@ void CPlayer::Dead(_float _fTimeDelta)
 
 		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skeleton"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), vPos)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skeleton"), m_iCurrentLevelndex, TEXT("Layer_Object"), vPos)))
 			return;
 
 		m_bMove = true;

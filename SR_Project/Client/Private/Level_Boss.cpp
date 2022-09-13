@@ -94,7 +94,7 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Wall_Stage_Boss.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/RockWall_Stage4.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -111,6 +111,7 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	for (_uint i = 0; i < iNum; ++i)
 	{
 		ReadFile(hFile, &(WallDesc), sizeof(CWoodWall::WALLDESC), &dwByte, nullptr);
+		WallDesc.eDir = CWoodWall::WALL_DIREND;
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_BOSS, TEXT("Layer_Wall"), &WallDesc);
 	}
 
