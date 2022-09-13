@@ -54,7 +54,7 @@ int CDaycountpont::Tick(_float fTimeDelta)
 	Safe_AddRef(pinv);
 */
 
-	if (GetTickCount() > m_dwdaytime + 15000)
+	if (GetTickCount() > m_dwdaytime + 45000)
 	{
 		++texnum;
 		m_dwdaytime = GetTickCount();

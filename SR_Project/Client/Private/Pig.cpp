@@ -439,6 +439,48 @@ void CPig::PickingTrue()
 		{
 			Give_Food();
 
+			if (pMouse->Get_Item_name() == ITEMNAME_MEATBALL)
+			{
+				auto k = (*pInvenManager->Get_Line_list());
+
+				for (auto i : k)
+				{
+					if (i->get_pontnum() == 0)
+						i->set_quest2(true);
+					break;
+				}
+
+			}
+			else if (pMouse->Get_Item_name() == ITEMNAME_LASAGNA)
+			{
+				auto k = (*pInvenManager->Get_Line_list());
+
+				for (auto i : k)
+				{
+					if (i->get_pontnum() == 1)
+					{
+						i->set_quest2(true);
+						break;
+					}
+						
+				}
+
+			}
+			else if (pMouse->Get_Item_name() == ITEMNAME_NUGGET)
+			{
+				auto k = (*pInvenManager->Get_Line_list());
+
+				for (auto i : k)
+				{
+					if (i->get_pontnum() == 2)
+					{
+						i->set_quest2(true);
+						break;
+					}
+						
+				}
+
+			}
 			// TODO: 
 			// Reset Mouse State
 			// Decrease Item Inventory Counter

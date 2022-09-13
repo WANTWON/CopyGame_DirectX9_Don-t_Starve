@@ -97,6 +97,7 @@
 
 #include "Eatitem.h"
 #include "CameraManager.h"
+#include "Poteffect.h"
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -609,7 +610,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_quest */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_quest"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/quest/quest%d.png"), 3))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/quest/quest%d.png"), 6))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_quest */
@@ -619,7 +620,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_talk */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_talk"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/talk/talk%d.png"), 13))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/talk/talk%d.png"), 30))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_logoscene */
@@ -918,6 +919,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Daypont"),
 		CDaypont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Poteffect"),
+		CPoteffect::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	

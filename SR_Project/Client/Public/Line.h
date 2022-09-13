@@ -52,6 +52,10 @@ public:
 	int get_pontex() { return texnum; }
 	void set_makewhat(MAKEWHAT item) { m_makewhat = item; }
 	void plus_quest2count() { ++quest2count; }
+	void plus_quest3count() { ++quest3count; }
+	void set_quest2(bool tof) { m_bquest2 = tof; }
+	void set_quest3(bool tof) { m_bquest3 = tof; }
+	void set_quest4(bool tof) { m_bquest4 = tof; }
 
 	void gobackfirstX() { m_fX = m_firstx; }
 	void gobackfirstY() { m_fX = m_firsty; }
@@ -62,8 +66,13 @@ private:
 	int iNum = 0;
 	int texnum = 0;
 	bool m_bcheck = true;
+	bool m_bquest2 = false;
+	bool m_bquest3 = false;
+	bool m_bquest4 = false;
+	
 	_uint questnum = 0;
 	_uint quest2count = 0;
+	_uint quest3count = 0;
 
 	MAKEWHAT m_makewhat = MAKE_END;
 };

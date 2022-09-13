@@ -73,7 +73,7 @@ public:
 	void gobackfirstY() { m_fX = m_firsty; }
 
 	//void set_makewhat(ITEMNAME item) { m_makewhat = item; }
-	void craft();
+	ITEMNAME craft();
 private:
 	int* iNumber = nullptr;
 	int iNum = 0;
@@ -88,6 +88,8 @@ private:
 	_uint texnum = 0;
 
 	TOOLTYPE  m_tooltype = TOOL_END;
+
+	DWORD m_dwTime = GetTickCount();
 
 	bool m_bcheck_pot = false;
 

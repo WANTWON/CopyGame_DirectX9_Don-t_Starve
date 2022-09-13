@@ -54,6 +54,7 @@ public:
 	void set_check(bool tof) { m_bcheck = tof; }
 	void set_check_bag(bool tof) { m_bcheck_bag = tof; }
 	void plus_itemcount() { ++item_number; }
+	void plus_itemcount2( _uint num) { item_number+= num; }
 	void minus_itemcount() { --item_number; }
 	void minus_material(_uint minus) { item_number -= minus; }
 	void set_itemcount(_uint count) { item_number = count; }
