@@ -111,7 +111,7 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	for (_uint i = 0; i < iNum; ++i)
 	{
 		ReadFile(hFile, &(WallDesc), sizeof(CWoodWall::WALLDESC), &dwByte, nullptr);
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_STATIC, TEXT("Layer_Wall"), &WallDesc);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_BOSS, TEXT("Layer_Wall"), &WallDesc);
 	}
 
 	

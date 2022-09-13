@@ -1608,7 +1608,7 @@ HRESULT CLoader::Loading_Terrain_ForHuntLevel()
 
 	int			iNum;
 	_ulong		dwByte = 0;
-	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Terrain_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Terrain_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 

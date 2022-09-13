@@ -134,7 +134,7 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Tree_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Tree_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -171,7 +171,7 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Grass_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Grass_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -190,7 +190,7 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 
 
 
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Wall_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Wall_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -207,7 +207,7 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 	for (_uint i = 0; i < iNum; ++i)
 	{
 		ReadFile(hFile, &(WallDesc), sizeof(CWoodWall::WALLDESC), &dwByte, nullptr);
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_STATIC, TEXT("Layer_Wall"), &WallDesc);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_HUNT, TEXT("Layer_Wall"), &WallDesc);
 	}
 
 
@@ -221,7 +221,7 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	PortalDesc.m_eType = CPortal::PORTAL_BOSS;
-	PortalDesc.vPosition = _float3(100.f, 2.f, 30.f);
+	PortalDesc.vPosition = _float3(102.f, 2.f, 24.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, &PortalDesc)))
 		return E_FAIL;
