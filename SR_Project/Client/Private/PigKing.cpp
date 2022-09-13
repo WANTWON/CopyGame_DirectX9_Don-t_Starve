@@ -6,6 +6,8 @@
 #include "Item.h"
 #include "CameraManager.h"
 
+_uint g_iQuestnum = 0;
+
 CPigKing::CPigKing(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CNPC(pGraphic_Device)
 {
@@ -214,54 +216,55 @@ void CPigKing::Interact(_uint Damage)
 			   {
 					success = true;
 			    }
-				if(m_iQuestnum ==0 || m_iQuestnum == 3)
+				if(g_iQuestnum ==0 || g_iQuestnum == 3)
 				++count;
 
 				
 			}
 		}
-		if (count >= 3 && m_iQuestnum == 0 )
+
+		if (count >= 3 && g_iQuestnum == 0)
 		{
-			++m_iQuestnum;
+			++g_iQuestnum;
 			pinven->Get_Talk_list()->front()->settexnum(3);
 			
 		}
-		else if (m_iQuestnum == 1 )
+		else if (g_iQuestnum == 1 )
 		{
 			pinven->Get_Talk_list()->front()->settexnum(7);
 			
-			m_iQuestnum = 2;
+			g_iQuestnum = 2;
 
 		}
-		else if (success && m_iQuestnum == 2 )
+		else if (success && g_iQuestnum == 2 )
 		{
 			
 			pinven->Get_Talk_list()->front()->settexnum(9);
-			m_iQuestnum = 3;
+			g_iQuestnum = 3;
 		}
-		else if (count >=3 && m_iQuestnum == 3)
+		else if (count >=3 && g_iQuestnum == 3)
 		{
 
 			pinven->Get_Talk_list()->front()->settexnum(13);
-			m_iQuestnum = 4;
+			g_iQuestnum = 4;
 		}
-		else if (m_iQuestnum == 4)
+		else if (g_iQuestnum == 4)
 		{
 			pinven->Get_Talk_list()->front()->settexnum(16);
-			m_iQuestnum = 5;
+			g_iQuestnum = 5;
 		}
-		else if (m_iQuestnum == 5&& success )
+		else if (g_iQuestnum == 5&& success )
 		{
 			pinven->Get_Talk_list()->front()->settexnum(19);
-			m_iQuestnum = 6;
+			g_iQuestnum = 6;
 			
 		}
-		else if (m_iQuestnum == 6 && pinven->Get_Quest_list()->front()->get_spidercount() >= 30)
+		else if (g_iQuestnum == 6 && pinven->Get_Quest_list()->front()->get_spidercount() >= 30)
 		{
 			pinven->Get_Talk_list()->front()->settexnum(26);
 			m_iQuestnum = 7;
 		}
-		/*else if (m_iQuestnum == 1 && count1 >= 1)
+		/*else if (g_iQuestnum == 1 && count1 >= 1)
 		{
 			
 		}*/

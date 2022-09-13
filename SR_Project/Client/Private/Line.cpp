@@ -396,6 +396,23 @@ void CLine::set_line()
 
 	}
 
+	else if (pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 5)  // quest 1
+	{
+
+		/*if (m_bquest4 == true)
+		{
+			m_bcheck = true;
+		}
+		else
+			m_bcheck = false;
+
+
+		if (iNum == 0 || iNum == 2)*/
+			m_bcheck = false;
+
+
+	}
+
 }
 	
 
