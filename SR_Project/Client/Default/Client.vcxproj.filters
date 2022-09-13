@@ -250,6 +250,9 @@
     <Filter Include="02.GameObject\98.UI\12.Poteffect">
       <UniqueIdentifier>{542e39b6-6deb-4710-b8c8-e56ff05c1b83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Pawn\01.Monster\Boaron">
+      <UniqueIdentifier>{c52fab07-ab75-4164-9892-a7a9a90a7316}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -582,6 +585,9 @@
     <ClInclude Include="..\Public\Poteffect.h">
       <Filter>02.GameObject\98.UI\12.Poteffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Boaron.h">
+      <Filter>02.GameObject\Pawn\01.Monster\Boaron</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -901,6 +907,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Poteffect.cpp">
       <Filter>02.GameObject\98.UI\12.Poteffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boaron.cpp">
+      <Filter>02.GameObject\Pawn\01.Monster\Boaron</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

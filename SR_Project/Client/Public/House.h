@@ -14,13 +14,12 @@ BEGIN(Client)
 class CHouse final : public CGameObject
 {
 public:
-	enum HOUSETYPE { PIGHOUSE, SPIDERHOUSE, HOUSE_END };
+	enum HOUSETYPE { PIGHOUSE, SPIDERHOUSE, BOARONSPAWNER, HOUSE_END };
 
 	typedef struct HouseTag
 	{
 		HOUSETYPE m_eState = HOUSE_END;
 		_float3 vInitPosition = _float3( 0.f,0.f,0.f );
-
 	}HOUSEDECS;
 
 private:
@@ -36,7 +35,6 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	_float3 Get_Pos() { return m_pTransformCom->Get_State(CTransform::STATE_POSITION); }
 	HOUSEDECS Get_Desc() { return m_HouseDesc; }
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
 
@@ -48,6 +46,7 @@ private:
 private: /* For TransformCom*/
 	void SetUp_BillBoard();
 	void WalkingTerrain();
+
 private: /* For.Components */
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
@@ -55,12 +54,16 @@ private: /* For.Components */
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 
 private:
+	void Spawn_Spider(_float fTimeDelta);
+	void Spawn_Boaron(_float fTimeDelta);
+
+private:
 	HOUSEDECS m_HouseDesc;
 	const _tchar* m_TimerTag = TEXT("");
 	_float m_fTerrain_Height = 0.f;
 
-	_int m_MonsterMaxCount = 4;
-	DWORD m_dwTime;
+	_int m_MonsterMaxCount = 0;
+	_float m_fSpawnTime = 999.f;
 
 public:
 	static CHouse* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
