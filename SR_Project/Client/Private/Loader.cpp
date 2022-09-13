@@ -14,7 +14,6 @@
 #include "Bearger.h"
 #include "Boarrior.h"
 #include "Terrain.h"
-#include "CameraDynamic.h"
 #include "Sky.h"
 #include "Tree.h"
 #include "Grass.h"
@@ -90,14 +89,15 @@
 #include "Potbutton.h"
 #include "Questbutton.h"
 
-#include "CameraFPS.h"
 #include "Mouse_iteminfo.h"
 
 #include "Deadcountpont.h"
 #include "Deadmain.h"
 #include "Daypont.h"
 
-#include"Eatitem.h"
+#include "Eatitem.h"
+#include "CameraManager.h"
+#include "Poteffect.h"
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -610,7 +610,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_quest */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_quest"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/quest/quest%d.png"), 3))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/quest/quest%d.png"), 6))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_quest */
@@ -620,7 +620,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_talk */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_talk"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/talk/talk%d.png"), 13))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/talk/talk%d.png"), 30))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_logoscene */
@@ -648,7 +648,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/DeadUI/dead%d.png"), 1))))
 		return E_FAIL;
 
-
+	/*For Prototype Component_Texture_rockWall  */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/RockWall/Healthy/Healthy_%03d.png"), 3))))
+		return E_FAIL;
 
 	
 
@@ -916,6 +919,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Daypont"),
 		CDaypont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Poteffect"),
+		CPoteffect::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	
@@ -1486,6 +1493,13 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CCameraFPS::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+
+	/*For.Prototype_GameObject_Camera_Target */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Target"),
+		CCameraTarget::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+
 	/*For.Prototype_GameObject_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
 		CSky::Create(m_pGraphic_Device))))
@@ -1599,7 +1613,7 @@ HRESULT CLoader::Loading_Terrain_ForHuntLevel()
 
 	int			iNum;
 	_ulong		dwByte = 0;
-	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Terrain_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Terrain_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -1669,6 +1683,20 @@ HRESULT CLoader::Loading_ForHuntLevel()
 		return E_FAIL;
 
 #pragma endregion Add_Texture_Tree
+
+	/*For. Prototype_Component_Texture_Grass*/
+#pragma region Add_Texture_Grass
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Grass_IDLE"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Grass2/Idle/Idle_%03d.png"), 15))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Grass_PICK"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Grass2/Pick/Pick_%03d.png"), 15))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Grass_PICKED"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Grass2/Picked/Picked_%03d.png"), 1))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Grass
+
 
 	/*For. Prototype_Component_Texture_Spider*/
 #pragma region Add_Texture_Spider
@@ -1822,9 +1850,6 @@ HRESULT CLoader::Loading_ForBossLevel()
 	if (FAILED(Loading_Terrain_ForBossLevel()))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/RockWall/Healthy/Healthy_%03d.png"), 3))))
-		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 	SetWindowText(g_hWnd, TEXT("Loading_HunLevel."));

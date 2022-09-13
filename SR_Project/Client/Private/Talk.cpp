@@ -54,31 +54,33 @@ int CTalk::Tick(_float fTimeDelta)
 	if (m_bcheck == true)
 	{
 		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-		Safe_AddRef(pinv);
+		
 		__super::Tick(fTimeDelta);
 
 		
 ////////////////////////////// Bearger 등장 카메라 테스트 //////////////////////////
-		if (m_SetTargetBearger)
-		{
-			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-			pCamera->Set_TalkingMode(true);
-			CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
-			pCamera->Set_Target(pGameObject);
-		}
 		
 		if (CGameInstance::Get_Instance()->Key_Up(VK_F3))
 		{
 			if (!m_SetTargetBearger)
 			{
-				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-				pCamera->Set_TalkingMode(false);
+				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+				CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(true);
+				CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
+				pCamera->Set_Target(pGameObject);
 				m_SetTargetBearger = true;
 			}
+			else
+			{
+				CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+				m_SetTargetBearger = false;
+			}
+				
 		}
-
 ///////////////////////////////////////////////////////////////////////////////////////////
-		//if (CKeyMgr::Get_Instance()->Key_Up('0'))
 		if(m_bActivated)
 		{
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -92,10 +94,8 @@ int CTalk::Tick(_float fTimeDelta)
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
 				m_bActivated = false;
-
 				pPlayer->Set_TalkMode(false);
 				pPlayer->Set_bOnlyActionKey(false);
-
 		     	Safe_Release(pinv);
 				
 					
@@ -161,7 +161,6 @@ int CTalk::Tick(_float fTimeDelta)
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
 				m_bActivated = false;
-
 				pPlayer->Set_TalkMode(false);
 				pPlayer->Set_bOnlyActionKey(false);
 				Safe_Release(pinv);
@@ -174,10 +173,103 @@ int CTalk::Tick(_float fTimeDelta)
 				pCamera->Set_TalkingMode(false);
 				m_bcheck = false;
 				m_bActivated = false;
-
 				pPlayer->Set_TalkMode(false);
 				pPlayer->Set_bOnlyActionKey(false);
-				Safe_Release(pinv);
+				Safe_Release(pinv);			
+			}
+
+			else if (texnum == 15)
+			{
+				auto pinven = pinv->Get_Inven_list();
+			
+				
+				for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+				{
+					if ((*iter)->get_texnum() == (ITEMNAME_ROCK2) && (*iter)->get_check() == true && (*iter)->get_item_number() <= 99)
+					{
+						(*iter)->plus_itemcount2(20);   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
+						break;
+					}
+					else if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+					{
+						(*iter)->set_texnum(ITEMNAME_ROCK2);
+						(*iter)->plus_itemcount2(20);
+
+						(*iter)->set_check(true);
+
+						break;
+					}
+
+				}
+				pinv->Get_Quest_list()->front()->set_onoff(false);
+				m_bcheck = false;
+				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				//m_bcheck = false;
+				
+			}
+
+			else if (texnum == 16)
+			{
+				/*pinv->Get_Quest_list()->front()->set_onoff(true);
+				pinv->Get_Quest_list()->front()->set_texnum(3);
+				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				m_bcheck = false;*/
+
+				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, TEXT("Layer_Bear"), _float3(10.f, 0.f, 40.f))))
+					return E_FAIL;
+
+				if (!m_SetTargetBearger)
+				{
+					CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+					CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+					pCamera->Set_TalkingMode(true);
+					CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Bear"));
+					pCamera->Set_Target(pGameObject);
+					m_SetTargetBearger = true;
+				}
+				else if (m_SetTargetBearger)
+				{
+					++texnum;
+				}
+
+			}
+			else if (texnum == 18)
+			{
+
+			if(m_SetTargetBearger)
+			{
+				CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+				m_SetTargetBearger = false;
+			}
+				pinv->Get_Quest_list()->front()->set_onoff(true);
+				pinv->Get_Quest_list()->front()->set_texnum(3);
+				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				m_bcheck = false;
+
+			}
+
+			else if (texnum == 25)
+			{
+				pinv->Get_Quest_list()->front()->set_onoff(true);
+				pinv->Get_Quest_list()->front()->set_texnum(4);
+				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				m_bcheck = false;
+
+			}
+
+			else if (texnum == 29)
+			{
+				pinv->Get_Quest_list()->front()->set_onoff(true);
+				pinv->Get_Quest_list()->front()->set_texnum(5);
+				CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+				pCamera->Set_TalkingMode(false);
+				m_bcheck = false;
 			}
 			else {
 				++texnum;

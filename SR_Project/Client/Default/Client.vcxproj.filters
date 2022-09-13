@@ -244,6 +244,12 @@
     <Filter Include="02.GameObject\Pawn\04.Interactive_Object\NPC\Pig King">
       <UniqueIdentifier>{7a569719-d033-4a90-bd6a-eecfe70825a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.Camera\TargetCamera">
+      <UniqueIdentifier>{53bab0ad-d3bd-4347-a01d-4870a2b3b26c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\12.Poteffect">
+      <UniqueIdentifier>{542e39b6-6deb-4710-b8c8-e56ff05c1b83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -570,6 +576,12 @@
     <ClInclude Include="..\Public\Pawn.h">
       <Filter>02.GameObject\Pawn</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CameraTarget.h">
+      <Filter>02.GameObject\99.Camera\TargetCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Poteffect.h">
+      <Filter>02.GameObject\98.UI\12.Poteffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -883,6 +895,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Pawn.cpp">
       <Filter>02.GameObject\Pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraTarget.cpp">
+      <Filter>02.GameObject\99.Camera\TargetCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Poteffect.cpp">
+      <Filter>02.GameObject\98.UI\12.Poteffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

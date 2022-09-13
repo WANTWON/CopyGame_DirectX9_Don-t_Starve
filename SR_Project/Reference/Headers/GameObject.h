@@ -47,6 +47,7 @@ protected:
 	_float												m_fRadius = 0.5;
 	_bool												m_bDead = false;
 	_bool												m_bConstruct = false;
+	_float4x4											m_CollisionMatrix;
 
 protected:
 	HRESULT Add_Components(const _tchar* pComponentTag, _uint iLevelIndex, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg = nullptr);

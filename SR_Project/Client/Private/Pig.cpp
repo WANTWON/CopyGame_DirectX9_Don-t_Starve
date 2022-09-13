@@ -37,6 +37,9 @@ HRESULT CPig::Initialize(void* pArg)
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_fAttackRadius = .8f;
 
+
+	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+
 	return S_OK;
 }
 
@@ -82,11 +85,10 @@ void CPig::Late_Tick(_float fTimeDelta)
 		m_bPicking = true;
 	}
 
-	if (m_eDir == DIR_STATE::DIR_LEFT)
-		m_pColliderCom->Set_IsInverse(true);
-	else
-		m_pColliderCom->Set_IsInverse(false);
-	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+
+	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+
 }
 
 HRESULT CPig::Render()
@@ -437,6 +439,48 @@ void CPig::PickingTrue()
 		{
 			Give_Food();
 
+			if (pMouse->Get_Item_name() == ITEMNAME_MEATBALL)
+			{
+				auto k = (*pInvenManager->Get_Line_list());
+
+				for (auto i : k)
+				{
+					if (i->get_pontnum() == 0)
+						i->set_quest2(true);
+					break;
+				}
+
+			}
+			else if (pMouse->Get_Item_name() == ITEMNAME_LASAGNA)
+			{
+				auto k = (*pInvenManager->Get_Line_list());
+
+				for (auto i : k)
+				{
+					if (i->get_pontnum() == 1)
+					{
+						i->set_quest2(true);
+						break;
+					}
+						
+				}
+
+			}
+			else if (pMouse->Get_Item_name() == ITEMNAME_NUGGET)
+			{
+				auto k = (*pInvenManager->Get_Line_list());
+
+				for (auto i : k)
+				{
+					if (i->get_pontnum() == 2)
+					{
+						i->set_quest2(true);
+						break;
+					}
+						
+				}
+
+			}
 			// TODO: 
 			// Reset Mouse State
 			// Decrease Item Inventory Counter

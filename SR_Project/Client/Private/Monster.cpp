@@ -170,6 +170,18 @@ void CMonster::WalkingTerrain()
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
+DIR_STATE CMonster::Get_Unprocessed_Dir(DIR_STATE eDir)
+{
+	DIR_STATE eOldDir = (DIR_STATE)((int)eDir - m_iDirOffset);
+	if (eOldDir < 0)
+	{
+		eDir = (DIR_STATE)((int)eOldDir + 4);
+		return eDir;
+	}
+
+	return eOldDir;
+}
+
 DIR_STATE CMonster::Get_Processed_Dir(DIR_STATE eDir)
 {
 	DIR_STATE eNewDir = (DIR_STATE)((int)eDir + m_iDirOffset);

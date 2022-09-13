@@ -206,8 +206,7 @@ void CPigKing::Interact(_uint Damage)
 
 		auto line = pinven->Get_Line_list();
 		
-
-		for (auto iter = line->begin(); iter != line->end(); ++iter)
+        for (auto iter = line->begin(); iter != line->end(); ++iter)
 		{
 			if ((*iter)->get_check() == true)
 			{
@@ -215,7 +214,7 @@ void CPigKing::Interact(_uint Damage)
 			   {
 					success = true;
 			    }
-				if(m_iQuestnum ==0)
+				if(m_iQuestnum ==0 || m_iQuestnum == 3)
 				++count;
 
 				
@@ -239,6 +238,28 @@ void CPigKing::Interact(_uint Damage)
 			
 			pinven->Get_Talk_list()->front()->settexnum(9);
 			m_iQuestnum = 3;
+		}
+		else if (count >=3 && m_iQuestnum == 3)
+		{
+
+			pinven->Get_Talk_list()->front()->settexnum(13);
+			m_iQuestnum = 4;
+		}
+		else if (m_iQuestnum == 4)
+		{
+			pinven->Get_Talk_list()->front()->settexnum(16);
+			m_iQuestnum = 5;
+		}
+		else if (m_iQuestnum == 5&& success )
+		{
+			pinven->Get_Talk_list()->front()->settexnum(19);
+			m_iQuestnum = 6;
+			
+		}
+		else if (m_iQuestnum == 6 && pinven->Get_Quest_list()->front()->get_spidercount() >= 30)
+		{
+			pinven->Get_Talk_list()->front()->settexnum(26);
+			m_iQuestnum = 7;
 		}
 		/*else if (m_iQuestnum == 1 && count1 >= 1)
 		{

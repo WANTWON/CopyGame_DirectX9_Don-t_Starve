@@ -36,14 +36,18 @@ HRESULT CSpiderWarrior::Initialize(void* pArg)
 	m_tInfo.fDamage = 10.f;
 
 	m_fAttackRadius = 2.f;
-
+	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 	return S_OK;
 }
 
 int CSpiderWarrior::Tick(_float fTimeDelta)
 {
 	if (__super::Tick(fTimeDelta))
+	{
+		CInventory_Manager::Get_Instance()->Get_Quest_list()->front()->plus_spidercount();
 		return OBJ_DEAD;
+	}
+		
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);
@@ -60,11 +64,9 @@ void CSpiderWarrior::Late_Tick(_float fTimeDelta)
 	Change_Motion();
 	Change_Frame(fTimeDelta);
 
-	if (m_eDir == DIR_STATE::DIR_LEFT)
-		m_pColliderCom->Set_IsInverse(true);
-	else
-		m_pColliderCom->Set_IsInverse(false);
-	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+
 }
 
 HRESULT CSpiderWarrior::Render()

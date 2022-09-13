@@ -53,6 +53,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_iPreLevelIndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
+	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 	
 
 	return S_OK;
@@ -147,7 +148,11 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
 	}
 	
+
 	Setup_Collider();
+
+	
+
 
 	Create_Bullet();
 }
@@ -522,20 +527,26 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		m_bIsFPS = false;
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMLEFT]))
+	else if (CKeyMgr::Get_Instance()->Key_Up(m_KeySets[INTERACTKEY::KEY_CAMLEFT]))
 	{
 		if (m_bIsFPS)
 			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
 		else
 		{
-			
+
 			CCameraManager::Get_Instance()->PlayerCamera_TurnLeft(m_iCurrentLevelndex);
 			Turn_OriginMat(false);
 			SetUp_BillBoard();
 		}
 
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_CAMLEFT]))
+	{
+		if (m_bIsFPS)
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
+		
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Up(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
 		if (m_bIsFPS)
 			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), -_fTimeDelta);
@@ -546,6 +557,13 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			SetUp_BillBoard();
 		}
 	}
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
+	{
+		if (m_bIsFPS)
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), -_fTimeDelta);
+		
+	}
+
 
 #pragma endregion Debug&CamKey	
 
@@ -1361,9 +1379,12 @@ void CPlayer::Revive(_float _fTimeDelta)
 			break;
 		}
 		m_ePreState = m_eState;
+
+		CCamera* pCamera =  CCameraManager::Get_Instance()->Get_CurrentCamera();
+		dynamic_cast<CCameraDynamic*>(pCamera)->Set_CamMode(CCameraDynamic::CAM_REVIVE);
 	}
 
-	if (m_fReviveTime > 3.f &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	if (m_fReviveTime > 1.5f &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
 		
 		Change_Texture(TEXT("Com_Texture_Idle_Down"));
@@ -1374,7 +1395,7 @@ void CPlayer::Revive(_float _fTimeDelta)
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(10);
 		m_fReviveTime = 0.f;
 	}
-	else if (m_fReviveTime < 3.f && m_pTextureCom->Get_Frame().m_iCurrentTex == 15)
+	else if (m_fReviveTime < 1.5f && m_pTextureCom->Get_Frame().m_iCurrentTex == 15)
 	{
 		m_pTextureCom->Get_Frame().m_iCurrentTex = 9;
 	}
@@ -1817,12 +1838,8 @@ _bool CPlayer::Check_Dead()
 
 void CPlayer::Setup_Collider(void)
 {
-	if (m_eDirState == DIR_STATE::DIR_LEFT)
-		m_pColliderCom->Set_IsInverse(true);
-	else
-		m_pColliderCom->Set_IsInverse(false);
-	m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
-
+	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 
 	//Block Collision
 	_float3 vDistance = _float3(0, 0, 0);

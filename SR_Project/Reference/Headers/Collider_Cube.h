@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Component.h"
+#include "Transform.h"
 BEGIN(Engine)
+
 
 class ENGINE_DLL CCollider_Cube final : public CComponent
 {
@@ -26,6 +28,9 @@ public:
 	_bool	Collision_Check(CCollider_Cube* pTarget, _float3* pOutDistance = nullptr);
 
 public:
+	void Set_Position(CTransform* pTransform) {}
+
+public:
 	COLLRECTDESC Get_CollRectDesc() { return m_StateDesc; }
 	_float3						m_vPoint[8];
 	_bool						m_bIsInverse = false;
@@ -35,6 +40,8 @@ public:
 
 protected:
 	COLLRECTDESC		m_StateDesc;
+	class CTransform*	m_pTransform = nullptr;
+	static _tchar*		m_pTransformTag;
 
 protected:
 	LPDIRECT3DVERTEXBUFFER9  m_pVB = nullptr;

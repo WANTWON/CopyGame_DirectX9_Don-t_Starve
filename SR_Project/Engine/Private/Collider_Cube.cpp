@@ -1,6 +1,8 @@
 #include "..\Public\Collider_Cube.h"
 
 
+_tchar* CCollider_Cube::m_pTransformTag = TEXT("Com_Transform");
+
 CCollider_Cube::CCollider_Cube(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CComponent(pGraphic_Device)
 {
@@ -107,6 +109,10 @@ HRESULT CCollider_Cube::Initialize_Prototype()
 
 HRESULT CCollider_Cube::Initialize(void * pArg)
 {
+	m_pTransform = CTransform::Create(m_pGraphic_Device);
+	if (m_pTransform == nullptr)
+		return E_FAIL;
+
 	if (pArg != nullptr)
 	{
 		memcpy(&m_StateDesc, pArg, sizeof(COLLRECTDESC));
@@ -127,31 +133,30 @@ HRESULT CCollider_Cube::Initialize(void * pArg)
 
 		m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&pVertices, 0);
 
-		//_float3 InitPos = _float3(40.f, 5.f, 25.f);
 
 		pVertices[0].vPosition = m_vPoint[0] = _float3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);// + InitPos;
 		pVertices[0].vTexture = pVertices[0].vPosition;
 
 		pVertices[1].vPosition = m_vPoint[1] = _float3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);// +InitPos;
-		pVertices[0].vTexture = pVertices[1].vPosition;
+		pVertices[1].vTexture = pVertices[1].vPosition;
 
 		pVertices[2].vPosition = m_vPoint[2] = _float3(m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);// +InitPos;
-		pVertices[0].vTexture = pVertices[2].vPosition;
+		pVertices[2].vTexture = pVertices[2].vPosition;
 
 		pVertices[3].vPosition = m_vPoint[3] = _float3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);// +InitPos;
-		pVertices[0].vTexture = pVertices[3].vPosition;
+		pVertices[3].vTexture = pVertices[3].vPosition;
 
 		pVertices[4].vPosition = m_vPoint[4] = _float3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, m_StateDesc.fRadiusZ);// + InitPos;
-		pVertices[0].vTexture = pVertices[4].vPosition;
+		pVertices[4].vTexture = pVertices[4].vPosition;
 
 		pVertices[5].vPosition = m_vPoint[5] = _float3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, m_StateDesc.fRadiusZ);// +InitPos;
-		pVertices[0].vTexture = pVertices[5].vPosition;
+		pVertices[5].vTexture = pVertices[5].vPosition;
 
 		pVertices[6].vPosition = m_vPoint[6] = _float3(m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, m_StateDesc.fRadiusZ);// +InitPos;
-		pVertices[0].vTexture = pVertices[6].vPosition;
+		pVertices[6].vTexture = pVertices[6].vPosition;
 
-		pVertices[7].vPosition = m_vPoint[7] = _float3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);// +InitPos;
-		pVertices[0].vTexture = pVertices[7].vPosition;
+		pVertices[7].vPosition = m_vPoint[7] = _float3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, m_StateDesc.fRadiusZ);// +InitPos;
+		pVertices[7].vTexture = pVertices[7].vPosition;
 		m_pVB->Unlock();
 
 		m_iIndicesByte = sizeof(FACEINDICES16);
@@ -200,17 +205,17 @@ HRESULT CCollider_Cube::Initialize(void * pArg)
 HRESULT CCollider_Cube::Update_ColliderBox(_float4x4 WorldMatrix)
 {
 
-	m_vPoint[0] = _float3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);// + InitPos;
-	m_vPoint[1] = _float3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);// +InitPos;
-	m_vPoint[2] = _float3(m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);// +InitPos;
-	m_vPoint[3] = _float3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);// +InitPos;
-	m_vPoint[4] = _float3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, m_StateDesc.fRadiusZ);// + InitPos;
-	m_vPoint[5] = _float3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, m_StateDesc.fRadiusZ);// +InitPos;
-	m_vPoint[6] = _float3(m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, m_StateDesc.fRadiusZ);// +InitPos;
-	m_vPoint[7] = _float3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, m_StateDesc.fRadiusZ);// +InitPos;
-
-
 	m_StateDesc.StateMatrix = WorldMatrix;
+
+	m_vPoint[0] = _float3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);
+	m_vPoint[1] = _float3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);
+	m_vPoint[2] = _float3(m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);
+	m_vPoint[3] = _float3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, -m_StateDesc.fRadiusZ);
+	m_vPoint[4] = _float3(-m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, m_StateDesc.fRadiusZ);
+	m_vPoint[5] = _float3(m_StateDesc.fRadiusX, m_StateDesc.fRadiusY, m_StateDesc.fRadiusZ);
+	m_vPoint[6] = _float3(m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, m_StateDesc.fRadiusZ);
+	m_vPoint[7] = _float3(-m_StateDesc.fRadiusX, -m_StateDesc.fRadiusY, m_StateDesc.fRadiusZ);
+
 	_float3 vecOffsetPos = *(_float3*)&(m_StateDesc.StateMatrix.m[3][0]);
 	vecOffsetPos.x += m_StateDesc.fOffSetX;
 	vecOffsetPos.y += m_StateDesc.fOffSetY;
@@ -220,12 +225,11 @@ HRESULT CCollider_Cube::Update_ColliderBox(_float4x4 WorldMatrix)
 	m_StateDesc.StateMatrix.m[3][1] = vecOffsetPos.y;
 	m_StateDesc.StateMatrix.m[3][2] = vecOffsetPos.z;
 
-
-	for (size_t i = 0; i < 8; ++i)
+	for (int i = 0; i < 8; ++i)
 	{
-		// 1x4 * 4x4
 		D3DXVec3TransformCoord(&m_vPoint[i], &m_vPoint[i], &m_StateDesc.StateMatrix);
 	}
+	
 
 	return S_OK;
 }
@@ -265,20 +269,11 @@ _bool CCollider_Cube::Collision_Check(CCollider_Cube * pTarget, _float3* pOutDis
 	vSourMax = m_vPoint[5];
 	vSourCenter = (vSourMax + vSourMin)*0.5f;
 
-	if (pTarget->m_bIsInverse)
-	{
-		vDestMin = pOther->m_vPoint[6];
-		vDestMax = pOther->m_vPoint[0];
-	}
-	else
-	{
-		vDestMin = pOther->m_vPoint[3];
-		vDestMax = pOther->m_vPoint[5];
-	}
 
+	vDestMin = pOther->m_vPoint[3];
+	vDestMax = pOther->m_vPoint[5];
+	
 	vDestCenter = (vDestMax + vDestMin)*0.5f;
-
-
 
 
 	if (min(vSourMax.x, vDestMax.x) < max(vSourMin.x, vDestMin.x))
@@ -292,7 +287,6 @@ _bool CCollider_Cube::Collision_Check(CCollider_Cube * pTarget, _float3* pOutDis
 		else
 			vDistance.x = (min(vSourMax.x, vDestMax.x) - max(vSourMin.x, vDestMin.x));
 	}
-
 
 	//if (min(vSourMax.y, vDestMax.y) < max(vSourMin.y, vDestMin.y))
 	/*	return false;
@@ -323,6 +317,8 @@ _bool CCollider_Cube::Collision_Check(CCollider_Cube * pTarget, _float3* pOutDis
 
 	return true;
 }
+
+
 
 CCollider_Cube * CCollider_Cube::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {

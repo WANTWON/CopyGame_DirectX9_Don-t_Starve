@@ -31,7 +31,7 @@ HRESULT CInteractive_Object::Initialize(void * pArg)
 
 	m_eObjID = OBJID::OBJ_OBJECT;
 	m_bPicking = false;
-
+	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 	return S_OK;
 }
 
@@ -61,7 +61,7 @@ void CInteractive_Object::Late_Tick(_float fTimeDelta)
 	}
 
 	if (m_pColliderCom)
-		m_pColliderCom->Update_ColliderBox(m_pTransformCom->Get_WorldMatrix());
+		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 }
 
 HRESULT CInteractive_Object::Render()

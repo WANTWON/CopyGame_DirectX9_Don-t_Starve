@@ -170,6 +170,7 @@
     <ClInclude Include="..\public\Boulder.h" />
     <ClInclude Include="..\Public\CameraFPS.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
+    <ClInclude Include="..\Public\CameraTarget.h" />
     <ClInclude Include="..\public\Carrot.h" />
     <ClInclude Include="..\Public\Craftbutton.h" />
     <ClInclude Include="..\Public\Craftmain_back.h" />
@@ -226,6 +227,7 @@
     <ClInclude Include="..\Public\Pont.h" />
     <ClInclude Include="..\Public\Portal.h" />
     <ClInclude Include="..\Public\Potbutton.h" />
+    <ClInclude Include="..\Public\Poteffect.h" />
     <ClInclude Include="..\Public\PotMain.h" />
     <ClInclude Include="..\Public\Pot_back.h" />
     <ClInclude Include="..\Public\Pot_front.h" />
@@ -278,6 +280,7 @@
     <ClCompile Include="..\private\Boulder.cpp" />
     <ClCompile Include="..\Private\CameraFPS.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
+    <ClCompile Include="..\Private\CameraTarget.cpp" />
     <ClCompile Include="..\private\Carrot.cpp" />
     <ClCompile Include="..\Private\Craftbutton.cpp" />
     <ClCompile Include="..\Private\Craftmain_back.cpp" />
@@ -333,6 +336,7 @@
     <ClCompile Include="..\Private\Pont.cpp" />
     <ClCompile Include="..\Private\Portal.cpp" />
     <ClCompile Include="..\Private\Potbutton.cpp" />
+    <ClCompile Include="..\Private\Poteffect.cpp" />
     <ClCompile Include="..\Private\PotMain.cpp" />
     <ClCompile Include="..\Private\Pot_back.cpp" />
     <ClCompile Include="..\Private\Pot_front.cpp" />
