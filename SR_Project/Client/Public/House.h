@@ -64,6 +64,7 @@ private:
 
 	_int m_MonsterMaxCount = 0;
 	_float m_fSpawnTime = 999.f;
+	DWORD m_dwTime = GetTickCount();
 
 public:
 	static CHouse* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

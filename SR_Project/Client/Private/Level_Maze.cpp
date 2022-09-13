@@ -85,7 +85,7 @@ HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	pPlayer->Set_Position(_float3(7.3, 0.5f, 43));
+	pPlayer->Set_Position(_float3(7.3, 0.5f, 43.f));
 
 	Safe_Release(pGameInstance);
 

@@ -75,7 +75,7 @@ HRESULT CLevel_Boss::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	pPlayer->Set_Position(_float3(20, 0.5f, 20));
+	pPlayer->Set_Position(_float3(15, 0.5f, 5));
 
 	Safe_Release(pGameInstance);
 
@@ -87,7 +87,7 @@ HRESULT CLevel_Boss::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boarrior"), LEVEL_BOSS, pLayerTag, _float3(19.f, 0.f, 26.f))))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boarrior"), LEVEL_BOSS, pLayerTag, _float3(15.f, 0.f, 15.f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -133,7 +133,7 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
 	HouseDesc.vInitPosition = _float3(19.f, 0.f, 20.f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
-	HouseDesc.vInitPosition = _float3(19.f, 0.f, 32.f);
+	HouseDesc.vInitPosition = _float3(19.f, 0.f, 29.f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
 
 

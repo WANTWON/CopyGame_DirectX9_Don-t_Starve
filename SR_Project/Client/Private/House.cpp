@@ -49,26 +49,27 @@ HRESULT CHouse::Initialize(void* pArg)
 		m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
 
 
-	if (m_HouseDesc.m_eState == SPIDERHOUSE)
-	{
-		_float fSize = 3;
-		m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
-		m_fRadius *= fSize;
-		m_fRadius -= 0.4f;
-	}
+		if (m_HouseDesc.m_eState == SPIDERHOUSE)
+		{
+			_float fSize = 3;
+			m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
+			m_fRadius *= fSize;
+			m_fRadius -= 0.4f;
+		}
 
-	if (m_HouseDesc.m_eState == PIGHOUSE)
-	{
-		_float fSize = 2;
-		m_pTransformCom->Set_Scale(fSize*0.9f, fSize, 1.f);
-		m_fRadius *= fSize;
-		m_fRadius -= 0.4f;
+		if (m_HouseDesc.m_eState == PIGHOUSE)
+		{
+			_float fSize = 2;
+			m_pTransformCom->Set_Scale(fSize*0.9f, fSize, 1.f);
+			m_fRadius *= fSize;
+			m_fRadius -= 0.4f;
+		}
 	}
-
 	
 
 	return S_OK;
 }
+	
 
 int CHouse::Tick(_float fTimeDelta)
 {
@@ -111,18 +112,18 @@ void CHouse::Late_Tick(_float fTimeDelta)
 		_float m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
 		if (m_fDistanceToTarget < 3.f)
 		{
+			if (m_MonsterMaxCount <= 0)
+				m_bDead = true;
+
 			if (m_MonsterMaxCount > 0 && (m_dwTime + 3000 < GetTickCount()))
 			{
-				_float3 vPosition = Get_Pos();
+				_float3 vPosition = Get_Position();
 				vPosition.z -= 0.5f;
 				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider_Warrior"), LEVEL_HUNT, TEXT("Layer_Monster"), vPosition)))
 					return;
 
 				m_dwTime = GetTickCount();
 				m_MonsterMaxCount--;
-
-				if (m_MonsterMaxCount == 0)
-					m_bDead = true;
 			}
 		}
 
