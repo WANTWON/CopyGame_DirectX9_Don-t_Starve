@@ -4,7 +4,7 @@
 CBT_NPC::CBT_NPC(CNPC * _Actor)
 	:Actor(_Actor)
 {
-	Safe_AddRef(Actor);
+	//Safe_AddRef(Actor);
 }
 
 void CBT_NPC::Initialize()
@@ -77,7 +77,6 @@ CNPC::NPC_STATE CBT_NPC::Find_Running()
 
 void CBT_NPC::Free()
 {
-
-	Root->Free();
-	Safe_Release(Actor);
+	Safe_Release(Root);
+	//Safe_Release(Actor);
 }
