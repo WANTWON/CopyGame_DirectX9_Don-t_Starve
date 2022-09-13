@@ -41,15 +41,16 @@ HRESULT CBearger::Initialize(void* pArg)
 	m_fEatRadius = 2.f;
 	m_fCameraShakeRadius = 7.f;
 
-	// Set this as final patrol position
-	vPatrolPosition = _float3(40.f, 1.f, 27.f);
+	vPatrolPosition = _float3(40.f, 1.f, 27.f); // Set this as final patrol position
+
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+	
 	return S_OK;
 }
 
 int CBearger::Tick(_float fTimeDelta)
 {
-	if (__super::Tick(fTimeDelta))
+	if (__super::Tick(fTimeDelta) && m_bDeadAnimExpired)
 		return OBJ_DEAD;
 
 	// A.I.
@@ -80,8 +81,8 @@ void CBearger::Late_Tick(_float fTimeDelta)
 	}
 
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+	
 	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
-
 }
 
 HRESULT CBearger::Render()
@@ -151,7 +152,7 @@ HRESULT CBearger::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 60;
+	TextureDesc.m_fSpeed = 30;
 
 	TextureDesc.m_iEndTex = 58;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bearger_Attack_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
@@ -393,6 +394,8 @@ void CBearger::Change_Frame(_float fTimeDelta)
 	case STATE::DIE:
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 49)
 			Drop_Items();
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 58)
+			m_bDeadAnimExpired = true;
 
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
 		break;
@@ -670,20 +673,32 @@ void CBearger::Find_Target()
 		if (m_bAggro)
 		{
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			Safe_AddRef(pGameInstance);
 
 			CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+			CPlayer* pPlayer = dynamic_cast<CPlayer*>(pTarget);
 
-			Safe_Release(pGameInstance);
-
-			if (pTarget)
+			if (pPlayer)
 			{
-				_float3 vTargetPos = pTarget->Get_Position();
-				m_fDistanceToTarget = D3DXVec3Length(&(Get_Position() - vTargetPos));
-				m_pTarget = pTarget;
+				if (pPlayer->Get_Dead())
+				{
+					if (m_bAggro)
+					{
+						m_pTarget = nullptr;
+						m_eState = STATE::IDLE;
+						m_bAggro = false;
+					}
+					return;
+				}
+
+				if (pTarget)
+				{
+					_float3 vTargetPos = pTarget->Get_Position();
+					m_fDistanceToTarget = D3DXVec3Length(&(Get_Position() - vTargetPos));
+					m_pTarget = pTarget;
+				}
+				else
+					m_pTarget = nullptr;
 			}
-			else
-				m_pTarget = nullptr;
 		}
 		// Look for Food (Carrot)
 		else
@@ -784,7 +799,6 @@ void CBearger::Attack(_bool bIsSpecial)
 
 		BulletData.bIsPlayerBullet = false;
 		BulletData.eWeaponType = WEAPON_TYPE::BEARGER_SPECIAL;
-		BulletData.eDirState = Get_Unprocessed_Dir(m_eDir);
 		D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 		D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
 
@@ -815,19 +829,15 @@ void CBearger::Attack(_bool bIsSpecial)
 
 			// Rocks
 			BulletData.vPosition = vSpawnPos + BulletData.vLook;
-			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 			BulletData.vPosition = vSpawnPos + BulletData.vRight;
-			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 			BulletData.vPosition = vSpawnPos - BulletData.vLook;
-			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 			BulletData.vPosition = vSpawnPos - BulletData.vRight;
-			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 		}
@@ -836,19 +846,15 @@ void CBearger::Attack(_bool bIsSpecial)
 		{
 			// Rocks
 			BulletData.vPosition = vSpawnPos + BulletData.vLook * 2;
-			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 			BulletData.vPosition = vSpawnPos + BulletData.vRight * 2;
-			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 			BulletData.vPosition = vSpawnPos - BulletData.vLook * 2;
-			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 			BulletData.vPosition = vSpawnPos - BulletData.vRight * 2;
-			BulletData.vPosition.y = pVIBuffer_Terrain->Compute_Height(BulletData.vPosition, pTransform_Terrain->Get_WorldMatrix());
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 		}

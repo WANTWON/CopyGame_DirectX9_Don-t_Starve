@@ -26,8 +26,8 @@ HRESULT CLevel_Boss::Initialize()
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Terrain"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-	//	return E_FAIL;
+	/*if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;*/
 
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
@@ -84,7 +84,13 @@ HRESULT CLevel_Boss::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 HRESULT CLevel_Boss::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
-	
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boarrior"), LEVEL_GAMEPLAY, pLayerTag, _float3(0.f, 0.f, 0.f))))
+		return E_FAIL;*/
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }

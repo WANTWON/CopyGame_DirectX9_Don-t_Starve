@@ -201,7 +201,7 @@ HRESULT CTree::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 60;
+	TextureDesc.m_fSpeed = 25;
 
 	_uint iPastLevelIndex = CLevel_Manager::Get_Instance()->Get_PastLevelIndex();
 

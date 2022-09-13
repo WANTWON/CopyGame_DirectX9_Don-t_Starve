@@ -41,17 +41,29 @@ private: /*For TextureCom */
 	virtual void Change_Motion() override;
 
 private:
-	DIR_STATE m_eDir = DIR_STATE::DIR_DOWN;
-	DIR_STATE m_ePreDir = DIR_STATE::DIR_END;
+	// Boarrior Variables
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
+	int m_iPattern = 0;
+	_float m_fFollowTime = 0.f;
+	_float m_fSpecialAttackRadius;
+	_float3 m_vAttackPos = _float3(0.f, 0.f, 0.f);
+	
+	// Bullet Variables
+	_bool m_bShouldSpawnBullet = false;
+	_float m_fBulletAliveTime = 999.f;
+	_uint m_iBulletCount = 0;
 
+	_float m_fStaggerDamageLimit = 80.f;
+	_float m_fStaggerDamage = 0.f;
+	
 private:
 	virtual void AI_Behaviour(_float fTimeDelta) override;
 	void Patrol(_float fTimeDelta);
 	virtual void Find_Target() override;
 	virtual void Follow_Target(_float fTimeDelta) override;
-	void Attack(STATE eAttack = STATE::ATTACK_1);
+	void Attack(_float fTimeDelta, STATE eAttack = STATE::ATTACK_1);
+	void Spawn_Bullet(_float fTimeDelta);
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 	virtual HRESULT Drop_Items() override;
 	virtual _bool IsDead() override;
