@@ -123,11 +123,30 @@ int CPotbutton::Tick(_float fTimeDelta)
 				Safe_Release(pinv);*/
 				m_pCookPot->Start_Cooking();
 
-				// Timer 2/3 seconds OVER 
-				//m_pCookPot->End_Cooking();
+			//	if (GetTickCount() > m_dwTime + 1500)
+			//	{
+					//m_dwTime = GetTickCount();
 
-				craft();
-				pinv->Off_pot();
+					//m_pCookPot->End_Cooking();
+					foreffect		effectdesc;
+					ZeroMemory(&effectdesc, sizeof(foreffect));
+
+					effectdesc.pos = m_pCookPot->Get_Position();
+					effectdesc.pos.y += 1.25f;
+					effectdesc.itemname = craft();
+
+
+					CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Poteffect"), LEVEL_HUNT, TEXT("Layer_Poteffect"), &effectdesc)))
+						return OBJ_NOEVENT;
+
+
+					pinv->Off_pot();
+			//	}
+				
+				// Timer 2/3 seconds OVER 
+				
 			//	m_Pot.front()->set_closepot();
 
 			}
@@ -163,7 +182,7 @@ void CPotbutton::Late_Tick(_float fTimeDelta)
 	{
 		__super::Late_Tick(fTimeDelta);
 
-		CMouse*			pMouse = CMouse::Get_Instance();
+	/*	CMouse*			pMouse = CMouse::Get_Instance();
 		Safe_AddRef(pMouse);
 
 		RECT		rcRect;
@@ -176,7 +195,7 @@ void CPotbutton::Late_Tick(_float fTimeDelta)
 		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 		Safe_AddRef(pinv);
 
-		auto mouse = pinv->Get_Mouse_item_list()->begin();
+		auto mouse = pinv->Get_Mouse_item_list()->begin();*/
 
 
 		
@@ -189,8 +208,8 @@ void CPotbutton::Late_Tick(_float fTimeDelta)
 		if (nullptr != m_pRendererCom)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-		Safe_Release(pMouse);
-		Safe_Release(pinv);
+		/*Safe_Release(pMouse);
+		Safe_Release(pinv);*/
 	}
 
 	
@@ -313,7 +332,7 @@ CGameObject * CPotbutton::Clone(void* pArg)
 	return pInstance;
 
 }
-void CPotbutton::craft()
+ITEMNAME CPotbutton::craft()
 {
 
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
@@ -391,7 +410,7 @@ void CPotbutton::craft()
 			{
 				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가 증가시켰다면 리턴으로 탈출! 못찾았으면? 탐색해야지 새로
 											 //check = true;
-				return;
+				return ITEMNAME_MEATBALL;
 			}
 		}
 
@@ -404,7 +423,7 @@ void CPotbutton::craft()
 
 				(*iter)->set_check(true);
 
-				return;
+				return ITEMNAME_MEATBALL;
 			}
 
 		}
@@ -439,7 +458,7 @@ void CPotbutton::craft()
 			{
 				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가 증가시켰다면 리턴으로 탈출! 못찾았으면? 탐색해야지 새로
 											 //check = true;
-				return;
+				return ITEMNAME_NUGGET;
 			}
 		}
 
@@ -452,7 +471,7 @@ void CPotbutton::craft()
 
 				(*iter)->set_check(true);
 
-				return;
+				return ITEMNAME_NUGGET;
 			}
 
 		}
@@ -477,7 +496,7 @@ void CPotbutton::craft()
 			{
 				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가 증가시켰다면 리턴으로 탈출! 못찾았으면? 탐색해야지 새로
 											 //check = true;
-				return;
+				return ITEMNAME_BERRYPIE;
 			}
 		}
 
@@ -490,7 +509,7 @@ void CPotbutton::craft()
 
 				(*iter)->set_check(true);
 
-				return;
+				return ITEMNAME_BERRYPIE;
 			}
 
 		}
@@ -515,7 +534,7 @@ void CPotbutton::craft()
 			{
 				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가 증가시켰다면 리턴으로 탈출! 못찾았으면? 탐색해야지 새로
 											 //check = true;
-				return;
+				return ITEMNAME_LASAGNA;
 			}
 		}
 
@@ -528,7 +547,7 @@ void CPotbutton::craft()
 
 				(*iter)->set_check(true);
 
-				return;
+				return ITEMNAME_LASAGNA;
 			}
 
 		}
@@ -543,7 +562,7 @@ void CPotbutton::craft()
 			{
 				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가 증가시켰다면 리턴으로 탈출! 못찾았으면? 탐색해야지 새로
 											 //check = true;
-				return;
+				return ITEMNAME_TRASH1;
 			}
 		}
 
@@ -556,7 +575,7 @@ void CPotbutton::craft()
 
 				(*iter)->set_check(true);
 
-				return;
+				return ITEMNAME_TRASH1;
 			}
 
 		}

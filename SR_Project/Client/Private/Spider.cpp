@@ -40,7 +40,11 @@ HRESULT CSpider::Initialize(void* pArg)
 int CSpider::Tick(_float fTimeDelta)
 {
 	if (__super::Tick(fTimeDelta))
+	{
+		CInventory_Manager::Get_Instance()->Get_Quest_list()->front()->plus_spidercount();
 		return OBJ_DEAD;
+	}
+		
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);

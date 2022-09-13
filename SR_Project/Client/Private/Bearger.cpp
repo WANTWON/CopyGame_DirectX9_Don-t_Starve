@@ -51,7 +51,15 @@ HRESULT CBearger::Initialize(void* pArg)
 int CBearger::Tick(_float fTimeDelta)
 {
 	if (__super::Tick(fTimeDelta) && m_bDeadAnimExpired)
+	{
+	auto line = CInventory_Manager::Get_Instance()->Get_Line_list();
+
+	for (auto k : *line)
+		k->set_quest3(true);
+		
 		return OBJ_DEAD;
+	}
+		
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);

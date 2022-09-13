@@ -40,6 +40,12 @@ namespace Client
 		//vector<Item*> vItemDrops;
 	}OBJINFO;
 
+	typedef struct foreffect
+	{
+		_float3 pos;
+		ITEMNAME itemname;
+	}Poteffect;
+
 	typedef struct tagBulletData {
 		_bool bIsPlayerBullet;
 		WEAPON_TYPE eWeaponType;
@@ -65,5 +71,6 @@ extern HINSTANCE g_hInst;
 extern _bool		g_bLoadingfirst;
 extern _bool		g_bUIMadefirst;
 extern _bool        g_bscenechange;
+extern _uint       g_iQuestnum;
 
 using namespace Client;

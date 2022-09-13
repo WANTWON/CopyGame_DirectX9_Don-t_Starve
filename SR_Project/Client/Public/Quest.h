@@ -42,6 +42,7 @@ private:
 
 	_uint texnum = 0;
 	_uint m_ihp;
+	_uint spidercount = 0;
 
 	bool b_onoff = false;
 
@@ -50,6 +51,10 @@ public:
 	void set_texnum(_uint num) { texnum = num; }
 	bool get_onoff() { return b_onoff;}
 	void set_onoff(bool tof) { b_onoff = tof; }
+
+	_uint get_spidercount() { return spidercount; }
+
+	void plus_spidercount() { ++spidercount; }
 public:
 	static CQuest* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

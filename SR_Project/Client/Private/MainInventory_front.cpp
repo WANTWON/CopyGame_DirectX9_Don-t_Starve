@@ -51,43 +51,43 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 
 	}
 
-	if (iNum == 11)
+	else if (iNum == 11)
 	{
 		m_fX = 1235.f;
 		m_fY = 435.f;
 	}
 
-	if (iNum == 12)
+	else if (iNum == 12)
 	{
 		m_fX = 1185.f;
 		m_fY = 485.f;
 	}
 
-	if (iNum == 13)
+	else if (iNum == 13)
 	{
 		m_fX = 1235.f;
 		m_fY = 485.f;
 	}
 
-	if (iNum == 14)
+	else if (iNum == 14)
 	{
 		m_fX = 1185.f;
 		m_fY = 535.f;
 	}
 
-	if (iNum == 15)
+	else if (iNum == 15)
 	{
 		m_fX = 1235.f;
 		m_fY = 535.f;
 	}
 
-	if (iNum == 16)
+	else if (iNum == 16)
 	{
 		m_fX = 1185.f;
 		m_fY = 585.f;
 	}
 
-	if (iNum == 17)
+	else if (iNum == 17)
 	{
 		m_fX = 1235.f;
 		m_fY = 585.f;
@@ -102,44 +102,75 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	if (iNum == 0)
 	{
 		texnum = ITEMNAME_WOOD;
-		item_number = 9;
+		item_number = 2;
 	}
 
-	if (iNum == 1)
+	else if (iNum == 1)
 	{
 		texnum = ITEMNAME_ROCK2;
-		item_number = 9;
+		item_number = 2;
 	}
 
-	if (iNum == 2)
+	else if (iNum == 2)
 	{
-		texnum = ITEMNAME_GOLD;
-		item_number = 9;
+		texnum = ITEMNAME_BERRY;
+		item_number = 2;
 	}
 
-	if (iNum == 3)
+	else if (iNum == 3)
 	{
 		texnum = ITEMNAME_BAG;
 	}
 
-	if (iNum == 4)
+	else if (iNum == 4)
 	{
-		texnum = ITEMNAME_BERRY;
-		item_number = 1;
+		texnum = ITEMNAME_GRASS;
+		item_number = 69;
 	}
 
 
-	if (iNum == 5)
+	else if (iNum == 5)
 	{
 		texnum = ITEMNAME_MEAT;
-		item_number = 6;
+		item_number = 93;
 	}
 
 
-	if (iNum == 7)
+	else if (iNum == 7)
 	{
 		texnum = ITEMNAME_ROPE;
-		item_number = 6;
+		item_number = 64;
+	}
+	else if (iNum == 8)
+	{
+		texnum = ITEMNAME_SPIDERMEAT;
+			item_number = 55;
+	}
+	else if (iNum == 9)
+	{
+		texnum = ITEMNAME_PIGTAIL;
+			item_number = 69;
+	}
+	else if (iNum == 10)
+	{
+		texnum = ITEMNAME_POT;
+		item_number = 9;
+	}
+
+	else if (iNum == 11)
+	{
+		texnum = ITEMNAME_LASAGNA;
+		item_number = 2;
+	}
+	else if (iNum == 12)
+	{
+		texnum = ITEMNAME_NUGGET;
+		item_number = 2;
+	}
+	else if (iNum == 13)
+	{
+		texnum = ITEMNAME_MEATBALL;
+		item_number = 2;
 	}
 
 	//CInventory_Manager::Get_Instance()->Get_Inven_list()->front.push_back(this);

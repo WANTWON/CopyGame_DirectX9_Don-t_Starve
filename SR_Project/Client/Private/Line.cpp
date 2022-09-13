@@ -268,7 +268,7 @@ void CLine::set_line()
 {
 
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pInventory_Manager);
+	
 	if (pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 0)  // quest 0
 	{
 		auto questpont = pInventory_Manager->Get_Questpont_list();
@@ -308,7 +308,7 @@ void CLine::set_line()
 						m_bcheck = false;
 				}
 
-				Safe_Release(pInventory_Manager);
+				
 
 			}
 		}
@@ -324,45 +324,96 @@ void CLine::set_line()
 			else if (iNum == 1)
 			{  
 				if (quest2count >= 3)
-				
+				{
 					m_bcheck = true;
-					
-			}
+				}
 				else
 					m_bcheck = false;
+				
+					
+					
+			}
+				
 			
 
 			
 
-			Safe_Release(pInventory_Manager);
+			
 
 		}
 
 	else if (pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 2)  // quest 1
 	{
 
-
-		m_bcheck = false;
-		/*if (iNum == 0 || iNum == 2)
-			m_bcheck = false;
-
-		else if (iNum == 1)
+		if (m_bquest2 == true)
 		{
-			if (quest2count >= 3)
-
-				m_bcheck = true;
-
+			m_bcheck = true;
 		}
 		else
 			m_bcheck = false;
 
-*/
 
+		
+		
+		
+		
 
-		Safe_Release(pInventory_Manager);
+		
 
 	}
+
+	else if (pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 3)  // quest 1
+	{
+
+		if (m_bquest3 == true)
+		{
+			m_bcheck = true;
+		}
+		else
+			m_bcheck = false;
+
+
+		if (iNum == 0 || iNum == 2)
+			m_bcheck = false;
+		
+
 	}
+
+	else if (pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 4)  // quest 1
+	{
+
+		if (m_bquest4 == true)
+		{
+			m_bcheck = true;
+		}
+		else
+			m_bcheck = false;
+
+
+		if (iNum == 0 || iNum == 2)
+			m_bcheck = false;
+
+
+	}
+
+	else if (pInventory_Manager->Get_Quest_list()->front()->get_texnum() == 5)  // quest 1
+	{
+
+		/*if (m_bquest4 == true)
+		{
+			m_bcheck = true;
+		}
+		else
+			m_bcheck = false;
+
+
+		if (iNum == 0 || iNum == 2)*/
+			m_bcheck = false;
+
+
+	}
+
+}
 	
 
 	
