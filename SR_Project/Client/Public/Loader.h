@@ -38,11 +38,13 @@ public:
 	HRESULT Loading_ForGamePlayLevel();
 	HRESULT Loading_ForHuntLevel();
 	HRESULT Loading_ForBossLevel();
+	HRESULT Loading_ForMazeLevel();
 
 
 	HRESULT Loading_Terrain_ForGamePlayLevel();
 	HRESULT Loading_Terrain_ForHuntLevel();
 	HRESULT Loading_Terrain_ForBossLevel();
+	HRESULT Loading_Terrain_ForMazeLevel();
 
 private:
 	LEVEL					m_eNextLevel = LEVEL_END;

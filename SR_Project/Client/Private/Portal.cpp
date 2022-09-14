@@ -42,20 +42,16 @@ HRESULT CPortal::Initialize(void* pArg)
 	m_eObjID = OBJID::OBJ_PORTAL;
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::PORTAL;
 
-	switch (m_ePortalDesc.m_eType)
-	{
-	case PORTAL_NORMAL:
-	{
-		m_eState = IDLE_CLOSE;
-		m_fRadius = 0.5f;
-		m_fOpenRadius = 3.f;
 
-		m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
-		if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)	
-				m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
-		break;
-	}
-	case PORTAL_BOSS:
+	m_eState = IDLE_CLOSE;
+	m_fRadius = 0.5f;
+	m_fOpenRadius = 3.f;
+
+	m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
+	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
+		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
+
+	if (m_ePortalDesc.m_eType == PORTAL_BOSS)
 	{
 		m_eState = IDLE_CLOSE;
 		m_fRadius = 0.5f;
@@ -64,8 +60,6 @@ HRESULT CPortal::Initialize(void* pArg)
 		m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
 		if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
 			m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
-		break;
-	}
 	}
 
 	return S_OK;
@@ -85,39 +79,36 @@ int CPortal::Tick(_float fTimeDelta)
 
 	if (m_bShouldTeleport)
 	{
+		CLevel_GamePlay* pLevel = nullptr;
+		
+		switch (m_ePortalDesc.m_eType)
+		{
+		case PORTAL_GAMEPLAY:
+			pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			pLevel->Set_NextLevel(true);
+			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_GAMEPLAY);
+			break;
 
-		switch (eLevel)
-		{
-		case Client::LEVEL_GAMEPLAY:
-		{
-			CLevel_GamePlay* pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+		case PORTAL_HUNT:
+			pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
 			pLevel->Set_NextLevel(true);
 			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_HUNT);
 			break;
-		}
-		case Client::LEVEL_HUNT:
-		{
-			if (m_ePortalDesc.m_eType == PORTAL_NORMAL)
-			{
-				CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-				pLevel->Set_PastLevel(true);
-				CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_GAMEPLAY);
 
-			}
-			else if (m_ePortalDesc.m_eType == PORTAL_BOSS)
-			{
-				CLevel_Hunt* pLevel = (CLevel_Hunt*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-				pLevel->Set_NextLevel(true);
-				CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_BOSS);
-
-			}
+		case PORTAL_BOSS:
+			 pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			pLevel->Set_NextLevel(true);
+			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_BOSS);
 			break;
-		}
+
+		case PORTAL_MAZE:
+			pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			pLevel->Set_NextLevel(true);
+			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_MAZE);
+			break;
 		default:
 			break;
 		}
-
-
 	}
 
 
@@ -228,6 +219,16 @@ HRESULT CPortal::Texture_Clone()
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_fSpeed = 60;
 
+	TextureDesc.m_iEndTex = 19;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BOSS_IDLE_OPEN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossPortal_Idle_Open"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 17;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BOSS_IDLE_CLOSE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossPortal_Idle_Close"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
 	TextureDesc.m_iEndTex = 17;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_CLOSE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal_Idle_Close"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
@@ -247,16 +248,7 @@ HRESULT CPortal::Texture_Clone()
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_CLOSING"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portal_Close"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
-
-	TextureDesc.m_iEndTex = 19;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BOSS_IDLE_OPEN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossPortal_Idle_Open"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-
-	TextureDesc.m_iEndTex = 17;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BOSS_IDLE_CLOSE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossPortal_Idle_Close"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	
 
 	return S_OK;
 }
@@ -294,16 +286,16 @@ void CPortal::Change_Motion()
 		switch (m_eState)
 		{
 		case STATE::IDLE_CLOSE:
-			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_IDLE_CLOSE")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));
+			m_ePortalDesc.m_eType == PORTAL_BOSS ?  Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE")) : Change_Texture(TEXT("Com_Texture_IDLE_CLOSE") );
 			break;
 		case STATE::OPENING:
-			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_OPENING")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));;
+			m_ePortalDesc.m_eType == PORTAL_BOSS ? Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE")) : Change_Texture(TEXT("Com_Texture_OPENING"));
 			break;
 		case STATE::IDLE_OPEN:
-			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_IDLE_OPEN")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE"));;
+			m_ePortalDesc.m_eType == PORTAL_BOSS ?   Change_Texture(TEXT("Com_Texture_BOSS_IDLE_CLOSE")) : Change_Texture(TEXT("Com_Texture_IDLE_OPEN"));
 			break;
 		case STATE::CLOSING:
-			m_ePortalDesc.m_eType == PORTAL_NORMAL ? Change_Texture(TEXT("Com_Texture_CLOSING")) : Change_Texture(TEXT("Com_Texture_BOSS_IDLE_OPEN"));;
+			m_ePortalDesc.m_eType == PORTAL_BOSS ?  Change_Texture(TEXT("Com_Texture_BOSS_IDLE_OPEN")) : Change_Texture(TEXT("Com_Texture_CLOSING"));
 			break;
 		}
 

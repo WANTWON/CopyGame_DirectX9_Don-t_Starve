@@ -26,8 +26,8 @@ HRESULT CLevel_Boss::Initialize()
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Terrain"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
@@ -75,7 +75,7 @@ HRESULT CLevel_Boss::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	pPlayer->Set_Position(_float3(20, 0.5f, 20));
+	pPlayer->Set_Position(_float3(15, 0.5f, 5));
 
 	Safe_Release(pGameInstance);
 
@@ -84,7 +84,13 @@ HRESULT CLevel_Boss::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 HRESULT CLevel_Boss::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
-	
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boarrior"), LEVEL_BOSS, pLayerTag, _float3(15.f, 0.f, 15.f))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
@@ -94,7 +100,7 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Wall_Stage_Boss.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/RockWall_Stage4.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -111,12 +117,27 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	for (_uint i = 0; i < iNum; ++i)
 	{
 		ReadFile(hFile, &(WallDesc), sizeof(CWoodWall::WALLDESC), &dwByte, nullptr);
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_STATIC, TEXT("Layer_Wall"), &WallDesc);
+		WallDesc.eDir = CWoodWall::WALL_DIREND;
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_BOSS, TEXT("Layer_Wall"), &WallDesc);
 	}
 
 	
 	CloseHandle(hFile);
 
+	CHouse::HOUSEDECS HouseDesc;
+	HouseDesc.m_eState = CHouse::HOUSETYPE::BOARONSPAWNER;
+
+	HouseDesc.vInitPosition = _float3(13.f, 0.f, 26.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
+	HouseDesc.vInitPosition = _float3(25.f, 0.f, 26.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
+	HouseDesc.vInitPosition = _float3(19.f, 0.f, 20.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
+	HouseDesc.vInitPosition = _float3(19.f, 0.f, 29.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
+
+
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boaron"), LEVEL_BOSS, TEXT("Layer_Wall"), _float3(19.f, 0.f, 20.f));
 
 	Safe_Release(pGameInstance);
 	return S_OK;
@@ -146,6 +167,9 @@ HRESULT CLevel_Boss::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_BOSS, pLayerTag, &CameraDesc)))
 		return E_FAIL;
+
+	CameraDesc.CameraDesc.fFovy = D3DXToRadian(45.0f);
+
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_BOSS, pLayerTag, &CameraDesc)))
 		return E_FAIL;

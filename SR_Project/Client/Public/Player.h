@@ -16,7 +16,7 @@ class CPlayer final : public CPawn
 {
 public:
 
-	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, DAMAGED, BUILD, PORTAL, DEAD, REVIVE, ANGRY, ACTION_END };
+	enum class ACTION_STATE { IDLE, MOVE, ATTACK, MINING, CHOP, WEEDING, EAT, PICKUP, DAMAGED, BUILD, PORTAL, DEAD, REVIVE, SLEEP, COOK, TALK, ANGRY, ACTION_END };
 	typedef enum class InteractionKey {
 		KEY_LBUTTON, //VK_LBUTTON
 		KEY_RBUTTON, //VK_RBUTTON
@@ -122,6 +122,8 @@ public: /*Get&Set*/
 	void	Set_Position(_float3 Position);
 	void	Set_IsBuild(_bool _bIsBuild) { m_bIsBuild = _bIsBuild; }
 	void	Set_bMove(_bool _Move) { m_bMove = _Move; }
+	void	Set_bOnlyActionKey(_bool _bUse) { m_bOnlyActionKey = _bUse; }
+	void	Set_TalkMode(_bool _bTalk) { m_bTalkMode = _bTalk; }
 	void	Clear_Target(void) { m_pTarget = nullptr; }
 public:
 	void	Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
@@ -161,7 +163,8 @@ private: /**Actions*/
 	void	Revive(_float _fTimeDelta);
 	void	Building(_float _fTImeDelta);
 	void	Angry(_float _fTimeDelta);
-
+	void	Sleep_Restore(_float _fTimeDelta);
+	void	Talk_NPC(_float _fTimeDelta);
 
 	void Multi_Action(_float _fTimeDelta); //
 
@@ -177,7 +180,7 @@ private: /**Actions*/
 	_bool	Check_Interact_End(void);
 	void	Find_Priority();
 	_bool	Check_Dead();
-	void	Sleep_Restore();
+	void	Setup_Collider(void);
 
 	void	Cooltime_Update(_float _fTimeDelta);
 	//ActStack
@@ -251,7 +254,9 @@ private: /*for Auto*/
 	stack<ACTION_STATE>		m_ActStack;
 
 	_bool					m_bMove = true;
-
+	//only use spacebar
+	_bool					m_bOnlyActionKey = false;
+	_float					m_fInteract_Range = 0.f;
 	//AtkRange
 	vector<SKILLDESC>		m_vecSkillDesc;
 	_float					m_fAtkRange = 0.f;
@@ -263,7 +268,7 @@ private: /*for Auto*/
 	_uint					iCnt = 0;
 
 	_bool					m_bSleeping = false;
-	DWORD					m_dwSleepTime = GetTickCount();
+	_float					m_fSleepTime = 0.f;
 
 	_float					m_fAtkScale = 6.2f;
 
@@ -277,6 +282,11 @@ private: /*for Auto*/
 	_bool					m_bIsBuild = false;
 	_bool					m_bBuildTrigger = false;
 	_float					m_fBuildTime = 0.f;
+
+	//for Talk
+	_bool					m_bTalkMode = false;
+	//for Keyboard
+	_bool					m_bActivated = false;
 private: // Test
 	_float3					m_vTargetPicking;
 	LEVEL					m_iCurrentLevelndex; //현재 레벨에 따라 불렛 생성 레벨이 다르기 때문에

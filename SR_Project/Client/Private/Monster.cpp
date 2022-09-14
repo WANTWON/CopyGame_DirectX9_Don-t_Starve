@@ -194,6 +194,26 @@ DIR_STATE CMonster::Get_Processed_Dir(DIR_STATE eDir)
 	return eNewDir;
 }
 
+void CMonster::Calculate_Direction(_float3 vTargetPos)
+{
+	// Set Direction
+	_float fX = vTargetPos.x - Get_Position().x;
+	_float fZ = vTargetPos.z - Get_Position().z;
+
+	// Move Horizontally
+	if (abs(fX) > abs(fZ))
+		if (fX > 0)
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_RIGHT);
+		else
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_LEFT);
+	// Move Vertically
+	else
+		if (fZ > 0)
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_UP);
+		else
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_DOWN);
+}
+
 _float CMonster::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
 	if (fDamage <= 0 || m_bDead)

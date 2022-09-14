@@ -37,7 +37,8 @@ private:
 	STATE m_eState = IDLE;
 	STATE m_ePreState = MAX;
 
-	//_uint g_iQuestnum = 0;
+	//Test
+	_bool bTest = true;
 
 public:
 	virtual void Interact(_uint Damage = 0) override;
@@ -46,6 +47,8 @@ public:
 public:/*for Actions*/
 	virtual void	Move(_float _fTimeDelta) override;
 	virtual void	Idle(_float _fTimeDelta) override;
+	virtual void	Interaction(_float _fTimedelta) override;
+
 	virtual void	Select_Target(_float _fTimeDelta) override;
 	virtual void	Set_RandPos(_float _fTimeDelta) override;
 

@@ -11,6 +11,8 @@ enum class STATUS { NOT_STARTED, SUCCESS, FAIL, RUNNING, STATUS_END};
 //Node
 class CNode : public CBase
 {
+protected:
+	virtual ~CNode() = default;
 public:
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) = 0;
 public:
@@ -21,7 +23,8 @@ public:
 //CompositeNode
 class CCompositeNode abstract : public CNode
 {
-
+protected:
+	virtual ~CCompositeNode() = default;
 public:
 	vector<CNode*> Get_VecNodes(void) { return m_vecNodes; }
 	void Add_Node(CNode* _pNode) { m_vecNodes.push_back(_pNode); }
@@ -49,6 +52,8 @@ public:
 //SequenceNode
 class CSequenceNode : public CCompositeNode
 {
+protected:
+	virtual ~CSequenceNode() = default;
 public:
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
@@ -77,6 +82,8 @@ public:
 //Selector
 class CSelectorNode : public CCompositeNode
 {
+protected:
+	virtual ~CSelectorNode() = default;
 public:
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
@@ -105,6 +112,8 @@ public:
 //RandomSelector
 class CRandomSelector : public CCompositeNode
 {
+protected:
+	virtual ~CRandomSelector() = default;
 public:
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
@@ -132,6 +141,8 @@ public:
 //Decorator_If
 class CDecorator_If : public CCompositeNode
 {
+protected:
+	virtual ~CDecorator_If() = default;
 public:
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) = 0;
 
@@ -147,6 +158,8 @@ public:
 	virtual void Free() override
 	{
 		__super::Free();
+		Safe_Release(TrueNode);
+		Safe_Release(FalseNode);
 	}
 };
 

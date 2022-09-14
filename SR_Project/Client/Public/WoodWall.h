@@ -17,7 +17,7 @@ class CWoodWall final : public CGameObject
 {
 public:
 	enum WALLTYPE { WALL_WOOD, WALL_ROCK, WALL_END };
-
+	enum WALLDIR { SIDE, FRONT, WALL_DIREND };
 	enum STATE
 	{
 		HEALTHY,
@@ -30,6 +30,7 @@ public:
 	typedef struct WallDesc
 	{
 		WALLTYPE etype = WALL_WOOD;
+		WALLDIR eDir = WALL_DIREND;
 		_float3 vecPosition;
 
 	}WALLDESC;

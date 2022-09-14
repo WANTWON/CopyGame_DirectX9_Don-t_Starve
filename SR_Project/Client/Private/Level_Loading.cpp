@@ -9,6 +9,7 @@
 #include "Level_Boss.h"
 #include "Loadingscene.h"
 #include "Level_Manager.h"
+#include "Level_Maze.h"
 
 
 _bool g_bLoadingfirst = true;
@@ -47,8 +48,6 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 	}
 	
 	
-	
-
 	if (FAILED(Ready_Layer_Loadingscene(TEXT("Layer_Loadingscene"))))
 		return E_FAIL;
 	m_eNextLevel = eNextLevel;
@@ -86,6 +85,9 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 				break;
 			case LEVEL_BOSS:
 				pNewLevel = CLevel_Boss::Create(m_pGraphic_Device);
+				break;
+			case LEVEL_MAZE:
+				pNewLevel = CLevel_Maze::Create(m_pGraphic_Device);
 				break;
 			}
 

@@ -200,17 +200,17 @@ HRESULT CBoulder::Texture_Clone()
 	TextureDesc.m_fSpeed = 60;
 
 	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HEALTHY"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Boulder_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HEALTHY"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Boulder_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DAMAGED"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Boulder_DAMAGED"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DAMAGED"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Boulder_DAMAGED"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BROKEN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Boulder_BROKEN"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_BROKEN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Boulder_BROKEN"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 

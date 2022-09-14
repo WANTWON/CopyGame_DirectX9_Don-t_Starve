@@ -37,8 +37,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
-		return E_FAIL;
+	//if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
+	//	return E_FAIL;
 
 	if (g_bUIMadefirst == false)
 	{
@@ -81,7 +81,8 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 	if (m_bNextLevel)
 	{
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_HUNT))))
+		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, iLevel))))
 			return;
 	}
 
@@ -127,9 +128,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, pLayerTag, _float3(10.f, 0.f, 40.f))))
-		return E_FAIL;*/
-
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Pig_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
@@ -148,9 +146,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	}
 
 	CloseHandle(hFile);
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boarrior"), LEVEL_GAMEPLAY, pLayerTag, _float3(30.f, 0.f, 22.f))))
-		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 
@@ -250,12 +245,25 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 
 
 	CPortal::PORTALDESC PortalDesc;
-	PortalDesc.m_eType = CPortal::PORTAL_NORMAL;
+	PortalDesc.m_eType = CPortal::PORTAL_HUNT;
 	PortalDesc.vPosition = _float3(45.f, 1.f, 26.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, &PortalDesc)))
 		return E_FAIL;
 
+
+	PortalDesc.m_eType = CPortal::PORTAL_MAZE;
+	PortalDesc.vPosition = _float3(20.f, 1.f, 26.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, &PortalDesc)))
+		return E_FAIL;
+
+
+	PortalDesc.m_eType = CPortal::PORTAL_BOSS;
+	PortalDesc.vPosition = _float3(30.f, 1.f, 16.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, &PortalDesc)))
+		return E_FAIL;
 
 
 	hFile = CreateFile(TEXT("../Bin/Resources/Data/Carrot_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -710,7 +718,7 @@ HRESULT CLevel_GamePlay::Ready_LayerNPC(const _tchar * pLayerTag)
 
 	if (pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC")) == nullptr)
 	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Wendy"), LEVEL_GAMEPLAY, pLayerTag, _float3(10.f, 1.f, 5.f))))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Wendy"), LEVEL_STATIC, pLayerTag, _float3(10.f, 1.f, 5.f))))
 			return E_FAIL;
 	}
 	

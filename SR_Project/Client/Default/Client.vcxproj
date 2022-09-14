@@ -163,6 +163,7 @@
     <ClInclude Include="..\Public\BagInventory.h" />
     <ClInclude Include="..\Public\Bearger.h" />
     <ClInclude Include="..\Public\Behavior_Tree.h" />
+    <ClInclude Include="..\public\Boaron.h" />
     <ClInclude Include="..\public\Boarrior.h" />
     <ClInclude Include="..\Public\BT_NPC.h" />
     <ClInclude Include="..\Public\Bullet.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="..\Public\Item.h" />
     <ClInclude Include="..\Public\Level_Boss.h" />
     <ClInclude Include="..\Public\Level_Hunt.h" />
+    <ClInclude Include="..\Public\Level_Maze.h" />
     <ClInclude Include="..\Public\Line.h" />
     <ClInclude Include="..\Public\Loadingscene.h" />
     <ClInclude Include="..\Public\Logoscene.h" />
@@ -273,6 +275,7 @@
     <ClCompile Include="..\Private\BagInventory.cpp" />
     <ClCompile Include="..\Private\Bearger.cpp" />
     <ClCompile Include="..\Private\Behavior_Tree.cpp" />
+    <ClCompile Include="..\private\Boaron.cpp" />
     <ClCompile Include="..\private\Boarrior.cpp" />
     <ClCompile Include="..\Private\BT_NPC.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
@@ -303,6 +306,7 @@
     <ClCompile Include="..\Private\Item.cpp" />
     <ClCompile Include="..\Private\Level_Boss.cpp" />
     <ClCompile Include="..\Private\Level_Hunt.cpp" />
+    <ClCompile Include="..\Private\Level_Maze.cpp" />
     <ClCompile Include="..\Private\Line.cpp" />
     <ClCompile Include="..\Private\Loadingscene.cpp" />
     <ClCompile Include="..\Private\Logoscene.cpp" />

@@ -334,11 +334,6 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
 
 
-
-
-
-
-
 	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
 		if (m_itemtype == ITEM_STRUCT)

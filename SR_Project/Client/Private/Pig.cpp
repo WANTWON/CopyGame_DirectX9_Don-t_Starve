@@ -161,7 +161,7 @@ HRESULT CPig::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 60;
+	TextureDesc.m_fSpeed = 30;
 
 	TextureDesc.m_iEndTex = 17;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Idle_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
@@ -599,20 +599,31 @@ void CPig::Find_Target()
 	if (!m_bIsAttacking && !m_bHit && !m_bDead)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
-
 		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pTarget);
 
-		Safe_Release(pGameInstance);
-
-		if (pTarget)
+		if (pPlayer)
 		{
-			_float3 vTargetPos = pTarget->Get_Position();
-			m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
-			m_pTarget = pTarget;
+			if (pPlayer->Get_Dead())
+			{
+				if (m_bAggro)
+				{
+					m_pTarget = nullptr;
+					m_eState = STATE::IDLE;
+					m_bAggro = false;
+				}
+				return;
+			}
+
+			if (pTarget)
+			{
+				_float3 vTargetPos = pTarget->Get_Position();
+				m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
+				m_pTarget = pTarget;
+			}
+			else
+				m_pTarget = nullptr;
 		}
-		else
-			m_pTarget = nullptr;
 	}
 	else
 		m_pTarget = nullptr;

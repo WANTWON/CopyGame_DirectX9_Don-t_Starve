@@ -24,8 +24,9 @@ class CBT_NPC : public CBase
 public:
 	typedef CNPC::NPC_STATE	NPCSTATE;
 public:
-CBT_NPC(CNPC* _Actor);
-virtual ~CBT_NPC() = default;
+	CBT_NPC(CNPC* _Actor);
+private:
+	virtual ~CBT_NPC() = default;
 
 public:
 	void Initialize();
@@ -156,7 +157,7 @@ class CBTTask_Interact : public CNode
 			|| dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::INTERACT) == true)
 		{
 			dynamic_cast<CNPC*>(_Obj)->Set_Activate(CNPC::INTERACT, true);
-			dynamic_cast<CNPC*>(_Obj)->Interact(_fTimeDelta);
+			dynamic_cast<CNPC*>(_Obj)->Interaction(_fTimeDelta);
 			return STATUS::RUNNING;
 		}
 	}
@@ -175,7 +176,6 @@ class CBTTask_SelectTarget : public CNode
 class CBTTask_HasTarget : public CDecorator_If
 {
 public:
-
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
 		if (dynamic_cast<CNPC*>(_Obj)->Get_HasTarget())

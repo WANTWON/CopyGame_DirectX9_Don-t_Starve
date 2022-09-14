@@ -49,15 +49,11 @@ void CLevel_Hunt::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (m_bPastLevel)
-	{
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GAMEPLAY))))
-			return;
-	}
 
-	else if (m_bNextLevel)
+	if (m_bNextLevel)
 	{
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_BOSS))))
+		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, iLevel))))
 			return;
 	}
 
@@ -92,7 +88,7 @@ HRESULT CLevel_Hunt::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	pPlayer->Set_Position(_float3(10, 1, 25));
+	pPlayer->Set_Position(_float3(7.5, 1, 20));
 
 	Safe_Release(pGameInstance);
 
@@ -134,6 +130,7 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	/* Load Tree */
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Tree_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
@@ -143,16 +140,63 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 	_uint iNum = 0;
 
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
 	for (_uint i = 0; i < iNum; ++i)
 	{
 		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tree"), LEVEL_HUNT, pLayerTag, ObjectPos);
 	}
-
 	CloseHandle(hFile);
 
+	/* Load Grass */
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Grass_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
 
+	dwByte = 0;
+	ObjectPos = _float3(0, 0, 0);
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Grass"), LEVEL_HUNT, pLayerTag, ObjectPos);
+	}
+	CloseHandle(hFile);
+
+	/* Load Rock */
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Rock_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	ObjectPos = _float3(0, 0, 0);
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boulder"), LEVEL_HUNT, pLayerTag, ObjectPos);
+	}
+	CloseHandle(hFile);
+
+	/* Load Berry */
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Berry_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	ObjectPos = _float3(0, 0, 0);
+	iNum = 0;
+
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berry_Bush"), LEVEL_HUNT, pLayerTag, ObjectPos);
+	}
+	CloseHandle(hFile);
+
+	/* Load House */
 	hFile = CreateFile(TEXT("../Bin/Resources/Data/House_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
@@ -160,7 +204,6 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 	dwByte = 0;
 	CHouse::HOUSEDECS HouseDesc;
 	iNum = 0;
-
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -168,37 +211,16 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 		ReadFile(hFile, &(HouseDesc), sizeof(CHouse::HOUSEDECS), &dwByte, nullptr);
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
 	}
-
 	CloseHandle(hFile);
 
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Grass_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	/* Load Collision Wall */
+
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Collision_Wall_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
-
-	dwByte = 0;
-	iNum = 0;
-
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
-	for (_uint i = 0; i < iNum; ++i)
-	{
-		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Grass"), LEVEL_HUNT, pLayerTag, &ObjectPos);
-	}
-
-	CloseHandle(hFile);
-
-
-
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Wall_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
-
-
 	dwByte = 0;
 	CWoodWall::WALLDESC WallDesc;
 	iNum = 0;
-	//vector<_tchar*> vecPath;
 
 
 	/* 타일의 개수 받아오기 */
@@ -207,24 +229,25 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 	for (_uint i = 0; i < iNum; ++i)
 	{
 		ReadFile(hFile, &(WallDesc), sizeof(CWoodWall::WALLDESC), &dwByte, nullptr);
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_STATIC, TEXT("Layer_Wall"), &WallDesc);
+		WallDesc.etype = CWoodWall::WALL_END;
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_HUNT, TEXT("Layer_Wall"), &WallDesc);
 	}
 
 
 	CloseHandle(hFile);
 
 	CPortal::PORTALDESC PortalDesc;
-	PortalDesc.m_eType = CPortal::PORTAL_NORMAL;
-	PortalDesc.vPosition = _float3(10.f, 2.f, 27.f);
+	PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
+	PortalDesc.vPosition = _float3(55.5f, 2.f, 20.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, &PortalDesc)))
 		return E_FAIL;
 
-	PortalDesc.m_eType = CPortal::PORTAL_BOSS;
-	PortalDesc.vPosition = _float3(100.f, 2.f, 30.f);
+	/*PortalDesc.m_eType = CPortal::PORTAL_BOSS;
+	PortalDesc.vPosition = _float3(102.f, 2.f, 24.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, &PortalDesc)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	Safe_Release(pGameInstance);
 	return S_OK;
@@ -254,6 +277,9 @@ HRESULT CLevel_Hunt::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_HUNT, pLayerTag, &CameraDesc)))
 		return E_FAIL;
+
+	CameraDesc.CameraDesc.fFovy = D3DXToRadian(45.0f);
+
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_HUNT, pLayerTag, &CameraDesc)))
 		return E_FAIL;
