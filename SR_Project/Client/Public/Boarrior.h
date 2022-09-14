@@ -14,6 +14,7 @@ class CBoarrior final : public CMonster
 		ATTACK_1,
 		ATTACK_2,
 		ATTACK_3,
+		SPAWN,
 		STUN,
 		HIT,
 		DIE,
@@ -56,6 +57,9 @@ private:
 
 	_float m_fStaggerDamageLimit = 80.f;
 	_float m_fStaggerDamage = 0.f;
+
+	// Spawn Variables
+	_float m_fSpawnTime = 0.f;
 	
 private:
 	virtual void AI_Behaviour(_float fTimeDelta) override;
@@ -64,6 +68,7 @@ private:
 	virtual void Follow_Target(_float fTimeDelta) override;
 	void Attack(_float fTimeDelta, STATE eAttack = STATE::ATTACK_1);
 	void Spawn_Bullet(_float fTimeDelta);
+	void Spawn_Adds(_float fTimeDelta);
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 	virtual HRESULT Drop_Items() override;
 	virtual _bool IsDead() override;

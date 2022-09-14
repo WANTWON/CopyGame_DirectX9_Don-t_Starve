@@ -41,31 +41,31 @@ HRESULT CHouse::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(&m_HouseDesc.vInitPosition)))
 		return E_FAIL;
 
-	if (m_HouseDesc.m_eState == HOUSETYPE::BOARONSPAWNER)
+	switch (m_HouseDesc.m_eState)
+	{
+	case HOUSETYPE::BOARONSPAWNER:
+	{
 		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.f);
-	else
+		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+		break;
+	}
+	case HOUSETYPE::SPIDERHOUSE:
 	{
 		_float fSize = 3;
 		m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
-
-
-		if (m_HouseDesc.m_eState == SPIDERHOUSE)
-		{
-			_float fSize = 3;
-			m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
-			m_fRadius *= fSize;
-			m_fRadius -= 0.4f;
-		}
-
-		if (m_HouseDesc.m_eState == PIGHOUSE)
-		{
-			_float fSize = 2;
-			m_pTransformCom->Set_Scale(fSize*0.9f, fSize, 1.f);
-			m_fRadius *= fSize;
-			m_fRadius -= 0.4f;
-		}
+		m_fRadius *= fSize;
+		m_fRadius -= 0.4f;
+		break;
+	}	
+	case HOUSETYPE::PIGHOUSE:
+	{
+		_float fSize = 2;
+		m_pTransformCom->Set_Scale(fSize*0.9f, fSize, 1.f);
+		m_fRadius *= fSize;
+		m_fRadius -= 0.4f;
+		break;
+	}	
 	}
-	
 
 	return S_OK;
 }
@@ -81,15 +81,8 @@ int CHouse::Tick(_float fTimeDelta)
 	WalkingTerrain();
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-	switch (m_HouseDesc.m_eState)
-	{
-	case HOUSETYPE::SPIDERHOUSE:
+	if (m_HouseDesc.m_eState == HOUSETYPE::SPIDERHOUSE)
 		Spawn_Spider(fTimeDelta);
-		break;
-	case HOUSETYPE::BOARONSPAWNER:
-		Spawn_Boaron(fTimeDelta);
-		break;
-	}
 
 	return OBJ_NOEVENT;
 }
@@ -99,37 +92,6 @@ void CHouse::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	SetUp_BillBoard();
-
-	if (m_HouseDesc.m_eState == SPIDERHOUSE)
-	{
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-
-		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-
-
-		_float3 vTargetPos = pTarget->Get_Position();
-		_float m_fDistanceToTarget = sqrt(pow(Get_Position().x - vTargetPos.x, 2) + pow(Get_Position().y - vTargetPos.y, 2) + pow(Get_Position().z - vTargetPos.z, 2));
-		if (m_fDistanceToTarget < 3.f)
-		{
-			if (m_MonsterMaxCount <= 0)
-				m_bDead = true;
-
-			if (m_MonsterMaxCount > 0 && (m_dwTime + 3000 < GetTickCount()))
-			{
-				_float3 vPosition = Get_Position();
-				vPosition.z -= 0.5f;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider_Warrior"), LEVEL_HUNT, TEXT("Layer_Monster"), vPosition)))
-					return;
-
-				m_dwTime = GetTickCount();
-				m_MonsterMaxCount--;
-			}
-		}
-
-		
-		
-	}
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -142,7 +104,6 @@ HRESULT CHouse::Render()
 
 	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 		return E_FAIL;
-
 
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	if (iLevel == LEVEL_HUNT && m_HouseDesc.m_eState == PIGHOUSE)
@@ -258,15 +219,13 @@ void CHouse::WalkingTerrain()
 {
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	if (nullptr == pGameInstance)
 		return;
-
-	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(iLevel, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(iLevel, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
 	if (nullptr == pVIBuffer_Terrain)
 		return;
-
-	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(iLevel, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(iLevel, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
 
 	if (nullptr == pTransform_Terrain)
 		return;
@@ -302,7 +261,23 @@ void CHouse::Spawn_Spider(_float fTimeDelta)
 
 void CHouse::Spawn_Boaron(_float fTimeDelta)
 {
-	// TODO: ..
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	_float3 vSpawnPosition = Get_Position();
+
+	// Spawn Effect
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spawn_Effect"), LEVEL_BOSS, TEXT("Layer_Effect"), vSpawnPosition)))
+		return;
+	// Spawn Smoke Effect
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spawn_Smoke_Effect"), LEVEL_BOSS, TEXT("Layer_Effect"), vSpawnPosition)))
+		return;
+
+	// Spawn Adds
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boaron"), LEVEL_BOSS, TEXT("Layer_Monster"), vSpawnPosition - _float3(.75f, 0.f, 0.f))))
+		return;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boaron"), LEVEL_BOSS, TEXT("Layer_Monster"), vSpawnPosition + _float3(.75f, 0.f, 0.f))))
+		return;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boaron"), LEVEL_BOSS, TEXT("Layer_Monster"), vSpawnPosition + _float3(0.f, 0.f, .75f))))
+		return;
 }
 
 CHouse* CHouse::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

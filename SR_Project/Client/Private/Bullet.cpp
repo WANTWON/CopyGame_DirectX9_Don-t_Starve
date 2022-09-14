@@ -1021,7 +1021,8 @@ _bool CBullet::Compare_Terrain(void)
 	case WEAPON_TYPE::WEAPON_MINE:
 	case WEAPON_TYPE::BEARGER_SPECIAL:
 	case WEAPON_TYPE::BOARRIOR_SPECIAL:
-		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
+		_float3 vScale = m_pTransformCom->Get_Scale();
+		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), (vScale.y*0.5f));
 
 		_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		vMyPos.y = vPosition.y;
@@ -1265,6 +1266,9 @@ HRESULT CBullet::Init_Data(void)
 		Change_Texture(TEXT("Com_Texture_Texture_SandSpike_Small_Create"));
 		m_fDamage = 1.f;
 		Compare_Terrain();
+		break;
+	case WEAPON_TYPE::BOARRIOR_SPECIAL:
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 		break;
 	default:
 		break;

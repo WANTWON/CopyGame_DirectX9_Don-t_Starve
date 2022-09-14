@@ -125,20 +125,18 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	
 	CloseHandle(hFile);
 
+	// Test Spawner
 	CHouse::HOUSEDECS HouseDesc;
 	HouseDesc.m_eState = CHouse::HOUSETYPE::BOARONSPAWNER;
 
-	HouseDesc.vInitPosition = _float3(13.f, 0.f, 26.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
-	HouseDesc.vInitPosition = _float3(25.f, 0.f, 26.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
-	HouseDesc.vInitPosition = _float3(19.f, 0.f, 20.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
-	HouseDesc.vInitPosition = _float3(19.f, 0.f, 29.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
-
-
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boaron"), LEVEL_BOSS, TEXT("Layer_Wall"), _float3(19.f, 0.f, 20.f));
+	HouseDesc.vInitPosition = _float3(14.f, 0.f, 20.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_BOSS, TEXT("Layer_House"), &HouseDesc);
+	HouseDesc.vInitPosition = _float3(10.f, 0.f, 15.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_BOSS, TEXT("Layer_House"), &HouseDesc);
+	HouseDesc.vInitPosition = _float3(20.f, 0.f, 15.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_BOSS, TEXT("Layer_House"), &HouseDesc);
+	HouseDesc.vInitPosition = _float3(14.f, 0.f, 10.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_BOSS, TEXT("Layer_House"), &HouseDesc);
 
 
 	hFile = CreateFile(TEXT("../Bin/Resources/Data/Deco_Stage4.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);

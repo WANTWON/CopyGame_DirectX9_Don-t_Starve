@@ -55,6 +55,7 @@ private: /* For.Components */
 
 private:
 	void Spawn_Spider(_float fTimeDelta);
+public:
 	void Spawn_Boaron(_float fTimeDelta);
 
 private:
