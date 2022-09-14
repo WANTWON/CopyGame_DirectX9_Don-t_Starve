@@ -3,6 +3,8 @@
 
 _tchar* CCollider_Cube::m_pTransformTag = TEXT("Com_Transform");
 
+_bool m_bRender = true;
+
 CCollider_Cube::CCollider_Cube(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CComponent(pGraphic_Device)
 {
@@ -236,6 +238,10 @@ HRESULT CCollider_Cube::Update_ColliderBox(_float4x4 WorldMatrix)
 
 HRESULT CCollider_Cube::Render_ColliderBox()
 {
+	if (GetKeyState(VK_F11))
+	{
+		m_bRender == true ? m_bRender = false : m_bRender = true;
+	}
 
 	if (m_bRender)
 	{

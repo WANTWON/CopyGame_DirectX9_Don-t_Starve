@@ -61,11 +61,8 @@ void CMainApp::Tick(_float fTimeDelta)
 	CInventory_Manager::Get_Instance()->Tick(fTimeDelta);
 	CInventory_Manager::Get_Instance()->Late_Tick(fTimeDelta);
 
-#ifdef _DEBUG
 	m_fTimeAcc += fTimeDelta;
-#endif // _DEBUG
 
-	
 
 }
 

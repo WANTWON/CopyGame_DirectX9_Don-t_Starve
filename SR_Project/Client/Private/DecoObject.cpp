@@ -37,12 +37,17 @@ HRESULT CDecoObject::Initialize(void* pArg)
 	{
 	case DECOTYPE::FLOORFIRE:
 		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
-		m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
-		m_pTransformCom->Turn(_float3(1, 0, 0), 1.f);
+		m_pTransformCom->Turn(_float3(1, 0, 0), 90.f);
+		m_pTransformCom->Turn(_float3(0, 1, 0), m_DecoDesc.fRotate);
 		m_fRadius = 0.01f;
 		break;
 	case DECOTYPE::FLOOR_EFFECT:
 		m_pTransformCom->Set_Scale(1.f, 1.5f, 1.f);
+		break;
+	case DECOTYPE::TORCH:
+		m_pTransformCom->Set_Scale(0.8f, 2.8f, 1.f);
+		m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+		m_fRadius = m_pTransformCom->Get_Scale().y *0.5f;
 		break;
 	}
 
@@ -167,6 +172,12 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorParticle"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
+	case DECOTYPE::TORCH:
+		TextureDesc.m_iEndTex = 4;
+		TextureDesc.m_fSpeed = 30.f;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Torch"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
 	}
 
 	/* For.Com_Renderer */
@@ -182,7 +193,7 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
 	TransformDesc.fSpeedPerSec = 0.f;
-	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
+	TransformDesc.fRotationPerSec = D3DXToRadian(1.f);
 	TransformDesc.InitPos = *(_float3*)pArg;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
@@ -193,20 +204,19 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 	CCollider_Cube::COLLRECTDESC CollRectDesc;
 	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
 	CollRectDesc.fRadiusY = 0.5f;
-	CollRectDesc.fRadiusX = 0.5f;
-	CollRectDesc.fRadiusZ = 0.5f;
+	CollRectDesc.fRadiusX = 0.2f;
+	CollRectDesc.fRadiusZ = 0.2f;
 	CollRectDesc.fOffSetX = 0.f;
 	CollRectDesc.fOffSetY = 0.f;
 	CollRectDesc.fOffsetZ = 0.f;
 
-	/*switch (m_DecoDesc.m_eState)
+	switch (m_DecoDesc.m_eState)
 	{
-	case DECOTYPE::FLOORFIRE:
-		CollRectDesc.fRadiusY = 0.1f;
-		if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
-			return E_FAIL;
+		case DECOTYPE::TORCH:
+			if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+				return E_FAIL;
 		break;
-	}*/
+	}
 
 
 
@@ -247,7 +257,8 @@ void CDecoObject::SetUp_BillBoard()
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	if(m_DecoDesc.m_eState != TORCH)
+		m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 }

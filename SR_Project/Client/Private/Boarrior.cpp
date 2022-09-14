@@ -32,6 +32,7 @@ HRESULT CBoarrior::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
+	m_fRadius = m_pTransformCom->Get_Scale().y * 0.5f;
 
 	m_tInfo.iMaxHp = 1000;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
@@ -857,7 +858,7 @@ HRESULT CBoarrior::Drop_Items()
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_SPIDERMEAT;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_BOSS, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

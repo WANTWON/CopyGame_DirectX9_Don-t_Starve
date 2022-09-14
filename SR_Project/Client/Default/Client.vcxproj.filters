@@ -130,9 +130,6 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Wall">
       <UniqueIdentifier>{acb02a53-95d5-496e-aa08-6e2785f27157}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\05.UnInteractive_Object\Torch">
-      <UniqueIdentifier>{e678b83f-4e12-4c45-90e6-f45bcde493d7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\05.UnInteractive_Object\OtherDecoObject">
       <UniqueIdentifier>{ed772d46-c6be-4144-97e8-935b8df75ff6}</UniqueIdentifier>
     </Filter>

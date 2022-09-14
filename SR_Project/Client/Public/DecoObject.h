@@ -15,12 +15,13 @@ BEGIN(Client)
 class CDecoObject final : public CGameObject
 {
 public:
-	enum DECOTYPE { FLOORFIRE, FLOOR_EFFECT, DECO_END };
+	enum DECOTYPE { FLOORFIRE, FLOOR_EFFECT, TORCH, DECO_END };
 
 	typedef struct DecoTag
 	{
 		DECOTYPE m_eState = DECO_END;
 		_float3 vInitPosition = _float3(0.f, 0.f, 0.f);
+		_float	fRotate = 1.f;
 	}DECODECS;
 
 private:

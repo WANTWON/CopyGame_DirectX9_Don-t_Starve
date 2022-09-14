@@ -119,6 +119,7 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	{
 		ReadFile(hFile, &(WallDesc), sizeof(CWoodWall::WALLDESC), &dwByte, nullptr);
 		WallDesc.eDir = CWoodWall::WALL_DIREND;
+		WallDesc.etype = CWoodWall::WALL_BOSS;
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_BOSS, TEXT("Layer_Wall"), &WallDesc);
 	}
 
@@ -126,20 +127,24 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 	// Test Spawner
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/House_Stage4.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
 	CHouse::HOUSEDECS HouseDesc;
-	HouseDesc.m_eState = CHouse::HOUSETYPE::BOARONSPAWNER;
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-	HouseDesc.vInitPosition = _float3(14.f, 0.f, 20.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_BOSS, TEXT("Layer_House"), &HouseDesc);
-	HouseDesc.vInitPosition = _float3(10.f, 0.f, 15.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_BOSS, TEXT("Layer_House"), &HouseDesc);
-	HouseDesc.vInitPosition = _float3(20.f, 0.f, 15.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_BOSS, TEXT("Layer_House"), &HouseDesc);
-	HouseDesc.vInitPosition = _float3(14.f, 0.f, 10.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_BOSS, TEXT("Layer_House"), &HouseDesc);
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(HouseDesc), sizeof(CHouse::HOUSEDECS), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_BOSS, TEXT("Layer_House"), &HouseDesc);
+	}
+	CloseHandle(hFile);
 
 
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Deco_Stage4.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Deco_Stage5.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
