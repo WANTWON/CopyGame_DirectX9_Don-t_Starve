@@ -606,6 +606,9 @@
     <ClInclude Include="..\public\SpawnSmokeEffect.h">
       <Filter>02.GameObject\05.UnInteractive_Object\House\Spawn_Smoke_Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\DecoObject.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -937,6 +940,9 @@
     </ClCompile>
     <ClCompile Include="..\private\SpawnSmokeEffect.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\House\Spawn_Smoke_Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DecoObject.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

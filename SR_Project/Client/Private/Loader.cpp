@@ -1958,15 +1958,16 @@ HRESULT CLoader::Loading_ForBossLevel()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DecoObject"),
 		CDecoObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	/*For.Prototype_GameObject_Spawn_Effect*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spawn_Effect"),
 		CSpawnEffect::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
 	/*For.Prototype_GameObject_Spawn_Smoke_Effect*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spawn_Smoke_Effect"),
 		CSpawnSmokeEffect::Create(m_pGraphic_Device))))
-
 		return E_FAIL;
 
 	if (FAILED(Loading_Terrain_ForBossLevel()))
