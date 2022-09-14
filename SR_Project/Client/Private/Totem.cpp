@@ -329,7 +329,7 @@ void CTotem::AI_Behaviour(_float fTimeDelta)
 		m_eState = TOTEM_STATE::BREAK;
 	else if (m_bIsHit)
 		m_eState = TOTEM_STATE::HIT;
-	else
+	else if (m_eState != TOTEM_STATE::PLACE)
 		m_eState = TOTEM_STATE::IDLE;
 }
 

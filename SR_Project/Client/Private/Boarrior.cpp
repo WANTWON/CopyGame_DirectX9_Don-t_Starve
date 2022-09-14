@@ -6,6 +6,7 @@
 #include "Item.h"
 #include "CameraManager.h"
 #include "House.h"
+#include "Totem.h"
 
 CBoarrior::CBoarrior(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -53,6 +54,8 @@ int CBoarrior::Tick(_float fTimeDelta)
 
 	if (m_bShouldSpawnBullet)
 		Spawn_Bullet(fTimeDelta);
+
+	Check_Health_Percent();
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);
@@ -467,6 +470,35 @@ void CBoarrior::Change_Motion()
 	}
 }
 
+void CBoarrior::Check_Health_Percent()
+{
+	cout << m_tInfo.iMaxHp << " / " << m_tInfo.iCurrentHp << endl;
+
+	if (m_tInfo.iCurrentHp <= 0 || m_bDead)
+		return;
+	
+	if (m_tInfo.iCurrentHp <= (m_tInfo.iMaxHp / 100 * 20) && !m_bIsBelow20Percent)
+	{
+		m_bIsBelow20Percent = true;
+		m_bShouldSpawn = true;
+	}	
+	else if (m_tInfo.iCurrentHp <= (m_tInfo.iMaxHp / 100 * 40) && !m_bIsBelow40Percent)
+	{
+		m_bIsBelow40Percent = true;
+		m_bShouldSpawn = true;
+	}
+	else if (m_tInfo.iCurrentHp <= (m_tInfo.iMaxHp / 100 * 60) && !m_bIsBelow60Percent)
+	{
+		m_bIsBelow60Percent = true;
+		m_bShouldSpawn = true;
+	}
+	else if (m_tInfo.iCurrentHp <= (m_tInfo.iMaxHp / 100 * 80) && !m_bIsBelow80Percent)
+	{
+		m_bIsBelow80Percent = true;
+		m_bShouldSpawn = true;
+	}
+}
+
 void CBoarrior::AI_Behaviour(_float fTimeDelta)
 {
 	if (m_bDead || m_bHit || m_bIsAttacking)
@@ -483,7 +515,7 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 	{
 		// Randomly choose a Pattern (if not already chosen)
 		if (!m_iPattern)
-			m_iPattern = rand() % 4 + 1;
+			m_iPattern = m_bShouldSpawn ? 4 : rand() % 3 + 1;
 
 		// Set Attack Radius based on Pattern chosen before
 		_float fRadius;
@@ -783,36 +815,60 @@ void CBoarrior::Spawn_Bullet(_float fTimeDelta)
 
 void CBoarrior::Spawn_Adds(_float fTimeDelta)
 {
-	// Resetting Variables
+	// Reset Variables
 	m_bIsAttacking = false;
 	m_dwAttackTime = GetTickCount();
 	m_bDidDamage = false;
 	m_iPattern = 0;
 	m_vAttackPos = _float3(0.f, 0.f, 0.f);
+	m_bShouldSpawn = false;
+
+	// Shake
+	CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+	if (pCamera)
+		pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.5f, 0.2f, 0.01f);
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
-	
-	if (!pGameInstance || !pLevelManager)
-		return;
+	CTotem::TOTEMDESC TotemDesc;
 
+	if (m_bIsBelow20Percent)
+	{
+		TotemDesc.eState = CTotem::TOTEM_TYPE::HEAL;
+		goto SpawnTotem;
+	}
+	else if (m_bIsBelow40Percent)
+		goto SpawnAdds;
+	else if (m_bIsBelow60Percent)
+	{
+		TotemDesc.eState = CTotem::TOTEM_TYPE::DEFENSE;
+		goto SpawnTotem;
+	}
+	else if (m_bIsBelow80Percent)
+		goto SpawnAdds;
+
+SpawnAdds:
+	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
 	list<CGameObject*>* lObjects = pGameInstance->Get_ObjectList(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_House"));
 
-	if (!lObjects)
-		return;
-
+	if (!lObjects) return;
 	for (auto& iter = lObjects->begin(); iter != lObjects->end(); ++iter)
 	{
 		CHouse* pSpawner = dynamic_cast<CHouse*>(*iter);
 		if (pSpawner)
-		{
 			pSpawner->Spawn_Boaron(fTimeDelta);
-
-			CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-			if (pCamera)
-				pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.5f, 0.2f, 0.01f);
-		}
 	}
+	return;
+
+SpawnTotem:
+	TotemDesc.vInitPosition = _float3(10.f, 0.f, 10.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+	TotemDesc.vInitPosition = _float3(10.f, 0.f, 19.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+	TotemDesc.vInitPosition = _float3(19.f, 0.f, 10.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+	TotemDesc.vInitPosition = _float3(19.f, 0.f, 19.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+	return;
 }
 
 _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
@@ -821,12 +877,12 @@ _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * Da
 
 	if (fDmg > 0)
 	{
-		if (!m_bDead)
+		if (!m_bDead && m_eState != STATE::SPAWN)
 		{
 			if (m_fStaggerDamage > m_fStaggerDamageLimit)
 			{
 				m_bHit = true;
-				
+
 				m_bIsAttacking = false;
 				m_bAggro = true;
 				m_vAttackPos = _float3(0.f, 0.f, 0.f);
