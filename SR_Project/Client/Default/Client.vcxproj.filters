@@ -256,6 +256,12 @@
     <Filter Include="96.Camera\TargetCamera">
       <UniqueIdentifier>{53bab0ad-d3bd-4347-a01d-4870a2b3b26c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\House\Spawn_Effect">
+      <UniqueIdentifier>{8c741b9c-5976-4993-858d-4c3a3eb901f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\House\Spawn_Smoke_Effect">
+      <UniqueIdentifier>{217683a5-e476-4462-b0d3-a26158d42a17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -594,6 +600,12 @@
     <ClInclude Include="..\Public\Level_Maze.h">
       <Filter>01.Levels\04. Maze</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\SpawnEffect.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\House\Spawn_Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpawnSmokeEffect.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\House\Spawn_Smoke_Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -919,6 +931,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Maze.cpp">
       <Filter>01.Levels\04. Maze</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpawnEffect.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\House\Spawn_Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpawnSmokeEffect.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\House\Spawn_Smoke_Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

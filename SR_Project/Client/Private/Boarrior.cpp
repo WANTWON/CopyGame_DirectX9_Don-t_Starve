@@ -5,6 +5,7 @@
 #include "Inventory.h"
 #include "Item.h"
 #include "CameraManager.h"
+#include "House.h"
 
 CBoarrior::CBoarrior(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -225,6 +226,11 @@ HRESULT CBoarrior::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
+	TextureDesc.m_iEndTex = 14;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_SPAWN"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boarrior_Spawn"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
 	TextureDesc.m_iEndTex = 6;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_STUN"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boarrior_Stun"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
@@ -296,10 +302,21 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 
 		Attack(fTimeDelta, m_eState);
 		break;
+	case STATE::SPAWN:
+		m_pTextureCom->MoveFrame(m_TimerTag);
+
+		m_fSpawnTime += fTimeDelta;
+		if (m_fSpawnTime > 3.f)
+		{
+			m_fSpawnTime = 0.f;
+			m_eState = STATE::IDLE;
+
+			Spawn_Adds(fTimeDelta);
+		}
+		break;
 	case STATE::STUN:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 			m_eState = STATE::IDLE;
-
 		break;
 	case STATE::HIT:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
@@ -420,6 +437,9 @@ void CBoarrior::Change_Motion()
 			if (m_eDir != m_ePreDir)
 				m_ePreDir = m_eDir;
 			break;
+		case STATE::SPAWN:
+			Change_Texture(TEXT("Com_Texture_SPAWN"));
+			break;
 		case STATE::STUN:
 			Change_Texture(TEXT("Com_Texture_STUN"));
 			break;
@@ -467,7 +487,7 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 	{
 		// Randomly choose a Pattern (if not already chosen)
 		if (!m_iPattern)
-			m_iPattern = rand() % 3 + 1;
+			m_iPattern = rand() % 4 + 1;
 
 		// Set Attack Radius based on Pattern chosen before
 		_float fRadius;
@@ -480,6 +500,9 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 		case 3:
 			fRadius = m_fSpecialAttackRadius;
 			break;
+		case 4:
+			fRadius = 999.f; // Spawn Adds
+			break;
 		default:
 			fRadius = m_fAttackRadius;
 		}
@@ -491,9 +514,9 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 		{
 			if (GetTickCount() > m_dwAttackTime + 1500)
 			{
-				if (m_iPattern == 1 || m_iPattern == 2 || m_iPattern == 3)
+				if (m_iPattern == 1 || m_iPattern == 2 || m_iPattern == 3 || m_iPattern == 4)
 				{
-					m_eState = m_iPattern == 1 ? STATE::ATTACK_1 : m_iPattern == 2 ? STATE::ATTACK_2 : STATE::ATTACK_3;
+					m_eState = m_iPattern == 1 ? STATE::ATTACK_1 : m_iPattern == 2 ? STATE::ATTACK_2 : m_iPattern == 3 ? STATE::ATTACK_3 : STATE::SPAWN;
 					m_bIsAttacking = true;
 					m_fFollowTime = 0.f;
 				}
@@ -762,6 +785,34 @@ void CBoarrior::Spawn_Bullet(_float fTimeDelta)
 	}
 }
 
+void CBoarrior::Spawn_Adds(_float fTimeDelta)
+{
+	// Resetting Variables
+	m_bIsAttacking = false;
+	m_dwAttackTime = GetTickCount();
+	m_bDidDamage = false;
+	m_iPattern = 0;
+	m_vAttackPos = _float3(0.f, 0.f, 0.f);
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+	
+	if (!pGameInstance || !pLevelManager)
+		return;
+
+	list<CGameObject*>* lObjects = pGameInstance->Get_ObjectList(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_House"));
+
+	if (!lObjects)
+		return;
+
+	for (auto& iter = lObjects->begin(); iter != lObjects->end(); ++iter)
+	{
+		CHouse* pSpawner = dynamic_cast<CHouse*>(*iter);
+		if (pSpawner)
+			pSpawner->Spawn_Boaron(fTimeDelta);
+	}
+}
+
 _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
 	_float fDmg = __super::Take_Damage(fDamage, DamageType, DamageCauser);
@@ -780,6 +831,7 @@ _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * Da
 				m_dwAttackTime = GetTickCount();
 
 				m_fStaggerDamage = 0.f;
+				m_fSpawnTime = 0.f;
 			}
 			else
 				m_fStaggerDamage += fDamage;

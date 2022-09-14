@@ -73,6 +73,8 @@
 #include "CookPot.h"
 #include "Tent.h"
 #include "Special_Attack.h"
+#include "SpawnEffect.h"
+#include "SpawnSmokeEffect.h"
 
 #include "Daycount.h"
 #include "Daycountpont.h"
@@ -1821,13 +1823,13 @@ HRESULT CLoader::Loading_ForBossLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Spawner/Spawner_%03d.png"), 1))))
 		return E_FAIL;
 	/*For.Prototype_Component_Texture_Spawner_Effect */
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Spawner_Effect"),
-	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Spawner_Effect/Spawner_Effect_%03d.png"), 50))))
-	//	return E_FAIL;
-	///*For.Prototype_Component_Texture_Spawner_Effect_Smoke */
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Spawner_Effect_Smoke"),
-	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Spawner_Effect_Smoke/Spawner_Effect_Smoke_%03d.png"), 51))))
-	//	return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Spawner_Effect"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Spawn/Spawn_%03d.png"), 50))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_Spawner_Effect_Smoke */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Spawner_Effect_Smoke"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Spawn_Smoke/Spawn_Smoke_%03d.png"), 51))))
+		return E_FAIL;
 
 #pragma region Add_Texture_Boaron
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boaron_Attack_Down"),
@@ -1922,6 +1924,9 @@ HRESULT CLoader::Loading_ForBossLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boarrior_Idle_Up"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Boarrior/Idle_Up/Idle_Up_%03d.png"), 32))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boarrior_Spawn"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Boarrior/Spawn/Spawn_%03d.png"), 15))))
+		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boarrior_Stun"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Boarrior/Stun/Stun_%03d.png"), 7))))
 		return E_FAIL;
@@ -1939,6 +1944,15 @@ HRESULT CLoader::Loading_ForBossLevel()
 	/*For.Prototype_GameObject_Boarrior*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boarrior"),
 		CBoarrior::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Spawn_Effect*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spawn_Effect"),
+		CSpawnEffect::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/*For.Prototype_GameObject_Spawn_Smoke_Effect*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spawn_Smoke_Effect"),
+		CSpawnSmokeEffect::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	if (FAILED(Loading_Terrain_ForBossLevel()))
