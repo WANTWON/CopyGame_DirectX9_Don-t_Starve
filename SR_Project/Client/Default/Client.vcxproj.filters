@@ -259,6 +259,12 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\House\Spawn_Smoke_Effect">
       <UniqueIdentifier>{217683a5-e476-4462-b0d3-a26158d42a17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\OtherDecoObject\Floor_Grate_Eruption">
+      <UniqueIdentifier>{dc96cbbb-9f68-495a-9931-c4be7231cab9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00. Pawn\Totem">
+      <UniqueIdentifier>{cc585df3-26be-4cdc-997c-82adabccd35f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -606,6 +612,12 @@
     <ClInclude Include="..\Public\DecoObject.h">
       <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\FloorGrateEruption.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject\Floor_Grate_Eruption</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Totem.h">
+      <Filter>02.GameObject\00. Pawn\Totem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -940,6 +952,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\DecoObject.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FloorGrateEruption.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject\Floor_Grate_Eruption</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Totem.cpp">
+      <Filter>02.GameObject\00. Pawn\Totem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

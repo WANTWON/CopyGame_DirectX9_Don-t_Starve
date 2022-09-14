@@ -55,13 +55,20 @@ private:
 	_float m_fBulletAliveTime = 999.f;
 	_uint m_iBulletCount = 0;
 
+	// Stagger Variables
 	_float m_fStaggerDamageLimit = 80.f;
 	_float m_fStaggerDamage = 0.f;
 
 	// Spawn Variables
+	_bool m_bIsBelow80Percent = false;
+	_bool m_bIsBelow60Percent = false;
+	_bool m_bIsBelow40Percent = false;
+	_bool m_bIsBelow20Percent = false;
+	_bool m_bShouldSpawn = false;
 	_float m_fSpawnTime = 0.f;
 	
 private:
+	void Check_Health_Percent();
 	virtual void AI_Behaviour(_float fTimeDelta) override;
 	void Patrol(_float fTimeDelta);
 	virtual void Find_Target() override;

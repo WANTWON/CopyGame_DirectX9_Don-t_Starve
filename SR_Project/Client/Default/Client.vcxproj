@@ -188,6 +188,7 @@
     <ClInclude Include="..\Public\Equipment_back.h" />
     <ClInclude Include="..\Public\Equipment_front.h" />
     <ClInclude Include="..\Public\Equip_Animation.h" />
+    <ClInclude Include="..\public\FloorGrateEruption.h" />
     <ClInclude Include="..\public\Grass.h" />
     <ClInclude Include="..\Public\House.h" />
     <ClInclude Include="..\Public\Interactive_Object.h" />
@@ -263,6 +264,7 @@
     <ClInclude Include="..\Public\ToolboxWeapon.h" />
     <ClInclude Include="..\Public\ToolboxWeapon_back.h" />
     <ClInclude Include="..\Public\ToolboxWeapon_front.h" />
+    <ClInclude Include="..\public\Totem.h" />
     <ClInclude Include="..\public\Tree.h" />
     <ClInclude Include="..\Public\MainInventory.h" />
     <ClInclude Include="..\Public\Water.h" />
@@ -303,6 +305,7 @@
     <ClCompile Include="..\Private\Equipment_back.cpp" />
     <ClCompile Include="..\Private\Equipment_front.cpp" />
     <ClCompile Include="..\Private\Equip_Animation.cpp" />
+    <ClCompile Include="..\private\FloorGrateEruption.cpp" />
     <ClCompile Include="..\private\Grass.cpp" />
     <ClCompile Include="..\Private\House.cpp" />
     <ClCompile Include="..\Private\Interactive_Object.cpp" />
@@ -377,6 +380,7 @@
     <ClCompile Include="..\Private\ToolboxWeapon.cpp" />
     <ClCompile Include="..\Private\ToolboxWeapon_back.cpp" />
     <ClCompile Include="..\Private\ToolboxWeapon_front.cpp" />
+    <ClCompile Include="..\private\Totem.cpp" />
     <ClCompile Include="..\private\Tree.cpp" />
     <ClCompile Include="..\Private\MainInventory.cpp" />
     <ClCompile Include="..\Private\Water.cpp" />

@@ -358,7 +358,7 @@ HRESULT CWoodWall::Texture_Clone()
 		m_vecTexture.push_back(m_pTextureCom);
 
 		TextureDesc.m_iEndTex = 0;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_BROKEN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_BROKEN"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_BROKcoEN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_BROKEN"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 		break;

@@ -60,14 +60,21 @@ private: /* For.Components */
 	CCollider_Cube* m_pColliderCom = nullptr;
 
 private:
+	void Check_Eruption(_float fTimeDelta);
+
+private:
 	DECODECS m_DecoDesc;
 	const _tchar* m_TimerTag = TEXT("");
 	_float m_fTerrain_Height = 0.f;
 
-	_int m_MonsterMaxCount = 0;
-	_float m_fSpawnTime = 999.f;
 	_bool m_bCreate = false;
-	DWORD m_dwTime = GetTickCount();
+
+	// Eruption Variables
+	_bool m_bShouldErupt = false;
+	_bool m_bIsWarningTimeChosen = false;
+	_float m_fWarningTime = 0.f;
+	_float m_fRandomWarningLimit = 0.f;
+	_float m_fEruptionTime = 0.f;
 
 public:
 	static CDecoObject* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
