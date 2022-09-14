@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\DecoObject.h"
 #include "GameInstance.h"
+#include "FloorGrateEruption.h"
 
 CDecoObject::CDecoObject(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -32,7 +33,6 @@ HRESULT CDecoObject::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(&m_DecoDesc.vInitPosition)))
 		return E_FAIL;
 
-
 	switch (m_DecoDesc.m_eState)
 	{
 	case DECOTYPE::FLOORFIRE:
@@ -46,11 +46,8 @@ HRESULT CDecoObject::Initialize(void* pArg)
 		break;
 	}
 
-	
-
 	return S_OK;
 }
-
 
 int CDecoObject::Tick(_float fTimeDelta)
 {
@@ -58,14 +55,6 @@ int CDecoObject::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
-
-	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true && m_pColliderCom != nullptr)
-	{
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_BLOCK, this);
-
-	}
-
 
 	WalkingTerrain();
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -84,14 +73,12 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 	{
 	case DECOTYPE::FLOORFIRE:
 		FloorUpdate();
+		Check_Eruption(fTimeDelta);
 		break;
 	}
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 }
 
 HRESULT CDecoObject::Render()
@@ -102,11 +89,8 @@ HRESULT CDecoObject::Render()
 	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 		return E_FAIL;
 
-
-
 	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
 		return E_FAIL;
-
 
 	m_pTextureCom->MoveFrame(m_TimerTag);
 
@@ -115,19 +99,8 @@ HRESULT CDecoObject::Render()
 
 	m_pVIBufferCom->Render();
 
-
-#ifdef _DEBUG
-	if (nullptr != m_pColliderCom)
-	{
-		m_pTextureCom->Bind_OnGraphicDev_Debug();
-		m_pColliderCom->Render_ColliderBox();
-	}	
-#endif // _DEBUG
-
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
-
-
 
 	return S_OK;
 }
@@ -188,28 +161,6 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
-
-	/* For.Com_Collider*/
-	CCollider_Cube::COLLRECTDESC CollRectDesc;
-	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
-	CollRectDesc.fRadiusY = 0.5f;
-	CollRectDesc.fRadiusX = 0.5f;
-	CollRectDesc.fRadiusZ = 0.5f;
-	CollRectDesc.fOffSetX = 0.f;
-	CollRectDesc.fOffSetY = 0.f;
-	CollRectDesc.fOffsetZ = 0.f;
-
-	/*switch (m_DecoDesc.m_eState)
-	{
-	case DECOTYPE::FLOORFIRE:
-		CollRectDesc.fRadiusY = 0.1f;
-		if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
-			return E_FAIL;
-		break;
-	}*/
-
-
-
 	return S_OK;
 }
 
@@ -256,15 +207,13 @@ void CDecoObject::WalkingTerrain()
 {
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	if (nullptr == pGameInstance)
 		return;
-
-	CVIBuffer_Terrain*		pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(iLevel, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(iLevel, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
 	if (nullptr == pVIBuffer_Terrain)
 		return;
-
-	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(iLevel, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(iLevel, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
 
 	if (nullptr == pTransform_Terrain)
 		return;
@@ -274,7 +223,70 @@ void CDecoObject::WalkingTerrain()
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
+void CDecoObject::Check_Eruption(_float fTimeDelta)
+{
+	// Spawn Eruption (Warning already Spawned)
+	if (m_bShouldErupt)
+	{
+		if (m_fEruptionTime < 1.5f)
+			m_fEruptionTime += fTimeDelta;
+		else
+		{
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			if (!pGameInstance)
+				return;
 
+			CFloorGrateEruption::ERUPTIONDESC tEruptionDesc;
+			tEruptionDesc.eState = CFloorGrateEruption::ERUPTION_STATE::ERUPTION;
+			tEruptionDesc.vInitPosition = Get_Position();
+
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Floor_Grate_Eruption"), LEVEL_BOSS, TEXT("Layer_Effect"), &tEruptionDesc)))
+				return;
+
+			m_bShouldErupt = false;
+			m_fEruptionTime = 0.f;
+		}
+	}
+	// Spawn Warning
+	else
+	{
+		// Every 2 seconds there is a random chance of Eruption (Warning)
+		if (m_fWarningTime < m_fRandomWarningLimit)
+			m_fWarningTime += fTimeDelta;
+		else
+		{
+			if (!m_bIsWarningTimeChosen)
+			{
+				m_fRandomWarningLimit = rand() % 3 + 1;
+				m_bIsWarningTimeChosen = true;
+			}
+			else
+			{
+				m_fWarningTime = 0.f;
+
+				_bool bShouldWarn = rand() % 5; // (0 ... 4)
+
+				// If bShouldErupt == 0 : Erupt (25% Chance)
+				if (bShouldWarn == 0)
+				{
+					CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+					if (!pGameInstance)
+						return;
+
+					CFloorGrateEruption::ERUPTIONDESC tEruptionDesc;
+					tEruptionDesc.eState = CFloorGrateEruption::ERUPTION_STATE::WARNING;
+					tEruptionDesc.vInitPosition = Get_Position();
+
+					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Floor_Grate_Eruption"), LEVEL_BOSS, TEXT("Layer_Effect"), &tEruptionDesc)))
+						return;
+
+					m_bShouldErupt = true;
+					m_bIsWarningTimeChosen = false;
+				}
+			}
+		}
+	}
+}
 
 CDecoObject* CDecoObject::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
@@ -301,7 +313,6 @@ CGameObject* CDecoObject::Clone(void* pArg)
 
 	return pInstance;
 }
-
 
 void CDecoObject::Free()
 {

@@ -310,7 +310,7 @@ HRESULT CPlayer::SetUp_Components()
 	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
 	CollRectDesc.fRadiusY = 0.4f;
 	CollRectDesc.fRadiusX = 0.3f;
-	CollRectDesc.fRadiusZ = 0.5f;
+	CollRectDesc.fRadiusZ = 0.3f;
 	CollRectDesc.fOffSetX = 0.f;
 	CollRectDesc.fOffSetY = -0.25f;
 	CollRectDesc.fOffsetZ = 0.f;

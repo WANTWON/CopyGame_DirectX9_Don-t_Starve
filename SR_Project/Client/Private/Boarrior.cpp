@@ -804,7 +804,13 @@ void CBoarrior::Spawn_Adds(_float fTimeDelta)
 	{
 		CHouse* pSpawner = dynamic_cast<CHouse*>(*iter);
 		if (pSpawner)
+		{
 			pSpawner->Spawn_Boaron(fTimeDelta);
+
+			CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			if (pCamera)
+				pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.5f, 0.2f, 0.01f);
+		}
 	}
 }
 

@@ -262,6 +262,9 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\House\Spawn_Smoke_Effect">
       <UniqueIdentifier>{217683a5-e476-4462-b0d3-a26158d42a17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\OtherDecoObject\Floor_Grate_Eruption">
+      <UniqueIdentifier>{dc96cbbb-9f68-495a-9931-c4be7231cab9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -609,6 +612,7 @@
     <ClInclude Include="..\Public\DecoObject.h">
       <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\FloorGrateEruption.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -944,6 +948,7 @@
     <ClCompile Include="..\Private\DecoObject.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\FloorGrateEruption.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
