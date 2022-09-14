@@ -264,6 +264,7 @@
     <ClInclude Include="..\Public\ToolboxWeapon.h" />
     <ClInclude Include="..\Public\ToolboxWeapon_back.h" />
     <ClInclude Include="..\Public\ToolboxWeapon_front.h" />
+    <ClInclude Include="..\public\Totem.h" />
     <ClInclude Include="..\public\Tree.h" />
     <ClInclude Include="..\Public\MainInventory.h" />
     <ClInclude Include="..\Public\Water.h" />
@@ -379,6 +380,7 @@
     <ClCompile Include="..\Private\ToolboxWeapon.cpp" />
     <ClCompile Include="..\Private\ToolboxWeapon_back.cpp" />
     <ClCompile Include="..\Private\ToolboxWeapon_front.cpp" />
+    <ClCompile Include="..\private\Totem.cpp" />
     <ClCompile Include="..\private\Tree.cpp" />
     <ClCompile Include="..\Private\MainInventory.cpp" />
     <ClCompile Include="..\Private\Water.cpp" />

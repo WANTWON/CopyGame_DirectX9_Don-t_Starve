@@ -9,6 +9,7 @@
 #include "Level_Loading.h"
 #include "WoodWall.h"
 #include "DecoObject.h"
+#include "Totem.h"
 
 CLevel_Boss::CLevel_Boss(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -138,6 +139,15 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	HouseDesc.vInitPosition = _float3(14.f, 0.f, 10.f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_BOSS, TEXT("Layer_House"), &HouseDesc);
 
+	// Test Totem
+	CTotem::TOTEMDESC TotemDesc;
+	TotemDesc.eState = CTotem::TOTEM_TYPE::DEFENSE;
+	TotemDesc.vInitPosition = _float3(10.f, 0.f, 10.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+
+	TotemDesc.eState = CTotem::TOTEM_TYPE::HEAL;
+	TotemDesc.vInitPosition = _float3(8.f, 0.f, 10.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
 
 	hFile = CreateFile(TEXT("../Bin/Resources/Data/Deco_Stage4.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
