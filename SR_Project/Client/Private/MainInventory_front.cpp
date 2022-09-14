@@ -469,16 +469,14 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	//	Safe_Release(pinv);
 
 
-	if (texnum == ITEMNAME_END)
-	{
-		//set_check(false);
-	}
+	
 	if (m_itemtype == ITEM_HAT && m_itemtype == ITEM_BAG && m_itemtype == ITEM_HAND && m_itemtype == ITEM_ARMOR) // 
 	{
 		item_number = 0;
 	}
 
-	if (item_number <= 0 && m_itemtype != ITEM_HAT && m_itemtype != ITEM_BAG && m_itemtype != ITEM_HAND && m_itemtype != ITEM_ARMOR) // 카운트가 필요한 타입들이면서 
+	if (item_number <= 0 && m_itemtype != ITEM_HAT && m_itemtype != ITEM_BAG && m_itemtype != ITEM_HAND && m_itemtype != ITEM_ARMOR
+		&& texnum != ITEMNAME_QUEST1) // 카운트가 필요한 타입들이면서 
 	{
 		m_bpontcheck = false;
 		m_bcheck = false;
@@ -491,9 +489,13 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	if (texnum == ITEMNAME_END)
 	{
 		m_bcheck = false;
+		item_number = 0; //최근
 	}
 	else
 		m_bcheck = true;
+
+	/*if (texnum == ITEMNAME_QUEST1)
+		m_bcheck = true;*/
 
 	if (nullptr != m_pRendererCom&&m_bcheck == true && iNum < 10)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);

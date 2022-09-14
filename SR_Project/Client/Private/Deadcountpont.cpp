@@ -80,7 +80,7 @@ int CDeadcountpont::Tick(_float fTimeDelta)
 		//if()
 	}
 	else
-		m_fY = 830.f;
+		m_fY = 825.f;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 	return OBJ_NOEVENT;
 }

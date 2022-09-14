@@ -437,6 +437,7 @@ void CPig::PickingTrue()
 
 		if (pMouse->Get_Item_type() == ITEMID::ITEM_FOOD)
 		{
+			pMouse->minus_Item_count();
 			Give_Food();
 
 			if (pMouse->Get_Item_name() == ITEMNAME_MEATBALL)

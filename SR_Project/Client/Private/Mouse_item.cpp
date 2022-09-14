@@ -2,6 +2,7 @@
 #include "..\Public\Mouse_item.h"
 #include "GameInstance.h"
 #include "Inventory.h"
+#include "Mouse.h"
 
 
 CMouse_item::CMouse_item(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -48,61 +49,61 @@ HRESULT CMouse_item::Initialize(void* pArg)
 
 int CMouse_item::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
+	if (m_bcheck == true)
+	{
+		__super::Tick(fTimeDelta);
 
-	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+		RECT		rcRect;
+		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
+		POINT		ptMouse;
+		GetCursorPos(&ptMouse);
+		ScreenToClient(g_hWnd, &ptMouse);
 
-	
+
 
 		m_fX = (float)ptMouse.x;
 		m_fY = (float)ptMouse.y;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
+	}
 	
-
-		//if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON) && m_bcheck == true)
-		//{
-		//	m_bcheck = false;
-		//}
+	
+		
 
 	return OBJ_NOEVENT;
 }
 
 void CMouse_item::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
-	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (!PtInRect(&rcRect, ptMouse))
+	if (m_bcheck == true)
 	{
-		m_fSizeX = 40;
-		m_fSizeY = 40;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		__super::Late_Tick(fTimeDelta);
 
 
-		//ERR_MSG(L"Ãæµ¹");
+		CMouse* pMouse = CMouse::Get_Instance();
+
+		if (pMouse->Get_picked() == true && pMouse->Get_Item_count() <= 0)
+		{
+			m_bcheck = false;
+			pMouse->Set_picked(false);
+		}
+		else
+			m_bcheck = true;
+
+		if (nullptr != m_pRendererCom && m_bcheck == true)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 	}
-
 	
-
+	
+	
 	/*if (m_bItem)
 	{
 
 	}*/
 
-	if (nullptr != m_pRendererCom && m_bcheck == true)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+	
 
 }
 
