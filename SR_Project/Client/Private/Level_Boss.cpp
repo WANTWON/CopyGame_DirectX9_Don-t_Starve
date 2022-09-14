@@ -175,8 +175,8 @@ HRESULT CLevel_Boss::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CameraDesc.iTest = 10;
 
-	CameraDesc.CameraDesc.vEye = _float3(0.f, 2.f, -5.f);
-	CameraDesc.CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.CameraDesc.vEye = _float3(0.f, 1.f, -8.f);
+	CameraDesc.CameraDesc.vAt = _float3(0.f, 1.5f, 0.f);
 
 	CameraDesc.CameraDesc.fFovy = D3DXToRadian(30.0f);
 	CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
@@ -189,10 +189,16 @@ HRESULT CLevel_Boss::Ready_Layer_Camera(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_BOSS, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
+
 	CameraDesc.CameraDesc.fFovy = D3DXToRadian(45.0f);
 
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_BOSS, pLayerTag, &CameraDesc)))
+		return E_FAIL;
+
+	CameraDesc.CameraDesc.fFovy = D3DXToRadian(30.0f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Target"), LEVEL_BOSS, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

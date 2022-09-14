@@ -59,6 +59,23 @@ int CBoarrior::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
+
+	if (CGameInstance::Get_Instance()->Key_Up('8'))
+	{
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_BOSS, TEXT("Layer_Monster"));
+		pCamera->Set_Target(pGameObject);
+		pCamera->Set_TalkingMode(true);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up('9'))
+	{
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+	}
+
 	return OBJ_NOEVENT;
 }
 
