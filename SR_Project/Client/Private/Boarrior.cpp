@@ -31,15 +31,15 @@ HRESULT CBoarrior::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+	m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 	m_tInfo.iMaxHp = 1000;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_tInfo.fDamage = 20.f;
 
-	m_fAggroRadius = 6.f;
-	m_fAttackRadius = 2.f;
-	m_fSpecialAttackRadius = 4.f;
+	m_fAggroRadius = 7.f;
+	m_fAttackRadius = 3.f;
+	m_fSpecialAttackRadius = 6.f;
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 	return S_OK;
@@ -86,11 +86,6 @@ HRESULT CBoarrior::Render()
 
 HRESULT CBoarrior::SetUp_Components(void* pArg)
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	Safe_Release(pGameInstance);
-
 	/* For.Com_Texture */
 	Texture_Clone();
 
@@ -121,7 +116,7 @@ HRESULT CBoarrior::SetUp_Components(void* pArg)
 	CollRectDesc.fRadiusX = .2f;
 	CollRectDesc.fRadiusZ = .8f;
 	CollRectDesc.fOffSetX = 0.f;
-	CollRectDesc.fOffSetY = -1.f;
+	CollRectDesc.fOffSetY = -2.f;
 	CollRectDesc.fOffsetZ = 0.f;
 
 	/* For.Com_Collider_Rect*/
@@ -260,34 +255,34 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 	{
 	case STATE::IDLE:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(-6.f, 6.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::WALK:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(-6.f, 6.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::DASH:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(-6.f, 6.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag)) == true)
 			m_eState = IDLE;
 		break;
 	case STATE::ATTACK_1:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(-6.f, 6.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		Attack(fTimeDelta);
 		break;
@@ -296,9 +291,9 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		break;
 	case STATE::ATTACK_3:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(-6.f, 6.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		Attack(fTimeDelta, m_eState);
 		break;
@@ -320,9 +315,9 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		break;
 	case STATE::HIT:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(-6.f, 6.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
 			m_bHit = false;
@@ -632,7 +627,7 @@ void CBoarrior::Follow_Target(_float fTimeDelta)
 		m_eState = STATE::WALK;
 
 		_float3 fTargetPos = m_pTarget->Get_Position();
-		m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
+		m_pTransformCom->Go_PosTarget(fTimeDelta * .2f, fTargetPos, _float3(0, 0, 0));
 
 		m_bIsAttacking = false;
 	}
@@ -747,8 +742,8 @@ void CBoarrior::Spawn_Bullet(_float fTimeDelta)
 		BulletData1.vPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 		BulletData2.vPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 
-		_float fForwardOffset = 0.75f;
-		_float fSideOffset = 0.25f;
+		_float fForwardOffset = 1.f;
+		_float fSideOffset = 0.4f;
 
 		switch (Get_Unprocessed_Dir(m_eDir))
 		{

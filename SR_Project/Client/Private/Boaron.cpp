@@ -353,7 +353,7 @@ void CBoaron::Patrol(_float fTimeDelta)
 	// Switch between Idle and Walk (based on time)
 	if (m_eState == STATE::IDLE)
 	{
-		if (GetTickCount() > m_dwIdleTime + 3000)
+		if (GetTickCount() > m_dwIdleTime + 3000 + (rand() % 3000)*(rand() % 2 + 1))
 		{
 			m_eState = STATE::RUN;
 			m_dwWalkTime = GetTickCount();
@@ -369,7 +369,7 @@ void CBoaron::Patrol(_float fTimeDelta)
 	}
 	else if (m_eState == STATE::RUN)
 	{
-		if (GetTickCount() > m_dwWalkTime + 1500)
+		if (GetTickCount() > m_dwWalkTime + 1500 + (rand() % 3000)*(rand() % 2 + 1))
 		{
 			m_eState = STATE::IDLE;
 			m_dwIdleTime = GetTickCount();
