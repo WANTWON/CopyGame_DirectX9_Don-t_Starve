@@ -8,6 +8,7 @@
 #include "CameraManager.h"
 #include "Level_Loading.h"
 #include "WoodWall.h"
+#include "DecoObject.h"
 
 CLevel_Boss::CLevel_Boss(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -138,6 +139,23 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 
 
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boaron"), LEVEL_BOSS, TEXT("Layer_Wall"), _float3(19.f, 0.f, 20.f));
+
+
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Deco_Stage4.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	CDecoObject::DECODECS DecoDesc;
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(DecoDesc), sizeof(CDecoObject::DECODECS), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_BOSS, TEXT("Layer_Deco"), &DecoDesc);
+	}
+	CloseHandle(hFile);
 
 	Safe_Release(pGameInstance);
 	return S_OK;

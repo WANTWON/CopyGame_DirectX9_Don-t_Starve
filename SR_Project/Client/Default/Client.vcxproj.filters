@@ -594,6 +594,9 @@
     <ClInclude Include="..\Public\Level_Maze.h">
       <Filter>01.Levels\04. Maze</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\DecoObject.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -919,6 +922,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Maze.cpp">
       <Filter>01.Levels\04. Maze</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DecoObject.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

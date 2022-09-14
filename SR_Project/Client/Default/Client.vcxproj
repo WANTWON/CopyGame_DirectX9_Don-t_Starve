@@ -183,6 +183,7 @@
     <ClInclude Include="..\Public\Daypont.h" />
     <ClInclude Include="..\Public\Deadcountpont.h" />
     <ClInclude Include="..\Public\Deadmain.h" />
+    <ClInclude Include="..\Public\DecoObject.h" />
     <ClInclude Include="..\Public\Eatitem.h" />
     <ClInclude Include="..\Public\Equipment_back.h" />
     <ClInclude Include="..\Public\Equipment_front.h" />
@@ -295,6 +296,7 @@
     <ClCompile Include="..\Private\Daypont.cpp" />
     <ClCompile Include="..\Private\Deadcountpont.cpp" />
     <ClCompile Include="..\Private\Deadmain.cpp" />
+    <ClCompile Include="..\Private\DecoObject.cpp" />
     <ClCompile Include="..\Private\Eatitem.cpp" />
     <ClCompile Include="..\Private\Equipment_back.cpp" />
     <ClCompile Include="..\Private\Equipment_front.cpp" />
