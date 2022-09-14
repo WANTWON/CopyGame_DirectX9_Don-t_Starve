@@ -101,6 +101,7 @@
 #include "Eatitem.h"
 #include "CameraManager.h"
 #include "Poteffect.h"
+#include "DecoObject.h"
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -1946,10 +1947,24 @@ HRESULT CLoader::Loading_ForBossLevel()
 		CBoarrior::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/*For.Prototype_Texture FloorDeco */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorDeco"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Deco/FloorFire/Idle_%03d.png"), 44))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorParticle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Floor/Floor_%03d.png"), 33))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DecoObject"),
+		CDecoObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/*For.Prototype_GameObject_Spawn_Effect*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spawn_Effect"),
 		CSpawnEffect::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
 	/*For.Prototype_GameObject_Spawn_Smoke_Effect*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spawn_Smoke_Effect"),
 		CSpawnSmokeEffect::Create(m_pGraphic_Device))))

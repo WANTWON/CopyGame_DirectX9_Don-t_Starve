@@ -158,7 +158,8 @@ HRESULT CWoodWall::Render()
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
 
-	if(m_eWallDesc.etype != WALL_END)
+	// m_eWallDesc.etype != WALL_END ||
+	if(CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_BOSS)
 		m_pVIBufferCom->Render();
 
 #ifdef _DEBUG

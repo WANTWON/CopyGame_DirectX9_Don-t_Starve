@@ -237,12 +237,6 @@ HRESULT CCollider_Cube::Update_ColliderBox(_float4x4 WorldMatrix)
 HRESULT CCollider_Cube::Render_ColliderBox()
 {
 
-	if (GetKeyState(VK_F11))
-	{
-		if (m_bRender) m_bRender = false;
-		else m_bRender = true;
-	}
-
 	if (m_bRender)
 	{
 		m_pGraphic_Device->SetTransform(D3DTS_WORLD, &m_StateDesc.StateMatrix);
