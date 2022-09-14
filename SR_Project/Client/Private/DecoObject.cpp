@@ -199,14 +199,14 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 	CollRectDesc.fOffSetY = 0.f;
 	CollRectDesc.fOffsetZ = 0.f;
 
-	switch (m_DecoDesc.m_eState)
+	/*switch (m_DecoDesc.m_eState)
 	{
 	case DECOTYPE::FLOORFIRE:
 		CollRectDesc.fRadiusY = 0.1f;
 		if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 			return E_FAIL;
 		break;
-	}
+	}*/
 
 
 
