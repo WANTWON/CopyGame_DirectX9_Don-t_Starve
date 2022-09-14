@@ -612,7 +612,9 @@
     <ClInclude Include="..\Public\DecoObject.h">
       <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\FloorGrateEruption.h" />
+    <ClInclude Include="..\public\FloorGrateEruption.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject\Floor_Grate_Eruption</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -948,7 +950,9 @@
     <ClCompile Include="..\Private\DecoObject.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\FloorGrateEruption.cpp" />
+    <ClCompile Include="..\private\FloorGrateEruption.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject\Floor_Grate_Eruption</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
