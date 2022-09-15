@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Inventory.h"
 #include "Item.h"
+#include "PickingMgr.h"
 
 CSpider::CSpider(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -31,7 +32,7 @@ HRESULT CSpider::Initialize(void* pArg)
 
 	m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
 
-	m_tInfo.iMaxHp = 100;
+	m_tInfo.iMaxHp = 75;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 	return S_OK;
@@ -41,8 +42,12 @@ int CSpider::Tick(_float fTimeDelta)
 {
 	if (__super::Tick(fTimeDelta))
 	{
+		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
 		CInventory_Manager::Get_Instance()->Get_Quest_list()->front()->plus_spidercount();
 		return OBJ_DEAD;
+
+		
+
 	}
 		
 
@@ -63,6 +68,11 @@ void CSpider::Late_Tick(_float fTimeDelta)
 
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	if (!m_bPicking)
+	{
+		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
+		m_bPicking = true;
+	}
 
 }
 
@@ -307,6 +317,59 @@ void CSpider::Change_Motion()
 		if (m_eState != m_ePreState)
 			m_ePreState = m_eState;
 	}
+}
+
+_bool CSpider::Picking(_float3 * PickingPoint)
+{
+	if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+		return false;
+
+	if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
+	{
+		m_vecOutPos = *PickingPoint;
+
+
+
+		return true;
+	}
+	else
+	{
+		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+
+		auto i = pInvenManager->Get_Monsterinfo_list()->front();
+		auto k = pInvenManager->Get_Monsterhp_list();
+
+		i->set_monstername(MONSTER_END);
+		i->set_check(false);
+
+
+		for (auto j : *k)
+			j->set_check(false);
+		return false;
+	}
+
+	return true;
+}
+
+void CSpider::PickingTrue()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
+	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+
+	auto i = pInvenManager->Get_Monsterinfo_list()->front();
+	auto k = pInvenManager->Get_Monsterhp_list();
+
+	i->set_monstername(MONSTER_SPIDER);
+	i->set_check(true);
+
+	for (auto j : *k)
+	{
+		j->set_check(true);
+		j->set_hp((_uint)m_tInfo.iCurrentHp);
+	}
+
+	Safe_Release(pGameInstance);
+	Safe_Release(pInvenManager);
 }
 
 void CSpider::AI_Behaviour(_float fTimeDelta)

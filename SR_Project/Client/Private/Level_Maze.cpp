@@ -45,7 +45,7 @@ HRESULT CLevel_Maze::Initialize()
 void CLevel_Maze::Tick(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
+	Safe_AddRef(pGameInstance);
 	__super::Tick(fTimeDelta);
 
 
@@ -55,6 +55,23 @@ void CLevel_Maze::Tick(_float fTimeDelta)
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, iLevel))))
 			return;
 	}
+
+	
+	
+
+	if (m_bNextLevel)
+	{
+		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, iLevel))))
+			return;
+	}
+
+	if (!m_bNextLevel)
+	{
+		CPickingMgr::Get_Instance()->Picking();
+	}
+
+	Safe_Release(pGameInstance);
 
 }
 

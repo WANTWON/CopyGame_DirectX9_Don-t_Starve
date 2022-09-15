@@ -57,6 +57,13 @@ void CLevel_Hunt::Tick(_float fTimeDelta)
 			return;
 	}
 
+	if (!m_bNextLevel)
+	{
+		CPickingMgr::Get_Instance()->Picking();
+	}
+
+	
+
 	//CPickingMgr::Get_Instance()->Picking();
 	Safe_Release(pGameInstance);
 }

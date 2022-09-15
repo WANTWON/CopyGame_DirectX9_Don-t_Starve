@@ -36,10 +36,15 @@ private: /*For TextureCom */
 	virtual HRESULT Texture_Clone() override;
 	virtual void Change_Frame(_float fTimeDelta) override;
 	virtual void Change_Motion() override;
+
+public: /*For Picking */
+	virtual _bool Picking(_float3* PickingPoint) override;
+	virtual void PickingTrue() override;
 	
 private:
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
+	_float3 m_vecOutPos; // For Picking
 
 private:
 	virtual void AI_Behaviour(_float fTimeDelta) override;

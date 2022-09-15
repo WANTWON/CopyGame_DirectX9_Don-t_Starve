@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Inventory.h"
 #include "Item.h"
+#include "PickingMgr.h"
 
 CBoaron::CBoaron(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -44,7 +45,13 @@ HRESULT CBoaron::Initialize(void* pArg)
 int CBoaron::Tick(_float fTimeDelta)
 {
 	if (__super::Tick(fTimeDelta) && m_bDeadAnimExpired)
+	{
+		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
 		return OBJ_DEAD;
+	}
+		
+
+	
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);
@@ -63,6 +70,11 @@ void CBoaron::Late_Tick(_float fTimeDelta)
 
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	if (!m_bPicking)
+	{
+		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
+		m_bPicking = true;
+	}
 }
 
 HRESULT CBoaron::Render()
@@ -311,6 +323,59 @@ void CBoaron::Change_Motion()
 		if (m_eState != m_ePreState)
 			m_ePreState = m_eState;
 	}
+}
+
+_bool CBoaron::Picking(_float3 * PickingPoint)
+{
+	if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+		return false;
+
+	if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
+	{
+		m_vecOutPos = *PickingPoint;
+
+
+
+		return true;
+	}
+	else
+	{
+		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+
+		auto i = pInvenManager->Get_Monsterinfo_list()->front();
+		auto k = pInvenManager->Get_Monsterhp_list();
+
+		i->set_monstername(MONSTER_END);
+		i->set_check(false);
+
+
+		for (auto j : *k)
+			j->set_check(false);
+		return false;
+	}
+
+	return true;
+}
+
+void CBoaron::PickingTrue()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
+	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+
+	auto i = pInvenManager->Get_Monsterinfo_list()->front();
+	auto k = pInvenManager->Get_Monsterhp_list();
+
+	i->set_monstername(MONSTER_BOARON);
+	i->set_check(true);
+
+	for (auto j : *k)
+	{
+		j->set_check(true);
+		j->set_hp((_uint)m_tInfo.iCurrentHp);
+	}
+
+	Safe_Release(pGameInstance);
+	Safe_Release(pInvenManager);
 }
 
 void CBoaron::AI_Behaviour(_float fTimeDelta)

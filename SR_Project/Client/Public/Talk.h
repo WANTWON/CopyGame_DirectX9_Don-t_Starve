@@ -27,6 +27,7 @@ public:
 
 private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
+	CTexture*				m_pTextureCom1 = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
@@ -44,12 +45,14 @@ private:
 	HRESULT Release_RenderState();
 
 	_uint texnum = 0;
+	_uint texnum1 = 0; //forwendy
 	_uint m_ihp;
 	bool m_bcheck = false;
 	bool m_SetTargetBearger = false;
 	_bool m_bActivated = false;
 	_bool	m_bTalkEnd = false;
 	_bool	m_bIsStartText = true;
+	_bool m_bforwendy = false;
 public:
 	bool getcheck() { return m_bcheck;  }
 	void setcheck(bool tof) { m_bcheck = tof; }
