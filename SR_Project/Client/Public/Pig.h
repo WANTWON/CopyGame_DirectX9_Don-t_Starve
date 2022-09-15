@@ -15,6 +15,7 @@ class CPig final : public CMonster
 		HIT,
 		DIE,
 		HAPPY,
+		INTERACT,
 		MAX
 	};
 
@@ -42,6 +43,12 @@ public: /*For Picking */
 	virtual _bool Picking(_float3* PickingPoint) override;
 	virtual void PickingTrue() override;
 
+public: /*Interact*/
+	void Interact(_float _fTimeDelta, _uint _iNum);
+
+public://Get&&Set
+	void	Set_CanMove(_bool _bMove) { m_bMove = _bMove; }
+	_bool	Get_CanMove(void) { return m_bMove; }
 private:
 	DIR_STATE m_eDir = DIR_STATE::DIR_DOWN;
 	DIR_STATE m_ePreDir = DIR_STATE::DIR_END;
@@ -50,6 +57,7 @@ private:
 	_float fHappyTimer = 0.f;
 	_float3 m_vecOutPos; // For Picking
 
+	_bool	m_bMove = true;
 public:
 	void Give_Food() { m_eState = STATE::HAPPY; }
 

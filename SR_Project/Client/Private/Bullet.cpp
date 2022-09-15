@@ -254,7 +254,6 @@ void CBullet::Excute(_float fTimeDelta)
 			{
 			case DIR_STATE::DIR_UP:
 				m_pTransformCom->Go_Straight(fTimeDelta);
-
 				break;
 			case DIR_STATE::DIR_DOWN:
 				m_pTransformCom->Go_Backward(fTimeDelta);
@@ -263,7 +262,7 @@ void CBullet::Excute(_float fTimeDelta)
 				m_pTransformCom->Go_Right(fTimeDelta);
 				break;
 			case DIR_STATE::DIR_LEFT:
-				m_pTransformCom->Go_Left(fTimeDelta);
+				m_pTransformCom->Go_Right(fTimeDelta);
 				break;
 			case DIR_STATE::DIR_END:
 				m_pTransformCom->Go_PosDir(fTimeDelta, m_tBulletData.vLook);
@@ -315,6 +314,8 @@ void CBullet::Excute(_float fTimeDelta)
 		case WEAPON_TYPE::WEAPON_MINES:
 			IceMines(fTimeDelta);
 			break;
+		case WEAPON_TYPE::WEAPON_ICESMOKE:
+			Ice_Smoke(fTimeDelta);
 		}
 	}
 }
@@ -342,26 +343,24 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 			goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_SMOKE:
-
 			if (m_bIsAttacked)
 			{
 				m_bIsAttacked = false;
-				m_fDamage = 20.f;
+				m_fDamage = 30.f;
 				goto AttackMulti;
 			}
 			break;
-
 		case WEAPON_TYPE::WEAPON_ICESPIKE1:
-				m_fDamage = 4.f;
+				m_fDamage = 1.f;
 				goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE2:
-				m_fDamage = 3.f;
+				m_fDamage = 1.f;
 				goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE3:
 				m_bIsAttacked = false;
-				m_fDamage = 2.f;
+				m_fDamage = 1.f;
 				goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE4:
@@ -374,6 +373,14 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 			{
 				m_bIsAttacked = true; // �����ѹ�����
 				m_bActivated = true; // 
+				m_fDamage = 10.f;
+				goto AttackMulti;
+			}
+			break;
+		case WEAPON_TYPE::WEAPON_ICESMOKE:
+			if (m_bIsAttacked)
+			{
+				m_fDamage = 0.6f;
 				goto AttackMulti;
 			}
 			break;
@@ -452,6 +459,7 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 
 		}
 		break;
+
 	case WEAPON_TYPE::WEAPON_SMOKE:
 		/*if (m_fAccDeadTimer > 3.f && !m_bActivated)
 		{
@@ -481,10 +489,12 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 			m_bDead = OBJ_DEAD;
 		}
 		break;
+
 	case WEAPON_TYPE::WEAPON_MINES:
 		if (m_bActivated3)
 			m_bDead = OBJ_DEAD;
 		break;
+
 	case WEAPON_TYPE::WEAPON_PUFF:
 		if(m_pTextureCom->Get_Frame().m_iCurrentTex >=m_pTextureCom->Get_Frame().m_iEndTex -2)
 			m_bDead = OBJ_DEAD;
@@ -492,6 +502,7 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 
 	case WEAPON_TYPE::BEARGER_SPECIAL:
 	case WEAPON_TYPE::BOARRIOR_SPECIAL:
+	case WEAPON_TYPE::WEAPON_ICESMOKE:
 		if ((m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1))
 			m_bDead = true;
 	}
@@ -906,6 +917,19 @@ void CBullet::Puff(_float _fTimeDelta)
 
 }
 
+void CBullet::Ice_Smoke(_float _fTimeDelta)
+{
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= 2
+		&& m_pTextureCom->Get_Frame().m_iCurrentTex <= 24)
+	{
+		m_bIsAttacked = true;
+	}
+	else
+	{
+		m_bIsAttacked = false;
+	}
+}
+
 HRESULT CBullet::Render_TextureState()
 {
 	switch (m_tBulletData.eWeaponType)
@@ -1021,6 +1045,7 @@ _bool CBullet::Compare_Terrain(void)
 	case WEAPON_TYPE::WEAPON_MINE:
 	case WEAPON_TYPE::BEARGER_SPECIAL:
 	case WEAPON_TYPE::BOARRIOR_SPECIAL:
+	case WEAPON_TYPE::WEAPON_ICESMOKE:
 		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
 
 		_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -1053,6 +1078,18 @@ void CBullet::SetUp_BillBoard()
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+
+	if (m_tBulletData.eDirState == DIR_STATE::DIR_LEFT)
+	{
+		if (m_tBulletData.eWeaponType == WEAPON_DART)
+		{
+			m_pTransformCom->Set_Scale(-0.3f, 0.3f, 1.f);
+		}
+		else
+		{
+			m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
+		}
+	}
 }
 
 HRESULT CBullet::Texture_Clone(void)
@@ -1191,6 +1228,7 @@ HRESULT CBullet::Texture_Clone(void)
 		m_vecTexture.push_back(m_pTextureCom);
 
 		break;
+
 	case WEAPON_TYPE::BOARRIOR_SPECIAL:
 		TextureDesc.m_iStartTex = 0;
 		TextureDesc.m_iEndTex = 31;
@@ -1200,6 +1238,7 @@ HRESULT CBullet::Texture_Clone(void)
 		m_vecTexture.push_back(m_pTextureCom);
 
 		break;
+
 	case WEAPON_TYPE::WEAPON_PUFF:
 		TextureDesc.m_iStartTex = 0;
 		TextureDesc.m_iEndTex = 16;
@@ -1210,6 +1249,15 @@ HRESULT CBullet::Texture_Clone(void)
 
 		break;
 
+	case WEAPON_TYPE::WEAPON_ICESMOKE:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 26;
+		TextureDesc.m_fSpeed = 60;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceSmoke"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Ice_Smoke"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+
+		break;
 	}
 
 
@@ -1263,7 +1311,13 @@ HRESULT CBullet::Init_Data(void)
 	case WEAPON_TYPE::WEAPON_MINE:
 		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 		Change_Texture(TEXT("Com_Texture_Texture_SandSpike_Small_Create"));
-		m_fDamage = 1.f;
+		m_fDamage = 10.f;
+		Compare_Terrain();
+		break;
+
+	case WEAPON_TYPE::WEAPON_ICESMOKE:
+		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_fDamage = 20.f;
 		Compare_Terrain();
 		break;
 	default:

@@ -36,7 +36,7 @@ HRESULT CPig::Initialize(void* pArg)
 	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_fAttackRadius = .8f;
-
+	m_eMonsterID = PIG;
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 
@@ -490,15 +490,44 @@ void CPig::PickingTrue()
 		Safe_Release(pMouse);
 	}
 
-	cout << "Collision Pig : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
+	//cout << "Collision Pig : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
 
 	Safe_Release(pGameInstance);
+}
+
+void CPig::Interact(_float _fTimeDelta, _uint _iNum)
+{
+	if (_iNum == 0)
+	{
+		m_eState = IDLE;
+		m_bMove = false;
+	}
+	else if (_iNum == 1)
+	{
+		m_eState = HAPPY;
+		m_bMove = true;
+	}
+	else if (_iNum == 2)
+	{
+		m_eState = IDLE;
+		m_bMove = true;
+	}
+
 }
 
 void CPig::AI_Behaviour(_float fTimeDelta)
 {
 	if (m_bHit)
+	{
 		m_eState = STATE::HIT;
+		m_bMove = true;
+	}
+		
+
+	if (!m_bMove)
+	{
+		return;
+	}
 
 	// Check for Target, AggroRadius
 	if (m_bAggro)
