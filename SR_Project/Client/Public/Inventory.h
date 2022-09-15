@@ -46,11 +46,14 @@
 
 #include "Mouse_iteminfo.h"
 #include "Eatitem.h"
+#include "Mouse_Monster.h"
 
 #include "Daypont.h"
 #include "Deadcountpont.h"
 #include "Deadmain.h" 
 #include "Daycountpont.h"
+
+#include "Loadingscene.h"
 /*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -121,7 +124,10 @@ public:
 
 	list<CDaycountpont*>* Get_Daycountpont_list(void) { return &m_Daycountpont; }
 
+	list<CMouse_Monster*>*Get_Monsterinfo_list(void) { return &m_Mousemonsterinfolist; }
+	list<CLoadingscene*>*Get_Loadingscene_list(void) { return &m_Loadingscenelist; }
 
+	
 
 	void sethp(_uint hp) { m_ihp = hp; }
 	void sethuger(_uint hunger) { m_ihunger = hunger;}
@@ -217,6 +223,9 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CDeadcountpont*>m_Deadcountpont;
 
 	list<CDaycountpont*>m_Daycountpont;
+
+	list<CMouse_Monster*>m_Mousemonsterinfolist;
+	list<CLoadingscene*> m_Loadingscenelist;
 	
 
 

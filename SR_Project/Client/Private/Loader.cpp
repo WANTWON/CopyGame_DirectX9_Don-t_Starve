@@ -104,6 +104,7 @@
 #include "CameraManager.h"
 #include "Poteffect.h"
 #include "DecoObject.h"
+#include "Mouse_Monster.h"
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -666,6 +667,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Fence/Idle_%03d.png"), 5))))
 		return E_FAIL;
+
+	/*For Prototype Component_Texture_Bossloadingscene  */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_loadingboss"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/scene2/frame_%03d_delay-0.03s.png"), 330))))
+		return E_FAIL;
 	
 
 	///*For.Prototype_Component_Texture_loadingscene */
@@ -869,6 +875,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	/*For.Prototype_GameObject_MentalityPont */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse_iteminfo"),
 		CMouse_iteminfo::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_MentalityPont */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse_Monster"),
+		CMouse_Monster::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Eateffect */

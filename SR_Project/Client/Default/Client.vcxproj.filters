@@ -103,9 +103,6 @@
     <Filter Include="02.GameObject\98.UI\09.Pot">
       <UniqueIdentifier>{86bb6014-7dd9-497c-bfb4-5acb09504ded}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\98.UI\01. Inventory\iteminfo">
-      <UniqueIdentifier>{7dc8053d-0b09-4953-a915-757aadbf5877}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.BeHavior_Tree">
       <UniqueIdentifier>{135c86d0-bf70-4ac6-88dc-d15f11ca00fd}</UniqueIdentifier>
     </Filter>
@@ -264,6 +261,9 @@
     </Filter>
     <Filter Include="02.GameObject\00. Pawn\Totem">
       <UniqueIdentifier>{cc585df3-26be-4cdc-997c-82adabccd35f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\13.Mouse_">
+      <UniqueIdentifier>{7dc8053d-0b09-4953-a915-757aadbf5877}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -541,10 +541,10 @@
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Wendy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Mouse_item.h">
-      <Filter>02.GameObject\98.UI\01. Inventory\iteminfo</Filter>
+      <Filter>02.GameObject\98.UI\13.Mouse_</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Mouse_iteminfo.h">
-      <Filter>02.GameObject\98.UI\01. Inventory\iteminfo</Filter>
+      <Filter>02.GameObject\98.UI\13.Mouse_</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Questbutton.h">
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
@@ -617,6 +617,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Totem.h">
       <Filter>02.GameObject\00. Pawn\Totem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mouse_Monster.h">
+      <Filter>02.GameObject\98.UI\13.Mouse_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monsterhp_pont.h">
+      <Filter>02.GameObject\98.UI\13.Mouse_</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -882,10 +888,10 @@
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Wendy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Mouse_item.cpp">
-      <Filter>02.GameObject\98.UI\01. Inventory\iteminfo</Filter>
+      <Filter>02.GameObject\98.UI\13.Mouse_</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Mouse_iteminfo.cpp">
-      <Filter>02.GameObject\98.UI\01. Inventory\iteminfo</Filter>
+      <Filter>02.GameObject\98.UI\13.Mouse_</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Questbutton.cpp">
       <Filter>02.GameObject\98.UI\04.Quest</Filter>
@@ -958,6 +964,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Totem.cpp">
       <Filter>02.GameObject\00. Pawn\Totem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mouse_Monster.cpp">
+      <Filter>02.GameObject\98.UI\13.Mouse_</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monsterhp_pont.cpp">
+      <Filter>02.GameObject\98.UI\13.Mouse_</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

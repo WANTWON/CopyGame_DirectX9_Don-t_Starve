@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "Inventory.h"
 
+
+
 CLoadingscene::CLoadingscene(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -53,16 +55,31 @@ int CLoadingscene::Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 	Safe_AddRef(pinv);
 	*/
-
-	if (GetTickCount() > m_dwdaytime + 30)
+	if (g_boss == false)
 	{
-		++texnum;
-		m_dwdaytime = GetTickCount();
+		if (GetTickCount() > m_dwdaytime + 30)
+		{
+			++texnum;
+			m_dwdaytime = GetTickCount();
+		}
+
+		if (texnum == 302)
+		{
+			texnum = 0;
+		}
 	}
-
-	if (texnum == 302)
+	else if(g_boss == true)
 	{
-		texnum = 0;
+		if (GetTickCount() > m_dwdaytime + 30)
+		{
+			++texnum1;
+			m_dwdaytime = GetTickCount();
+		}
+
+		if (texnum1 == 330)
+		{
+			texnum1 = 0;
+		}
 	}
 	//pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
 
@@ -88,65 +105,94 @@ HRESULT CLoadingscene::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
-	m_fSizeX = 1280.f;
-	m_fSizeY = 760.f;
-	m_fX = 640.f;
-	m_fY = 380.f;
 
-	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+	if (g_boss == false)
+	{
+		m_fSizeX = 1280.f;
+		m_fSizeY = 760.f;
+		m_fX = 640.f;
+		m_fY = 380.f;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
-	/*_float4x4		ViewMatrix;
-	D3DXMatrixIdentity(&ViewMatrix);
-
-	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);*/
+		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+			return E_FAIL;
 
 
 
-	if (FAILED(m_pTextureCom1->Bind_OnGraphicDev(0)))
-		return E_FAIL;
+		if (FAILED(m_pTextureCom1->Bind_OnGraphicDev(0)))
+			return E_FAIL;
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
+		if (FAILED(SetUp_RenderState()))
+			return E_FAIL;
 
-	m_pVIBufferCom->Render();
+		m_pVIBufferCom->Render();
 
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
+		if (FAILED(Release_RenderState()))
+			return E_FAIL;
 
-	m_fSizeX = 900.f;
-	m_fSizeY = 900.f;
-	m_fX = 700.f;
-	m_fY = 650.f;
+		m_fSizeX = 900.f;
+		m_fSizeY = 900.f;
+		m_fX = 700.f;
+		m_fY = 650.f;
 
-	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
+		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+			return E_FAIL;
 
-	_float4x4		ViewMatrix;
-	D3DXMatrixIdentity(&ViewMatrix);
+		_float4x4		ViewMatrix;
+		D3DXMatrixIdentity(&ViewMatrix);
 
-	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
 
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
-		return E_FAIL;
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+			return E_FAIL;
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
+		if (FAILED(SetUp_RenderState()))
+			return E_FAIL;
 
-	m_pVIBufferCom->Render();
+		m_pVIBufferCom->Render();
 
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
+		if (FAILED(Release_RenderState()))
+			return E_FAIL;
+	}
+	else if (g_boss == true)
+	{
+		m_fSizeX = 1280.f;
+		m_fSizeY = 760.f;
+		m_fX = 640.f;
+		m_fY = 380.f;
+
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+
+		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+			return E_FAIL;
+
+		_float4x4		ViewMatrix;
+		D3DXMatrixIdentity(&ViewMatrix);
+
+		m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+
+		if (FAILED(m_pTextureCom2->Bind_OnGraphicDev(texnum1)))
+			return E_FAIL;
+
+		if (FAILED(SetUp_RenderState()))
+			return E_FAIL;
+
+		m_pVIBufferCom->Render();
+
+		if (FAILED(Release_RenderState()))
+			return E_FAIL;
+	}
+	
 
 
 
@@ -169,6 +215,13 @@ HRESULT CLoadingscene::SetUp_Components()
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_loading"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
+
+	if (g_boss == true)
+	{
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_loadingboss"), (CComponent**)&m_pTextureCom2)))
+			return E_FAIL;
+	}
+	
 	
 
 
@@ -236,6 +289,8 @@ CGameObject * CLoadingscene::Clone(void* pArg)
 		ERR_MSG(TEXT("Failed to Cloned : CLoadingscene"));
 		Safe_Release(pInstance);
 	}
+
+	CInventory_Manager::Get_Instance()->Get_Loadingscene_list()->push_back(pInstance);
 
 	return pInstance;
 }

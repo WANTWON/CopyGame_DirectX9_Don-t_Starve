@@ -27,6 +27,9 @@ namespace Client
 	};
 	enum NPCID {NPC_PIGKING, NPC_WENDY};
 
+	enum MONSTERID { MONSTER_BEARGER, MONSTER_BOARON, MONSTER_BOARRIOR, MONSTER_PIG, MONSTER_SPIDER, MONSTER_SPIDERWARRIOR , MONSTER_END };
+		
+
 	enum MAKEWHAT { MAKE_AXE, MAKE_PICK, MAKE_HAMBAT, MAKE_SHOTTER, MAKE_STAFF, MAKE_ARMOR, MAKE_HELMET,MAKE_FENCE,MAKE_POT,MAKE_TENT,MAKE_ROPE,MAKE_COAL,MAKE_TORCH, MAKE_END };
 
 	const  _float  g_iWinSizeX = 1280;
@@ -72,5 +75,6 @@ extern _bool		g_bLoadingfirst;
 extern _bool		g_bUIMadefirst;
 extern _bool        g_bscenechange;
 extern _uint       g_iQuestnum;
+extern _bool       g_boss;
 
 using namespace Client;

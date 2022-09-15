@@ -429,10 +429,18 @@ _bool CPig::Picking(_float3 * PickingPoint)
 void CPig::PickingTrue()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
+	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+
+	auto i = pInvenManager->Get_Monsterinfo_list()->front();
+
+	i->set_monstername(MONSTER_PIG);
+	i->set_check(true);
+
 	
+
 	if (pGameInstance->Key_Up(VK_LBUTTON))
 	{
-		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+		
 		CMouse* pMouse = CMouse::Get_Instance(); Safe_AddRef(pMouse);
 
 		if (pMouse->Get_Item_type() == ITEMID::ITEM_FOOD)

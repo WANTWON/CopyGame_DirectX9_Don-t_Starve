@@ -10,9 +10,11 @@
 #include "Loadingscene.h"
 #include "Level_Manager.h"
 #include "Level_Maze.h"
+#include "Inventory.h"
 
 
 _bool g_bLoadingfirst = true;
+_bool g_boss = false;
 
 CLevel_Loading::CLevel_Loading(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -36,6 +38,8 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 			CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/scene3/loading_%03d.png"), 303))))
 			return E_FAIL;
 
+		
+
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_loadingback"),
 			CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Loading_Scene/loading6.png"), 1))))
 			return E_FAIL;
@@ -46,10 +50,29 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 		g_bLoadingfirst = false;
 			
 	}
-	
-	
+
+	//CInventory_Manager* inv = CInventory_Manager::Get_Instance();
+	//auto i = inv->Get_Loadingscene_list()->front();
+	if (eNextLevel == LEVEL_BOSS)
+	{
+
+		//i->bosson();
+		g_boss = true;
+
+
+	}
+	else if (eNextLevel != LEVEL_BOSS)
+	{
+		//i->bossoff();
+		g_boss = false;
+	}
+
 	if (FAILED(Ready_Layer_Loadingscene(TEXT("Layer_Loadingscene"))))
 		return E_FAIL;
+
+	
+	
+	
 	m_eNextLevel = eNextLevel;
 
 	m_pLoader = CLoader::Create(m_pGraphic_Device, eNextLevel);
@@ -111,6 +134,7 @@ void CLevel_Loading::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
+	
 	SetWindowText(g_hWnd, m_pLoader->Get_LoadingText());
 }
 

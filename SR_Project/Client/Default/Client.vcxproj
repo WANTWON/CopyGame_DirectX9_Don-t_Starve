@@ -203,9 +203,11 @@
     <ClInclude Include="..\Public\MainInventory_back.h" />
     <ClInclude Include="..\Public\MainInventory_front.h" />
     <ClInclude Include="..\Public\Craftmain.h" />
+    <ClInclude Include="..\Public\Monsterhp_pont.h" />
     <ClInclude Include="..\Public\Mouse.h" />
     <ClInclude Include="..\Public\Mouse_item.h" />
     <ClInclude Include="..\Public\Mouse_iteminfo.h" />
+    <ClInclude Include="..\Public\Mouse_Monster.h" />
     <ClInclude Include="..\Public\NPC.h" />
     <ClInclude Include="..\Public\Particle.h" />
     <ClInclude Include="..\Public\ParticleSystem.h" />
@@ -320,9 +322,11 @@
     <ClCompile Include="..\Private\MainInventory_back.cpp" />
     <ClCompile Include="..\Private\MainInventory_front.cpp" />
     <ClCompile Include="..\Private\Craftmain.cpp" />
+    <ClCompile Include="..\Private\Monsterhp_pont.cpp" />
     <ClCompile Include="..\Private\Mouse.cpp" />
     <ClCompile Include="..\Private\Mouse_item.cpp" />
     <ClCompile Include="..\Private\Mouse_iteminfo.cpp" />
+    <ClCompile Include="..\Private\Mouse_Monster.cpp" />
     <ClCompile Include="..\Private\NPC.cpp" />
     <ClCompile Include="..\Private\Particle.cpp" />
     <ClCompile Include="..\Private\ParticleSystem.cpp" />
