@@ -446,7 +446,7 @@ HRESULT CTalk::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_talkwendy"), (CComponent**)&m_pTextureCom1)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_talkwendy"), (CComponent**)&m_pTextureCom1)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
