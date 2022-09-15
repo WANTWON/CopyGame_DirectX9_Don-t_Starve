@@ -6,6 +6,8 @@
 #include "Level_GamePlay.h"
 #include "Level_Hunt.h"
 #include "CameraManager.h"
+#include "Level_Maze.h"
+#include "Level_Boss.h"
 
 CPortal::CPortal(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -79,36 +81,41 @@ int CPortal::Tick(_float fTimeDelta)
 
 	if (m_bShouldTeleport)
 	{
-		CLevel_GamePlay* pLevel = nullptr;
-		
+		CLevel* pLevel = nullptr;
+		pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+		LEVEL pCurrentLevelIndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+		switch (pCurrentLevelIndex)
+		{
+		case Client::LEVEL_GAMEPLAY:
+			dynamic_cast<CLevel_GamePlay*>(pLevel)->Set_NextLevel(true);
+			break;
+		case Client::LEVEL_HUNT:
+			dynamic_cast<CLevel_Hunt*>(pLevel)->Set_NextLevel(true);
+			break;
+		case Client::LEVEL_MAZE:
+			dynamic_cast<CLevel_Maze*>(pLevel)->Set_NextLevel(true);
+			break;
+		case Client::LEVEL_BOSS:
+			dynamic_cast<CLevel_Boss*>(pLevel)->Set_NextLevel(true);
+			break;
+		}
+
 		switch (m_ePortalDesc.m_eType)
 		{
 		case PORTAL_GAMEPLAY:
-			pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-			pLevel->Set_NextLevel(true);
 			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_GAMEPLAY);
 			break;
-
 		case PORTAL_HUNT:
-			pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-			pLevel->Set_NextLevel(true);
 			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_HUNT);
 			break;
-
 		case PORTAL_BOSS:
-			 pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-			pLevel->Set_NextLevel(true);
 			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_BOSS);
 			break;
-
 		case PORTAL_MAZE:
-			pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-			pLevel->Set_NextLevel(true);
 			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_MAZE);
 			break;
-		default:
-			break;
 		}
+
 	}
 
 

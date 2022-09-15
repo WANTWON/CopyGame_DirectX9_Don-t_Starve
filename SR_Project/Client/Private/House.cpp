@@ -28,7 +28,7 @@ HRESULT CHouse::Initialize(void* pArg)
 	switch (m_HouseDesc.m_eState)
 	{
 	case HOUSETYPE::SPIDERHOUSE:
-		m_MonsterMaxCount = 4;
+		m_MonsterMaxCount = 5;
 		break;
 	case HOUSETYPE::BOARONSPAWNER:
 		m_MonsterMaxCount = 3;
