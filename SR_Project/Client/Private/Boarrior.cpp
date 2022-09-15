@@ -9,6 +9,7 @@
 #include "Totem.h"
 #include "PickingMgr.h"
 #include "Portal.h"
+#include "Level_Boss.h"
 
 CBoarrior::CBoarrior(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -56,12 +57,14 @@ int CBoarrior::Tick(_float fTimeDelta)
 	if (__super::Tick(fTimeDelta) && m_bDeadAnimExpired)
 	{
 		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
-		CPortal::PORTALDESC PortalDesc;
+		CLevel* pLevel =  CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+		dynamic_cast<CLevel_Boss*>(pLevel)->Set_PortalMake(true);
+		/*CPortal::PORTALDESC PortalDesc;
 		PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
 		PortalDesc.vPosition = _float3(14.f, 1.f, 15.f);
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_BOSS, TEXT("Layer_Object"), &PortalDesc)))
-			return E_FAIL;
+			return E_FAIL;*/
 
 		return OBJ_DEAD;
 	}

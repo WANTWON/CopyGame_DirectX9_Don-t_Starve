@@ -437,10 +437,10 @@ public:
 				return Get_VecNodes()[0]->Excute(_Obj, _fTimeDelta);
 			}
 		}
-		else if (eID == OBJ_OBJECT)
-		{
-			return Get_VecNodes()[2]->Excute(_Obj, _fTimeDelta); //Object_Interact
-		}
+		//else if (eID == OBJ_OBJECT)
+		//{
+		//	return Get_VecNodes()[2]->Excute(_Obj, _fTimeDelta); //Object_Interact
+		//}
 	}
 };
 

@@ -10,6 +10,7 @@
 #include "WoodWall.h"
 #include "DecoObject.h"
 #include "Totem.h"
+#include "Portal.h"
 
 CLevel_Boss::CLevel_Boss(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -56,6 +57,19 @@ void CLevel_Boss::Tick(_float fTimeDelta)
 		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, iLevel))))
 			return;
+	}
+
+	if (m_bPortalMake)
+	{
+		m_bPortalMake = false;
+		CPortal::PORTALDESC PortalDesc;
+		PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
+		PortalDesc.vPosition = _float3(14.f, 1.f, 15.f);
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_BOSS, TEXT("Layer_Object"), &PortalDesc)))
+			return;
+
+
 	}
 
 	if (!m_bNextLevel)
