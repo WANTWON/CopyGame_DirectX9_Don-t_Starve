@@ -77,17 +77,45 @@ int CMouse_item::Tick(_float fTimeDelta)
 
 void CMouse_item::Late_Tick(_float fTimeDelta)
 {
+	CMouse* pMouse = CMouse::Get_Instance();
+
+
+	if (texnum == ITEMNAME_ARMOR)
+	{
+		pMouse->Set_Item_type(ITEM_ARMOR);
+	}
+	else if (texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH || texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK || texnum == ITEMNAME_HAMBAT)
+	{
+		pMouse->Set_Item_type(ITEM_HAND);
+	}
+
+	else if (texnum == ITEMNAME_HELMET)
+	{
+		pMouse->Set_Item_type(ITEM_HAT);
+	}
+
+	else if (texnum == ITEMNAME_BAG)
+	{
+		pMouse->Set_Item_type(ITEM_BAG);
+	}
+
 	if (m_bcheck == true)
 	{
 		__super::Late_Tick(fTimeDelta);
 
 
-		CMouse* pMouse = CMouse::Get_Instance();
+		
 
-		if (pMouse->Get_picked() == true && pMouse->Get_Item_count() <= 0)
+		if (pMouse->Get_picked() == true && pMouse->Get_Item_count() <= 0 )
 		{
-			m_bcheck = false;
-			pMouse->Set_picked(false);
+			if (pMouse->Get_Item_type() != ITEM_HAT && pMouse->Get_Item_type() != ITEM_BAG && pMouse->Get_Item_type() != ITEM_HAND && pMouse->Get_Item_type() != ITEM_ARMOR
+				&& pMouse->Get_Item_name() != ITEMNAME_QUEST1)
+			{
+				m_bcheck = false;
+				pMouse->Set_picked(false);
+			}
+			
+			
 		}
 		else
 			m_bcheck = true;

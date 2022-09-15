@@ -351,6 +351,7 @@ void CCraftbutton::craft(MAKEWHAT item)
 				(*iter)->set_texnum(ITEMNAME_AXE);
 
 				(*iter)->set_check(true);
+				(*iter)->plus_itemcount();
 
 				return;
 			}
@@ -403,9 +404,11 @@ void CCraftbutton::craft(MAKEWHAT item)
 		{
 			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
 			{
-				(*iter)->set_texnum(ITEMNAME_PICK);
-
 				(*iter)->set_check(true);
+				(*iter)->set_texnum(ITEMNAME_PICK);
+				(*iter)->plus_itemcount();
+
+				
 
 				return;
 			}
@@ -460,6 +463,8 @@ void CCraftbutton::craft(MAKEWHAT item)
 
 				(*iter)->set_check(true);
 
+				(*iter)->plus_itemcount();
+
 				return;
 			}
 
@@ -512,6 +517,8 @@ void CCraftbutton::craft(MAKEWHAT item)
 				(*iter)->set_texnum(ITEMNAME_SHOTTER);
 
 				(*iter)->set_check(true);
+
+				(*iter)->plus_itemcount();
 
 				return;
 			}
@@ -566,6 +573,8 @@ void CCraftbutton::craft(MAKEWHAT item)
 
 				(*iter)->set_check(true);
 
+				(*iter)->plus_itemcount();
+
 				return;
 			}
 
@@ -619,6 +628,8 @@ void CCraftbutton::craft(MAKEWHAT item)
 
 				(*iter)->set_check(true);
 
+				(*iter)->plus_itemcount();
+
 				return;
 			}
 
@@ -671,6 +682,8 @@ void CCraftbutton::craft(MAKEWHAT item)
 				(*iter)->set_texnum(ITEMNAME_HELMET);
 
 				(*iter)->set_check(true);
+
+				(*iter)->plus_itemcount();
 
 				return;
 			}
