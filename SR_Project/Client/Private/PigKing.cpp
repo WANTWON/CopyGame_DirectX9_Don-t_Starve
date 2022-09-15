@@ -327,6 +327,14 @@ void CPigKing::Interaction(_float _fTimedelta)
 {
 }
 
+void CPigKing::Talk(_float _fTimeDelta)
+{
+}
+
+void CPigKing::Dance(_float _fTimeDelta)
+{
+}
+
 void CPigKing::Select_Target(_float _fTimeDelta)
 {
 }

@@ -481,6 +481,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Small_Puff"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Small_Puff/Small_Puff_%03d.png"), 17))))
 		return E_FAIL;
+
+	/*Ice_Smoke*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Ice_Smoke"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Ice_Smoke/Ice_Smoke_%03d.png"), 27))))
+		return E_FAIL;
 	//BulletEnd
 	
 	/*AttackRange & Picker*/
@@ -1059,13 +1064,13 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	//Wendy Run
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Run_Down"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Run/Wendy_Run_Down_%03d.png"), 17))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Run/Wendy_Run_Down_%03d.png"), 28))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Run_Up"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Run/Wendy_Run_Up_%03d.png"), 17))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Run/Wendy_Run_Up_%03d.png"), 28))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Run_Side"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Run/Wendy_Run_Side_%03d.png"), 17))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Run/Wendy_Run_Side_%03d.png"), 28))))
 		return E_FAIL;
 
 	//Wendy Build
@@ -1101,6 +1106,25 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Give/Wendy_Give_Side_%03d.png"), 14))))
 		return E_FAIL;
 
+	//Wendy Dance
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Dance"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Dance/Wendy_Dance_%03d.png"), 32))))
+		return E_FAIL;
+
+	//Wendy Talk
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Talk"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Talk/Wendy_Talk_%03d.png"), 52))))
+		return E_FAIL;
+
+	//Wendy Recall
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Recall"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Recall/Wendy_Recall_%03d.png"), 25))))
+		return E_FAIL;
+
+	//Wendy Channel
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Channel"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Channel/Wendy_Channel_%03d.png"), 53))))
+		return E_FAIL;
 #pragma endregion Add_Texture_Wendy
 
 	/*For.Prototype_Component_SpiderHouse Texture */

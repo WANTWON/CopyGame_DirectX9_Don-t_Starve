@@ -46,14 +46,12 @@ void CLevel_Maze::Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 	__super::Tick(fTimeDelta);
 
-
 	if (m_bNextLevel)
 	{
 		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, iLevel))))
 			return;
 	}
-
 
 	if (!m_bNextLevel)
 	{
@@ -70,7 +68,7 @@ void CLevel_Maze::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetWindowText(g_hWnd, TEXT("¹Ì·Î·¹º§ÀÔ´Ï´Ù."));
+	SetWindowText(g_hWnd, TEXT("ï¿½Ì·Î·ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½."));
 }
 
 HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
@@ -164,7 +162,7 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	//vector<_tchar*> vecPath;
 
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)

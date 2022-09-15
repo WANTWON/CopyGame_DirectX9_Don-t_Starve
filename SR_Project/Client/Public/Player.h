@@ -125,7 +125,10 @@ public: /*Get&Set*/
 	void	Set_bOnlyActionKey(_bool _bUse) { m_bOnlyActionKey = _bUse; }
 	void	Set_TalkMode(_bool _bTalk) { m_bTalkMode = _bTalk; }
 	void	Clear_Target(void) { m_pTarget = nullptr; }
+
 	void	Set_FPSMode(_bool type) { if (type) m_bIsFPS = true; else m_bIsFPS = false; }
+	void	Set_Select(_bool _bSelect) { m_bSelect = _bSelect; }
+
 public:
 	void	Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
 public:
@@ -167,6 +170,7 @@ private: /**Actions*/
 	void	Sleep_Restore(_float _fTimeDelta);
 	void	Talk_NPC(_float _fTimeDelta);
 
+
 	void Multi_Action(_float _fTimeDelta); //
 
 	//Skill
@@ -180,6 +184,7 @@ private: /**Actions*/
 	void	Detect_Enemy(void);
 	_bool	Check_Interact_End(void);
 	void	Find_Priority();
+	_bool	Find_NPC();
 	_bool	Check_Dead();
 	void	Setup_Collider(void);
 
@@ -286,13 +291,14 @@ private: /*for Auto*/
 
 	//for Talk
 	_bool					m_bTalkMode = false;
+	_bool					m_bSelect = false;
 	//for Keyboard
 	_bool					m_bActivated = false;
 private: // Test
 	_float3					m_vTargetPicking;
 	LEVEL					m_iCurrentLevelndex; //현재 레벨에 따라 불렛 생성 레벨이 다르기 때문에
 	LEVEL					m_iPreLevelIndex;
-	
+	_uint					m_iTalkNum = 0;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
