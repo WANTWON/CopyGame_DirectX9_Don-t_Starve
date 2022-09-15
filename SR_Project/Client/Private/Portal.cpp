@@ -54,12 +54,12 @@ HRESULT CPortal::Initialize(void* pArg)
 	if (m_ePortalDesc.m_eType == PORTAL_BOSS)
 	{
 		m_eState = IDLE_CLOSE;
-		m_fRadius = 0.5f;
+		m_fRadius = 1.5f;
 		m_fOpenRadius = 3.f;
 
-		m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
-		if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
-			m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+		//if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
+			//m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
 	}
 
 	return S_OK;
@@ -123,15 +123,18 @@ void CPortal::Late_Tick(_float fTimeDelta)
 {
 	//__super::Late_Tick(fTimeDelta);
 
-	if(m_ePortalDesc.m_eType != PORTAL_BOSS)
-		SetUp_BillBoard();
+	SetUp_BillBoard();
 
 	Change_Motion();
 	Change_Frame();
 
-	_float3 vPosition = Get_Position();
-	vPosition.y -= m_fRadius - 0.1f;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+	if (m_ePortalDesc.m_eType != PORTAL_BOSS)
+	{
+		_float3 vPosition = Get_Position();
+		vPosition.y -= m_fRadius - 0.1f;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+	}
+	
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -187,7 +190,7 @@ HRESULT CPortal::SetUp_Components(void* pArg)
 
 void CPortal::SetUp_BillBoard()
 {
-	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_FPS)
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_FPS || m_ePortalDesc.m_eType == PORTAL_BOSS )
 	{
 		_float4x4 ViewMatrix;
 

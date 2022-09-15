@@ -155,7 +155,7 @@ HRESULT CLevel_Maze::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CCameraDynamic::CAMERADESC_DERIVED				CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CCameraDynamic::CAMERADESC_DERIVED));
 
-	CameraDesc.iTest = 10;
+	CameraDesc.vDistance = _float3(0, 7, -6);
 
 	CameraDesc.CameraDesc.vEye = _float3(0.f, 2.f, -5.f);
 	CameraDesc.CameraDesc.vAt = _float3(0.f, 0.f, 0.f);

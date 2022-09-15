@@ -9,6 +9,8 @@
 #include "CameraManager.h"
 #include "Player.h"
 #include "Portal.h"
+#include "Particle.h"
+#include <time.h>
 
 _bool g_bUIMadefirst = false;
 
@@ -61,7 +63,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	}
 
 	
-
+	srand(unsigned int(time(NULL)));
 	CPickingMgr::Get_Instance()->Clear_PickingMgr();
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_GAMEPLAY);
 
@@ -76,12 +78,12 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
-
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
 	pGameInstance->PlayBGM(TEXT("Filed.mp3"), 0.1f);
 
 	if (m_bNextLevel)
 	{
-		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
+		
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, iLevel))))
 			return;
 	}
@@ -89,6 +91,22 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 	if (!m_bNextLevel)
 	{
 		CPickingMgr::Get_Instance()->Picking();
+	}
+
+	m_fTimeAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+	if (m_fTimeAcc > 1.f / 10.f)
+	{
+		CParticle::STATEDESC ParticleDesc;
+		ZeroMemory(&ParticleDesc, sizeof(CParticle::STATEDESC));
+		ParticleDesc.eTextureScene = LEVEL_GAMEPLAY;
+		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Leaf");
+		ParticleDesc.iTextureNum = rand() % 7;
+		ParticleDesc.vVelocity = _float3((rand() % 3)*0.1f, -0.1f, -(rand() % 3) * 0.1f);
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_Particle"), ParticleDesc.eTextureScene, TEXT("Layer_Particle"), &ParticleDesc)))
+			return;
+
+		m_fTimeAcc = 0.f;
 	}
 
 	Safe_Release(pGameInstance);
@@ -314,7 +332,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CCameraDynamic::CAMERADESC_DERIVED				CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CCameraDynamic::CAMERADESC_DERIVED));
 
-	CameraDesc.iTest = 10;
+	CameraDesc.vDistance = _float3(0, 6, -10);
 
 	CameraDesc.CameraDesc.vEye = _float3(0.f, 2.f, -5.f);
 	CameraDesc.CameraDesc.vAt = _float3(0.f, 0.5f, 0.f);

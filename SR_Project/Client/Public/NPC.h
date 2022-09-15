@@ -30,6 +30,7 @@ public:
 
 protected:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) =0;
+
 protected: /*For TextureCom */
 	virtual HRESULT Texture_Clone() override = 0;
 	virtual void Change_Frame() override = 0;

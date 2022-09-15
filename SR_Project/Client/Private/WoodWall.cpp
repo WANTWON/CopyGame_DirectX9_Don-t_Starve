@@ -166,11 +166,16 @@ HRESULT CWoodWall::Render()
 		m_pVIBufferCom->Render();
 
 #ifdef _DEBUG
-	if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct() == false)
+
+	if (g_ColliderRender)
 	{
-		m_pTextureCom->Bind_OnGraphicDev_Debug();
-		m_pColliderCom->Render_ColliderBox();
+		if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct() == false)
+		{
+			m_pTextureCom->Bind_OnGraphicDev_Debug();
+			m_pColliderCom->Render_ColliderBox();
+		}
 	}
+	
 #endif // _DEBUG
 
 	if (FAILED(Release_RenderState()))

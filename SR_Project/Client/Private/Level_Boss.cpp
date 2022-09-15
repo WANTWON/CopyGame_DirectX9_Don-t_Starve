@@ -183,7 +183,7 @@ HRESULT CLevel_Boss::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CCameraDynamic::CAMERADESC_DERIVED				CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CCameraDynamic::CAMERADESC_DERIVED));
 
-	CameraDesc.iTest = 10;
+	CameraDesc.vDistance = _float3(0.f, 8.f, -15.f);
 
 	CameraDesc.CameraDesc.vEye = _float3(0.f, 1.f, -8.f);
 	CameraDesc.CameraDesc.vAt = _float3(0.f, 1.5f, 0.f);

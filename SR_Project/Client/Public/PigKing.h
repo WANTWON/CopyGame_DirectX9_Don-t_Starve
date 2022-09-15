@@ -26,7 +26,8 @@ public:
 	virtual HRESULT Render() override;
 private:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
-
+	HRESULT SetUp_RenderState();
+	HRESULT Release_RenderState();
 private: /*For TextureCom */
 	virtual HRESULT Texture_Clone() override;
 	virtual void Change_Frame() override;

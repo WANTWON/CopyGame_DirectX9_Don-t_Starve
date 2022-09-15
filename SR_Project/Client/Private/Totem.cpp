@@ -92,8 +92,12 @@ HRESULT CTotem::Render()
 
 	m_pVIBufferCom->Render();
 
-	m_pTextureCom->Bind_OnGraphicDev_Debug();
-	m_pColliderCom->Render_ColliderBox();
+	if (g_ColliderRender)
+	{
+		m_pTextureCom->Bind_OnGraphicDev_Debug();
+		m_pColliderCom->Render_ColliderBox();
+	}
+	
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;

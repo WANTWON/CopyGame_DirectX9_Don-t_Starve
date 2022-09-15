@@ -29,6 +29,8 @@ HRESULT CCameraTarget::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(&((CAMERADESC_DERIVED*)pArg)->CameraDesc)))
 		return E_FAIL;
 
+	m_vDistance = ((CAMERADESC_DERIVED*)pArg)->vDistance;
+	m_vInitDistance = m_vDistance;
 	return S_OK;
 }
 
@@ -44,6 +46,10 @@ int CCameraTarget::Tick(_float fTimeDelta)
 	if (m_eCamMode == CAM_ZOOM)
 	{
 		Target_Camera(fTimeDelta, m_pTarget);
+	}
+	if (m_eCamMode == CAM_ZOOMOUT)
+	{
+		OutTarget_Camera(fTimeDelta);
 	}
 	else if(m_eCamMode == CAM_IDLE)
 	{
@@ -146,11 +152,14 @@ void CCameraTarget::OutTarget_Camera(_float fTimeDelta)
 	Safe_Release(pTarget);
 
 	_float3 vCameraPos = Get_Position();
-	_float3 vDir = (m_TargetPos + m_vDistance) - vCameraPos;
+	_float3 vEndPosition = (m_TargetPos + m_vInitDistance);
+	_float3 vDir = vEndPosition - vCameraPos;
 
-	if (fabsf(m_TargetPos.y + m_vDistance.y - vCameraPos.y) < 0.5f)
+	if (fabsf(vEndPosition.y - vCameraPos.y) < 0.5f && fabsf(vEndPosition.z - vCameraPos.z) < 0.5f)
 	{
-		m_bOutZoom = false;
+		m_eCamMode = CAM_IDLE;
+		m_vDistance = m_vInitDistance; 
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
 		Safe_Release(pGameInstance);
 		return;
 	}

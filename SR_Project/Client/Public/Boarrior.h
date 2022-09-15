@@ -66,6 +66,9 @@ private:
 	_bool m_bIsBelow20Percent = false;
 	_bool m_bShouldSpawn = false;
 	_float m_fSpawnTime = 0.f;
+	DWORD m_dwTime;
+	_bool m_bFirst = false;
+	_bool m_bTargetCam = false;
 	
 private:
 	void Check_Health_Percent();

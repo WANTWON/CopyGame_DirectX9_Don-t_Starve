@@ -7,11 +7,11 @@ BEGIN(Client)
 class CCameraTarget final : public CCamera
 {
 public:
-	enum CAMERAMODE { CAM_ZOOM, CAM_FOLLOW, CAM_IDLE };
+	enum CAMERAMODE { CAM_ZOOM, CAM_FOLLOW, CAM_ZOOMOUT, CAM_IDLE };
 
 	typedef struct tagCameraDesc_Derived
 	{
-		_uint						iTest;
+		_float3						vDistance = _float3(0, 6, -10);
 		CCamera::CAMERADESC			CameraDesc;
 	}CAMERADESC_DERIVED;
 private:
@@ -26,7 +26,7 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 
 public: //SetEnum
-	void Set_TalkingMode(_bool type) { if(type)m_eCamMode = CAM_ZOOM; else m_eCamMode = CAM_IDLE;}
+	void Set_TalkingMode(_bool type) { if(type)m_eCamMode = CAM_ZOOM; else m_eCamMode = CAM_ZOOMOUT;}
 	void Set_Target(class CGameObject* pGameObject) { m_pTarget = pGameObject; }
 
 private:
@@ -38,7 +38,8 @@ private:
 private:
 	CAMERAMODE		m_eCamMode = CAM_IDLE;
 	_long			m_lMouseWheel = 0;
-	_float3			m_vDistance = _float3(0, 8, -6);
+	_float3			m_vDistance;
+	_float3			m_vInitDistance;
 	class CGameObject*	m_pTarget = nullptr;
 	_bool			m_bTalkingMode = false;
 	_bool			m_bOutZoom = false;

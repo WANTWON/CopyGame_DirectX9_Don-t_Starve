@@ -14,6 +14,8 @@
 #include "Level_Manager.h"
 #include "Skeleton.h"
 
+_bool	   g_ColliderRender = false ;
+
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CPawn(pGraphic_Device)
 {
@@ -237,8 +239,11 @@ HRESULT CPlayer::Render()
 	}
 
 #ifdef _DEBUG
-	m_pTextureCom->Bind_OnGraphicDev_Debug();
-	m_pColliderCom->Render_ColliderBox();
+	if (g_ColliderRender)
+	{
+		m_pTextureCom->Bind_OnGraphicDev_Debug();
+		m_pColliderCom->Render_ColliderBox();
+	}
 #endif // _DEBUG
 
 
@@ -514,7 +519,10 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 #pragma region Debug&CamKey
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_DEBUG]))
 	{
-		m_bDebugKey = !m_bDebugKey;
+		if(g_ColliderRender)
+			g_ColliderRender = false;
+		else
+			g_ColliderRender = true;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMFPSMODE]))
 	{
@@ -1150,7 +1158,7 @@ void CPlayer::Chop(_float _fTimeDelta)
 		ParticleDesc.iMaxParticleCount = 5;
 		ParticleDesc.vParticleScale = _float2(0.5, 0.5);
 		ParticleDesc.vParticleDeviation = _float3(1 * 0.6f, 0.f, 1 * 0.6f);
-		ParticleDesc.iTextureNum = 4;
+		ParticleDesc.iTextureNum = rand() % 8;
 		ParticleDesc.vVelocity = _float3(0.01f, -0.5, 0.f);
 		ParticleDesc.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		ParticleDesc.vPosition.z -= 0.001f;

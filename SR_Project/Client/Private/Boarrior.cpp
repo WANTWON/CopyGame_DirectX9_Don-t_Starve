@@ -45,6 +45,7 @@ HRESULT CBoarrior::Initialize(void* pArg)
 	m_fSpecialAttackRadius = 6.f;
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+	m_dwTime = GetTickCount();
 	return S_OK;
 }
 
@@ -64,20 +65,23 @@ int CBoarrior::Tick(_float fTimeDelta)
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 
-	if (CGameInstance::Get_Instance()->Key_Up('8'))
+	if (!m_bTargetCam && m_dwTime + 1000 < GetTickCount())
 	{
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
 		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_BOSS, TEXT("Layer_Monster"));
 		pCamera->Set_Target(pGameObject);
 		pCamera->Set_TalkingMode(true);
+		m_dwTime = GetTickCount();
+		m_bFirst = true;
+		m_bTargetCam = true;
 	}
 
-	if (CGameInstance::Get_Instance()->Key_Up('9'))
+	if (m_dwTime + 5000 < GetTickCount() && m_bFirst)
 	{
 		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 		pCamera->Set_TalkingMode(false);
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+		m_bFirst = false;
 	}
 
 	return OBJ_NOEVENT;
@@ -100,7 +104,8 @@ HRESULT CBoarrior::Render()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	m_pColliderCom->Render_ColliderBox();
+	if (g_ColliderRender)
+		m_pColliderCom->Render_ColliderBox();
 #endif // _DEBUG
 
 	return S_OK;

@@ -29,6 +29,9 @@ HRESULT CCameraFPS::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(&((CAMERADESC_DERIVED*)pArg)->CameraDesc)))
 		return E_FAIL;
 
+
+	m_vDistance = ((CAMERADESC_DERIVED*)pArg)->vDistance;
+
 	return S_OK;
 }
 
