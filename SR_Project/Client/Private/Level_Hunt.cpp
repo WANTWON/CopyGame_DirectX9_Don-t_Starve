@@ -63,24 +63,8 @@ void CLevel_Hunt::Tick(_float fTimeDelta)
 		CPickingMgr::Get_Instance()->Picking();
 	}
 
-	if (!m_bTargetCam && m_dwTime + 1000 < GetTickCount())
-	{
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
-		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_HUNT, TEXT("Layer_Object"));
-		pCamera->Set_Target(pGameObject);
-		pCamera->Set_GoingMode(true);
-		m_bFirst = true;
-		m_bTargetCam = true;
-		m_dwTime = GetTickCount();
-	}
-	
-	if (m_dwTime + 5000 < GetTickCount() && m_bFirst)
-	{
-		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-		pCamera->Set_GoingMode(false);
-		m_bFirst = false;
-	}
+	Start_Camera_Motion();
+	//Test_QuestComplete_Camera_Motion();
 
 	//CPickingMgr::Get_Instance()->Picking();
 	Safe_Release(pGameInstance);
@@ -162,6 +146,19 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, &PortalDesc)))
 		return E_FAIL;
 
+	/*CWoodWall::WALLDESC WallDesc;
+	ZeroMemory(&WallDesc, sizeof(CWoodWall::WALLDESC));
+	WallDesc.etype = CWoodWall::WALL_BOSS;
+	WallDesc.eDir = CWoodWall::FRONT;
+	WallDesc.vecPosition = _float3(53.5f, 2.f, 20.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_HUNT, TEXT("Layer_QuestWall"), &WallDesc)))
+		return E_FAIL;
+
+	WallDesc.vecPosition = _float3(53.5f, 2.f, 18.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_HUNT, TEXT("Layer_QuestWall"), &WallDesc)))
+		return E_FAIL;*/
 
 	/* Load Tree */
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Tree_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -335,6 +332,57 @@ HRESULT CLevel_Hunt::Ready_Layer_Camera(const _tchar * pLayerTag)
 	Safe_Release(pGameInstance);
 
 	return S_OK;
+}
+
+void CLevel_Hunt::Start_Camera_Motion()
+{
+	if (!m_bTargetCam && m_dwTime + 1000 < GetTickCount())
+	{
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_HUNT, TEXT("Layer_Object"));
+		pCamera->Set_Target(pGameObject);
+		pCamera->Set_GoingMode(true);
+		m_bFirst = true;
+		m_bTargetCam = true;
+		m_dwTime = GetTickCount();
+	}
+
+	if (m_dwTime + 5000 < GetTickCount() && m_bFirst)
+	{
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_GoingMode(false);
+		m_bFirst = false;
+	}
+}
+
+void CLevel_Hunt::Test_QuestComplete_Camera_Motion()
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	if (pGameInstance->Key_Up('8'))
+	{
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_HUNT, TEXT("Layer_QuestWall"));
+		pCamera->Set_Target(pGameObject);
+		pCamera->Set_GoingMode(true);
+		m_btest = true;
+		m_dwTime = GetTickCount();
+	}
+	if (m_dwTime + 5000 < GetTickCount() && m_btest)
+	{
+		pGameInstance->Clear_Layer(LEVEL_HUNT, TEXT("Layer_QuestWall"));
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_Target(nullptr);
+		m_btest = false;
+		m_btest2 = true;
+	}
+	if (m_dwTime + 8000 < GetTickCount() && m_btest2)
+	{
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_GoingMode(false);
+		m_btest2 = false;
+	}
 }
 
 

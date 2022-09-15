@@ -93,7 +93,7 @@ void CCameraTarget::Idle_Camera(_float fTimeDelta)
 	if (m_lMouseWheel < 0)
 		m_lMouseWheel += 0.001;
 
-	if (m_lMouseWheel += (_long)(pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
+	if (m_lMouseWheel += (pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
 	{
 		if (m_vDistance.y > 15 || m_vDistance.y < 3)
 			return;
@@ -182,23 +182,52 @@ void CCameraTarget::OutTarget_Camera(_float fTimeDelta)
 
 void CCameraTarget::Target_Follow(_float fTimeDelta, CGameObject * pGameObject)
 {
+	if (pGameObject == nullptr)
+	{
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+
+		_float3 TargetPos = m_TargetPos;
+		TargetPos.y -= m_CameraDesc.vAt.y;
+		m_pTransform->LookAt(TargetPos);
+		m_pTransform->Follow_Target(fTimeDelta, TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
+		return;
+	}
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 
-	_float3 m_TargetPos = pGameObject->Get_Position();
-	m_TargetPos.y -= m_CameraDesc.vAt.y;
-	m_pTransform->LookAt(m_TargetPos);
-	m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
+	_float3 TargetPos = pGameObject->Get_Position();
+	TargetPos.y -= m_CameraDesc.vAt.y;
+	m_pTransform->LookAt(TargetPos);
+	m_pTransform->Follow_Target(fTimeDelta, TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
 }
 
 void CCameraTarget::Going_Target(_float fTimeDelta, CGameObject * pGameObject)
 {
 	if (pGameObject == nullptr)
-		return;
+	{
+		_float3 TargetPos = m_TargetPos;
+		TargetPos += m_vDistance;
+		_float3 vCameraPos = Get_Position();
+		_float3 vDir = m_TargetPos - vCameraPos;
 
-	_float3 m_TargetPos = pGameObject->Get_Position();
-	m_TargetPos += m_vDistance;
+		if (fabsf(vDir.x) < 0.3f && fabsf(vDir.z) < 0.3f && fabsf(vDir.x) < 0.3f)
+		{
+			m_eCamMode = CAM_FOLLOW;
+		}
+		else
+		{
+			D3DXVec3Normalize(&vDir, &vDir);
+			vCameraPos += vDir*0.2f;
+		}
+		m_pTransform->Set_State(CTransform::STATE_POSITION, vCameraPos);
+		return;
+	}
+		
+
+	_float3 TargetPos = pGameObject->Get_Position();
+	TargetPos += m_vDistance;
+	m_TargetPos = TargetPos;
 	_float3 vCameraPos = Get_Position();
-	_float3 vDir = m_TargetPos  - vCameraPos;
+	_float3 vDir = TargetPos  - vCameraPos;
 
 	if (fabsf(vDir.x) < 0.3f && fabsf(vDir.z) < 0.3f && fabsf(vDir.x) < 0.3f)
 	{

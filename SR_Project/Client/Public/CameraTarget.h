@@ -43,6 +43,7 @@ private:
 	_long			m_lMouseWheel = 0;
 	_float3			m_vDistance;
 	_float3			m_vInitDistance;
+	_float3			m_TargetPos;
 	class CGameObject*	m_pTarget = nullptr;
 	_bool			m_bTalkingMode = false;
 	_bool			m_bOutZoom = false;

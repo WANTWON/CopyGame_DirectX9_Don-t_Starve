@@ -27,7 +27,7 @@ HRESULT CLevel_Maze::Initialize()
 		return E_FAIL;
 
 	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-	//	return E_FAIL;
+		//return E_FAIL;
 
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
@@ -88,7 +88,7 @@ HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
 		TEXT("Prototype_Component_VIBuffer_Terrain_Load0"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Water"), LEVEL_MAZE, pLayerTag, _float3(-20.f, -0.001f, -20.f))))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Water"), LEVEL_MAZE, pLayerTag, _float3(-20.f, +0.001f, -20.f))))
 		return E_FAIL;
 
 
@@ -103,6 +103,31 @@ HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
 HRESULT CLevel_Maze::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Spider_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	_ulong		dwByte = 0;
+	_float3 ObjectPos(0, 0, 0);
+	_uint iNum = 0;
+
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider"), LEVEL_MAZE, pLayerTag, ObjectPos)))
+			return E_FAIL;
+	}
+
+	CloseHandle(hFile);
+
+
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
@@ -151,6 +176,25 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 
 
 	CloseHandle(hFile);
+
+
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Carrot_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	_float3 ObjectPos = _float3(0, 0, 0);
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_MAZE, pLayerTag, ObjectPos);
+	}
+	CloseHandle(hFile);
+
+
+
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
@@ -224,16 +268,27 @@ void CLevel_Maze::Update_Camera_Motion()
 {
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
-	if ((pGameObject->Get_Position().x < 31 && pGameObject->Get_Position().z < 28) &&
+	if (m_bFlowerPicked)
+	{
+		if (m_dwTime + 3000 < GetTickCount())
+		{
+			dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(true);
+			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_FPS);
+			m_bFlowerPicked = false;
+		}
+	}
+	else if ((pGameObject->Get_Position().x < 31 && pGameObject->Get_Position().z < 28) &&
 		(pGameObject->Get_Position().x > 18 && pGameObject->Get_Position().z > 21))
 	{
 		dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(false);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+		
 	}
 	else if (pGameObject->Get_Position().x > 12 || pGameObject->Get_Position().z < 40)
 	{
 		dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(true);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_FPS);
+	
 	}
 	
 

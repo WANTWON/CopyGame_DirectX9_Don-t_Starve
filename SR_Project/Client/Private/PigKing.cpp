@@ -304,7 +304,7 @@ void CPigKing::Interact(_uint Damage)
 
 		Safe_Release(pinven);
 		
-		//m_eState = rand() % 2 ? COINTOSS : UNIMPRESSED;
+		m_eState = rand() % 2 ? COINTOSS : UNIMPRESSED;
 	}
 
 

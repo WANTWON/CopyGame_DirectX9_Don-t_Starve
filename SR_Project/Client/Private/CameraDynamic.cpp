@@ -97,9 +97,9 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 	if (m_lMouseWheel < 0)
 		m_lMouseWheel += 0.001;
 
-	if (m_lMouseWheel += (_long)(pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
+	if (m_lMouseWheel += (pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
 	{
-		if (m_vDistance.y > 15 || m_vDistance.y <3)
+		if (m_vDistance.y > 15 || m_vDistance.y < 3)
 		{
 			m_vDistance.y += (fTimeDelta*m_lMouseWheel*0.05f);
 			m_vDistance.z -= (fTimeDelta*m_lMouseWheel*0.05f);
