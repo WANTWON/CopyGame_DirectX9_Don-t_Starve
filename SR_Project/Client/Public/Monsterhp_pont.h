@@ -54,7 +54,7 @@ private:
 	int* iNumber = nullptr;
 	int iNum = 0;
 	int texnum = 0;
-	bool m_bcheck = true;
+	bool m_bcheck = false;
 };
 
 END

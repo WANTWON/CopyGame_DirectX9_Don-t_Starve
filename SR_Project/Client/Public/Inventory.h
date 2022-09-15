@@ -54,6 +54,7 @@
 #include "Daycountpont.h"
 
 #include "Loadingscene.h"
+#include "Monsterhp_pont.h"
 /*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -126,6 +127,7 @@ public:
 
 	list<CMouse_Monster*>*Get_Monsterinfo_list(void) { return &m_Mousemonsterinfolist; }
 	list<CLoadingscene*>*Get_Loadingscene_list(void) { return &m_Loadingscenelist; }
+	list<CMonsterhp_pont*>*Get_Monsterhp_list(void) { return &m_Monsterhppontlist; }
 
 	
 
@@ -226,6 +228,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 
 	list<CMouse_Monster*>m_Mousemonsterinfolist;
 	list<CLoadingscene*> m_Loadingscenelist;
+	list<CMonsterhp_pont*>m_Monsterhppontlist;
 	
 
 

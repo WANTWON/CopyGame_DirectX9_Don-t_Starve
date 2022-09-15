@@ -432,9 +432,13 @@ void CPig::PickingTrue()
 	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 
 	auto i = pInvenManager->Get_Monsterinfo_list()->front();
+	auto k = pInvenManager->Get_Monsterhp_list();
 
 	i->set_monstername(MONSTER_PIG);
 	i->set_check(true);
+
+	for (auto j : *k)
+		j->set_check(true);
 
 	
 

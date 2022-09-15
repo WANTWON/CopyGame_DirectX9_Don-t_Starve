@@ -105,6 +105,7 @@
 #include "Poteffect.h"
 #include "DecoObject.h"
 #include "Mouse_Monster.h"
+#include "Monsterhp_pont.h"
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -948,6 +949,12 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Poteffect"),
 		CPoteffect::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monsterhp_pont"),
+		CMonsterhp_pont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+
 
 	
 

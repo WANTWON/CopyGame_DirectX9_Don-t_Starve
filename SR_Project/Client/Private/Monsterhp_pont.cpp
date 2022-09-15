@@ -35,8 +35,8 @@ HRESULT CMonsterhp_pont::Initialize(void* pArg)
 
 	m_fSizeX = 20.0f;
 	m_fSizeY = 20.0f;
-	m_fX = 1215.f + (iNum * 15.f);
-	m_fY = 190.f;
+	/*m_fX = 1215.f;
+	m_fY = 190.f;*/
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
@@ -49,62 +49,67 @@ HRESULT CMonsterhp_pont::Initialize(void* pArg)
 
 int CMonsterhp_pont::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
-
-	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (PtInRect(&rcRect, ptMouse))
+	if (m_bcheck == true)
 	{
+		__super::Tick(fTimeDelta);
 
-		m_fSizeX = 35.f;
-		m_fSizeY = 35.f;
+
+
+		RECT		rcRect;
+		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+
+		POINT		ptMouse;
+		GetCursorPos(&ptMouse);
+		ScreenToClient(g_hWnd, &ptMouse);
+
+
+
+		m_fX = (float)ptMouse.x + (iNum * 15.f);
+		m_fY = (float)ptMouse.y - 80.f;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		//set_check(true);
+
+
+
+		//if()
 	}
-
-
-
-
-	//if()
+	
 	return OBJ_NOEVENT;
 }
 
 void CMonsterhp_pont::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
-
-	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
-
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	if (!PtInRect(&rcRect, ptMouse))
+	if (m_bcheck == true)
 	{
-		m_fSizeX = 20;
-		m_fSizeY = 20;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		__super::Late_Tick(fTimeDelta);
+
+		RECT		rcRect;
+		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+
+		POINT		ptMouse;
+		GetCursorPos(&ptMouse);
+		ScreenToClient(g_hWnd, &ptMouse);
+
+		if (!PtInRect(&rcRect, ptMouse))
+		{
+			m_fSizeX = 20;
+			m_fSizeY = 20;
+			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 
 
-		//ERR_MSG(L"충돌");
+			//ERR_MSG(L"충돌");
+		}
+		if (nullptr != m_pRendererCom&&m_bcheck)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 	}
-	if (nullptr != m_pRendererCom&&m_bcheck)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	//set_check(false);
 }
 
 HRESULT CMonsterhp_pont::Render()
 {
-	//if (m_bcheck)
-	//{
+	if (m_bcheck == true)
+	{
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -117,7 +122,7 @@ HRESULT CMonsterhp_pont::Render()
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))
@@ -127,7 +132,7 @@ HRESULT CMonsterhp_pont::Render()
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
-	//	}
+		}
 
 	return S_OK;
 }
@@ -206,7 +211,7 @@ CGameObject * CMonsterhp_pont::Clone(void* pArg)
 		ERR_MSG(TEXT("Failed to Cloned : CMonsterhp_pont"));
 		Safe_Release(pInstance);
 	}
-	//CInventory_Manager::Get_Instance()->Get_playerhp_Pont_list()->push_back(pInstance);
+	CInventory_Manager::Get_Instance()->Get_Monsterhp_list()->push_back(pInstance);
 	return pInstance;
 }
 
