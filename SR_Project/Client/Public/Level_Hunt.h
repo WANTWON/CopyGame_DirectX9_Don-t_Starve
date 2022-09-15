@@ -28,6 +28,11 @@ public: //test
 	_bool m_bNextLevel = false;
 	_bool m_bPastLevel = false;
 
+private:
+	DWORD m_dwTime;
+	_bool m_bFirst = false;
+	_bool m_bTargetCam = false;
+
 public:
 	static CLevel_Hunt* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;

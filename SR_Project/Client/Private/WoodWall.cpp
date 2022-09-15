@@ -50,6 +50,10 @@ HRESULT CWoodWall::Initialize(void* pArg)
 		m_fRadius = 1.f;
 		
 	}
+	if (m_eWallDesc.etype == WALL_END)
+	{
+		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+	}
 	
 
 	

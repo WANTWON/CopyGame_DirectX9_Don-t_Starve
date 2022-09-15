@@ -38,9 +38,6 @@ HRESULT CCameraDynamic::Initialize(void * pArg)
 
 int CCameraDynamic::Tick(_float fTimeDelta)
 {
-	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_PLAYER)
-		return OBJ_NOEVENT;
-
 	__super::Tick(fTimeDelta);
 
 	if(m_eCamMode == CAM_SHAKING)
@@ -69,6 +66,10 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 	}
 
 	Update_Position(m_pTransform->Get_State(CTransform::STATE_POSITION));
+
+	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_PLAYER)
+		return OBJ_NOEVENT;
+
 
 	if (FAILED(Bind_OnGraphicDev()))
 		return OBJ_NOEVENT;

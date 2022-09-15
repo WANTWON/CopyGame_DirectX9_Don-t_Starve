@@ -163,7 +163,7 @@ HRESULT CPig::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 30;
+	TextureDesc.m_fSpeed = 45;
 
 	TextureDesc.m_iEndTex = 17;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Idle_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))

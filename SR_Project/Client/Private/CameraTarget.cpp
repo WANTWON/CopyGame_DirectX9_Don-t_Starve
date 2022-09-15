@@ -39,23 +39,29 @@ int CCameraTarget::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (m_eCamMode == CAM_FOLLOW)
+	switch (m_eCamMode)
 	{
-		Target_Follow(fTimeDelta, m_pTarget);
-	}
-	if (m_eCamMode == CAM_ZOOM)
-	{
+	case Client::CCameraTarget::CAM_ZOOM:
 		Target_Camera(fTimeDelta, m_pTarget);
-	}
-	if (m_eCamMode == CAM_ZOOMOUT)
-	{
+		break;
+	case Client::CCameraTarget::CAM_FOLLOW:
+		Target_Follow(fTimeDelta, m_pTarget);
+		break;
+	case Client::CCameraTarget::CAM_ZOOMOUT:
 		OutTarget_Camera(fTimeDelta);
-	}
-	else if(m_eCamMode == CAM_IDLE)
-	{
+		break;
+	case Client::CCameraTarget::CAM_GO:
+		Going_Target(fTimeDelta, m_pTarget);
+		break;
+	case Client::CCameraTarget::CAM_RETURN:
+		Return_Camera(fTimeDelta);
+		break;
+	case Client::CCameraTarget::CAM_IDLE:
 		Idle_Camera(fTimeDelta);
+		break;
+	default:
+		break;
 	}
-
 
 	Update_Position(m_pTransform->Get_State(CTransform::STATE_POSITION));
 
@@ -134,7 +140,7 @@ void CCameraTarget::Target_Camera(_float fTimeDelta, CGameObject* pGameObject)
 	else
 	{
 		D3DXVec3Normalize(&vDir, &vDir);
-		vCameraPos += vDir*0.3f;
+		vCameraPos += vDir*0.2f;
 		m_pTransform->LookAt(m_TargetPos);
 	}
 	m_pTransform->Set_State(CTransform::STATE_POSITION, vCameraPos);
@@ -166,7 +172,7 @@ void CCameraTarget::OutTarget_Camera(_float fTimeDelta)
 
 
 	D3DXVec3Normalize(&vDir, &vDir);
-	vCameraPos += vDir*0.1f;
+	vCameraPos += vDir*0.2f;
 
 	m_pTransform->LookAt(m_TargetPos);
 	m_pTransform->Set_State(CTransform::STATE_POSITION, vCameraPos);
@@ -182,6 +188,59 @@ void CCameraTarget::Target_Follow(_float fTimeDelta, CGameObject * pGameObject)
 	m_TargetPos.y -= m_CameraDesc.vAt.y;
 	m_pTransform->LookAt(m_TargetPos);
 	m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
+}
+
+void CCameraTarget::Going_Target(_float fTimeDelta, CGameObject * pGameObject)
+{
+	if (pGameObject == nullptr)
+		return;
+
+	_float3 m_TargetPos = pGameObject->Get_Position();
+	m_TargetPos += m_vDistance;
+	_float3 vCameraPos = Get_Position();
+	_float3 vDir = m_TargetPos  - vCameraPos;
+
+	if (fabsf(vDir.x) < 0.3f && fabsf(vDir.z) < 0.3f && fabsf(vDir.x) < 0.3f)
+	{
+		m_eCamMode = CAM_FOLLOW;
+	}
+	else
+	{
+		D3DXVec3Normalize(&vDir, &vDir);
+		vCameraPos += vDir*0.2f;
+	}
+	m_pTransform->Set_State(CTransform::STATE_POSITION, vCameraPos);
+}
+
+void CCameraTarget::Return_Camera(_float fTimeDelta)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	Safe_AddRef(pTarget);
+
+	_float3 m_TargetPos = pTarget->Get_Pos();
+	Safe_Release(pTarget);
+
+	_float3 vCameraPos = Get_Position();
+	_float3 vEndPosition = (m_TargetPos + m_vInitDistance);
+	_float3 vDir = vEndPosition - vCameraPos;
+
+	if (fabsf(vEndPosition.y - vCameraPos.y) < 0.5f && fabsf(vEndPosition.z - vCameraPos.z) < 0.5f && fabsf(vEndPosition.x - vCameraPos.x) < 0.5f)
+	{
+		m_eCamMode = CAM_IDLE;
+		m_vDistance = m_vInitDistance;
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+		Safe_Release(pGameInstance);
+		return;
+	}
+
+	D3DXVec3Normalize(&vDir, &vDir);
+	vCameraPos += vDir*0.2f;
+	m_pTransform->Set_State(CTransform::STATE_POSITION, vCameraPos);
+
+	Safe_Release(pGameInstance);
 }
 
 CCameraTarget * CCameraTarget::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

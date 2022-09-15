@@ -8,6 +8,7 @@
 #include "House.h"
 #include "Totem.h"
 #include "PickingMgr.h"
+#include "Portal.h"
 
 CBoarrior::CBoarrior(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -46,7 +47,7 @@ HRESULT CBoarrior::Initialize(void* pArg)
 	m_fSpecialAttackRadius = 6.f;
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
-	m_dwTime = GetTickCount();
+	
 	return S_OK;
 }
 
@@ -55,6 +56,13 @@ int CBoarrior::Tick(_float fTimeDelta)
 	if (__super::Tick(fTimeDelta) && m_bDeadAnimExpired)
 	{
 		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
+		CPortal::PORTALDESC PortalDesc;
+		PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
+		PortalDesc.vPosition = _float3(14.f, 1.f, 15.f);
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_BOSS, TEXT("Layer_Object"), &PortalDesc)))
+			return E_FAIL;
+
 		return OBJ_DEAD;
 	}
 		
@@ -70,25 +78,6 @@ int CBoarrior::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-
-	if (!m_bTargetCam && m_dwTime + 1000 < GetTickCount())
-	{
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
-		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_BOSS, TEXT("Layer_Monster"));
-		pCamera->Set_Target(pGameObject);
-		pCamera->Set_TalkingMode(true);
-		m_dwTime = GetTickCount();
-		m_bFirst = true;
-		m_bTargetCam = true;
-	}
-
-	if (m_dwTime + 5000 < GetTickCount() && m_bFirst)
-	{
-		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-		pCamera->Set_TalkingMode(false);
-		m_bFirst = false;
-	}
 
 	return OBJ_NOEVENT;
 }

@@ -71,10 +71,6 @@ private:
 	_bool m_bShouldSpawn = false;
 	_float m_fSpawnTime = 0.f;
 
-	DWORD m_dwTime;
-	_bool m_bFirst = false;
-	_bool m_bTargetCam = false;
-
 	_float3 m_vecOutPos; // For Picking
 
 	

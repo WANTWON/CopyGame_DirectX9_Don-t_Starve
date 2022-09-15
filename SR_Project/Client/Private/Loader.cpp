@@ -1114,6 +1114,9 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Boulder
 
+	
+
+
 	m_isFinished = true;
 
 	Safe_Release(pGameInstance);
@@ -1143,13 +1146,12 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 7))))
 		return E_FAIL;
 
-	/*For.Prototype_Component_Texture_SnowEffect */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Snow"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow.png"), 1))))
-		return E_FAIL;
-
 	lstrcpy(m_szLoadingText, TEXT("Loading_Interactive Object Texture"));
 
+	/*For.Prototype_Component_Texture_LeafEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Snow"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow-%d.png"), 4))))
+		return E_FAIL;
 
 	/*For. Prototype_Component_Texture_Tree*/
 #pragma region Add_Texture_Tree
@@ -1534,6 +1536,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CSkeleton::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DecoObject"),
+		CDecoObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading_Finish"));
 
 	Safe_Release(pGameInstance);
@@ -1702,7 +1708,10 @@ HRESULT CLoader::Loading_ForHuntLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Berry_Bush
 
-
+	/*For.Prototype_Component_Texture_LeafEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Snow"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow-%d.png"), 4))))
+		return E_FAIL;
 
 	/*For. Prototype_Component_Texture_Spider*/
 #pragma region Add_Texture_Spider
@@ -1738,6 +1747,10 @@ HRESULT CLoader::Loading_ForHuntLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Spider
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Flies"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Flies/Idle_%03d.png"), 55))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Texture_RockEffect */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Rock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Roc.png"), 1))))
@@ -1747,11 +1760,6 @@ HRESULT CLoader::Loading_ForHuntLevel()
 	/*For.Prototype_Component_Texture_LeafEffect */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Leaf"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 7))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_LeafEffect */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HUNT, TEXT("Prototype_Component_Texture_Snow"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow.png"), 1))))
 		return E_FAIL;
 
 	/*For. Prototype_Component_Texture_Spider_Warrior*/
@@ -1846,11 +1854,6 @@ HRESULT CLoader::Loading_ForBossLevel()
 	/*For.Prototype_Component_Texture_LeafEffect */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Leaf"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 7))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_SnowEffect */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Snow"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow.png"), 1))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Spawner */
@@ -2040,13 +2043,12 @@ HRESULT CLoader::Loading_ForBossLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Torch"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Deco/Torch/Idle_%03d.png"), 5))))
 		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DecoObject"),
-		CDecoObject::Create(m_pGraphic_Device))))
-		return E_FAIL;
 #pragma endregion Add_Texture_Deco
 
-
+	/*For.Prototype_Component_Texture_LeafEffect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Snow"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow-%d.png"), 4))))
+		return E_FAIL;
 
 	/*For.Prototype_GameObject_Spawn_Effect*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spawn_Effect"),
@@ -2094,9 +2096,9 @@ HRESULT CLoader::Loading_ForMazeLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 7))))
 		return E_FAIL;
 
-	/*For.Prototype_Component_Texture_SnowEffect */
+	/*For.Prototype_Component_Texture_LeafEffect */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Snow"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow.png"), 1))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow-%d.png"), 4))))
 		return E_FAIL;
 
 	if (FAILED(Loading_Terrain_ForMazeLevel()))

@@ -130,7 +130,8 @@ void CPortal::Late_Tick(_float fTimeDelta)
 {
 	//__super::Late_Tick(fTimeDelta);
 
-	SetUp_BillBoard();
+	if(m_ePortalDesc.m_eType == PORTAL_BOSS)
+		SetUp_BillBoard();
 
 	Change_Motion();
 	Change_Frame();

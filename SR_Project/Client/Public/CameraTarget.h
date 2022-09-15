@@ -7,7 +7,7 @@ BEGIN(Client)
 class CCameraTarget final : public CCamera
 {
 public:
-	enum CAMERAMODE { CAM_ZOOM, CAM_FOLLOW, CAM_ZOOMOUT, CAM_IDLE };
+	enum CAMERAMODE { CAM_ZOOM, CAM_FOLLOW, CAM_ZOOMOUT, CAM_GO, CAM_RETURN, CAM_IDLE };
 
 	typedef struct tagCameraDesc_Derived
 	{
@@ -27,6 +27,7 @@ public:
 
 public: //SetEnum
 	void Set_TalkingMode(_bool type) { if(type)m_eCamMode = CAM_ZOOM; else m_eCamMode = CAM_ZOOMOUT;}
+	void Set_GoingMode(_bool type) { if (type)m_eCamMode = CAM_GO; else m_eCamMode = CAM_RETURN; }
 	void Set_Target(class CGameObject* pGameObject) { m_pTarget = pGameObject; }
 
 private:
@@ -34,6 +35,8 @@ private:
 	void Target_Camera(_float fTimeDelta, CGameObject* pGameObject);
 	void OutTarget_Camera(_float fTimeDelta);
 	void Target_Follow(_float fTimeDelta, CGameObject* pGameObject);
+	void Going_Target(_float fTimeDelta, CGameObject* pGameObject);
+	void Return_Camera(_float fTimeDelta);
 
 private:
 	CAMERAMODE		m_eCamMode = CAM_IDLE;

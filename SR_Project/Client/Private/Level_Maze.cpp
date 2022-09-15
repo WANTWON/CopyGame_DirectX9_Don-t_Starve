@@ -32,13 +32,11 @@ HRESULT CLevel_Maze::Initialize()
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
 
-
-
 	CPickingMgr::Get_Instance()->Clear_PickingMgr();
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_MAZE);
 
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_MAZE);
-
+	m_dwTime = GetTickCount();
 	return S_OK;
 }
 
@@ -56,30 +54,23 @@ void CLevel_Maze::Tick(_float fTimeDelta)
 			return;
 	}
 
-	
-	
-
-	if (m_bNextLevel)
-	{
-		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, iLevel))))
-			return;
-	}
 
 	if (!m_bNextLevel)
 	{
 		CPickingMgr::Get_Instance()->Picking();
 	}
 
-	Safe_Release(pGameInstance);
+	Start_Camera_Motion();
+	Update_Camera_Motion();
 
+	Safe_Release(pGameInstance);
 }
 
 void CLevel_Maze::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetWindowText(g_hWnd, TEXT("보스레벨입니다."));
+	SetWindowText(g_hWnd, TEXT("미로레벨입니다."));
 }
 
 HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
@@ -121,6 +112,22 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	CPortal::PORTALDESC PortalDesc;
+
+
+	PortalDesc.m_eType = CPortal::PORTAL_BOSS;
+	PortalDesc.vPosition = _float3(25.f, 2.f, 25.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, pLayerTag, &PortalDesc)))
+		return E_FAIL;
+
+	PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
+	PortalDesc.vPosition = _float3(7.5f, 2.f, 45.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, pLayerTag, &PortalDesc)))
+		return E_FAIL;
+
+
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/RockWall_Stage4_Vertical_and_Horizontal.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
@@ -144,21 +151,6 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 
 
 	CloseHandle(hFile);
-
-
-	CPortal::PORTALDESC PortalDesc;
-	PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
-	PortalDesc.vPosition = _float3(7.5f, 2.f, 45.f);
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, pLayerTag, &PortalDesc)))
-		return E_FAIL;
-
-	PortalDesc.m_eType = CPortal::PORTAL_BOSS;
-	PortalDesc.vPosition = _float3(25.f, 2.f, 25.f);
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, pLayerTag, &PortalDesc)))
-		return E_FAIL;
-
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
@@ -195,11 +187,57 @@ HRESULT CLevel_Maze::Ready_Layer_Camera(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_MAZE, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
+	CameraDesc.CameraDesc.vEye = _float3(0.f, 6.f, -7.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Target"), LEVEL_MAZE, pLayerTag, &CameraDesc)))
+		return E_FAIL;
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
 
+void CLevel_Maze::Start_Camera_Motion()
+{
+	if (!m_bTargetCam && m_dwTime + 1000 < GetTickCount())
+	{
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_MAZE, TEXT("Layer_Object"));
+		pCamera->Set_Target(pGameObject);
+		pCamera->Set_GoingMode(true);
+		m_bFirst = true;
+		m_bTargetCam = true;
+		m_dwTime = GetTickCount();
+	}
+
+	if (m_dwTime + 4000 < GetTickCount() && m_bFirst)
+	{
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_GoingMode(false);
+		m_bFirst = false;
+	}
+}
+
+
+void CLevel_Maze::Update_Camera_Motion()
+{
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	if ((pGameObject->Get_Position().x < 31 && pGameObject->Get_Position().z < 28) &&
+		(pGameObject->Get_Position().x > 18 && pGameObject->Get_Position().z > 21))
+	{
+		dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(false);
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+	}
+	else if (pGameObject->Get_Position().x > 12 || pGameObject->Get_Position().z < 40)
+	{
+		dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(true);
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_FPS);
+	}
+	
+
+}
 
 
 CLevel_Maze * CLevel_Maze::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

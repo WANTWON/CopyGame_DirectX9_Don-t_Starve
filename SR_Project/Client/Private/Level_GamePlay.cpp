@@ -316,7 +316,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 	else
 	{
 		CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-		pPlayer->Set_Position(_float3(45.f, 0.5f, 27.f));
+
+		LEVEL ePastLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_PastLevelIndex();
+		switch (ePastLevel)
+		{
+		case Client::LEVEL_HUNT:
+			pPlayer->Set_Position(_float3(45.f, 0.5f, 27.f));
+			break;
+		case Client::LEVEL_MAZE:
+			pPlayer->Set_Position(_float3(22.f, 0.5f, 26.f));
+			break;
+		case Client::LEVEL_BOSS:
+			pPlayer->Set_Position(_float3(32.f, 0.5f, 17.f));
+			break;
+		}
+		
+		
 	}
 
 	Safe_Release(pGameInstance);
