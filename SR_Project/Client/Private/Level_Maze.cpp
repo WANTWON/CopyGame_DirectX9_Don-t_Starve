@@ -48,17 +48,6 @@ void CLevel_Maze::Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 	__super::Tick(fTimeDelta);
 
-
-	if (m_bNextLevel)
-	{
-		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, iLevel))))
-			return;
-	}
-
-	
-	
-
 	if (m_bNextLevel)
 	{
 		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();

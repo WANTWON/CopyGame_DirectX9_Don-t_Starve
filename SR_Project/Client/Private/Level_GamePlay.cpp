@@ -9,7 +9,7 @@
 #include "CameraManager.h"
 #include "Player.h"
 #include "Portal.h"
-
+#include "NPC.h"
 _bool g_bUIMadefirst = false;
 
 CLevel_GamePlay::CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -37,8 +37,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_LayerNPC(TEXT("Layer_NPC"))))
+		return E_FAIL;
 
 	if (g_bUIMadefirst == false)
 	{
@@ -737,7 +737,12 @@ HRESULT CLevel_GamePlay::Ready_LayerNPC(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Wendy"), LEVEL_STATIC, pLayerTag, _float3(10.f, 1.f, 5.f))))
 			return E_FAIL;
 	}
-	
+	else
+	{
+		CNPC* pPlayer = (CNPC*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC"));
+		pPlayer->Set_Position(_float3(45.f, 0.5f, 27.f));
+	}
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;

@@ -1779,7 +1779,7 @@ void CPlayer::Detect_Enemy(void)
 void CPlayer::Find_Priority()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
+	
 
 	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(m_iCurrentLevelndex, TEXT("Layer_Object"));
 
@@ -1849,8 +1849,6 @@ void CPlayer::Find_Priority()
 
 	}
 
-
-	Safe_Release(pGameInstance);
 }
 
 _bool CPlayer::Find_NPC()
@@ -1858,6 +1856,9 @@ _bool CPlayer::Find_NPC()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	_uint iIndex = 0;
 	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_NPC"));
+	if (list_Obj == nullptr)
+		return false;
+
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
 		if ((*iter_Obj) == nullptr)

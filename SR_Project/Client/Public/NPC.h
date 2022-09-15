@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Interactive_Object.h"
+#include "Transform.h"
 
 BEGIN(Engine)
 class CTexture;
@@ -62,6 +63,7 @@ public: /*Get & Set*/
 	void	Set_TalkCnt() { ++m_iTalkCnt; }
 	void	Set_Accept(_bool _bAccept) { m_bAccept = _bAccept; }
 	void	Set_HasOwner(_bool _bAccept) { m_bOwner = _bAccept; }
+	void	Set_Position(_float3 _vPos) { m_pTransformCom->Set_State(CTransform::STATE_POSITION, _vPos); }
 public:/*for Actions*/
 	virtual void Interact(_uint Damage = 0) = 0;
 	virtual HRESULT Drop_Items() = 0;
