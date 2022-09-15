@@ -53,6 +53,7 @@ private:
 	_bool m_bIsEating = false;
 	_float3 vPatrolPosition;
 	_float fEatTimer = 0.f;
+	_float3 m_vecOutPos; // For Picking
 
 private:
 	virtual void AI_Behaviour(_float fTimeDelta) override;
@@ -64,6 +65,10 @@ private:
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 	virtual HRESULT Drop_Items() override;
 	virtual _bool IsDead() override;
+
+public: /*For Picking */
+	virtual _bool Picking(_float3* PickingPoint) override;
+	virtual void PickingTrue() override;
 
 public:
 	static CBearger* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

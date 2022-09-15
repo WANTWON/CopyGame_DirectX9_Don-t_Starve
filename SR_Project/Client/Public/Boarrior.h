@@ -41,6 +41,10 @@ private: /*For TextureCom */
 	virtual void Change_Frame(_float fTimeDelta) override;
 	virtual void Change_Motion() override;
 
+public: /*For Picking */
+	virtual _bool Picking(_float3* PickingPoint) override;
+	virtual void PickingTrue() override;
+
 private:
 	// Boarrior Variables
 	STATE m_eState = STATE::IDLE;
@@ -66,9 +70,13 @@ private:
 	_bool m_bIsBelow20Percent = false;
 	_bool m_bShouldSpawn = false;
 	_float m_fSpawnTime = 0.f;
+
 	DWORD m_dwTime;
 	_bool m_bFirst = false;
 	_bool m_bTargetCam = false;
+
+	_float3 m_vecOutPos; // For Picking
+
 	
 private:
 	void Check_Health_Percent();

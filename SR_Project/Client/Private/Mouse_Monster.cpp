@@ -33,8 +33,8 @@ HRESULT CMouse_Monster::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 100.f;
-	m_fSizeY = 50.0f;
+	m_fSizeX = 180.f;
+	m_fSizeY = 170.f;
 
 
 	if (FAILED(SetUp_Components()))
@@ -60,33 +60,32 @@ int CMouse_Monster::Tick(_float fTimeDelta)
 
 
 
-		m_fX = (float)ptMouse.x;
-		m_fY = (float)ptMouse.y - 50.f;
+		m_fX = (float)ptMouse.x + 100.f;
+		m_fY = (float)ptMouse.y ;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 
 		switch (monstername)
 		{
-		case MONSTER_BEARGER:
+		case MONSTER_PIG:
 			texnum = 0;
 			break;
-		case MONSTER_BOARON:
+		case MONSTER_SPIDER:
 			texnum = 1;
 			break;
-		case MONSTER_BOARRIOR:
+		case MONSTER_SPIDERWARRIOR:
 			texnum = 2;
 			break;
-		case MONSTER_PIG:
+		case MONSTER_BEARGER:
 			texnum = 3;
 			break;
-		case MONSTER_SPIDER:
+		case MONSTER_BOARON:
 			texnum = 4;
 			break;
-		case MONSTER_SPIDERWARRIOR:
+		case MONSTER_BOARRIOR:
 			texnum = 5;
 			break;
-		
 		}
 		//if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON) && m_bcheck == true)
 		//{
@@ -172,7 +171,7 @@ HRESULT CMouse_Monster::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Iteminfo"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_MonsterInfo"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */

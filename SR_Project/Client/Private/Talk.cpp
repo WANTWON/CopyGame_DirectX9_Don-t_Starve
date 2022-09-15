@@ -142,6 +142,20 @@ HRESULT CTalk::Render()
 			return E_FAIL;
 
 
+		if (m_bforwendy == true)
+		{
+			if (FAILED(m_pTextureCom1->Bind_OnGraphicDev(texnum1)))
+				return E_FAIL;
+
+			if (FAILED(SetUp_RenderState()))
+				return E_FAIL;
+
+			m_pVIBufferCom->Render();
+
+			if (FAILED(Release_RenderState()))
+				return E_FAIL;
+		}
+		
 
 
 	}
@@ -431,9 +445,14 @@ HRESULT CTalk::SetUp_Components()
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_talk"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_talkwendy"), (CComponent**)&m_pTextureCom1)))
+		return E_FAIL;
+
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
+	
 
 
 	/* For.Com_Transform */

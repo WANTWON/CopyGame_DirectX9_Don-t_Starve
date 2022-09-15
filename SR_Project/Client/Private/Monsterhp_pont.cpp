@@ -33,8 +33,8 @@ HRESULT CMonsterhp_pont::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 20.0f;
-	m_fSizeY = 20.0f;
+	m_fSizeX = 16.0f;
+	m_fSizeY = 33.0f;
 	/*m_fX = 1215.f;
 	m_fY = 190.f;*/
 
@@ -64,8 +64,8 @@ int CMonsterhp_pont::Tick(_float fTimeDelta)
 
 
 
-		m_fX = (float)ptMouse.x + (iNum * 15.f);
-		m_fY = (float)ptMouse.y - 80.f;
+		m_fX = (float)ptMouse.x + 69.2f + (iNum * 15.5f);
+		m_fY = (float)ptMouse.y - 6.f;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
@@ -79,62 +79,94 @@ int CMonsterhp_pont::Tick(_float fTimeDelta)
 
 void CMonsterhp_pont::Late_Tick(_float fTimeDelta)
 {
+	
 	if (m_bcheck == true)
 	{
 		__super::Late_Tick(fTimeDelta);
 
-		RECT		rcRect;
-		SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
-
-		POINT		ptMouse;
-		GetCursorPos(&ptMouse);
-		ScreenToClient(g_hWnd, &ptMouse);
-
-		if (!PtInRect(&rcRect, ptMouse))
+		if (iNum == 0 )
 		{
-			m_fSizeX = 20;
-			m_fSizeY = 20;
-			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+			if( m_ihp < 1000)
+				m_bcheck = false;
 
-
-			//ERR_MSG(L"충돌");
+			texnum = m_ihp / 1000;
 		}
-		if (nullptr != m_pRendererCom&&m_bcheck)
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
-	}
+		else if (iNum == 1)
+		{
+			
+			if (m_ihp < 100)
+				m_bcheck = false;
 
-	//set_check(false);
+			texnum = (m_ihp % 1000) / 100;
+			
+		}
+		else if (iNum == 2)
+		{
+			if (m_ihp < 10)
+				m_bcheck = false;
+				
+			
+			texnum = ((m_ihp % 100) / 10);
+		}
+		else if (iNum == 3)
+		{
+			texnum = (m_ihp % 10);
+		}
+		//	RECT		rcRect;
+		//	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+
+		//	POINT		ptMouse;
+		//	GetCursorPos(&ptMouse);
+		//	ScreenToClient(g_hWnd, &ptMouse);
+
+		//	if (!PtInRect(&rcRect, ptMouse))
+		//	{
+		//		m_fSizeX = 20;
+		//		m_fSizeY = 20;
+		//		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+
+
+		//		//ERR_MSG(L"충돌");
+		//	}
+		if (nullptr != m_pRendererCom&&m_bcheck)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+		//}
+
+		//set_check(false);
+	}
 }
 
 HRESULT CMonsterhp_pont::Render()
 {
-	if (m_bcheck == true)
-	{
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+		if (m_bcheck == true)
+		{
+			if (FAILED(__super::Render()))
+				return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
+			if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+				return E_FAIL;
 
-	_float4x4		ViewMatrix;
-	D3DXMatrixIdentity(&ViewMatrix);
+			_float4x4		ViewMatrix;
+			D3DXMatrixIdentity(&ViewMatrix);
 
-	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+			m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
+			m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
-		return E_FAIL;
+			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+				return E_FAIL;
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
+			if (FAILED(SetUp_RenderState()))
+				return E_FAIL;
 
-	m_pVIBufferCom->Render();
+			m_pVIBufferCom->Render();
 
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
+			if (FAILED(Release_RenderState()))
+				return E_FAIL;
+
+
+			
 		}
-
-	return S_OK;
+		return S_OK;
 }
 
 HRESULT CMonsterhp_pont::SetUp_Components()

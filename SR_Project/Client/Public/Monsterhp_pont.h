@@ -48,13 +48,18 @@ public:
 	bool get_check() { return m_bcheck; }
 	int get_iNum() { return iNum; }
 	void set_check(bool tof) { m_bcheck = tof; }
-	void set_pont_num(int num) { texnum = num; }
+	void set_pont_num(_uint num) { texnum = num; }
+
+	void set_hp(_uint hp) { m_ihp = hp;}
+	void set_boss(bool tof) { noboss = tof; }
 
 private:
 	int* iNumber = nullptr;
 	int iNum = 0;
-	int texnum = 0;
+	_uint texnum = 0;
 	bool m_bcheck = false;
+	_uint m_ihp = 0;
+	bool noboss = true;
 };
 
 END
