@@ -52,6 +52,8 @@ public:
 
 	void set_daycount(_uint day) { daycount = day; }
 
+	void Open_DeadUI(_float time) { m_fY -= 135.f * time; }
+
 private:
 	int* iNumber = nullptr;
 	int iNum = 0;

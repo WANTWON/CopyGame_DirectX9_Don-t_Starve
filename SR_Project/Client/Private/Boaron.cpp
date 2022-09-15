@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Inventory.h"
 #include "Item.h"
+#include "PickingMgr.h"
 
 CBoaron::CBoaron(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -44,7 +45,13 @@ HRESULT CBoaron::Initialize(void* pArg)
 int CBoaron::Tick(_float fTimeDelta)
 {
 	if (__super::Tick(fTimeDelta) && m_bDeadAnimExpired)
+	{
+		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
 		return OBJ_DEAD;
+	}
+		
+
+	
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);
@@ -63,6 +70,11 @@ void CBoaron::Late_Tick(_float fTimeDelta)
 
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	if (!m_bPicking)
+	{
+		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
+		m_bPicking = true;
+	}
 }
 
 HRESULT CBoaron::Render()
@@ -313,6 +325,59 @@ void CBoaron::Change_Motion()
 	}
 }
 
+_bool CBoaron::Picking(_float3 * PickingPoint)
+{
+	if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+		return false;
+
+	if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
+	{
+		m_vecOutPos = *PickingPoint;
+
+
+
+		return true;
+	}
+	else
+	{
+		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+
+		auto i = pInvenManager->Get_Monsterinfo_list()->front();
+		auto k = pInvenManager->Get_Monsterhp_list();
+
+		i->set_monstername(MONSTER_END);
+		i->set_check(false);
+
+
+		for (auto j : *k)
+			j->set_check(false);
+		return false;
+	}
+
+	return true;
+}
+
+void CBoaron::PickingTrue()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
+	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+
+	auto i = pInvenManager->Get_Monsterinfo_list()->front();
+	auto k = pInvenManager->Get_Monsterhp_list();
+
+	i->set_monstername(MONSTER_BOARON);
+	i->set_check(true);
+
+	for (auto j : *k)
+	{
+		j->set_check(true);
+		j->set_hp((_uint)m_tInfo.iCurrentHp);
+	}
+
+	Safe_Release(pGameInstance);
+	Safe_Release(pInvenManager);
+}
+
 void CBoaron::AI_Behaviour(_float fTimeDelta)
 {
 	if (m_bDead || m_bHit || m_bIsAttacking)
@@ -353,7 +418,7 @@ void CBoaron::Patrol(_float fTimeDelta)
 	// Switch between Idle and Walk (based on time)
 	if (m_eState == STATE::IDLE)
 	{
-		if (GetTickCount() > m_dwIdleTime + 3000)
+		if (GetTickCount() > m_dwIdleTime + 3000 + (rand() % 3000)*(rand() % 2 + 1))
 		{
 			m_eState = STATE::RUN;
 			m_dwWalkTime = GetTickCount();
@@ -369,7 +434,7 @@ void CBoaron::Patrol(_float fTimeDelta)
 	}
 	else if (m_eState == STATE::RUN)
 	{
-		if (GetTickCount() > m_dwWalkTime + 1500)
+		if (GetTickCount() > m_dwWalkTime + 1500 + (rand() % 3000)*(rand() % 2 + 1))
 		{
 			m_eState = STATE::IDLE;
 			m_dwIdleTime = GetTickCount();
@@ -516,7 +581,7 @@ HRESULT CBoaron::Drop_Items()
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_SPIDERMEAT;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_BOSS, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

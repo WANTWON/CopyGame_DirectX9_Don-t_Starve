@@ -70,7 +70,7 @@ private:
 	int iNum = 100;
 	ITEMNAME texnum = ITEMNAME_END;
 	ITEMID m_itemtype = ITEM_END;
-	_uint item_number = 1;//아이템갯수
+	_uint item_number = 0;//아이템갯수
 	bool m_bcheck = true;
 	bool m_bpontcheck = true;
 	bool m_bcheck_bag = false;

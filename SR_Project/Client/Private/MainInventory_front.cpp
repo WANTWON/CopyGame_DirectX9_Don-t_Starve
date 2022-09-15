@@ -196,6 +196,8 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	ScreenToClient(g_hWnd, &ptMouse);
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 	//Safe_AddRef(pinv);
+	if (iNum == 6)
+		int a = 10;
 
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
 	auto iteminfo = pinv->Get_Mouse_iteminfo_list()->begin();
@@ -228,63 +230,7 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	(*iteminfo)->set_check(false);*/
 
 
-	if (texnum == ITEMNAME_ARMOR)
-	{
-		m_itemtype = ITEM_ARMOR;
-	}
-	else if (texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH || texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK || texnum == ITEMNAME_HAMBAT)
-	{
-		m_itemtype = ITEM_HAND;
-	}
-
-	else if (texnum == ITEMNAME_HELMET)
-	{
-		m_itemtype = ITEM_HAT;
-	}
-
-	else if (texnum == ITEMNAME_BAG)
-	{
-		m_itemtype = ITEM_BAG;
-	}
-
-
-	else if (texnum == ITEMNAME_BERRY || texnum == ITEMNAME_CARROT || texnum == ITEMNAME_MEAT || texnum == ITEMNAME_SPIDERMEAT
-		|| texnum == ITEMNAME_MEATBALL || texnum == ITEMNAME_NUGGET || texnum == ITEMNAME_LASAGNA || texnum == ITEMNAME_BERRYPIE
-		|| texnum == ITEMNAME_TRASH1 || texnum == ITEMNAME_TRASH2)
-	{
-		m_itemtype = ITEM_FOOD;
-	}
-
-	else if (texnum == ITEMNAME_COAL || texnum == ITEMNAME_WOOD || texnum == ITEMNAME_ROCK || texnum == ITEMNAME_GOLD || texnum == ITEMNAME_WOOD2
-		|| texnum == ITEMNAME_PIGTAIL || texnum == ITEMNAME_ROPE || texnum == ITEMNAME_WEB || texnum == ITEMNAME_GRASS || texnum == ITEMNAME_ROCK2)
-	{
-		m_itemtype = ITEM_MATERIAL;
-	}
-
-	else if (texnum == ITEMNAME_FENCE || texnum == ITEMNAME_POT || texnum == ITEMNAME_TENT)
-	{
-		m_itemtype = ITEM_STRUCT;
-	}
-
-
-	if (m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT || m_itemtype == ITEM_HAND || m_itemtype == ITEM_ARMOR || texnum == ITEMNAME_END)
-	{
-
-
-		m_bpontcheck = false;
-
-	}
-	else if (m_itemtype == ITEM_FOOD || m_itemtype == ITEM_MATERIAL || m_itemtype == ITEM_STRUCT)
-	{
-		m_bpontcheck = true;
-	}
-
-
-
-	if (texnum == ITEMNAME_END)
-	{
-		m_itemtype = ITEM_END;
-	}
+	
 
 	/*if (texnum == ITEMNAME_BAG || texnum == ITEMNAME_HELMET || texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH
 	|| texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK || texnum == ITEMNAME_HAMBAT || texnum == ITEMNAME_ARMOR || texnum == ITEMNAME_END)
@@ -468,17 +414,71 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	//Safe_Release(pMouse);
 	//	Safe_Release(pinv);
 
+	if (texnum == ITEMNAME_ARMOR)
+	{
+		m_itemtype = ITEM_ARMOR;
+	}
+	else if (texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH || texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK || texnum == ITEMNAME_HAMBAT)
+	{
+		m_itemtype = ITEM_HAND;
+	}
+
+	else if (texnum == ITEMNAME_HELMET)
+	{
+		m_itemtype = ITEM_HAT;
+	}
+
+	else if (texnum == ITEMNAME_BAG)
+	{
+		m_itemtype = ITEM_BAG;
+	}
+
+
+	else if (texnum == ITEMNAME_BERRY || texnum == ITEMNAME_CARROT || texnum == ITEMNAME_MEAT || texnum == ITEMNAME_SPIDERMEAT
+		|| texnum == ITEMNAME_MEATBALL || texnum == ITEMNAME_NUGGET || texnum == ITEMNAME_LASAGNA || texnum == ITEMNAME_BERRYPIE
+		|| texnum == ITEMNAME_TRASH1 || texnum == ITEMNAME_TRASH2)
+	{
+		m_itemtype = ITEM_FOOD;
+	}
+
+	else if (texnum == ITEMNAME_COAL || texnum == ITEMNAME_WOOD || texnum == ITEMNAME_ROCK || texnum == ITEMNAME_GOLD || texnum == ITEMNAME_WOOD2
+		|| texnum == ITEMNAME_PIGTAIL || texnum == ITEMNAME_ROPE || texnum == ITEMNAME_WEB || texnum == ITEMNAME_GRASS || texnum == ITEMNAME_ROCK2)
+	{
+		m_itemtype = ITEM_MATERIAL;
+	}
+
+	else if (texnum == ITEMNAME_FENCE || texnum == ITEMNAME_POT || texnum == ITEMNAME_TENT)
+	{
+		m_itemtype = ITEM_STRUCT;
+	}
+
+
+	if (m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT || m_itemtype == ITEM_HAND || m_itemtype == ITEM_ARMOR || texnum == ITEMNAME_END)
+	{
+
+
+		m_bpontcheck = false;
+
+	}
+	else if (m_itemtype == ITEM_FOOD || m_itemtype == ITEM_MATERIAL || m_itemtype == ITEM_STRUCT)
+	{
+		m_bpontcheck = true;
+	}
+
+
 
 	if (texnum == ITEMNAME_END)
 	{
-		//set_check(false);
+		m_itemtype = ITEM_END;
 	}
-	if (m_itemtype == ITEM_HAT && m_itemtype == ITEM_BAG && m_itemtype == ITEM_HAND && m_itemtype == ITEM_ARMOR) // 
+	
+	if (m_itemtype == ITEM_HAT || m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAND || m_itemtype == ITEM_ARMOR) // 
 	{
 		item_number = 0;
 	}
 
-	if (item_number <= 0 && m_itemtype != ITEM_HAT && m_itemtype != ITEM_BAG && m_itemtype != ITEM_HAND && m_itemtype != ITEM_ARMOR) // 카운트가 필요한 타입들이면서 
+	if (item_number <= 0 && m_itemtype != ITEM_HAT && m_itemtype != ITEM_BAG && m_itemtype != ITEM_HAND && m_itemtype != ITEM_ARMOR
+		&& texnum != ITEMNAME_QUEST1) // 카운트가 필요한 타입들이면서 
 	{
 		m_bpontcheck = false;
 		m_bcheck = false;
@@ -491,9 +491,13 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	if (texnum == ITEMNAME_END)
 	{
 		m_bcheck = false;
+		item_number = 0; //최근
 	}
 	else
 		m_bcheck = true;
+
+	/*if (texnum == ITEMNAME_QUEST1)
+		m_bcheck = true;*/
 
 	if (nullptr != m_pRendererCom&&m_bcheck == true && iNum < 10)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);

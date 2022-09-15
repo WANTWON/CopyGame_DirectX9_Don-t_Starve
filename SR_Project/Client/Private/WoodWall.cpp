@@ -2,6 +2,7 @@
 #include "..\Public\WoodWall.h"
 #include "GameInstance.h"
 #include "PickingMgr.h"
+#include "CameraManager.h"
 
 CWoodWall::CWoodWall(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -41,21 +42,46 @@ HRESULT CWoodWall::Initialize(void* pArg)
 		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 	if (m_eWallDesc.etype == WALL_ROCK)
 		m_pTransformCom->Set_Scale(1.f, 3.f, 1.f);
+	if (m_eWallDesc.etype == WALL_MAZE)
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+	if (m_eWallDesc.etype == WALL_BOSS)
+	{
+		m_pTransformCom->Set_Scale(0.5f, 2.f, 1.f);
+		m_fRadius = 1.f;
+		
+	}
+	
 
-
-
-	WalkingTerrain();
+	
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+
+
+	if (m_eWallDesc.eDir == SIDE)
+		m_pTransformCom->Turn(_float3(0, 1, 0), 1.f);
+
+	
 	return S_OK;
 }
 
 
 int CWoodWall::Tick(_float fTimeDelta)
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_BLOCK, this);
 
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+	{
+
+		if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct() == false)
+		{
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_BLOCK, this);
+
+		}
+	}
+		
 	__super::Tick(fTimeDelta);
+
+	if (m_eWallDesc.etype == WALL_BOSS)
+		WalkingTerrain();
 
 	// If Hp <= 0 : Drop Items
 	if (m_tInfo.iCurrentHp > 40)
@@ -70,6 +96,8 @@ int CWoodWall::Tick(_float fTimeDelta)
 		}
 	}
 
+	
+
 	if (m_bConstruct)
 	{
 		_float3 vPickingPos = CPickingMgr::Get_Instance()->Get_PickingPos();
@@ -83,13 +111,24 @@ int CWoodWall::Tick(_float fTimeDelta)
 
 void CWoodWall::Late_Tick(_float fTimeDelta)
 {
+
 	__super::Late_Tick(fTimeDelta);
 
-	SetUp_BillBoard();
+	if (m_eWallDesc.eDir == WALL_DIREND)
+		SetUp_BillBoard();
+	else
+		SetUp_FPSBillBoard();
 
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+	{
+			if (nullptr != m_pRendererCom)
+				m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
+			m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	}
+		
+	
 	if (m_eWallDesc.etype == WALL_WOOD)
 	{
 		Change_Motion();
@@ -97,7 +136,7 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 
 	}
 	
-	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	
 }
 
 HRESULT CWoodWall::Render()
@@ -108,17 +147,30 @@ HRESULT CWoodWall::Render()
 	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-		return E_FAIL;
+	if (m_eWallDesc.etype == WALL_WOOD || m_eWallDesc.etype == WALL_MAZE || m_eWallDesc.etype == WALL_BOSS)
+	{
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
+			return E_FAIL;
+	}
+	else if (m_eWallDesc.etype == WALL_ROCK)
+	{
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
+			return E_FAIL;
+	}
+	
 
 	if (FAILED(SetUp_RenderState()))
 		return E_FAIL;
 
-	m_pVIBufferCom->Render();
+	if( m_eWallDesc.etype != WALL_END)
+		m_pVIBufferCom->Render();
 
 #ifdef _DEBUG
-	m_pTextureCom->Bind_OnGraphicDev_Debug();
-	m_pColliderCom->Render_ColliderBox();
+	if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct() == false)
+	{
+		m_pTextureCom->Bind_OnGraphicDev_Debug();
+		m_pColliderCom->Render_ColliderBox();
+	}
 #endif // _DEBUG
 
 	if (FAILED(Release_RenderState()))
@@ -146,18 +198,34 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	///* For.Com_Collider*/
-	//CCollider_Rect::COLLRECTDESC CollRectDesc;
-	//ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
-	//CollRectDesc.fRadiusY = 0.5f;
-	//CollRectDesc.fRadiusX = 0.5f;
-	//CollRectDesc.fOffSetX = 0.f;
-	//CollRectDesc.fOffSetY = -0.0f;
+	/* For.Com_Collider*/
+	CCollider_Cube::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
+	CollRectDesc.fRadiusY = 0.5f;
+	CollRectDesc.fRadiusX = 0.5f;
+	CollRectDesc.fRadiusZ = 0.1f;
+	CollRectDesc.fOffSetX = 0.f;
+	CollRectDesc.fOffSetY = 0.f;
+	CollRectDesc.fOffsetZ = 0.f;
 
-	/* For.Com_Collider_Rect*/
-	/*if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
-		return E_FAIL;*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom)))
+	if(m_eWallDesc.etype == WALL_END)
+		CollRectDesc.fRadiusZ = 0.5f;
+	if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_MAZE)
+	{
+		CollRectDesc.fRadiusZ = 0.5f;
+	}
+	if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_BOSS)
+	{
+		CollRectDesc.fRadiusZ = 0.5f;
+		CollRectDesc.fRadiusX = 1.2f;
+	}
+	if (m_eWallDesc.eDir == SIDE)
+	{
+		CollRectDesc.fRadiusZ = 0.8f;
+		CollRectDesc.fRadiusX = 0.1f;
+	}
+	
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -169,7 +237,7 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
 	TransformDesc.fSpeedPerSec = 0.f;
-	TransformDesc.fRotationPerSec = D3DXToRadian(0.f);
+	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
 	TransformDesc.InitPos = m_eWallDesc.vecPosition;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
@@ -185,8 +253,13 @@ HRESULT CWoodWall::SetUp_RenderState()
 
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	/*m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);*/
 
 	return S_OK;
 }
@@ -194,7 +267,7 @@ HRESULT CWoodWall::SetUp_RenderState()
 HRESULT CWoodWall::Release_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	return S_OK;
 }
 
@@ -208,8 +281,27 @@ void CWoodWall::SetUp_BillBoard()
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+
+	if(m_eWallDesc.etype == WALL_WOOD)
+		m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+}
+
+void CWoodWall::SetUp_FPSBillBoard()
+{
+	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
+		return;
+	
+	_float4x4 ViewMatrix;
+
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);  // Get View Matrix
+	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
+
+	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
+	//m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	//m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 
 void CWoodWall::WalkingTerrain()
@@ -229,7 +321,7 @@ void CWoodWall::WalkingTerrain()
 
 	_float3 vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_float3 vScale = m_pTransformCom->Get_Scale();
-	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), (1 * vScale.y *0.5f));
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_fRadius);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
@@ -266,13 +358,32 @@ HRESULT CWoodWall::Texture_Clone()
 		m_vecTexture.push_back(m_pTextureCom);
 
 		TextureDesc.m_iEndTex = 0;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_BROKEN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_BROKEN"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_BROKcoEN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WoodWall_BROKEN"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
 	case Client::CWoodWall::WALL_ROCK:
 		TextureDesc.m_iEndTex = 2;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RockHEALTHY"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case Client::CWoodWall::WALL_END:
+		TextureDesc.m_iEndTex = 2;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_RockHEALTHY"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case Client::CWoodWall::WALL_MAZE:
+		TextureDesc.m_iStartTex = 20;
+		TextureDesc.m_iCurrentTex = 20;
+		TextureDesc.m_iEndTex = 22;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_HEALTHY"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case Client::CWoodWall::WALL_BOSS:
+		TextureDesc.m_iStartTex = rand() % 5;
+		TextureDesc.m_iCurrentTex = TextureDesc.m_iStartTex;
+		TextureDesc.m_iEndTex = 4;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_HEALTHY"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
 	default:

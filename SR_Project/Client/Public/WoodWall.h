@@ -16,8 +16,8 @@ BEGIN(Client)
 class CWoodWall final : public CGameObject
 {
 public:
-	enum WALLTYPE { WALL_WOOD, WALL_ROCK, WALL_END };
-
+	enum WALLTYPE { WALL_WOOD, WALL_ROCK, WALL_MAZE, WALL_BOSS, WALL_END };
+	enum WALLDIR { SIDE, FRONT, WALL_DIREND };
 	enum STATE
 	{
 		HEALTHY,
@@ -30,6 +30,7 @@ public:
 	typedef struct WallDesc
 	{
 		WALLTYPE etype = WALL_WOOD;
+		WALLDIR eDir = WALL_DIREND;
 		_float3 vecPosition;
 
 	}WALLDESC;
@@ -51,6 +52,7 @@ private:
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 	void SetUp_BillBoard();
+	void SetUp_FPSBillBoard();
 	void WalkingTerrain();
 	HRESULT Change_Texture(const _tchar* LayerTag);
 

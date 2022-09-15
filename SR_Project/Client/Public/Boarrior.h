@@ -14,6 +14,7 @@ class CBoarrior final : public CMonster
 		ATTACK_1,
 		ATTACK_2,
 		ATTACK_3,
+		SPAWN,
 		STUN,
 		HIT,
 		DIE,
@@ -40,6 +41,10 @@ private: /*For TextureCom */
 	virtual void Change_Frame(_float fTimeDelta) override;
 	virtual void Change_Motion() override;
 
+public: /*For Picking */
+	virtual _bool Picking(_float3* PickingPoint) override;
+	virtual void PickingTrue() override;
+
 private:
 	// Boarrior Variables
 	STATE m_eState = STATE::IDLE;
@@ -54,16 +59,28 @@ private:
 	_float m_fBulletAliveTime = 999.f;
 	_uint m_iBulletCount = 0;
 
+	// Stagger Variables
 	_float m_fStaggerDamageLimit = 80.f;
 	_float m_fStaggerDamage = 0.f;
+
+	// Spawn Variables
+	_bool m_bIsBelow80Percent = false;
+	_bool m_bIsBelow60Percent = false;
+	_bool m_bIsBelow40Percent = false;
+	_bool m_bIsBelow20Percent = false;
+	_bool m_bShouldSpawn = false;
+	_float m_fSpawnTime = 0.f;
+	_float3 m_vecOutPos; // For Picking
 	
 private:
+	void Check_Health_Percent();
 	virtual void AI_Behaviour(_float fTimeDelta) override;
 	void Patrol(_float fTimeDelta);
 	virtual void Find_Target() override;
 	virtual void Follow_Target(_float fTimeDelta) override;
 	void Attack(_float fTimeDelta, STATE eAttack = STATE::ATTACK_1);
 	void Spawn_Bullet(_float fTimeDelta);
+	void Spawn_Adds(_float fTimeDelta);
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 	virtual HRESULT Drop_Items() override;
 	virtual _bool IsDead() override;

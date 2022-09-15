@@ -1046,7 +1046,8 @@ _bool CBullet::Compare_Terrain(void)
 	case WEAPON_TYPE::BEARGER_SPECIAL:
 	case WEAPON_TYPE::BOARRIOR_SPECIAL:
 	case WEAPON_TYPE::WEAPON_ICESMOKE:
-		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
+		_float3 vScale = m_pTransformCom->Get_Scale();
+		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), (vScale.y*0.5f));
 
 		_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		vMyPos.y = vPosition.y;
@@ -1319,6 +1320,9 @@ HRESULT CBullet::Init_Data(void)
 		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 		m_fDamage = 20.f;
 		Compare_Terrain();
+		break;
+	case WEAPON_TYPE::BOARRIOR_SPECIAL:
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 		break;
 	default:
 		break;

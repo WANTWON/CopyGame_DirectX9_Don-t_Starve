@@ -69,16 +69,15 @@ HRESULT CItem::Render()
 
 void CItem::Interact(_uint Damage)
 {
-	// Test
-	int iTestNum = 0;
+	
 
 	CInventory_Manager* pInventory_Manager = CInventory_Manager::Get_Instance();
 
-	Safe_AddRef(pInventory_Manager);
+	
 	auto Maininvenlist = pInventory_Manager->Get_Inven_list();
 	auto equipmentlist = pInventory_Manager->Get_Equipment_list()->begin();
 	auto eat = pInventory_Manager->Get_Eatitem_list()->front();
-	//Safe_Release(pInventory_Manager);
+	
 	m_bInteract = false;
 	m_bDead = true;
 	if (m_bDead)
@@ -94,11 +93,10 @@ void CItem::Interact(_uint Damage)
 	
 	//this->Get_Position();
 
-	for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
-	{
+	
 		if ((*equipmentlist)->get_texnum() == ITEMNAME_BAG) // 가방을 장착하고있을때
 		{
-			for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
+			for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end(); ++iter)
 			{
 				if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true && (*iter)->get_item_number() <= 99)
 				{
@@ -106,31 +104,36 @@ void CItem::Interact(_uint Damage)
 					pInventory_Manager->update_craftpont();
 					eat->set_way((*iter)->get_pos());
 					eat->set_texnum((*iter)->get_texnum());
-					Safe_Release(pInventory_Manager);
+					
 					return;
 				}
-				else if ((*iter)->get_check() == false)
-				{
-					(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
-					(*iter)->plus_itemcount();
-					(*iter)->set_check(true);
-					eat->set_way((*iter)->get_pos());
-					eat->set_texnum((*iter)->get_texnum());
-					pInventory_Manager->update_craftpont();
-					Safe_Release(pInventory_Manager);
-
-					return;
-				}
-				else
-					++iter;
 			}
+
+			for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();++iter)
+			{
+
+				   if ((*iter)->get_check() == false)
+	     			{
+					         (*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
+					         (*iter)->plus_itemcount();
+				             (*iter)->set_check(true);
+			                 eat->set_way((*iter)->get_pos());
+			                 eat->set_texnum((*iter)->get_texnum());
+			                 pInventory_Manager->update_craftpont();
+			                 
+
+			                 return;
+	         	}
+			}
+				
+			
 		}
 		else // 가방을 장착하고있지 않을때
 		{
-			for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();)
+			for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end();++iter)
 			{
 				if ((*iter)->get_iNum() >= 10)
-					return;
+					break;
 
 				if ((*iter)->get_texnum() == (m_ItemDesc.eItemName) && (*iter)->get_check() == true)
 				{
@@ -138,10 +141,15 @@ void CItem::Interact(_uint Damage)
 					pInventory_Manager->update_craftpont();
 					eat->set_way((*iter)->get_pos());
 					eat->set_texnum((*iter)->get_texnum());
-					Safe_Release(pInventory_Manager);
+					
 					return;
 				}
-				else if ((*iter)->get_check() == false)
+			}
+			for (auto iter = Maininvenlist->begin(); iter != Maininvenlist->end(); ++iter)
+			{
+				if ((*iter)->get_iNum() >= 10)
+					return;
+			    if ((*iter)->get_check() == false)
 				{
 					(*iter)->set_texnum(m_ItemDesc.eItemName); //추후에 아이템enum 만들고부터는 숫자대신 원하는 아이템 넣어주세요
 					(*iter)->plus_itemcount();
@@ -149,19 +157,15 @@ void CItem::Interact(_uint Damage)
 					eat->set_texnum((*iter)->get_texnum());
 					(*iter)->set_check(true);
 					pInventory_Manager->update_craftpont();
-					Safe_Release(pInventory_Manager);
+					
 
 					return;
 				}
-				else
-				{
-					++iter;
-					++iTestNum;
-				}
+				
 			}
 		}
 	}
-}
+
 
 HRESULT CItem::Drop_Items()
 {

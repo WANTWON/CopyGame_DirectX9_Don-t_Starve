@@ -17,11 +17,11 @@ class CPortal final : public CInteractive_Object
 {
 public: 
 
-	enum  PORTALTYPE { PORTAL_NORMAL, PORTAL_BOSS, PORTAL_END };
+	enum  PORTALTYPE { PORTAL_GAMEPLAY,  PORTAL_HUNT, PORTAL_MAZE, PORTAL_BOSS, PORTAL_END };
 
 	typedef struct PortalDesc
 	{
-		PORTALTYPE m_eType = PORTAL_NORMAL;
+		PORTALTYPE m_eType = PORTAL_GAMEPLAY;
 		_float3 vPosition;
 	}PORTALDESC;
 	

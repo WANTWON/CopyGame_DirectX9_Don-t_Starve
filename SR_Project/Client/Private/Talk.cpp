@@ -142,6 +142,20 @@ HRESULT CTalk::Render()
 			return E_FAIL;
 
 
+		if (m_bforwendy == true)
+		{
+			if (FAILED(m_pTextureCom1->Bind_OnGraphicDev(texnum1)))
+				return E_FAIL;
+
+			if (FAILED(SetUp_RenderState()))
+				return E_FAIL;
+
+			m_pVIBufferCom->Render();
+
+			if (FAILED(Release_RenderState()))
+				return E_FAIL;
+		}
+		
 
 
 	}
@@ -152,35 +166,169 @@ void CTalk::Check_Quest(void)
 {
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 
-	if (texnum == 6)
+	if (m_bActivated == true)
 	{
-		auto pinven = pinv->Get_Inven_list();
-		//Safe_Release(pinv);//üũ
-		//	Safe_AddRef(pinven);
-		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		if (texnum == 6)
 		{
-
-			if ((*iter)->get_texnum() == ITEMNAME_BERRY)
+			auto pinven = pinv->Get_Inven_list();
+			//Safe_Release(pinv);//üũ
+			//	Safe_AddRef(pinven);
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 			{
-				(*iter)->minus_material(3);
+
+				if ((*iter)->get_texnum() == ITEMNAME_BERRY)
+				{
+					(*iter)->minus_material(3);
+				}
+
+				if ((*iter)->get_texnum() == ITEMNAME_GRASS)
+				{
+					(*iter)->minus_material(2);
+				}
+
+				if ((*iter)->get_texnum() == ITEMNAME_WOOD)
+				{
+					(*iter)->minus_material(1);
+				}
 			}
-
-			if ((*iter)->get_texnum() == ITEMNAME_GRASS)
+			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 			{
-				(*iter)->minus_material(2);
-			}
 
-			if ((*iter)->get_texnum() == ITEMNAME_WOOD)
-			{
-				(*iter)->minus_material(1);
+				if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+				{
+					(*iter)->set_texnum(ITEMNAME_QUEST1);
+					
+					(*iter)->set_check(true);
+
+					break;
+				}
+
 			}
 		}
-		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		else if (texnum == 8)
+		{
+			pinv->Get_Quest_list()->front()->set_onoff(true);
+			pinv->Get_Quest_list()->front()->set_texnum(1);
+		}
+		else if (texnum == 12)
+		{
+			pinv->Get_Quest_list()->front()->set_onoff(true);
+			pinv->Get_Quest_list()->front()->set_texnum(2);
+		}
+		else if (texnum == 15)
 		{
 
-			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+		}
+		else if (texnum == 16)
+		{
+
+
+		}
+		else if (texnum == 18)
+		{
+
+
+			pinv->Get_Quest_list()->front()->set_onoff(true);
+			pinv->Get_Quest_list()->front()->set_texnum(3);
+
+		}
+		else if (texnum == 25)
+		{
+			pinv->Get_Quest_list()->front()->set_onoff(true);
+			pinv->Get_Quest_list()->front()->set_texnum(4);
+
+		}
+
+		else if (texnum == 29)
+		{
+			pinv->Get_Quest_list()->front()->set_onoff(true);
+			pinv->Get_Quest_list()->front()->set_texnum(5);
+
+		}
+		m_bActivated = false;
+	}
+
+
+}
+
+HRESULT CTalk::Excute(void)
+{
+
+	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	if (texnum == 2)
+	{
+		pinv->Get_Quest_list()->front()->set_onoff(true);
+		pinv->Get_Quest_list()->front()->set_texnum(0);
+		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		m_bcheck = false;
+		//m_bActivated = false;
+		pPlayer->Set_TalkMode(false);
+		pPlayer->Set_bOnlyActionKey(false);
+		m_bTalkEnd = true;
+		//Safe_Release(pinv);	
+	}
+	else if (texnum == 6)
+	{
+
+		pinv->Get_Quest_list()->front()->set_onoff(false);
+		m_bcheck = false;
+		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		m_bcheck = false;
+		//m_bActivated = false;
+
+		pPlayer->Set_TalkMode(false);
+		pPlayer->Set_bOnlyActionKey(false);
+		m_bTalkEnd = true;
+		//Safe_Release(pinv);
+	}
+	else if (texnum == 8)
+	{
+		pinv->Get_Quest_list()->front()->set_onoff(true);
+		pinv->Get_Quest_list()->front()->set_texnum(1);
+		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		m_bcheck = false;
+		//m_bActivated = false;
+		pPlayer->Set_TalkMode(false);
+		pPlayer->Set_bOnlyActionKey(false);
+		m_bTalkEnd = true;
+		//	Safe_Release(pinv);
+	}
+	else if (texnum == 12)
+	{
+		pinv->Get_Quest_list()->front()->set_onoff(true);
+		pinv->Get_Quest_list()->front()->set_texnum(2);
+		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		m_bcheck = false;
+		//m_bActivated = false;
+		pPlayer->Set_TalkMode(false);
+		pPlayer->Set_bOnlyActionKey(false);
+		m_bTalkEnd = true;
+		//Safe_Release(pinv);			
+	}
+	else if (texnum == 15)
+	{
+		auto pinven = pinv->Get_Inven_list();
+
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+			if ((*iter)->get_texnum() == (ITEMNAME_ROCK2) && (*iter)->get_check() == true && (*iter)->get_item_number() <= 99)
 			{
-				(*iter)->set_texnum(ITEMNAME_QUEST1);
+				(*iter)->plus_itemcount2(20);   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
+				break;
+			}
+			else if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(ITEMNAME_ROCK2);
+				(*iter)->plus_itemcount2(20);
 
 				(*iter)->set_check(true);
 
@@ -188,232 +336,102 @@ void CTalk::Check_Quest(void)
 			}
 
 		}
-	}
-	else if (texnum == 8)
-	{
-		pinv->Get_Quest_list()->front()->set_onoff(true);
-		pinv->Get_Quest_list()->front()->set_texnum(1);
-	}
-	else if (texnum == 12)
-	{
-		pinv->Get_Quest_list()->front()->set_onoff(true);
-		pinv->Get_Quest_list()->front()->set_texnum(2);		
-	}
-	else if (texnum == 15)
-	{
-		
+		pinv->Get_Quest_list()->front()->set_onoff(false);
+		m_bcheck = false;
+
+		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		//m_bcheck = false;
+		//m_bActivated = false;
+		m_bTalkEnd = true;
+		pPlayer->Set_TalkMode(false);
+		pPlayer->Set_bOnlyActionKey(false);
 	}
 	else if (texnum == 16)
 	{
-		
+		/*pinv->Get_Quest_list()->front()->set_onoff(true);
+		pinv->Get_Quest_list()->front()->set_texnum(3);
+		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		m_bcheck = false;*/
+
+		if (!m_SetTargetBearger)
+		{
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, TEXT("Layer_Bear"), _float3(10.f, 0.f, 40.f))))
+				return E_FAIL;
+
+			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+			CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+			pCamera->Set_TalkingMode(true);
+			CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Bear"));
+			pCamera->Set_Target(pGameObject);
+			m_SetTargetBearger = true;
+
+		}
+		else if (m_SetTargetBearger)
+		{
+			texnum++;
+			//m_bActivated = false;
+		}
 
 	}
 	else if (texnum == 18)
 	{
 
-		
+		if (m_SetTargetBearger)
+		{
+			CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+			pCamera->Set_TalkingMode(false);
+			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+			m_SetTargetBearger = false;
+		}
 		pinv->Get_Quest_list()->front()->set_onoff(true);
 		pinv->Get_Quest_list()->front()->set_texnum(3);
-		
+		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		m_bcheck = false;
+		//m_bActivated = false;
+		m_bTalkEnd = true;
+		pPlayer->Set_TalkMode(false);
+		pPlayer->Set_bOnlyActionKey(false);
 	}
 	else if (texnum == 25)
 	{
 		pinv->Get_Quest_list()->front()->set_onoff(true);
 		pinv->Get_Quest_list()->front()->set_texnum(4);
-		
+		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		m_bcheck = false;
+		m_bTalkEnd = true;
+		pPlayer->Set_TalkMode(false);
+		pPlayer->Set_bOnlyActionKey(false);
 	}
 
 	else if (texnum == 29)
 	{
 		pinv->Get_Quest_list()->front()->set_onoff(true);
 		pinv->Get_Quest_list()->front()->set_texnum(5);
-	
+		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		m_bcheck = false;
+		m_bTalkEnd = true;
+		pPlayer->Set_TalkMode(false);
+		pPlayer->Set_bOnlyActionKey(false);
 	}
-	m_bActivated = false;
-}
-
-HRESULT CTalk::Excute(void)
-{
-	if (m_bActivated)
+	else
 	{
-		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-
-		if (texnum == 2)
+		if (m_bIsStartText)
 		{
-			pinv->Get_Quest_list()->front()->set_onoff(true);
-			pinv->Get_Quest_list()->front()->set_texnum(0);
-			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-			pCamera->Set_TalkingMode(false);
-			m_bcheck = false;
-			m_bActivated = false;
-			pPlayer->Set_TalkMode(false);
-			pPlayer->Set_bOnlyActionKey(false);
-			m_bTalkEnd = true;
-			//Safe_Release(pinv);	
+			m_bIsStartText = false;
 		}
-		else if (texnum == 6)
-		{
-			
-			pinv->Get_Quest_list()->front()->set_onoff(false);
-			m_bcheck = false;
-			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-			pCamera->Set_TalkingMode(false);
-			m_bcheck = false;
-			m_bActivated = false;
-
-			pPlayer->Set_TalkMode(false);
-			pPlayer->Set_bOnlyActionKey(false);
-			m_bTalkEnd = true;
-			//Safe_Release(pinv);
+		else {
+			++texnum;
 		}
-		else if (texnum == 8)
-		{
-			pinv->Get_Quest_list()->front()->set_onoff(true);
-			pinv->Get_Quest_list()->front()->set_texnum(1);
-			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-			pCamera->Set_TalkingMode(false);
-			m_bcheck = false;
-			m_bActivated = false;
-			pPlayer->Set_TalkMode(false);
-			pPlayer->Set_bOnlyActionKey(false);
-			m_bTalkEnd = true;
-			//	Safe_Release(pinv);
-		}
-		else if (texnum == 12)
-		{
-			pinv->Get_Quest_list()->front()->set_onoff(true);
-			pinv->Get_Quest_list()->front()->set_texnum(2);
-			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-			pCamera->Set_TalkingMode(false);
-			m_bcheck = false;
-			m_bActivated = false;
-			pPlayer->Set_TalkMode(false);
-			pPlayer->Set_bOnlyActionKey(false);
-			m_bTalkEnd = true;
-			//Safe_Release(pinv);			
-		}
-		else if (texnum == 15)
-		{
-			auto pinven = pinv->Get_Inven_list();
-
-
-			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-			{
-				if ((*iter)->get_texnum() == (ITEMNAME_ROCK2) && (*iter)->get_check() == true && (*iter)->get_item_number() <= 99)
-				{
-					(*iter)->plus_itemcount2(20);   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가
-					break;
-				}
-				else if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
-				{
-					(*iter)->set_texnum(ITEMNAME_ROCK2);
-					(*iter)->plus_itemcount2(20);
-
-					(*iter)->set_check(true);
-
-					break;
-				}
-
-			}
-			pinv->Get_Quest_list()->front()->set_onoff(false);
-			m_bcheck = false;
-
-			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-			pCamera->Set_TalkingMode(false);
-			//m_bcheck = false;
-			m_bActivated = false;
-			m_bTalkEnd = true;
-			pPlayer->Set_TalkMode(false);
-			pPlayer->Set_bOnlyActionKey(false);
-		}
-		else if (texnum == 16)
-		{
-			/*pinv->Get_Quest_list()->front()->set_onoff(true);
-			pinv->Get_Quest_list()->front()->set_texnum(3);
-			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-			pCamera->Set_TalkingMode(false);
-			m_bcheck = false;*/
-
-			if (!m_SetTargetBearger)
-			{
-				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, TEXT("Layer_Bear"), _float3(10.f, 0.f, 40.f))))
-					return E_FAIL;
-
-				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
-				CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-				pCamera->Set_TalkingMode(true);
-				CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Bear"));
-				pCamera->Set_Target(pGameObject);
-				m_SetTargetBearger = true;
-
-			}
-			else if (m_SetTargetBearger)
-			{
-				texnum++;
-				m_bActivated = false;
-			}
-
-		}
-		else if (texnum == 18)
-		{
-
-			if (m_SetTargetBearger)
-			{
-				CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-				pCamera->Set_TalkingMode(false);
-				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
-				m_SetTargetBearger = false;
-			}
-			pinv->Get_Quest_list()->front()->set_onoff(true);
-			pinv->Get_Quest_list()->front()->set_texnum(3);
-			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-			pCamera->Set_TalkingMode(false);
-			m_bcheck = false;
-			m_bActivated = false;
-			m_bTalkEnd = true;
-			pPlayer->Set_TalkMode(false);
-			pPlayer->Set_bOnlyActionKey(false);
-		}
-		else if (texnum == 25)
-		{
-			pinv->Get_Quest_list()->front()->set_onoff(true);
-			pinv->Get_Quest_list()->front()->set_texnum(4);
-			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-			pCamera->Set_TalkingMode(false);
-			m_bcheck = false;
-			m_bTalkEnd = true;
-			pPlayer->Set_TalkMode(false);
-			pPlayer->Set_bOnlyActionKey(false);
-		}
-
-		else if (texnum == 29)
-		{
-			pinv->Get_Quest_list()->front()->set_onoff(true);
-			pinv->Get_Quest_list()->front()->set_texnum(5);
-			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-			pCamera->Set_TalkingMode(false);
-			m_bcheck = false;
-			m_bTalkEnd = true;
-			pPlayer->Set_TalkMode(false);
-			pPlayer->Set_bOnlyActionKey(false);
-		}
-		else
-		{
-			if (m_bIsStartText)
-			{
-				m_bIsStartText = false;
-			}
-			else{
-				++texnum;
-			}
-			m_bActivated = false;
-			//m_bTalkEnd = false;
-		}
-		m_bActivated = false;
+		//m_bActivated = false;
+		//m_bTalkEnd = false;
 	}
+	//m_bActivated = false;
+
 	return S_OK;
 }
 
@@ -427,9 +445,14 @@ HRESULT CTalk::SetUp_Components()
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_talk"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_talkwendy"), (CComponent**)&m_pTextureCom1)))
+		return E_FAIL;
+
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
+	
 
 
 	/* For.Com_Transform */

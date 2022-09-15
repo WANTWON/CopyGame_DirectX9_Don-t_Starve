@@ -53,6 +53,10 @@ int CDeadcountpont::Tick(_float fTimeDelta)
 	{
 		__super::Tick(fTimeDelta);
 
+		if (m_fY >= 680.f)
+			Open_DeadUI(fTimeDelta);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+
 		//RECT		rcRect;
 		//SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
@@ -75,6 +79,9 @@ int CDeadcountpont::Tick(_float fTimeDelta)
 
 		//if()
 	}
+	else
+		m_fY = 825.f;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 	return OBJ_NOEVENT;
 }
 

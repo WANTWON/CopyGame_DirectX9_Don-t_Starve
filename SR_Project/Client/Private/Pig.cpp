@@ -33,10 +33,12 @@ HRESULT CPig::Initialize(void* pArg)
 
 	m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 
-	m_tInfo.iMaxHp = 100;
+	m_tInfo.iMaxHp = 150;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+
 	m_fAttackRadius = .8f;
 	m_eMonsterID = PIG;
+	m_fAttackRadius = 0.8f;
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 
@@ -84,6 +86,7 @@ void CPig::Late_Tick(_float fTimeDelta)
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
 		m_bPicking = true;
 	}
+	
 
 
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
@@ -419,24 +422,58 @@ _bool CPig::Picking(_float3 * PickingPoint)
 	if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
 	{
 		m_vecOutPos = *PickingPoint;
+
+
+
 		return true;
 	}
 	else
+	{
+		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+
+		auto i = pInvenManager->Get_Monsterinfo_list()->front();
+		auto k = pInvenManager->Get_Monsterhp_list();
+
+		i->set_monstername(MONSTER_END);
+		i->set_check(false);
+
+
+		for (auto j : *k)
+			j->set_check(false);
 		return false;
+	}
+		
 	return true;
 }
 
 void CPig::PickingTrue()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
+	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+
+	auto i = pInvenManager->Get_Monsterinfo_list()->front();
+	auto k = pInvenManager->Get_Monsterhp_list();
+
+	i->set_monstername(MONSTER_PIG);
+	i->set_check(true);
+
+	for (auto j : *k)
+	{
+		j->set_check(true);
+		j->set_hp((_uint)m_tInfo.iCurrentHp);
+	}
+		
+
 	
+
 	if (pGameInstance->Key_Up(VK_LBUTTON))
 	{
-		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+		
 		CMouse* pMouse = CMouse::Get_Instance(); Safe_AddRef(pMouse);
 
 		if (pMouse->Get_Item_type() == ITEMID::ITEM_FOOD)
 		{
+			pMouse->minus_Item_count();
 			Give_Food();
 
 			if (pMouse->Get_Item_name() == ITEMNAME_MEATBALL)

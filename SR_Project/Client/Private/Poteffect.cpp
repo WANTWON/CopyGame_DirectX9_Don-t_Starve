@@ -73,7 +73,7 @@ int CPoteffect::Tick(_float fTimeDelta)
 		i += 0.01f;
 
 		if (i >= 1.0f)
-			i = 0.6;
+			i = 0.6f;
 
 		__super::Tick(fTimeDelta);
 		m_pTransformCom->Set_Scale(i, i, 1.f);

@@ -312,7 +312,7 @@ HRESULT CPlayer::SetUp_Components()
 	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
 	CollRectDesc.fRadiusY = 0.4f;
 	CollRectDesc.fRadiusX = 0.3f;
-	CollRectDesc.fRadiusZ = 0.5f;
+	CollRectDesc.fRadiusZ = 0.3f;
 	CollRectDesc.fOffSetX = 0.f;
 	CollRectDesc.fOffSetY = -0.25f;
 	CollRectDesc.fOffsetZ = 0.f;
@@ -335,7 +335,7 @@ HRESULT CPlayer::SetUp_Components()
 	CTransform::TRANSFORMDESC		TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
-	TransformDesc.fSpeedPerSec = 5.f;
+	TransformDesc.fSpeedPerSec = 3.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);
 
@@ -887,7 +887,7 @@ void CPlayer::Move_Up(_float _fTimeDelta)
 	if (m_bInputKey)
 	{
 		if (m_iCameraMode == CCameraManager::CAM_PLAYER)
-			m_pTransformCom->Go_Straight(_fTimeDelta * 2, m_fTerrain_Height);
+			m_pTransformCom->Go_Straight(_fTimeDelta * 1.5, m_fTerrain_Height);
 		else
 			m_pTransformCom->Go_Straight(_fTimeDelta, m_fTerrain_Height);
 	}
@@ -950,7 +950,7 @@ void CPlayer::Move_Down(_float _fTimeDelta)
 	if (m_bInputKey)
 	{
 		if (m_iCameraMode == CCameraManager::CAM_PLAYER)
-			m_pTransformCom->Go_Backward(_fTimeDelta * 2, m_fTerrain_Height);
+			m_pTransformCom->Go_Backward(_fTimeDelta * 1.5, m_fTerrain_Height);
 		else
 			m_pTransformCom->Go_Backward(_fTimeDelta, m_fTerrain_Height);
 	}
@@ -964,6 +964,7 @@ void CPlayer::Move_Down(_float _fTimeDelta)
 		{
 			Change_Texture(TEXT("Com_Texture_Run_Down"));
 		}
+
 
 		m_ePreState = m_eState;
 		m_ePreDirState = m_eDirState;

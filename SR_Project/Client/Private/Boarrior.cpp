@@ -5,6 +5,9 @@
 #include "Inventory.h"
 #include "Item.h"
 #include "CameraManager.h"
+#include "House.h"
+#include "Totem.h"
+#include "PickingMgr.h"
 
 CBoarrior::CBoarrior(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -30,15 +33,17 @@ HRESULT CBoarrior::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+	m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
+	m_fRadius = m_pTransformCom->Get_Scale().y * 0.5f;
 
-	m_tInfo.iMaxHp = 1000;
+	m_tInfo.iMaxHp = 1500.f;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_tInfo.fDamage = 20.f;
 
-	m_fAggroRadius = 6.f;
-	m_fAttackRadius = 2.f;
-	m_fSpecialAttackRadius = 4.f;
+	m_fRadius = 6.f;
+	m_fAggroRadius = 7.f;
+	m_fAttackRadius = 3.f;
+	m_fSpecialAttackRadius = 6.f;
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 	return S_OK;
@@ -47,15 +52,39 @@ HRESULT CBoarrior::Initialize(void* pArg)
 int CBoarrior::Tick(_float fTimeDelta)
 {
 	if (__super::Tick(fTimeDelta) && m_bDeadAnimExpired)
+	{
+		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
 		return OBJ_DEAD;
+	}
+		
+
 
 	if (m_bShouldSpawnBullet)
 		Spawn_Bullet(fTimeDelta);
+
+	Check_Health_Percent();
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+
+
+	if (CGameInstance::Get_Instance()->Key_Up('8'))
+	{
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_BOSS, TEXT("Layer_Monster"));
+		pCamera->Set_Target(pGameObject);
+		pCamera->Set_TalkingMode(true);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up('9'))
+	{
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+	}
 
 	return OBJ_NOEVENT;
 }
@@ -69,6 +98,11 @@ void CBoarrior::Late_Tick(_float fTimeDelta)
 
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	if (!m_bPicking)
+	{
+		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
+		m_bPicking = true;
+	}
 }
 
 HRESULT CBoarrior::Render()
@@ -85,11 +119,6 @@ HRESULT CBoarrior::Render()
 
 HRESULT CBoarrior::SetUp_Components(void* pArg)
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	Safe_Release(pGameInstance);
-
 	/* For.Com_Texture */
 	Texture_Clone();
 
@@ -120,7 +149,7 @@ HRESULT CBoarrior::SetUp_Components(void* pArg)
 	CollRectDesc.fRadiusX = .2f;
 	CollRectDesc.fRadiusZ = .8f;
 	CollRectDesc.fOffSetX = 0.f;
-	CollRectDesc.fOffSetY = -1.f;
+	CollRectDesc.fOffSetY = -2.f;
 	CollRectDesc.fOffsetZ = 0.f;
 
 	/* For.Com_Collider_Rect*/
@@ -225,6 +254,11 @@ HRESULT CBoarrior::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
+	TextureDesc.m_iEndTex = 14;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_SPAWN"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boarrior_Spawn"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
 	TextureDesc.m_iEndTex = 6;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_STUN"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boarrior_Stun"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
@@ -254,34 +288,34 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 	{
 	case STATE::IDLE:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(-6.f, 6.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::WALK:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(-6.f, 6.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::DASH:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(-6.f, 6.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag)) == true)
 			m_eState = IDLE;
 		break;
 	case STATE::ATTACK_1:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(-6.f, 6.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		Attack(fTimeDelta);
 		break;
@@ -290,22 +324,33 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		break;
 	case STATE::ATTACK_3:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(-6.f, 6.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		Attack(fTimeDelta, m_eState);
+		break;
+	case STATE::SPAWN:
+		m_pTextureCom->MoveFrame(m_TimerTag);
+
+		m_fSpawnTime += fTimeDelta;
+		if (m_fSpawnTime > 3.f)
+		{
+			m_fSpawnTime = 0.f;
+			m_eState = STATE::IDLE;
+
+			Spawn_Adds(fTimeDelta);
+		}
 		break;
 	case STATE::STUN:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 			m_eState = STATE::IDLE;
-
 		break;
 	case STATE::HIT:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(-6.f, 6.f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
 			m_bHit = false;
@@ -420,6 +465,9 @@ void CBoarrior::Change_Motion()
 			if (m_eDir != m_ePreDir)
 				m_ePreDir = m_eDir;
 			break;
+		case STATE::SPAWN:
+			Change_Texture(TEXT("Com_Texture_SPAWN"));
+			break;
 		case STATE::STUN:
 			Change_Texture(TEXT("Com_Texture_STUN"));
 			break;
@@ -451,6 +499,89 @@ void CBoarrior::Change_Motion()
 	}
 }
 
+_bool CBoarrior::Picking(_float3 * PickingPoint)
+{
+
+	if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
+		return false;
+
+	if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
+	{
+		m_vecOutPos = *PickingPoint;
+
+
+
+		return true;
+	}
+	else
+	{
+		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+
+		auto i = pInvenManager->Get_Monsterinfo_list()->front();
+		auto k = pInvenManager->Get_Monsterhp_list();
+
+		i->set_monstername(MONSTER_END);
+		i->set_check(false);
+
+
+		for (auto j : *k)
+			j->set_check(false);
+		return false;
+	}
+
+	return true;
+}
+
+void CBoarrior::PickingTrue()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
+	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+
+	auto i = pInvenManager->Get_Monsterinfo_list()->front();
+	auto k = pInvenManager->Get_Monsterhp_list();
+
+	i->set_monstername(MONSTER_BOARRIOR);
+	i->set_check(true);
+
+	for (auto j : *k)
+	{
+		j->set_check(true);
+		j->set_hp((_uint)m_tInfo.iCurrentHp);
+	}
+
+	Safe_Release(pGameInstance);
+	Safe_Release(pInvenManager);
+}
+
+void CBoarrior::Check_Health_Percent()
+{
+	cout << m_tInfo.iMaxHp << " / " << m_tInfo.iCurrentHp << endl;
+
+	if (m_tInfo.iCurrentHp <= 0 || m_bDead)
+		return;
+	
+	if (m_tInfo.iCurrentHp <= (m_tInfo.iMaxHp / 100 * 20) && !m_bIsBelow20Percent)
+	{
+		m_bIsBelow20Percent = true;
+		m_bShouldSpawn = true;
+	}	
+	else if (m_tInfo.iCurrentHp <= (m_tInfo.iMaxHp / 100 * 40) && !m_bIsBelow40Percent)
+	{
+		m_bIsBelow40Percent = true;
+		m_bShouldSpawn = true;
+	}
+	else if (m_tInfo.iCurrentHp <= (m_tInfo.iMaxHp / 100 * 60) && !m_bIsBelow60Percent)
+	{
+		m_bIsBelow60Percent = true;
+		m_bShouldSpawn = true;
+	}
+	else if (m_tInfo.iCurrentHp <= (m_tInfo.iMaxHp / 100 * 80) && !m_bIsBelow80Percent)
+	{
+		m_bIsBelow80Percent = true;
+		m_bShouldSpawn = true;
+	}
+}
+
 void CBoarrior::AI_Behaviour(_float fTimeDelta)
 {
 	if (m_bDead || m_bHit || m_bIsAttacking)
@@ -467,7 +598,7 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 	{
 		// Randomly choose a Pattern (if not already chosen)
 		if (!m_iPattern)
-			m_iPattern = rand() % 3 + 1;
+			m_iPattern = m_bShouldSpawn ? 4 : rand() % 3 + 1;
 
 		// Set Attack Radius based on Pattern chosen before
 		_float fRadius;
@@ -480,6 +611,9 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 		case 3:
 			fRadius = m_fSpecialAttackRadius;
 			break;
+		case 4:
+			fRadius = 999.f; // Spawn Adds
+			break;
 		default:
 			fRadius = m_fAttackRadius;
 		}
@@ -491,9 +625,9 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 		{
 			if (GetTickCount() > m_dwAttackTime + 1500)
 			{
-				if (m_iPattern == 1 || m_iPattern == 2 || m_iPattern == 3)
+				if (m_iPattern == 1 || m_iPattern == 2 || m_iPattern == 3 || m_iPattern == 4)
 				{
-					m_eState = m_iPattern == 1 ? STATE::ATTACK_1 : m_iPattern == 2 ? STATE::ATTACK_2 : STATE::ATTACK_3;
+					m_eState = m_iPattern == 1 ? STATE::ATTACK_1 : m_iPattern == 2 ? STATE::ATTACK_2 : m_iPattern == 3 ? STATE::ATTACK_3 : STATE::SPAWN;
 					m_bIsAttacking = true;
 					m_fFollowTime = 0.f;
 				}
@@ -609,7 +743,7 @@ void CBoarrior::Follow_Target(_float fTimeDelta)
 		m_eState = STATE::WALK;
 
 		_float3 fTargetPos = m_pTarget->Get_Position();
-		m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
+		m_pTransformCom->Go_PosTarget(fTimeDelta * .2f, fTargetPos, _float3(0, 0, 0));
 
 		m_bIsAttacking = false;
 	}
@@ -724,8 +858,8 @@ void CBoarrior::Spawn_Bullet(_float fTimeDelta)
 		BulletData1.vPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 		BulletData2.vPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 
-		_float fForwardOffset = 0.75f;
-		_float fSideOffset = 0.25f;
+		_float fForwardOffset = 1.f;
+		_float fSideOffset = 0.4f;
 
 		switch (Get_Unprocessed_Dir(m_eDir))
 		{
@@ -762,24 +896,83 @@ void CBoarrior::Spawn_Bullet(_float fTimeDelta)
 	}
 }
 
+void CBoarrior::Spawn_Adds(_float fTimeDelta)
+{
+	// Reset Variables
+	m_bIsAttacking = false;
+	m_dwAttackTime = GetTickCount();
+	m_bDidDamage = false;
+	m_iPattern = 0;
+	m_vAttackPos = _float3(0.f, 0.f, 0.f);
+	m_bShouldSpawn = false;
+
+	// Shake
+	CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+	if (pCamera)
+		pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.5f, 0.2f, 0.01f);
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CTotem::TOTEMDESC TotemDesc;
+
+	if (m_bIsBelow20Percent)
+	{
+		TotemDesc.eState = CTotem::TOTEM_TYPE::HEAL;
+		goto SpawnTotem;
+	}
+	else if (m_bIsBelow40Percent)
+		goto SpawnAdds;
+	else if (m_bIsBelow60Percent)
+	{
+		TotemDesc.eState = CTotem::TOTEM_TYPE::DEFENSE;
+		goto SpawnTotem;
+	}
+	else if (m_bIsBelow80Percent)
+		goto SpawnAdds;
+
+SpawnAdds:
+	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+	list<CGameObject*>* lObjects = pGameInstance->Get_ObjectList(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_House"));
+
+	if (!lObjects) return;
+	for (auto& iter = lObjects->begin(); iter != lObjects->end(); ++iter)
+	{
+		CHouse* pSpawner = dynamic_cast<CHouse*>(*iter);
+		if (pSpawner)
+			pSpawner->Spawn_Boaron(fTimeDelta);
+	}
+	return;
+
+SpawnTotem:
+	TotemDesc.vInitPosition = _float3(10.f, 0.f, 10.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+	TotemDesc.vInitPosition = _float3(10.f, 0.f, 19.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+	TotemDesc.vInitPosition = _float3(19.f, 0.f, 10.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+	TotemDesc.vInitPosition = _float3(19.f, 0.f, 19.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+	return;
+}
+
 _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
 	_float fDmg = __super::Take_Damage(fDamage, DamageType, DamageCauser);
 
 	if (fDmg > 0)
 	{
-		if (!m_bDead)
+		if (!m_bDead && m_eState != STATE::SPAWN)
 		{
 			if (m_fStaggerDamage > m_fStaggerDamageLimit)
 			{
 				m_bHit = true;
-				
+
 				m_bIsAttacking = false;
 				m_bAggro = true;
 				m_vAttackPos = _float3(0.f, 0.f, 0.f);
 				m_dwAttackTime = GetTickCount();
 
 				m_fStaggerDamage = 0.f;
+				m_fSpawnTime = 0.f;
 			}
 			else
 				m_fStaggerDamage += fDamage;
@@ -810,7 +1003,7 @@ HRESULT CBoarrior::Drop_Items()
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_SPIDERMEAT;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_BOSS, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

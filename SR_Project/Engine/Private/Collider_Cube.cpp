@@ -3,6 +3,8 @@
 
 _tchar* CCollider_Cube::m_pTransformTag = TEXT("Com_Transform");
 
+_bool m_bRender = true;
+
 CCollider_Cube::CCollider_Cube(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CComponent(pGraphic_Device)
 {
@@ -236,17 +238,26 @@ HRESULT CCollider_Cube::Update_ColliderBox(_float4x4 WorldMatrix)
 
 HRESULT CCollider_Cube::Render_ColliderBox()
 {
-	m_pGraphic_Device->SetTransform(D3DTS_WORLD, &m_StateDesc.StateMatrix);
+	if (GetKeyState(VK_F11))
+	{
+		m_bRender == true ? m_bRender = false : m_bRender = true;
+	}
 
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	if (m_bRender)
+	{
+		m_pGraphic_Device->SetTransform(D3DTS_WORLD, &m_StateDesc.StateMatrix);
 
-	m_pGraphic_Device->SetStreamSource(0, m_pVB, 0, m_iStride);
-	m_pGraphic_Device->SetFVF(m_dwFVF);
-	m_pGraphic_Device->SetIndices(m_pIB);
+		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
-	m_pGraphic_Device->DrawIndexedPrimitive(m_ePrimitiveType, 0, 0, m_iNumVertices, 0, m_iNumPrimitive);
+		m_pGraphic_Device->SetStreamSource(0, m_pVB, 0, m_iStride);
+		m_pGraphic_Device->SetFVF(m_dwFVF);
+		m_pGraphic_Device->SetIndices(m_pIB);
 
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		m_pGraphic_Device->DrawIndexedPrimitive(m_ePrimitiveType, 0, 0, m_iNumVertices, 0, m_iNumPrimitive);
+
+		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	}
+	
 
 
 	return S_OK;

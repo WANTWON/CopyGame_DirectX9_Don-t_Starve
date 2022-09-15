@@ -50,5 +50,9 @@ using namespace std;
 #define OBJ_NOEVENT 0
 #define	VK_MAX		0xff
 #define NONE_HEIGHT		9999999.f
+
+
+
 using namespace Engine;
 
+extern _bool						m_bRender;
