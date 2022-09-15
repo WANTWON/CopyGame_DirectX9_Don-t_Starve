@@ -113,10 +113,10 @@ void CCameraTarget::Target_Camera(_float fTimeDelta, CGameObject* pGameObject)
 		return;
 
 	_float3 m_TargetPos = pGameObject->Get_Position();
-	m_TargetPos.y -= 0.5f;
+	m_TargetPos.y -= m_CameraDesc.vAt.y;
 	_float3 vCameraPos = Get_Position();
 
-	_float3 vDistance = _float3(0, 6, -7);
+	_float3 vDistance = m_CameraDesc.vEye;
 	_float3 vDir = (m_TargetPos+vDistance) - vCameraPos;
 
 	if (fabsf(vDir.y) < 0.5f && fabsf(vDir.z) < 0.5f)
@@ -170,7 +170,7 @@ void CCameraTarget::Target_Follow(_float fTimeDelta, CGameObject * pGameObject)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 
 	_float3 m_TargetPos = pGameObject->Get_Position();
-	m_TargetPos.y -= 0.5f;
+	m_TargetPos.y -= m_CameraDesc.vAt.y;
 	m_pTransform->LookAt(m_TargetPos);
 	m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
 }

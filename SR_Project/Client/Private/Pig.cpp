@@ -35,7 +35,7 @@ HRESULT CPig::Initialize(void* pArg)
 
 	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
-	m_fAttackRadius = .8f;
+	m_fAttackRadius = 0.8f;
 
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();

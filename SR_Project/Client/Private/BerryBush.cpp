@@ -270,8 +270,8 @@ void CBerryBush::Free()
 	//Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTextureCom);
 
-	for (auto& iter : m_vecTexture)
-		Safe_Release(iter);
+	//for (auto& iter : m_vecTexture)
+		//Safe_Release(iter);
 
 	m_vecTexture.clear();
 }

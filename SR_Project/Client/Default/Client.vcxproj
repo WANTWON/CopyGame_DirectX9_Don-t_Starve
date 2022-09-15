@@ -183,10 +183,12 @@
     <ClInclude Include="..\Public\Daypont.h" />
     <ClInclude Include="..\Public\Deadcountpont.h" />
     <ClInclude Include="..\Public\Deadmain.h" />
+    <ClInclude Include="..\Public\DecoObject.h" />
     <ClInclude Include="..\Public\Eatitem.h" />
     <ClInclude Include="..\Public\Equipment_back.h" />
     <ClInclude Include="..\Public\Equipment_front.h" />
     <ClInclude Include="..\Public\Equip_Animation.h" />
+    <ClInclude Include="..\public\FloorGrateEruption.h" />
     <ClInclude Include="..\public\Grass.h" />
     <ClInclude Include="..\Public\House.h" />
     <ClInclude Include="..\Public\Interactive_Object.h" />
@@ -238,6 +240,8 @@
     <ClInclude Include="..\Public\Questpont.h" />
     <ClInclude Include="..\Public\Skeleton.h" />
     <ClInclude Include="..\Public\Sky.h" />
+    <ClInclude Include="..\public\SpawnEffect.h" />
+    <ClInclude Include="..\public\SpawnSmokeEffect.h" />
     <ClInclude Include="..\public\Special_Attack.h" />
     <ClInclude Include="..\Public\Spider.h" />
     <ClInclude Include="..\Public\SpiderWarrior.h" />
@@ -260,6 +264,7 @@
     <ClInclude Include="..\Public\ToolboxWeapon.h" />
     <ClInclude Include="..\Public\ToolboxWeapon_back.h" />
     <ClInclude Include="..\Public\ToolboxWeapon_front.h" />
+    <ClInclude Include="..\public\Totem.h" />
     <ClInclude Include="..\public\Tree.h" />
     <ClInclude Include="..\Public\MainInventory.h" />
     <ClInclude Include="..\Public\Water.h" />
@@ -295,10 +300,12 @@
     <ClCompile Include="..\Private\Daypont.cpp" />
     <ClCompile Include="..\Private\Deadcountpont.cpp" />
     <ClCompile Include="..\Private\Deadmain.cpp" />
+    <ClCompile Include="..\Private\DecoObject.cpp" />
     <ClCompile Include="..\Private\Eatitem.cpp" />
     <ClCompile Include="..\Private\Equipment_back.cpp" />
     <ClCompile Include="..\Private\Equipment_front.cpp" />
     <ClCompile Include="..\Private\Equip_Animation.cpp" />
+    <ClCompile Include="..\private\FloorGrateEruption.cpp" />
     <ClCompile Include="..\private\Grass.cpp" />
     <ClCompile Include="..\Private\House.cpp" />
     <ClCompile Include="..\Private\Interactive_Object.cpp" />
@@ -349,6 +356,8 @@
     <ClCompile Include="..\Private\Questpont.cpp" />
     <ClCompile Include="..\Private\Skeleton.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
+    <ClCompile Include="..\private\SpawnEffect.cpp" />
+    <ClCompile Include="..\private\SpawnSmokeEffect.cpp" />
     <ClCompile Include="..\private\Special_Attack.cpp" />
     <ClCompile Include="..\Private\Spider.cpp" />
     <ClCompile Include="..\Private\SpiderWarrior.cpp" />
@@ -371,6 +380,7 @@
     <ClCompile Include="..\Private\ToolboxWeapon.cpp" />
     <ClCompile Include="..\Private\ToolboxWeapon_back.cpp" />
     <ClCompile Include="..\Private\ToolboxWeapon_front.cpp" />
+    <ClCompile Include="..\private\Totem.cpp" />
     <ClCompile Include="..\private\Tree.cpp" />
     <ClCompile Include="..\Private\MainInventory.cpp" />
     <ClCompile Include="..\Private\Water.cpp" />

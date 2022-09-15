@@ -8,6 +8,8 @@
 #include "CameraManager.h"
 #include "Level_Loading.h"
 #include "WoodWall.h"
+#include "DecoObject.h"
+#include "Totem.h"
 
 CLevel_Boss::CLevel_Boss(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -118,26 +120,55 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	{
 		ReadFile(hFile, &(WallDesc), sizeof(CWoodWall::WALLDESC), &dwByte, nullptr);
 		WallDesc.eDir = CWoodWall::WALL_DIREND;
+		WallDesc.etype = CWoodWall::WALL_BOSS;
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_BOSS, TEXT("Layer_Wall"), &WallDesc);
 	}
 
 	
 	CloseHandle(hFile);
 
+	// Test Spawner
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/House_Stage4.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
 	CHouse::HOUSEDECS HouseDesc;
-	HouseDesc.m_eState = CHouse::HOUSETYPE::BOARONSPAWNER;
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-	HouseDesc.vInitPosition = _float3(13.f, 0.f, 26.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
-	HouseDesc.vInitPosition = _float3(25.f, 0.f, 26.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
-	HouseDesc.vInitPosition = _float3(19.f, 0.f, 20.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
-	HouseDesc.vInitPosition = _float3(19.f, 0.f, 29.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_HUNT, TEXT("Layer_House"), &HouseDesc);
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(HouseDesc), sizeof(CHouse::HOUSEDECS), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_BOSS, TEXT("Layer_House"), &HouseDesc);
+	}
+	CloseHandle(hFile);
 
+	// Test Totem
+	/*CTotem::TOTEMDESC TotemDesc;
+	TotemDesc.eState = CTotem::TOTEM_TYPE::DEFENSE;
+	TotemDesc.vInitPosition = _float3(10.f, 0.f, 10.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
 
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boaron"), LEVEL_BOSS, TEXT("Layer_Wall"), _float3(19.f, 0.f, 20.f));
+	TotemDesc.eState = CTotem::TOTEM_TYPE::HEAL;
+	TotemDesc.vInitPosition = _float3(8.f, 0.f, 10.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);*/
+
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Deco_Stage5.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	CDecoObject::DECODECS DecoDesc;
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(DecoDesc), sizeof(CDecoObject::DECODECS), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_BOSS, TEXT("Layer_Deco"), &DecoDesc);
+	}
+	CloseHandle(hFile);
 
 	Safe_Release(pGameInstance);
 	return S_OK;
@@ -154,8 +185,8 @@ HRESULT CLevel_Boss::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CameraDesc.iTest = 10;
 
-	CameraDesc.CameraDesc.vEye = _float3(0.f, 2.f, -5.f);
-	CameraDesc.CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.CameraDesc.vEye = _float3(0.f, 1.f, -8.f);
+	CameraDesc.CameraDesc.vAt = _float3(0.f, 1.5f, 0.f);
 
 	CameraDesc.CameraDesc.fFovy = D3DXToRadian(30.0f);
 	CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
@@ -168,10 +199,16 @@ HRESULT CLevel_Boss::Ready_Layer_Camera(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_BOSS, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
+
 	CameraDesc.CameraDesc.fFovy = D3DXToRadian(45.0f);
 
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_BOSS, pLayerTag, &CameraDesc)))
+		return E_FAIL;
+
+	CameraDesc.CameraDesc.fFovy = D3DXToRadian(30.0f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Target"), LEVEL_BOSS, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

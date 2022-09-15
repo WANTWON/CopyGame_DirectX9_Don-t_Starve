@@ -130,9 +130,6 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Wall">
       <UniqueIdentifier>{acb02a53-95d5-496e-aa08-6e2785f27157}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\05.UnInteractive_Object\Torch">
-      <UniqueIdentifier>{e678b83f-4e12-4c45-90e6-f45bcde493d7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\05.UnInteractive_Object\OtherDecoObject">
       <UniqueIdentifier>{ed772d46-c6be-4144-97e8-935b8df75ff6}</UniqueIdentifier>
     </Filter>
@@ -255,6 +252,18 @@
     </Filter>
     <Filter Include="96.Camera\TargetCamera">
       <UniqueIdentifier>{53bab0ad-d3bd-4347-a01d-4870a2b3b26c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\House\Spawn_Effect">
+      <UniqueIdentifier>{8c741b9c-5976-4993-858d-4c3a3eb901f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\House\Spawn_Smoke_Effect">
+      <UniqueIdentifier>{217683a5-e476-4462-b0d3-a26158d42a17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\OtherDecoObject\Floor_Grate_Eruption">
+      <UniqueIdentifier>{dc96cbbb-9f68-495a-9931-c4be7231cab9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00. Pawn\Totem">
+      <UniqueIdentifier>{cc585df3-26be-4cdc-997c-82adabccd35f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -594,6 +603,21 @@
     <ClInclude Include="..\Public\Level_Maze.h">
       <Filter>01.Levels\04. Maze</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\SpawnEffect.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\House\Spawn_Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpawnSmokeEffect.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\House\Spawn_Smoke_Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DecoObject.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FloorGrateEruption.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject\Floor_Grate_Eruption</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Totem.h">
+      <Filter>02.GameObject\00. Pawn\Totem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -919,6 +943,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Maze.cpp">
       <Filter>01.Levels\04. Maze</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpawnEffect.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\House\Spawn_Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpawnSmokeEffect.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\House\Spawn_Smoke_Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DecoObject.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\FloorGrateEruption.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\OtherDecoObject\Floor_Grate_Eruption</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Totem.cpp">
+      <Filter>02.GameObject\00. Pawn\Totem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

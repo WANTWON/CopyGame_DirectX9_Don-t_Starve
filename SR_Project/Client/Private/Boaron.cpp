@@ -353,7 +353,7 @@ void CBoaron::Patrol(_float fTimeDelta)
 	// Switch between Idle and Walk (based on time)
 	if (m_eState == STATE::IDLE)
 	{
-		if (GetTickCount() > m_dwIdleTime + 3000)
+		if (GetTickCount() > m_dwIdleTime + 3000 + (rand() % 3000)*(rand() % 2 + 1))
 		{
 			m_eState = STATE::RUN;
 			m_dwWalkTime = GetTickCount();
@@ -369,7 +369,7 @@ void CBoaron::Patrol(_float fTimeDelta)
 	}
 	else if (m_eState == STATE::RUN)
 	{
-		if (GetTickCount() > m_dwWalkTime + 1500)
+		if (GetTickCount() > m_dwWalkTime + 1500 + (rand() % 3000)*(rand() % 2 + 1))
 		{
 			m_eState = STATE::IDLE;
 			m_dwIdleTime = GetTickCount();
@@ -516,7 +516,7 @@ HRESULT CBoaron::Drop_Items()
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_SPIDERMEAT;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_BOSS, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
