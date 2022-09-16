@@ -13,6 +13,20 @@ END
 BEGIN(Client)
 class CTotemEffect final : public CGameObject
 {
+public:
+	enum TOTEM_EFFECT_TYPE
+	{
+		DEFENSE,
+		HEAL,
+		MAX_TYPE
+	};
+
+	typedef struct TotemEffectDescription
+	{
+		TOTEM_EFFECT_TYPE eType = TOTEM_EFFECT_TYPE::MAX_TYPE;
+		_float3 vInitPosition = _float3(0.f, 0.f, 0.f);
+	}TOTEMEFFECTDESC;
+
 private:
 	CTotemEffect(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CTotemEffect(const CTotemEffect& rhs);
@@ -46,6 +60,9 @@ private:
 	CTransform*	m_pTransformCom = nullptr;
 
 	vector<CTexture*> m_vecTexture;
+
+private:
+	TOTEMEFFECTDESC m_tTotemEffectDesc;
 
 public:
 	static CTotemEffect* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

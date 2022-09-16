@@ -7,6 +7,7 @@
 #include "CameraManager.h"
 #include "House.h"
 #include "Totem.h"
+#include "TotemEffect.h"
 #include "PickingMgr.h"
 #include "Portal.h"
 #include "Level_Boss.h"
@@ -595,8 +596,37 @@ void CBoarrior::Totem_Heal(_float fTimeDelta)
 {
 	if (m_fHealTimer > 5.f)
 	{
-		// Spawn Heal Effect
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
 
+		// Spawn Heal Effect
+		CTotemEffect::TOTEMEFFECTDESC TotemEffectDesc;
+		TotemEffectDesc.eType = CTotemEffect::TOTEM_EFFECT_TYPE::HEAL;
+		TotemEffectDesc.vInitPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
+		TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
+
+		list<CGameObject*>* lGameObject = pGameInstance->Get_ObjectList(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Totem"));
+		if (!lGameObject)
+			return;
+
+		// Check for Active Totems
+		CTotem* pTotem = nullptr;
+		for (auto& iter = lGameObject->begin(); iter != lGameObject->end(); ++iter)
+		{
+			pTotem = dynamic_cast<CTotem*>(*iter);
+			if (!pTotem)
+				continue;
+
+			if (pTotem->Get_TotemDesc().eType == CTotem::TOTEM_TYPE::HEAL)
+			{
+				TotemEffectDesc.vInitPosition = pTotem->Get_Position();
+				TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
+				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
+			}
+		}
 
 		// Increase Health
 		m_tInfo.iCurrentHp += 150;

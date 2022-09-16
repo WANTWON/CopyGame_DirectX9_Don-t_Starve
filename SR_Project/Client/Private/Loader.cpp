@@ -77,6 +77,7 @@
 #include "SpawnEffect.h"
 #include "SpawnSmokeEffect.h"
 #include "FloorGrateEruption.h"
+#include "TotemEffect.h"
 
 #include "Daycount.h"
 #include "Daycountpont.h"
@@ -1892,6 +1893,15 @@ HRESULT CLoader::Loading_ForBossLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Floor_Grate_Eruption/Eruption_%03d.png"), 41))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_Totem_Effect_Defense */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Defense"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Defense_Effect/Defend_%03d.png"), 34))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_Totem_Effect_Heal */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Heal"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Heal_Effect/Heal_%03d.png"), 35))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Texture_Totem_Defense */
 #pragma region Add_Texture_Totem_Defense
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Defense_Break"),
@@ -2077,6 +2087,11 @@ HRESULT CLoader::Loading_ForBossLevel()
 	/*For.Prototype_GameObject_Floor_Grate_Eruption*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Floor_Grate_Eruption"),
 		CFloorGrateEruption::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Totem_Effect*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Totem_Effect"),
+		CTotemEffect::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	if (FAILED(Loading_Terrain_ForBossLevel()))

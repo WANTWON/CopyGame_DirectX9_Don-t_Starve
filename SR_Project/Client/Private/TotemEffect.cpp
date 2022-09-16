@@ -23,13 +23,26 @@ HRESULT CTotemEffect::Initialize_Prototype()
 
 HRESULT CTotemEffect::Initialize(void* pArg)
 {
+	ZeroMemory(&m_tTotemEffectDesc, sizeof(TOTEMEFFECTDESC));
+	memcpy(&m_tTotemEffectDesc, (TOTEMEFFECTDESC*)pArg, sizeof(TOTEMEFFECTDESC));
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(SetUp_Components(pArg)))
+	if (FAILED(SetUp_Components(m_tTotemEffectDesc.vInitPosition)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+	m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.f);
+
+	switch (m_tTotemEffectDesc.eType)
+	{
+	case TOTEM_EFFECT_TYPE::DEFENSE:
+		m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+		break;
+	case TOTEM_EFFECT_TYPE::HEAL:
+		m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+		break;
+	}
 
 	return S_OK;
 }
@@ -41,7 +54,7 @@ int CTotemEffect::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	WalkingTerrain();
+	//WalkingTerrain(); // No need
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	return OBJ_NOEVENT;
@@ -51,7 +64,7 @@ void CTotemEffect::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetUp_BillBoard();
+	//SetUp_BillBoard(); // No need
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -114,6 +127,11 @@ HRESULT CTotemEffect::SetUp_RenderState()
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	m_pGraphic_Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
@@ -124,6 +142,7 @@ HRESULT CTotemEffect::SetUp_RenderState()
 
 HRESULT CTotemEffect::Release_RenderState()
 {
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	return S_OK;
@@ -181,11 +200,22 @@ HRESULT CTotemEffect::Texture_Clone()
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_fSpeed = 30;
 
-	TextureDesc.m_iEndTex = 49;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Spawn_Effect"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Spawner_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-
+	switch (m_tTotemEffectDesc.eType)
+	{
+	case TOTEM_EFFECT_TYPE::DEFENSE:
+		TextureDesc.m_iEndTex = 33;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Defend_Effect"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Defense"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		break;
+	case TOTEM_EFFECT_TYPE::HEAL:
+		TextureDesc.m_iEndTex = 34;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Heal_Effect"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Heal"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		break;
+	}
+	
 	return S_OK;
 }
 
