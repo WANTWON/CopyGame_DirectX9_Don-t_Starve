@@ -216,7 +216,7 @@ HRESULT CTotem::Texture_Clone()
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_fSpeed = 30;
 
-	switch (m_tTotemDesc.eState)
+	switch (m_tTotemDesc.eType)
 	{
 	case TOTEM_TYPE::DEFENSE:
 	{

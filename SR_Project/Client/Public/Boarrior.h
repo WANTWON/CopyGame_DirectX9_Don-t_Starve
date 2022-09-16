@@ -71,10 +71,16 @@ private:
 	_bool m_bShouldSpawn = false;
 	_float m_fSpawnTime = 0.f;
 
+	// Totem Variables
+	_bool m_bHasDefenseBoost = false;
+	_float m_fHealTimer = 0.f;
+
 	_float3 m_vecOutPos; // For Picking
 
 	
 private:
+	void Check_Totem_Effect(_float fTimeDelta);
+	void Totem_Heal(_float fTimeDelta);
 	void Check_Health_Percent();
 	virtual void AI_Behaviour(_float fTimeDelta) override;
 	void Patrol(_float fTimeDelta);
