@@ -46,14 +46,17 @@ HRESULT CWendy::Initialize(void * pArg)
 
 int CWendy::Tick(_float fTimeDelta)
 {
+	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
-	__super::Tick(fTimeDelta);
 
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return OBJ_NOEVENT;
 
 	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
 		return OBJ_NOEVENT;
+
+	__super::Tick(fTimeDelta);
+
 
 	BehaviorTree->Tick(fTimeDelta);
 
