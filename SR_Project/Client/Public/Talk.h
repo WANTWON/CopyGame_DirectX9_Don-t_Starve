@@ -68,6 +68,10 @@ public:
 
 	void Set_StartText(_bool _Activated) { m_bIsStartText = _Activated; }
 	_bool Get_StartText(void) { return m_bIsStartText; }
+
+	void Set_WendyTalk(_bool _Activated) { m_bforwendy = _Activated; }
+
+	void Set_Texnum1(_uint _iNum) { texnum1 = _iNum; }
 public:
 	static CTalk* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

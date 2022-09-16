@@ -423,18 +423,18 @@ public:
 		if (eID == OBJID::OBJ_PLAYER)
 		{//Sequence
 			//return TrueNode->Excute(_Obj, _fTimeDelta);
-			return Get_VecNodes()[0]->Excute(_Obj, _fTimeDelta);
+			return Get_VecNodes()[1]->Excute(_Obj, _fTimeDelta);
 		}
 		else if (eID == OBJID::OBJ_MONSTER)
 		{
 			_bool bAggro = dynamic_cast<CMonster*>(dynamic_cast<CNPC*>(_Obj)->Get_Target())->Get_Aggro();
 			if (bAggro)
 			{
-				return Get_VecNodes()[1]->Excute(_Obj, _fTimeDelta); //Attack
+				return Get_VecNodes()[0]->Excute(_Obj, _fTimeDelta); //Attack
 			}
 			else
 			{
-				return Get_VecNodes()[0]->Excute(_Obj, _fTimeDelta);
+				return Get_VecNodes()[1]->Excute(_Obj, _fTimeDelta);
 			}
 		}
 		else if (eID == OBJ_OBJECT)

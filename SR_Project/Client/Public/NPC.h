@@ -129,6 +129,7 @@ protected:
 	//Talk with Player
 	_bool		m_bFirstCall = false;
 	_uint		m_iTalkCnt = 0;
+	_uint		m_iPreTalkCnt = 0;
 	_bool		m_bAccept = false;
 
 	_bool		m_bOwner = false;
