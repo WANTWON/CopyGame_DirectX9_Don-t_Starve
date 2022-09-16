@@ -265,6 +265,9 @@
     <Filter Include="02.GameObject\98.UI\13.Mouse_">
       <UniqueIdentifier>{7dc8053d-0b09-4953-a915-757aadbf5877}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\14.Status">
+      <UniqueIdentifier>{1937c635-1ecd-4075-a34a-001d911cf070}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -624,6 +627,15 @@
     <ClInclude Include="..\Public\Monsterhp_pont.h">
       <Filter>02.GameObject\98.UI\13.Mouse_</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Status.h">
+      <Filter>02.GameObject\98.UI\14.Status</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_Icon.h">
+      <Filter>02.GameObject\98.UI\14.Status</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Status_pont.h">
+      <Filter>02.GameObject\98.UI\14.Status</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -970,6 +982,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Monsterhp_pont.cpp">
       <Filter>02.GameObject\98.UI\13.Mouse_</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Status.cpp">
+      <Filter>02.GameObject\98.UI\14.Status</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_Icon.cpp">
+      <Filter>02.GameObject\98.UI\14.Status</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Status_pont.cpp">
+      <Filter>02.GameObject\98.UI\14.Status</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -66,6 +66,11 @@ int CBoarrior::Tick(_float fTimeDelta)
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_BOSS, TEXT("Layer_Object"), &PortalDesc)))
 			return E_FAIL;*/
 
+		auto line = CInventory_Manager::Get_Instance()->Get_Line_list();
+
+		for (auto k : *line)
+			k->set_quest5(true);
+
 		return OBJ_DEAD;
 	}
 		

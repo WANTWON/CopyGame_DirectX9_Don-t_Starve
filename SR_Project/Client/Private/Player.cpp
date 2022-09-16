@@ -629,6 +629,18 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			{
 				Throw_Bomb(_fTimeDelta);
 				m_vecSkillDesc[0].bSkillUsed = true;
+
+				CInventory_Manager* inv = CInventory_Manager::Get_Instance();
+				auto i = inv->Get_Skill_list();
+
+				for (auto f : *i)
+				{
+					if(f->GetiNum() == 0)
+						f->setbombon();
+				}
+					
+			//여기
+
 				if (m_pPicker->Get_IsShow())
 				{
 					{
@@ -666,6 +678,16 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			{
 				Ice_Spike(_fTimeDelta);
 				m_vecSkillDesc[1].bSkillUsed = true;
+
+				CInventory_Manager* inv = CInventory_Manager::Get_Instance();
+				auto i = inv->Get_Skill_list();
+
+				for (auto f : *i)
+				{
+					if (f->GetiNum() == 1)
+						f->seticeon();
+				}
+
 				if (m_pPicker->Get_IsShow())
 				{
 					{
@@ -704,6 +726,15 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			{
 				Sand_Mines(_fTimeDelta);
 				m_vecSkillDesc[2].bSkillUsed = true;
+
+				CInventory_Manager* inv = CInventory_Manager::Get_Instance();
+				auto i = inv->Get_Skill_list();
+
+				for (auto f : *i)
+				{
+					if (f->GetiNum() == 2)
+						f->setsandon();
+				}
 				if (m_pPicker->Get_IsShow())
 				{
 					{
@@ -743,6 +774,15 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			{
 				Teleport(_fTimeDelta);
 				m_vecSkillDesc[3].bSkillUsed = true;
+
+				CInventory_Manager* inv = CInventory_Manager::Get_Instance();
+				auto i = inv->Get_Skill_list();
+
+				for (auto f : *i)
+				{
+					if (f->GetiNum() == 3)
+						f->setteleporton();
+				}
 				if (m_pPicker->Get_IsShow())
 				{
 					{

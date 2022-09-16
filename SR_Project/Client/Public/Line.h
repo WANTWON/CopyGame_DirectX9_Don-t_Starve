@@ -56,6 +56,7 @@ public:
 	void set_quest2(bool tof) { m_bquest2 = tof; }
 	void set_quest3(bool tof) { m_bquest3 = tof; }
 	void set_quest4(bool tof) { m_bquest4 = tof; }
+	void set_quest5(bool tof) { m_bquest5 = tof; }
 
 	void gobackfirstX() { m_fX = m_firstx; }
 	void gobackfirstY() { m_fX = m_firsty; }
@@ -69,6 +70,7 @@ private:
 	bool m_bquest2 = false;
 	bool m_bquest3 = false;
 	bool m_bquest4 = false;
+	bool m_bquest5 = false;
 	
 	_uint questnum = 0;
 	_uint quest2count = 0;
