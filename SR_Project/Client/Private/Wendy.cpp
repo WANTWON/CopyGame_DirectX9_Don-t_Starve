@@ -5,6 +5,7 @@
 #include "BerryBush.h"
 #include "Pig.h"
 #include "Bullet.h"
+#include "Inventory.h"
 CWendy::CWendy(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CNPC(pGraphic_Device)
 {
@@ -125,7 +126,7 @@ HRESULT CWendy::SetUp_Components(void * pArg)
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
-	TransformDesc.fSpeedPerSec = 5.f;
+	TransformDesc.fSpeedPerSec = 3.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(0.f);
 	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);;
 
@@ -306,10 +307,9 @@ void CWendy::Move(_float _fTimeDelta)
 {
 	_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-	if (m_bOwner)
-	{
-		m_eCur_Dir = Check_Direction();
-	}
+	
+	m_eCur_Dir = Check_Direction();
+	
 
 	m_eState = CNPC::MOVE;
 
@@ -593,6 +593,11 @@ void CWendy::Revive_Berry(_float _fTimeDelta)
 
 void CWendy::Talk_Player(_float _fTimeDelta)
 {
+	CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(true);
+
+	CInventory_Manager* pinven = CInventory_Manager::Get_Instance();
+	pinven->Get_Talk_list()->front()->setcheck(true);
+
 	if (!m_bFirstCall)
 	{
 		m_bNextAct = false;
@@ -613,6 +618,45 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 		Change_Texture(TEXT("Com_Texture_Talk"));
 		m_ePreState = m_eState;
 
+	}
+
+	if (m_iPreTalkCnt != m_iTalkCnt)
+	{
+		switch (m_iTalkCnt)
+		{
+		case 1:
+			if (!m_bOwner)
+				pinven->Get_Talk_list()->front()->Set_Texnum1(0);
+			else
+				pinven->Get_Talk_list()->front()->Set_Texnum1(4);
+			break;
+		case 2:
+			if (!m_bOwner)
+				pinven->Get_Talk_list()->front()->Set_Texnum1(1);
+			else
+				pinven->Get_Talk_list()->front()->Set_Texnum1(5);
+			break;
+
+		case 3:
+			if(m_bAccept)
+			{
+				if (!m_bOwner)
+					pinven->Get_Talk_list()->front()->Set_Texnum1(2);
+				else
+					pinven->Get_Talk_list()->front()->Set_Texnum1(6);
+			}
+			else
+			{
+				if (!m_bOwner)
+					pinven->Get_Talk_list()->front()->Set_Texnum1(3);
+				else
+					pinven->Get_Talk_list()->front()->Set_Texnum1(7);
+			}
+			break;
+		case 4:
+			break;
+		}	
+		m_iPreTalkCnt = m_iTalkCnt;
 	}
 
 	if (!m_bOwner)
@@ -639,17 +683,23 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 			}
 			break;
 		case 4:
-			if (m_bNextAct)
-			{
-				m_bOwner = true;
-				m_pOwner = static_cast<CPawn*>(m_pTarget);
-			}
 			Clear_Activated();
 			static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
 			static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
 			m_iTalkCnt = 0;
 			m_bInteract = false;
 			m_bFirstCall = false;
+			if (m_bNextAct)
+			{
+				m_bOwner = true;
+				m_pOwner = static_cast<CPawn*>(m_pTarget);
+			}
+			else
+			{
+				m_pTarget = nullptr;
+			}
+			pinven->Get_Talk_list()->front()->setcheck(false);
+			CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
 			break;
 		}
 	}
@@ -688,6 +738,8 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 			m_iTalkCnt = 0;
 			m_bInteract = false;
 			m_bFirstCall = false;
+			pinven->Get_Talk_list()->front()->setcheck(false);
+			CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
 			break;
 		}
 	}
@@ -809,17 +861,17 @@ DIR_STATE CWendy::Check_Direction(void)
 	{
 		if (fDegreeTarget > 0.f && fDegreeTarget <= 60.f)
 		{
-			cout << "y+, UP, Degree: " << fDegreeTarget << endl;
+			//cout << "y+, UP, Degree: " << fDegreeTarget << endl;
 			return DIR_UP;
 		}
 		else if (fDegreeTarget > 60.f && fDegreeTarget <= 135.f)
 		{
-			cout << "y+, Right, Degree: " << fDegreeTarget << endl;
+			//cout << "y+, Right, Degree: " << fDegreeTarget << endl;
 			return DIR_RIGHT;
 		}
 		else if (fDegreeTarget > 135.f && fDegreeTarget <= 180.f)
 		{
-			cout << "y+, Down, Degree: " << fDegreeTarget << endl;
+			//cout << "y+, Down, Degree: " << fDegreeTarget << endl;
 			return DIR_DOWN;
 		}
 	}
@@ -827,22 +879,22 @@ DIR_STATE CWendy::Check_Direction(void)
 	{
 		if (fDegreeTarget > 0.f && fDegreeTarget <= 60.f)
 		{
-			cout << "y-, UP, Degree: " << fDegreeTarget << endl;
+			//cout << "y-, UP, Degree: " << fDegreeTarget << endl;
 			return DIR_UP;
 		}
 		else if (fDegreeTarget > 60.f && fDegreeTarget <= 135.f)
 		{
-			cout << "y-, Left, Degree: " << fDegreeTarget << endl;
+			//cout << "y-, Left, Degree: " << fDegreeTarget << endl;
 			return DIR_LEFT;
 		}
 		else if (fDegreeTarget > 135.f && fDegreeTarget <= 180.f)
 		{
-			cout << "y-, Down, Degree: " << fDegreeTarget << endl;
+			//cout << "y-, Down, Degree: " << fDegreeTarget << endl;
 			return DIR_DOWN;
 		}
 	}
 
-	cout << "Error " << fDegreeTarget << endl;
+	//cout << "Error " << fDegreeTarget << endl;
 	return DIR_DOWN;
 
 }
@@ -886,6 +938,9 @@ void CWendy::Find_Friend()
 	Safe_AddRef(pGameInstance);
 
 	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(m_iCurrentLevelndex, TEXT("Layer_Monster"));
+
+	if (list_Obj == nullptr)
+		return;
 
 	_uint iIndex = 0;
 
@@ -934,8 +989,11 @@ void CWendy::Find_Enemy()
 
 	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(m_iCurrentLevelndex, TEXT("Layer_Monster"));
 
-	_uint iIndex = 0;
+	if (list_Obj == nullptr)
+		return;
 
+	_uint iIndex = 0;
+	
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
@@ -986,6 +1044,9 @@ void CWendy::Find_Berry()
 	Safe_AddRef(pGameInstance);
 
 	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(m_iCurrentLevelndex, TEXT("Layer_Object"));
+
+	if (list_Obj == nullptr)
+		return;
 
 	_uint iIndex = 0;
 

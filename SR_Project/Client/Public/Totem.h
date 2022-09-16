@@ -33,7 +33,7 @@ public:
 
 	typedef struct TotemDescription
 	{
-		TOTEM_TYPE eState = TOTEM_TYPE::MAX_TYPE;
+		TOTEM_TYPE eType = TOTEM_TYPE::MAX_TYPE;
 		_float3 vInitPosition = _float3(0.f, 0.f, 0.f);
 	}TOTEMDESC;
 
@@ -76,6 +76,9 @@ public:
 
 private:
 	void AI_Behaviour(_float fTimeDelta);
+
+public:
+	TOTEMDESC Get_TotemDesc() { return m_tTotemDesc; }
 
 private:
 	const _tchar* m_TimerTag = TEXT("");

@@ -517,22 +517,25 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		}
 		m_bActivated = true;
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN1]))
+	if (m_bTalkMode && m_bSelect)
 	{
-		if (m_bTalkMode && m_bSelect)
+		if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN1]))
 		{
-			m_bSelect = false;
-			m_iTalkNum = 1;
-			m_bActivated = true;
+			if (m_bTalkMode && m_bSelect)
+			{
+				m_bSelect = false;
+				m_iTalkNum = 1;
+				m_bActivated = true;
+			}
 		}
-	}
-	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN2]))
-	{
-		if (m_bTalkMode && m_bSelect)
+		else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN2]))
 		{
-			m_bSelect = false;
-			m_iTalkNum = 2;
-			m_bActivated = true;
+			if (m_bTalkMode && m_bSelect)
+			{
+				m_bSelect = false;
+				m_iTalkNum = 2;
+				m_bActivated = true;
+			}
 		}
 	}
 

@@ -86,9 +86,8 @@ void CBT_NPC::Init_Nodes()
 	Sequence_Interact_Actor->Add_Node(BTTask_Talk);
 	Sequence_Interact_Actor->Add_Node(BTTask_Dance);
 	//---------BTTask_IsActor---
-	//BTTask_IsActor->Add_Node(BTTask_IsFightMode);
+	BTTask_IsActor->Add_Node(BTTask_IsFightMode);
 	BTTask_IsActor->Add_Node(Sequence_Interact_Actor);
-
 	BTTask_IsActor->Add_Node(BTTask_Interact);
 	//--Selector_OnOwner--
 	Selector_OnOwner->Add_Node(BTTask_IsFightMode);
