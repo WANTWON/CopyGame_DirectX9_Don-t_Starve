@@ -31,14 +31,13 @@ HRESULT CCameraDynamic::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(&((CAMERADESC_DERIVED*)pArg)->CameraDesc)))
 		return E_FAIL;
 
+	m_vDistance = ((CAMERADESC_DERIVED*)pArg)->vDistance;
+
 	return S_OK;
 }
 
 int CCameraDynamic::Tick(_float fTimeDelta)
 {
-	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_PLAYER)
-		return OBJ_NOEVENT;
-
 	__super::Tick(fTimeDelta);
 
 	if(m_eCamMode == CAM_SHAKING)
@@ -68,6 +67,10 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransform->Get_State(CTransform::STATE_POSITION));
 
+	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_PLAYER)
+		return OBJ_NOEVENT;
+
+
 	if (FAILED(Bind_OnGraphicDev()))
 		return OBJ_NOEVENT;
 
@@ -94,9 +97,9 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 	if (m_lMouseWheel < 0)
 		m_lMouseWheel += 0.001;
 
-	if (m_lMouseWheel += (_long)(pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
+	if (m_lMouseWheel += (pGameInstance->Get_DIMMoveState(DIMM_WHEEL)*0.05))
 	{
-		if (m_vDistance.y > 15 || m_vDistance.y <3)
+		if (m_vDistance.y > 15 || m_vDistance.y < 3)
 		{
 			m_vDistance.y += (fTimeDelta*m_lMouseWheel*0.05f);
 			m_vDistance.z -= (fTimeDelta*m_lMouseWheel*0.05f);

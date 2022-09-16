@@ -7,7 +7,10 @@
 #include "CameraManager.h"
 #include "House.h"
 #include "Totem.h"
+#include "TotemEffect.h"
 #include "PickingMgr.h"
+#include "Portal.h"
+#include "Level_Boss.h"
 
 CBoarrior::CBoarrior(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -46,6 +49,7 @@ HRESULT CBoarrior::Initialize(void* pArg)
 	m_fSpecialAttackRadius = 6.f;
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+	
 	return S_OK;
 }
 
@@ -54,37 +58,28 @@ int CBoarrior::Tick(_float fTimeDelta)
 	if (__super::Tick(fTimeDelta) && m_bDeadAnimExpired)
 	{
 		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
+		CLevel* pLevel =  CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+		dynamic_cast<CLevel_Boss*>(pLevel)->Set_PortalMake(true);
+		/*CPortal::PORTALDESC PortalDesc;
+		PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
+		PortalDesc.vPosition = _float3(14.f, 1.f, 15.f);
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_BOSS, TEXT("Layer_Object"), &PortalDesc)))
+			return E_FAIL;*/
+
 		return OBJ_DEAD;
 	}
 		
-
-
 	if (m_bShouldSpawnBullet)
 		Spawn_Bullet(fTimeDelta);
 
+	Check_Totem_Effect(fTimeDelta);
 	Check_Health_Percent();
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
-
-	if (CGameInstance::Get_Instance()->Key_Up('8'))
-	{
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
-		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_BOSS, TEXT("Layer_Monster"));
-		pCamera->Set_Target(pGameObject);
-		pCamera->Set_TalkingMode(true);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up('9'))
-	{
-		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-		pCamera->Set_TalkingMode(false);
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
-	}
 
 	return OBJ_NOEVENT;
 }
@@ -111,7 +106,8 @@ HRESULT CBoarrior::Render()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	m_pColliderCom->Render_ColliderBox();
+	if (g_ColliderRender)
+		m_pColliderCom->Render_ColliderBox();
 #endif // _DEBUG
 
 	return S_OK;
@@ -553,6 +549,96 @@ void CBoarrior::PickingTrue()
 	Safe_Release(pInvenManager);
 }
 
+void CBoarrior::Check_Totem_Effect(_float fTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+	if (!pGameInstance || !pLevelManager)
+		return;
+
+	list<CGameObject*>* lGameObject = pGameInstance->Get_ObjectList(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Totem"));
+	if (!lGameObject)
+		return;
+
+	// Check for Active Totems
+	CTotem* pTotem = nullptr;
+	for (auto& iter = lGameObject->begin(); iter != lGameObject->end(); ++iter)
+	{
+		pTotem = dynamic_cast<CTotem*>(*iter);
+		if (!pTotem)
+			continue;
+
+		if (pTotem->Get_TotemDesc().eType == CTotem::TOTEM_TYPE::DEFENSE || pTotem->Get_TotemDesc().eType == CTotem::TOTEM_TYPE::HEAL)
+			goto Effect;
+	}
+
+Effect:
+	if (pTotem)
+	{
+		switch (pTotem->Get_TotemDesc().eType)
+		{
+		case CTotem::TOTEM_TYPE::DEFENSE:
+			m_bHasDefenseBoost = true;
+			break;
+		case CTotem::TOTEM_TYPE::HEAL:
+			Totem_Heal(fTimeDelta); // Heal over time
+			break;
+		}
+	}
+	else
+	{
+		m_bHasDefenseBoost = false;
+		return;
+	}
+}
+
+void CBoarrior::Totem_Heal(_float fTimeDelta)
+{
+	if (m_fHealTimer > 5.f)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+
+		// Spawn Heal Effect
+		CTotemEffect::TOTEMEFFECTDESC TotemEffectDesc;
+		TotemEffectDesc.eType = CTotemEffect::TOTEM_EFFECT_TYPE::HEAL;
+		TotemEffectDesc.vInitPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
+		TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
+
+		list<CGameObject*>* lGameObject = pGameInstance->Get_ObjectList(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Totem"));
+		if (!lGameObject)
+			return;
+
+		// Check for Active Totems
+		CTotem* pTotem = nullptr;
+		for (auto& iter = lGameObject->begin(); iter != lGameObject->end(); ++iter)
+		{
+			pTotem = dynamic_cast<CTotem*>(*iter);
+			if (!pTotem)
+				continue;
+
+			if (pTotem->Get_TotemDesc().eType == CTotem::TOTEM_TYPE::HEAL)
+			{
+				TotemEffectDesc.vInitPosition = pTotem->Get_Position();
+				TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
+				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
+			}
+		}
+
+		// Increase Health
+		m_tInfo.iCurrentHp += 150;
+		if (m_tInfo.iCurrentHp > m_tInfo.iMaxHp)
+			m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+
+		m_fHealTimer = 0.f;
+	}
+	else
+		m_fHealTimer += fTimeDelta;
+}
+
 void CBoarrior::Check_Health_Percent()
 {
 	cout << m_tInfo.iMaxHp << " / " << m_tInfo.iCurrentHp << endl;
@@ -916,14 +1002,14 @@ void CBoarrior::Spawn_Adds(_float fTimeDelta)
 
 	if (m_bIsBelow20Percent)
 	{
-		TotemDesc.eState = CTotem::TOTEM_TYPE::HEAL;
+		TotemDesc.eType = CTotem::TOTEM_TYPE::HEAL;
 		goto SpawnTotem;
 	}
 	else if (m_bIsBelow40Percent)
 		goto SpawnAdds;
 	else if (m_bIsBelow60Percent)
 	{
-		TotemDesc.eState = CTotem::TOTEM_TYPE::DEFENSE;
+		TotemDesc.eType = CTotem::TOTEM_TYPE::DEFENSE;
 		goto SpawnTotem;
 	}
 	else if (m_bIsBelow80Percent)
@@ -944,18 +1030,21 @@ SpawnAdds:
 
 SpawnTotem:
 	TotemDesc.vInitPosition = _float3(10.f, 0.f, 10.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_Totem"), &TotemDesc);
 	TotemDesc.vInitPosition = _float3(10.f, 0.f, 19.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_Totem"), &TotemDesc);
 	TotemDesc.vInitPosition = _float3(19.f, 0.f, 10.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_Totem"), &TotemDesc);
 	TotemDesc.vInitPosition = _float3(19.f, 0.f, 19.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_Totem"), &TotemDesc);
 	return;
 }
 
 _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
+	if (m_bHasDefenseBoost)
+		fDamage = fDamage / 100 * 20;
+
 	_float fDmg = __super::Take_Damage(fDamage, DamageType, DamageCauser);
 
 	if (fDmg > 0)

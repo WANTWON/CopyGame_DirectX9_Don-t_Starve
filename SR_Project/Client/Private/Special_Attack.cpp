@@ -52,7 +52,7 @@ void CSpecial_Attack::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetUp_BillBoard();
+	SetUp_BillBoard(); // No need
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);

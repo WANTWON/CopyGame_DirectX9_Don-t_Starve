@@ -28,7 +28,7 @@ HRESULT CHouse::Initialize(void* pArg)
 	switch (m_HouseDesc.m_eState)
 	{
 	case HOUSETYPE::SPIDERHOUSE:
-		m_MonsterMaxCount = 4;
+		m_MonsterMaxCount = 5;
 		break;
 	case HOUSETYPE::BOARONSPAWNER:
 		m_MonsterMaxCount = 3;
@@ -181,7 +181,7 @@ HRESULT CHouse::SetUp_RenderState()
 
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
 	return S_OK;

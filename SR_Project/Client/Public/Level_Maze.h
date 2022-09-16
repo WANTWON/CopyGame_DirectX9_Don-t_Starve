@@ -22,11 +22,21 @@ public:
 	HRESULT Ready_Layer_Camera(const _tchar * pLayerTag);
 
 public: //test
+	void Start_Camera_Motion();
+	void Update_Camera_Motion();
 	void Set_NextLevel(_bool _dd) { m_bNextLevel = _dd; }
 	void Set_PastLevel(_bool _dd) { m_bPastLevel = _dd; }
+	void Set_Flowerpicked(_bool type) { m_bFlowerPicked = type; m_dwTime = GetTickCount(); }
+	
 
+private:
 	_bool m_bNextLevel = false;
 	_bool m_bPastLevel = false;
+	DWORD m_dwTime;
+	_bool m_bFirst = false;
+	_bool m_bTargetCam = false;
+	_bool m_bFlowerPicked = false;
+
 
 public:
 	static CLevel_Maze* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

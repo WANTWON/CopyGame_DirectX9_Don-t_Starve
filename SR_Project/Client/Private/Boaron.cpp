@@ -83,7 +83,8 @@ HRESULT CBoaron::Render()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	m_pColliderCom->Render_ColliderBox();
+	if (g_ColliderRender)
+		m_pColliderCom->Render_ColliderBox();
 #endif // _DEBUG
 
 	return S_OK;
@@ -502,7 +503,7 @@ void CBoaron::Follow_Target(_float fTimeDelta)
 	m_eState = STATE::RUN;
 
 	_float3 fTargetPos = m_pTarget->Get_Position();
-	m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, fTargetPos, _float3(0, 0, 0));
+	m_pTransformCom->Go_PosTarget(fTimeDelta * .2f, fTargetPos, _float3(0, 0, 0));
 
 	m_bIsAttacking = false;
 }

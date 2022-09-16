@@ -31,6 +31,7 @@ public:
 
 protected:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) = 0;
+
 protected: /*For TextureCom */
 	virtual HRESULT Texture_Clone() override = 0;
 	virtual void Change_Frame() override = 0;
@@ -49,7 +50,7 @@ public: /*Get & Set*/
 	_bool	Get_NextAct(void) { return m_bNextAct; }
 	_bool	Get_Interrupted(void) { return m_bInterrupted; }
 	_uint	Get_TalkCnt(void) { return m_iTalkCnt; }
-	_bool	Get_HasOwner(void) { if (m_bOwner && !m_bFightMode) { m_pTarget = m_pOwner; } return m_bOwner; }//AttackÃß°¡½Ã &&!AttackMode Ãß°¡
+	_bool	Get_HasOwner(void) { if (m_bOwner && !m_bFightMode) { m_pTarget = m_pOwner; } return m_bOwner; }//Attackï¿½ß°ï¿½ï¿½ï¿½ &&!AttackMode ï¿½ß°ï¿½
 	_bool	Get_FirstCall(void) { return m_bFirstCall; }
 	_bool	Get_CanAttack(void) { return m_bCanAttack; }
 	_bool	Get_FightMode(void) { return m_bFightMode; }

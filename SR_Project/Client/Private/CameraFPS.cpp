@@ -29,17 +29,24 @@ HRESULT CCameraFPS::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(&((CAMERADESC_DERIVED*)pArg)->CameraDesc)))
 		return E_FAIL;
 
+
+	m_vDistance = ((CAMERADESC_DERIVED*)pArg)->vDistance;
+
 	return S_OK;
 }
 
 int CCameraFPS::Tick(_float fTimeDelta)
 {
-	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
-		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
 
 	FPS_Camera(fTimeDelta);
+
+
+
+	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
+		return OBJ_NOEVENT;
+
 
 	if (FAILED(Bind_OnGraphicDev()))
 		return OBJ_NOEVENT;

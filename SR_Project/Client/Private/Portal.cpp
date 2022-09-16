@@ -6,6 +6,8 @@
 #include "Level_GamePlay.h"
 #include "Level_Hunt.h"
 #include "CameraManager.h"
+#include "Level_Maze.h"
+#include "Level_Boss.h"
 
 CPortal::CPortal(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -54,12 +56,12 @@ HRESULT CPortal::Initialize(void* pArg)
 	if (m_ePortalDesc.m_eType == PORTAL_BOSS)
 	{
 		m_eState = IDLE_CLOSE;
-		m_fRadius = 0.5f;
+		m_fRadius = 1.5f;
 		m_fOpenRadius = 3.f;
 
-		m_pTransformCom->Set_Scale(2.f, 1.f, 1.f);
-		if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
-			m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+		//if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
+			//m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
 	}
 
 	return S_OK;
@@ -79,36 +81,41 @@ int CPortal::Tick(_float fTimeDelta)
 
 	if (m_bShouldTeleport)
 	{
-		CLevel_GamePlay* pLevel = nullptr;
-		
+		CLevel* pLevel = nullptr;
+		pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+		LEVEL pCurrentLevelIndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+		switch (pCurrentLevelIndex)
+		{
+		case Client::LEVEL_GAMEPLAY:
+			dynamic_cast<CLevel_GamePlay*>(pLevel)->Set_NextLevel(true);
+			break;
+		case Client::LEVEL_HUNT:
+			dynamic_cast<CLevel_Hunt*>(pLevel)->Set_NextLevel(true);
+			break;
+		case Client::LEVEL_MAZE:
+			dynamic_cast<CLevel_Maze*>(pLevel)->Set_NextLevel(true);
+			break;
+		case Client::LEVEL_BOSS:
+			dynamic_cast<CLevel_Boss*>(pLevel)->Set_NextLevel(true);
+			break;
+		}
+
 		switch (m_ePortalDesc.m_eType)
 		{
 		case PORTAL_GAMEPLAY:
-			pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-			pLevel->Set_NextLevel(true);
 			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_GAMEPLAY);
 			break;
-
 		case PORTAL_HUNT:
-			pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-			pLevel->Set_NextLevel(true);
 			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_HUNT);
 			break;
-
 		case PORTAL_BOSS:
-			 pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-			pLevel->Set_NextLevel(true);
 			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_BOSS);
 			break;
-
 		case PORTAL_MAZE:
-			pLevel = (CLevel_GamePlay*)CLevel_Manager::Get_Instance()->Get_CurrentLevel();
-			pLevel->Set_NextLevel(true);
 			CLevel_Manager::Get_Instance()->Set_DestinationLevel(LEVEL_MAZE);
 			break;
-		default:
-			break;
 		}
+
 	}
 
 
@@ -123,15 +130,19 @@ void CPortal::Late_Tick(_float fTimeDelta)
 {
 	//__super::Late_Tick(fTimeDelta);
 
-	if(m_ePortalDesc.m_eType != PORTAL_BOSS)
+	if(m_ePortalDesc.m_eType == PORTAL_BOSS)
 		SetUp_BillBoard();
 
 	Change_Motion();
 	Change_Frame();
 
-	_float3 vPosition = Get_Position();
-	vPosition.y -= m_fRadius - 0.1f;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+	if (m_ePortalDesc.m_eType != PORTAL_BOSS)
+	{
+		_float3 vPosition = Get_Position();
+		vPosition.y -= m_fRadius - 0.1f;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+	}
+	
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -187,7 +198,7 @@ HRESULT CPortal::SetUp_Components(void* pArg)
 
 void CPortal::SetUp_BillBoard()
 {
-	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_FPS)
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_FPS || m_ePortalDesc.m_eType == PORTAL_BOSS )
 	{
 		_float4x4 ViewMatrix;
 

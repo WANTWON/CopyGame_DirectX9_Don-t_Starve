@@ -125,7 +125,10 @@ public: /*Get&Set*/
 	void	Set_bOnlyActionKey(_bool _bUse) { m_bOnlyActionKey = _bUse; }
 	void	Set_TalkMode(_bool _bTalk) { m_bTalkMode = _bTalk; }
 	void	Clear_Target(void) { m_pTarget = nullptr; }
+
+	void	Set_FPSMode(_bool type) { if (type) m_bIsFPS = true; else m_bIsFPS = false; }
 	void	Set_Select(_bool _bSelect) { m_bSelect = _bSelect; }
+
 public:
 	void	Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
 public:

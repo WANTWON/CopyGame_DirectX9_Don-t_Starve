@@ -14,6 +14,11 @@
 #include "Level_Manager.h"
 #include "Skeleton.h"
 #include "NPC.h"
+
+
+_bool	   g_ColliderRender = false ;
+
+
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CPawn(pGraphic_Device)
 {
@@ -239,8 +244,11 @@ HRESULT CPlayer::Render()
 	}
 
 #ifdef _DEBUG
-	m_pTextureCom->Bind_OnGraphicDev_Debug();
-	m_pColliderCom->Render_ColliderBox();
+	if (g_ColliderRender)
+	{
+		m_pTextureCom->Bind_OnGraphicDev_Debug();
+		m_pColliderCom->Render_ColliderBox();
+	}
 #endif // _DEBUG
 
 
@@ -537,7 +545,10 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 #pragma region Debug&CamKey
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_DEBUG]))
 	{
-		m_bDebugKey = !m_bDebugKey;
+		if(g_ColliderRender)
+			g_ColliderRender = false;
+		else
+			g_ColliderRender = true;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMFPSMODE]))
 	{
@@ -565,13 +576,13 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_CAMLEFT]))
 	{
 		if (m_bIsFPS)
-			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), -_fTimeDelta);
 		
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Up(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
 		if (m_bIsFPS)
-			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), -_fTimeDelta);
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
 		else
 		{
 			CCameraManager::Get_Instance()->PlayerCamera_TurnRight(m_iCurrentLevelndex);
@@ -582,7 +593,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
 		if (m_bIsFPS)
-			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), -_fTimeDelta);
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
 		
 	}
 
@@ -1182,7 +1193,7 @@ void CPlayer::Chop(_float _fTimeDelta)
 		ParticleDesc.iMaxParticleCount = 5;
 		ParticleDesc.vParticleScale = _float2(0.5, 0.5);
 		ParticleDesc.vParticleDeviation = _float3(1 * 0.6f, 0.f, 1 * 0.6f);
-		ParticleDesc.iTextureNum = 4;
+		ParticleDesc.iTextureNum = rand() % 8;
 		ParticleDesc.vVelocity = _float3(0.01f, -0.5, 0.f);
 		ParticleDesc.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		ParticleDesc.vPosition.z -= 0.001f;
@@ -1572,7 +1583,7 @@ void CPlayer::Ice_Spike(_float _fTimeDelta)
 		ZeroMemory(&ParticleDesc, sizeof(CParticle::STATEDESC));
 		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
 		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Snow");
-		ParticleDesc.iTextureNum = 1;
+		ParticleDesc.iTextureNum = rand()%4;
 		ParticleDesc.vVelocity = _float3((rand() % 10)*0.1f, -0.1f, -rand() % 10 * 0.1f);
 
 		for (int i = 0; i < 200; ++i)

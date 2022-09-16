@@ -76,5 +76,6 @@ extern _bool		g_bUIMadefirst;
 extern _bool        g_bscenechange;
 extern _uint       g_iQuestnum;
 extern _bool       g_boss;
+extern _bool	   g_ColliderRender;
 
 using namespace Client;

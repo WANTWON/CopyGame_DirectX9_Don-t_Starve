@@ -38,6 +38,7 @@ public:
 public: //test
 	void Set_NextLevel(_bool _dd) { m_bNextLevel = _dd; }
 
+	_float m_fTimeAcc = 0.f;
 	_bool m_bNextLevel = false;
 };
 

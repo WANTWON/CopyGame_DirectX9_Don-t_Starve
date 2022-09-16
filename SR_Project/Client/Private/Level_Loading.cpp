@@ -90,8 +90,6 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 
 	if (true == m_pLoader->Get_Finished())
 	{
-		if (GetKeyState(VK_RETURN) & 0x8000)
-		{
 			/* 넥스트레벨에 대한 준비가 끝나면 실제 넥스트레벨을 할당한다. */
 			CLevel*			pNewLevel = nullptr;
 
@@ -127,7 +125,6 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 
 			Safe_Release(pGameInstance);
 		}		
-	}
 }
 
 void CLevel_Loading::Late_Tick(_float fTimeDelta)

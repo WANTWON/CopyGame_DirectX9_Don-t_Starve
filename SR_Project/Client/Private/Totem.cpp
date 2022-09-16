@@ -92,8 +92,12 @@ HRESULT CTotem::Render()
 
 	m_pVIBufferCom->Render();
 
-	m_pTextureCom->Bind_OnGraphicDev_Debug();
-	m_pColliderCom->Render_ColliderBox();
+	if (g_ColliderRender)
+	{
+		m_pTextureCom->Bind_OnGraphicDev_Debug();
+		m_pColliderCom->Render_ColliderBox();
+	}
+	
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
@@ -145,6 +149,11 @@ HRESULT CTotem::SetUp_RenderState()
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	m_pGraphic_Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
@@ -155,6 +164,7 @@ HRESULT CTotem::SetUp_RenderState()
 
 HRESULT CTotem::Release_RenderState()
 {
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	return S_OK;
@@ -212,7 +222,7 @@ HRESULT CTotem::Texture_Clone()
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_fSpeed = 30;
 
-	switch (m_tTotemDesc.eState)
+	switch (m_tTotemDesc.eType)
 	{
 	case TOTEM_TYPE::DEFENSE:
 	{

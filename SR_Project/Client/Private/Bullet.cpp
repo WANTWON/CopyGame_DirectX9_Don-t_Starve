@@ -123,7 +123,8 @@ HRESULT CBullet::Render()
 
 
 #ifdef _DEBUG
-	m_pColliderCom->Render_ColliderBox();
+	if (g_ColliderRender)
+		m_pColliderCom->Render_ColliderBox();
 #endif // _DEBUG
 
 	return S_OK;

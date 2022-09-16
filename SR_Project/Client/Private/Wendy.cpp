@@ -89,6 +89,7 @@ HRESULT CWendy::Render()
 
 
 #ifdef _DEBUG
+
 	//m_pColliderCom->Render_ColliderBox();
 #endif // _DEBUG
 
