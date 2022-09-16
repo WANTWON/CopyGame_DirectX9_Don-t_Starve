@@ -38,26 +38,38 @@ private: /*For TextureCom */
 public:
 	virtual void Interact(_uint Damage = 0) override;
 	virtual HRESULT Drop_Items() override;
-
+	virtual	void	Make_Interrupt(CPawn* pCauser, _uint _InterruptNum);
 private:/*Func for BT*/
 	CBT_NPC* BehaviorTree = nullptr;
 public:/*for Actions*/
 	virtual void	Move(_float _fTimeDelta) override;
 	virtual void	Idle(_float _fTimeDelta) override;
 	virtual void	Interaction(_float _fTimedelta) override;
+	virtual void	Talk(_float _fTimeDelta) override;
+	virtual void	Dance(_float _fTimeDelta) override;
+	virtual void	Attack(_float _fTimeDelta) override;
+	virtual void	Interrupted(_float _fTimeDelta) override;
 
 	virtual void	Select_Target(_float _fTimeDelta) override;
 	virtual void	Set_RandPos(_float _fTimeDelta) override;
+	virtual _bool	Get_Target_Moved(_float _fTimeDelta) override;
 private:
-	void Revive_Berry(_float _fTimeDelta);
+	void	Revive_Berry(_float _fTimeDelta);
+	void	Talk_Player(_float _fTimeDelta);
+	void	Talk_Friend(_float _fTimeDelta);
+	void	Create_Bullet(_float _fTimeDelta);
 
 public:
 	DIR_STATE Check_Direction(void);
-private:
+private://FindPriority
 	virtual void Find_Priority() override;
+	void		Find_Friend();
+	void		Find_Enemy();
+	void		Find_Berry();
+	void		Find_Player();
 
 private:
-	_bool		m_bOwner = false;
+
 
 public:
 	static CWendy* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

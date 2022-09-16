@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "Item.h"
 #include "Level_Manager.h"
+#include "CameraManager.h"
+#include "Level_Maze.h"
 
 CCarrot::CCarrot(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -32,7 +34,11 @@ HRESULT CCarrot::Initialize(void* pArg)
 	m_eObjID = OBJID::OBJ_OBJECT;
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::CARROT;
 
-	m_pTransformCom->Set_Scale(.5f, .5f, .5f);
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
+	if(iLevel == LEVEL_MAZE)
+		m_pTransformCom->Set_Scale(1.f, 2.5f, 1.f);
+	else
+		m_pTransformCom->Set_Scale(.5f, .5f, .5f);
 
 	return S_OK;
 }
@@ -67,7 +73,9 @@ HRESULT CCarrot::Render()
 
 void CCarrot::Interact(_uint Damage)
 {
-	Drop_Items();
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	if (iLevel != LEVEL_MAZE)
+		Drop_Items();
 
 	m_bInteract = false;
 	m_bDead = true;
@@ -75,6 +83,15 @@ void CCarrot::Interact(_uint Damage)
 	{
 		CGameInstance* pInstance = CGameInstance::Get_Instance();
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"), 0));
+
+		if (iLevel == LEVEL_MAZE)
+		{
+			dynamic_cast<CPlayer*>(pPlayer)->Set_FPSMode(false);
+			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+			CLevel* pLevel =  CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			dynamic_cast<CLevel_Maze*>(pLevel)->Set_Flowerpicked(true);
+		}
+		
 		pPlayer->Check_Target(m_bDead);
 	}
 }
@@ -148,14 +165,25 @@ HRESULT CCarrot::SetUp_Components(void* pArg)
 
 HRESULT CCarrot::Texture_Clone()
 {
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
 	CTexture::TEXTUREDESC TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
-	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 60;
-
-	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Carrot_IDLE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Carrot"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (iLevel == LEVEL_MAZE)
+	{
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_fSpeed = 45;
+		TextureDesc.m_iEndTex = 24;
+	}
+	else
+	{
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_fSpeed = 60;
+		TextureDesc.m_iEndTex = 0;
+		iLevel = LEVEL_GAMEPLAY;
+	}
+	
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Carrot_IDLE"), iLevel, TEXT("Prototype_Component_Texture_Carrot"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
@@ -164,10 +192,14 @@ HRESULT CCarrot::Texture_Clone()
 
 void CCarrot::Change_Frame()
 {
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	switch (m_eState)
 	{
 	case IDLE:
-		m_pTextureCom->MoveFrame(m_TimerTag, false);
+		if(iLevel == LEVEL_GAMEPLAY)
+			m_pTextureCom->MoveFrame(m_TimerTag, false);
+		else
+			m_pTextureCom->MoveFrame(m_TimerTag, true);
 		break;
 	}
 }

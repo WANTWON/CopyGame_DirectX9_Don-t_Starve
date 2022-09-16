@@ -106,7 +106,8 @@ HRESULT CBearger::Render()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	m_pColliderCom->Render_ColliderBox();
+	if (g_ColliderRender)
+		m_pColliderCom->Render_ColliderBox();
 #endif // _DEBUG
 
 	return S_OK;
@@ -167,7 +168,7 @@ HRESULT CBearger::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 30;
+	TextureDesc.m_fSpeed = 45;
 
 	TextureDesc.m_iEndTex = 58;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bearger_Attack_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))

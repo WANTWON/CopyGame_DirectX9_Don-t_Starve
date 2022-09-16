@@ -11,7 +11,7 @@ public:
 	//Default ÇÊ¿äx , 
 	typedef struct tagCameraDesc_Derived
 	{
-		_uint						iTest;
+		_float3						vDistance = _float3(0, 6, -10);
 		CCamera::CAMERADESC			CameraDesc;
 	}CAMERADESC_DERIVED;
 private:
@@ -49,8 +49,8 @@ private:
 	void Shaking_Camera(_float fTimeDelta, _float fPower);
 
 private:
+	_float3			m_vDistance;
 	_long			m_lMouseWheel = 0;
-	_float3			m_vDistance = _float3(0, 6, -10);
 	CAMERAMODE		m_eCamMode = CAM_PLAYER;
 	_int			m_iTurnCount = 0;
 	class CGameObject*	m_pTarget = nullptr;

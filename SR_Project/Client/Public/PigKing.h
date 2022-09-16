@@ -26,7 +26,8 @@ public:
 	virtual HRESULT Render() override;
 private:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
-
+	HRESULT SetUp_RenderState();
+	HRESULT Release_RenderState();
 private: /*For TextureCom */
 	virtual HRESULT Texture_Clone() override;
 	virtual void Change_Frame() override;
@@ -48,6 +49,8 @@ public:/*for Actions*/
 	virtual void	Move(_float _fTimeDelta) override;
 	virtual void	Idle(_float _fTimeDelta) override;
 	virtual void	Interaction(_float _fTimedelta) override;
+	virtual void	Talk(_float _fTimeDelta) override;
+	virtual void	Dance(_float _fTimeDelta) override;
 
 	virtual void	Select_Target(_float _fTimeDelta) override;
 	virtual void	Set_RandPos(_float _fTimeDelta) override;

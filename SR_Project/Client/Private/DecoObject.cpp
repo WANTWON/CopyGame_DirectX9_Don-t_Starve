@@ -49,6 +49,9 @@ HRESULT CDecoObject::Initialize(void* pArg)
 		m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 		m_fRadius = m_pTransformCom->Get_Scale().y *0.5f;
 		break;
+	case DECOTYPE::FLIES:
+		m_pTransformCom->Set_Scale(1.5f, 2.f, 1.f);
+		break;
 	}
 
 	return S_OK;
@@ -149,6 +152,12 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 		TextureDesc.m_iEndTex = 4;
 		TextureDesc.m_fSpeed = 30.f;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Torch"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case DECOTYPE::FLIES:
+		TextureDesc.m_iEndTex = 54;
+		TextureDesc.m_fSpeed = 40.f;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Flies"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
 	}

@@ -22,12 +22,18 @@ public:
 	HRESULT Ready_Layer_Camera(const _tchar * pLayerTag);
 
 public: //test
+	void Start_Camera_Motion();
 	void Set_NextLevel(_bool _dd) { m_bNextLevel = _dd; }
 	void Set_PastLevel(_bool _dd) { m_bPastLevel = _dd; }
+	void Set_PortalMake(_bool _dd) { m_bPortalMake = _dd; }
 
+private:
 	_bool m_bNextLevel = false;
 	_bool m_bPastLevel = false;
-
+	DWORD m_dwTime;
+	_bool m_bFirst = false;
+	_bool m_bTargetCam = false;
+	_bool m_bPortalMake = false;
 public:
 	static CLevel_Boss* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;

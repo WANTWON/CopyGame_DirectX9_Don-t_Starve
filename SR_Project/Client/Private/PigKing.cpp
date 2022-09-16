@@ -304,7 +304,7 @@ void CPigKing::Interact(_uint Damage)
 
 		Safe_Release(pinven);
 		
-		//m_eState = rand() % 2 ? COINTOSS : UNIMPRESSED;
+		m_eState = rand() % 2 ? COINTOSS : UNIMPRESSED;
 	}
 
 
@@ -324,6 +324,14 @@ void CPigKing::Idle(_float _fTimeDelta)
 }
 
 void CPigKing::Interaction(_float _fTimedelta)
+{
+}
+
+void CPigKing::Talk(_float _fTimeDelta)
+{
+}
+
+void CPigKing::Dance(_float _fTimeDelta)
 {
 }
 

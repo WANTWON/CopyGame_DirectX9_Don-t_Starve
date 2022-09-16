@@ -5,7 +5,7 @@
 #include "Level_Manager.h"
 #include "GameInstance.h"
 #include "CameraManager.h"
-
+#include "NPC.h"
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CPawn(pGraphic_Device)
 {
@@ -229,6 +229,7 @@ _float CMonster::Take_Damage(float fDamage, void * DamageType, CGameObject * Dam
 
 	return fDamage;
 }
+
 
 void CMonster::Free()
 {

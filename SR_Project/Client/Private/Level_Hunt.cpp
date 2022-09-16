@@ -8,6 +8,7 @@
 #include "Level_Loading.h"
 #include "Portal.h"
 #include "WoodWall.h"
+#include "DecoObject.h"
 
 CLevel_Hunt::CLevel_Hunt(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -38,7 +39,7 @@ HRESULT CLevel_Hunt::Initialize()
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_HUNT);
 
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_HUNT);
-
+	m_dwTime = GetTickCount();
 	return S_OK;
 }
 
@@ -62,7 +63,8 @@ void CLevel_Hunt::Tick(_float fTimeDelta)
 		CPickingMgr::Get_Instance()->Picking();
 	}
 
-	
+	Start_Camera_Motion();
+	//Test_QuestComplete_Camera_Motion();
 
 	//CPickingMgr::Get_Instance()->Picking();
 	Safe_Release(pGameInstance);
@@ -136,6 +138,27 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
+
+	CPortal::PORTALDESC PortalDesc;
+	PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
+	PortalDesc.vPosition = _float3(55.5f, 2.f, 20.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, &PortalDesc)))
+		return E_FAIL;
+
+	/*CWoodWall::WALLDESC WallDesc;
+	ZeroMemory(&WallDesc, sizeof(CWoodWall::WALLDESC));
+	WallDesc.etype = CWoodWall::WALL_BOSS;
+	WallDesc.eDir = CWoodWall::FRONT;
+	WallDesc.vecPosition = _float3(53.5f, 2.f, 20.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_HUNT, TEXT("Layer_QuestWall"), &WallDesc)))
+		return E_FAIL;
+
+	WallDesc.vecPosition = _float3(53.5f, 2.f, 18.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_HUNT, TEXT("Layer_QuestWall"), &WallDesc)))
+		return E_FAIL;*/
 
 	/* Load Tree */
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Tree_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -239,16 +262,25 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 		WallDesc.etype = CWoodWall::WALL_END;
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_HUNT, TEXT("Layer_Wall"), &WallDesc);
 	}
-
-
 	CloseHandle(hFile);
 
-	CPortal::PORTALDESC PortalDesc;
-	PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
-	PortalDesc.vPosition = _float3(55.5f, 2.f, 20.f);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, &PortalDesc)))
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Deco_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
 		return E_FAIL;
+
+	dwByte = 0;
+	CDecoObject::DECODECS DecoDesc;
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(DecoDesc), sizeof(CDecoObject::DECODECS), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_HUNT, TEXT("Layer_Deco"), &DecoDesc);
+	}
+	CloseHandle(hFile);
+
 
 	/*PortalDesc.m_eType = CPortal::PORTAL_BOSS;
 	PortalDesc.vPosition = _float3(102.f, 2.f, 24.f);
@@ -269,9 +301,9 @@ HRESULT CLevel_Hunt::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CCameraDynamic::CAMERADESC_DERIVED				CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CCameraDynamic::CAMERADESC_DERIVED));
 
-	CameraDesc.iTest = 10;
+	CameraDesc.vDistance = _float3(0, 8, -6);
 
-	CameraDesc.CameraDesc.vEye = _float3(0.f, 2.f, -5.f);
+	CameraDesc.CameraDesc.vEye = _float3(0, 8, -6);
 	CameraDesc.CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 
 	CameraDesc.CameraDesc.fFovy = D3DXToRadian(30.0f);
@@ -291,9 +323,66 @@ HRESULT CLevel_Hunt::Ready_Layer_Camera(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_HUNT, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
+	CameraDesc.CameraDesc.fFovy = D3DXToRadian(30.0f);
+	CameraDesc.CameraDesc.vEye = _float3(0.f, 6.f, -7.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Target"), LEVEL_HUNT, pLayerTag, &CameraDesc)))
+		return E_FAIL;
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
+}
+
+void CLevel_Hunt::Start_Camera_Motion()
+{
+	if (!m_bTargetCam && m_dwTime + 1000 < GetTickCount())
+	{
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_HUNT, TEXT("Layer_Object"));
+		pCamera->Set_Target(pGameObject);
+		pCamera->Set_GoingMode(true);
+		m_bFirst = true;
+		m_bTargetCam = true;
+		m_dwTime = GetTickCount();
+	}
+
+	if (m_dwTime + 5000 < GetTickCount() && m_bFirst)
+	{
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_GoingMode(false);
+		m_bFirst = false;
+	}
+}
+
+void CLevel_Hunt::Test_QuestComplete_Camera_Motion()
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	if (pGameInstance->Key_Up('8'))
+	{
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_HUNT, TEXT("Layer_QuestWall"));
+		pCamera->Set_Target(pGameObject);
+		pCamera->Set_GoingMode(true);
+		m_btest = true;
+		m_dwTime = GetTickCount();
+	}
+	if (m_dwTime + 5000 < GetTickCount() && m_btest)
+	{
+		pGameInstance->Clear_Layer(LEVEL_HUNT, TEXT("Layer_QuestWall"));
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_Target(nullptr);
+		m_btest = false;
+		m_btest2 = true;
+	}
+	if (m_dwTime + 8000 < GetTickCount() && m_btest2)
+	{
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_GoingMode(false);
+		m_btest2 = false;
+	}
 }
 
 

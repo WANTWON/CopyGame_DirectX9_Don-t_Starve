@@ -13,6 +13,11 @@
 #include "ParticleSystem.h"
 #include "Level_Manager.h"
 #include "Skeleton.h"
+#include "NPC.h"
+
+
+_bool	   g_ColliderRender = false ;
+
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CPawn(pGraphic_Device)
@@ -95,11 +100,13 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	//Sleep_Restore(fTimeDelta);
 
+	//Act Auto
+	Tick_ActStack(fTimeDelta);
+
 	//KeyInput
 	GetKeyDown(fTimeDelta);
 
-	//Act Auto
-	Tick_ActStack(fTimeDelta);
+	
 
 	
 
@@ -237,8 +244,11 @@ HRESULT CPlayer::Render()
 	}
 
 #ifdef _DEBUG
-	m_pTextureCom->Bind_OnGraphicDev_Debug();
-	m_pColliderCom->Render_ColliderBox();
+	if (g_ColliderRender)
+	{
+		m_pTextureCom->Bind_OnGraphicDev_Debug();
+		m_pColliderCom->Render_ColliderBox();
+	}
 #endif // _DEBUG
 
 
@@ -507,6 +517,24 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		}
 		m_bActivated = true;
 	}
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN1]))
+	{
+		if (m_bTalkMode && m_bSelect)
+		{
+			m_bSelect = false;
+			m_iTalkNum = 1;
+			m_bActivated = true;
+		}
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN2]))
+	{
+		if (m_bTalkMode && m_bSelect)
+		{
+			m_bSelect = false;
+			m_iTalkNum = 2;
+			m_bActivated = true;
+		}
+	}
 
 	if (m_bOnlyActionKey)
 		return;
@@ -514,7 +542,10 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 #pragma region Debug&CamKey
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_DEBUG]))
 	{
-		m_bDebugKey = !m_bDebugKey;
+		if(g_ColliderRender)
+			g_ColliderRender = false;
+		else
+			g_ColliderRender = true;
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMFPSMODE]))
 	{
@@ -542,13 +573,13 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_CAMLEFT]))
 	{
 		if (m_bIsFPS)
-			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), -_fTimeDelta);
 		
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Up(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
 		if (m_bIsFPS)
-			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), -_fTimeDelta);
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
 		else
 		{
 			CCameraManager::Get_Instance()->PlayerCamera_TurnRight(m_iCurrentLevelndex);
@@ -559,7 +590,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
 		if (m_bIsFPS)
-			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), -_fTimeDelta);
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
 		
 	}
 
@@ -1056,6 +1087,15 @@ void CPlayer::Attack(_float _fTimeDelta)
 			break;
 		}
 		m_ePreState = m_eState;
+
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		CGameObject* npc = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC"));
+
+		static_cast<CNPC*>(npc)->Make_Interrupt(this, 1);
+
+		Safe_Release(pGameInstance);
 	}
 
 
@@ -1150,7 +1190,7 @@ void CPlayer::Chop(_float _fTimeDelta)
 		ParticleDesc.iMaxParticleCount = 5;
 		ParticleDesc.vParticleScale = _float2(0.5, 0.5);
 		ParticleDesc.vParticleDeviation = _float3(1 * 0.6f, 0.f, 1 * 0.6f);
-		ParticleDesc.iTextureNum = 4;
+		ParticleDesc.iTextureNum = rand() % 8;
 		ParticleDesc.vVelocity = _float3(0.01f, -0.5, 0.f);
 		ParticleDesc.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		ParticleDesc.vPosition.z -= 0.001f;
@@ -1540,7 +1580,7 @@ void CPlayer::Ice_Spike(_float _fTimeDelta)
 		ZeroMemory(&ParticleDesc, sizeof(CParticle::STATEDESC));
 		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
 		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Snow");
-		ParticleDesc.iTextureNum = 1;
+		ParticleDesc.iTextureNum = rand()%4;
 		ParticleDesc.vVelocity = _float3((rand() % 10)*0.1f, -0.1f, -rand() % 10 * 0.1f);
 
 		for (int i = 0; i < 200; ++i)
@@ -1750,11 +1790,14 @@ void CPlayer::Detect_Enemy(void)
 void CPlayer::Find_Priority()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
+	
 
 	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(m_iCurrentLevelndex, TEXT("Layer_Object"));
 
 	_uint iIndex = 0;
+
+	if (Find_NPC())
+		return;
 
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
@@ -1817,8 +1860,59 @@ void CPlayer::Find_Priority()
 
 	}
 
+}
 
-	Safe_Release(pGameInstance);
+_bool CPlayer::Find_NPC()
+{//Test
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	_uint iIndex = 0;
+	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_NPC"));
+	if (list_Obj == nullptr)
+		return false;
+
+	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
+	{
+		if ((*iter_Obj) == nullptr)
+		{
+			++iIndex;
+			iter_Obj++;
+			continue;
+		}
+
+
+		_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
+			+ (Get_Pos().y - (*iter_Obj)->Get_Position().y)*(Get_Pos().y - (*iter_Obj)->Get_Position().y)
+			+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
+		
+		if (fCmpDir >= 2.f)
+		{
+			++iIndex;
+			iter_Obj++;
+			continue;
+		}
+
+		if (m_pTarget == nullptr)
+		{
+			m_pTarget = *iter_Obj;
+		}
+
+		_float fTargetDir = (Get_Pos().x - (m_pTarget)->Get_Position().x)*(Get_Pos().x - (m_pTarget)->Get_Position().x)
+			+ (Get_Pos().y - (m_pTarget)->Get_Position().y)*(Get_Pos().y - (m_pTarget)->Get_Position().y)
+			+ (Get_Pos().z - (m_pTarget)->Get_Position().z)*(Get_Pos().z - (m_pTarget)->Get_Position().z);
+
+		if (fCmpDir < fTargetDir)
+		{
+			m_pTarget = *iter_Obj;
+		}
+
+		++iIndex;
+		iter_Obj++;
+	}
+
+	if (m_pTarget == nullptr)
+		return false;
+
+	return true;
 }
 
 _bool CPlayer::Check_Dead()
@@ -1863,7 +1957,7 @@ void CPlayer::Sleep_Restore(_float _fTimeDelta)
 	if (m_bSleeping)
 	{
 		m_fSleepTime += _fTimeDelta;
-		if (1.f > m_fSleepTime)
+		if (1.f < m_fSleepTime)
 		{
 			if (m_tStat.fCurrentHealth < m_tStat.fMaxHealth)
 				m_tStat.fCurrentHealth += 1;
@@ -1893,24 +1987,32 @@ void CPlayer::Talk_NPC(_float _fTimeDelta)
 	{
 		//m_bTalkMode = true;
 
-		switch (m_eDirState)
-		{
-		case DIR_STATE::DIR_DOWN:
-			Change_Texture(TEXT("Com_Texture_Idle_Down"));
-			break;
-		case DIR_STATE::DIR_UP:
-			Change_Texture(TEXT("Com_Texture_Idle_Up"));
-			break;
-		case DIR_STATE::DIR_LEFT:
-		case DIR_STATE::DIR_RIGHT:
-			Change_Texture(TEXT("Com_Texture_Idle_Side"));
-			break;
-		}
-
-		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(2);
-		m_bActivated = false;
 		
+		dynamic_cast<CNPC*>(m_pTarget)->Make_Interrupt(this, 0);
+
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(m_iTalkNum);
+
+		if (dynamic_cast<CNPC*>(m_pTarget)->Get_TalkCnt() == 2)
+		{
+			m_bSelect = true;
+		}
+		m_iTalkNum = 0;
+		m_bActivated = false;
 	}
+	switch (m_eDirState)
+	{
+	case DIR_STATE::DIR_DOWN:
+		Change_Texture(TEXT("Com_Texture_Idle_Down"));
+		break;
+	case DIR_STATE::DIR_UP:
+		Change_Texture(TEXT("Com_Texture_Idle_Up"));
+		break;
+	case DIR_STATE::DIR_LEFT:
+	case DIR_STATE::DIR_RIGHT:
+		Change_Texture(TEXT("Com_Texture_Idle_Side"));
+		break;
+	}
+
 }
 
 void CPlayer::Cooltime_Update(_float _fTimeDelta)
@@ -2148,12 +2250,14 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 			{
 				m_ActStack.pop();
 			}
+			break;
 		case ACTION_STATE::TALK:
 			Talk_NPC(fTimeDelta);
 			if (!m_bTalkMode)
 			{
 				m_ActStack.pop();
 			}
+			break;
 		default:
 			break;
 		}
@@ -2168,11 +2272,13 @@ void CPlayer::Clear_ActStack()
 	{
 		m_ActStack.pop();
 	}
+	m_bInPortal = false;
 	m_bActivated = false;
 	m_bAutoMode = false;
 	m_bIsBuild = false;
 	m_bBuildTrigger = false;
 	m_pTarget = nullptr;
+	m_bTalkMode = false;
 }
 
 CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)

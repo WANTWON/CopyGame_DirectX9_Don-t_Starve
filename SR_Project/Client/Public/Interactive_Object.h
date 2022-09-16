@@ -62,6 +62,7 @@ protected:
 public:
 	INTERACTOBJ_ID Get_InteractName() { return m_eInteract_OBJ_ID; }
 	_bool Get_CanInteract() { return m_bInteract; }
+	void  Set_Interact(_bool _Interact) { m_bInteract = _Interact; }
 	_uint Set_Damage(_uint _iDamage) { m_iDamage = 0; }
 	_bool Get_Destroyed() { return m_bIsDestroyed; }
 	_bool Get_Dead() { return m_bDead; }

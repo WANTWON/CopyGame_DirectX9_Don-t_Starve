@@ -10,6 +10,7 @@
 #include "WoodWall.h"
 #include "DecoObject.h"
 #include "Totem.h"
+#include "Portal.h"
 
 CLevel_Boss::CLevel_Boss(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -40,7 +41,7 @@ HRESULT CLevel_Boss::Initialize()
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_BOSS);
 
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_BOSS);
-
+	m_dwTime = GetTickCount();
 	return S_OK;
 }
 
@@ -58,10 +59,24 @@ void CLevel_Boss::Tick(_float fTimeDelta)
 			return;
 	}
 
-	if (!m_bNextLevel)
+	if (m_bPortalMake)
 	{
-		CPickingMgr::Get_Instance()->Picking();
+		m_bPortalMake = false;
+		CPortal::PORTALDESC PortalDesc;
+		PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
+		PortalDesc.vPosition = _float3(14.f, 1.f, 15.f);
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_BOSS, TEXT("Layer_Object"), &PortalDesc)))
+			return;
+
+
 	}
+
+	if (!m_bNextLevel)
+		CPickingMgr::Get_Instance()->Picking();
+
+
+	Start_Camera_Motion();
 
 	Safe_Release(pGameInstance);
 }
@@ -160,17 +175,7 @@ HRESULT CLevel_Boss::Ready_Layer_Object(const _tchar * pLayerTag)
 	}
 	CloseHandle(hFile);
 
-	// Test Totem
-	/*CTotem::TOTEMDESC TotemDesc;
-	TotemDesc.eState = CTotem::TOTEM_TYPE::DEFENSE;
-	TotemDesc.vInitPosition = _float3(10.f, 0.f, 10.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);
-
-	TotemDesc.eState = CTotem::TOTEM_TYPE::HEAL;
-	TotemDesc.vInitPosition = _float3(8.f, 0.f, 10.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem"), LEVEL_BOSS, TEXT("Layer_House"), &TotemDesc);*/
-
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Deco_Stage5.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Deco_Stage4.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -199,7 +204,7 @@ HRESULT CLevel_Boss::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CCameraDynamic::CAMERADESC_DERIVED				CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CCameraDynamic::CAMERADESC_DERIVED));
 
-	CameraDesc.iTest = 10;
+	CameraDesc.vDistance = _float3(0.f, 8.f, -15.f);
 
 	CameraDesc.CameraDesc.vEye = _float3(0.f, 1.f, -8.f);
 	CameraDesc.CameraDesc.vAt = _float3(0.f, 1.5f, 0.f);
@@ -230,6 +235,28 @@ HRESULT CLevel_Boss::Ready_Layer_Camera(const _tchar * pLayerTag)
 	Safe_Release(pGameInstance);
 
 	return S_OK;
+}
+
+void CLevel_Boss::Start_Camera_Motion()
+{
+	if (!m_bTargetCam && m_dwTime + 1000 < GetTickCount())
+	{
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_BOSS, TEXT("Layer_Monster"));
+		pCamera->Set_Target(pGameObject);
+		pCamera->Set_TalkingMode(true);
+		m_dwTime = GetTickCount();
+		m_bFirst = true;
+		m_bTargetCam = true;
+	}
+
+	if (m_dwTime + 5000 < GetTickCount() && m_bFirst)
+	{
+		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		m_bFirst = false;
+	}
 }
 
 

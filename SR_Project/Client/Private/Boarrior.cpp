@@ -8,6 +8,8 @@
 #include "House.h"
 #include "Totem.h"
 #include "PickingMgr.h"
+#include "Portal.h"
+#include "Level_Boss.h"
 
 CBoarrior::CBoarrior(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -46,6 +48,7 @@ HRESULT CBoarrior::Initialize(void* pArg)
 	m_fSpecialAttackRadius = 6.f;
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+	
 	return S_OK;
 }
 
@@ -54,6 +57,15 @@ int CBoarrior::Tick(_float fTimeDelta)
 	if (__super::Tick(fTimeDelta) && m_bDeadAnimExpired)
 	{
 		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
+		CLevel* pLevel =  CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+		dynamic_cast<CLevel_Boss*>(pLevel)->Set_PortalMake(true);
+		/*CPortal::PORTALDESC PortalDesc;
+		PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
+		PortalDesc.vPosition = _float3(14.f, 1.f, 15.f);
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_BOSS, TEXT("Layer_Object"), &PortalDesc)))
+			return E_FAIL;*/
+
 		return OBJ_DEAD;
 	}
 		
@@ -69,22 +81,6 @@ int CBoarrior::Tick(_float fTimeDelta)
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-
-	if (CGameInstance::Get_Instance()->Key_Up('8'))
-	{
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
-		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_BOSS, TEXT("Layer_Monster"));
-		pCamera->Set_Target(pGameObject);
-		pCamera->Set_TalkingMode(true);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up('9'))
-	{
-		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-		pCamera->Set_TalkingMode(false);
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
-	}
 
 	return OBJ_NOEVENT;
 }
@@ -111,7 +107,8 @@ HRESULT CBoarrior::Render()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	m_pColliderCom->Render_ColliderBox();
+	if (g_ColliderRender)
+		m_pColliderCom->Render_ColliderBox();
 #endif // _DEBUG
 
 	return S_OK;

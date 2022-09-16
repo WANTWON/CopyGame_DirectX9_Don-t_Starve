@@ -70,7 +70,9 @@ private:
 	_bool m_bIsBelow20Percent = false;
 	_bool m_bShouldSpawn = false;
 	_float m_fSpawnTime = 0.f;
+
 	_float3 m_vecOutPos; // For Picking
+
 	
 private:
 	void Check_Health_Percent();

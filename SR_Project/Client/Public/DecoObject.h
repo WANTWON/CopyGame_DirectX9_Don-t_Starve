@@ -15,7 +15,7 @@ BEGIN(Client)
 class CDecoObject final : public CGameObject
 {
 public:
-	enum DECOTYPE { FLOORFIRE, FLOOR_EFFECT, TORCH, DECO_END };
+	enum DECOTYPE { FLOORFIRE, FLOOR_EFFECT, TORCH, FLIES, DECO_END };
 
 	typedef struct DecoTag
 	{

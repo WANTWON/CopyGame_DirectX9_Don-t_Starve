@@ -13,6 +13,8 @@ END
 BEGIN(Client)
 class CMonster abstract : public CPawn
 {
+public:
+	enum MONSTER_ID{ PIG, SPIDER, SPIDER_WARRIOR, BEARGER, BOARON, BOARRIOR, ID_END};
 protected:
 	CMonster(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CMonster(const CMonster& rhs);
@@ -25,13 +27,15 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public: // Get& Set
+	_bool Get_Aggro(void) { return m_bAggro; }
+	MONSTER_ID Get_MonsterID(void) { return m_eMonsterID; }
 protected: /* For.Components */
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 	CTransform*	m_pTransformCom = nullptr;
 	CCollider_Cube* m_pColliderCom = nullptr;
-
 	vector<CTexture*> m_vecTexture;
 
 	/* For.Debug */
@@ -71,12 +75,13 @@ protected:
 	_bool m_bDidDamage = false;
 	_bool m_bHit = false;
 	_bool m_bPicking = false;
+	_bool m_bSend = false;
 	DWORD m_dwIdleTime = GetTickCount();
 	DWORD m_dwWalkTime = GetTickCount();
 	DWORD m_dwAttackTime = GetTickCount();
 	DWORD m_dwDeathTime = GetTickCount();
 	_bool m_bDeadAnimExpired = false;
-
+	MONSTER_ID	m_eMonsterID;
 protected:
 	DIR_STATE Get_Unprocessed_Dir(DIR_STATE eDir);
 	DIR_STATE Get_Processed_Dir(DIR_STATE eDir);
@@ -87,8 +92,6 @@ protected:
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser);
 	virtual HRESULT Drop_Items() { return S_OK; };
 	virtual _bool IsDead() = 0;
-	_bool		m_bFirst = false;
-
 public:
 	virtual void Free() override;
 };

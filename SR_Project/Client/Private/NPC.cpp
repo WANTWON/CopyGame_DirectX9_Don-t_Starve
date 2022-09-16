@@ -40,6 +40,8 @@ int CNPC::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	Update_Cooltime(fTimeDelta);
+	Update_FightMode(fTimeDelta);
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
@@ -70,11 +72,40 @@ _float3 CNPC::Get_Pos(void)
 }
 
 
-
 void CNPC::Free()
 {
 	__super::Free();
 }
+
+void CNPC::Attack(_float _fTimeDelta)
+{
+}
+
+void CNPC::Interrupted(_float _fTimeDelta)
+{
+}
+
+void CNPC::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
+{
+}
+
+_bool CNPC::Get_Target_Moved(_float _fTimeDelta)
+{
+	return _bool();
+}
+
+_bool CNPC::Set_TargetPos()
+{
+	if (m_pTarget == nullptr)
+		return false;
+
+	m_vTargetPos = m_pTarget->Get_Position();
+	return true;
+}
+
+
+
+
 
 CNPC::NPC_STATE CNPC::Find_Activated(void)
 {
@@ -95,4 +126,45 @@ void CNPC::Init_Map(void)
 	{
 		m_NPCStates.emplace((CNPC::NPC_STATE)i, false);
 	}
+}
+
+void CNPC::Clear_Activated(void)
+{
+	for (auto& iter : m_NPCStates)
+	{
+		iter.second = false;
+	}
+}
+
+void CNPC::Update_Cooltime(_float _fTimeDelta)
+{
+	if (!m_bCanAttack)
+	{
+		if (m_fAtk_Cur_CoolTime <= 0.f)
+		{
+			m_fAtk_Cur_CoolTime = m_fAtk_Max_CoolTime;
+			m_bCanAttack = true;
+		}
+		m_fAtk_Cur_CoolTime -= _fTimeDelta;
+	}
+
+	
+}
+
+void CNPC::Update_FightMode(_float _fTimeDelta)
+{
+	if (m_bFightMode && m_pTarget == nullptr)
+	{
+		m_fModeTime += _fTimeDelta;
+		if (m_fModeTime > 2.f)
+		{
+			m_fModeTime = 0.f;
+			m_bFightMode = false;
+		}
+		else
+		{
+			m_fModeTime = 0.f;
+		}
+	}
+
 }

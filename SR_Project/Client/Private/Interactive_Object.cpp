@@ -84,7 +84,7 @@ HRESULT CInteractive_Object::Render()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	if (m_pColliderCom)
+	if (m_pColliderCom && g_ColliderRender)
 		m_pColliderCom->Render_ColliderBox();
 #endif // _DEBUG
 
@@ -114,7 +114,7 @@ HRESULT CInteractive_Object::SetUp_RenderState()
 
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
 	return S_OK;

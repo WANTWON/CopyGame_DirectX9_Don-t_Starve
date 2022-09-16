@@ -35,11 +35,11 @@ HRESULT CParticle::Initialize(void * pArg)
 	float positionX, positionY, positionZ;
 
 	positionX = rand() % 50;
-	positionY = 5;
+	positionY = 10;
 	positionZ = rand() % 50;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(positionX, positionY, positionZ));
 
-	m_pTransformCom->Set_Scale(0.3f, 0.3f, 1);
+	m_pTransformCom->Set_Scale(0.2f, 0.2f, 1);
 
 	return S_OK;
 }
@@ -78,7 +78,7 @@ HRESULT CParticle::Render()
 	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_StateDesc.iTextureNum)))
 		return E_FAIL;
 
 	//m_pTextureCom->MoveFrame(TEXT(""));
