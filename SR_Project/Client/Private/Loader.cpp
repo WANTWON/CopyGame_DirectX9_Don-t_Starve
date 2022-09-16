@@ -760,7 +760,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CWendy::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("Loading_UI"));
+	lstrcpy(m_szLoadingText, TEXT("Loading_UI_Object"));
 
 #pragma region Add_Prototype UI Object
 
