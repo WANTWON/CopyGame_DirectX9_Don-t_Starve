@@ -53,6 +53,9 @@ private:
 	_float m_fFollowTime = 0.f;
 	_float m_fSpecialAttackRadius;
 	_float3 m_vAttackPos = _float3(0.f, 0.f, 0.f);
+	_bool m_bStun = false;
+	_float m_fStunTime = 0.f;
+	_float m_fStunTimeLimit = 3.f;
 	
 	// Bullet Variables
 	_bool m_bShouldSpawnBullet = false;
