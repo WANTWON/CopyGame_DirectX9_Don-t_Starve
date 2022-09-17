@@ -335,7 +335,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		m_pTextureCom->MoveFrame(m_TimerTag);
 
 		m_fSpawnTime += fTimeDelta;
-		if (m_fSpawnTime > 3.f)
+		if (m_fSpawnTime > 2.f)
 		{
 			m_fSpawnTime = 0.f;
 			m_eState = STATE::IDLE;
@@ -635,6 +635,8 @@ void CBoarrior::Totem_Heal(_float fTimeDelta)
 
 			if (pTotem->Get_TotemDesc().eType == CTotem::TOTEM_TYPE::HEAL)
 			{
+				// Spawn Heal Effect on Totems
+				TotemEffectDesc.eType = CTotemEffect::TOTEM_EFFECT_TYPE::HEAL;
 				TotemEffectDesc.vInitPosition = pTotem->Get_Position();
 				TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
 				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);

@@ -146,7 +146,6 @@ HRESULT CTotemEffect::SetUp_RenderState()
 HRESULT CTotemEffect::Release_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	return S_OK;
 }
