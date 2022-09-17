@@ -50,8 +50,12 @@ namespace Client
 	typedef struct foreffect
 	{
 		_float3 pos;
+		_float dmg;
 		ITEMNAME itemname;
+
 	}Poteffect;
+
+	
 
 	typedef struct tagBulletData {
 		_bool bIsPlayerBullet;

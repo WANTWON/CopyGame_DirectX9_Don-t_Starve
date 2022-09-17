@@ -110,6 +110,7 @@
 #include "Status.h"
 #include "Skill_Icon.h"
 #include "Status_pont.h"
+#include "Dmgpont.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -1040,6 +1041,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerStatus_pont"),
 		CStatus_pont::Create(m_pGraphic_Device))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Dmg_pont"),
+		CDmgpont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 
 
 	
@@ -1931,11 +1936,20 @@ HRESULT CLoader::Loading_ForBossLevel()
 
 	/*For.Prototype_Component_Texture_Totem_Effect_Defense */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Defense"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Defense_Effect/Defend_%03d.png"), 34))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Defense_Effect/Defend_%03d.png"), 18))))
 		return E_FAIL;
+	/*For.Prototype_Component_Texture_Totem_Effect_Shield */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Shield"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Shield/Shield_%03d.png"), 18))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Texture_Totem_Effect_Heal */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Heal"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Heal_Effect/Heal_%03d.png"), 35))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_Totem_Effect_Heal_Particles */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Heal_Particles"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Heal_Particles/Heal_Particles_%03d.png"), 47))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Totem_Defense */
@@ -1952,6 +1966,9 @@ HRESULT CLoader::Loading_ForBossLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Defense_Place"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Totem_Defense/Place/Place_%03d.png"), 16))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Defense_Active"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Totem_Defense/Active/Active_%03d.png"), 11))))
+		return E_FAIL;
 #pragma endregion Add_Texture_Totem_Defense
 
 	/*For.Prototype_Component_Texture_Totem_Heal */
@@ -1967,6 +1984,9 @@ HRESULT CLoader::Loading_ForBossLevel()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Heal_Place"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Totem_Heal/Place/Place_%03d.png"), 16))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Heal_Active"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Totem_Heal/Active/Active_%03d.png"), 11))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Totem_Heal
 
@@ -2085,7 +2105,7 @@ HRESULT CLoader::Loading_ForBossLevel()
 		CBoarrior::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-/*For.Prototype_GameObject_Totem*/
+	/*For.Prototype_GameObject_Totem*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Totem"),
 		CTotem::Create(m_pGraphic_Device))))
 		return E_FAIL;

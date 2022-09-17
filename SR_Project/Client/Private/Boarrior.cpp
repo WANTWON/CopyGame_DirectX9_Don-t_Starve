@@ -339,7 +339,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		m_pTextureCom->MoveFrame(m_TimerTag);
 
 		m_fSpawnTime += fTimeDelta;
-		if (m_fSpawnTime > 3.f)
+		if (m_fSpawnTime > 2.f)
 		{
 			m_fSpawnTime = 0.f;
 			m_eState = STATE::IDLE;
@@ -607,7 +607,7 @@ Effect:
 
 void CBoarrior::Totem_Heal(_float fTimeDelta)
 {
-	if (m_fHealTimer > 5.f)
+	if (m_fHealTimer > 5.f && !m_bDead)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
@@ -619,6 +619,14 @@ void CBoarrior::Totem_Heal(_float fTimeDelta)
 		TotemEffectDesc.eType = CTotemEffect::TOTEM_EFFECT_TYPE::HEAL;
 		TotemEffectDesc.vInitPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 		TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
+
+		// Spawn Heal Effect Particles
+		TotemEffectDesc.eType = CTotemEffect::TOTEM_EFFECT_TYPE::PARTICLES;
+		_float3 vLook;
+		D3DXVec3Normalize(&vLook, &m_pTransformCom->Get_State(CTransform::STATE::STATE_LOOK));
+		TotemEffectDesc.vInitPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - vLook;
+		//TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
 
 		list<CGameObject*>* lGameObject = pGameInstance->Get_ObjectList(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Totem"));
@@ -635,9 +643,13 @@ void CBoarrior::Totem_Heal(_float fTimeDelta)
 
 			if (pTotem->Get_TotemDesc().eType == CTotem::TOTEM_TYPE::HEAL)
 			{
+				// Spawn Heal Effect on Totems
+				TotemEffectDesc.eType = CTotemEffect::TOTEM_EFFECT_TYPE::HEAL;
 				TotemEffectDesc.vInitPosition = pTotem->Get_Position();
 				TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
 				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
+
+				pTotem->Set_IsActive(true);
 			}
 		}
 
@@ -654,8 +666,6 @@ void CBoarrior::Totem_Heal(_float fTimeDelta)
 
 void CBoarrior::Check_Health_Percent()
 {
-	cout << m_tInfo.iMaxHp << " / " << m_tInfo.iCurrentHp << endl;
-
 	if (m_tInfo.iCurrentHp <= 0 || m_bDead)
 		return;
 	
@@ -1056,14 +1066,67 @@ SpawnTotem:
 _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
 	if (m_bHasDefenseBoost)
+	{
 		fDamage = fDamage / 100 * 20;
 
 	m_eShaderID = SHADER_HIT;
 
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+
+		// Spawn Shield Effect
+		CTotemEffect::TOTEMEFFECTDESC TotemEffectDesc;
+		TotemEffectDesc.eType = CTotemEffect::TOTEM_EFFECT_TYPE::SHIELD;
+		_float3 vLook;
+		D3DXVec3Normalize(&vLook, &m_pTransformCom->Get_State(CTransform::STATE::STATE_LOOK));
+		TotemEffectDesc.vInitPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - vLook;
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
+
+		// Spawn Defense Effect
+		TotemEffectDesc.eType = CTotemEffect::TOTEM_EFFECT_TYPE::DEFENSE;
+		TotemEffectDesc.vInitPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
+		TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
+
+		// Set Totem Active Animation
+		list<CGameObject*>* lGameObject = pGameInstance->Get_ObjectList(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Totem"));
+		if (!lGameObject)
+			goto ApplyDamage;
+
+		for (auto& iter = lGameObject->begin(); iter != lGameObject->end(); ++iter)
+		{
+			CTotem* pTotem = dynamic_cast<CTotem*>(*iter);
+			if (!pTotem)
+				continue;
+
+			if (pTotem->Get_TotemDesc().eType == CTotem::TOTEM_TYPE::DEFENSE)
+			{
+				TotemEffectDesc.vInitPosition = pTotem->Get_Position();
+				TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
+				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
+
+				pTotem->Set_IsActive(true);
+			}
+		}
+	}
+		
+ApplyDamage:
 	_float fDmg = __super::Take_Damage(fDamage, DamageType, DamageCauser);
 
 	if (fDmg > 0)
 	{
+		foreffect		effectdesc;
+		ZeroMemory(&effectdesc, sizeof(foreffect));
+		effectdesc.dmg = fDmg;
+		effectdesc.pos = Get_Position();
+		effectdesc.pos.z -= 0.01f;
+		//effectdesc.pos.y += 1.25f;
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dmg_pont"), LEVEL_GAMEPLAY, TEXT("Layer_dmgp"), &effectdesc)))
+			return OBJ_NOEVENT;
+
 		if (!m_bDead && m_eState != STATE::SPAWN)
 		{
 			if (m_fStaggerDamage > m_fStaggerDamageLimit)
@@ -1074,9 +1137,10 @@ _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * Da
 				m_bAggro = true;
 				m_vAttackPos = _float3(0.f, 0.f, 0.f);
 				m_dwAttackTime = GetTickCount();
-
+				m_iPattern = 0;
 				m_fStaggerDamage = 0.f;
 				m_fSpawnTime = 0.f;
+				m_fFollowTime = 0.f;
 			}
 			else
 				m_fStaggerDamage += fDamage;

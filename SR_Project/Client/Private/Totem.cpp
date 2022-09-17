@@ -247,6 +247,10 @@ HRESULT CTotem::Texture_Clone()
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_PLACE"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Defense_Place"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 10;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_ACTIVE"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Defense_Active"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 		break;
 	}
 	case TOTEM_TYPE::HEAL:
@@ -265,6 +269,10 @@ HRESULT CTotem::Texture_Clone()
 		m_vecTexture.push_back(m_pTextureCom);
 		TextureDesc.m_iEndTex = 15;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_PLACE"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Heal_Place"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 10;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_ACTIVE"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Heal_Active"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
@@ -293,6 +301,9 @@ void CTotem::Change_Motion()
 		case TOTEM_STATE::BREAK:
 			Change_Texture(TEXT("Com_Texture_BREAK"));
 			break;
+		case TOTEM_STATE::ACTIVE:
+			Change_Texture(TEXT("Com_Texture_ACTIVE"));
+			break;
 		}
 
 		m_ePreState = m_eState;
@@ -317,6 +328,10 @@ void CTotem::Change_Frame()
 	case TOTEM_STATE::BREAK:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 			m_bShouldDestroy = true;
+		break;
+	case TOTEM_STATE::ACTIVE:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_bIsActive = false;
 		break;
 	}
 }
@@ -344,7 +359,9 @@ void CTotem::AI_Behaviour(_float fTimeDelta)
 		m_eState = TOTEM_STATE::BREAK;
 	else if (m_bIsHit)
 		m_eState = TOTEM_STATE::HIT;
-	else if (m_eState != TOTEM_STATE::PLACE)
+	else if (m_bIsActive)
+		m_eState = TOTEM_STATE::ACTIVE;
+	else if (m_eState != TOTEM_STATE::PLACE || m_eState != TOTEM_STATE::ACTIVE)
 		m_eState = TOTEM_STATE::IDLE;
 }
 

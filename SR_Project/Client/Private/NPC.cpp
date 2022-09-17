@@ -71,6 +71,26 @@ _float3 CNPC::Get_Pos(void)
 	return (m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 }
 
+_bool CNPC::Get_TargetDead(void)
+{
+	if (m_pTarget != nullptr)
+	{
+		if (m_pTarget->Get_Dead() == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return true;
+	}
+
+}
+
 
 void CNPC::Free()
 {

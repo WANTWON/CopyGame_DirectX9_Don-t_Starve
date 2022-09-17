@@ -102,7 +102,7 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	if (iNum == 0)
 	{
 		texnum = ITEMNAME_WOOD;
-		item_number = 2;
+		item_number = 11;
 	}
 
 	else if (iNum == 1)
@@ -203,55 +203,62 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	auto iteminfo = pinv->Get_Mouse_iteminfo_list()->begin();
 	//Safe_Release(pinv);
 
-	if (PtInRect(&rcRect, ptMouse)) // for iteminfo
+	if (smaller == false)
 	{
-
-		m_fSizeX = 55.f;
-		m_fSizeY = 55.f;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		if (m_itemtype == ITEM_FOOD)
+		if (PtInRect(&rcRect, ptMouse)) // for iteminfo
 		{
-			(*iteminfo)->set_check(true);
-			(*iteminfo)->set_test(true);
-			(*iteminfo)->set_itemname(texnum);
-			whatnum = iNum;
+
+			m_fSizeX = 55.f;
+			m_fSizeY = 55.f;
+			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+			//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+			if (m_itemtype == ITEM_FOOD)
+			{
+				(*iteminfo)->set_check(true);
+				(*iteminfo)->set_test(true);
+				(*iteminfo)->set_itemname(texnum);
+				//whatnum = iNum;
+
+			}
+			big = true;
+		}
+		else
+		{
+			m_fSizeX = 40;
+			m_fSizeY = 40;
+			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+			(*iteminfo)->set_check(false);
+			big = false;
+			//whatnum = 30;
 		}
 	}
-	else if (iNum == whatnum && !PtInRect(&rcRect, ptMouse))
-	{
-		m_fSizeX = 40;
-		m_fSizeY = 40;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		(*iteminfo)->set_check(false);
-		whatnum = 30;
-	}
-	/*else if (whatnum >= 18)
-	(*iteminfo)->set_check(false);*/
+	
+	
 
 
 	
-
-	/*if (texnum == ITEMNAME_BAG || texnum == ITEMNAME_HELMET || texnum == ITEMNAME_AXE || texnum == ITEMNAME_SHOTTER || texnum == ITEMNAME_TORCH
-	|| texnum == ITEMNAME_STAFF || texnum == ITEMNAME_PICK || texnum == ITEMNAME_HAMBAT || texnum == ITEMNAME_ARMOR || texnum == ITEMNAME_END)
+	if (bbig == true)
 	{
-	m_bpontcheck = false;
+		m_fSizeX = 55.f;
+		m_fSizeY = 55.f;
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		bbig = false;
 	}
-	else if(texnum == carrot)
-	m_bpontcheck = true;*/
-
-
-
-
-	/*if (PtInRect(&rcRect, ptMouse))
+	
+	
+	if (smaller == true)
 	{
+		--m_fSizeX; //-= 0.3f;
+		--m_fSizeY;//-= 0.3f;
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 
-	m_fSizeX = 55.f;
-	m_fSizeY = 55.f;
-	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-	CInventory_Manager
-	}*/
+		if (m_fSizeX <= 40)
+		{
+			smaller = false;
+		}
+	}
+
+	
 
 
 
@@ -718,4 +725,12 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 	dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Add_ActStack(CPlayer::ACTION_STATE::EAT);
 	dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_bMove(false);
 	//	Safe_Release(pGameInstance);
+}
+
+void CMainInventory_front::bigbig(void)
+{
+
+	m_fSizeX = 55.f;
+	m_fSizeY = 55.f;
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 }

@@ -35,7 +35,7 @@ HRESULT CPoteffect::Initialize(void* pArg)
 		memcpy(&effectdesc, pArg, sizeof(foreffect));
 		
 	}
-
+	
 
 	//return S_OK;
 

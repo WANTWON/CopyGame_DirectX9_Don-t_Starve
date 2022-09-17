@@ -19,6 +19,8 @@ public:
 	{
 		DEFENSE,
 		HEAL,
+		PARTICLES,
+		SHIELD,
 		MAX_TYPE
 	};
 

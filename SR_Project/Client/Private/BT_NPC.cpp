@@ -53,6 +53,7 @@ void CBT_NPC::Init_Nodes()
 	BTTask_SetGoalPos = new CBTTask_SetGoalPos;
 	BTTask_Attack = new CBTTask_Attack;
 	BTTask_GetCanAttack = new CBTTask_GetCanAttack;
+	BTTask_TargetIsDead = new CBTTask_TargetIsDead;
 
 	BTTask_Fail = new CBTTask_Fail;
 	//Add in Root
@@ -77,6 +78,7 @@ void CBT_NPC::Init_Nodes()
 	Sequence_NonTarget->Add_Node(BTTask_SetRandPos);
 	Sequence_NonTarget->Add_Node(BTTask_SelectTarget);
 	//------- OnTargeting-Selector---------------
+	Selector_OnTarget->Add_Node(BTTask_TargetIsDead);
 	Selector_OnTarget->Add_Node(Sequence_OnTarget);
 	Selector_OnTarget->Add_Node(BTTask_Move);
 	//-------Ontargeting_Sequence
