@@ -64,6 +64,15 @@ public:
 	void Use_item(ITEMNAME item);
 	int get_iNum() { return iNum; }
 	_float3 get_pos() { return pos; }
+	bool get_big() { return big; }
+	void set_big(bool tof) { big = tof; }
+
+	bool get_crash() { return crash; }
+	void set_small(bool tof) { smaller = tof; }
+	void set_crash(bool tof) { crash = tof; }
+	void set_bbig(bool tof) { bbig = tof; }
+
+	void bigbig(void);
 
 private:
 	int* iNumber = nullptr;
@@ -73,7 +82,11 @@ private:
 	_uint item_number = 0;//æ∆¿Ã≈€∞πºˆ
 	bool m_bcheck = true;
 	bool m_bpontcheck = true;
-	bool m_bcheck_bag = false;
+	bool m_bcheck_bag = false;  
+	bool big = false;
+	bool crash = false;
+	bool smaller = false;
+	bool bbig = false;
 	_uint whatnum = 30;
 
 };

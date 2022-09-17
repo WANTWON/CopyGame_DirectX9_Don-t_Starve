@@ -90,6 +90,7 @@ void CItem::Interact(_uint Damage)
 	eat->set_first(true);
 	eat->set_check(true);
 	eat->set_pos(this->Get_Position());
+	eat->set_onetime(true);
 	
 	//this->Get_Position();
 
@@ -104,7 +105,7 @@ void CItem::Interact(_uint Damage)
 					pInventory_Manager->update_craftpont();
 					eat->set_way((*iter)->get_pos());
 					eat->set_texnum((*iter)->get_texnum());
-					
+					(*iter)->set_crash(true);
 					return;
 				}
 			}
@@ -120,6 +121,7 @@ void CItem::Interact(_uint Damage)
 			                 eat->set_way((*iter)->get_pos());
 			                 eat->set_texnum((*iter)->get_texnum());
 			                 pInventory_Manager->update_craftpont();
+							 (*iter)->set_crash(true);
 			                 
 
 			                 return;
@@ -142,6 +144,7 @@ void CItem::Interact(_uint Damage)
 					eat->set_way((*iter)->get_pos());
 					eat->set_texnum((*iter)->get_texnum());
 					
+					(*iter)->set_crash(true);
 					return;
 				}
 			}
@@ -157,7 +160,7 @@ void CItem::Interact(_uint Damage)
 					eat->set_texnum((*iter)->get_texnum());
 					(*iter)->set_check(true);
 					pInventory_Manager->update_craftpont();
-					
+					(*iter)->set_crash(true);
 
 					return;
 				}

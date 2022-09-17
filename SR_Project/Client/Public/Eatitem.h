@@ -34,6 +34,8 @@ public:
 	void set_way(_float3 p) { pos1 = p; }
 	void set_first(bool tof) { m_bfirst = tof; }
 
+	void set_onetime(bool tof) { onetime = tof; }
+
 
 	int get_iNum() { return iNum; }
 
@@ -68,6 +70,7 @@ private:
 	bool m_bcheck_bag = true;
 	bool m_bcheck = true;
 	bool m_Lclick = true;
+	bool onetime = false;
 	ITEMNAME texnum = ITEMNAME_END;
 
 	bool m_bfirst = false;

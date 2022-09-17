@@ -48,7 +48,16 @@ void CInventory_Manager::Tick(_float fTimeDelta)
 			(*iterfont)->set_check(true);
 		}
 
-		if ((*iterfont)->get_pontnum() % 2 == 0) //10�ڸ�
+		if ((*iter)->get_big() == false)  //�κ��丮�� ��Ʈ�� false��
+		{
+			(*iterfont)->set_big(false);//��Ʈâ�� �ȶ߰��ұ���
+		}
+		else if ((*iter)->get_big() == true)
+		{
+			(*iterfont)->set_big(true);
+		}
+
+		if ((*iterfont)->get_pontnum() % 2 == 0) //짝수번쨰폰트 (10의자리)
 		{
 			(*iterfont)->set_pont_num(((*iter)->get_item_number() % 100) / 10);      //10�� �ڸ����� 0���� �־� (0)
 
@@ -59,7 +68,7 @@ void CInventory_Manager::Tick(_float fTimeDelta)
 
 
 		}
-		else if ((*iterfont)->get_pontnum() % 2 != 0) // 1���ڸ�                 
+		else if ((*iterfont)->get_pontnum() % 2 != 0) // 홀수번쨰폰트 (1의자리)                
 		{
 			(*iterfont)->set_pont_num(((*iter)->get_item_number() % 10));
 
