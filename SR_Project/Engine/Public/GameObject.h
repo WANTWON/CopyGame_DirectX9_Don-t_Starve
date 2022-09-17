@@ -26,11 +26,16 @@ public:
 	_float3 Get_Position() { return m_vPosition; }
 	_float  Get_Radius() { return m_fRadius; }
 	_bool	Get_Dead() { return m_bDead; }
+	_float  Get_CamDistance() { return m_fCamDistance; }
 	void	Set_Dead(_bool bDead) { m_bDead = bDead; }
 	void	Set_Radius(_float _fRadius) { m_fRadius = _fRadius;}
 	void	Set_bConstruct(_bool type) { m_bConstruct = type; }
+
+
+public:
 	virtual _bool Picking(_float3* PickingPoint) { return true; }
 	virtual void PickingTrue() { return; }
+	void Compute_CamDistance(_float3 WorldPos);
 
 	//Damage Func
 	//Apply_Damage
@@ -48,6 +53,7 @@ protected:
 	_bool												m_bDead = false;
 	_bool												m_bConstruct = false;
 	_float4x4											m_CollisionMatrix;
+	_float												m_fCamDistance;
 
 protected:
 	HRESULT Add_Components(const _tchar* pComponentTag, _uint iLevelIndex, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg = nullptr);

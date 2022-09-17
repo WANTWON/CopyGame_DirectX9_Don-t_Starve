@@ -312,7 +312,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 
 	if (pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
 	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BackGround"), LEVEL_STATIC, pLayerTag, _float3(10.f, 0.5f, 5.f))))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BackGround"), LEVEL_STATIC, pLayerTag, _float3(10.f, 0.0f, 5.f))))
 			return E_FAIL;
 	}
 	else

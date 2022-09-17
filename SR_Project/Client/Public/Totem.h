@@ -28,6 +28,7 @@ public:
 		IDLE,
 		HIT,
 		BREAK,
+		ACTIVE,
 		MAX_STATE
 	};
 
@@ -87,7 +88,12 @@ private:
 	TOTEM_STATE m_eState = TOTEM_STATE::PLACE;
 	TOTEM_STATE m_ePreState = TOTEM_STATE::MAX_STATE;
 
+public:
+	void Set_IsActive(_bool bIsActive = false) { m_bIsActive = bIsActive; }
+
+private:
 	_bool m_bIsHit = false;
+	_bool m_bIsActive = false;
 	_bool m_bShouldDestroy = false;
 
 public:

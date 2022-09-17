@@ -54,7 +54,7 @@ public: /*Get & Set*/
 	_bool	Get_FirstCall(void) { return m_bFirstCall; }
 	_bool	Get_CanAttack(void) { return m_bCanAttack; }
 	_bool	Get_FightMode(void) { return m_bFightMode; }
-
+	_bool	Get_TargetDead(void);
 	//Set
 	void	Reset_Target(void) { m_pTarget = nullptr; }
 	void	Set_IsArrive(_bool _bArrive) { m_bArrive = _bArrive; }

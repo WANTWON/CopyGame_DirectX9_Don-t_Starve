@@ -67,6 +67,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 int CPlayer::Tick(_float fTimeDelta)
 {
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+		return OBJ_NOEVENT;
+
 	if (m_iPreLevelIndex != m_iCurrentLevelndex)
 	{
 		Clear_ActStack();
@@ -76,8 +80,7 @@ int CPlayer::Tick(_float fTimeDelta)
 		m_bMove = true;
 	}
 	m_iCameraMode = CCameraManager::Get_Instance()->Get_CamState();
-	if (m_iCurrentLevelndex == LEVEL_LOADING)
-		return OBJ_NOEVENT;
+	
 
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -137,7 +140,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	SetUp_BillBoard();
 
 	if (nullptr != m_pRendererCom/* && !m_bSleeping*/)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 	if (m_tStat.fCurrentHealth > m_tStat.fMaxHealth)
 	{
@@ -1385,20 +1388,16 @@ void CPlayer::Jump(_float _fTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 
-	if (m_fReviveTime > 3.f && m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 38)
 	{
-		m_bInPortal = true;
-
-		m_bMove = true;
-	}
-	else if (m_fReviveTime < 3.f && m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1)
-	{
+		m_pTextureCom->Get_Frame().m_iCurrentTex = 37;
 		if (!Check_Interact_End())
 		{
 			dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact();
 		}
 
-		m_pTextureCom->Get_Frame().m_iCurrentTex = 37;
+		//m_bInPortal = true;
+		m_bMove = false;
 	}
 
 }
@@ -1836,6 +1835,9 @@ void CPlayer::Find_Priority()
 	
 
 	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(m_iCurrentLevelndex, TEXT("Layer_Object"));
+
+	if (list_Obj == nullptr)
+		return;
 
 	_uint iIndex = 0;
 

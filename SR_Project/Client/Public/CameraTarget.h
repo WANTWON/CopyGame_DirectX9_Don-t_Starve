@@ -47,7 +47,7 @@ private:
 	class CGameObject*	m_pTarget = nullptr;
 	_bool			m_bTalkingMode = false;
 	_bool			m_bOutZoom = false;
-
+	_bool			m_bChange = false;
 
 public:
 	static CCameraTarget* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

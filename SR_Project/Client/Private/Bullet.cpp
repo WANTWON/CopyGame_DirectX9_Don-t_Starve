@@ -73,12 +73,12 @@ void CBullet::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	
+	Compute_CamDistance(Get_Position());
 
 
 	SetUp_BillBoard();
 	if (nullptr != m_pRendererCom && m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_MINES)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
@@ -216,9 +216,6 @@ HRESULT CBullet::SetUp_RenderState()
 	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
 	return S_OK;
 }
@@ -1318,7 +1315,7 @@ HRESULT CBullet::Init_Data(void)
 		break;
 
 	case WEAPON_TYPE::WEAPON_ICESMOKE:
-		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_pTransformCom->Set_Scale(1.f, 2.f, 1.f);
 		m_fDamage = 20.f;
 		Compare_Terrain();
 		break;
