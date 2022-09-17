@@ -312,7 +312,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 
 	if (pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
 	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BackGround"), LEVEL_STATIC, pLayerTag, _float3(10.f, 0.5f, 5.f))))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BackGround"), LEVEL_STATIC, pLayerTag, _float3(10.f, 0.0f, 5.f))))
 			return E_FAIL;
 	}
 	else
@@ -533,6 +533,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Deadmain"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_PlayerStatus"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skillicon"), LEVEL_STATIC, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
 	for (int i = 0; i < 2; ++i)
 	{
 		int number = i;
@@ -560,6 +572,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 
 	}
 
+	for (int i = 0; i < 4; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_PlayerStatus_pont"), LEVEL_STATIC, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	
+	
+	
+	
+
+	
+	
 	
 
 

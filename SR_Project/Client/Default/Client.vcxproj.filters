@@ -268,6 +268,9 @@
     <Filter Include="02.GameObject\00. Pawn\Totem\Totem_Effect">
       <UniqueIdentifier>{d21fe866-97e5-4dee-abee-6e7e4686b6ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\14.Status">
+      <UniqueIdentifier>{376872f1-be7c-4afe-aef9-3dda9d93fc13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -630,6 +633,15 @@
     <ClInclude Include="..\public\TotemEffect.h">
       <Filter>02.GameObject\00. Pawn\Totem\Totem_Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Status_pont.h">
+      <Filter>02.GameObject\98.UI\14.Status</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_Icon.h">
+      <Filter>02.GameObject\98.UI\14.Status</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Status.h">
+      <Filter>02.GameObject\98.UI\14.Status</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -979,6 +991,15 @@
     </ClCompile>
     <ClCompile Include="..\private\TotemEffect.cpp">
       <Filter>02.GameObject\00. Pawn\Totem\Totem_Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_Icon.cpp">
+      <Filter>02.GameObject\98.UI\14.Status</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Status.cpp">
+      <Filter>02.GameObject\98.UI\14.Status</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Status_pont.cpp">
+      <Filter>02.GameObject\98.UI\14.Status</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

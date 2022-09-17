@@ -200,7 +200,7 @@ void CTalk::Check_Quest(void)
 				if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
 				{
 					(*iter)->set_texnum(ITEMNAME_QUEST1);
-					
+
 					(*iter)->set_check(true);
 
 					break;
@@ -248,6 +248,7 @@ void CTalk::Check_Quest(void)
 			pinv->Get_Quest_list()->front()->set_texnum(5);
 
 		}
+
 		m_bActivated = false;
 	}
 
@@ -268,6 +269,33 @@ HRESULT CTalk::Excute(void)
 		{
 			m_bcheck = false;
 		}*/
+	}
+
+	else if (texnum == 33)
+	{
+		auto pinven = pinv->Get_Inven_list();
+
+		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
+		{
+
+			if ((*iter)->get_check() == false || (*iter)->get_texnum() == ITEMNAME_END)
+			{
+				(*iter)->set_texnum(ITEMNAME_QUEST2);
+
+				(*iter)->set_check(true);
+
+				break;
+			}
+
+		}
+		//pinv->Get_Quest_list()->front()->set_onoff(true);
+		//pinv->Get_Quest_list()->front()->set_texnum(5);
+		CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+		pCamera->Set_TalkingMode(false);
+		m_bcheck = false;
+		m_bTalkEnd = true;
+		pPlayer->Set_TalkMode(false);
+		pPlayer->Set_bOnlyActionKey(false);
 	}
 	else
 	{
@@ -522,6 +550,7 @@ CTalk * CTalk::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 CGameObject * CTalk::Clone(void* pArg)
 {
+
 	CTalk*	pInstance = new CTalk(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))

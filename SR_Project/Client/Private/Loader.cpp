@@ -107,7 +107,9 @@
 #include "DecoObject.h"
 #include "Mouse_Monster.h"
 #include "Monsterhp_pont.h"
-
+#include "Status.h"
+#include "Skill_Icon.h"
+#include "Status_pont.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -616,7 +618,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_MainInventory_front */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainInventory_front"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 34))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Item/item%d.png"), 35))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Equipment_back */
@@ -672,7 +674,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_talk */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_talk"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/talk/talk%d.png"), 30))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/talk/talk%d.png"), 34))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_talkwendy */
@@ -723,6 +725,28 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	/*For Prototype Component_Texture_Bossloadingscene  */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_loadingboss"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/scene2/frame_%03d_delay-0.03s.png"), 330))))
+		return E_FAIL;
+
+	/*For Prototype Component_Texture_Bossloadingscene  */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_status"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/status/status.png"), 1))))
+		return E_FAIL;
+
+	/*For Prototype Component_Texture_Skill  */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_bomb"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/skillicon/bomb_%03d.png"), 23))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_ice"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/skillicon/ice_%03d.png"), 23))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_sand"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/skillicon/sand_%03d.png"), 23))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_teleport"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/skillicon/teleport_%03d.png"), 23))))
 		return E_FAIL;
 	
 
@@ -1005,6 +1029,17 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CMonsterhp_pont::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerStatus"),
+		CStatus::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skillicon"),
+		CSkill_Icon::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerStatus_pont"),
+		CStatus_pont::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 
 	
@@ -1603,6 +1638,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For. Prototype_GameObject_Spider */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider"),
 		CSpider::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	/*For. Prototype_GameObject_Spider_Warrior */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider_Warrior"),
@@ -1895,11 +1931,20 @@ HRESULT CLoader::Loading_ForBossLevel()
 
 	/*For.Prototype_Component_Texture_Totem_Effect_Defense */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Defense"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Defense_Effect/Defend_%03d.png"), 34))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Defense_Effect/Defend_%03d.png"), 18))))
 		return E_FAIL;
+	/*For.Prototype_Component_Texture_Totem_Effect_Shield */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Shield"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Shield/Shield_%03d.png"), 18))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Texture_Totem_Effect_Heal */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Heal"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Heal_Effect/Heal_%03d.png"), 35))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_Totem_Effect_Heal_Particles */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Heal_Particles"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Heal_Particles/Heal_Particles_%03d.png"), 47))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Totem_Defense */
@@ -1916,6 +1961,9 @@ HRESULT CLoader::Loading_ForBossLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Defense_Place"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Totem_Defense/Place/Place_%03d.png"), 16))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Defense_Active"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Totem_Defense/Active/Active_%03d.png"), 11))))
+		return E_FAIL;
 #pragma endregion Add_Texture_Totem_Defense
 
 	/*For.Prototype_Component_Texture_Totem_Heal */
@@ -1931,6 +1979,9 @@ HRESULT CLoader::Loading_ForBossLevel()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Heal_Place"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Totem_Heal/Place/Place_%03d.png"), 16))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Heal_Active"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Totem_Heal/Active/Active_%03d.png"), 11))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Totem_Heal
 
@@ -2049,7 +2100,7 @@ HRESULT CLoader::Loading_ForBossLevel()
 		CBoarrior::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-/*For.Prototype_GameObject_Totem*/
+	/*For.Prototype_GameObject_Totem*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Totem"),
 		CTotem::Create(m_pGraphic_Device))))
 		return E_FAIL;

@@ -245,7 +245,7 @@ void CHouse::Spawn_Spider(_float fTimeDelta)
 	_float m_fDistanceToTarget = D3DXVec3Length(&(Get_Position() - vTargetPos));
 	if (m_fDistanceToTarget < 4.f && m_MonsterMaxCount > 0)
 	{
-		if (m_fSpawnTime < 5.f)
+		if (m_fSpawnTime < 4.f)
 			m_fSpawnTime += fTimeDelta;
 		else
 		{

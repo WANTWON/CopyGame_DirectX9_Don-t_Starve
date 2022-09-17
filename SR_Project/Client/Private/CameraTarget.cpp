@@ -71,6 +71,14 @@ int CCameraTarget::Tick(_float fTimeDelta)
 	if (FAILED(Bind_OnGraphicDev()))
 		return OBJ_NOEVENT;
 
+	if (m_bChange)
+	{
+		m_eCamMode = CAM_IDLE;
+		m_vDistance = m_vInitDistance;
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+		m_bChange = false;
+	}
+
 
 	return OBJ_NOEVENT;
 }
@@ -163,9 +171,7 @@ void CCameraTarget::OutTarget_Camera(_float fTimeDelta)
 
 	if (fabsf(vEndPosition.y - vCameraPos.y) < 0.5f && fabsf(vEndPosition.z - vCameraPos.z) < 0.5f)
 	{
-		m_eCamMode = CAM_IDLE;
-		m_vDistance = m_vInitDistance; 
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+		m_bChange = true;
 		Safe_Release(pGameInstance);
 		return;
 	}
@@ -258,9 +264,7 @@ void CCameraTarget::Return_Camera(_float fTimeDelta)
 
 	if (fabsf(vEndPosition.y - vCameraPos.y) < 0.5f && fabsf(vEndPosition.z - vCameraPos.z) < 0.5f && fabsf(vEndPosition.x - vCameraPos.x) < 0.5f)
 	{
-		m_eCamMode = CAM_IDLE;
-		m_vDistance = m_vInitDistance;
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+		m_bChange = true;
 		Safe_Release(pGameInstance);
 		return;
 	}
