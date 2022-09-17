@@ -242,7 +242,7 @@ HRESULT CTotem::Texture_Clone()
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_PLACE"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Defense_Place"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
-		TextureDesc.m_iEndTex = 11;
+		TextureDesc.m_iEndTex = 10;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_ACTIVE"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Defense_Active"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
@@ -266,7 +266,7 @@ HRESULT CTotem::Texture_Clone()
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_PLACE"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Heal_Place"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
-		TextureDesc.m_iEndTex = 11;
+		TextureDesc.m_iEndTex = 10;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_ACTIVE"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Heal_Active"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
