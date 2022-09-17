@@ -95,6 +95,11 @@ HRESULT CMonster::Render()
 	return S_OK;
 }
 
+_float3 CMonster::Get_Scale(void)
+{
+	return m_pTransformCom->Get_Scale();
+}
+
 HRESULT CMonster::SetUp_DebugComponents(void * pArg)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();

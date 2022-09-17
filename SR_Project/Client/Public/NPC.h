@@ -55,6 +55,7 @@ public: /*Get & Set*/
 	_bool	Get_CanAttack(void) { return m_bCanAttack; }
 	_bool	Get_FightMode(void) { return m_bFightMode; }
 	_bool	Get_TargetDead(void);
+	_bool	Get_CloseToOwner(void);
 	//Set
 	void	Reset_Target(void) { m_pTarget = nullptr; }
 	void	Set_IsArrive(_bool _bArrive) { m_bArrive = _bArrive; }
@@ -65,6 +66,7 @@ public: /*Get & Set*/
 	void	Set_Accept(_bool _bAccept) { m_bAccept = _bAccept; }
 	void	Set_HasOwner(_bool _bAccept) { m_bOwner = _bAccept; }
 	void	Set_Position(_float3 _vPos) { m_pTransformCom->Set_State(CTransform::STATE_POSITION, _vPos); }
+	void	Set_MoveNum(_uint _iNum) { m_MoveNum = _iNum; }
 public:/*for Actions*/
 	virtual void Interact(_uint Damage = 0) = 0;
 	virtual HRESULT Drop_Items() = 0;
@@ -93,8 +95,11 @@ protected:
 	void Update_FightMode(_float _fTimeDelta);
 protected:
 	CGameObject*	m_pTarget = nullptr;
-	CGameObject*			m_pOwner = nullptr;
+	CGameObject*	m_pOwner = nullptr;
 	//for TargetPos
+	_float	m_fOwnerRadius = 3.f;
+	_float	m_fAtkRange = 3.f;
+	_uint	m_MoveNum = 0;
 	//For RandPos
 	_float m_fPatrolRadius = 3.f;
 	_float m_fPatrolPosX = 0.f;
@@ -113,7 +118,7 @@ protected:
 	map<NPC_STATE, _bool>	m_NPCStates;
 	//Level
 	LEVEL					m_iCurrentLevelndex;
-
+	LEVEL					m_iPreLevelIndex;
 	DIR_STATE				m_eCur_Dir;
 	DIR_STATE				m_ePre_Dir;
 

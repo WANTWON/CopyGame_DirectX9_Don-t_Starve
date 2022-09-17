@@ -91,6 +91,30 @@ _bool CNPC::Get_TargetDead(void)
 
 }
 
+_bool CNPC::Get_CloseToOwner(void)
+{
+	if (!m_bOwner)
+		return false;
+
+	_float Compare_Range = (m_pOwner->Get_Position().x - Get_Pos().x)*(m_pOwner->Get_Position().x - Get_Pos().x)
+		+ (m_pOwner->Get_Position().y - Get_Pos().y)*(m_pOwner->Get_Position().y - Get_Pos().y)
+		+ (m_pOwner->Get_Position().z - Get_Pos().z)*(m_pOwner->Get_Position().z - Get_Pos().z);
+
+	if (m_fOwnerRadius > Compare_Range)
+	{
+		Clear_Activated();
+		return true;
+	}
+	else
+	{
+		m_pTarget = m_pOwner;
+		Clear_Activated();
+		return false;
+	}
+
+	return _bool();
+}
+
 
 void CNPC::Free()
 {

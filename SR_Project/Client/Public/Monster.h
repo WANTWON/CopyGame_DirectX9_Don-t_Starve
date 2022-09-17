@@ -30,6 +30,8 @@ public:
 public: // Get& Set
 	_bool Get_Aggro(void) { return m_bAggro; }
 	MONSTER_ID Get_MonsterID(void) { return m_eMonsterID; }
+	_bool Get_Hited(void) { return m_bHit; }
+	_float3 Get_Scale(void);
 protected: /* For.Components */
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;

@@ -489,6 +489,16 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Ice_Smoke"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Ice_Smoke/Ice_Smoke_%03d.png"), 27))))
 		return E_FAIL;
+
+	/*Ice_Blast_Pre*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Ice_Blast_Pre"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Ice_Blast/Ice_Blast_Pre_%03d.png"), 20))))
+		return E_FAIL;
+
+	/*Ice_Blast*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Ice_Blast"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Ice_Blast/Ice_Blast_%03d.png"), 20))))
+		return E_FAIL;
 	//BulletEnd
 	
 	/*AttackRange & Picker*/

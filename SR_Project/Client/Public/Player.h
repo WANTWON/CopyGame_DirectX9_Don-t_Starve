@@ -188,6 +188,7 @@ private: /**Actions*/
 	_bool	Check_Dead();
 	void	Setup_Collider(void);
 
+	void	Invincible_Update(_float _fTimeDelta);
 	void	Cooltime_Update(_float _fTimeDelta);
 	//ActStack
 	void	Tick_ActStack(_float fTimeDelta);
@@ -260,6 +261,8 @@ private: /*for Auto*/
 	stack<ACTION_STATE>		m_ActStack;
 
 	_bool					m_bMove = true;
+	_bool					m_bHited = false;
+	_float					m_fInvincible_Time = 0.f;
 	//only use spacebar
 	_bool					m_bOnlyActionKey = false;
 	_float					m_fInteract_Range = 0.f;

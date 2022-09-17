@@ -59,6 +59,8 @@ private:
 	void	Talk_Friend(_float _fTimeDelta);
 	void	Create_Bullet(_float _fTimeDelta);
 
+	void	MoveWithOwner(_float _fTimeDelta);
+	void	MoveWithoutOwner(_float _fTimeDelta);
 public:
 	DIR_STATE Check_Direction(void);
 private://FindPriority

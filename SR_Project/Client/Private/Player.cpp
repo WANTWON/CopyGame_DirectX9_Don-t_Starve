@@ -96,7 +96,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	}
 	//SkillCoolTime
 	Cooltime_Update(fTimeDelta);
-
+	Invincible_Update(fTimeDelta);
 	//Collider Add
 	//if (nullptr != m_pColliderCom)
 	//	m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
@@ -263,7 +263,7 @@ HRESULT CPlayer::Render()
 
 _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
-	if (m_eState != ACTION_STATE::DAMAGED || !m_bGhost)
+	if ((m_eState != ACTION_STATE::DAMAGED || !m_bGhost) && !m_bHited)
 	{
 		m_tStat.fCurrentHealth -= fDamage;
 	}
@@ -278,7 +278,7 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 		m_bAutoMode = true;
 		m_bMove = false;
 	}
-	else if (!m_bGhost && !Check_Dead())
+	else if (!m_bGhost && !Check_Dead() &&!m_bHited)
 	{
 		m_ActStack.push(ACTION_STATE::DAMAGED);
 
@@ -843,7 +843,6 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 
 		Clear_ActStack();
 		Move_Left(_fTimeDelta);
-
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(m_KeySets[INTERACTKEY::KEY_ATTACK]) && !m_bSleeping)
 	{
@@ -1353,9 +1352,10 @@ void CPlayer::Damaged(_float _fTimeDelta)
 
 	}
 
-	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iCurrentTex - 1)
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
 		m_bMove = true;
+		m_bHited = true;
 	}
 }
 
@@ -2056,6 +2056,20 @@ void CPlayer::Talk_NPC(_float _fTimeDelta)
 	case DIR_STATE::DIR_RIGHT:
 		Change_Texture(TEXT("Com_Texture_Idle_Side"));
 		break;
+	}
+
+}
+
+void CPlayer::Invincible_Update(_float _fTimeDelta)
+{
+	if (m_bHited)
+	{
+		m_fInvincible_Time += _fTimeDelta;
+		if (m_fInvincible_Time >= 2.f)
+		{
+			m_bHited = false;
+			m_fInvincible_Time = 0.f;
+		}
 	}
 
 }

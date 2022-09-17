@@ -36,6 +36,8 @@ class CBTTask_Attack;
 class CBTTask_IsFightMode;
 class CBTTask_Fail;
 class CBTTask_TargetIsDead;
+class CBTTask_Target_Hited;
+class CBTTask_Owner_Close;
 //class CBTTask_FollowTarget;
 class CBT_NPC : public CBase
 {
@@ -62,6 +64,7 @@ public:/*Selector Nodes*/
 	CSelectorNode* Selector_Main = nullptr;
 	CSelectorNode* Selector_OnOwner = nullptr;
 	CSelectorNode* Selector_NonFight = nullptr;
+	CSelectorNode* Selector_Attack = nullptr;
 public:/*Sequence Nodes*/
 	CSequenceNode* Sequence_NonTarget = nullptr;
 	CSequenceNode* Sequence_Interact_Actor = nullptr;
@@ -76,9 +79,10 @@ public:/*If_Nodes*/
 	CBTTask_IsActor* BTTask_IsActor = nullptr;
 	CBTTask_HasOwner* BTTask_HasOwner = nullptr;
 	CBTTask_TargetMoved* BTTask_IsTargetMove = nullptr;
+	CBTTask_TargetMoved* BTTask_IsNotAtkRange = nullptr;
 	CBTTask_IsFirstCall* BTTask_IsFirstCall = nullptr;
 	CBTTask_IsFightMode* BTTask_IsFightMode = nullptr;
-
+	CBTTask_Owner_Close* BTTask_IsOwner_Closed = nullptr;
 public:/*Leaf Nodes*/
 	CBTTask_SetRandPos* BTTask_SetRandPos = nullptr;
 	CBTTask_Idle* BTTask_Idle = nullptr;
@@ -94,7 +98,7 @@ public:/*Leaf Nodes*/
 	CBTTask_Attack* BTTask_Attack = nullptr;
 	CBTTask_GetCanAttack* BTTask_GetCanAttack = nullptr;
 	CBTTask_TargetIsDead* BTTask_TargetIsDead = nullptr;
-
+	CBTTask_Target_Hited* BTTask_TargetHited = nullptr;
 	//Default
 	CBTTask_Fail* BTTask_Fail = nullptr;
 private:
@@ -389,6 +393,7 @@ class CBTTask_TargetIsDead : public CNode
 		if (static_cast<CNPC*>(_Obj)->Get_Target()->Get_Dead() == true
 			|| static_cast<CNPC*>(_Obj)->Get_Target() == nullptr)
 		{
+			static_cast<CNPC*>(_Obj)->Clear_Activated();
 			static_cast<CNPC*>(_Obj)->Reset_Target();
 			return STATUS::SUCCESS;
 		}
@@ -397,6 +402,30 @@ class CBTTask_TargetIsDead : public CNode
 			return STATUS::FAIL;
 		}
 	}
+};
+
+class CBTTask_Target_Hited : public CNode
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		OBJID eID = static_cast<CPawn*>(dynamic_cast<CNPC*>(_Obj)->Get_Target())->Get_ObjID();
+
+		if (eID == OBJ_MONSTER)
+		{
+			if (static_cast<CMonster*>(dynamic_cast<CNPC*>(_Obj)->Get_Target())->Get_Hited())
+			{
+				static_cast<CNPC*>(_Obj)->Clear_Activated();
+				static_cast<CNPC*>(_Obj)->Reset_Target();
+				return STATUS::SUCCESS;
+			}
+
+		}
+		else
+		{
+			return STATUS::FAIL;
+		}
+	}
+
 };
 
 //Decorator
@@ -511,6 +540,22 @@ public:
 		}
 	}
 
+};
+
+class CBTTask_Owner_Close : public CDecorator_If
+{
+
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		if (dynamic_cast<CNPC*>(_Obj)->Get_CloseToOwner())
+		{//Sequence
+			return TrueNode->Excute(_Obj, _fTimeDelta);
+		}
+		else
+		{
+			return  FalseNode->Excute(_Obj, _fTimeDelta);
+		}
+	}
 };
 
 class CBTTask_Fail : public CNode
