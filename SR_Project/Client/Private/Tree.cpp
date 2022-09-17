@@ -155,6 +155,9 @@ HRESULT CTree::SetUp_Components(void* pArg)
 		//return E_FAIL;
 
 	Safe_Release(pGameInstance);
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
 
 	/* For.Com_Texture */
 	Texture_Clone();
@@ -214,6 +217,7 @@ HRESULT CTree::Texture_Clone()
 		m_vecTexture.push_back(m_pTextureCom);
 
 		TextureDesc.m_iEndTex = 14;
+		TextureDesc.m_fSpeed = 40;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Tall_CHOP"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Tree_Tall_CHOP"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
@@ -239,6 +243,7 @@ HRESULT CTree::Texture_Clone()
 		m_vecTexture.push_back(m_pTextureCom);
 
 		TextureDesc.m_iEndTex = 14;
+		TextureDesc.m_fSpeed = 40;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Tall_CHOP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Tree_Tall_CHOP"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);

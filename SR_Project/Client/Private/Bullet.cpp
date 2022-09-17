@@ -92,40 +92,37 @@ void CBullet::Late_Tick(_float fTimeDelta)
 
 HRESULT CBullet::Render()
 {
+	m_pTextureCom->MoveFrame(m_TimerTag);
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
+	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-		return E_FAIL;
+	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+
+	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
 
 	Render_TextureState();
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
+	m_pShaderCom->Begin(m_eShaderID);
 
 	if (m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_HAND && m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_SWORD)
 		m_pVIBufferCom->Render();
-
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
-
-	m_pTextureCom->MoveFrame(m_TimerTag);
-
-	/*if (m_pVIDebugBufferCom)
-	{
-		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-		m_pVIDebugBufferCom->Render();
-		m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	}*/
-
+	m_pShaderCom->End();
 
 #ifdef _DEBUG
 	if (g_ColliderRender)
+	{
+		m_pTextureCom->Bind_OnGraphicDev_Debug();
 		m_pColliderCom->Render_ColliderBox();
+	}
 #endif // _DEBUG
+
 
 	return S_OK;
 }
@@ -186,6 +183,10 @@ HRESULT CBullet::SetUp_Components()
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 	
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
+
 	Init_Data();
 
 	//SetUp_DebugComponents();
@@ -934,8 +935,7 @@ HRESULT CBullet::Render_TextureState()
 	{
 	case WEAPON_TYPE::WEAPON_HAND:
 	case WEAPON_TYPE::WEAPON_SWORD:
-		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
-			return E_FAIL;
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(0));
 		break;
 	case WEAPON_TYPE::WEAPON_STAFF:
 		m_pTextureCom->MoveFrame(m_TimerTag);
@@ -944,25 +944,20 @@ HRESULT CBullet::Render_TextureState()
 		switch (m_tBulletData.eDirState)
 		{
 		case DIR_STATE::DIR_UP:
-			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(1)))
-				return E_FAIL;
+			m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(1));
 			break;
 		case DIR_STATE::DIR_DOWN:
-			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
-				return E_FAIL;
+			m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(0));
 			break;
 		case DIR_STATE::DIR_RIGHT:
 		case DIR_STATE::DIR_LEFT:
-			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(2)))
-				return E_FAIL;
+			m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(2));
 			break;
 		case DIR_STATE::DIR_END:
-			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(1)))
-				return E_FAIL;
+			m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(1));
 			break;
 		default:
-			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-				return E_FAIL;
+			m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
 			break;
 		}
 	}
@@ -1060,7 +1055,7 @@ void CBullet::SetUp_BillBoard()
 {
 
 	if (m_tBulletData.eDirState == DIR_STATE::DIR_END
-		&& !m_tBulletData.eWeaponType ==WEAPON_TYPE::WEAPON_MINE)
+		&& m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_MINE)
 		return;
 
 	_float4x4		ViewMatrix;
@@ -1371,6 +1366,8 @@ void CBullet::Free()
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pColliderCom);
 
 	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_MINE)
 	{

@@ -180,6 +180,7 @@
     <ClInclude Include="..\public\Object_Manager.h" />
     <ClInclude Include="..\Public\Picking.h" />
     <ClInclude Include="..\public\Renderer.h" />
+    <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\Sound_Manager.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Timer.h" />
@@ -210,6 +211,7 @@
     <ClCompile Include="..\private\Object_Manager.cpp" />
     <ClCompile Include="..\Private\Picking.cpp" />
     <ClCompile Include="..\private\Renderer.cpp" />
+    <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\Sound_Manager.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />

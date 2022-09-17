@@ -8,12 +8,14 @@ class CVIBuffer_Rect;
 class CTransform;
 class CTexture;
 class CCollider_Cube;
+class CShader;
 END
 
 BEGIN(Client)
 class CMonster abstract : public CPawn
 {
 public:
+	
 	enum MONSTER_ID{ PIG, SPIDER, SPIDER_WARRIOR, BEARGER, BOARON, BOARRIOR, ID_END};
 protected:
 	CMonster(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -37,7 +39,7 @@ protected: /* For.Components */
 	CTransform*	m_pTransformCom = nullptr;
 	CCollider_Cube* m_pColliderCom = nullptr;
 	vector<CTexture*> m_vecTexture;
-
+	CShader*				m_pShaderCom = nullptr;
 	/* For.Debug */
 	//CVIBuffer_Rect* m_pVIDebugBufferCom = nullptr;
 
@@ -82,6 +84,8 @@ protected:
 	DWORD m_dwDeathTime = GetTickCount();
 	_bool m_bDeadAnimExpired = false;
 	MONSTER_ID	m_eMonsterID;
+	
+
 protected:
 	DIR_STATE Get_Unprocessed_Dir(DIR_STATE eDir);
 	DIR_STATE Get_Processed_Dir(DIR_STATE eDir);

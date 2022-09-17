@@ -99,6 +99,8 @@ HRESULT CPig::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
+	
+
 #ifdef _DEBUG
 	if (g_ColliderRender)
 		m_pColliderCom->Render_ColliderBox();
@@ -153,6 +155,11 @@ HRESULT CPig::SetUp_Components(void* pArg)
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
+
 
 	SetUp_DebugComponents(pArg);
 
@@ -301,13 +308,17 @@ void CPig::Change_Frame(_float fTimeDelta)
 		}
 		break;
 	case STATE::HIT:
+		m_eShaderID = SHADER_HIT;
 		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
+		{
+			m_eShaderID = SHADER_IDLE_ALPHATEST;
 			m_bHit = false;
+		}
 		break;
 	case STATE::DIE:
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 17)
@@ -430,6 +441,7 @@ _bool CPig::Picking(_float3 * PickingPoint)
 	}
 	else
 	{
+		m_eShaderID = SHADER_IDLE_ALPHATEST;
 		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 
 		auto i = pInvenManager->Get_Monsterinfo_list()->front();
@@ -464,7 +476,7 @@ void CPig::PickingTrue()
 		j->set_hp((_uint)m_tInfo.iCurrentHp);
 	}
 		
-
+	m_eShaderID = SHADER_PICKING;
 	
 
 	if (pGameInstance->Key_Up(VK_LBUTTON))

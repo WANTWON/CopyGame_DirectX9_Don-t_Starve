@@ -9,6 +9,7 @@ class CRenderer;
 class CTransform;
 class CVIBuffer_Rect;
 class CCollider_Cube;
+class CShader;
 END
 
 BEGIN(Client)
@@ -58,7 +59,7 @@ private: /* For.Components */
 	CTransform* m_pTransformCom = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 	CCollider_Cube* m_pColliderCom = nullptr;
-
+	CShader*		m_pShaderCom = nullptr;
 private:
 	void Check_Eruption(_float fTimeDelta);
 
@@ -75,7 +76,7 @@ private:
 	_float m_fWarningTime = 0.f;
 	_float m_fRandomWarningLimit = 0.f;
 	_float m_fEruptionTime = 0.f;
-
+	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
 public:
 	static CDecoObject* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

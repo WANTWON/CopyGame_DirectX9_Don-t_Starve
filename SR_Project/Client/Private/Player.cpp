@@ -220,28 +220,32 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 HRESULT CPlayer::Render()
 {
 	WEAPON_TYPE type = m_eWeaponType;
+	m_pTextureCom->MoveFrame(m_TimerTag);
 
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
+	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-		return E_FAIL;
+	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
 
+	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
 
-	m_pTextureCom->MoveFrame(m_TimerTag);
+	m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
-
-
+	m_pShaderCom->Begin(m_eShaderID);
 
 	if (!m_bSleeping)
 	{
 		m_pVIBufferCom->Render();
 	}
+	m_pShaderCom->End();
+
+	
 
 #ifdef _DEBUG
 	if (g_ColliderRender)
@@ -251,9 +255,6 @@ HRESULT CPlayer::Render()
 	}
 #endif // _DEBUG
 
-
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -302,6 +303,9 @@ HRESULT CPlayer::SetUp_Components()
 
 	m_TimerTag = TEXT("Timer_Player");
 
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
 
 
 	/* For.Com_Renderer */
@@ -360,6 +364,7 @@ HRESULT CPlayer::SetUp_Components()
 	bPicker = false;
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Picker"), LEVEL_STATIC, TEXT("Layer_Range"), &(bPicker))))
 		return E_FAIL;
+
 
 	Init_Data();
 
@@ -1035,7 +1040,11 @@ void CPlayer::Move_Left(_float _fTimeDelta)
 		if (m_bIsFPS)
 			m_pTransformCom->Go_Left(_fTimeDelta, m_fTerrain_Height);
 		else
+		{
+			//m_pTransformCom->Go_PosTarget(_fTimeDelta * .1f, _float3(Get_Position().x-3.f, Get_Position().y, Get_Position().z), _float3{ 0.f, 0.f, 0.f });
 			m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
+		}
+			
 	}
 	m_eState = ACTION_STATE::MOVE;
 	m_eDirState = DIR_STATE::DIR_LEFT;
@@ -2606,7 +2615,7 @@ HRESULT CPlayer::Change_Texture(const _tchar * LayerTag)
 
 void CPlayer::SetUp_BillBoard()
 {
-	if (m_bIsFPS && m_eDirState != DIR_STATE::DIR_RIGHT &&
+	 if(m_bIsFPS && m_eDirState != DIR_STATE::DIR_RIGHT &&
 		m_bIsFPS && m_eDirState != DIR_STATE::DIR_LEFT)
 		return;
 
@@ -2687,6 +2696,7 @@ void CPlayer::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pShaderCom);
 
 	Safe_Release(m_Equipment);
 

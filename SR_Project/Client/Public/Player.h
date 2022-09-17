@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Client_Defines.h"
 #include "Pawn.h"
 
@@ -9,6 +8,7 @@ class CRenderer;
 class CVIBuffer_Rect;
 class CTransform;
 class CCollider_Cube;
+class CShader;
 END
 
 BEGIN(Client)
@@ -219,6 +219,7 @@ private: /* For.Components */
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CCollider_Cube*			m_pColliderCom = nullptr;
+	CShader*				m_pShaderCom = nullptr;
 	//vector<CTexture*>       m_mapTexture;
 	map<const _tchar*, CTexture*> m_mapTexture;
 private: /*State*/

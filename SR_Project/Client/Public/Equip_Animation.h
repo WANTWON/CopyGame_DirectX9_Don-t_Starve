@@ -11,6 +11,7 @@ class CRenderer;
 class CVIBuffer_Rect;
 class CTransform;
 class CCollider_Manager;
+class CShader;
 END
 
 BEGIN(Client)
@@ -63,6 +64,7 @@ protected: /* For.Components */
 	CRenderer*				m_pRendererCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
+	CShader*				m_pShaderCom = nullptr;
 	vector<CTexture*>       m_vecTexture;
 protected: /*STATE*/
 	ACTION_STATE			m_eState = ACTION_STATE::IDLE;
@@ -70,6 +72,7 @@ protected: /*STATE*/
 	DIR_STATE				m_eDirState = DIR_STATE::DIR_DOWN;
 	DIR_STATE				m_ePreDirState = DIR_STATE::DIR_DOWN;
 	WEAPON_TYPE				m_eWeaponType = WEAPON_TYPE::WEAPON_SWORD;
+	SHADER_STATE			m_eShaderID = SHADER_IDLE_ALPHATEST;
 protected:/*others*/
 	const _tchar*	m_TimerTag = TEXT("");
 	_float3			m_MovePos;

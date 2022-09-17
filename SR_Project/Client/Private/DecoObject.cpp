@@ -91,24 +91,36 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 
 HRESULT CDecoObject::Render()
 {
+	m_pTextureCom->MoveFrame(m_TimerTag);
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
+	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-		return E_FAIL;
+	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
 
-	m_pTextureCom->MoveFrame(m_TimerTag);
+	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
+	m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
+
+	m_pShaderCom->Begin(m_eShaderID);
 
 	m_pVIBufferCom->Render();
+	m_pShaderCom->End();
 
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
+#ifdef _DEBUG
+	if (g_ColliderRender)
+	{
+		m_pTextureCom->Bind_OnGraphicDev_Debug();
+		m_pColliderCom->Render_ColliderBox();
+	}
+#endif // _DEBUG
+
 
 	return S_OK;
 }
@@ -128,6 +140,11 @@ void CDecoObject::FloorUpdate()
 
 HRESULT CDecoObject::SetUp_Components(void* pArg)
 {
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
+
 	/* For.Com_Texture */
 	CTexture::TEXTUREDESC TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
@@ -362,4 +379,5 @@ void CDecoObject::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pShaderCom);
 }

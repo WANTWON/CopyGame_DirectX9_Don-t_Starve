@@ -156,6 +156,9 @@ HRESULT CBearger::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
 
 	SetUp_DebugComponents(pArg);
 
@@ -399,13 +402,18 @@ void CBearger::Change_Frame(_float fTimeDelta)
 			Attack(true);
 		break;
 	case STATE::HIT:
+		m_eShaderID = SHADER_HIT;
 		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
+		{
+			m_eShaderID = SHADER_IDLE_ALPHATEST;
 			m_bHit = false;
+		}
+			
 		break;
 	case STATE::DIE:
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 49)
@@ -1028,6 +1036,7 @@ _bool CBearger::Picking(_float3 * PickingPoint)
 	{
 		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 
+		m_eShaderID = SHADER_IDLE_ALPHATEST;
 		auto i = pInvenManager->Get_Monsterinfo_list()->front();
 		auto k = pInvenManager->Get_Monsterhp_list();
 
@@ -1048,6 +1057,8 @@ void CBearger::PickingTrue()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
 	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
+
+	m_eShaderID = SHADER_PICKING;
 
 	auto i = pInvenManager->Get_Monsterinfo_list()->front();
 	auto k = pInvenManager->Get_Monsterhp_list();

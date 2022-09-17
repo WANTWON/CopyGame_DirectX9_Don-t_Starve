@@ -145,29 +145,34 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 
 HRESULT CWoodWall::Render()
 {
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
+	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
+
+	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+
+	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
 
 	if (m_eWallDesc.etype == WALL_WOOD || m_eWallDesc.etype == WALL_MAZE || m_eWallDesc.etype == WALL_BOSS)
 	{
-		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-			return E_FAIL;
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
 	}
 	else if (m_eWallDesc.etype == WALL_ROCK)
 	{
-		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
-			return E_FAIL;
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(0));
 	}
-	
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
-
-	if( m_eWallDesc.etype != WALL_END)
+	m_pShaderCom->Begin(m_eShaderID);
+	if (m_eWallDesc.etype != WALL_END)
 		m_pVIBufferCom->Render();
+	
+	m_pShaderCom->End();
 
 #ifdef _DEBUG
 
@@ -202,6 +207,9 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 
 	/* For.Com_Texture */
 	Texture_Clone();
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
 
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -463,6 +471,7 @@ void CWoodWall::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pShaderCom);
 
 	for (auto& iter : m_vecTexture)
 		Safe_Release(iter);

@@ -10,7 +10,6 @@
 #include "Mouse.h"
 
 
-
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
 {
@@ -135,6 +134,13 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), CCollider_Cube::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Shader_Rect */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), CShader::Create(m_pGraphic_Device, TEXT("../Bin/Shaderfiles/Shader_Rect.hlsl")))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), CShader::Create(m_pGraphic_Device, TEXT("../Bin/Shaderfiles/Shader_UI.hlsl")))))
+		return E_FAIL;
+	
 	return S_OK;
 }
 

@@ -9,6 +9,7 @@ class CRenderer;
 class CVIBuffer_Rect;
 class CTransform;
 class CCollider_Rect;
+class CShader;
 END
 
 BEGIN(Client)

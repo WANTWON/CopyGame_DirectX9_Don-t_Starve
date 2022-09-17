@@ -9,6 +9,7 @@ class CVIBuffer_Rect;
 class CTransform;
 class CTexture;
 class CCollider_Manager;
+class CShader;
 END
 
 
@@ -48,7 +49,8 @@ private:
 	CVIBuffer_Rect*		m_pVIBufferCom = nullptr;
 	CTexture*			m_pTextureCom = nullptr;
 	CRenderer*			m_pRendererCom = nullptr;
-
+	CShader*			m_pShaderCom = nullptr;
+	SHADER_STATE		m_eShaderID = SHADER_IDLE_ALPHABLEND;
 
 private:
 	STATEDESC			m_StateDesc;
