@@ -1638,6 +1638,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For. Prototype_GameObject_Spider */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider"),
 		CSpider::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	/*For. Prototype_GameObject_Spider_Warrior */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider_Warrior"),

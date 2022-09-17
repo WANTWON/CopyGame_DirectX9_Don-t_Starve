@@ -60,6 +60,7 @@ void CParticle::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
+	Compute_CamDistance(Get_Position());
 
 	if (m_vPosition.y < 0)
 		m_bDead = true;

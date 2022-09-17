@@ -137,7 +137,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	SetUp_BillBoard();
 
 	if (nullptr != m_pRendererCom/* && !m_bSleeping*/)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 	if (m_tStat.fCurrentHealth > m_tStat.fMaxHealth)
 	{

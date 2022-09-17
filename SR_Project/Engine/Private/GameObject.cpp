@@ -49,6 +49,19 @@ HRESULT CGameObject::Render()
 //}
 
 
+void CGameObject::Compute_CamDistance(_float3 WorldPos)
+{
+	_float4x4 ViewMatrix;
+
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	D3DXMatrixInverse(&ViewMatrix, nullptr , &ViewMatrix);
+
+	_float3 vCamPosition = *(_float3*)&ViewMatrix.m[3][0];
+
+	m_fCamDistance = D3DXVec3Length(&(vCamPosition - WorldPos));
+
+}
+
 _float CGameObject::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
 	/*
