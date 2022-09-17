@@ -1004,6 +1004,13 @@ HRESULT CBullet::Render_TextureState()
 			break;
 		}
 	}
+	if (m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_DART
+		&& m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_SWORD
+		&& m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_HAND)
+	{
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
+	}
+
 	return S_OK;
 }
 
@@ -1432,14 +1439,10 @@ void CBullet::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pColliderCom);
 
-	if (m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_MINE)
-	{
-		for (auto& iter : m_vecTexture)
-			Safe_Release(iter);
-	}
-	else {
-		Safe_Release(m_pTextureCom);
-	}
+
+	for (auto& iter : m_vecTexture)
+		Safe_Release(iter);
+
 
 	m_vecTexture.clear();
 }

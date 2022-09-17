@@ -285,6 +285,15 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 
 		m_bMove = false;
 		m_bAutoMode = true;
+
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		CGameObject* npc = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC"));
+
+		static_cast<CNPC*>(npc)->Make_Interrupt(this, 1);
+
+		Safe_Release(pGameInstance);
 	}
 
 
@@ -2040,7 +2049,6 @@ void CPlayer::Talk_NPC(_float _fTimeDelta)
 	if (m_bActivated)
 	{
 		//m_bTalkMode = true;
-
 		
 		dynamic_cast<CNPC*>(m_pTarget)->Make_Interrupt(this, 0);
 
@@ -2052,6 +2060,7 @@ void CPlayer::Talk_NPC(_float _fTimeDelta)
 		}
 		m_iTalkNum = 0;
 		m_bActivated = false;
+		m_bOnlyActionKey = true;
 	}
 	switch (m_eDirState)
 	{

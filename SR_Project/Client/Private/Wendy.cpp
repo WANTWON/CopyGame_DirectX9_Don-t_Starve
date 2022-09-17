@@ -553,7 +553,7 @@ _bool CWendy::Get_Target_Moved(_float _fTimeDelta)
 
 	if (m_pTarget == m_pOwner)
 	{//Owner
-		if (m_bFightMode)
+		if (!m_bFightMode)
 		{
 			fRange = m_fOwnerRadius;
 		}
