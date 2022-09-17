@@ -478,7 +478,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	}
 
 	if (item_number <= 0 && m_itemtype != ITEM_HAT && m_itemtype != ITEM_BAG && m_itemtype != ITEM_HAND && m_itemtype != ITEM_ARMOR
-		&& texnum != ITEMNAME_QUEST1) // 카운트가 필요한 타입들이면서 
+		&& texnum != ITEMNAME_QUEST1 && texnum != ITEMNAME_QUEST2) // 카운트가 필요한 타입들이면서 
 	{
 		m_bpontcheck = false;
 		m_bcheck = false;

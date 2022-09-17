@@ -408,6 +408,15 @@ void CLine::set_line()
 
 
 		if (iNum == 0 || iNum == 2)*/
+		if (m_bquest5 == true)
+		{
+			m_bcheck = true;
+		}
+		else
+			m_bcheck = false;
+
+
+		if (iNum == 0 || iNum == 2)
 			m_bcheck = false;
 
 

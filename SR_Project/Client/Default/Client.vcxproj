@@ -241,6 +241,7 @@
     <ClInclude Include="..\Public\Questbutton.h" />
     <ClInclude Include="..\Public\Questpont.h" />
     <ClInclude Include="..\Public\Skeleton.h" />
+    <ClInclude Include="..\Public\Skill_Icon.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\public\SpawnEffect.h" />
     <ClInclude Include="..\public\SpawnSmokeEffect.h" />
@@ -248,6 +249,8 @@
     <ClInclude Include="..\Public\Spider.h" />
     <ClInclude Include="..\Public\SpiderWarrior.h" />
     <ClInclude Include="..\Public\Startbutton.h" />
+    <ClInclude Include="..\Public\Status.h" />
+    <ClInclude Include="..\Public\Status_pont.h" />
     <ClInclude Include="..\Public\Talk.h" />
     <ClInclude Include="..\public\Tent.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -360,6 +363,7 @@
     <ClCompile Include="..\Private\Questbutton.cpp" />
     <ClCompile Include="..\Private\Questpont.cpp" />
     <ClCompile Include="..\Private\Skeleton.cpp" />
+    <ClCompile Include="..\Private\Skill_Icon.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\private\SpawnEffect.cpp" />
     <ClCompile Include="..\private\SpawnSmokeEffect.cpp" />
@@ -367,6 +371,8 @@
     <ClCompile Include="..\Private\Spider.cpp" />
     <ClCompile Include="..\Private\SpiderWarrior.cpp" />
     <ClCompile Include="..\Private\Startbutton.cpp" />
+    <ClCompile Include="..\Private\Status.cpp" />
+    <ClCompile Include="..\Private\Status_pont.cpp" />
     <ClCompile Include="..\Private\Talk.cpp" />
     <ClCompile Include="..\private\Tent.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />

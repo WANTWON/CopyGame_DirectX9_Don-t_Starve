@@ -299,6 +299,14 @@ void CPigKing::Interact(_uint Damage)
 			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
 			pinven->Get_Talk_list()->front()->Set_StartText(true);
 		}
+		else if (g_iQuestnum == 7 && success
+			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
+		{
+			pinven->Get_Talk_list()->front()->settexnum(30);
+			g_iQuestnum = 7;
+			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
+			pinven->Get_Talk_list()->front()->Set_StartText(true);
+		}
 		
 		pinven->Get_Talk_list()->front()->Excute();
 
