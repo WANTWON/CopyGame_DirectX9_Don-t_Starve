@@ -8,6 +8,7 @@ class CTexture;
 class CRenderer;
 class CTransform;
 class CVIBuffer_Terrain;
+class CShader;
 END
 
 BEGIN(Client)
@@ -49,8 +50,9 @@ private: /* For.Components */
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Terrain*		m_pVIBufferCom = nullptr;
+	CShader*				m_pShaderCom = nullptr;
 	TERRAINDESC				m_TerrainDesc;
-
+	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
 private:
 	HRESULT SetUp_Components(void* pArg);
 	HRESULT SetUp_Components(const _tchar* VIBufferTag, LEVEL TerrainLevelIndex, void* pArg = nullptr);

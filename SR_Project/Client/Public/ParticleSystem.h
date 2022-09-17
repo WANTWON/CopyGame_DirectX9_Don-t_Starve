@@ -92,7 +92,8 @@ private:
 	CTransform*			m_pTransformCom = nullptr;
 	CTexture*			m_pTextureCom = nullptr;
 	CRenderer*			m_pRendererCom = nullptr;
-
+	CShader*			m_pShaderCom = nullptr;
+	SHADER_STATE		m_eShaderID = SHADER_IDLE_ALPHABLEND;
 	STATEDESC		m_StateDesc;
 	PARTICLE_TYPE	m_eType = PARTICLE_END;
 

@@ -51,11 +51,19 @@ public:
 	void set_pont_num(int num) { texnum = num; }
 	int get_pontex() { return texnum; }
 
+	bool get_big() { return big; }
+	void set_big(bool tof) { big = tof; }
+
+	bool get_crash() { return crash; }
+	void set_crash(bool tof) { crash = tof; }
+
 private:
 	int* iNumber = nullptr;
 	int iNum = 0;
 	int texnum = 0;
 	bool m_bcheck = true;
+	bool big = false;
+	bool crash = false;
 };
 
 END

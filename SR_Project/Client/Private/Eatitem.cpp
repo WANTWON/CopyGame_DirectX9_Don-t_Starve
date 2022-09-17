@@ -87,7 +87,35 @@ int CEateffect::Tick(_float fTimeDelta)
 			mypos += vdir * 20.f; // 이거로 이동
 
 		if (pos1.y <= mypos.y)
+		{
 			m_bcheck = false;
+
+			if (onetime == true)
+			{
+				CInventory_Manager* inv = CInventory_Manager::Get_Instance();
+
+				auto k = inv->Get_Inven_list();
+
+				for (auto i : *k)
+				{
+					if (i->get_crash() == true)
+					{
+						i->set_bbig(true);
+						i->set_small(true);
+					    i->set_crash(false); //ㅁㄹ
+					}
+						
+
+
+				}
+				onetime = false;
+
+			}
+			
+				
+				
+		}
+			
 
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(mypos.x - g_iWinSizeX * 0.5f, -mypos.y + g_iWinSizeY * 0.5f, 0.f));

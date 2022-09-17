@@ -99,33 +99,37 @@ void CHouse::Late_Tick(_float fTimeDelta)
 
 HRESULT CHouse::Render()
 {
+	m_pTextureCom->MoveFrame(m_TimerTag);
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
+	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
+
+	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+
+	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
+
 
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	if (iLevel == LEVEL_HUNT && m_HouseDesc.m_eState == PIGHOUSE)
 	{
-		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(1)))
-			return E_FAIL;
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(1));
 	}
 	else
 	{
-		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
-			return E_FAIL;
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(0));
 	}
 
 	m_pTextureCom->MoveFrame(m_TimerTag);
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
-
+	m_pShaderCom->Begin(m_eShaderID);
 	m_pVIBufferCom->Render();
-
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
+	m_pShaderCom->End();
 
 	return S_OK;
 }
@@ -151,6 +155,10 @@ HRESULT CHouse::SetUp_Components(void* pArg)
 			return E_FAIL;
 		break;
 	}
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
 
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -316,4 +324,5 @@ void CHouse::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pShaderCom);
 }

@@ -157,6 +157,10 @@ HRESULT CBoarrior::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
+
 	SetUp_DebugComponents(pArg);
 
 	return S_OK;
@@ -354,7 +358,10 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
+		{
+			m_eShaderID = SHADER_IDLE_ALPHATEST;
 			m_bHit = false;
+		}
 		break;
 	case STATE::DIE:
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 74)
@@ -517,7 +524,7 @@ _bool CBoarrior::Picking(_float3 * PickingPoint)
 	else
 	{
 		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
-
+		m_eShaderID = SHADER_IDLE_ALPHATEST;
 		auto i = pInvenManager->Get_Monsterinfo_list()->front();
 		auto k = pInvenManager->Get_Monsterhp_list();
 
@@ -540,6 +547,7 @@ void CBoarrior::PickingTrue()
 
 	auto i = pInvenManager->Get_Monsterinfo_list()->front();
 	auto k = pInvenManager->Get_Monsterhp_list();
+	m_eShaderID = SHADER_PICKING;
 
 	i->set_monstername(MONSTER_BOARRIOR);
 	i->set_check(true);
@@ -1061,6 +1069,8 @@ _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * Da
 	{
 		fDamage = fDamage / 100 * 20;
 
+	m_eShaderID = SHADER_HIT;
+
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
 		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
@@ -1107,12 +1117,22 @@ ApplyDamage:
 
 	if (fDmg > 0)
 	{
+		foreffect		effectdesc;
+		ZeroMemory(&effectdesc, sizeof(foreffect));
+		effectdesc.dmg = fDmg;
+		effectdesc.pos = Get_Position();
+		effectdesc.pos.z -= 0.01f;
+		//effectdesc.pos.y += 1.25f;
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dmg_pont"), LEVEL_GAMEPLAY, TEXT("Layer_dmgp"), &effectdesc)))
+			return OBJ_NOEVENT;
+
 		if (!m_bDead && m_eState != STATE::SPAWN)
 		{
 			if (m_fStaggerDamage > m_fStaggerDamageLimit)
 			{
 				m_bHit = true;
-
+				
 				m_bIsAttacking = false;
 				m_bAggro = true;
 				m_vAttackPos = _float3(0.f, 0.f, 0.f);

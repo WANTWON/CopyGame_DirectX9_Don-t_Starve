@@ -11,6 +11,7 @@ class CRenderer;
 //class CCollider;
 class CTransform;
 class CVIBuffer_Rect;
+class CShader;
 END
 
 BEGIN(Client)

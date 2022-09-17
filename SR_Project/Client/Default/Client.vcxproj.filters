@@ -271,6 +271,12 @@
     <Filter Include="02.GameObject\98.UI\14.Status">
       <UniqueIdentifier>{376872f1-be7c-4afe-aef9-3dda9d93fc13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\15.Damagepont">
+      <UniqueIdentifier>{29671dbe-a68d-4f86-9bfa-270e7d79706c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.ShaderFiles">
+      <UniqueIdentifier>{8d7f7ea7-9831-4cda-b767-38b07e416b1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -642,6 +648,9 @@
     <ClInclude Include="..\Public\Status.h">
       <Filter>02.GameObject\98.UI\14.Status</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Dmgpont.h">
+      <Filter>02.GameObject\98.UI\15.Damagepont</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1001,6 +1010,9 @@
     <ClCompile Include="..\Private\Status_pont.cpp">
       <Filter>02.GameObject\98.UI\14.Status</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Dmgpont.cpp">
+      <Filter>02.GameObject\98.UI\15.Damagepont</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1019,5 +1031,13 @@
     <Text Include="ReadMe.txt">
       <Filter>99.Defines</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl">
+      <Filter>95.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Rect.hlsl">
+      <Filter>95.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

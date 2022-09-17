@@ -110,6 +110,7 @@
 #include "Status.h"
 #include "Skill_Icon.h"
 #include "Status_pont.h"
+#include "Dmgpont.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -1050,6 +1051,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerStatus_pont"),
 		CStatus_pont::Create(m_pGraphic_Device))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Dmg_pont"),
+		CDmgpont::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 
 
 	

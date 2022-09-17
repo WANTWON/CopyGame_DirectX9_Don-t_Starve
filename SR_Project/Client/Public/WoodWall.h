@@ -6,10 +6,10 @@
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
-class CCollider_Manager;
 class CTransform;
 class CVIBuffer_Rect;
 class CCollider_Cube;
+class CShader;
 END
 
 BEGIN(Client)
@@ -62,6 +62,7 @@ private: /*For TextureCom */
 	virtual void Change_Motion();
 
 private:
+	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
 	STATE m_eState = HEALTHY;
 	STATE m_ePreState = MAX;
 	WALLDESC m_eWallDesc;
@@ -76,6 +77,7 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 	CTransform*	m_pTransformCom = nullptr;
 	CCollider_Cube* m_pColliderCom = nullptr;
+	CShader*		m_pShaderCom = nullptr;
 
 	vector<CTexture*> m_vecTexture;
 

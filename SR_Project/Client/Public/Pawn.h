@@ -8,6 +8,7 @@ class CRenderer;
 class CTransform;
 class CVIBuffer_Rect;
 class CCollider_Rect;
+class CShader;
 END
 
 BEGIN(Client)
@@ -28,7 +29,7 @@ public:
 
 public:
 	OBJID	Get_ObjID(void) { return m_eObjID; }
-
+	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
 protected:
 	OBJID m_eObjID;
 

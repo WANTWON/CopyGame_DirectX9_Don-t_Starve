@@ -93,7 +93,7 @@ void CParticleSystem::Late_Tick(_float fTimeDelta)
 		return;
 
 	SetUp_BillBoard();
-	if (FAILED(m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this)))
+	if (FAILED(m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this)))
 		return;
 }
 
@@ -101,23 +101,26 @@ HRESULT CParticleSystem::Render()
 {
 	if (nullptr == m_pVBuffer)
 		return E_FAIL;
-
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-		return E_FAIL;
+	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
 
-	//m_pTextureCom->MoveFrame(TEXT(""), false);
+	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
+	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
 
-	if (FAILED(Render_VIBuffer()))
-		return E_FAIL;
+	m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
+
+	m_pShaderCom->Begin(m_eShaderID);
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
+	m_pShaderCom->End();
 
 	return S_OK;
 }
@@ -274,6 +277,10 @@ HRESULT CParticleSystem::SetUp_Components(void * pArg)
 	Safe_AddRef(pGameInstance);
 
 	Safe_Release(pGameInstance);
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
 
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -544,6 +551,7 @@ void CParticleSystem::Free()
 
 	Safe_Release(m_pVBuffer);
 
+	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pTransformCom);

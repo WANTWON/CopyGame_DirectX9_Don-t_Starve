@@ -8,6 +8,7 @@ class CRenderer;
 class CVIBuffer_Rect;
 class CTransform;
 class CCollider_Manager;
+class CShader;
 END
 
 BEGIN(Client)
@@ -55,7 +56,9 @@ private:/*For Components*/
 	CRenderer*				m_pRendererCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
-	//CCollider*				m_pColliderCom = nullptr;
+	CShader*				m_pShaderCom = nullptr;
+
+	SHADER_STATE			m_eShaderID = SHADER_IDLE_ALPHATEST;
 
 private: //values	
 	_bool					m_bIsPicker = false;

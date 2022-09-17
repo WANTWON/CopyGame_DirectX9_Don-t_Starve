@@ -138,7 +138,7 @@ int CPotbutton::Tick(_float fTimeDelta)
 
 					CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Poteffect"), LEVEL_HUNT, TEXT("Layer_Poteffect"), &effectdesc)))
+					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Poteffect"), LEVEL_GAMEPLAY, TEXT("Layer_Poteffect"), &effectdesc)))
 						return OBJ_NOEVENT;
 
 

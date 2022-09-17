@@ -33,61 +33,61 @@ HRESULT CPont::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, (_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 10.0f;
-	m_fSizeY = 10.0f;
-	m_fX = 300.f + (iNum * 50.f);
-	m_fY = 660.f;
+	m_fSizeX = 13.0f;
+	m_fSizeY = 15.0f;
+	m_fX = 300.f + (iNum * 12.f);
+	m_fY = 680.f;
 
 
    if (iNum == 0)
-	   m_fX = 290.f;
+	   m_fX = 295.f;
    else if (iNum == 1)
-	   m_fX = 310.f;
+	   m_fX = 308.f;
 
    else if (iNum == 2)
-	   m_fX = 340.f;
+	   m_fX = 345.f;
    else if (iNum == 3)
-	   m_fX = 360.f;
+	   m_fX = 358.f;
 
    else if (iNum == 4)
-	   m_fX = 390.f;
+	   m_fX = 395.f;
    else if (iNum == 5)
-	   m_fX = 410.f;
+	   m_fX = 408.f;
 
    else if (iNum == 6)
-	   m_fX = 440.f;
+	   m_fX = 445.f;
    else if (iNum == 7)
-	   m_fX = 460.f;
+	   m_fX = 458.f;
 
    else if (iNum == 8)
-	   m_fX = 490.f;
+	   m_fX = 495.f;
    else if (iNum == 9)
-	   m_fX = 510.f;
+	   m_fX = 508.f;
 
    else if (iNum == 10)
-	   m_fX = 540.f;
+	   m_fX = 545.f;
    else if (iNum == 11)
-	   m_fX = 560.f;
+	   m_fX = 558.f;
 
    else if (iNum == 12)
-	   m_fX = 590.f;
+	   m_fX = 595.f;
    else if (iNum == 13)
-	   m_fX = 610.f;
+	   m_fX = 608.f;
 
    else if (iNum == 14)
-	   m_fX = 640.f;
+	   m_fX = 645.f;
    else if (iNum == 15)
-	   m_fX = 660.f;
+	   m_fX = 658.f;
 
    else if (iNum == 16)
-	   m_fX = 690.f;
+	   m_fX = 695.f;
    else if (iNum == 17)
-	   m_fX = 710.f;
+	   m_fX = 708.f;
 
    else if (iNum == 18)
-	   m_fX = 740.f;
+	   m_fX = 745.f;
    else if (iNum == 19)
-	   m_fX = 760.f;
+	   m_fX = 758.f;
    
 			
 	if (FAILED(SetUp_Components()))
@@ -110,14 +110,21 @@ int CPont::Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	if (PtInRect(&rcRect, ptMouse))
+	if(big)// (PtInRect(&rcRect, ptMouse))
 	{
 
-		m_fSizeX = 35.f;
-		m_fSizeY = 35.f;
+		m_fSizeX = 16.f;
+		m_fSizeY = 18.f;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 		//set_check(true);
+	}
+	else
+	{
+		m_fSizeX = 13.f;
+		m_fSizeY = 15.f;
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 	}
 
 
@@ -138,15 +145,7 @@ void CPont::Late_Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	if (!PtInRect(&rcRect, ptMouse))
-	{
-		m_fSizeX = 20;
-		m_fSizeY = 20;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 
-
-		//ERR_MSG(L"Ãæµ¹");
-	}
 	if (nullptr != m_pRendererCom&&m_bcheck)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 

@@ -361,6 +361,7 @@ void CCollider_Cube::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pTransform);
 	Safe_Release(m_pVB);
 	Safe_Release(m_pIB);
 }

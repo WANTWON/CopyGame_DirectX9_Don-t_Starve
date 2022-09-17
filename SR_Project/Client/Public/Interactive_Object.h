@@ -8,6 +8,7 @@ class CRenderer;
 class CTransform;
 class CVIBuffer_Rect;
 class CCollider_Cube;
+class CShader;
 END
 
 BEGIN(Client)
@@ -31,7 +32,7 @@ protected: /* For.Components */
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 	CTransform*	m_pTransformCom = nullptr;
 	CCollider_Cube* m_pColliderCom = nullptr;
-
+	CShader*				m_pShaderCom = nullptr;
 	vector<CTexture*> m_vecTexture;
 
 protected:
