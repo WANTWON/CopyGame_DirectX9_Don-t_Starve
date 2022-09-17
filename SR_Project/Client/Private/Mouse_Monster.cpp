@@ -33,7 +33,7 @@ HRESULT CMouse_Monster::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 180.f;
+	m_fSizeX = 190.f;
 	m_fSizeY = 170.f;
 
 

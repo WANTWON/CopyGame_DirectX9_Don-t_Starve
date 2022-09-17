@@ -1,20 +1,22 @@
 #include "stdafx.h"
-#include "..\Public\Poteffect.h"
+#include "..\Public\Dmgpont.h"
 #include "GameInstance.h"
 #include "Inventory.h"
+#include "KeyMgr.h"
 
 
-CPoteffect::CPoteffect(LPDIRECT3DDEVICE9 pGraphic_Device)
+
+CDmgpont::CDmgpont(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CPoteffect::CPoteffect(const CPoteffect & rhs)
+CDmgpont::CDmgpont(const CDmgpont & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CPoteffect::Initialize_Prototype()
+HRESULT CDmgpont::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -22,110 +24,135 @@ HRESULT CPoteffect::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CPoteffect::Initialize(void* pArg)
+HRESULT CDmgpont::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	//mypos = (*(_float3*)pArg);
-	
-	
+
+
 	if (pArg != nullptr)
 	{
 		memcpy(&effectdesc, pArg, sizeof(foreffect));
-		
+
 	}
-	
+
 
 	//return S_OK;
+	
+	//_float3 vRight = *(_float3*)&effectdesc.pos.m[0][0];
 
 	//D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
-	
+
 
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(0.6f, 0.6f, 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, effectdesc.pos);
+	texnum = ((_uint)effectdesc.dmg % 100) / 10;
+	texnum1 =((_uint)effectdesc.dmg % 10);
+
+	pos = effectdesc.pos;
+	
+	//pos.x += 2.f;
+
+	
+	m_pTransformCom->Set_Scale(0.25f, 0.25f, 1.f);
+	m_pTransformCom1->Set_Scale(0.25f, 0.25f, 1.f);
+	
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, effectdesc.pos);d
+	
+
+	_float3 vRight;
+
+	vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+	*D3DXVec3Normalize(&vRight, &vRight);
+
+	random = rand() % 2;
+
+	//pos += (vRight * 1.f);
+
+//	m_pTransformCom1->Set_State(CTransform::STATE_POSITION, pos);d
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(mypos.x - g_iWinSizeX * 0.5f, -pos.y + g_iWinSizeY * 0.5f, 0.f));
 
 	return S_OK;
 }
 
-int CPoteffect::Tick(_float fTimeDelta)
+int CDmgpont::Tick(_float fTimeDelta)
 {
 
-	if (GetTickCount() > m_dwDeadtime + 1500)
+	if (GetTickCount() > m_dwDeadtime + 400)
 	{
 		m_dwDeadtime = GetTickCount();
 		return OBJ_DEAD;
 	}
-	
-	
+
+	_float3 vRight;
+
+	vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+	*D3DXVec3Normalize(&vRight, &vRight);
 
 
-	if (m_bcheck == true)
+
+	
+
+	if (random == 0)
 	{
-
-		
-
-		i += 0.01f;
-
-		if (i >= 1.0f)
-			i = 0.6f;
-
-		__super::Tick(fTimeDelta);
-		m_pTransformCom->Set_Scale(i, i, 1.f);
-		Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
-		//	RECT		rcRect;
-		//	SetRect(&rcRect, (int)(mypos.x - m_fSizeX * 0.5f), (int)(mypos.y - m_fSizeY * 0.5f), (int)(mypos.x + m_fSizeX * 0.5f), (int)(mypos.y + m_fSizeY * 0.5f));
-
-		//POINT		ptMouse;
-		//GetCursorPos(&ptMouse);
-		//ScreenToClient(g_hWnd, &ptMouse);
-		/*if (m_bfirst == true)
+		//effectdesc.pos.x += 0.02f;
+		effectdesc.pos += (vRight*0.02f);
+		if (GetTickCount() > m_dwDeadtime + 200)
 		{
-			_float4x4		ViewMatrix, ProjMatrix;
+			effectdesc.pos.y -= 0.02f;
 
-			m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-			D3DXVec3TransformCoord(&pos, &pos, &ViewMatrix);
+		}
+		else
+			effectdesc.pos.y += 0.02f;
+	}
+	else
 
-			m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
-			D3DXVec3TransformCoord(&pos, &pos, &ProjMatrix);
+	{
+		//effectdesc.pos.x -= 0.02f;
+		effectdesc.pos -= (vRight*0.02f);
+		if (GetTickCount() > m_dwDeadtime + 200)
+		{
+			effectdesc.pos.y -= 0.02f;
 
-			mypos.x = (float)pos.x * 640.f + 639.f;
-			mypos.y = (float)pos.y * 359.f + 359.f;
+		}
+		else
+			effectdesc.pos.y += 0.02f;
+	}
+	
+	
+		
+		
+	pos = effectdesc.pos + (vRight * 0.25f);
+	
+	
 
 
+	//pos.y = effectdesc.pos.y; 
+	 
 
-			m_bfirst = false;
-		}*/
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, effectdesc.pos);
+	m_pTransformCom1->Set_State(CTransform::STATE_POSITION, pos);
+
 
 
 	
+	
+	
 
-		
-		//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(mypos.x - g_iWinSizeX * 0.5f, -mypos.y + g_iWinSizeY * 0.5f, 0.f));
-
-
-
-
-		//if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON) && m_bcheck == true)
-		//{
-		//	m_bcheck = false;
-		//}
-	}
 
 	return OBJ_NOEVENT;
 }
 
-void CPoteffect::Late_Tick(_float fTimeDelta)
+void CDmgpont::Late_Tick(_float fTimeDelta)
 {
 	if (m_bcheck == true)
 	{
-		
+
 		__super::Late_Tick(fTimeDelta);
 		SetUp_BillBoard();
 		//RECT		rcRect;
@@ -159,7 +186,7 @@ void CPoteffect::Late_Tick(_float fTimeDelta)
 
 }
 
-HRESULT CPoteffect::Render()
+HRESULT CDmgpont::Render()
 {
 	if (m_bcheck == true)
 	{
@@ -169,13 +196,9 @@ HRESULT CPoteffect::Render()
 		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 			return E_FAIL;
 
-	//	_float4x4		ViewMatrix;
-	//	D3DXMatrixIdentity(&ViewMatrix);
+		
 
-//		m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
-	//	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
-
-		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(effectdesc.itemname)))
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
 			return E_FAIL;
 
 		if (FAILED(SetUp_RenderState()))
@@ -183,8 +206,30 @@ HRESULT CPoteffect::Render()
 
 		m_pVIBufferCom->Render();
 
+		//effectdesc.pos.x += 2.f;
+		//Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+		//m_pTransformCom->Set_State(CTransform::STATE_POSITION, effectdesc.pos);
+
+		if (FAILED(m_pTransformCom1->Bind_OnGraphicDev()))
+			return E_FAIL;
+
+
+
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum1)))
+			return E_FAIL;
+		
+		m_pVIBufferCom->Render();
+
+
+
 		if (FAILED(Release_RenderState()))
 			return E_FAIL;
+
+
+
+
+
+
 	}
 
 
@@ -193,14 +238,14 @@ HRESULT CPoteffect::Render()
 	return S_OK;
 }
 
-HRESULT CPoteffect::SetUp_Components()
+HRESULT CDmgpont::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainInventory_front"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_HpPont"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -219,10 +264,15 @@ HRESULT CPoteffect::SetUp_Components()
 		return E_FAIL;
 
 
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Transform1"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom1, &TransformDesc)))
+		return E_FAIL;
+
+
 	return S_OK;
 }
 
-HRESULT CPoteffect::SetUp_RenderState()
+HRESULT CDmgpont::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -235,7 +285,7 @@ HRESULT CPoteffect::SetUp_RenderState()
 	return S_OK;
 }
 
-void CPoteffect::SetUp_BillBoard()
+void CDmgpont::SetUp_BillBoard()
 {
 	_float4x4 ViewMatrix;
 
@@ -247,9 +297,13 @@ void CPoteffect::SetUp_BillBoard()
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+
+	m_pTransformCom1->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	m_pTransformCom1->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+    m_pTransformCom1->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
 
-HRESULT CPoteffect::Release_RenderState()
+HRESULT CDmgpont::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -257,26 +311,26 @@ HRESULT CPoteffect::Release_RenderState()
 	return S_OK;
 }
 
-CPoteffect * CPoteffect::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CDmgpont * CDmgpont::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CPoteffect*	pInstance = new CPoteffect(pGraphic_Device);
+	CDmgpont*	pInstance = new CDmgpont(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CMouse_item"));
+		ERR_MSG(TEXT("Failed to Created : CDmgpont"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CPoteffect::Clone(void* pArg)
+CGameObject * CDmgpont::Clone(void* pArg)
 {
-	CPoteffect*	pInstance = new CPoteffect(*this);
+	CDmgpont*	pInstance = new CDmgpont(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CMouse_item"));
+		ERR_MSG(TEXT("Failed to Cloned : CDmgpont"));
 		Safe_Release(pInstance);
 	}
 
@@ -286,7 +340,7 @@ CGameObject * CPoteffect::Clone(void* pArg)
 }
 
 
-void CPoteffect::Free()
+void CDmgpont::Free()
 {
 	__super::Free();
 

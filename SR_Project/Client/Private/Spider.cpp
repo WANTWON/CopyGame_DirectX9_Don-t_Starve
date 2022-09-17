@@ -529,6 +529,15 @@ _float CSpider::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 	
 	if (fDmg > 0)
 	{
+		foreffect		effectdesc;
+		ZeroMemory(&effectdesc, sizeof(foreffect));
+		effectdesc.dmg = fDmg;
+		effectdesc.pos = Get_Position();
+		effectdesc.pos.z -= 0.01f;
+		//effectdesc.pos.y += 1.25f;
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dmg_pont"), LEVEL_GAMEPLAY, TEXT("Layer_dmgp"), &effectdesc)))
+			return OBJ_NOEVENT;
 		if (!m_bDead)
 			m_bHit = true;
 
