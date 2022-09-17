@@ -93,7 +93,7 @@ void CParticleSystem::Late_Tick(_float fTimeDelta)
 		return;
 
 	SetUp_BillBoard();
-	if (FAILED(m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this)))
+	if (FAILED(m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this)))
 		return;
 }
 

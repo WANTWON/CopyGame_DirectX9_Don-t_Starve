@@ -66,7 +66,7 @@ void CParticle::Late_Tick(_float fTimeDelta)
 		m_bDead = true;
 
 	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 	SetUp_BillBoard();
 }

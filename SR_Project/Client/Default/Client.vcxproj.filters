@@ -274,6 +274,9 @@
     <Filter Include="02.GameObject\98.UI\15.Damagepont">
       <UniqueIdentifier>{29671dbe-a68d-4f86-9bfa-270e7d79706c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.ShaderFiles">
+      <UniqueIdentifier>{8d7f7ea7-9831-4cda-b767-38b07e416b1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1028,5 +1031,13 @@
     <Text Include="ReadMe.txt">
       <Filter>99.Defines</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl">
+      <Filter>95.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Rect.hlsl">
+      <Filter>95.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

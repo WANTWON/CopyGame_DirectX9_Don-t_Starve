@@ -46,7 +46,7 @@ HRESULT CBullet::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
-
+	m_eShaderID = SHADER_IDLE_ALPHABLEND;
 	return S_OK;
 }
 
@@ -74,7 +74,6 @@ void CBullet::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	Compute_CamDistance(Get_Position());
-
 
 	SetUp_BillBoard();
 	if (nullptr != m_pRendererCom && m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_MINES)
@@ -938,7 +937,7 @@ HRESULT CBullet::Render_TextureState()
 		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(0));
 		break;
 	case WEAPON_TYPE::WEAPON_STAFF:
-		m_pTextureCom->MoveFrame(m_TimerTag);
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
 		break;
 	case WEAPON_TYPE::WEAPON_DART:
 		switch (m_tBulletData.eDirState)
