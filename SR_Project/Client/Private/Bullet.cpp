@@ -1318,7 +1318,7 @@ HRESULT CBullet::Init_Data(void)
 		break;
 
 	case WEAPON_TYPE::WEAPON_ICESMOKE:
-		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_pTransformCom->Set_Scale(1.f, 2.f, 1.f);
 		m_fDamage = 20.f;
 		Compare_Terrain();
 		break;

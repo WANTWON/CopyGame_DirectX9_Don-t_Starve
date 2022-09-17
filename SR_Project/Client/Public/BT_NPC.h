@@ -35,6 +35,7 @@ class CBTTask_GetCanAttack;
 class CBTTask_Attack;
 class CBTTask_IsFightMode;
 class CBTTask_Fail;
+class CBTTask_TargetIsDead;
 //class CBTTask_FollowTarget;
 class CBT_NPC : public CBase
 {
@@ -92,7 +93,9 @@ public:/*Leaf Nodes*/
 	CBTTask_SetGoalPos* BTTask_SetGoalPos = nullptr;
 	CBTTask_Attack* BTTask_Attack = nullptr;
 	CBTTask_GetCanAttack* BTTask_GetCanAttack = nullptr;
+	CBTTask_TargetIsDead* BTTask_TargetIsDead = nullptr;
 
+	//Default
 	CBTTask_Fail* BTTask_Fail = nullptr;
 private:
 	CNPC* Actor = nullptr;
@@ -379,6 +382,23 @@ class CBTTask_Attack : public CNode
 	}
 };
 
+class CBTTask_TargetIsDead : public CNode
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		if (static_cast<CNPC*>(_Obj)->Get_Target()->Get_Dead() == true
+			|| static_cast<CNPC*>(_Obj)->Get_Target() == nullptr)
+		{
+			static_cast<CNPC*>(_Obj)->Reset_Target();
+			return STATUS::SUCCESS;
+		}
+		else
+		{
+			return STATUS::FAIL;
+		}
+	}
+};
+
 //Decorator
 class CBTTask_HasTarget : public CDecorator_If
 {
@@ -419,7 +439,7 @@ public:
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
 		OBJID eID = dynamic_cast<CPawn*>(dynamic_cast<CNPC*>(_Obj)->Get_Target())->Get_ObjID();
-		//
+		
 		if (eID == OBJID::OBJ_PLAYER)
 		{//Sequence
 			//return TrueNode->Excute(_Obj, _fTimeDelta);
@@ -437,10 +457,10 @@ public:
 				return Get_VecNodes()[1]->Excute(_Obj, _fTimeDelta);
 			}
 		}
-		//else if (eID == OBJ_OBJECT)
-		//{
-		//	return Get_VecNodes()[2]->Excute(_Obj, _fTimeDelta); //Object_Interact
-		//}
+		else if (eID == OBJ_OBJECT)
+		{
+			return Get_VecNodes()[2]->Excute(_Obj, _fTimeDelta); //Object_Interact
+		}
 	}
 };
 
