@@ -599,7 +599,7 @@ Effect:
 
 void CBoarrior::Totem_Heal(_float fTimeDelta)
 {
-	if (m_fHealTimer > 5.f)
+	if (m_fHealTimer > 5.f && !m_bDead)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
@@ -1120,6 +1120,7 @@ ApplyDamage:
 				m_iPattern = 0;
 				m_fStaggerDamage = 0.f;
 				m_fSpawnTime = 0.f;
+				m_fFollowTime = 0.f;
 			}
 			else
 				m_fStaggerDamage += fDamage;
