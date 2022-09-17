@@ -32,15 +32,21 @@ HRESULT CTotemEffect::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(m_tTotemEffectDesc.vInitPosition)))
 		return E_FAIL;
 
-	m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.f);
-
 	switch (m_tTotemEffectDesc.eType)
 	{
 	case TOTEM_EFFECT_TYPE::DEFENSE:
-		m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.f);
 		break;
 	case TOTEM_EFFECT_TYPE::HEAL:
 		m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.f);
+		break;
+	case TOTEM_EFFECT_TYPE::PARTICLES:
+		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+		break;
+	case TOTEM_EFFECT_TYPE::SHIELD:
+		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
 		break;
 	}
 
@@ -64,7 +70,8 @@ void CTotemEffect::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	//SetUp_BillBoard(); // No need
+	if (m_tTotemEffectDesc.eType == TOTEM_EFFECT_TYPE::SHIELD || m_tTotemEffectDesc.eType == TOTEM_EFFECT_TYPE::PARTICLES)
+		SetUp_BillBoard();
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -203,7 +210,7 @@ HRESULT CTotemEffect::Texture_Clone()
 	switch (m_tTotemEffectDesc.eType)
 	{
 	case TOTEM_EFFECT_TYPE::DEFENSE:
-		TextureDesc.m_iEndTex = 33;
+		TextureDesc.m_iEndTex = 17;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Defend_Effect"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Defense"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
@@ -211,6 +218,18 @@ HRESULT CTotemEffect::Texture_Clone()
 	case TOTEM_EFFECT_TYPE::HEAL:
 		TextureDesc.m_iEndTex = 34;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Heal_Effect"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Heal"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		break;
+	case TOTEM_EFFECT_TYPE::PARTICLES:
+		TextureDesc.m_iEndTex = 46;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Heal_Particles"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Heal_Particles"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		break;
+	case TOTEM_EFFECT_TYPE::SHIELD:
+		TextureDesc.m_iEndTex = 17;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Shield_Effect"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Shield"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
