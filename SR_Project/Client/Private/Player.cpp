@@ -251,7 +251,7 @@ HRESULT CPlayer::Render()
 	
 
 #ifdef _DEBUG
-	if (g_ColliderRender)
+	if (g_ColliderRender && m_pColliderCom != nullptr)
 	{
 		m_pTextureCom->Bind_OnGraphicDev_Debug();
 		m_pColliderCom->Render_ColliderBox();
