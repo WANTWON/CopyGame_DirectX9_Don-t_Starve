@@ -25,6 +25,7 @@ void CBT_NPC::Init_Nodes()
 	Selector_OnOwner = new CSelectorNode;
 	Selector_NonFight = new CSelectorNode;
 	Selector_Attack = new CSelectorNode;
+	//Selector_Skill = new CSelectorNode;
 	//Init Sequence
 	Sequence_NonTarget = new CSequenceNode;
 	Sequence_Interact_Actor = new CSequenceNode;
@@ -32,6 +33,7 @@ void CBT_NPC::Init_Nodes()
 	Sequence_Attack = new CSequenceNode;
 	Sequence_MoveToTarget = new CSequenceNode; // TODO: Add TargetMove, Move, IsArrive
 	Sequence_Fight = new CSequenceNode;
+	Sequence_Skill = new CSequenceNode;
 	//Init Decorator
 	BTTask_HasTarget = new CBTTask_HasTarget;
 	BTTask_HasEnemy = new CBTTask_HasTarget;
@@ -40,8 +42,11 @@ void CBT_NPC::Init_Nodes()
 	BTTask_IsFirstCall = new CBTTask_IsFirstCall;
 	BTTask_IsFightMode = new CBTTask_IsFightMode;
 	BTTask_IsTargetMove = new CBTTask_TargetMoved;
-	BTTask_IsNotAtkRange = new CBTTask_TargetMoved;
-	BTTask_IsOwner_Closed = new CBTTask_Owner_Close;
+
+	BTTask_IsOwner_Closed = new CBTTask_TargetMoved;
+
+	BTTask_IsSkillRange = new CBTTask_TargetSkillRange;
+	BTTask_IsAtkRange = new CBTTask_TargetAtkRange;
 	//Init Leaf
 	BTTask_SetRandPos = new CBTTask_SetRandPos;
 	BTTask_Idle = new CBTTask_Idle;
@@ -59,6 +64,8 @@ void CBT_NPC::Init_Nodes()
 	BTTask_TargetIsDead = new CBTTask_TargetIsDead;
 	BTTask_TargetHited = new CBTTask_Target_Hited;
 	BTTask_Fail = new CBTTask_Fail;
+	BTTask_GetCanSkill = new CBTTask_GetCanSkill;
+	BTTask_Skill = new CBTTask_Skill;
 	//Add in Root
 	Root->Add_Node(Selector_Main);
 	//Select_Main
@@ -77,9 +84,11 @@ void CBT_NPC::Init_Nodes()
 	BTTask_IsFirstCall->Set_DecoratorNodes(Sequence_Interact_Actor, nullptr);
 	BTTask_IsFightMode->Set_DecoratorNodes(BTTask_IsOwner_Closed, Selector_NonFight);
 	//Owner_Close_Deco
-	BTTask_IsOwner_Closed->Set_DecoratorNodes(Sequence_Fight, BTTask_IsTargetMove);
-	//IsTargetMove_Deco
-	BTTask_IsNotAtkRange->Set_DecoratorNodes(BTTask_Move, Sequence_Attack);
+	BTTask_IsOwner_Closed->Set_DecoratorNodes( BTTask_IsTargetMove, Sequence_Fight);
+	//IsTargetAttakRange_Deco
+	BTTask_IsAtkRange->Set_DecoratorNodes(Sequence_Attack, BTTask_Move);
+	//IsSkillRange
+	BTTask_IsSkillRange->Set_DecoratorNodes(BTTask_Skill, BTTask_Move);
 	//Add InSequence_NoneTarget 
 	Sequence_NonTarget->Add_Node(BTTask_Idle);
 	Sequence_NonTarget->Add_Node(BTTask_Move);
@@ -91,8 +100,13 @@ void CBT_NPC::Init_Nodes()
 	Selector_OnTarget->Add_Node(Sequence_OnTarget);
 	Selector_OnTarget->Add_Node(BTTask_Move);
 	//------Attack_Selector
-	Selector_Attack->Add_Node(BTTask_IsNotAtkRange);
+	Selector_Attack->Add_Node(Sequence_Skill);
+	Selector_Attack->Add_Node(BTTask_IsAtkRange);
 	Selector_Attack->Add_Node(BTTask_Idle);
+
+	//------Attack_Selector
+	//Selector_Skill->Add_Node(BTTask_TargetSkillRange);
+	//Selector_Skill->Add_Node(BTTask_Idle);
 	//-------Ontargeting_Sequence
 	Sequence_OnTarget->Add_Node(BTTask_Arrive);
 	Sequence_OnTarget->Add_Node(BTTask_IsActor);
@@ -119,7 +133,10 @@ void CBT_NPC::Init_Nodes()
 	//----Sequence_Fight
 	Sequence_Fight->Add_Node(BTTask_SelectTarget);
 	Sequence_Fight->Add_Node(BTTask_HasEnemy);
-	//------
+
+	//------Sequence_Skill
+	Sequence_Skill->Add_Node(BTTask_GetCanSkill);
+	Sequence_Skill->Add_Node(BTTask_IsSkillRange);
 	//-----Sequence_FollowOwne------
 	//Sequence_FollowOwner->Add_Node(BTTask_SelectTarget);
 	//Sequence_FollowOwner->Add_Node(BTTask_Move);

@@ -2644,8 +2644,8 @@ void CPlayer::SetUp_BillBoard()
 		m_bIsFPS && m_eDirState != DIR_STATE::DIR_LEFT)
 		return;
 
-	if (!m_bIsFPS && m_eDirState == DIR_STATE::DIR_LEFT)
-		return;
+	/*if (!m_bIsFPS && m_eDirState == DIR_STATE::DIR_LEFT)
+		return;*/
 	_float4x4 ViewMatrix;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix
@@ -2656,6 +2656,11 @@ void CPlayer::SetUp_BillBoard()
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+
+	if (!m_bIsFPS && m_eDirState == DIR_STATE::DIR_LEFT)
+	{
+		m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
+	}
 }
 
 void CPlayer::WalkingTerrain()

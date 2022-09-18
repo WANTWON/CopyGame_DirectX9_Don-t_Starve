@@ -38,6 +38,10 @@ class CBTTask_Fail;
 class CBTTask_TargetIsDead;
 class CBTTask_Target_Hited;
 class CBTTask_Owner_Close;
+class CBTTask_TargetAtkRange;
+class CBTTask_TargetSkillRange;
+class CBTTask_GetCanSkill;
+class CBTTask_Skill;
 //class CBTTask_FollowTarget;
 class CBT_NPC : public CBase
 {
@@ -65,6 +69,7 @@ public:/*Selector Nodes*/
 	CSelectorNode* Selector_OnOwner = nullptr;
 	CSelectorNode* Selector_NonFight = nullptr;
 	CSelectorNode* Selector_Attack = nullptr;
+	CSelectorNode* Selector_Skill = nullptr;
 public:/*Sequence Nodes*/
 	CSequenceNode* Sequence_NonTarget = nullptr;
 	CSequenceNode* Sequence_Interact_Actor = nullptr;
@@ -72,6 +77,7 @@ public:/*Sequence Nodes*/
 	CSequenceNode* Sequence_Attack = nullptr; 
 	CSequenceNode* Sequence_MoveToTarget = nullptr;
 	CSequenceNode* Sequence_Fight = nullptr;
+	CSequenceNode*Sequence_Skill = nullptr;
 	//CSequenceNode* Sequence_OnTarget = nullptr;
 public:/*If_Nodes*/
 	CBTTask_HasTarget* BTTask_HasTarget = nullptr;
@@ -79,10 +85,11 @@ public:/*If_Nodes*/
 	CBTTask_IsActor* BTTask_IsActor = nullptr;
 	CBTTask_HasOwner* BTTask_HasOwner = nullptr;
 	CBTTask_TargetMoved* BTTask_IsTargetMove = nullptr;
-	CBTTask_TargetMoved* BTTask_IsNotAtkRange = nullptr;
+	CBTTask_TargetSkillRange* BTTask_IsSkillRange = nullptr;
+	CBTTask_TargetAtkRange* BTTask_IsAtkRange = nullptr;
 	CBTTask_IsFirstCall* BTTask_IsFirstCall = nullptr;
 	CBTTask_IsFightMode* BTTask_IsFightMode = nullptr;
-	CBTTask_Owner_Close* BTTask_IsOwner_Closed = nullptr;
+	CBTTask_TargetMoved* BTTask_IsOwner_Closed = nullptr; //CBTTask_Owner_Close class 삭제할것
 public:/*Leaf Nodes*/
 	CBTTask_SetRandPos* BTTask_SetRandPos = nullptr;
 	CBTTask_Idle* BTTask_Idle = nullptr;
@@ -99,6 +106,8 @@ public:/*Leaf Nodes*/
 	CBTTask_GetCanAttack* BTTask_GetCanAttack = nullptr;
 	CBTTask_TargetIsDead* BTTask_TargetIsDead = nullptr;
 	CBTTask_Target_Hited* BTTask_TargetHited = nullptr;
+	CBTTask_GetCanSkill* BTTask_GetCanSkill = nullptr;
+	CBTTask_Skill* BTTask_Skill = nullptr;
 	//Default
 	CBTTask_Fail* BTTask_Fail = nullptr;
 private:
@@ -386,6 +395,49 @@ class CBTTask_Attack : public CNode
 	}
 };
 
+class CBTTask_GetCanSkill : public CNode
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+
+		if (dynamic_cast<CNPC*>(_Obj)->Get_CanSkill() 
+			&& dynamic_cast<CNPC*>(_Obj)->Find_Activated() == CNPC::STATE_END
+			|| dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::SKILL) == true)
+		{
+			return STATUS::SUCCESS;
+		}
+		else
+		{
+			return STATUS::FAIL;
+		}
+	}
+};
+
+class CBTTask_Skill : public CNode
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		if (!dynamic_cast<CNPC*>(_Obj)->Get_CanInteract()
+			&& dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::SKILL) == true)
+		{
+			dynamic_cast<CNPC*>(_Obj)->Reset_Target();
+			dynamic_cast<CNPC*>(_Obj)->Set_Activate(CNPC::SKILL, false);
+			return STATUS::SUCCESS;
+		}
+		else if (dynamic_cast<CNPC*>(_Obj)->Get_CanInteract()
+			&& dynamic_cast<CNPC*>(_Obj)->Find_Activated() == CNPC::STATE_END
+			|| dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::SKILL) == true)
+		{
+			dynamic_cast<CNPC*>(_Obj)->Set_Activate(CNPC::SKILL, true);
+			dynamic_cast<CNPC*>(_Obj)->Skill(_fTimeDelta);
+			return STATUS::RUNNING;
+		}
+		else {
+			return STATUS::NOT_STARTED;
+		}
+	}
+};
+
 class CBTTask_TargetIsDead : public CNode
 {
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
@@ -428,6 +480,8 @@ class CBTTask_Target_Hited : public CNode
 
 };
 
+
+
 //Decorator
 class CBTTask_HasTarget : public CDecorator_If
 {
@@ -446,11 +500,41 @@ public:
 
 };
 
+class CBTTask_TargetAtkRange : public CDecorator_If
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		if (!dynamic_cast<CNPC*>(_Obj)->Get_Target_Moved(_fTimeDelta, 1))
+		{
+			return TrueNode->Excute(_Obj, _fTimeDelta);
+		}
+		else
+		{
+			return FalseNode->Excute(_Obj, _fTimeDelta);
+		}
+	}
+};
+
+class CBTTask_TargetSkillRange : public CDecorator_If
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		if (!dynamic_cast<CNPC*>(_Obj)->Get_Target_Moved(_fTimeDelta, 2))
+		{
+			return TrueNode->Excute(_Obj, _fTimeDelta);
+		}
+		else
+		{
+			return FalseNode->Excute(_Obj, _fTimeDelta);
+		}
+	}
+};
+
 class CBTTask_TargetMoved : public CDecorator_If
 {
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
-		if (dynamic_cast<CNPC*>(_Obj)->Get_Target_Moved(_fTimeDelta))
+		if (dynamic_cast<CNPC*>(_Obj)->Get_Target_Moved(_fTimeDelta, 0))
 		{
 			return TrueNode->Excute(_Obj, _fTimeDelta);
 		}
