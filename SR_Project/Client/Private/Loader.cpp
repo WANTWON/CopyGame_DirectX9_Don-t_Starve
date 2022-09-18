@@ -1943,14 +1943,9 @@ HRESULT CLoader::Loading_ForBossLevel()
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture"));
 
-	/*For.Prototype_Component_Texture_RockEffect */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Rock"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Roc.png"), 1))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_LeafEffect */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Leaf"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 7))))
+	/*For.Prototype_Component_Texture_Magma */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Magma"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/magma-%d.png"), 1))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Spawner */
@@ -2232,7 +2227,7 @@ HRESULT CLoader::Loading_ForMazeLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/fff-%d.png"), 7))))
 		return E_FAIL;
 
-	/*For.Prototype_Component_Texture_LeafEffect */
+	/*For.Prototype_Component_Texture_Snow */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Snow"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Snow-%d.png"), 4))))
 		return E_FAIL;
