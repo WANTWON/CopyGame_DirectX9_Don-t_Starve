@@ -74,8 +74,20 @@ HRESULT CTerrain::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
+	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix, PlayerMatrix;
 
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"), 0);
+	if (nullptr == pTransform_Terrain)
+		return E_FAIL;
+
+	PlayerMatrix= *D3DXMatrixTranspose(&WorldMatrix, &pTransform_Terrain->Get_WorldMatrix());
+
+	_float3  fPlayerPosition = pTarget->Get_Position();
+	m_pShaderCom->Set_RawValue("g_PlayerPosition", &fPlayerPosition, sizeof(_float3));
+	m_pShaderCom->Set_RawValue("g_PlayerWorldMatrix", &PlayerMatrix, sizeof(_float4x4));
+	
 	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
@@ -100,7 +112,7 @@ HRESULT CTerrain::SetUp_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Terrain"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom)))

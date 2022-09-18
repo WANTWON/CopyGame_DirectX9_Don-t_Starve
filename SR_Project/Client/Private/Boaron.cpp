@@ -83,7 +83,7 @@ HRESULT CBoaron::Render()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	if (g_ColliderRender)
+	if (g_ColliderRender &&  m_pColliderCom != nullptr)
 		m_pColliderCom->Render_ColliderBox();
 #endif // _DEBUG
 

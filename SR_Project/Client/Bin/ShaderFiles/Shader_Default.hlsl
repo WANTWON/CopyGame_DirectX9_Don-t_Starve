@@ -19,6 +19,7 @@
 
 // float4x4, float3x3, float1x3, matrix
 
+float			g_Distance;
 float4x4		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture			g_Texture;
 bool			g_isColl;
@@ -71,6 +72,7 @@ struct PS_IN
 	float4 vPosition : POSITION;
 	float2 vTexUV : TEXCOORD0;
 	float3 vWorldPos : TEXCOORD1;
+
 };
 
 struct PS_OUT
@@ -101,6 +103,17 @@ PS_OUT PS_PICKING(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vColor = tex2D(TextureSampler, In.vTexUV);
 	Out.vColor.rgb += float3(0.2, 0.2, 0.2);
+	return Out;
+}
+
+PS_OUT PS_DEAD(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor = tex2D(TextureSampler, In.vTexUV);
+	Out.vColor.gb = Out.vColor.r;
+
+	Out.vColor.rgb -= g_Distance*0.05f;
+
 	return Out;
 }
 
@@ -148,4 +161,15 @@ technique		DefaultTechnique
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_PICKING();
 	}
+
+	pass Dead
+	{
+		AlphaTestEnable = TRUE;
+		AlphaFunc = greater;
+		AlphaRef = 40;
+		CULLMODE = NONE;
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_DEAD();
+	}
 }
+

@@ -176,7 +176,7 @@ HRESULT CWoodWall::Render()
 
 #ifdef _DEBUG
 
-	if (g_ColliderRender)
+	if (g_ColliderRender &&  m_pColliderCom != nullptr)
 	{
 		if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct() == false)
 		{

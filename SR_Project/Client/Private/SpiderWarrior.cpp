@@ -95,7 +95,7 @@ HRESULT CSpiderWarrior::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	if(g_ColliderRender)
+	if(g_ColliderRender  && m_pColliderCom != nullptr)
 		m_pColliderCom->Render_ColliderBox();
 
 	return S_OK;
