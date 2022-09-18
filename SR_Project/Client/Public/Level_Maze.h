@@ -36,7 +36,7 @@ private:
 	_bool m_bFirst = false;
 	_bool m_bTargetCam = false;
 	_bool m_bFlowerPicked = false;
-
+	_bool m_bPlayerCam = false;
 
 public:
 	static CLevel_Maze* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

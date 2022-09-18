@@ -91,7 +91,7 @@ HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	pPlayer->Set_Position(_float3(7.3, 0.5f, 43.f));
+	pPlayer->Set_Position(_float3(9.0, 0.5f, 7.f));
 
 	Safe_Release(pGameInstance);
 
@@ -145,7 +145,7 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
-	PortalDesc.vPosition = _float3(7.5f, 2.f, 45.f);
+	PortalDesc.vPosition = _float3(9.0f, 2.f, 8.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, pLayerTag, &PortalDesc)))
 		return E_FAIL;
@@ -176,7 +176,7 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Carrot_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	/*hFile = CreateFile(TEXT("../Bin/Resources/Data/Carrot_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -189,7 +189,7 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_MAZE, pLayerTag, ObjectPos);
 	}
-	CloseHandle(hFile);
+	CloseHandle(hFile);*/
 
 
 
@@ -275,18 +275,21 @@ void CLevel_Maze::Update_Camera_Motion()
 			m_bFlowerPicked = false;
 		}
 	}
-	else if ((pGameObject->Get_Position().x < 31 && pGameObject->Get_Position().z < 28) &&
-		(pGameObject->Get_Position().x > 18 && pGameObject->Get_Position().z > 21))
-	{
-		dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(false);
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
-		
-	}
-	else if (pGameObject->Get_Position().x > 12 || pGameObject->Get_Position().z < 40)
+
+
+	if (pGameObject->Get_Position().x > 19 && pGameObject->Get_Position().z > 0.5 &&
+		pGameObject->Get_Position().x < 29 && pGameObject->Get_Position().z < 13 )
 	{
 		dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(true);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_FPS);
+		m_bPlayerCam = true;
 	
+	}
+	else if (m_bPlayerCam)
+	{
+		dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(false);
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+		m_bPlayerCam = false;
 	}
 	
 
