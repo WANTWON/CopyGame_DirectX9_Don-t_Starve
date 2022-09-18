@@ -76,6 +76,7 @@ private:
 	bool m_bcheck_bag = true;
 	bool m_bcheck = true;
 	bool m_Lclick = true;
+	bool one = false;
 	
 	_uint texnum = 0;
 	_uint texnum1 = 0;

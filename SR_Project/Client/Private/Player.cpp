@@ -281,13 +281,18 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 	}
 	else if (!m_bGhost && !Check_Dead() &&!m_bHited)
 	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"))))
+			return OBJ_NOEVENT;
+
 		m_ActStack.push(ACTION_STATE::DAMAGED);
 
 		m_bMove = false;
 		m_bAutoMode = true;
 
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
+		
 
 		CGameObject* npc = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC"));
 

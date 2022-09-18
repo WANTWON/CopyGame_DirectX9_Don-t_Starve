@@ -7,16 +7,17 @@ class CTexture;
 class CRenderer;
 class CTransform;
 class CVIBuffer_Rect;
+class CShader;
 END
 
 BEGIN(Client)
 
-class CPont final : public CGameObject
+class CScreenEffect final : public CGameObject
 {
 private:
-	CPont(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CPont(const CPont& rhs);
-	virtual ~CPont() = default;
+	CScreenEffect(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CScreenEffect(const CScreenEffect& rhs);
+	virtual ~CScreenEffect() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -30,45 +31,26 @@ private: /* For.Components */
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
-
+	CShader*				m_pShaderCom = nullptr;
+	UI_SHADER_STATE			m_eShaderID = UI_SHADER_SCREEN;
 private:
 	_float4x4				m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
+	_float alpha = 0.f;
 
+	DWORD m_dwDeadtime = GetTickCount();
 private:
 	HRESULT SetUp_Components();
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 
+	_uint texnum = 0;
+	_uint m_ihp;
+
 public:
-	static CPont* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CScreenEffect* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
-
-	bool get_check() { return m_bcheck; }
-	void set_check(bool tof) { m_bcheck = tof; }
-	int get_pontnum() { return iNum; }
-	void set_pont_num(int num) { texnum = num; }
-	int get_pontex() { return texnum; }
-
-	bool get_big() { return big; }
-	void set_big(bool tof) { big = tof; }
-
-	bool get_crash() { return crash; }
-	void set_crash(bool tof) { crash = tof; }
-
-	void set_bbig(bool tof) { bbig = tof; }
-	void set_small(bool tof) { smaller = tof; }
-
-private:
-	int* iNumber = nullptr;
-	int iNum = 0;
-	int texnum = 0;
-	bool m_bcheck = true;
-	bool big = false;
-	bool crash = false;
-	bool smaller = false;
-	bool bbig = false;
 };
 
 END

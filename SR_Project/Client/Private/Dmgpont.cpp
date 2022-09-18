@@ -53,6 +53,11 @@ HRESULT CDmgpont::Initialize(void* pArg)
 	texnum = ((_uint)effectdesc.dmg % 100) / 10;
 	texnum1 =((_uint)effectdesc.dmg % 10);
 
+	if (effectdesc.dmg < 10)
+	{
+		one = true;
+	}
+
 	pos = effectdesc.pos;
 	
 	//pos.x += 2.f;
@@ -197,14 +202,17 @@ HRESULT CDmgpont::Render()
 			return E_FAIL;
 
 		
+		if (one == false)
+		{
+			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+				return E_FAIL;
 
-		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
-			return E_FAIL;
+			if (FAILED(SetUp_RenderState()))
+				return E_FAIL;
 
-		if (FAILED(SetUp_RenderState()))
-			return E_FAIL;
-
-		m_pVIBufferCom->Render();
+			m_pVIBufferCom->Render();
+		}
+		
 
 		//effectdesc.pos.x += 2.f;
 		//Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
