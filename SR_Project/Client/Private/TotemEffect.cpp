@@ -2,6 +2,8 @@
 #include "TotemEffect.h"
 #include "GameInstance.h"
 #include "PickingMgr.h"
+#include "Collider_Cube.h"
+#include "Transform.h"
 
 CTotemEffect::CTotemEffect(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -59,6 +61,9 @@ int CTotemEffect::Tick(_float fTimeDelta)
 
 	if (m_bDead)
 		return OBJ_DEAD;
+
+	// If Effect has Target
+	Stick_ToTarget();
 
 	//WalkingTerrain(); // No need
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -224,7 +229,8 @@ HRESULT CTotemEffect::Texture_Clone()
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
 	case TOTEM_EFFECT_TYPE::PARTICLES:
-		TextureDesc.m_iEndTex = 46;
+		TextureDesc.m_iEndTex = 45;
+		TextureDesc.m_fSpeed = 20;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Heal_Particles"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Heal_Particles"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
@@ -244,6 +250,51 @@ void CTotemEffect::Change_Frame()
 {
 	if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 		m_bDead = true;
+}
+
+void CTotemEffect::Stick_ToTarget()
+{
+	if (m_tTotemEffectDesc.pEffectTarget)
+	{
+		CComponent* pComponent = m_tTotemEffectDesc.pEffectTarget->Find_Component(TEXT("Com_Collider_Cube"));
+		if (!pComponent)
+			return;
+
+		CCollider_Cube* pColliderCube = dynamic_cast<CCollider_Cube*>(pComponent);
+		if (!pColliderCube)
+			return;
+
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+
+		_float3 vTargetPosition;
+
+		if (m_tTotemEffectDesc.eType == TOTEM_EFFECT_TYPE::DEFENSE || m_tTotemEffectDesc.eType == TOTEM_EFFECT_TYPE::HEAL)
+		{
+			vTargetPosition = (_float3)pColliderCube->Get_CollRectDesc().StateMatrix.m[3];
+			vTargetPosition.y = pVIBuffer_Terrain->Compute_Height(vTargetPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
+
+			m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, vTargetPosition);
+		}
+		else if (m_tTotemEffectDesc.eType == TOTEM_EFFECT_TYPE::SHIELD || m_tTotemEffectDesc.eType == TOTEM_EFFECT_TYPE::PARTICLES)
+		{
+			CComponent* pComponent = m_tTotemEffectDesc.pEffectTarget->Find_Component(TEXT("Com_Transform"));
+			if (!pComponent)
+				return;
+
+			CTransform* pTransform = dynamic_cast<CTransform*>(pComponent);
+			if (!pTransform)
+				return;
+
+			_float3 vLook;
+			D3DXVec3Normalize(&vLook, &pTransform->Get_State(CTransform::STATE::STATE_LOOK));
+			vTargetPosition = (_float3)pColliderCube->Get_CollRectDesc().StateMatrix.m[3] - vLook;
+
+			m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, vTargetPosition);
+		}
+	}
 }
 
 CTotemEffect* CTotemEffect::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

@@ -27,6 +27,7 @@ public:
 	typedef struct TotemEffectDescription
 	{
 		TOTEM_EFFECT_TYPE eType = TOTEM_EFFECT_TYPE::MAX_TYPE;
+		CGameObject* pEffectTarget = nullptr;
 		_float3 vInitPosition = _float3(0.f, 0.f, 0.f);
 	}TOTEMEFFECTDESC;
 
@@ -66,6 +67,9 @@ private:
 
 
 	vector<CTexture*> m_vecTexture;
+
+private:
+	void Stick_ToTarget();
 
 private:
 	TOTEMEFFECTDESC m_tTotemEffectDesc;

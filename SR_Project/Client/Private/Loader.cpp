@@ -1990,7 +1990,7 @@ HRESULT CLoader::Loading_ForBossLevel()
 		return E_FAIL;
 	/*For.Prototype_Component_Texture_Totem_Effect_Heal_Particles */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Heal_Particles"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Heal_Particles/Heal_Particles_%03d.png"), 47))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Heal_Particles/Heal_Particles_%03d.png"), 46))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Totem_Defense */
