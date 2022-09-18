@@ -724,14 +724,44 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/DeadUI/dead%d.png"), 1))))
 		return E_FAIL;
 
-	/*For Prototype Component_Texture_rockWall  */
+	/*For Prototype Component_Texture_rockWall */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/RockWall/Healthy/Healthy_%03d.png"), 3))))
 		return E_FAIL;
 
-	/*For Prototype Component_Texture_Fire  */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Fence/Idle_%03d.png"), 5))))
+	/*For Prototype Component_Texture_Boss_Fence_Idle */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Idle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Fence/Idle/Idle_%03d.png"), 3))))
+		return E_FAIL;
+
+	/*For Prototype Component_Texture_Boss_Fence_Grow_0 */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Grow0"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Fence/Grow/Grow0_%03d.png"), 18))))
+		return E_FAIL;
+
+	/*For Prototype Component_Texture_Boss_Fence_Grow_1 */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Grow1"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Fence/Grow/Grow1_%03d.png"), 18))))
+		return E_FAIL;
+
+	/*For Prototype Component_Texture_Boss_Fence_Grow_2 */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Grow2"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Fence/Grow/Grow2_%03d.png"), 18))))
+		return E_FAIL;
+
+	/*For Prototype Component_Texture_Boss_Fence_Shrink_0 */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Shrink0"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Fence/Shrink/Shrink0_%03d.png"), 28))))
+		return E_FAIL;
+
+	/*For Prototype Component_Texture_Boss_Fence_Shrink_1 */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Shrink1"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Fence/Shrink/Shrink1_%03d.png"), 28))))
+		return E_FAIL;
+
+	/*For Prototype Component_Texture_Boss_Fence_Shrink_2 */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Shrink2"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Fence/Shrink/Shrink2_%03d.png"), 27))))
 		return E_FAIL;
 
 	/*For Prototype Component_Texture_Bossloadingscene  */
