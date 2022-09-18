@@ -34,6 +34,7 @@ private:
 	_bool m_bFirst = false;
 	_bool m_bTargetCam = false;
 	_bool m_bPortalMake = false;
+	_float m_fTimeAcc = 0.f;
 public:
 	static CLevel_Boss* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;

@@ -11,6 +11,7 @@
 #include "DecoObject.h"
 #include "Totem.h"
 #include "Portal.h"
+#include "Particle.h"
 
 CLevel_Boss::CLevel_Boss(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -75,6 +76,21 @@ void CLevel_Boss::Tick(_float fTimeDelta)
 	if (!m_bNextLevel)
 		CPickingMgr::Get_Instance()->Picking();
 
+	m_fTimeAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+	if (m_fTimeAcc > 1.f / 10.f)
+	{
+		CParticle::STATEDESC ParticleDesc;
+		ZeroMemory(&ParticleDesc, sizeof(CParticle::STATEDESC));
+		ParticleDesc.eTextureScene = LEVEL_BOSS;
+		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Magma");
+		ParticleDesc.iTextureNum = 0;
+		ParticleDesc.vVelocity = _float3((rand() % 3)*0.1f, -0.1f, -(rand() % 3) * 0.1f);
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_Particle"), ParticleDesc.eTextureScene, TEXT("Layer_Particle"), &ParticleDesc)))
+			return;
+
+		m_fTimeAcc = 0.f;
+	}
 
 	Start_Camera_Motion();
 

@@ -620,6 +620,7 @@ void CBoarrior::Totem_Heal(_float fTimeDelta)
 
 		// Spawn Heal Effect
 		CTotemEffect::TOTEMEFFECTDESC TotemEffectDesc;
+		TotemEffectDesc.pEffectTarget = this;
 		TotemEffectDesc.eType = CTotemEffect::TOTEM_EFFECT_TYPE::HEAL;
 		TotemEffectDesc.vInitPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 		TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
@@ -630,7 +631,6 @@ void CBoarrior::Totem_Heal(_float fTimeDelta)
 		_float3 vLook;
 		D3DXVec3Normalize(&vLook, &m_pTransformCom->Get_State(CTransform::STATE::STATE_LOOK));
 		TotemEffectDesc.vInitPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - vLook;
-		//TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
 
 		list<CGameObject*>* lGameObject = pGameInstance->Get_ObjectList(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Totem"));
@@ -648,6 +648,7 @@ void CBoarrior::Totem_Heal(_float fTimeDelta)
 			if (pTotem->Get_TotemDesc().eType == CTotem::TOTEM_TYPE::HEAL)
 			{
 				// Spawn Heal Effect on Totems
+				TotemEffectDesc.pEffectTarget = nullptr;
 				TotemEffectDesc.eType = CTotemEffect::TOTEM_EFFECT_TYPE::HEAL;
 				TotemEffectDesc.vInitPosition = pTotem->Get_Position();
 				TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
@@ -1115,6 +1116,7 @@ _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * Da
 
 		// Spawn Shield Effect
 		CTotemEffect::TOTEMEFFECTDESC TotemEffectDesc;
+		TotemEffectDesc.pEffectTarget = this;
 		TotemEffectDesc.eType = CTotemEffect::TOTEM_EFFECT_TYPE::SHIELD;
 		_float3 vLook;
 		D3DXVec3Normalize(&vLook, &m_pTransformCom->Get_State(CTransform::STATE::STATE_LOOK));
@@ -1140,6 +1142,7 @@ _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * Da
 
 			if (pTotem->Get_TotemDesc().eType == CTotem::TOTEM_TYPE::DEFENSE)
 			{
+				TotemEffectDesc.pEffectTarget = nullptr;
 				TotemEffectDesc.vInitPosition = pTotem->Get_Position();
 				TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
 				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
