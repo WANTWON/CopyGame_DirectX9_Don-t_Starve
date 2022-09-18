@@ -67,6 +67,8 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		if (nullptr != m_pRendererCom)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
+
+	
 }
 
 HRESULT CMonster::Render()
@@ -76,6 +78,13 @@ HRESULT CMonster::Render()
 
 	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
 
+
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	_float  fDistance = D3DXVec3Length(&(Get_Position() - pTarget->Get_Position()));
+	m_pShaderCom->Set_RawValue("g_Distance", &fDistance, sizeof(_float));
+
 	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
@@ -83,7 +92,6 @@ HRESULT CMonster::Render()
 	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
 	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
 	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
-
 	m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
 
 	m_pShaderCom->Begin(m_eShaderID);

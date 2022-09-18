@@ -88,7 +88,7 @@ HRESULT CInteractive_Object::Render()
 	m_pShaderCom->End();
 
 #ifdef _DEBUG
-	if (m_pColliderCom && g_ColliderRender)
+	if (m_pColliderCom != nullptr&& g_ColliderRender)
 		m_pColliderCom->Render_ColliderBox();
 #endif // _DEBUG
 
