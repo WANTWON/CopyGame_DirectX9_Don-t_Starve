@@ -395,7 +395,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 		case WEAPON_TYPE::BEARGER_SPECIAL: // TODO: Fix
 		case WEAPON_TYPE::BOARRIOR_SPECIAL:
 			m_bDead = OBJ_DEAD;
-			goto BeargerSpecial;
+			goto AttackMulti;
 			break;
 		}
 		return;
@@ -405,8 +405,6 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 	}
 	vecDamagedActor.clear();
 
-
-BeargerSpecial:
 	// Collision with Object (if Bearger Special Attack)
 	if (m_tBulletData.eWeaponType == WEAPON_TYPE::BEARGER_SPECIAL)
 	{
