@@ -231,8 +231,8 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 	}
 	if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_BOSS)
 	{
-		CollRectDesc.fRadiusZ = 0.2f;
-		CollRectDesc.fRadiusX = 0.2f;
+		CollRectDesc.fRadiusZ = 0.5f;
+		CollRectDesc.fRadiusX = 0.5f;
 	}
 	if (m_eWallDesc.eDir == SIDE)
 	{
