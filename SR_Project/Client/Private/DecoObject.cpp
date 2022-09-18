@@ -43,11 +43,13 @@ HRESULT CDecoObject::Initialize(void* pArg)
 		break;
 	case DECOTYPE::FLOOR_EFFECT:
 		m_pTransformCom->Set_Scale(1.f, 1.5f, 1.f);
+		m_eShaderID = SHADER_IDLE_ALPHABLEND;
 		break;
 	case DECOTYPE::TORCH:
 		m_pTransformCom->Set_Scale(0.8f, 2.8f, 1.f);
 		m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 		m_fRadius = m_pTransformCom->Get_Scale().y *0.5f;
+		m_eShaderID = SHADER_IDLE_ALPHABLEND;
 		break;
 	case DECOTYPE::FLIES:
 		m_pTransformCom->Set_Scale(1.5f, 2.f, 1.f);
@@ -86,7 +88,16 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 	}
 
 	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	{
+		if (m_DecoDesc.m_eState == DECOTYPE::TORCH || m_DecoDesc.m_eState == DECOTYPE::FLOOR_EFFECT)
+		{
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+			Compute_CamDistance(Get_Position());
+		}
+		else
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	}
+		
 }
 
 HRESULT CDecoObject::Render()

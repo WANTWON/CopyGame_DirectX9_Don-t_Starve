@@ -57,7 +57,6 @@ int CParticle::Tick(_float fTimeDelta)
 
 void CParticle::Late_Tick(_float fTimeDelta)
 {
-	Compute_CamDistance(Get_Position());
 	__super::Late_Tick(fTimeDelta);
 
 	Compute_CamDistance(Get_Position());
