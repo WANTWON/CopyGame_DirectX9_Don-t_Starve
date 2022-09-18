@@ -224,6 +224,7 @@ HRESULT CTotemEffect::Texture_Clone()
 		break;
 	case TOTEM_EFFECT_TYPE::HEAL:
 		TextureDesc.m_iEndTex = 34;
+		TextureDesc.m_fSpeed = 20;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Heal_Effect"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Heal"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
