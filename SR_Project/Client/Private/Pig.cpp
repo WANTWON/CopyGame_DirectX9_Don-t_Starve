@@ -754,6 +754,9 @@ _float CPig::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageC
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dmg_pont"), LEVEL_GAMEPLAY, TEXT("Layer_dmgp"), &effectdesc)))
 			return OBJ_NOEVENT;
 
+		
+		
+
 		if (!m_bDead)
 			m_bHit = true;
 		

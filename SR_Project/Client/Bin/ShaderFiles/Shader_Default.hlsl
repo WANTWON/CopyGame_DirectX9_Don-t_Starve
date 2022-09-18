@@ -95,6 +95,7 @@ PS_OUT PS_HIT(PS_IN In)
 	Out.vColor = tex2D(TextureSampler, In.vTexUV);
 	Out.vColor.r += 0.2f;
 	Out.vColor.gb -= 0.1f;
+	
 	return Out;
 }
 

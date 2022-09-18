@@ -239,8 +239,8 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	
 	if (bbig == true)
 	{
-		m_fSizeX = 55.f;
-		m_fSizeY = 55.f;
+		m_fSizeX = 65.f;
+		m_fSizeY = 65.f;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		bbig = false;
 	}

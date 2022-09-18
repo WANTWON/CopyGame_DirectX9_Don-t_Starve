@@ -17,7 +17,7 @@ BEGIN(Client)
 class CNPC abstract : public CInteractive_Object
 {
 public:
-	enum NPC_STATE { IDLE, MOVE, INTERACT, TALK, DANCE, ATTACK, STATE_END };
+	enum NPC_STATE { IDLE, MOVE, INTERACT, TALK, DANCE, ATTACK, SKILL, STATE_END };
 public:
 	CNPC(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CNPC(const CNPC& rhs);
@@ -57,6 +57,7 @@ public: /*Get & Set*/
 	_bool	Get_FightMode(void) { return m_bFightMode; }
 	_bool	Get_TargetDead(void);
 	_bool	Get_CloseToOwner(void);
+	_bool	Get_CanSkill(void) { return m_bCanSkill; }
 	//Set
 	void	Reset_Target(void) { m_pTarget = nullptr; }
 	void	Set_IsArrive(_bool _bArrive) { m_bArrive = _bArrive; }
@@ -80,11 +81,11 @@ public:/*for Actions*/
 	virtual void	Select_Target(_float _fTimeDelta) = 0;
 	virtual void	Set_RandPos(_float _fTimeDelta) = 0;
 	virtual void	Attack(_float _fTimeDelta);
-
+	virtual void	Skill(_float _fTimeDelta);
 
 	virtual void	Interrupted(_float _fTimeDelta);
 	virtual	void	Make_Interrupt(CPawn* pCauser, _uint _InterruptNum);
-	virtual _bool	Get_Target_Moved(_float _fTimeDelta);
+	virtual _bool	Get_Target_Moved(_float _fTimeDeltam, _uint _iTarget);
 	virtual _bool	Set_TargetPos();
 public: //mange map
 	NPC_STATE	Find_Activated(void);
@@ -101,6 +102,7 @@ protected:
 	_float	m_fOwnerRadius = 3.f;
 	_float	m_fAtkRange = 3.f;
 	_uint	m_MoveNum = 0;
+	_float	m_fSkillRange = 5.f;
 	//For RandPos
 	_float m_fPatrolRadius = 3.f;
 	_float m_fPatrolPosX = 0.f;
@@ -147,6 +149,11 @@ protected:
 	_float		m_fAtk_Cur_CoolTime = 0.f;
 	_float		m_fAtk_Max_CoolTime = 0.f;
 	_bool		m_bCanAttack = false;
+
+	_float		m_fSkill_Cur_CoolTime = 0.f;
+	_float		m_fSkill_Max_CoolTime = 0.f;
+	_bool		m_bCanSkill = true;
+
 	//time
 	//_float					m_fInteractTime = 0.f;
 public:

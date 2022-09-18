@@ -49,16 +49,17 @@ public:/*for Actions*/
 	virtual void	Dance(_float _fTimeDelta) override;
 	virtual void	Attack(_float _fTimeDelta) override;
 	virtual void	Interrupted(_float _fTimeDelta) override;
+	virtual void	Skill(_float _fTimeDelta) override;
 
 	virtual void	Select_Target(_float _fTimeDelta) override;
 	virtual void	Set_RandPos(_float _fTimeDelta) override;
-	virtual _bool	Get_Target_Moved(_float _fTimeDelta) override;
+	virtual _bool	Get_Target_Moved(_float _fTimeDelta, _uint _iTarget) override;
 private:
 	void	Revive_Berry(_float _fTimeDelta);
 	void	Talk_Player(_float _fTimeDelta);
 	void	Talk_Friend(_float _fTimeDelta);
 	void	Create_Bullet(_float _fTimeDelta);
-
+	void	Create_Heal(_float _fTimeDelta);
 	void	MoveWithOwner(_float _fTimeDelta);
 	void	MoveWithoutOwner(_float _fTimeDelta);
 public:

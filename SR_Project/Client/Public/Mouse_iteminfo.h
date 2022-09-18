@@ -63,7 +63,7 @@ private:
 	
 	bool m_bcheck = false;
 	bool m_Lclick = false;
-	bool test = false;
+	bool test = true;
 	_uint texnum = 30;
 	ITEMNAME itemname = ITEMNAME_END;
 	//bool m_bcheck = true;
