@@ -18,14 +18,8 @@ class CWoodWall final : public CGameObject
 public:
 	enum WALLTYPE { WALL_WOOD, WALL_ROCK, WALL_MAZE, WALL_BOSS, WALL_END };
 	enum WALLDIR { SIDE, FRONT, WALL_DIREND };
-	enum STATE
-	{
-		HEALTHY,
-		DAMAGED,
-		BROKEN,
-		MAX
-	};
-
+	enum STATE { HEALTHY, DAMAGED, BROKEN, MAX };
+	enum FENCESTATE { IDLE, GROW, SHRINK, FENCE_MAX };
 
 	typedef struct WallDesc
 	{
@@ -58,13 +52,18 @@ private:
 
 private: /*For TextureCom */
 	virtual HRESULT Texture_Clone();
-	virtual void Change_Frame();
+	virtual void Change_Frame(_float fTimeDelta);
 	virtual void Change_Motion();
+
+private:
+	void Check_GrowShrink();
 
 private:
 	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
 	STATE m_eState = HEALTHY;
 	STATE m_ePreState = MAX;
+	FENCESTATE m_eFenceState = IDLE;
+	FENCESTATE m_ePreFenceState = FENCE_MAX;
 	WALLDESC m_eWallDesc;
 
 	const _tchar* m_TimerTag = TEXT("");

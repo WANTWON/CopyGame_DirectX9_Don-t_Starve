@@ -432,7 +432,8 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Rect.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Default.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Terrain.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

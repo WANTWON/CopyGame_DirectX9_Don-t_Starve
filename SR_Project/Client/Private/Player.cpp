@@ -251,7 +251,7 @@ HRESULT CPlayer::Render()
 	
 
 #ifdef _DEBUG
-	if (g_ColliderRender)
+	if (g_ColliderRender && m_pColliderCom != nullptr)
 	{
 		m_pTextureCom->Bind_OnGraphicDev_Debug();
 		m_pColliderCom->Render_ColliderBox();
@@ -303,6 +303,36 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 void CPlayer::Set_Position(_float3 Position)
 {
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, Position);
+}
+
+void CPlayer::Set_FPSMode(_bool type)
+{
+
+	if (m_bIsFPS == type)
+		return;
+
+	if (type)
+	{
+		m_bIsFPS = true;
+
+		
+		switch (m_eDirState)
+		{
+		case Client::DIR_DOWN:
+			m_pTransformCom->Turn(_float3(0, 1, 0), 2.f);
+			break;
+		case Client::DIR_RIGHT:
+			m_pTransformCom->Turn(_float3(0, 1, 0), 1.f);
+			break;
+		case Client::DIR_UP:
+			break;
+		case Client::DIR_LEFT:
+			m_pTransformCom->Turn(_float3(0, 1, 0), -1.f);
+			break;
+		}
+	}
+	else 
+		m_bIsFPS = false; 
 }
 
 HRESULT CPlayer::SetUp_Components()
@@ -569,12 +599,12 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMFPSMODE]))
 	{
-		m_bIsFPS = true;
+		Set_FPSMode(true);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_FPS);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMTPSMODE]))
 	{
-		m_bIsFPS = false;
+		Set_FPSMode(false);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Up(m_KeySets[INTERACTKEY::KEY_CAMLEFT]))
@@ -2641,11 +2671,10 @@ HRESULT CPlayer::Change_Texture(const _tchar * LayerTag)
 void CPlayer::SetUp_BillBoard()
 {
 	 if(m_bIsFPS && m_eDirState != DIR_STATE::DIR_RIGHT &&
-		m_bIsFPS && m_eDirState != DIR_STATE::DIR_LEFT)
+		m_bIsFPS && m_eDirState != DIR_STATE::DIR_LEFT &&
+		 m_bIsFPS && m_eDirState != DIR_STATE::DIR_DOWN)
 		return;
 
-	/*if (!m_bIsFPS && m_eDirState == DIR_STATE::DIR_LEFT)
-		return;*/
 	_float4x4 ViewMatrix;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix

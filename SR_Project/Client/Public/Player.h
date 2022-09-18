@@ -109,6 +109,7 @@ public: /*Get&Set*/
 	_bool	Get_IsBuild(void) { return m_bIsBuild; }
 	_float3 Get_PickingPoint(void) { return m_vPickingPoint; }
 	_bool	Get_SkillShow(void);
+	DIR_STATE Get_DirState(void) { return m_eDirState; }
 
 	//Sets
 	void	Set_HP(_float _fHP) { m_tStat.fCurrentHealth += _fHP; }
@@ -126,7 +127,7 @@ public: /*Get&Set*/
 	void	Set_TalkMode(_bool _bTalk) { m_bTalkMode = _bTalk; }
 	void	Clear_Target(void) { m_pTarget = nullptr; }
 
-	void	Set_FPSMode(_bool type) { if (type) m_bIsFPS = true; else m_bIsFPS = false; }
+	void	Set_FPSMode(_bool type);
 	void	Set_Select(_bool _bSelect) { m_bSelect = _bSelect; }
 
 public:

@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "PickingMgr.h"
 #include "CameraManager.h"
+#include "Player.h"
 
 CWoodWall::CWoodWall(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -46,9 +47,8 @@ HRESULT CWoodWall::Initialize(void* pArg)
 		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 	if (m_eWallDesc.etype == WALL_BOSS)
 	{
-		m_pTransformCom->Set_Scale(0.5f, 2.f, 1.f);
-		m_fRadius = 1.f;
-		
+		m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.f);
+		m_fRadius = .65f;
 	}
 	if (m_eWallDesc.etype == WALL_END)
 	{
@@ -85,7 +85,10 @@ int CWoodWall::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	if (m_eWallDesc.etype == WALL_BOSS)
+	{
 		WalkingTerrain();
+		Check_GrowShrink();
+	}
 
 	// If Hp <= 0 : Drop Items
 	if (m_tInfo.iCurrentHp > 40)
@@ -99,8 +102,6 @@ int CWoodWall::Tick(_float fTimeDelta)
 			m_eState = BROKEN;
 		}
 	}
-
-	
 
 	if (m_bConstruct)
 	{
@@ -133,14 +134,11 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 	}
 		
 	
-	if (m_eWallDesc.etype == WALL_WOOD)
+	if (m_eWallDesc.etype == WALL_WOOD || m_eWallDesc.etype == WALL_BOSS)
 	{
 		Change_Motion();
-		Change_Frame();
-
+		Change_Frame(fTimeDelta);
 	}
-	
-	
 }
 
 HRESULT CWoodWall::Render()
@@ -176,7 +174,7 @@ HRESULT CWoodWall::Render()
 
 #ifdef _DEBUG
 
-	if (g_ColliderRender)
+	if (g_ColliderRender &&  m_pColliderCom != nullptr)
 	{
 		if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct() == false)
 		{
@@ -234,7 +232,7 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 	if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_BOSS)
 	{
 		CollRectDesc.fRadiusZ = 0.5f;
-		CollRectDesc.fRadiusX = 1.2f;
+		CollRectDesc.fRadiusX = 0.5f;
 	}
 	if (m_eWallDesc.eDir == SIDE)
 	{
@@ -392,11 +390,61 @@ HRESULT CWoodWall::Texture_Clone()
 			return E_FAIL;
 		break;
 	case Client::CWoodWall::WALL_BOSS:
-		TextureDesc.m_iStartTex = rand() % 5;
+	{
+		_uint iFenceType = rand() % 3;
+		TextureDesc.m_iStartTex = iFenceType;
 		TextureDesc.m_iCurrentTex = TextureDesc.m_iStartTex;
-		TextureDesc.m_iEndTex = 4;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_HEALTHY"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		TextureDesc.m_fSpeed = 30;
+		TextureDesc.m_iEndTex = 3;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Idle"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+
+		switch (iFenceType)
+		{
+		case 0:
+		{
+			TextureDesc.m_iStartTex = 0;
+			TextureDesc.m_iCurrentTex = TextureDesc.m_iStartTex;
+			TextureDesc.m_iEndTex = 17;
+			if (FAILED(__super::Add_Components(TEXT("Com_Texture_GROW"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Grow0"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+				return E_FAIL;
+			TextureDesc.m_iStartTex = 0;
+			TextureDesc.m_iCurrentTex = TextureDesc.m_iStartTex;
+			TextureDesc.m_iEndTex = 27;
+			if (FAILED(__super::Add_Components(TEXT("Com_Texture_SHRINK"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Shrink0"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+				return E_FAIL;
+		}
+			break;
+		case 1:
+		{
+			TextureDesc.m_iStartTex = 0;
+			TextureDesc.m_iCurrentTex = TextureDesc.m_iStartTex;
+			TextureDesc.m_iEndTex = 17;
+			if (FAILED(__super::Add_Components(TEXT("Com_Texture_GROW"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Grow1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+				return E_FAIL;
+			TextureDesc.m_iStartTex = 0;
+			TextureDesc.m_iCurrentTex = TextureDesc.m_iStartTex;
+			TextureDesc.m_iEndTex = 27;
+			if (FAILED(__super::Add_Components(TEXT("Com_Texture_SHRINK"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Shrink1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+				return E_FAIL;
+		}
+			break;
+		case 2:
+		{
+			TextureDesc.m_iStartTex = 0;
+			TextureDesc.m_iCurrentTex = TextureDesc.m_iStartTex;
+			TextureDesc.m_iEndTex = 17;
+			if (FAILED(__super::Add_Components(TEXT("Com_Texture_GROW"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Grow2"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+				return E_FAIL;
+			TextureDesc.m_iStartTex = 0;
+			TextureDesc.m_iCurrentTex = TextureDesc.m_iStartTex;
+			TextureDesc.m_iEndTex = 26;
+			if (FAILED(__super::Add_Components(TEXT("Com_Texture_SHRINK"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Shrink2"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+				return E_FAIL;
+		}
+			break;
+		}
+	}
 		break;
 	default:
 		break;
@@ -404,15 +452,33 @@ HRESULT CWoodWall::Texture_Clone()
 	return S_OK;
 }
 
-void CWoodWall::Change_Frame()
+void CWoodWall::Change_Frame(_float fTimeDelta)
 {
-	m_pTextureCom->MoveFrame(m_TimerTag);
+	if (m_eWallDesc.etype == WALLTYPE::WALL_BOSS)
+	{
+		switch (m_eFenceState)
+		{
+		case FENCESTATE::IDLE:
+			m_pTextureCom->MoveFrame(m_TimerTag);
+			break;
+		case FENCESTATE::GROW:
+			if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
+				m_eFenceState = FENCESTATE::IDLE;
+			break;
+		case FENCESTATE::SHRINK:
+			m_pTextureCom->MoveFrame(m_TimerTag, false);
+			break;
+		}
+	}
+	else
+		m_pTextureCom->MoveFrame(m_TimerTag);
 }
 
 void CWoodWall::Change_Motion()
 {
-
-	if (m_eWallDesc.etype == WALL_WOOD)
+	switch(m_eWallDesc.etype)
+	{
+	case WALLTYPE::WALL_WOOD:
 	{
 		if (m_eState != m_ePreState)
 		{
@@ -432,8 +498,49 @@ void CWoodWall::Change_Motion()
 			m_ePreState = m_eState;
 		}
 	}
+	break;
+	case WALLTYPE::WALL_BOSS:
+	{
+		if (m_eFenceState != m_ePreFenceState)
+		{
+			switch (m_eFenceState)
+			{
+			case FENCESTATE::IDLE:
+				Change_Texture(TEXT("Com_Texture_IDLE"));
+				break;
+			case FENCESTATE::GROW:
+				Change_Texture(TEXT("Com_Texture_GROW"));
+				break;
+			case FENCESTATE::SHRINK:
+				Change_Texture(TEXT("Com_Texture_SHRINK"));
+				break;
+			}
+
+			m_ePreFenceState = m_eFenceState;
+		}
+	}
+	break;
+	default:
+		break;
+	}
 }
 
+void CWoodWall::Check_GrowShrink()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pTarget);
+
+	if (pPlayer)
+	{
+		// Calculate Distance between Fence and Player
+		_float fDistance = D3DXVec3Length(&(Get_Position() - pPlayer->Get_Position()));
+		if (fDistance < 4.f)
+			m_eFenceState = FENCESTATE::GROW;
+		else
+			m_eFenceState = FENCESTATE::SHRINK;
+	}
+}
 
 CWoodWall* CWoodWall::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
@@ -460,7 +567,6 @@ CGameObject* CWoodWall::Clone(void* pArg)
 
 	return pInstance;
 }
-
 
 void CWoodWall::Free()
 {
