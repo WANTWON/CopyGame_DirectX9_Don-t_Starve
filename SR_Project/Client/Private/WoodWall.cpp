@@ -4,6 +4,7 @@
 #include "PickingMgr.h"
 #include "CameraManager.h"
 #include "Player.h"
+#include "Level_Maze.h"
 
 CWoodWall::CWoodWall(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -35,7 +36,7 @@ HRESULT CWoodWall::Initialize(void* pArg)
 
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
-
+	m_eState = HEALTHY;
 	m_tInfo.iMaxHp = 60;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 
@@ -45,7 +46,7 @@ HRESULT CWoodWall::Initialize(void* pArg)
 		m_pTransformCom->Set_Scale(1.f, 3.f, 1.f);
 	if (m_eWallDesc.etype == WALL_MAZE)
 		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
-	if (m_eWallDesc.etype == WALL_BOSS)
+	if (m_eWallDesc.etype == WALL_BOSS || m_eWallDesc.etype == WALL_PUZZLE)
 	{
 		m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.f);
 		m_fRadius = .65f;
@@ -77,7 +78,8 @@ int CWoodWall::Tick(_float fTimeDelta)
 		if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct() == false)
 		{
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_BLOCK, this);
+			if (m_eWallDesc.etype != WALL_PUZZLE)
+				pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_BLOCK, this);
 
 		}
 	}
@@ -90,17 +92,10 @@ int CWoodWall::Tick(_float fTimeDelta)
 		Check_GrowShrink();
 	}
 
-	// If Hp <= 0 : Drop Items
-	if (m_tInfo.iCurrentHp > 40)
-		m_eState = HEALTHY;
-	else if (m_tInfo.iCurrentHp <= 40 && m_tInfo.iCurrentHp > 0)
-		m_eState = DAMAGED;
-	else if (m_tInfo.iCurrentHp <= 0)
+	if (m_eWallDesc.etype == WALL_PUZZLE)
 	{
-		if (m_eState < BROKEN)
-		{
-			m_eState = BROKEN;
-		}
+		WalkingTerrain();
+		Check_PuzzleSolved();
 	}
 
 	if (m_bConstruct)
@@ -134,7 +129,7 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 	}
 		
 	
-	if (m_eWallDesc.etype == WALL_WOOD || m_eWallDesc.etype == WALL_BOSS)
+	if (m_eWallDesc.etype == WALL_WOOD || m_eWallDesc.etype == WALL_BOSS || m_eWallDesc.etype == WALL_PUZZLE)
 	{
 		Change_Motion();
 		Change_Frame(fTimeDelta);
@@ -157,7 +152,7 @@ HRESULT CWoodWall::Render()
 	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
 	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
 
-	if (m_eWallDesc.etype == WALL_WOOD || m_eWallDesc.etype == WALL_MAZE || m_eWallDesc.etype == WALL_BOSS)
+	if (m_eWallDesc.etype == WALL_WOOD || m_eWallDesc.etype == WALL_MAZE || m_eWallDesc.etype == WALL_BOSS || m_eWallDesc.etype == WALL_PUZZLE)
 	{
 		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
 	}
@@ -226,9 +221,7 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 	if(m_eWallDesc.etype == WALL_END)
 		CollRectDesc.fRadiusZ = 0.5f;
 	if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_MAZE)
-	{
 		CollRectDesc.fRadiusZ = 0.5f;
-	}
 	if (CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_BOSS)
 	{
 		CollRectDesc.fRadiusZ = 0.5f;
@@ -390,6 +383,7 @@ HRESULT CWoodWall::Texture_Clone()
 			return E_FAIL;
 		break;
 	case Client::CWoodWall::WALL_BOSS:
+	case Client::CWoodWall::WALL_PUZZLE:
 	{
 		_uint iFenceType = rand() % 3;
 		TextureDesc.m_iStartTex = iFenceType;
@@ -454,7 +448,7 @@ HRESULT CWoodWall::Texture_Clone()
 
 void CWoodWall::Change_Frame(_float fTimeDelta)
 {
-	if (m_eWallDesc.etype == WALLTYPE::WALL_BOSS)
+	if (m_eWallDesc.etype == WALLTYPE::WALL_BOSS || m_eWallDesc.etype == WALLTYPE::WALL_PUZZLE)
 	{
 		switch (m_eFenceState)
 		{
@@ -500,6 +494,7 @@ void CWoodWall::Change_Motion()
 	}
 	break;
 	case WALLTYPE::WALL_BOSS:
+	case WALLTYPE::WALL_PUZZLE:
 	{
 		if (m_eFenceState != m_ePreFenceState)
 		{
@@ -539,6 +534,26 @@ void CWoodWall::Check_GrowShrink()
 			m_eFenceState = FENCESTATE::GROW;
 		else
 			m_eFenceState = FENCESTATE::SHRINK;
+	}
+}
+
+void CWoodWall::Check_PuzzleSolved()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+	
+	_bool bPuzzleSolved = dynamic_cast<CLevel_Maze*>(pLevel)->Get_PuzzleSolved();
+
+	if (bPuzzleSolved)
+	{
+		m_eFenceState = FENCESTATE::SHRINK;
+	}
+	else
+	{
+		pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_BLOCK, this);
+		m_eFenceState = FENCESTATE::GROW;
+		
 	}
 }
 

@@ -327,7 +327,8 @@ void CPlayer::Set_FPSMode(_bool type)
 		case Client::DIR_UP:
 			break;
 		case Client::DIR_LEFT:
-			m_pTransformCom->Turn(_float3(0, 1, 0), -1.f);
+			m_pTransformCom->Turn(_float3(0, 1, 0), 1.f);
+			m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
 			break;
 		}
 	}

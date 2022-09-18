@@ -46,6 +46,15 @@ void CLevel_Maze::Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 	__super::Tick(fTimeDelta);
 
+	if (pGameInstance->Key_Up('0'))
+	{
+		if (m_bPuzzleSolved)
+			m_bPuzzleSolved = false;
+		else
+			m_bPuzzleSolved = true;
+	}
+
+
 	if (m_bNextLevel)
 	{
 		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
@@ -159,10 +168,6 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	_ulong dwByte = 0;
 	CWoodWall::WALLDESC WallDesc;
 	_uint iNum = 0;
-	//vector<_tchar*> vecPath;
-
-
-	/* Ÿ���� ���� �޾ƿ��� */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -176,22 +181,22 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 
-	/*hFile = CreateFile(TEXT("../Bin/Resources/Data/Carrot_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/PuzzleDoor_MazeMap.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
-
 	dwByte = 0;
-	_float3 ObjectPos = _float3(0, 0, 0);
 	iNum = 0;
+	/* 타일의 개수 받아오기 */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
 	for (_uint i = 0; i < iNum; ++i)
 	{
-		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_MAZE, pLayerTag, ObjectPos);
+		ReadFile(hFile, &(WallDesc), sizeof(CWoodWall::WALLDESC), &dwByte, nullptr);
+		WallDesc.eDir = CWoodWall::WALL_DIREND;
+		WallDesc.etype = CWoodWall::WALL_PUZZLE;
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_MAZE, TEXT("Layer_Wall"), &WallDesc);
 	}
-	CloseHandle(hFile);*/
-
-
+	CloseHandle(hFile);
 
 	Safe_Release(pGameInstance);
 	return S_OK;

@@ -22,6 +22,18 @@ HRESULT CCollider_Manager::Add_CollisionGroup(COLLISION_GROUP eCollisionGroup, C
 	return S_OK;
 }
 
+void CCollider_Manager::Out_CollisiomGroup(COLLISION_GROUP eCollisionGroup, CGameObject * pGameObject)
+{
+		auto& iter = m_GameObjects[eCollisionGroup].begin();
+		while (iter != m_GameObjects[eCollisionGroup].end())
+		{
+			if (*iter == pGameObject)
+				iter = m_GameObjects[eCollisionGroup].erase(iter);
+			else
+				++iter;
+		}
+}
+
 
 HRESULT CCollider_Manager::Reset_ColliderGroup()
 {
