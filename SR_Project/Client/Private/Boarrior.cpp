@@ -11,6 +11,7 @@
 #include "PickingMgr.h"
 #include "Portal.h"
 #include "Level_Boss.h"
+#include "ShockEffect.h"
 
 CBoarrior::CBoarrior(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -80,6 +81,9 @@ int CBoarrior::Tick(_float fTimeDelta)
 
 	Check_Totem_Effect(fTimeDelta);
 	Check_Health_Percent();
+
+	if (CKeyMgr::Get_Instance()->Key_Down('O'))
+		m_bStun = true;
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);
@@ -348,8 +352,24 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		}
 		break;
 	case STATE::STUN:
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATE::IDLE;
+		m_pTextureCom->MoveFrame(m_TimerTag);
+
+		m_fStunTime += fTimeDelta;
+		if (m_fStunTime > m_fStunTimeLimit)
+		{
+			m_fStunTime = 0.f;
+			m_bStun = false;
+
+			// Reset Variables
+			m_bIsAttacking = false;
+			m_dwAttackTime = GetTickCount();
+			m_iPattern = 0;
+			m_bDidDamage = false;
+			m_vAttackPos = _float3(0.f, 0.f, 0.f);
+			m_bShouldSpawn = false;
+			m_fFollowTime = 0.f;
+		}
+			
 		break;
 	case STATE::HIT:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
@@ -394,9 +414,6 @@ void CBoarrior::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_IDLE_SIDE"));
 				break;
 			}
-
-			if (m_eDir != m_ePreDir)
-				m_ePreDir = m_eDir;
 			break;
 		case STATE::WALK:
 			switch (m_eDir)
@@ -412,9 +429,6 @@ void CBoarrior::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_WALK_SIDE"));
 				break;
 			}
-
-			if (m_eDir != m_ePreDir)
-				m_ePreDir = m_eDir;
 			break;
 		case STATE::DASH:
 			switch (m_eDir)
@@ -430,9 +444,6 @@ void CBoarrior::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_DASH_SIDE"));
 				break;
 			}
-
-			if (m_eDir != m_ePreDir)
-				m_ePreDir = m_eDir;
 			break;
 		case STATE::ATTACK_1:
 			switch (m_eDir)
@@ -448,9 +459,6 @@ void CBoarrior::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_ATTACK_1_SIDE"));
 				break;
 			}
-
-			if (m_eDir != m_ePreDir)
-				m_ePreDir = m_eDir;
 			break;
 		case STATE::ATTACK_2:
 			Change_Texture(TEXT("Com_Texture_ATTACK_2"));
@@ -469,9 +477,6 @@ void CBoarrior::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_ATTACK_3_SIDE"));
 				break;
 			}
-
-			if (m_eDir != m_ePreDir)
-				m_ePreDir = m_eDir;
 			break;
 		case STATE::SPAWN:
 			Change_Texture(TEXT("Com_Texture_SPAWN"));
@@ -493,9 +498,6 @@ void CBoarrior::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_HIT_SIDE"));
 				break;
 			}
-
-			if (m_eDir != m_ePreDir)
-				m_ePreDir = m_eDir;
 			break;
 		case STATE::DIE:
 			Change_Texture(TEXT("Com_Texture_DEATH"));
@@ -504,6 +506,8 @@ void CBoarrior::Change_Motion()
 
 		if (m_eState != m_ePreState)
 			m_ePreState = m_eState;
+		if (m_eDir != m_ePreDir)
+			m_ePreDir = m_eDir;
 	}
 }
 
@@ -693,13 +697,45 @@ void CBoarrior::Check_Health_Percent()
 
 void CBoarrior::AI_Behaviour(_float fTimeDelta)
 {
-	if (m_bDead || m_bHit || m_bIsAttacking)
-	{
-		if (m_bHit)
-			m_eState = STATE::HIT;
+	if (m_bDead)
+		return;
 
+	if (m_bStun)
+	{
+		if (m_eState == STATE::SPAWN)
+		{
+			m_bStun = false;
+			return;
+		}
+
+		if (m_eState != STATE::STUN)
+		{
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+
+			// Spawn Shock Effect
+			CShockEffect::SHOCKDESC ShockDesc;
+			ShockDesc.fShockTimeLimit = m_fStunTimeLimit;
+
+			_float3 vLook;
+			D3DXVec3Normalize(&vLook, &m_pTransformCom->Get_State(CTransform::STATE::STATE_LOOK));
+			ShockDesc.vInitPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - vLook;
+			
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Shock_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Effect"), &ShockDesc);
+		}
+
+		m_eState = STATE::STUN;
 		return;
 	}
+		
+	if (m_bHit)
+	{
+		m_eState = STATE::HIT;
+		return;
+	}
+
+	if (m_bIsAttacking)
+		return;
 
 	Find_Target();  // Check: pTarget, bAggro, fDistanceToTarget
 
@@ -1010,10 +1046,11 @@ void CBoarrior::Spawn_Adds(_float fTimeDelta)
 	// Reset Variables
 	m_bIsAttacking = false;
 	m_dwAttackTime = GetTickCount();
-	m_bDidDamage = false;
 	m_iPattern = 0;
+	m_bDidDamage = false;
 	m_vAttackPos = _float3(0.f, 0.f, 0.f);
 	m_bShouldSpawn = false;
+	m_fFollowTime = 0.f;
 
 	// Shake
 	CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
@@ -1127,7 +1164,7 @@ ApplyDamage:
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dmg_pont"), LEVEL_GAMEPLAY, TEXT("Layer_dmgp"), &effectdesc)))
 			return OBJ_NOEVENT;
 
-		if (!m_bDead && m_eState != STATE::SPAWN)
+		if (!m_bDead && m_eState != STATE::SPAWN && m_eState != STATE::STUN)
 		{
 			if (m_fStaggerDamage > m_fStaggerDamageLimit)
 			{

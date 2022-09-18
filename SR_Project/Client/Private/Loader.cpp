@@ -78,6 +78,7 @@
 #include "SpawnSmokeEffect.h"
 #include "FloorGrateEruption.h"
 #include "TotemEffect.h"
+#include "ShockEffect.h"
 
 #include "Daycount.h"
 #include "Daycountpont.h"
@@ -2000,6 +2001,11 @@ HRESULT CLoader::Loading_ForBossLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Totem_Heal
 
+	/*For.Prototype_Component_Texture_Shock_Effect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Shock_Effect"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Shock/Shock_%03d.png"), 17))))
+		return E_FAIL;
+
 #pragma region Add_Texture_Boaron
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boaron_Attack_Down"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Boaron/Attack_Down/Attack_Down_%03d.png"), 32))))
@@ -2158,6 +2164,11 @@ HRESULT CLoader::Loading_ForBossLevel()
 	/*For.Prototype_GameObject_Totem_Effect*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Totem_Effect"),
 		CTotemEffect::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Shock_Effect*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Shock_Effect"),
+		CShockEffect::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	if (FAILED(Loading_Terrain_ForBossLevel()))

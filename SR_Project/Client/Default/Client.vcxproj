@@ -253,6 +253,7 @@
     <ClInclude Include="..\Public\Quest.h" />
     <ClInclude Include="..\Public\Questbutton.h" />
     <ClInclude Include="..\Public\Questpont.h" />
+    <ClInclude Include="..\public\ShockEffect.h" />
     <ClInclude Include="..\Public\Skeleton.h" />
     <ClInclude Include="..\Public\Skill_Icon.h" />
     <ClInclude Include="..\Public\Sky.h" />
@@ -376,6 +377,7 @@
     <ClCompile Include="..\Private\Quest.cpp" />
     <ClCompile Include="..\Private\Questbutton.cpp" />
     <ClCompile Include="..\Private\Questpont.cpp" />
+    <ClCompile Include="..\private\ShockEffect.cpp" />
     <ClCompile Include="..\Private\Skeleton.cpp" />
     <ClCompile Include="..\Private\Skill_Icon.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
