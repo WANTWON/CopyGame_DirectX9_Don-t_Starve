@@ -23,7 +23,7 @@
 #include "BerryBush.h"
 #include "Carrot.h"
 #include "Item.h"
-
+#include "Skill.h"
 #include "Wendy.h"
 
 #include "MainInventory.h"
@@ -493,17 +493,24 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Ice_Smoke/Ice_Smoke_%03d.png"), 27))))
 		return E_FAIL;
 
+	//BulletEnd
+
+	//Skill_Start
 	/*Ice_Blast_Pre*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Ice_Blast_Pre"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Ice_Blast/Ice_Blast_Pre_%03d.png"), 20))))
 		return E_FAIL;
-
 	/*Ice_Blast*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Ice_Blast"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Ice_Blast/Ice_Blast_%03d.png"), 20))))
 		return E_FAIL;
-	//BulletEnd
-	
+
+	/*NPC_Heal*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_NPC_Heal"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/NPC_Heal/Heal_%03d.png"), 39))))
+		return E_FAIL;
+
+	/*Skill_End*/
 	/*AttackRange & Picker*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Picker"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Picker/Picker_%03d.png"), 2))))
@@ -825,6 +832,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Attack_Special"),
 		CSpecial_Attack::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill"),
+		CSkill::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*NPC Prototype*/

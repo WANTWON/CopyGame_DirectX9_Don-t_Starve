@@ -5,6 +5,7 @@
 #include "BerryBush.h"
 #include "Pig.h"
 #include "Bullet.h"
+#include "Skill.h"
 #include "Inventory.h"
 CWendy::CWendy(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CNPC(pGraphic_Device)
@@ -32,9 +33,14 @@ HRESULT CWendy::Initialize(void * pArg)
 	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 	m_eObjID = OBJID::OBJ_NPC;
 	m_eNPCID = NPCID::NPC_WENDY;
+
 	m_fAtk_Max_CoolTime = 3.f;
 	m_fAtk_Cur_CoolTime = m_fAtk_Max_CoolTime;
 
+	m_fSkill_Max_CoolTime = 5.f;
+	m_fSkill_Cur_CoolTime = m_fSkill_Max_CoolTime;
+
+	m_fSkillRange = 20.f;
 	m_fAtkRange = 20.f;
 	m_fOwnerRadius = 5.f;
 
@@ -503,6 +509,28 @@ void CWendy::Interrupted(_float _fTimeDelta)
 
 }
 
+void CWendy::Skill(_float _fTimeDelta)
+{
+	m_eState = CNPC::SKILL;
+
+	if (m_ePreState != m_eState)
+	{
+		m_bInteract = true;
+		cout << "Skill" << endl;
+		Change_Texture(TEXT("Com_Texture_Channel"));
+		m_ePreState = m_eState;
+
+		//cout << "Create_Bullet" << endl;
+
+	}
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 2)
+	{
+		Create_Heal(_fTimeDelta);
+		m_bInteract = false;
+		m_bCanSkill = false;
+	}
+}
+
 void CWendy::Select_Target(_float _fTimeDelta)
 {
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
@@ -540,19 +568,20 @@ void CWendy::Set_RandPos(_float _fTimeDelta)
 	//m_eCur_Dir = Check_Direction();
 }
 
-_bool CWendy::Get_Target_Moved(_float _fTimeDelta)
+_bool CWendy::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 {
 	if (m_pTarget == nullptr)
 		return false;
 
-	_float Compare_Range = (m_pTarget->Get_Position().x - Get_Pos().x)*(m_pTarget->Get_Position().x - Get_Pos().x)
-		+ (m_pTarget->Get_Position().y - Get_Pos().y)*(m_pTarget->Get_Position().y - Get_Pos().y)
-		+ (m_pTarget->Get_Position().z - Get_Pos().z)*(m_pTarget->Get_Position().z - Get_Pos().z);
+	
 
 	_float fRange = 5.f;
 
-	if (m_pTarget == m_pOwner)
-	{//Owner
+
+	switch (_iTarget)
+	{
+	case 0: //Target == Owner
+		m_pTarget = m_pOwner;
 		if (!m_bFightMode)
 		{
 			fRange = m_fOwnerRadius;
@@ -561,21 +590,33 @@ _bool CWendy::Get_Target_Moved(_float _fTimeDelta)
 		{
 			fRange = 10.f;
 		}
-	}
-	else
-	{//Monst
+		break;
+	case 1:// Basic AttackRange
 		fRange = m_fAtkRange;
+		break;
+
+	case 2://SkillRange
+		m_pTarget = m_pOwner;
+		fRange = m_fSkillRange;
+		break;
+	default:
+		break;
 	}
 
-	if (fRange > Compare_Range)
-	{
-		Clear_Activated();
-		return false;
-	}
-	else
+	_float Compare_Range = (m_pTarget->Get_Position().x - Get_Pos().x)*(m_pTarget->Get_Position().x - Get_Pos().x)
+		+ (m_pTarget->Get_Position().y - Get_Pos().y)*(m_pTarget->Get_Position().y - Get_Pos().y)
+		+ (m_pTarget->Get_Position().z - Get_Pos().z)*(m_pTarget->Get_Position().z - Get_Pos().z);
+
+	if (fRange < Compare_Range)
 	{
 		Clear_Activated();
 		return true;
+	}
+	else
+	{
+		m_bArrive = true;
+		Clear_Activated();
+		return false;
 	}
 	
 
@@ -819,26 +860,35 @@ void CWendy::Create_Bullet(_float _fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	BULLETDATA BulletData;
-	ZeroMemory(&BulletData, sizeof(BulletData));
-	BulletData.bIsPlayerBullet = true;
+	CSkill::SKILL_DESC SkillDesc;
 
-	BulletData.eWeaponType = WEAPON_TYPE::WEAPON_ICEBLAST;
-
-	BulletData.eDirState = DIR_STATE::DIR_END;
-
-	_float3 vLookTemp = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-
-	BulletData.vLook = vLookTemp; // m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-
-	BulletData.vPosition = m_pTarget->Get_Position();
-
-	BulletData.vScale = static_cast<CMonster*>(m_pTarget)->Get_Scale();
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
+	SkillDesc.eDirState = DIR_END;
+	SkillDesc.eSkill = CSkill::SKILL_TYPE::ICE_BLAST;
+	SkillDesc.vTargetPos = m_pTarget->Get_Position();
+	SkillDesc.vPosition = m_pTarget->Get_Position();
+	SkillDesc.vScale = static_cast<CMonster*>(m_pTarget)->Get_Scale();
+	SkillDesc.pTarget = this;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skill"), m_iCurrentLevelndex, TEXT("Skill"), &SkillDesc)))
 		return;
 
 
+}
+
+void CWendy::Create_Heal(_float _fTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	CSkill::SKILL_DESC SkillDesc;
+
+	SkillDesc.eDirState = DIR_END;
+	SkillDesc.eSkill = CSkill::SKILL_TYPE::HEAL;
+	SkillDesc.vTargetPos = m_pOwner->Get_Position();
+	SkillDesc.vPosition = m_pOwner->Get_Position();
+	SkillDesc.vScale = _float3(3.f, 3.f, 1.f);
+	SkillDesc.pTarget = m_pOwner;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skill"), m_iCurrentLevelndex, TEXT("Skill"), &SkillDesc)))
+		return;
 }
 
 void CWendy::MoveWithOwner(_float _fTimeDelta)

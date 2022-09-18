@@ -1436,7 +1436,7 @@ void CBullet::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pColliderCom);
-
+	Safe_Release(m_pVIDebugBufferCom);
 
 	for (auto& iter : m_vecTexture)
 		Safe_Release(iter);

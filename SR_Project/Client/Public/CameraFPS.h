@@ -26,12 +26,14 @@ public:
 
 private:
 	void FPS_Camera(_float fTimeDelta);
+	void Set_Dir(DIR_STATE Dir) { m_StartDir = Dir; }
 	
 
 
 private:
 	_long			m_lMouseWheel = 0;
 	_float3			m_vDistance;
+	DIR_STATE		m_StartDir = DIR_END;
 
 public:
 	static CCameraFPS* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

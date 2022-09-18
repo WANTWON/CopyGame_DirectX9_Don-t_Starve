@@ -125,6 +125,10 @@ void CNPC::Attack(_float _fTimeDelta)
 {
 }
 
+void CNPC::Skill(_float _fTimeDelta)
+{
+}
+
 void CNPC::Interrupted(_float _fTimeDelta)
 {
 }
@@ -133,7 +137,7 @@ void CNPC::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 {
 }
 
-_bool CNPC::Get_Target_Moved(_float _fTimeDelta)
+_bool CNPC::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 {
 	return _bool();
 }
@@ -192,7 +196,15 @@ void CNPC::Update_Cooltime(_float _fTimeDelta)
 		m_fAtk_Cur_CoolTime -= _fTimeDelta;
 	}
 
-	
+	if (!m_bCanSkill)
+	{
+		if (m_fSkill_Cur_CoolTime <= 0.f)
+		{
+			m_fSkill_Cur_CoolTime = m_fSkill_Max_CoolTime;
+			m_bCanSkill = true;
+		}
+		m_fSkill_Cur_CoolTime -= _fTimeDelta;
+	}
 }
 
 void CNPC::Update_FightMode(_float _fTimeDelta)
