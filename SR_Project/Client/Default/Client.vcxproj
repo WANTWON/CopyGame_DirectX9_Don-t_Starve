@@ -290,6 +290,7 @@
     <ClInclude Include="..\Public\ToolboxWeapon_front.h" />
     <ClInclude Include="..\public\Totem.h" />
     <ClInclude Include="..\public\TotemEffect.h" />
+    <ClInclude Include="..\public\Trap.h" />
     <ClInclude Include="..\public\Tree.h" />
     <ClInclude Include="..\Public\MainInventory.h" />
     <ClInclude Include="..\Public\UnInteractive_Object.h" />
@@ -420,6 +421,7 @@
     <ClCompile Include="..\Private\ToolboxWeapon_front.cpp" />
     <ClCompile Include="..\private\Totem.cpp" />
     <ClCompile Include="..\private\TotemEffect.cpp" />
+    <ClCompile Include="..\private\Trap.cpp" />
     <ClCompile Include="..\private\Tree.cpp" />
     <ClCompile Include="..\Private\MainInventory.cpp" />
     <ClCompile Include="..\Private\UnInteractive_Object.cpp" />

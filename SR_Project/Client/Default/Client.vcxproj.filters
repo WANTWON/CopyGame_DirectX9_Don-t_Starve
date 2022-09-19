@@ -289,8 +289,8 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Statue">
       <UniqueIdentifier>{9bc1c7fe-7140-4334-8f3f-90f30549f156}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00. Pawn\01.Monster\Shooting_Target">
-      <UniqueIdentifier>{fd98bed5-b39a-40f5-880b-9d41f68fbfdc}</UniqueIdentifier>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Trap">
+      <UniqueIdentifier>{c76a6b74-f03a-46c9-acfa-026dbb7236d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -680,8 +680,8 @@
     <ClInclude Include="..\Public\Statue.h">
       <Filter>02.GameObject\05.UnInteractive_Object\Statue</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Shooting_Target.h">
-      <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
+    <ClInclude Include="..\public\Trap.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1059,8 +1059,8 @@
     <ClCompile Include="..\Private\Statue.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\Statue</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Shooting_Target.cpp">
-      <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
+    <ClCompile Include="..\private\Trap.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

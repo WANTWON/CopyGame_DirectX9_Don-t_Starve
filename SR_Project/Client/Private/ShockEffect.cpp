@@ -32,7 +32,11 @@ HRESULT CShockEffect::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(m_tShockDesc.vInitPosition)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+	if (m_tShockDesc.eShockType == SHOCKTYPE::SHOCK)
+		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+	
+	if (m_tShockDesc.eShockType == SHOCKTYPE::HIT)
+		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
 	return S_OK;
 }
@@ -58,10 +62,13 @@ void CShockEffect::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 
-	if (m_fShockTime > m_tShockDesc.fShockTimeLimit)
-		m_bDead = true;
-	else
-		m_fShockTime += fTimeDelta;
+	if (m_tShockDesc.eShockType == SHOCKTYPE::SHOCK)
+	{
+		if (m_fShockTime > m_tShockDesc.fShockTimeLimit)
+			m_bDead = true;
+		else
+			m_fShockTime += fTimeDelta;
+	}
 
 	Change_Frame();
 }
@@ -188,17 +195,33 @@ HRESULT CShockEffect::Texture_Clone()
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_fSpeed = 30;
 
-	TextureDesc.m_iEndTex = 16;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Shock_Effect"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Shock_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	if (m_tShockDesc.eShockType == SHOCKTYPE::SHOCK)
+	{
+		TextureDesc.m_iEndTex = 16;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Shock_Effect"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Shock_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+	}
+	
+	if (m_tShockDesc.eShockType == SHOCKTYPE::HIT)
+	{
+		TextureDesc.m_iEndTex = 18;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Shock_Effect"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hit_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+	}
 
 	return S_OK;
 }
 
 void CShockEffect::Change_Frame()
 {
-	m_pTextureCom->MoveFrame(m_TimerTag);
+	if (m_tShockDesc.eShockType == SHOCKTYPE::SHOCK)
+		m_pTextureCom->MoveFrame(m_TimerTag);
+
+	if (m_tShockDesc.eShockType == SHOCKTYPE::HIT)
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_bDead = true;
 }
 
 CShockEffect* CShockEffect::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
