@@ -286,6 +286,9 @@
     <Filter Include="02.GameObject\00. Pawn\Skills">
       <UniqueIdentifier>{95881df0-4775-4da0-a5ac-83f23d3802b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Trap">
+      <UniqueIdentifier>{33301cc9-be17-4e42-9330-fc2af12cd2c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -667,6 +670,10 @@
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Skill.h" />
+    <ClInclude Include="..\Public\ScreenEffect.h" />
+    <ClInclude Include="..\public\Trap.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1036,6 +1043,10 @@
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Skill.cpp" />
+    <ClCompile Include="..\Private\ScreenEffect.cpp" />
+    <ClCompile Include="..\private\Trap.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
