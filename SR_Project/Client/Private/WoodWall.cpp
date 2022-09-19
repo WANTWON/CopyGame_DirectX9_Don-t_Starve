@@ -482,9 +482,14 @@ void CWoodWall::Change_Motion()
 void CWoodWall::Set_ShaderID()
 {
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
-	if (iLevel == LEVEL_MAZE)
+	if (pGameObject->Get_Dead())
+		m_eShaderID = SHADER_DEAD;
+	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
+	else
+		m_eShaderID = SHADER_IDLE_ALPHATEST;
 }
 
 void CWoodWall::Check_GrowShrink()

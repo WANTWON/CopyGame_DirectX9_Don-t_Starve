@@ -109,6 +109,8 @@ void CHouse::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
+	Set_ShaderID();
 }
 
 HRESULT CHouse::Render()
@@ -146,6 +148,19 @@ HRESULT CHouse::Render()
 	m_pShaderCom->End();
 
 	return S_OK;
+}
+
+void CHouse::Set_ShaderID()
+{
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	if (pGameObject->Get_Dead())
+		m_eShaderID = SHADER_DEAD;
+	else if (iLevel == LEVEL_MAZE)
+		m_eShaderID = SHADER_DARK;
+	else
+		m_eShaderID = SHADER_IDLE_ALPHATEST;
 }
 
 HRESULT CHouse::SetUp_Components(void* pArg)
