@@ -62,7 +62,7 @@ private: /* For.Components */
 	CShader*		m_pShaderCom = nullptr;
 private:
 	void Check_Eruption(_float fTimeDelta);
-
+	void Set_FloorDecoTexture();
 private:
 	DECODECS m_DecoDesc;
 	const _tchar* m_TimerTag = TEXT("");

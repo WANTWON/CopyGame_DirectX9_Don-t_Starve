@@ -68,8 +68,9 @@ void CLevel_Maze::Tick(_float fTimeDelta)
 		CPickingMgr::Get_Instance()->Picking();
 	}
 
-	Start_Camera_Motion();
+	//Start_Camera_Motion();
 	Update_Camera_Motion();
+	Update_Floor_Motion();
 
 	Safe_Release(pGameInstance);
 }
@@ -338,17 +339,64 @@ void CLevel_Maze::Update_Camera_Motion()
 	}
 	
 
+
+	
+
+}
+
+void CLevel_Maze::Update_Floor_Motion()
+{
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
 	if ((pGameObject->Get_Position().x > 35 && !m_bPuzzleStart[0]))
 	{
 		CDecoObject::DECODECS  DecoDesc;
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 9.f);
-		DecoDesc.fRotate = 0.f;
+		DecoDesc.fRotate = 3.f;
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[0] = true;
 	}
-
-	
+	else if ((pGameObject->Get_Position().x > 35) && (pGameObject->Get_Position().z > 20) && !m_bPuzzleStart[1])
+	{
+		CDecoObject::DECODECS  DecoDesc;
+		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
+		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 24.f);
+		DecoDesc.fRotate = 1.f;
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		m_bPuzzleStart[1] = true;
+	}
+	else if ((pGameObject->Get_Position().x > 35) && (pGameObject->Get_Position().z > 36) && !m_bPuzzleStart[2])
+	{
+		CDecoObject::DECODECS  DecoDesc;
+		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
+		DecoDesc.fRotate = 5.f;
+		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 42.f);
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		
+		DecoDesc.fRotate = 2.f;
+		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 38.f);
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		m_bPuzzleStart[2] = true;
+	}
+	else if ((pGameObject->Get_Position().x < 28) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[3])
+	{
+		CDecoObject::DECODECS  DecoDesc;
+		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
+		DecoDesc.vInitPosition = _float3(25.f, 0.f, 40.f);
+		DecoDesc.fRotate = 3.f;
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		m_bPuzzleStart[3] = true;
+	}
+	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[4])
+	{
+		CDecoObject::DECODECS  DecoDesc;
+		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
+		DecoDesc.vInitPosition = _float3(10.f, 0.f, 40.f);
+		DecoDesc.fRotate = 2.f;
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		m_bPuzzleStart[4] = true;
+	}
 
 }
 

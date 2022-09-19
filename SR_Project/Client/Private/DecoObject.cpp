@@ -55,10 +55,24 @@ HRESULT CDecoObject::Initialize(void* pArg)
 		m_pTransformCom->Set_Scale(1.5f, 2.f, 1.f);
 		break;
 	case DECOTYPE::FLOOR:
-		m_pTransformCom->Set_Scale(13.f, 13.f, 1.f);
+	{
+		if (m_DecoDesc.fRotate == 1.f)
+			m_pTransformCom->Set_Scale(5.f, 5.f, 1.f);
+		else if (m_DecoDesc.fRotate == 2.f)
+			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+		else if (m_DecoDesc.fRotate == 3.f)
+			m_pTransformCom->Set_Scale(7.f, 7.f, 1.f);
+		else if(m_DecoDesc.fRotate == 4.f)
+			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+		else if (m_DecoDesc.fRotate == 5.f)
+			m_pTransformCom->Set_Scale(10.f, 2.f, 1.f);
+		else
+			m_pTransformCom->Set_Scale(7.f, 7.f, 1.f);
 		m_pTransformCom->Turn(_float3(1, 0, 0), 90.f);
 		m_fRadius = 0.002f;
 		break;
+	}
+		
 	}
 
 	return S_OK;
@@ -230,10 +244,8 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 		break;
 
 	case DECOTYPE::FLOOR:
-		TextureDesc.m_iEndTex = 15;
-		TextureDesc.m_fSpeed = 40.f;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-			return E_FAIL;
+		
+		Set_FloorDecoTexture();
 		break;
 	}
 
@@ -379,6 +391,39 @@ void CDecoObject::Check_Eruption(_float fTimeDelta)
 			}
 		}
 	}
+}
+
+void CDecoObject::Set_FloorDecoTexture()
+{
+	CTexture::TEXTUREDESC TextureDesc;
+	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
+	TextureDesc.m_iStartTex = 0;
+	TextureDesc.m_iCurrentTex = 0;
+	TextureDesc.m_iEndTex = 15;
+	TextureDesc.m_fSpeed = 40.f;
+
+
+	if (m_DecoDesc.fRotate == 0.f)
+		__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place1"), (CComponent**)&m_pTextureCom, &TextureDesc);
+	
+	if (m_DecoDesc.fRotate == 1.f)
+		__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place2"), (CComponent**)&m_pTextureCom, &TextureDesc);
+
+	if (m_DecoDesc.fRotate == 2.f)
+		__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place3"), (CComponent**)&m_pTextureCom, &TextureDesc);
+
+	if (m_DecoDesc.fRotate == 3.f)
+		__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place4"), (CComponent**)&m_pTextureCom, &TextureDesc);
+
+	if (m_DecoDesc.fRotate == 4.f)
+		__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place5"), (CComponent**)&m_pTextureCom, &TextureDesc);
+
+	if (m_DecoDesc.fRotate == 5.f)
+	{
+		TextureDesc.m_iEndTex = 10;
+		__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place6"), (CComponent**)&m_pTextureCom, &TextureDesc);
+	}
+		
 }
 
 CDecoObject* CDecoObject::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

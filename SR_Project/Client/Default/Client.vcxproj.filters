@@ -289,6 +289,9 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Statue">
       <UniqueIdentifier>{9bc1c7fe-7140-4334-8f3f-90f30549f156}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00. Pawn\01.Monster\Shooting_Target">
+      <UniqueIdentifier>{fd98bed5-b39a-40f5-880b-9d41f68fbfdc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -677,6 +680,9 @@
     <ClInclude Include="..\Public\Statue.h">
       <Filter>02.GameObject\05.UnInteractive_Object\Statue</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Shooting_Target.h">
+      <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1052,6 +1058,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Statue.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\Statue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Shooting_Target.cpp">
+      <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
