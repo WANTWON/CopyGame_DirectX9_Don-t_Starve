@@ -25,6 +25,7 @@
 #include "Item.h"
 #include "Dirt.h"
 #include "Statue.h"
+#include "Trap.h"
 
 #include "Skill.h"
 #include "Wendy.h"
@@ -631,6 +632,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Eruption"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Boarrior_Eruption/Boarrior_Eruption_%03d.png"), 32))))
 		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Hit_Effect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hit_Effect"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Hit_Effect/Hit_%03d.png"), 19))))
+		return E_FAIL;
 #pragma  endregion Add_Texture_Effects
 	/*    ̴   ε    . */
 
@@ -1045,6 +1051,34 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Statue/Broken/Broken_%03d.png"), 1))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Statue
+
+#pragma region Add_Texture_Trap
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Star_Idle_Ready"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Trap_Star/Idle_Ready/Idle_Ready_%03d.png"), 17))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Star_Idle_Trap"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Trap_Star/Idle_Trap/Idle_Trap_%03d.png"), 17))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Star_Trap"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Trap_Star/Trap/Trap_%03d.png"), 49))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Star_Reset"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Trap_Star/Reset/Reset_%03d.png"), 17))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Plant_Idle_Ready"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Trap_Plant/Idle_Ready/Idle_Ready_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Plant_Idle_Trap"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Trap_Plant/Idle_Trap/Idle_Trap_%03d.png"), 3))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Plant_Trap"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Trap_Plant/Trap/Trap_%03d.png"), 24))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Plant_Reset"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Trap_Plant/Reset/Reset_%03d.png"), 16))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Trap
 
 	if (FAILED(Loading_Prototype_Object()))
 		return E_FAIL;
@@ -1504,7 +1538,6 @@ HRESULT CLoader::Loading_Prototype_Object()
 		CShockEffect::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-
 	/*For.Prototype_GameObject_Item*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Item"),
 		CItem::Create(m_pGraphic_Device))))
@@ -1612,6 +1645,11 @@ HRESULT CLoader::Loading_Prototype_Object()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DecoObject"),
 		CDecoObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Trap*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Trap"),
+		CTrap::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/*For. Prototype_GameObject_Spider */

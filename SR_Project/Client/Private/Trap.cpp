@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Trap.h"
 #include "GameInstance.h"
+#include "ShockEffect.h"
 
 CTrap::CTrap(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -31,15 +32,17 @@ HRESULT CTrap::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(&m_tTrapDesc.vInitPosition)))
 		return E_FAIL;
 
-	switch (m_tTrapDesc.eState)
+	switch (m_tTrapDesc.eType)
 	{
 	case TRAPTYPE::TRAP_STAR:
-		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_fRadius = .4f;
 		break;
 	case TRAPTYPE::TRAP_PLANT:
-		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_fRadius = .5f; 
 		break;
 	}
+
+	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 
 	return S_OK;
 }
@@ -53,7 +56,13 @@ int CTrap::Tick(_float fTimeDelta)
 
 	WalkingTerrain();
 
-	// TODO: Check for Collision with Player
+	if (m_pColliderCom)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_GROUP::COLLISION_OBJECT, this);
+	}
+	
+	Check_Collision();
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -67,6 +76,12 @@ void CTrap::Late_Tick(_float fTimeDelta)
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 	SetUp_BillBoard();
+
+	if (m_pColliderCom)
+	{
+		memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	}
 	
 	Change_Motion();
 	Change_Frame(fTimeDelta);
@@ -96,7 +111,7 @@ HRESULT CTrap::Render()
 	m_pShaderCom->End();
 
 #ifdef _DEBUG
-	if (g_ColliderRender &&  m_pColliderCom != nullptr)
+	if (g_ColliderRender && m_pColliderCom != nullptr)
 	{
 		m_pTextureCom->Bind_OnGraphicDev_Debug();
 		m_pColliderCom->Render_ColliderBox();
@@ -137,13 +152,12 @@ HRESULT CTrap::SetUp_Components(void* pArg)
 	/* For.Com_Collider*/
 	CCollider_Cube::COLLRECTDESC CollRectDesc;
 	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
-	CollRectDesc.fRadiusY = 0.5f;
-	CollRectDesc.fRadiusX = 0.2f;
-	CollRectDesc.fRadiusZ = 0.2f;
+	CollRectDesc.fRadiusX = 0.3f;
+	CollRectDesc.fRadiusY = 0.3f;
+	CollRectDesc.fRadiusZ = 0.3f;
 	CollRectDesc.fOffSetX = 0.f;
-	CollRectDesc.fOffSetY = 0.f;
+	CollRectDesc.fOffSetY = -m_fRadius / 2;
 	CollRectDesc.fOffsetZ = 0.f;
-
 	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
@@ -189,41 +203,41 @@ HRESULT CTrap::Texture_Clone()
 {
 	CTexture::TEXTUREDESC TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
-	TextureDesc.m_fSpeed = 30.f;
+	TextureDesc.m_fSpeed = 25.f;
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_iCurrentTex = 0;
 
-	switch (m_tTrapDesc.eState)
+	switch (m_tTrapDesc.eType)
 	{
 	case TRAPTYPE::TRAP_STAR:
 	{
 		TextureDesc.m_iEndTex = 16;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Ready"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorDeco"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Ready"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Star_Idle_Ready"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		TextureDesc.m_iEndTex = 16;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Trap"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorDeco"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Trap"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Star_Idle_Trap"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		TextureDesc.m_iEndTex = 48;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Trap"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorDeco"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Trap"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Star_Trap"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		TextureDesc.m_iEndTex = 16;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reset"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorDeco"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reset"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Star_Reset"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 	}
 	break;
 	case TRAPTYPE::TRAP_PLANT:
 	{
 		TextureDesc.m_iEndTex = 0;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Ready"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorDeco"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Ready"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Plant_Idle_Ready"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		TextureDesc.m_iEndTex = 2;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Trap"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorDeco"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Trap"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Plant_Idle_Trap"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		TextureDesc.m_iEndTex = 23;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Trap"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorDeco"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Trap"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Plant_Trap"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		TextureDesc.m_iEndTex = 15;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reset"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorDeco"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reset"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Plant_Reset"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 	}
 	break;
@@ -288,8 +302,42 @@ void CTrap::Change_Frame(_float fTimeDelta)
 		break;
 	case TRAPSTATE::STATE_RESET:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		{
 			m_eState = TRAPSTATE::STATE_IDLE_READY;
+			m_bDidDamage = false;
+		}
 		break;
+	}
+}
+
+void CTrap::Check_Collision()
+{
+	if (m_bDidDamage)
+		return;
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	vector<CGameObject*> vCollided;
+
+	if (pGameInstance->Collision_Check_Group_Multi(CCollider_Manager::COLLISION_GROUP::COLLISION_PLAYER, vCollided, this, CCollider_Manager::COLLISION_TYPE::COLLSIION_BOX))
+	{
+		if (m_eState != TRAPSTATE::STATE_TRAP)
+			m_eState = TRAPSTATE::STATE_TRAP;
+
+		if (m_eState == TRAPSTATE::STATE_TRAP && m_pTextureCom->Get_Frame().m_iCurrentTex == 6)
+		{
+			// Spawn Hit Effect
+			CShockEffect::SHOCKDESC ShockDesc;
+			ShockDesc.eShockType = CShockEffect::SHOCKTYPE::HIT;
+
+			_float3 vLook;
+			D3DXVec3Normalize(&vLook, &m_pTransformCom->Get_State(CTransform::STATE::STATE_LOOK));
+			ShockDesc.vInitPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - vLook;
+
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Shock_Effect"), LEVEL_STATIC, TEXT("Layer_Effect"), &ShockDesc);
+
+			CGameInstance::Apply_Damage_Multi(m_iDamage, vCollided, this, nullptr);
+			m_bDidDamage = true;
+		}
 	}
 }
 

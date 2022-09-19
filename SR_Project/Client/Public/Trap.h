@@ -21,7 +21,7 @@ public:
 
 	typedef struct TrapDescription
 	{
-		TRAPTYPE eState = TRAP_MAX;
+		TRAPTYPE eType = TRAP_MAX;
 		_float3 vInitPosition = _float3(0.f, 0.f, 0.f);
 	}TRAPDESC;
 
@@ -60,6 +60,7 @@ private: /*For TextureCom */
 	
 public:
 	TRAPDESC Get_Desc() { return m_tTrapDesc; }
+	void Check_Collision();
 
 private:
 	const _tchar* m_TimerTag = TEXT("Trap");
@@ -69,6 +70,8 @@ private:
 	TRAPSTATE m_eState = STATE_IDLE_READY;
 	TRAPSTATE m_ePreState = STATE_MAX;
 
+	_uint m_iDamage = 10.f;
+	_bool m_bDidDamage = false;
 	_float m_fTrapTimer = 0.f;
 
 public:

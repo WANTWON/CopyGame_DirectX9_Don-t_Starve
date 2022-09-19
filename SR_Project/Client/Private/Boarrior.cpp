@@ -716,6 +716,7 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 
 			// Spawn Shock Effect
 			CShockEffect::SHOCKDESC ShockDesc;
+			ShockDesc.eShockType = CShockEffect::SHOCKTYPE::SHOCK;
 			ShockDesc.fShockTimeLimit = m_fStunTimeLimit;
 
 			_float3 vLook;

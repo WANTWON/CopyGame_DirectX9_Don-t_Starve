@@ -286,11 +286,11 @@
     <Filter Include="02.GameObject\00. Pawn\Skills">
       <UniqueIdentifier>{95881df0-4775-4da0-a5ac-83f23d3802b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\05.UnInteractive_Object\Trap">
-      <UniqueIdentifier>{33301cc9-be17-4e42-9330-fc2af12cd2c8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\05.UnInteractive_Object\Statue">
       <UniqueIdentifier>{9bc1c7fe-7140-4334-8f3f-90f30549f156}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Trap">
+      <UniqueIdentifier>{c76a6b74-f03a-46c9-acfa-026dbb7236d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -674,14 +674,14 @@
     </ClInclude>
     <ClInclude Include="..\Public\Skill.h" />
     <ClInclude Include="..\Public\ScreenEffect.h" />
-    <ClInclude Include="..\public\Trap.h">
-      <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UnInteractive_Object.h">
       <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Statue.h">
       <Filter>02.GameObject\05.UnInteractive_Object\Statue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Trap.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1053,14 +1053,14 @@
     </ClCompile>
     <ClCompile Include="..\Private\Skill.cpp" />
     <ClCompile Include="..\Private\ScreenEffect.cpp" />
-    <ClCompile Include="..\private\Trap.cpp">
-      <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
-    </ClInclude>
     <ClCompile Include="..\Private\UnInteractive_Object.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Statue.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\Statue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Trap.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
