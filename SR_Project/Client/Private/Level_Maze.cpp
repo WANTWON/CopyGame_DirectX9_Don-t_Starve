@@ -9,6 +9,7 @@
 #include "WoodWall.h"
 #include "Portal.h"
 #include "DecoObject.h"
+#include "Trap.h"
 
 CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -218,7 +219,7 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	}
 	CloseHandle(hFile);
 
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Dirt_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Dirt_Stage4.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -231,6 +232,24 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	{
 		ReadFile(hFile, &(vPosition), sizeof(_float3), &dwByte, nullptr);
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dirt"), LEVEL_MAZE, pLayerTag, vPosition)))
+			return E_FAIL;
+	}
+	CloseHandle(hFile);
+
+
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Trap_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	CTrap::TRAPDESC tTrapDesc;
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(tTrapDesc), sizeof(CTrap::TRAPDESC), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trap"), LEVEL_GAMEPLAY, TEXT("Layer_Trap"), &tTrapDesc)))
 			return E_FAIL;
 	}
 	CloseHandle(hFile);
@@ -363,7 +382,7 @@ void CLevel_Maze::Update_Floor_Motion()
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 24.f);
 		DecoDesc.fRotate = 1.f;
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		//CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[1] = true;
 	}
 	else if ((pGameObject->Get_Position().x > 35) && (pGameObject->Get_Position().z > 36) && !m_bPuzzleStart[2])

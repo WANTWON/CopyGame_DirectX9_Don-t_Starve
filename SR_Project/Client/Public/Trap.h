@@ -61,7 +61,7 @@ private: /*For TextureCom */
 public:
 	TRAPDESC Get_Desc() { return m_tTrapDesc; }
 	void Check_Collision();
-
+	void Set_ShaderID();
 private:
 	const _tchar* m_TimerTag = TEXT("Trap");
 	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;

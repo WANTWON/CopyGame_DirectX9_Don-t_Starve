@@ -305,17 +305,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	}
 	CloseHandle(hFile);
 
-	// Trap Test
-	CTrap::TRAPDESC tTrapDesc;
-	tTrapDesc.eType = CTrap::TRAPTYPE::TRAP_PLANT;
-	tTrapDesc.vInitPosition = _float3(43.f, 1.f, 26.f);
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trap"), LEVEL_GAMEPLAY, TEXT("Layer_Trap"), &tTrapDesc)))
-		return E_FAIL;
-	tTrapDesc.eType = CTrap::TRAPTYPE::TRAP_STAR;
-	tTrapDesc.vInitPosition = _float3(41.f, 1.f, 26.f);
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trap"), LEVEL_GAMEPLAY, TEXT("Layer_Trap"), &tTrapDesc)))
-		return E_FAIL;
-
 	Safe_Release(pGameInstance);
 	return S_OK;
 }

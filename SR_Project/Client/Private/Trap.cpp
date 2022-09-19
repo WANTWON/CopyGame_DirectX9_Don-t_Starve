@@ -85,6 +85,8 @@ void CTrap::Late_Tick(_float fTimeDelta)
 	
 	Change_Motion();
 	Change_Frame(fTimeDelta);
+
+	Set_ShaderID();
 }
 
 HRESULT CTrap::Render()
@@ -339,6 +341,19 @@ void CTrap::Check_Collision()
 			m_bDidDamage = true;
 		}
 	}
+}
+
+void CTrap::Set_ShaderID()
+{
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	if (pGameObject->Get_Dead())
+		m_eShaderID = SHADER_DEAD;
+	else if (iLevel == LEVEL_MAZE)
+		m_eShaderID = SHADER_DARK;
+	else
+		m_eShaderID = SHADER_IDLE_ALPHATEST;
 }
 
 CTrap* CTrap::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

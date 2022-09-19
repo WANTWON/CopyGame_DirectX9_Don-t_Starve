@@ -256,7 +256,6 @@
     <ClInclude Include="..\Public\Questpont.h" />
     <ClInclude Include="..\Public\ScreenEffect.h" />
     <ClInclude Include="..\public\ShockEffect.h" />
-    <ClInclude Include="..\Public\Shooting_Target.h" />
     <ClInclude Include="..\Public\Skeleton.h" />
     <ClInclude Include="..\Public\Skill.h" />
     <ClInclude Include="..\Public\Skill_Icon.h" />
@@ -387,7 +386,6 @@
     <ClCompile Include="..\Private\Questpont.cpp" />
     <ClCompile Include="..\Private\ScreenEffect.cpp" />
     <ClCompile Include="..\private\ShockEffect.cpp" />
-    <ClCompile Include="..\Private\Shooting_Target.cpp" />
     <ClCompile Include="..\Private\Skeleton.cpp" />
     <ClCompile Include="..\Private\Skill.cpp" />
     <ClCompile Include="..\Private\Skill_Icon.cpp" />
