@@ -120,7 +120,15 @@ HRESULT CDirt::Drop_Items()
 	// Next Room Key
 	case 3:
 	{
+		CItem::ITEMDESC ItemDesc;
+		ZeroMemory(&ItemDesc, sizeof(CItem::ITEMDESC));
 
+		ItemDesc.fPosition = vDropPos;
+		ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
+		ItemDesc.pTextureComponent = TEXT("Com_Texture_Dirt_Key");
+		ItemDesc.eItemName = ITEMNAME_KEY;
+
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_HUNT, TEXT("Layer_Object"), &ItemDesc);
 	}
 	break;
 	}
