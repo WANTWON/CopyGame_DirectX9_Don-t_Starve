@@ -3,8 +3,8 @@
 #include "Engine_Defines.h"
 #include <process.h>
 
-class Item;
 
+class Item;
 extern HWND	g_hWnd;
 extern HINSTANCE g_hInst;
 
@@ -33,9 +33,10 @@ namespace Client
 
 	enum MAKEWHAT { MAKE_AXE, MAKE_PICK, MAKE_HAMBAT, MAKE_SHOTTER, MAKE_STAFF, MAKE_ARMOR, MAKE_HELMET,MAKE_FENCE,MAKE_POT,MAKE_TENT,MAKE_ROPE,MAKE_COAL,MAKE_TORCH, MAKE_END };
 
+	enum MININAME {MIN_PLAYER , MIN_PORTAL , MIN_WENDY , MIN_PIG , MIN_END};
 
 	enum SHADER_STATE { SHADER_IDLE_ALPHATEST, SHADER_IDLE_ALPHABLEND, SHADER_HIT, SHADER_PICKING, SHADER_DEAD };
-	enum UI_SHADER_STATE { UI_SHADER_IDLE , UI_SHADER_SCREEN };
+	enum UI_SHADER_STATE { UI_SHADER_IDLE , UI_SHADER_SCREEN , UI_SHADER_MINIMAP };
 
 	const  _float  g_iWinSizeX = 1280;
 	const  _float  g_iWinSizeY = 720;
@@ -56,6 +57,9 @@ namespace Client
 
 	}Poteffect;
 
+
+	
+
 	
 
 	typedef struct tagBulletData {
@@ -71,6 +75,13 @@ namespace Client
 		_float fOffsetDown;
 		_float fOffsetSide;
 	}BULLETDATA;
+
+	/*typedef struct MINIMAP
+	{
+		MININAME name;
+		CPig* pointer;
+
+	}min;*/
 
 }
 

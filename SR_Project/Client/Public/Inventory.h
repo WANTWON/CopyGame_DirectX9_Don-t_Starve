@@ -56,7 +56,8 @@
 #include "Loadingscene.h"
 #include "Monsterhp_pont.h"
 #include "Skill_Icon.h"
-/*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
+#include "MiniMap_player.h" 
+/*  생성 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
 class CInventory_Manager final : public CBase

@@ -113,6 +113,8 @@
 #include "Status_pont.h"
 #include "Dmgpont.h"
 #include "ScreenEffect.h"
+#include "MiniMap.h"
+#include "MiniMap_player.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -737,6 +739,18 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/screeneffect/screeneffect%d.png"), 1))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_DeadUI */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniMap"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/minimap/minimap%d.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_DeadUI */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniMap_player"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/minimap/minimapplayer%d.png"), 1))))
+		return E_FAIL;
+
+	
+
 	/*For Prototype Component_Texture_rockWall */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_RockWall_HEALTHY"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/RockWall/Healthy/Healthy_%03d.png"), 3))))
@@ -1105,6 +1119,14 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Screen_Effect"),
 		CScreenEffect::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniMap"),
+		CMiniMap::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniMap_player"),
+		CMiniMap_player::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 

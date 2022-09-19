@@ -584,6 +584,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 
 	}
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_player"), LEVEL_STATIC, pLayerTag)))
+	//	return E_FAIL;
+
 	
 	
 	
