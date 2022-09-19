@@ -193,77 +193,77 @@ HRESULT CPig::Texture_Clone()
 	TextureDesc.m_fSpeed = 45;
 
 	TextureDesc.m_iEndTex = 17;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Idle_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_UP"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Idle_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 17;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Idle_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_DOWN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Idle_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 17;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_SIDE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Idle_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_SIDE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Idle_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 20;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_WALK_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Walk_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_WALK_UP"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Walk_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 20;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_WALK_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Walk_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_WALK_DOWN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Walk_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 20;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_WALK_SIDE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Walk_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_WALK_SIDE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Walk_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 16;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_RUN_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Run_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_RUN_UP"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Run_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 16;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_RUN_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Run_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_RUN_DOWN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Run_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 16;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_RUN_SIDE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Run_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_RUN_SIDE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Run_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 30;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_UP"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Attack_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_UP"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Attack_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 32;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_DOWN"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Attack_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_DOWN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Attack_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 36;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_SIDE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Attack_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_SIDE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Attack_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 14;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 31;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DIE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Death"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DIE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Death"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 33;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HAPPY"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_Happy"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HAPPY"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Happy"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 

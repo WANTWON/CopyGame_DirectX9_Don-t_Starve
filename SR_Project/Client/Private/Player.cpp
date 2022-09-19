@@ -2401,6 +2401,7 @@ CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
 	case INTERACTOBJ_ID::BERRYBUSH:
 	case INTERACTOBJ_ID::CARROT:
 	case INTERACTOBJ_ID::GRASS:
+	case INTERACTOBJ_ID::DIRT: // Move to New ACTION_STATE
 		return ACTION_STATE::WEEDING;
 		break;
 	case INTERACTOBJ_ID::TREE:
@@ -2413,7 +2414,6 @@ CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
 		return ACTION_STATE::PORTAL;
 		break;
 	case INTERACTOBJ_ID::COOKPOT:
-
 	case INTERACTOBJ_ID::ITEMS:
 		return ACTION_STATE::PICKUP;
 		break;
