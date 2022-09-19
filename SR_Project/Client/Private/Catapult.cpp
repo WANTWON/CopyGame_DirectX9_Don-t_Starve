@@ -327,6 +327,7 @@ void CCatapult::Attack(_float _fTimeDelta)
 
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
+		m_eState = IDLE;
 		m_bCanAttack = false;
 	}
 }
@@ -468,6 +469,8 @@ CGameObject * CCatapult::Clone(void * pArg)
 
 void CCatapult::Free()
 {
+	__super::Free();
+
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);

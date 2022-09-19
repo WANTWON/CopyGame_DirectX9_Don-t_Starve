@@ -989,14 +989,19 @@ void CBullet::Rock(_float _fTimeDelta)
 		m_pTextureCom->Get_Frame().m_iCurrentTex = m_pTextureCom->Get_Frame().m_iEndTex;
 	}
 	//Attack
-	if (m_bActivated &&m_pTextureCom->Get_Frame().m_iCurrentTex ==1)
-	{
-		m_bIsAttacked = true;
-	}
-	else
+	if (m_bActivated2)
 	{
 		m_bIsAttacked = false;
 	}
+
+	if (!m_bActivated2 &&m_bActivated &&m_pTextureCom->Get_Frame().m_iCurrentTex ==1)
+	{
+		m_bIsAttacked = true;
+		m_bActivated2 = true;
+	}
+	
+	
+
 	//Dead
 	if (m_bActivated &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{

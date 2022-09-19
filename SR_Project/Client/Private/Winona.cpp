@@ -1271,6 +1271,16 @@ void CWinona::Find_Player()
 
 void CWinona::CatapultCheck(void)
 {
+	for (auto& iter = m_vecCatapults.begin(); iter != m_vecCatapults.end();)
+	{
+		if (*iter == nullptr)
+			iter = m_vecCatapults.erase(iter);
+		else
+		{
+			iter++;
+		}
+	}
+
 	if (m_vecCatapults.size() >= 3)
 	{
 		m_bCanSkill = false;
