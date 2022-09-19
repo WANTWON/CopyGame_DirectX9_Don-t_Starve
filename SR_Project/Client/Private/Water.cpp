@@ -53,6 +53,11 @@ void CWater::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	if (iLevel == LEVEL_MAZE)
+		m_eShaderID = SHADER_DARK;
 }
 
 HRESULT CWater::Render()

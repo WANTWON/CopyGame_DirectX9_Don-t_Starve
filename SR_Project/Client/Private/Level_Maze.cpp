@@ -8,6 +8,7 @@
 #include "Level_Loading.h"
 #include "WoodWall.h"
 #include "Portal.h"
+#include "DecoObject.h"
 
 CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -200,6 +201,29 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	}
 	CloseHandle(hFile);
 
+
+	// Test Spawner
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/House_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	CHouse::HOUSEDECS HouseDesc;
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(HouseDesc), sizeof(CHouse::HOUSEDECS), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_MAZE, TEXT("Layer_House"), &HouseDesc);
+	}
+	CloseHandle(hFile);
+
+
+
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Statue"), LEVEL_MAZE, TEXT("Layer_Statue"), _float3(39.75f, 0.f, 9.f));
+
+
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
@@ -298,6 +322,17 @@ void CLevel_Maze::Update_Camera_Motion()
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
 		m_bPlayerCam = false;
 	}
+	
+
+	if ((pGameObject->Get_Position().x > 35 && !m_bPuzzleStart[0]))
+	{
+		CDecoObject::DECODECS  DecoDesc;
+		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
+		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 9.f);
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		m_bPuzzleStart[0] = true;
+	}
+
 	
 
 }

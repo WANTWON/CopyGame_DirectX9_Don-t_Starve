@@ -15,7 +15,7 @@ BEGIN(Client)
 class CHouse final : public CGameObject
 {
 public:
-	enum HOUSETYPE { PIGHOUSE, SPIDERHOUSE, BOARONSPAWNER, HOUSE_END };
+	enum HOUSETYPE { PIGHOUSE, SPIDERHOUSE, BOARONSPAWNER, MAZESPAWNER, HOUSE_END };
 
 	typedef struct HouseTag
 	{
@@ -57,6 +57,7 @@ private: /* For.Components */
 
 private:
 	void Spawn_Spider(_float fTimeDelta);
+	void Spawn_RandomMonster(_float fTimeDelta);
 public:
 	void Spawn_Boaron(_float fTimeDelta);
 

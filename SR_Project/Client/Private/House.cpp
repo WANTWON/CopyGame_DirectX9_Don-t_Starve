@@ -33,6 +33,9 @@ HRESULT CHouse::Initialize(void* pArg)
 	case HOUSETYPE::BOARONSPAWNER:
 		m_MonsterMaxCount = 3;
 		break;
+	case HOUSETYPE::MAZESPAWNER:
+		m_MonsterMaxCount = 10;
+		break;
 	}
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -56,7 +59,7 @@ HRESULT CHouse::Initialize(void* pArg)
 		m_fRadius *= fSize;
 		m_fRadius -= 0.4f;
 		break;
-	}	
+	}
 	case HOUSETYPE::PIGHOUSE:
 	{
 		_float fSize = 2;
@@ -64,7 +67,16 @@ HRESULT CHouse::Initialize(void* pArg)
 		m_fRadius *= fSize;
 		m_fRadius -= 0.4f;
 		break;
-	}	
+	}
+	case HOUSETYPE::MAZESPAWNER:
+	{
+		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.f);
+		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+
+		
+
+		break;
+	}
 	}
 
 	return S_OK;
@@ -83,6 +95,8 @@ int CHouse::Tick(_float fTimeDelta)
 
 	if (m_HouseDesc.m_eState == HOUSETYPE::SPIDERHOUSE)
 		Spawn_Spider(fTimeDelta);
+	else if (m_HouseDesc.m_eState == HOUSETYPE::MAZESPAWNER)
+		Spawn_RandomMonster(fTimeDelta);
 
 	return OBJ_NOEVENT;
 }
@@ -117,9 +131,9 @@ HRESULT CHouse::Render()
 
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	if (iLevel == LEVEL_HUNT && m_HouseDesc.m_eState == PIGHOUSE)
-	{
 		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(1));
-	}
+	else if (m_HouseDesc.m_eState == MAZESPAWNER)
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(1));
 	else
 	{
 		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(0));
@@ -151,7 +165,11 @@ HRESULT CHouse::SetUp_Components(void* pArg)
 			return E_FAIL;
 		break;
 	case HOUSETYPE::BOARONSPAWNER:
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Spawner"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spawner"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case HOUSETYPE::MAZESPAWNER:
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spawner"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
 	}
@@ -208,7 +226,7 @@ HRESULT CHouse::Release_RenderState()
 void CHouse::SetUp_BillBoard()
 {
 
-	if (m_HouseDesc.m_eState == HOUSETYPE::BOARONSPAWNER)
+	if (m_HouseDesc.m_eState == HOUSETYPE::BOARONSPAWNER || m_HouseDesc.m_eState == HOUSETYPE::MAZESPAWNER)
 		return;
 
 	_float4x4 ViewMatrix;
@@ -240,7 +258,7 @@ void CHouse::WalkingTerrain()
 		return;
 
 	_float3	vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_HouseDesc.m_eState == HOUSETYPE::BOARONSPAWNER ? .01f : m_fRadius);
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_HouseDesc.m_eState == HOUSETYPE::BOARONSPAWNER || m_HouseDesc.m_eState == HOUSETYPE::MAZESPAWNER ? .01f : m_fRadius);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
@@ -262,6 +280,33 @@ void CHouse::Spawn_Spider(_float fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider_Warrior"), LEVEL_HUNT, TEXT("Layer_Monster"), vPosition)))
 				return;
 
+			m_MonsterMaxCount--;
+			m_fSpawnTime = 0.f;
+		}
+	}
+}
+
+void CHouse::Spawn_RandomMonster(_float fTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	_float3 vTargetPos = pTarget->Get_Position();
+
+	_float m_fDistanceToTarget = D3DXVec3Length(&(Get_Position() - vTargetPos));
+	if (m_fDistanceToTarget < 5.f && m_MonsterMaxCount > 0)
+	{
+		if (m_fSpawnTime < 5.f)
+			m_fSpawnTime += fTimeDelta;
+		else
+		{
+			_float3 vPosition = Get_Position();
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider"), LEVEL_MAZE, TEXT("Layer_Monster"), vPosition)))
+				return;
+
+			_float3 vSpawnPosition = Get_Position();
+			// Spawn Effect
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spawn_Effect"), LEVEL_MAZE, TEXT("Layer_Effect"), vSpawnPosition)))
+				return;
 			m_MonsterMaxCount--;
 			m_fSpawnTime = 0.f;
 		}
