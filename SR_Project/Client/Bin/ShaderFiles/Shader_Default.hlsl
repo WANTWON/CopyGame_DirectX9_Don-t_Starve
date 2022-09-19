@@ -126,7 +126,7 @@ technique		DefaultTechnique
 	{	
 		AlphaTestEnable = TRUE;
 		AlphaFunc = greater;
-		AlphaRef = 40;
+		AlphaRef = 50;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_MAIN();
@@ -147,7 +147,7 @@ technique		DefaultTechnique
 	{
 		AlphaTestEnable = TRUE;
 		AlphaFunc = greater;
-		AlphaRef = 40;
+		AlphaRef = 50;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_HIT();
@@ -157,7 +157,7 @@ technique		DefaultTechnique
 	{
 		AlphaTestEnable = TRUE;
 		AlphaFunc = greater;
-		AlphaRef = 40;
+		AlphaRef = 50;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_PICKING();
@@ -167,7 +167,7 @@ technique		DefaultTechnique
 	{
 		AlphaTestEnable = TRUE;
 		AlphaFunc = greater;
-		AlphaRef = 40;
+		AlphaRef = 50;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_DEAD();

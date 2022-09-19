@@ -285,7 +285,7 @@ void CWoodWall::SetUp_BillBoard()
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 
-	if(m_eWallDesc.etype == WALL_WOOD)
+	if(m_eWallDesc.etype == WALL_WOOD || m_eWallDesc.etype == WALL_PUZZLE)
 		m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 }
