@@ -82,8 +82,7 @@ HRESULT CMonster::Render()
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
-	_float  fDistance = D3DXVec3Length(&(Get_Position() - pTarget->Get_Position()));
-	m_pShaderCom->Set_RawValue("g_Distance", &fDistance, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_PlayerPosition", &pTarget->Get_Position(), sizeof(_float3));
 
 	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);

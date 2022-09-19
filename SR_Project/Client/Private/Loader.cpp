@@ -24,6 +24,7 @@
 #include "Carrot.h"
 #include "Item.h"
 #include "Dirt.h"
+#include "Statue.h"
 
 #include "Skill.h"
 #include "Wendy.h"
@@ -1368,7 +1369,23 @@ HRESULT CLoader::Loading_ForLogoLevel()
 #pragma endregion Add_Texture_Boulder
 
 	
+#pragma region Add_Texture_Statue
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Statue_HEALTHY"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Statue/Healthy/Healthy_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Statue_DAMAGED"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Statue/Damaged/Damaged_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Statue_BROKEN"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Statue/Broken/Broken_%03d.png"), 1))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Statue
 
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Statue"),
+		CStatue::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	m_isFinished = true;
 

@@ -255,7 +255,7 @@ void CHouse::WalkingTerrain()
 		return;
 
 	_float3	vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_HouseDesc.m_eState == HOUSETYPE::BOARONSPAWNER ? .01f : m_fRadius);
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_HouseDesc.m_eState == HOUSETYPE::BOARONSPAWNER || m_HouseDesc.m_eState == HOUSETYPE::MAZESPAWNER ? .01f : m_fRadius);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
@@ -290,14 +290,13 @@ void CHouse::Spawn_RandomMonster(_float fTimeDelta)
 	_float3 vTargetPos = pTarget->Get_Position();
 
 	_float m_fDistanceToTarget = D3DXVec3Length(&(Get_Position() - vTargetPos));
-	if (m_fDistanceToTarget < 4.f && m_MonsterMaxCount > 0)
+	if (m_fDistanceToTarget < 5.f && m_MonsterMaxCount > 0)
 	{
-		if (m_fSpawnTime < 4.f)
+		if (m_fSpawnTime < 5.f)
 			m_fSpawnTime += fTimeDelta;
 		else
 		{
 			_float3 vPosition = Get_Position();
-			vPosition.z -= 0.5f;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider"), LEVEL_MAZE, TEXT("Layer_Monster"), vPosition)))
 				return;
 

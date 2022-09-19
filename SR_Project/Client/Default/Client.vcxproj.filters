@@ -286,6 +286,9 @@
     <Filter Include="02.GameObject\00. Pawn\Skills">
       <UniqueIdentifier>{95881df0-4775-4da0-a5ac-83f23d3802b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Statue">
+      <UniqueIdentifier>{9bc1c7fe-7140-4334-8f3f-90f30549f156}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -667,6 +670,13 @@
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Skill.h" />
+    <ClInclude Include="..\Public\ScreenEffect.h" />
+    <ClInclude Include="..\Public\UnInteractive_Object.h">
+      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Statue.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\Statue</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1036,6 +1046,13 @@
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Skill.cpp" />
+    <ClCompile Include="..\Private\ScreenEffect.cpp" />
+    <ClCompile Include="..\Private\UnInteractive_Object.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Statue.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\Statue</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

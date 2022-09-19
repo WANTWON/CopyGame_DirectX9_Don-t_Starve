@@ -266,6 +266,7 @@
     <ClInclude Include="..\Public\Spider.h" />
     <ClInclude Include="..\Public\SpiderWarrior.h" />
     <ClInclude Include="..\Public\Startbutton.h" />
+    <ClInclude Include="..\Public\Statue.h" />
     <ClInclude Include="..\Public\Status.h" />
     <ClInclude Include="..\Public\Status_pont.h" />
     <ClInclude Include="..\Public\Talk.h" />
@@ -290,6 +291,7 @@
     <ClInclude Include="..\public\TotemEffect.h" />
     <ClInclude Include="..\public\Tree.h" />
     <ClInclude Include="..\Public\MainInventory.h" />
+    <ClInclude Include="..\Public\UnInteractive_Object.h" />
     <ClInclude Include="..\Public\Water.h" />
     <ClInclude Include="..\Public\Wendy.h" />
     <ClInclude Include="..\Public\WoodWall.h" />
@@ -393,6 +395,7 @@
     <ClCompile Include="..\Private\Spider.cpp" />
     <ClCompile Include="..\Private\SpiderWarrior.cpp" />
     <ClCompile Include="..\Private\Startbutton.cpp" />
+    <ClCompile Include="..\Private\Statue.cpp" />
     <ClCompile Include="..\Private\Status.cpp" />
     <ClCompile Include="..\Private\Status_pont.cpp" />
     <ClCompile Include="..\Private\Talk.cpp" />
@@ -417,6 +420,7 @@
     <ClCompile Include="..\private\TotemEffect.cpp" />
     <ClCompile Include="..\private\Tree.cpp" />
     <ClCompile Include="..\Private\MainInventory.cpp" />
+    <ClCompile Include="..\Private\UnInteractive_Object.cpp" />
     <ClCompile Include="..\Private\Water.cpp" />
     <ClCompile Include="..\Private\Wendy.cpp" />
     <ClCompile Include="..\Private\WoodWall.cpp" />

@@ -7,13 +7,13 @@
 #include "Level_Maze.h"
 
 CWoodWall::CWoodWall(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CUnInteractive_Object(pGraphic_Device)
 {
 	ZeroMemory(&m_tInfo, sizeof(OBJINFO));
 }
 
 CWoodWall::CWoodWall(const CWoodWall & rhs)
-	: CGameObject(rhs)
+	: CUnInteractive_Object(rhs)
 {
 }
 
@@ -27,15 +27,12 @@ HRESULT CWoodWall::Initialize_Prototype()
 
 HRESULT CWoodWall::Initialize(void* pArg)
 {
-
 	if (pArg != nullptr)
 		memcpy(&m_eWallDesc, pArg, sizeof(WALLDESC));
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(SetUp_Components(pArg)))
-		return E_FAIL;
 	m_eState = HEALTHY;
 	m_tInfo.iMaxHp = 60;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
@@ -56,10 +53,8 @@ HRESULT CWoodWall::Initialize(void* pArg)
 		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
 	}
 	
-
 	
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
-
 
 	if (m_eWallDesc.eDir == SIDE)
 		m_pTransformCom->Turn(_float3(0, 1, 0), 1.f);
@@ -112,8 +107,6 @@ int CWoodWall::Tick(_float fTimeDelta)
 void CWoodWall::Late_Tick(_float fTimeDelta)
 {
 
-	__super::Late_Tick(fTimeDelta);
-
 	if (m_eWallDesc.eDir == WALL_DIREND)
 		SetUp_BillBoard();
 	else
@@ -142,31 +135,6 @@ HRESULT CWoodWall::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
-
-	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
-
-	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
-	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
-	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
-
-	if (m_eWallDesc.etype == WALL_WOOD || m_eWallDesc.etype == WALL_MAZE || m_eWallDesc.etype == WALL_BOSS || m_eWallDesc.etype == WALL_PUZZLE)
-	{
-		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
-	}
-	else if (m_eWallDesc.etype == WALL_ROCK)
-	{
-		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(0));
-	}
-
-	m_pShaderCom->Begin(m_eShaderID);
-	if (m_eWallDesc.etype != WALL_END)
-		m_pVIBufferCom->Render();
-	
-	m_pShaderCom->End();
-
 #ifdef _DEBUG
 
 	if (g_ColliderRender &&  m_pColliderCom != nullptr)
@@ -180,10 +148,12 @@ HRESULT CWoodWall::Render()
 	
 #endif // _DEBUG
 
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
-
 	return S_OK;
+}
+
+void CWoodWall::Set_Texture()
+{
+	m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
 }
 
 
@@ -200,6 +170,7 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 
 	/* For.Com_Texture */
 	Texture_Clone();
+
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
@@ -254,25 +225,6 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CWoodWall::SetUp_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-
-	return S_OK;
-}
-
-HRESULT CWoodWall::Release_RenderState()
-{
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	return S_OK;
-}
 
 void CWoodWall::SetUp_BillBoard()
 {
@@ -587,15 +539,4 @@ void CWoodWall::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pColliderCom);
-	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pShaderCom);
-
-	for (auto& iter : m_vecTexture)
-		Safe_Release(iter);
-
-	m_vecTexture.clear();
 }

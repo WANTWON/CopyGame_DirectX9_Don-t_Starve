@@ -200,6 +200,27 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	}
 	CloseHandle(hFile);
 
+
+	// Test Spawner
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/House_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	CHouse::HOUSEDECS HouseDesc;
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(HouseDesc), sizeof(CHouse::HOUSEDECS), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_MAZE, TEXT("Layer_House"), &HouseDesc);
+	}
+	CloseHandle(hFile);
+
+
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Statue"), LEVEL_MAZE, TEXT("Layer_Statue"), _float3(39.f, 0.f, 9.f));
+
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
