@@ -9,15 +9,13 @@ class CTexture;
 class CRenderer;
 class CTransform;
 class CVIBuffer_Rect;
-//class CCollider;
 END
 
 BEGIN(Client)
 class CPortal final : public CInteractive_Object
 {
 public: 
-
-	enum  PORTALTYPE { PORTAL_GAMEPLAY,  PORTAL_HUNT, PORTAL_MAZE, PORTAL_BOSS, PORTAL_END };
+	enum PORTALTYPE { PORTAL_GAMEPLAY, PORTAL_HUNT, PORTAL_MAZE, PORTAL_BOSS, PORTAL_END };
 
 	typedef struct PortalDesc
 	{
@@ -25,8 +23,6 @@ public:
 		_float3 vPosition;
 	}PORTALDESC;
 	
-
-
 	enum STATE
 	{
 		IDLE_CLOSE,

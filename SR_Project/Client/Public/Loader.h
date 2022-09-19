@@ -46,6 +46,8 @@ public:
 	HRESULT Loading_Terrain_ForBossLevel();
 	HRESULT Loading_Terrain_ForMazeLevel();
 
+	HRESULT Loading_Prototype_Object();
+
 private:
 	LEVEL					m_eNextLevel = LEVEL_END;
 	_bool					m_isFinished = false;

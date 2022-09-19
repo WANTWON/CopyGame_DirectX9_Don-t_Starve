@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "Portal.h"
 #include "Particle.h"
+#include "Trap.h"
 #include <time.h>
 
 #include "NPC.h"
