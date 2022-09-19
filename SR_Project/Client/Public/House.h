@@ -38,7 +38,7 @@ public:
 public:
 	HOUSEDECS Get_Desc() { return m_HouseDesc; }
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
-
+	void Set_ShaderID();
 private:
 	HRESULT SetUp_Components(void* pArg);
 	HRESULT SetUp_RenderState();

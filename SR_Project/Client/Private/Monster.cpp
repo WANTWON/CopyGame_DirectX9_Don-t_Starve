@@ -68,7 +68,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
 
-	
+	Set_ShaderID();
 }
 
 HRESULT CMonster::Render()

@@ -55,9 +55,14 @@ void CWater::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
-	if (iLevel == LEVEL_MAZE)
+	if (pGameObject->Get_Dead())
+		m_eShaderID = SHADER_DEAD;
+	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
+	else
+		m_eShaderID = SHADER_IDLE_ALPHATEST;
 }
 
 HRESULT CWater::Render()

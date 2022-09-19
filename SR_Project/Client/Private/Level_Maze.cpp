@@ -160,10 +160,8 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, pLayerTag, &PortalDesc)))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dirt"), LEVEL_MAZE, pLayerTag, _float3(11.0f, 2.f, 8.f))))
-		return E_FAIL;
 
-	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/RockWall_Stage4_Vertical_and_Horizontal.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/RockWall_Stage5_Vertical_and_Horizontal.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -219,8 +217,24 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	}
 	CloseHandle(hFile);
 
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Dirt_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
 
+	dwByte = 0;
+	_float3 vPosition = _float3(0.f, 0.f, 0.f);
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(vPosition), sizeof(_float3), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dirt"), LEVEL_MAZE, pLayerTag, vPosition)))
+			return E_FAIL;
+	}
+	CloseHandle(hFile);
+
+	
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Statue"), LEVEL_MAZE, TEXT("Layer_Statue"), _float3(39.75f, 0.f, 9.f));
 
 

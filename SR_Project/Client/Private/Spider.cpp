@@ -603,7 +603,7 @@ HRESULT CSpider::Drop_Items()
 _bool CSpider::IsDead()
 {
 	if (m_bDead && m_eState == STATE::DIE && GetTickCount() > m_dwDeathTime + 1500)
-		return true;
+		return true;	
 	else if (m_bDead && m_eState != STATE::DIE)
 	{
 		m_dwDeathTime = GetTickCount();
