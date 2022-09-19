@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Statue.h"
 #include "GameInstance.h"
-
+#include "CameraManager.h"
 
 CStatue::CStatue(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -86,6 +86,8 @@ void CStatue::Late_Tick(_float fTimeDelta)
 
 	Change_Motion();
 	Change_Frame();
+
+	Set_ShaderID();
 }
 
 HRESULT CStatue::Render()
@@ -120,6 +122,7 @@ HRESULT CStatue::Render()
 
 _float CStatue::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
+	m_eShaderID = SHADER_HIT;
 	m_tInfo.iCurrentHp -= fDamage;
 	return m_tInfo.iCurrentHp;
 }
@@ -205,10 +208,28 @@ void CStatue::SetUp_BillBoard()
 
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-	//m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+
+	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
+	{
+		m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+		//m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+		m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+	}
+	else
+	{
+		_float4x4 ViewMatrix;
+
+		m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);  // Get View Matrix
+		D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
+
+		_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+		_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
+		m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	}
+
+	
 }
+
 
 HRESULT CStatue::Texture_Clone()
 {
@@ -234,6 +255,14 @@ HRESULT CStatue::Texture_Clone()
 	m_vecTexture.push_back(m_pTextureCom);
 
 	return S_OK;
+}
+
+void CStatue::Set_ShaderID()
+{
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	if (iLevel == LEVEL_MAZE)
+		m_eShaderID = SHADER_DARK;
 }
 
 void CStatue::Change_Frame()

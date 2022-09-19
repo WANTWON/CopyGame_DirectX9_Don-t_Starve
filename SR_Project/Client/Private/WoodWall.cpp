@@ -5,6 +5,7 @@
 #include "CameraManager.h"
 #include "Player.h"
 #include "Level_Maze.h"
+#include "Level_Manager.h"
 
 CWoodWall::CWoodWall(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CUnInteractive_Object(pGraphic_Device)
@@ -42,7 +43,10 @@ HRESULT CWoodWall::Initialize(void* pArg)
 	if (m_eWallDesc.etype == WALL_ROCK)
 		m_pTransformCom->Set_Scale(1.f, 3.f, 1.f);
 	if (m_eWallDesc.etype == WALL_MAZE)
+	{
 		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+	}
+		
 	if (m_eWallDesc.etype == WALL_BOSS || m_eWallDesc.etype == WALL_PUZZLE)
 	{
 		m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.f);
@@ -127,6 +131,9 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 		Change_Motion();
 		Change_Frame(fTimeDelta);
 	}
+
+	Set_ShaderID();
+
 }
 
 HRESULT CWoodWall::Render()
@@ -470,6 +477,14 @@ void CWoodWall::Change_Motion()
 	default:
 		break;
 	}
+}
+
+void CWoodWall::Set_ShaderID()
+{
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	if (iLevel == LEVEL_MAZE)
+		m_eShaderID = SHADER_DARK;
 }
 
 void CWoodWall::Check_GrowShrink()

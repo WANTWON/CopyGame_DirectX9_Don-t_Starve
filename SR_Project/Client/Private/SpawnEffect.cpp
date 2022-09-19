@@ -29,7 +29,13 @@ HRESULT CSpawnEffect::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+
+	LEVEL iLEVEL = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	if (iLEVEL == LEVEL_MAZE)
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+	else
+		m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+
 
 	return S_OK;
 }
@@ -190,18 +196,57 @@ HRESULT CSpawnEffect::Texture_Clone()
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_fSpeed = 30;
 
-	TextureDesc.m_iEndTex = 49;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Spawn_Effect"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Spawner_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	LEVEL iLEVEL = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	if (iLEVEL == LEVEL_MAZE)
+	{
+		TextureDesc.m_fSpeed = 40;
+		TextureDesc.m_iEndTex = 13;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Spawn_CloseEffect"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_SpawnerClose_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+
+		TextureDesc.m_iEndTex = 13;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Spawn_Effect"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Spawner_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+	}
+	else
+	{
+		TextureDesc.m_iEndTex = 49;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Spawn_Effect"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Spawner_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+	}
+
+	
 
 	return S_OK;
 }
 
 void CSpawnEffect::Change_Frame()
 {
+	LEVEL iLEVEL = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	
+
 	if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-		m_bDead = true;
+	{
+		if (iLEVEL == LEVEL_MAZE)
+		{
+			if (m_bChanged)
+				m_bDead = true;
+			else
+			{
+				Change_Texture(TEXT("Com_Texture_Spawn_CloseEffect"));
+				m_bChanged = true;
+			}
+			
+		}
+		else
+			m_bDead = true;
+	}
+		
 }
 
 CSpawnEffect* CSpawnEffect::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

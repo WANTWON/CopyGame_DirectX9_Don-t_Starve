@@ -48,10 +48,13 @@ private:
 	void WalkingTerrain();
 	HRESULT Change_Texture(const _tchar* LayerTag);
 
+	void Set_ShaderID();
+
 private: /*For TextureCom */
 	virtual HRESULT Texture_Clone();
 	virtual void Change_Frame(_float fTimeDelta);
 	virtual void Change_Motion();
+	
 
 private:
 	void Check_GrowShrink();

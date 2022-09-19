@@ -42,11 +42,13 @@ public:
 	 HRESULT SetUp_Components(void* pArg = nullptr);
 	 void WalkingTerrain();
 	 void SetUp_BillBoard();
+	 
 private: /*For TextureCom */
 	 void Change_Frame();
 	 void Change_Motion();
 	 HRESULT Change_Texture(const _tchar * LayerTag);
 	 HRESULT Texture_Clone();
+	 void Set_ShaderID();
 private:
 	STATE m_eState = HEALTHY;
 	STATE m_ePreState = MAX;

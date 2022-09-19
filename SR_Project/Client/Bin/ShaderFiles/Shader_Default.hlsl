@@ -159,6 +159,30 @@ PS_OUT PS_DARK(PS_IN In)
 }
 
 
+PS_OUT PS_DARKWITHLIGHT(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor = tex2D(TextureSampler, In.vTexUV);
+
+	float4		vFogColor = vector(1.f, 1.f, 1.f, 0.f);
+	float		fDistance = length(g_PlayerPosition - In.vWorldPos);
+
+	float		fFogPower = max(fDistance - g_fMinRange, 0.f) / (g_fMaxRange - g_fMinRange);
+
+	Out.vColor -= vFogColor * fFogPower;
+
+
+
+	float4		vLightColor = vector(2.f, 2.f, 1.f, 0.f);
+	float		fLightPower = max(g_fMinRange - fDistance, 0.f) / (g_fMaxRange - g_fMinRange);
+
+
+	Out.vColor += vLightColor * fLightPower;
+
+	return Out;
+}
+
+
 
 technique		DefaultTechnique
 {

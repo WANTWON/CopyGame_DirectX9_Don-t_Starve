@@ -72,6 +72,9 @@ HRESULT CHouse::Initialize(void* pArg)
 	{
 		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.f);
 		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+
+		
+
 		break;
 	}
 	}
@@ -300,6 +303,10 @@ void CHouse::Spawn_RandomMonster(_float fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider"), LEVEL_MAZE, TEXT("Layer_Monster"), vPosition)))
 				return;
 
+			_float3 vSpawnPosition = Get_Position();
+			// Spawn Effect
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spawn_Effect"), LEVEL_MAZE, TEXT("Layer_Effect"), vSpawnPosition)))
+				return;
 			m_MonsterMaxCount--;
 			m_fSpawnTime = 0.f;
 		}
