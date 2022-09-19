@@ -14,8 +14,11 @@ BEGIN(Client)
 class CShockEffect final : public CGameObject
 {
 public:
+	enum SHOCKTYPE { SHOCK, HIT, SHOCK_MAX };
+
 	typedef struct ShockDescription
 	{
+		SHOCKTYPE eShockType = SHOCK_MAX;
 		_float fShockTimeLimit = 0.f;
 		_float3 vInitPosition = _float3(0.f, 0.f, 0.f);
 	}SHOCKDESC;

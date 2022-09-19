@@ -37,15 +37,12 @@ protected: /* For.Components */
 
 protected:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) = 0;
-	HRESULT SetUp_RenderState();
-	HRESULT Release_RenderState();
 
 protected: /*For TextureCom */
 	virtual HRESULT Texture_Clone() = 0;
 	HRESULT Change_Texture(const _tchar* LayerTag);
 	virtual void Change_Frame() = 0;
 	virtual void Change_Motion() = 0;
-
 protected: /* For TransformCom*/
 	void SetUp_BillBoard();
 	void WalkingTerrain();
