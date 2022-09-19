@@ -343,6 +343,7 @@ void CLevel_Maze::Update_Camera_Motion()
 		CDecoObject::DECODECS  DecoDesc;
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 9.f);
+		DecoDesc.fRotate = 0.f;
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[0] = true;
 	}

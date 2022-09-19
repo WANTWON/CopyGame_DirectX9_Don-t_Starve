@@ -2265,12 +2265,24 @@ HRESULT CLoader::Loading_ForMazeLevel()
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Floor */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Idle"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Floor/Floor1/Idle/Idle_%03d.png"), 1))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place1"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Floor/Floor1/Place_%03d.png"), 16))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Floor/Floor1/Place/Place_%03d.png"), 16))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place2"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Floor/Floor2/Place_%03d.png"), 16))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place3"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Floor/Floor3/Place_%03d.png"), 16))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place4"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Floor/Floor4/Place_%03d.png"), 16))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place5"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Floor/Floor5/Place_%03d.png"), 16))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_RockEffect */
