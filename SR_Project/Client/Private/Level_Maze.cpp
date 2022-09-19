@@ -150,6 +150,8 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, pLayerTag, &PortalDesc)))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dirt"), LEVEL_MAZE, pLayerTag, _float3(9.f, 2.f, 45.f))))
+		return E_FAIL;
 
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/RockWall_Stage4_Vertical_and_Horizontal.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)

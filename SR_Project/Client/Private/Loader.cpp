@@ -23,6 +23,7 @@
 #include "BerryBush.h"
 #include "Carrot.h"
 #include "Item.h"
+#include "Dirt.h"
 
 #include "Wendy.h"
 
@@ -2236,7 +2237,20 @@ HRESULT CLoader::Loading_ForMazeLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/MazeFlower/Idle_%03d.png"), 25))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_Dirt */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Dirt"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Dirt/Dirt_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Dirt_Empty"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Dirt/Empty_%03d.png"), 1))))
+		return E_FAIL;
+
 	if (FAILED(Loading_Terrain_ForMazeLevel()))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Dirt*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Dirt"),
+		CDirt::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Finished Loading"));

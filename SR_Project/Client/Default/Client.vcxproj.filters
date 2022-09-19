@@ -280,6 +280,9 @@
     <Filter Include="02.GameObject\00. Pawn\01.Monster\Boarrior\ShockEffect">
       <UniqueIdentifier>{5d19ea0c-0303-4d16-af19-78963be08ee6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Dirt">
+      <UniqueIdentifier>{dabbb46c-0362-4148-8a9f-1c2379a7eb44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -657,6 +660,9 @@
     <ClInclude Include="..\public\ShockEffect.h">
       <Filter>02.GameObject\00. Pawn\01.Monster\Boarrior\ShockEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Dirt.h">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1021,6 +1027,9 @@
     </ClCompile>
     <ClCompile Include="..\private\ShockEffect.cpp">
       <Filter>02.GameObject\00. Pawn\01.Monster\Boarrior\ShockEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Dirt.cpp">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
