@@ -1,5 +1,6 @@
 #include "stdafx.h"
-#include "..\Public\Wendy.h"
+#include "..\Public\Winona.h"
+#include "Transform.h"
 #include "GameInstance.h"
 #include "Player.h"
 #include "BerryBush.h"
@@ -7,17 +8,18 @@
 #include "Bullet.h"
 #include "Skill.h"
 #include "Inventory.h"
-CWendy::CWendy(LPDIRECT3DDEVICE9 pGraphic_Device)
+#include "Catapult.h"
+CWinona::CWinona(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CNPC(pGraphic_Device)
 {
 }
 
-CWendy::CWendy(const CWendy & rhs)
-	: CNPC(rhs)
+CWinona::CWinona(const CWinona & rhs)
+	:CNPC(rhs)
 {
 }
 
-HRESULT CWendy::Initialize_Prototype()
+HRESULT CWinona::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -25,16 +27,16 @@ HRESULT CWendy::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CWendy::Initialize(void * pArg)
+HRESULT CWinona::Initialize(void * pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 	//Test
 	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 	m_eObjID = OBJID::OBJ_NPC;
-	m_eNPCID = NPCID::NPC_WENDY;
+	m_eNPCID = NPCID::NPC_WINONA;
 
-	m_fAtk_Max_CoolTime = 3.f;
+	m_fAtk_Max_CoolTime = 10.f;
 	m_fAtk_Cur_CoolTime = m_fAtk_Max_CoolTime;
 
 	m_fSkill_Max_CoolTime = 5.f;
@@ -53,29 +55,14 @@ HRESULT CWendy::Initialize(void * pArg)
 	return S_OK;
 }
 
-int CWendy::Tick(_float fTimeDelta)
+int CWinona::Tick(_float fTimeDelta)
 {
-	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-
-
-	if (m_iCurrentLevelndex == LEVEL_LOADING)
+	if (!Setup_LevelChange(fTimeDelta))
 		return OBJ_NOEVENT;
 
-	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
-		return OBJ_NOEVENT;
-	
-	if (m_iCurrentLevelndex != m_iPreLevelIndex)
-	{
-		if (m_bOwner)
-		{
-			_float3 Owner_Pos = static_cast<CPlayer*>(m_pOwner)->Get_Pos();
-			Owner_Pos.x -= 3.f;
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
-		}	
-		m_iPreLevelIndex = m_iCurrentLevelndex;
-	}
 	__super::Tick(fTimeDelta);
 
+	CatapultCheck();
 
 	BehaviorTree->Tick(fTimeDelta);
 
@@ -84,7 +71,7 @@ int CWendy::Tick(_float fTimeDelta)
 	return OBJ_NOEVENT;
 }
 
-void CWendy::Late_Tick(_float fTimeDelta)
+void CWinona::Late_Tick(_float fTimeDelta)
 {
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return;
@@ -93,6 +80,7 @@ void CWendy::Late_Tick(_float fTimeDelta)
 		return;
 
 	__super::Late_Tick(fTimeDelta);
+
 	m_pTextureCom->MoveFrame(m_TimerTag);
 
 	if (m_eCur_Dir == DIR_STATE::DIR_LEFT)
@@ -101,7 +89,7 @@ void CWendy::Late_Tick(_float fTimeDelta)
 	}
 }
 
-HRESULT CWendy::Render()
+HRESULT CWinona::Render()
 {
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return S_OK;
@@ -118,7 +106,25 @@ HRESULT CWendy::Render()
 	return S_OK;
 }
 
-HRESULT CWendy::SetUp_Components(void * pArg)
+void CWinona::Decreas_Catapult(CCatapult * _pCatapult)
+{
+	auto iter = find_if(m_vecCatapults.begin(), m_vecCatapults.end(), [&](auto& iter)->bool {
+
+		if (iter == _pCatapult)
+			return true;
+
+		return false;
+	});
+
+	if (iter != m_vecCatapults.end())
+	{
+		iter = m_vecCatapults.erase(iter);
+	}
+
+
+}
+
+HRESULT CWinona::SetUp_Components(void * pArg)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -163,127 +169,95 @@ HRESULT CWendy::SetUp_Components(void * pArg)
 	return S_OK;
 }
 
-HRESULT CWendy::Texture_Clone()
+HRESULT CWinona::Texture_Clone()
 {
 	CTexture::TEXTUREDESC TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 	/*Idle*/
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_iEndTex = 1;
-	TextureDesc.m_fSpeed = 20;
-
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Idle_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	TextureDesc.m_iEndTex = 68;
+	TextureDesc.m_fSpeed = 40;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Idle_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Idle_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Idle_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Idle_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Idle_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
+
 	/*Run*/
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_iEndTex = 27;
-	TextureDesc.m_fSpeed = 20;
+	TextureDesc.m_iEndTex = 20;
+	TextureDesc.m_fSpeed = 40;
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Run_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Run_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Run_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Run_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Run_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Run_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Run_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
+
 	/*Build*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Build_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Build_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Build_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Build_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Build_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Build_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	/*Pickup*/
-	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_iEndTex = 5;
-	TextureDesc.m_fSpeed = 20;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Pickup_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	TextureDesc.m_iEndTex = 7;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Pickup_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Pickup_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Pickup_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Pickup_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-
-	/*Give*/
-	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_iEndTex = 13;
-	TextureDesc.m_fSpeed = 20;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Give_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Give_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Give_Up"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Give_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Give_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Give_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pickup_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Pickup_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	/*Dance*/
-	TextureDesc.m_iEndTex = 31;
-	TextureDesc.m_fSpeed = 20;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Dance"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Dance"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	TextureDesc.m_iEndTex = 41;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Dance"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Dance"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	/*Talk*/
 	TextureDesc.m_iEndTex = 51;
-	TextureDesc.m_fSpeed = 20;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Talk"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Talk"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-
-	/*Recall*/
-	TextureDesc.m_iEndTex = 24;
-	TextureDesc.m_fSpeed = 20;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Recall"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Recall"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-
-	/*Channel*/
-	TextureDesc.m_iEndTex = 52;
-	TextureDesc.m_fSpeed = 20;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Channel"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Channel"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+	TextureDesc.m_fSpeed = 40;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Talk"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Talk"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
 	return S_OK;
 }
 
-void CWendy::Change_Frame()
+void CWinona::Change_Frame()
 {
 }
 
-void CWendy::Change_Motion()
+void CWinona::Change_Motion()
 {
 }
 
-void CWendy::Interact(_uint Damage)
+void CWinona::Interact(_uint Damage)
 {
 	if (m_iTalkCnt == 2 && Damage == 1)
 	{
@@ -299,15 +273,14 @@ void CWendy::Interact(_uint Damage)
 	{
 		m_iTalkCnt++;
 	}
-
 }
 
-HRESULT CWendy::Drop_Items()
+HRESULT CWinona::Drop_Items()
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
-void CWendy::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
+void CWinona::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 {
 	switch (_InterruptNum)
 	{
@@ -324,17 +297,15 @@ void CWendy::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 		}
 		break;
 	}
-
-
 }
 
-void CWendy::Move(_float _fTimeDelta)
+void CWinona::Move(_float _fTimeDelta)
 {
 	_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-	
+
 	m_eCur_Dir = Check_Direction();
-	
+
 
 	m_eState = CNPC::MOVE;
 
@@ -342,8 +313,6 @@ void CWendy::Move(_float _fTimeDelta)
 		|| m_ePre_Dir != m_eCur_Dir)
 	{
 		m_eCur_Dir = Check_Direction();
-
-		cout << "Move" << endl;
 		switch (m_eCur_Dir)
 		{
 		case DIR_UP:
@@ -366,22 +335,12 @@ void CWendy::Move(_float _fTimeDelta)
 		m_ePre_Dir = m_eCur_Dir;
 	}
 
-	//if (m_bOwner)
-	//{
-	//	MoveWithOwner(_fTimeDelta);
-	//}
-	//else
-	//{
-	//	
-	//}
-
 	MoveWithoutOwner(_fTimeDelta);
 
 	SetUp_BillBoard();
-
 }
 
-void CWendy::Idle(_float _fTimeDelta)
+void CWinona::Idle(_float _fTimeDelta)
 {
 	m_fInteractTIme += _fTimeDelta;
 
@@ -414,17 +373,16 @@ void CWendy::Idle(_float _fTimeDelta)
 	}
 }
 
-void CWendy::Interaction(_float _fTimedelta)
-{
-	//Test Only Berry
+void CWinona::Interaction(_float _fTimedelta)
+{//Test Only Berry
 	if (m_pTarget == nullptr)
 		return;
 	//나중에 분간.
 
 	Revive_Berry(_fTimedelta);
-
 }
-void CWendy::Talk(_float _fTimeDelta)
+
+void CWinona::Talk(_float _fTimeDelta)
 {
 	if (static_cast<CPawn*>(m_pTarget)->Get_ObjID() == OBJID::OBJ_PLAYER)
 	{
@@ -436,7 +394,7 @@ void CWendy::Talk(_float _fTimeDelta)
 	}
 }
 
-void CWendy::Dance(_float _fTimeDelta)
+void CWinona::Dance(_float _fTimeDelta)
 {
 	m_fInteractTIme += _fTimeDelta;
 
@@ -457,9 +415,8 @@ void CWendy::Dance(_float _fTimeDelta)
 	}
 }
 
-void CWendy::Attack(_float _fTimeDelta)
-{
-	//m_fInteractTIme += _fTimeDelta;
+void CWinona::Attack(_float _fTimeDelta)
+{//m_fInteractTIme += _fTimeDelta;
 
 	m_eState = CNPC::ATTACK;
 
@@ -467,11 +424,11 @@ void CWendy::Attack(_float _fTimeDelta)
 	{
 		m_bInteract = true;
 		cout << "Attack" << endl;
-		Change_Texture(TEXT("Com_Texture_Recall"));
+		Change_Texture(TEXT("Com_Texture_Build_Down"));
 		m_ePreState = m_eState;
 
 		//cout << "Create_Bullet" << endl;
-		
+
 	}
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 2)
 	{
@@ -479,12 +436,10 @@ void CWendy::Attack(_float _fTimeDelta)
 		m_bInteract = false;
 		m_bCanAttack = false;
 	}
-
-
 }
 
-void CWendy::Interrupted(_float _fTimeDelta)
-{//for Test. Only TalkInterrupt
+void CWinona::Interrupted(_float _fTimeDelta)
+{
 	if (m_bInterrupted)
 	{
 
@@ -506,10 +461,9 @@ void CWendy::Interrupted(_float _fTimeDelta)
 		}
 
 	}
-
 }
 
-void CWendy::Skill(_float _fTimeDelta)
+void CWinona::Skill(_float _fTimeDelta)
 {
 	m_eState = CNPC::SKILL;
 
@@ -517,7 +471,7 @@ void CWendy::Skill(_float _fTimeDelta)
 	{
 		m_bInteract = true;
 		cout << "Skill" << endl;
-		Change_Texture(TEXT("Com_Texture_Channel"));
+		Change_Texture(TEXT("Com_Texture_Build_Down"));
 		m_ePreState = m_eState;
 
 		//cout << "Create_Bullet" << endl;
@@ -525,13 +479,13 @@ void CWendy::Skill(_float _fTimeDelta)
 	}
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 2)
 	{
-		Create_Heal(_fTimeDelta);
+		Create_Catapult(_fTimeDelta);
 		m_bInteract = false;
 		m_bCanSkill = false;
 	}
 }
 
-void CWendy::Select_Target(_float _fTimeDelta)
+void CWinona::Select_Target(_float _fTimeDelta)
 {
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return;
@@ -540,21 +494,17 @@ void CWendy::Select_Target(_float _fTimeDelta)
 
 	if (m_pTarget == nullptr)
 		return;
-
 	m_vTargetPos = m_pTarget->Get_Position();
 	m_bInteract = true;
 	m_bArrive = false;
 
-	cout << "SelectTarget" << endl;
 	//m_eCur_Dir = Check_Direction();
 }
 
-void CWendy::Set_RandPos(_float _fTimeDelta)
-{// Find Random Patroling Position
+void CWinona::Set_RandPos(_float _fTimeDelta)
+{
 	if (m_bArrive)
 	{
-		cout << "RandPos" << endl;
-
 		_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
 		_int bSignX = rand() % 2;
 		_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
@@ -565,10 +515,9 @@ void CWendy::Set_RandPos(_float _fTimeDelta)
 		m_vTargetPos = _float3(m_fPatrolPosX, 0.5f, m_fPatrolPosZ);
 		m_bArrive = false;
 	}
-	//m_eCur_Dir = Check_Direction();
 }
 
-_bool CWendy::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
+_bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 {
 	if (m_pTarget == nullptr)
 		return false;
@@ -590,6 +539,7 @@ _bool CWendy::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		break;
 	case 1:// Basic AttackRange
 		fRange = m_fAtkRange;
+		//fRange = 1.f;
 		break;
 
 	case 2://SkillRange
@@ -600,9 +550,10 @@ _bool CWendy::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		break;
 	}
 
-	_float Compare_Range = (m_pTarget->Get_Position().x - Get_Pos().x)*(m_pTarget->Get_Position().x - Get_Pos().x)
-		+ (m_pTarget->Get_Position().y - Get_Pos().y)*(m_pTarget->Get_Position().y - Get_Pos().y)
-		+ (m_pTarget->Get_Position().z - Get_Pos().z)*(m_pTarget->Get_Position().z - Get_Pos().z);
+	_float Compare_Range = 0.f;
+	Compare_Range = (m_pTarget->Get_Position().x - Get_Pos().x)*(m_pTarget->Get_Position().x - Get_Pos().x)
+			+ (m_pTarget->Get_Position().y - Get_Pos().y)*(m_pTarget->Get_Position().y - Get_Pos().y)
+			+ (m_pTarget->Get_Position().z - Get_Pos().z)*(m_pTarget->Get_Position().z - Get_Pos().z);	
 
 	if (fRange < Compare_Range)
 	{
@@ -615,11 +566,9 @@ _bool CWendy::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		Clear_Activated();
 		return false;
 	}
-	
-
 }
 
-void CWendy::Revive_Berry(_float _fTimeDelta)
+void CWinona::Revive_Berry(_float _fTimeDelta)
 {
 	m_eState = CNPC::INTERACT;
 
@@ -654,11 +603,9 @@ void CWendy::Revive_Berry(_float _fTimeDelta)
 
 		m_bInteract = false;
 	}
-
-
 }
 
-void CWendy::Talk_Player(_float _fTimeDelta)
+void CWinona::Talk_Player(_float _fTimeDelta)
 {
 	CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(true);
 
@@ -705,7 +652,7 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 			break;
 
 		case 3:
-			if(m_bAccept)
+			if (m_bAccept)
 			{
 				if (!m_bOwner)
 					pinven->Get_Talk_list()->front()->Set_Texnum1(2);
@@ -722,7 +669,7 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 			break;
 		case 4:
 			break;
-		}	
+		}
 		m_iPreTalkCnt = m_iTalkCnt;
 	}
 
@@ -756,7 +703,7 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 			{
 				m_bOwner = true;
 				m_pOwner = static_cast<CPawn*>(m_pTarget);
-				static_cast<CPlayer*>(m_pTarget)->Add_Party(TEXT("Wendy"), this);
+				static_cast<CPlayer*>(m_pTarget)->Add_Party(TEXT("Winona"), this);
 			}
 			else
 			{
@@ -791,7 +738,7 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 			static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
 			if (!m_bNextAct)
 			{
-				static_cast<CPlayer*>(m_pTarget)->Release_Party(TEXT("Wendy"));
+				static_cast<CPlayer*>(m_pTarget)->Release_Party(TEXT("Winona"));
 				m_bOwner = false;
 				m_pOwner = nullptr;
 				m_pTarget = nullptr;
@@ -804,13 +751,10 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 			break;
 		}
 	}
-
-
 }
 
-void CWendy::Talk_Friend(_float _fTimeDelta)
+void CWinona::Talk_Friend(_float _fTimeDelta)
 {
-
 	m_fInteractTIme += _fTimeDelta;
 
 	m_eState = CNPC::TALK;
@@ -843,11 +787,9 @@ void CWendy::Talk_Friend(_float _fTimeDelta)
 			m_bNextAct = true;
 		}
 	}
-
-
 }
 
-void CWendy::Create_Bullet(_float _fTimeDelta)
+void CWinona::Create_Bullet(_float _fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
@@ -861,28 +803,27 @@ void CWendy::Create_Bullet(_float _fTimeDelta)
 	SkillDesc.pTarget = this;
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skill"), m_iCurrentLevelndex, TEXT("Skill"), &SkillDesc)))
 		return;
-
-
 }
 
-void CWendy::Create_Heal(_float _fTimeDelta)
+void CWinona::Create_Catapult(_float _fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	CSkill::SKILL_DESC SkillDesc;
+	CCatapult::CATAPULTDESC CatapultDesc;
+	if (m_vecCatapults.size() >= 1)
+	{
+		SetPosForSkill(_fTimeDelta);
+	}
+	ZeroMemory(&CatapultDesc, sizeof(CatapultDesc));
+	CatapultDesc.pOwner = this;
+	CatapultDesc.vInitPos = m_vTargetPos;
 
-	SkillDesc.eDirState = DIR_END;
-	SkillDesc.eSkill = CSkill::SKILL_TYPE::HEAL;
-	SkillDesc.vTargetPos = m_pOwner->Get_Position();
-	SkillDesc.vPosition = m_pOwner->Get_Position();
-	SkillDesc.vScale = _float3(3.f, 3.f, 1.f);
-	SkillDesc.pTarget = m_pOwner;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skill"), m_iCurrentLevelndex, TEXT("Skill"), &SkillDesc)))
+	//Test
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Catapult"), m_iCurrentLevelndex, TEXT("Layer_Catapults"), &CatapultDesc)))
 		return;
 }
 
-void CWendy::MoveWithOwner(_float _fTimeDelta)
+void CWinona::MoveWithOwner(_float _fTimeDelta)
 {
 	_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
@@ -896,7 +837,7 @@ void CWendy::MoveWithOwner(_float _fTimeDelta)
 			m_bDirChanged = false;
 		}
 	}
-	else if(m_pTarget == m_pOwner)
+	else if (m_pTarget == m_pOwner)
 	{
 		m_pTransformCom->Go_PosTarget(_fTimeDelta, _float3(m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ), _float3{ 0.f, 0.f, 0.f });
 		if ((abs(vMyPos.x - m_fPatrolPosX) < 0.3 &&
@@ -908,19 +849,33 @@ void CWendy::MoveWithOwner(_float _fTimeDelta)
 	}
 }
 
-void CWendy::MoveWithoutOwner(_float _fTimeDelta)
+void CWinona::MoveWithoutOwner(_float _fTimeDelta)
 {
 	_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	if (m_pTarget)
 	{
-		m_pTransformCom->Go_PosTarget(_fTimeDelta, m_vTargetPos, _float3{ 0.f, 0.f, 0.f });
-		if ((abs(vMyPos.x - m_vTargetPos.x) < 0.3 &&
-			abs(vMyPos.z - m_vTargetPos.z) < 0.3))
+		if (m_bFightMode&&m_bCanSkill && m_vecCatapults.size() >= 1)
 		{
-			m_bArrive = true;
-			m_bDirChanged = false;
+			m_pTransformCom->Go_PosTarget(_fTimeDelta, m_vTargetPos, _float3{ 0.f, 0.f, 0.f });
+			if ((abs(vMyPos.x - m_vTargetPos.x) < 0.01 &&
+				abs(vMyPos.z - m_vTargetPos.z) < 0.01))
+			{
+				m_bArrive = true;
+				m_bDirChanged = false;
+			}
 		}
+		else
+		{
+			m_pTransformCom->Go_PosTarget(_fTimeDelta, m_vTargetPos, _float3{ 0.f, 0.f, 0.f });
+			if ((abs(vMyPos.x - m_vTargetPos.x) < 0.3 &&
+				abs(vMyPos.z - m_vTargetPos.z) < 0.3))
+			{
+				m_bArrive = true;
+				m_bDirChanged = false;
+			}
+		}
+	
 	}
 	else
 	{
@@ -934,9 +889,99 @@ void CWendy::MoveWithoutOwner(_float _fTimeDelta)
 	}
 }
 
-DIR_STATE CWendy::Check_Direction(void)
+void CWinona::SetPosForSkill(_float _fTimeDelta)
 {
-	//내 자신의 Look에서 3번 변환한 값
+	_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_bool bLoof = true;
+	_bool bIsTarget = false;
+	while (bLoof)
+	{
+		_float fOffsetX = _float(rand() % 2) *1.f + _float(rand() % 10) *0.1f;
+		_uint bSignX = rand() % 2;
+		_float fOffsetZ = _float(rand() % 2) *1.f + _float(rand() % 10) *0.1f;
+		_uint bSignZ = rand() % 2;
+		
+		fOffsetX = bSignX ? fOffsetX * -1.f : fOffsetX;
+		fOffsetZ = bSignZ ? fOffsetZ * -1.f : fOffsetZ;
+		m_vTargetPos = _float3(vMyPos.x + fOffsetX, vMyPos.y, vMyPos.z + fOffsetZ);
+	
+		for (_uint i = 0; i < m_vecCatapults.size(); i++)
+		{
+			_float3 fPos = m_vecCatapults[i]->Get_Position();
+
+			_float Compare_Range = (fPos.x - m_vTargetPos.x)*(fPos.x - m_vTargetPos.x)
+				+ (fPos.y - m_vTargetPos.y)*(fPos.y - m_vTargetPos.y)
+				+ (fPos.z - m_vTargetPos.z)*(fPos.z - m_vTargetPos.z);
+
+			if (Compare_Range < 1.f)
+			{
+				bIsTarget = false;
+				break;
+			}
+			else
+			{
+				bIsTarget = true;
+			}
+		}
+
+		if (!bIsTarget)
+		{
+			continue;
+		}
+		else
+		{
+			bLoof = false;
+		}
+	}
+	
+
+
+
+
+}
+
+_bool CWinona::Setup_LevelChange(_float _fTimeDelta)
+{
+	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+	{
+		m_iPreLevelIndex = m_iCurrentLevelndex;
+		return false;
+	}
+		
+
+	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
+	{
+		
+		m_iPreLevelIndex = m_iCurrentLevelndex;
+		return false;
+	}
+
+	if (m_iCurrentLevelndex != m_iPreLevelIndex)
+	{
+		if (m_bOwner)
+		{
+			_float3 Owner_Pos = static_cast<CPlayer*>(m_pOwner)->Get_Pos();
+			Owner_Pos.x -= 2.f;
+			Owner_Pos.z += 2.f;
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
+		}
+		else
+		{
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(40.f, 0.5f, 27.f));
+			Clear_Activated();
+		}
+
+	}
+
+	m_iPreLevelIndex = m_iCurrentLevelndex;
+	return true;
+}
+
+DIR_STATE CWinona::Check_Direction(void)
+{//내 자신의 Look에서 3번 변환한 값
 	_float3 vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	_float4x4 OriginMat = m_pTransformCom->Get_WorldMatrix();
 	_float4x4 RotateMat = OriginMat;
@@ -1019,10 +1064,9 @@ DIR_STATE CWendy::Check_Direction(void)
 
 	//cout << "Error " << fDegreeTarget << endl;
 	return DIR_DOWN;
-
 }
 
-void CWendy::Find_Priority()
+void CWinona::Find_Priority()
 {
 	if (m_bOwner && !m_bFightMode)
 	{
@@ -1049,11 +1093,9 @@ void CWendy::Find_Priority()
 			break;
 		}
 	}
-	//Find_Enemy();
-	//Find_Player();
 }
 
-void CWendy::Find_Friend()
+void CWinona::Find_Friend()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -1103,7 +1145,7 @@ void CWendy::Find_Friend()
 	Safe_Release(pGameInstance);
 }
 
-void CWendy::Find_Enemy()
+void CWinona::Find_Enemy()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -1114,20 +1156,20 @@ void CWendy::Find_Enemy()
 		return;
 
 	_uint iIndex = 0;
-	
+
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
 		if ((*iter_Obj) != nullptr && dynamic_cast<CMonster*>(*iter_Obj)->Get_Aggro())
 		{
 
-			
+
 
 			_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
 				+ (Get_Pos().y - (*iter_Obj)->Get_Position().y)*(Get_Pos().y - (*iter_Obj)->Get_Position().y)
 				+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
 
-			if (fCmpDir >m_fAtkRange)
+			if (fCmpDir > m_fAtkRange)
 			{
 				++iIndex;
 				iter_Obj++;
@@ -1167,9 +1209,8 @@ void CWendy::Find_Enemy()
 	Safe_Release(pGameInstance);
 }
 
-void CWendy::Find_Berry()
-{
-	//후에 Primary_queue로 각 레이어들중에서 가장 가까운 객체를 m_pTarget
+void CWinona::Find_Berry()
+{//후에 Primary_queue로 각 레이어들중에서 가장 가까운 객체를 m_pTarget
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
@@ -1216,10 +1257,9 @@ void CWendy::Find_Berry()
 		}
 	}
 	Safe_Release(pGameInstance);
-
 }
 
-void CWendy::Find_Player()
+void CWinona::Find_Player()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -1229,9 +1269,17 @@ void CWendy::Find_Player()
 	Safe_Release(pGameInstance);
 }
 
-CWendy * CWendy::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+void CWinona::CatapultCheck(void)
 {
-	CWendy* pInstance = new CWendy(pGraphic_Device);
+	if (m_vecCatapults.size() >= 3)
+	{
+		m_bCanSkill = false;
+	}
+}
+
+CWinona * CWinona::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+{
+	CWinona* pInstance = new CWinona(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -1242,9 +1290,9 @@ CWendy * CWendy::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 	return pInstance;
 }
 
-CGameObject * CWendy::Clone(void * pArg)
+CGameObject * CWinona::Clone(void * pArg)
 {
-	CWendy* pInstance = new CWendy(*this);
+	CWinona* pInstance = new CWinona(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -1255,7 +1303,7 @@ CGameObject * CWendy::Clone(void * pArg)
 	return pInstance;
 }
 
-void CWendy::Free()
+void CWinona::Free()
 {
 	__super::Free();
 

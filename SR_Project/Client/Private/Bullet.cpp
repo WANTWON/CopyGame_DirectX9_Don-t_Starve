@@ -84,7 +84,7 @@ void CBullet::Late_Tick(_float fTimeDelta)
 	AttackCheck(fTimeDelta);
 	DeadCheck(fTimeDelta);
 
-	if (Compare_Terrain())
+	if (Compare_Terrain()&& m_tBulletData.eWeaponType == WEAPON_BOMB)
 		m_bDead = true;
 
 	Compute_CamDistance(Get_Position());
@@ -92,7 +92,7 @@ void CBullet::Late_Tick(_float fTimeDelta)
 
 HRESULT CBullet::Render()
 {
-	m_pTextureCom->MoveFrame(m_TimerTag);
+
 
 	if (FAILED(__super::Render()))
 		return E_FAIL;
@@ -122,7 +122,7 @@ HRESULT CBullet::Render()
 		m_pColliderCom->Render_ColliderBox();
 	}
 #endif // _DEBUG
-
+	m_pTextureCom->MoveFrame(m_TimerTag);
 
 	return S_OK;
 }
@@ -315,8 +315,8 @@ void CBullet::Excute(_float fTimeDelta)
 			break;
 		case WEAPON_TYPE::WEAPON_ICESMOKE:
 			Ice_Smoke(fTimeDelta);
-		case WEAPON_TYPE::WEAPON_ICEBLAST:
-			Ice_Blast(fTimeDelta);
+		case WEAPON_TYPE::WEAPON_ROCK:
+			Rock(fTimeDelta);
 		}
 	}
 }
@@ -385,7 +385,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 				goto AttackMulti;
 			}
 			break;
-		case WEAPON_TYPE::WEAPON_ICEBLAST:
+		case WEAPON_TYPE::WEAPON_ROCK:
 			if (m_bIsAttacked)
 			{
 				m_fDamage = 30.f;
@@ -515,12 +515,6 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 	case WEAPON_TYPE::WEAPON_ICESMOKE:
 		if ((m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1))
 			m_bDead = true;
-		break;
-	case WEAPON_TYPE::WEAPON_ICEBLAST:
-		if ((m_bActivated && m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1))
-		{
-			m_bDead = true;
-		}
 		break;
 	}
 }
@@ -971,6 +965,44 @@ void CBullet::Ice_Blast(_float _fTimeDelta)
 
 }
 
+void CBullet::Rock(_float _fTimeDelta)
+{
+	if (!m_bActivated&&Compare_Terrain())
+	{
+		m_bActivated = true;
+		
+		m_pTextureCom->Get_Frame().m_iCurrentTex = 0;
+	}
+	else if(!m_bActivated&&!Compare_Terrain())
+	{
+		m_fTime += 0.1f;//m_tBulletData.fAdd_Z;
+						//if (m_fTime >= m_MaxTime) // �ð����� ũ��??	
+		m_MaxTime = 2.f * 8.2f;
+
+		float fSpeed = (-0.3f *m_fTime*m_fTime + 0.3f);//m_tBulletData.fAdd_Z); // ((3.f / 2.f)*m_fPower *0.03f); //0.1f ����
+		m_tBulletData.vPosition.y += fSpeed;
+		m_tBulletData.vPosition.x += m_tBulletData.vTargetPos.x / m_MaxTime;
+		m_tBulletData.vPosition.z += m_tBulletData.vTargetPos.z / m_MaxTime;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_tBulletData.vPosition);
+	
+		m_pTextureCom->Get_Frame().m_iCurrentTex = m_pTextureCom->Get_Frame().m_iEndTex;
+	}
+	//Attack
+	if (m_bActivated &&m_pTextureCom->Get_Frame().m_iCurrentTex ==1)
+	{
+		m_bIsAttacked = true;
+	}
+	else
+	{
+		m_bIsAttacked = false;
+	}
+	//Dead
+	if (m_bActivated &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	{
+		m_bDead = true;
+	}
+}
+
 HRESULT CBullet::Render_TextureState()
 {
 	switch (m_tBulletData.eWeaponType)
@@ -1061,6 +1093,7 @@ _bool CBullet::Compare_Terrain(void)
 
 	switch (m_tBulletData.eWeaponType)
 	{
+	case WEAPON_TYPE::WEAPON_ROCK:
 	case WEAPON_TYPE::WEAPON_BOMB:
 		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), 0.5f);
 
@@ -1300,17 +1333,11 @@ HRESULT CBullet::Texture_Clone(void)
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 
-	case WEAPON_TYPE::WEAPON_ICEBLAST:
+	case WEAPON_TYPE::WEAPON_ROCK:
 		TextureDesc.m_iStartTex = 0;
-		TextureDesc.m_iEndTex = 19;
-		TextureDesc.m_fSpeed = 60;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceBlast_Pre"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Ice_Blast_Pre"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-			return E_FAIL;
-		m_vecTexture.push_back(m_pTextureCom);
-
-		TextureDesc.m_iEndTex = 19;
-		TextureDesc.m_fSpeed = 60;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceBlast"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Ice_Blast"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		TextureDesc.m_iEndTex = 28;
+		TextureDesc.m_fSpeed = 20;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Rock"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Catapult_Projectile_Impact"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
@@ -1377,14 +1404,14 @@ HRESULT CBullet::Init_Data(void)
 		Compare_Terrain();
 		break;
 
-	case WEAPON_TYPE::WEAPON_ICEBLAST:
-		Change_Texture(TEXT("Com_Texture_IceBlast_Pre"));
-		m_pTransformCom->Set_Scale(m_tBulletData.vScale.x, m_tBulletData.vScale.y, m_tBulletData.vScale.z);
-		m_fDamage = 30.f;
+	case WEAPON_TYPE::WEAPON_ROCK:
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+		//m_pTransformCom->Set_Scale(m_tBulletData.vScale.x, m_tBulletData.vScale.y, m_tBulletData.vScale.z);
+		m_fDamage = 10.f;
 		Compare_Terrain();
 		break;
 	case WEAPON_TYPE::BOARRIOR_SPECIAL:
-		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
 		break;
 	default:
 		break;

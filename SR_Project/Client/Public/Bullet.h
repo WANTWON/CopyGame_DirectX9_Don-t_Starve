@@ -51,6 +51,7 @@ private:/*Act Player`s Bullets*/
 	void Puff(_float _fTimeDelta);
 	void Ice_Smoke(_float _fTimeDelta);
 	void Ice_Blast(_float _fTimeDelta);
+	void Rock(_float _fTimeDelta);
 private://ApplyDamage
 	//virtual void	Apply_Damage(_float Damage, CGameObject* DamagedObj, void* AttackType = nullptr);
 	//virtual void	Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void* AttackType = nullptr);
