@@ -47,12 +47,23 @@ private:
 	STATE m_eState = IDLE;
 	STATE m_ePreState = MAX;
 
+	// Monster List
 	vector<WCHAR*> m_lMonstersTable =
 	{
 		TEXT("Prototype_GameObject_Pig"),
 		TEXT("Prototype_GameObject_Spider"),
-		TEXT("Prototype_GameObject_Spider_Warrior"),
-		TEXT("Prototype_GameObject_Boaron")
+		TEXT("Prototype_GameObject_Spider_Warrior")
+	};
+
+	// Item List
+	vector<_uint> m_lItemIdTable = 
+	{ 
+		ITEMNAME_BERRY, 
+		ITEMNAME_WOOD, 
+		ITEMNAME_CARROT, 
+		ITEMNAME_GRASS, 
+		ITEMNAME_GOLD, 
+		ITEMNAME_ROCK2 
 	};
 
 public:
