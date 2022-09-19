@@ -37,7 +37,7 @@ void CCollider_Manager::Out_CollisiomGroup(COLLISION_GROUP eCollisionGroup, CGam
 
 HRESULT CCollider_Manager::Reset_ColliderGroup()
 {
-	for (_uint i = 0; i < COLLISION_GROUPEND; ++i)
+	for (_uint i = 0; i < COLLISION_END; ++i)
 	{
 		for (auto& pGameObject : m_GameObjects[i])
 		{
@@ -136,6 +136,6 @@ _bool CCollider_Manager::Collision_Check_Group_Multi(COLLISION_GROUP eGroup, vec
 
 void CCollider_Manager::Free()
 {
-	for (_uint i = 0; i < COLLISION_GROUPEND; ++i)
+	for (_uint i = 0; i < COLLISION_END; ++i)
 		m_GameObjects[i].clear();
 }

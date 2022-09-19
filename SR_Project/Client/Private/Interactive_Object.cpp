@@ -62,8 +62,6 @@ void CInteractive_Object::Late_Tick(_float fTimeDelta)
 
 	if (m_pColliderCom)
 		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
-
-	Set_ShaderID();
 }
 
 HRESULT CInteractive_Object::Render()
@@ -114,6 +112,25 @@ void CInteractive_Object::Free()
 	m_vecTexture.clear();
 }
 
+HRESULT CInteractive_Object::SetUp_RenderState()
+{
+	if (nullptr == m_pGraphic_Device)
+		return E_FAIL;
+
+	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+	return S_OK;
+}
+
+HRESULT CInteractive_Object::Release_RenderState()
+{
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+	return S_OK;
+}
 
 HRESULT CInteractive_Object::Change_Texture(const _tchar * LayerTag)
 {
@@ -124,7 +141,6 @@ HRESULT CInteractive_Object::Change_Texture(const _tchar * LayerTag)
 
 	return S_OK;
 }
-
 
 void CInteractive_Object::SetUp_BillBoard()
 {

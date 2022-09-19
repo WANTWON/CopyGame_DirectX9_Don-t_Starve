@@ -24,7 +24,6 @@ public:
 public: //test
 	void Start_Camera_Motion();
 	void Update_Camera_Motion();
-	void Update_Floor_Motion();
 	void Set_NextLevel(_bool _dd) { m_bNextLevel = _dd; }
 	void Set_PastLevel(_bool _dd) { m_bPastLevel = _dd; }
 	void Set_Flowerpicked(_bool type) { m_bFlowerPicked = type; m_dwTime = GetTickCount(); }
@@ -41,7 +40,7 @@ private:
 	_bool m_bFlowerPicked = false;
 	_bool m_bPlayerCam = false;
 	_bool m_bPuzzleSolved = false;
-	_bool m_bPuzzleStart[5] = { false };
+
 public:
 	static CLevel_Maze* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;

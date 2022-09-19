@@ -49,9 +49,6 @@ private:
 	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHABLEND;
 	vector<CTexture*> m_vecTexture;
 
-
-	_bool		m_bChanged = false;
-
 public:
 	static CSpawnEffect* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

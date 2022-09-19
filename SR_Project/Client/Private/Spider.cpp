@@ -5,7 +5,6 @@
 #include "Inventory.h"
 #include "Item.h"
 #include "PickingMgr.h"
-#include "Statue.h"
 
 CSpider::CSpider(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -426,24 +425,9 @@ void CSpider::Find_Target()
 {
 	if (!m_bIsAttacking && !m_bHit && !m_bDead)
 	{
-		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		CGameObject* pTarget = nullptr;
-		CPlayer* pPlayer = nullptr;
-		CStatue* pSattue = nullptr;
-		if (iLevel == LEVEL_MAZE)
-		{
-			m_fAggroRadius = 10.f;
-			pTarget = pGameInstance->Get_Object(LEVEL_MAZE, TEXT("Layer_Statue"));
-			pSattue = dynamic_cast<CStatue*>(pTarget);	
-			pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-		}
-		else
-		{
-			pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-			pPlayer = dynamic_cast<CPlayer*>(pTarget);
-		}
-		
+		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pTarget);
 
 		if (pPlayer)
 		{
@@ -603,7 +587,7 @@ HRESULT CSpider::Drop_Items()
 _bool CSpider::IsDead()
 {
 	if (m_bDead && m_eState == STATE::DIE && GetTickCount() > m_dwDeathTime + 1500)
-		return true;	
+		return true;
 	else if (m_bDead && m_eState != STATE::DIE)
 	{
 		m_dwDeathTime = GetTickCount();

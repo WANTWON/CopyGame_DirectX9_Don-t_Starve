@@ -26,7 +26,7 @@ public:
 	virtual int Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	void Set_ShaderID();
+
 public:
 	OBJID	Get_ObjID(void) { return m_eObjID; }
 	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;

@@ -393,7 +393,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 			}
 			break;
 
-		case WEAPON_TYPE::BEARGER_SPECIAL:
+		case WEAPON_TYPE::BEARGER_SPECIAL: // TODO: Fix
 		case WEAPON_TYPE::BOARRIOR_SPECIAL:
 			m_bDead = OBJ_DEAD;
 			goto AttackMulti;
@@ -427,7 +427,6 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 		}
 	}
 	vecDamagedActor.clear();
-
 }
 
 void CBullet::DeadCheck(_float _fTimeDelta)
