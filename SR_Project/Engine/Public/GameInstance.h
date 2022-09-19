@@ -80,7 +80,7 @@ public: /* For. Sound Manager */
 
 public: /* For. Collider Manager */
 	HRESULT Add_CollisionGroup(CCollider_Manager::COLLISION_GROUP eCollisionGroup, class CGameObject* pGameObject);
-
+	void Out_CollisiomGroup(CCollider_Manager::COLLISION_GROUP eCollisionGroup, class CGameObject* pGameObject);
 	_bool Collision_with_Group(CCollider_Manager::COLLISION_GROUP eGroup, class CGameObject* pGameObject, CCollider_Manager::COLLISION_TYPE eType, _float3* pOutDistance = nullptr);
 	_bool Collision_Check_Group_Multi(CCollider_Manager::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, class CGameObject* pDamageCauser, CCollider_Manager::COLLISION_TYPE eType);
 

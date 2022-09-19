@@ -283,6 +283,9 @@
     <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Dirt">
       <UniqueIdentifier>{dabbb46c-0362-4148-8a9f-1c2379a7eb44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00. Pawn\Skills">
+      <UniqueIdentifier>{95881df0-4775-4da0-a5ac-83f23d3802b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -663,6 +666,7 @@
     <ClInclude Include="..\public\Dirt.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Skill.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1031,6 +1035,7 @@
     <ClCompile Include="..\private\Dirt.cpp">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Skill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

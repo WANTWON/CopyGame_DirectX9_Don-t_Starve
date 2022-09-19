@@ -16,7 +16,7 @@ BEGIN(Client)
 class CWoodWall final : public CGameObject
 {
 public:
-	enum WALLTYPE { WALL_WOOD, WALL_ROCK, WALL_MAZE, WALL_BOSS, WALL_END };
+	enum WALLTYPE { WALL_WOOD, WALL_ROCK, WALL_MAZE, WALL_BOSS, WALL_PUZZLE, WALL_END };
 	enum WALLDIR { SIDE, FRONT, WALL_DIREND };
 	enum STATE { HEALTHY, DAMAGED, BROKEN, MAX };
 	enum FENCESTATE { IDLE, GROW, SHRINK, FENCE_MAX };
@@ -57,6 +57,8 @@ private: /*For TextureCom */
 
 private:
 	void Check_GrowShrink();
+	void Check_PuzzleSolved();
+
 
 private:
 	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
@@ -79,6 +81,8 @@ private:
 	CShader*		m_pShaderCom = nullptr;
 
 	vector<CTexture*> m_vecTexture;
+
+	
 
 public:
 	static CWoodWall* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

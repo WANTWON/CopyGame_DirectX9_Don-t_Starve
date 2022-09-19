@@ -46,6 +46,15 @@ void CLevel_Maze::Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 	__super::Tick(fTimeDelta);
 
+	if (pGameInstance->Key_Up('0'))
+	{
+		if (m_bPuzzleSolved)
+			m_bPuzzleSolved = false;
+		else
+			m_bPuzzleSolved = true;
+	}
+
+
 	if (m_bNextLevel)
 	{
 		LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
@@ -91,7 +100,7 @@ HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	pPlayer->Set_Position(_float3(7.3, 0.5f, 43.f));
+	pPlayer->Set_Position(_float3(9.0, 0.5f, 7.f));
 
 	Safe_Release(pGameInstance);
 
@@ -145,7 +154,7 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
-	PortalDesc.vPosition = _float3(7.5f, 2.f, 45.f);
+	PortalDesc.vPosition = _float3(9.0f, 2.f, 8.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, pLayerTag, &PortalDesc)))
 		return E_FAIL;
@@ -161,10 +170,6 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	_ulong dwByte = 0;
 	CWoodWall::WALLDESC WallDesc;
 	_uint iNum = 0;
-	//vector<_tchar*> vecPath;
-
-
-	/* Ÿ���� ���� �޾ƿ��� */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -178,22 +183,22 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Carrot_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/PuzzleDoor_MazeMap.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
-
 	dwByte = 0;
-	_float3 ObjectPos = _float3(0, 0, 0);
 	iNum = 0;
+	/* 타일의 개수 받아오기 */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
 	for (_uint i = 0; i < iNum; ++i)
 	{
-		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_MAZE, pLayerTag, ObjectPos);
+		ReadFile(hFile, &(WallDesc), sizeof(CWoodWall::WALLDESC), &dwByte, nullptr);
+		WallDesc.eDir = CWoodWall::WALL_DIREND;
+		WallDesc.etype = CWoodWall::WALL_PUZZLE;
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_MAZE, TEXT("Layer_Wall"), &WallDesc);
 	}
 	CloseHandle(hFile);
-
-
 
 	Safe_Release(pGameInstance);
 	return S_OK;
@@ -277,18 +282,21 @@ void CLevel_Maze::Update_Camera_Motion()
 			m_bFlowerPicked = false;
 		}
 	}
-	else if ((pGameObject->Get_Position().x < 31 && pGameObject->Get_Position().z < 28) &&
-		(pGameObject->Get_Position().x > 18 && pGameObject->Get_Position().z > 21))
-	{
-		dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(false);
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
-		
-	}
-	else if (pGameObject->Get_Position().x > 12 || pGameObject->Get_Position().z < 40)
+
+
+	if (pGameObject->Get_Position().x > 19 && pGameObject->Get_Position().z > 0.5 &&
+		pGameObject->Get_Position().x < 29 && pGameObject->Get_Position().z < 13 )
 	{
 		dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(true);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_FPS);
+		m_bPlayerCam = true;
 	
+	}
+	else if (m_bPlayerCam)
+	{
+		dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(false);
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+		m_bPlayerCam = false;
 	}
 	
 

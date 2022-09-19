@@ -360,6 +360,14 @@ HRESULT CGameInstance::Add_CollisionGroup(CCollider_Manager::COLLISION_GROUP eCo
 	return m_pCollider_Manager->Add_CollisionGroup(eCollisionGroup, pGameObject);
 }
 
+void CGameInstance::Out_CollisiomGroup(CCollider_Manager::COLLISION_GROUP eCollisionGroup, CGameObject * pGameObject)
+{
+	if (!m_pCollider_Manager)
+		return;
+
+	m_pCollider_Manager->Out_CollisiomGroup(eCollisionGroup, pGameObject);
+}
+
 _bool CGameInstance::Collision_with_Group(CCollider_Manager::COLLISION_GROUP eGroup, CGameObject * pGameObject, CCollider_Manager::COLLISION_TYPE eType, _float3* pOutDistance)
 {
 	if (nullptr == m_pCollider_Manager)
