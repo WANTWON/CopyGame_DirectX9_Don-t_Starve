@@ -28,7 +28,9 @@ public: //test
 	void Set_PastLevel(_bool _dd) { m_bPastLevel = _dd; }
 	void Set_Flowerpicked(_bool type) { m_bFlowerPicked = type; m_dwTime = GetTickCount(); }
 	
-
+public:
+	_bool Get_PuzzleSolved() { return m_bPuzzleSolved; }
+	void Set_PuzzleSolved(_bool type) { m_bPuzzleSolved = type; }
 private:
 	_bool m_bNextLevel = false;
 	_bool m_bPastLevel = false;
@@ -37,6 +39,7 @@ private:
 	_bool m_bTargetCam = false;
 	_bool m_bFlowerPicked = false;
 	_bool m_bPlayerCam = false;
+	_bool m_bPuzzleSolved = false;
 
 public:
 	static CLevel_Maze* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

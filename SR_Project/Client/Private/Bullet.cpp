@@ -73,7 +73,6 @@ void CBullet::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	Compute_CamDistance(Get_Position());
 
 	SetUp_BillBoard();
 	if (nullptr != m_pRendererCom && m_tBulletData.eWeaponType != WEAPON_TYPE::WEAPON_MINES)
@@ -87,6 +86,8 @@ void CBullet::Late_Tick(_float fTimeDelta)
 
 	if (Compare_Terrain())
 		m_bDead = true;
+
+	Compute_CamDistance(Get_Position());
 }
 
 HRESULT CBullet::Render()

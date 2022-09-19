@@ -281,13 +281,18 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 	}
 	else if (!m_bGhost && !Check_Dead() &&!m_bHited)
 	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"))))
+			return OBJ_NOEVENT;
+
 		m_ActStack.push(ACTION_STATE::DAMAGED);
 
 		m_bMove = false;
 		m_bAutoMode = true;
 
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
+		
 
 		CGameObject* npc = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC"));
 
@@ -327,7 +332,8 @@ void CPlayer::Set_FPSMode(_bool type)
 		case Client::DIR_UP:
 			break;
 		case Client::DIR_LEFT:
-			m_pTransformCom->Turn(_float3(0, 1, 0), -1.f);
+			m_pTransformCom->Turn(_float3(0, 1, 0), 1.f);
+			m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
 			break;
 		}
 	}
@@ -2395,6 +2401,7 @@ CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
 	case INTERACTOBJ_ID::BERRYBUSH:
 	case INTERACTOBJ_ID::CARROT:
 	case INTERACTOBJ_ID::GRASS:
+	case INTERACTOBJ_ID::DIRT: // Move to New ACTION_STATE
 		return ACTION_STATE::WEEDING;
 		break;
 	case INTERACTOBJ_ID::TREE:
@@ -2407,7 +2414,6 @@ CPlayer::ACTION_STATE CPlayer::Select_Interact_State(INTERACTOBJ_ID _eObjID)
 		return ACTION_STATE::PORTAL;
 		break;
 	case INTERACTOBJ_ID::COOKPOT:
-
 	case INTERACTOBJ_ID::ITEMS:
 		return ACTION_STATE::PICKUP;
 		break;

@@ -72,6 +72,9 @@ public:
 	void set_crash(bool tof) { crash = tof; }
 	void set_bbig(bool tof) { bbig = tof; }
 
+	bool get_bbig() { return bbig; }
+	bool get_small() { return smaller; }
+
 	void bigbig(void);
 
 private:

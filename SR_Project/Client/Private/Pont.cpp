@@ -110,7 +110,7 @@ int CPont::Tick(_float fTimeDelta)
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	if(big)// (PtInRect(&rcRect, ptMouse))
+	if(big && !smaller)// (PtInRect(&rcRect, ptMouse))
 	{
 
 		m_fSizeX = 16.f;
@@ -119,12 +119,34 @@ int CPont::Tick(_float fTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 		//set_check(true);
 	}
-	else
+	else if(!big && !smaller)
 	{
 		m_fSizeX = 13.f;
 		m_fSizeY = 15.f;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+	}
+
+
+	if (bbig == true)
+	{
+		m_fSizeX = 20.f;
+		m_fSizeY = 22.f;
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		bbig = false;
+	}
+
+
+	if (smaller == true)
+	{
+		m_fSizeX -= 0.35f;
+		m_fSizeY -= 0.35f;
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+
+		if (m_fSizeX <= 13)
+		{
+			smaller = false;
+		}
 	}
 
 

@@ -239,8 +239,8 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	
 	if (bbig == true)
 	{
-		m_fSizeX = 55.f;
-		m_fSizeY = 55.f;
+		m_fSizeX = 65.f;
+		m_fSizeY = 65.f;
 		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 		bbig = false;
 	}
@@ -449,7 +449,7 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 	}
 
 	else if (texnum == ITEMNAME_COAL || texnum == ITEMNAME_WOOD || texnum == ITEMNAME_ROCK || texnum == ITEMNAME_GOLD || texnum == ITEMNAME_WOOD2
-		|| texnum == ITEMNAME_PIGTAIL || texnum == ITEMNAME_ROPE || texnum == ITEMNAME_WEB || texnum == ITEMNAME_GRASS || texnum == ITEMNAME_ROCK2)
+		|| texnum == ITEMNAME_PIGTAIL || texnum == ITEMNAME_ROPE || texnum == ITEMNAME_WEB || texnum == ITEMNAME_GRASS || texnum == ITEMNAME_ROCK2 || texnum == ITEMNAME_KEY)
 	{
 		m_itemtype = ITEM_MATERIAL;
 	}

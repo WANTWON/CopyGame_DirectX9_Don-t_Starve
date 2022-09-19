@@ -57,6 +57,9 @@ public:
 	bool get_crash() { return crash; }
 	void set_crash(bool tof) { crash = tof; }
 
+	void set_bbig(bool tof) { bbig = tof; }
+	void set_small(bool tof) { smaller = tof; }
+
 private:
 	int* iNumber = nullptr;
 	int iNum = 0;
@@ -64,6 +67,8 @@ private:
 	bool m_bcheck = true;
 	bool big = false;
 	bool crash = false;
+	bool smaller = false;
+	bool bbig = false;
 };
 
 END

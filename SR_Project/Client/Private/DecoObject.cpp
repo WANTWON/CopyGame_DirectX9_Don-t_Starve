@@ -91,13 +91,19 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 	{
 		if (m_DecoDesc.m_eState == DECOTYPE::TORCH || m_DecoDesc.m_eState == DECOTYPE::FLOOR_EFFECT)
 		{
+			m_eShaderID = SHADER_IDLE_ALPHABLEND;
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 			Compute_CamDistance(Get_Position());
 		}
 		else
+		{
+			m_eShaderID = SHADER_IDLE_ALPHATEST;
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		}
+			
 	}
-		
+	
+	Compute_CamDistance(Get_Position());
 }
 
 HRESULT CDecoObject::Render()
