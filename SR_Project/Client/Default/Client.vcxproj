@@ -187,6 +187,7 @@
     <ClInclude Include="..\public\CarnivalCard.h" />
     <ClInclude Include="..\public\CarnivalMemory.h" />
     <ClInclude Include="..\public\Carrot.h" />
+    <ClInclude Include="..\Public\Catapult.h" />
     <ClInclude Include="..\Public\Craftbutton.h" />
     <ClInclude Include="..\Public\Craftmain_back.h" />
     <ClInclude Include="..\Public\Craftmain_front.h" />
@@ -219,6 +220,9 @@
     <ClInclude Include="..\Public\MainInventory_back.h" />
     <ClInclude Include="..\Public\MainInventory_front.h" />
     <ClInclude Include="..\Public\Craftmain.h" />
+    <ClInclude Include="..\Public\MiniMap.h" />
+    <ClInclude Include="..\Public\MiniMap_button.h" />
+    <ClInclude Include="..\Public\MiniMap_Icon.h" />
     <ClInclude Include="..\Public\Monsterhp_pont.h" />
     <ClInclude Include="..\Public\Mouse.h" />
     <ClInclude Include="..\Public\Mouse_item.h" />
@@ -258,6 +262,7 @@
     <ClInclude Include="..\Public\Questpont.h" />
     <ClInclude Include="..\Public\ScreenEffect.h" />
     <ClInclude Include="..\public\ShockEffect.h" />
+    <ClInclude Include="..\Public\Shooting_Target.h" />
     <ClInclude Include="..\Public\Skeleton.h" />
     <ClInclude Include="..\Public\Skill.h" />
     <ClInclude Include="..\Public\Skill_Icon.h" />
@@ -297,6 +302,7 @@
     <ClInclude Include="..\Public\UnInteractive_Object.h" />
     <ClInclude Include="..\Public\Water.h" />
     <ClInclude Include="..\Public\Wendy.h" />
+    <ClInclude Include="..\Public\Winona.h" />
     <ClInclude Include="..\Public\WoodWall.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -320,6 +326,7 @@
     <ClCompile Include="..\private\CarnivalCard.cpp" />
     <ClCompile Include="..\private\CarnivalMemory.cpp" />
     <ClCompile Include="..\private\Carrot.cpp" />
+    <ClCompile Include="..\Private\Catapult.cpp" />
     <ClCompile Include="..\Private\Craftbutton.cpp" />
     <ClCompile Include="..\Private\Craftmain_back.cpp" />
     <ClCompile Include="..\Private\Craftmain_front.cpp" />
@@ -352,6 +359,9 @@
     <ClCompile Include="..\Private\MainInventory_back.cpp" />
     <ClCompile Include="..\Private\MainInventory_front.cpp" />
     <ClCompile Include="..\Private\Craftmain.cpp" />
+    <ClCompile Include="..\Private\MiniMap.cpp" />
+    <ClCompile Include="..\Private\MiniMap_button.cpp" />
+    <ClCompile Include="..\Private\MiniMap_Icon.cpp" />
     <ClCompile Include="..\Private\Monsterhp_pont.cpp" />
     <ClCompile Include="..\Private\Mouse.cpp" />
     <ClCompile Include="..\Private\Mouse_item.cpp" />
@@ -390,6 +400,7 @@
     <ClCompile Include="..\Private\Questpont.cpp" />
     <ClCompile Include="..\Private\ScreenEffect.cpp" />
     <ClCompile Include="..\private\ShockEffect.cpp" />
+    <ClCompile Include="..\Private\Shooting_Target.cpp" />
     <ClCompile Include="..\Private\Skeleton.cpp" />
     <ClCompile Include="..\Private\Skill.cpp" />
     <ClCompile Include="..\Private\Skill_Icon.cpp" />
@@ -429,6 +440,7 @@
     <ClCompile Include="..\Private\UnInteractive_Object.cpp" />
     <ClCompile Include="..\Private\Water.cpp" />
     <ClCompile Include="..\Private\Wendy.cpp" />
+    <ClCompile Include="..\Private\Winona.cpp" />
     <ClCompile Include="..\Private\WoodWall.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">

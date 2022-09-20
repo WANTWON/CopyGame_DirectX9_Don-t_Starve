@@ -118,7 +118,7 @@ HRESULT CPig::SetUp_Components(void* pArg)
 		return E_FAIL;
 	m_TimerTag = TEXT("Timer_Pig");*/
 
-	Safe_Release(pGameInstance);
+	
 
 	/* For.Com_Texture */
 	Texture_Clone();
@@ -152,6 +152,24 @@ HRESULT CPig::SetUp_Components(void* pArg)
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.InitPos = *(_float3*)pArg;
+
+	
+
+
+	//typedef struct MINIMAP
+	//{
+	//	MININAME name;
+	//	CGameObject* pointer;
+
+	//}min;
+
+	MINIMAP		minidesc;
+	ZeroMemory(&minidesc, sizeof(MINIMAP));
+	minidesc.name = MIN_PIG;
+	minidesc.pointer = this;
+
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), LEVEL_GAMEPLAY, TEXT("MiniMap_Icon"), &minidesc);
+	Safe_Release(pGameInstance);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
@@ -450,7 +468,7 @@ _bool CPig::Picking(_float3 * PickingPoint)
 		i->set_monstername(MONSTER_END);
 		i->set_check(false);
 
-
+		m_bPickingTrue = false;
 		for (auto j : *k)
 			j->set_check(false);
 		return false;
@@ -461,6 +479,7 @@ _bool CPig::Picking(_float3 * PickingPoint)
 
 void CPig::PickingTrue()
 {
+	m_bPickingTrue = true;
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
 	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 
@@ -837,6 +856,9 @@ CGameObject* CPig::Clone(void* pArg)
 		ERR_MSG(TEXT("Failed to Cloned : CPig"));
 		Safe_Release(pInstance);
 	}
+	
+		
+
 
 	return pInstance;
 }

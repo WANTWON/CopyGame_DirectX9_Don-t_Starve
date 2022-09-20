@@ -93,6 +93,9 @@ HRESULT CBerryBush::Drop_Items()
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME_BERRY;
 
+	
+	
+
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
@@ -110,14 +113,13 @@ void CBerryBush::Destroy()
 
 HRESULT CBerryBush::SetUp_Components(void* pArg)
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
+	
 
 	//m_TimerTag = TEXT("Timer_BerryBush");
 	//if (FAILED(pGameInstance->Add_Timer(m_TimerTag)))
 		//return E_FAIL;
 
-	Safe_Release(pGameInstance);
+	
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
@@ -143,6 +145,28 @@ HRESULT CBerryBush::SetUp_Components(void* pArg)
 	TransformDesc.fSpeedPerSec = 0.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(0.f);
 	TransformDesc.InitPos = *(_float3*)pArg;
+
+	MINIMAP		minidesc;
+	ZeroMemory(&minidesc, sizeof(MINIMAP));
+	minidesc.name = MIN_BERRYBUSH;
+	minidesc.pointer = this;
+
+	LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
+	//LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
+	switch (CurrentLevelndex)
+	{
+	case LEVEL_HUNT:
+		break;
+	case LEVEL_MAZE:
+		break;
+	case LEVEL_BOSS:
+		break;
+	default:
+		CurrentLevelndex = LEVEL_GAMEPLAY;
+		break;
+	}
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;

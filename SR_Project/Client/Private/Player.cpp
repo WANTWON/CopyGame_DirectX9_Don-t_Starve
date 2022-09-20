@@ -78,6 +78,16 @@ int CPlayer::Tick(_float fTimeDelta)
 		Change_Texture(TEXT("Com_Texture_Idle_Side"));
 		m_bInPortal = false;
 		m_bMove = true;
+
+		
+		MINIMAP		minidesc;
+		ZeroMemory(&minidesc, sizeof(MINIMAP));
+		minidesc.name = MIN_PLAYER;
+		minidesc.pointer = this;
+
+		LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
 	}
 	m_iCameraMode = CCameraManager::Get_Instance()->Get_CamState();
 	
@@ -291,12 +301,8 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 
 		m_bMove = false;
 		m_bAutoMode = true;
-
-		
-
-		CGameObject* npc = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC"));
-
-		static_cast<CNPC*>(npc)->Make_Interrupt(this, 1);
+		m_bHited = true;
+		Notify_NPC(1);
 
 		Safe_Release(pGameInstance);
 	}
@@ -340,6 +346,71 @@ void CPlayer::Set_FPSMode(_bool type)
 	else 
 		m_bIsFPS = false; 
 }
+
+void CPlayer::Release_Party(const _tchar * _Name)
+{
+	auto iter = find_if(m_vecParty.begin(), m_vecParty.end(), [&](auto& MyPair)->bool {
+
+		if (MyPair.first == _Name)
+			return true;
+		
+		return false;
+	});
+
+	if (iter != m_vecParty.end())
+	{
+		iter = m_vecParty.erase(iter);
+	}
+
+}
+
+_float3 CPlayer::Set_PartyPostion(CNPC * _NPC)
+{
+	_float3 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+	D3DXVec3Normalize(&vRight, &vRight);
+	_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	D3DXVec3Normalize(&vLook, &vLook);
+	_float3 vMyPos = Get_Position();
+
+
+	for (_uint i = 0; i < m_vecParty.size(); ++i)
+	{
+		if (m_vecParty[i].second == _NPC)
+		{
+			switch (i)
+			{
+			case 0:
+				return Get_Position();
+				break;
+			case 1:
+				if (m_eDirState == DIR_STATE::DIR_LEFT || m_eDirState == DIR_STATE::DIR_RIGHT)
+				{
+					return vMyPos + vLook* -2.f;
+				}
+				else
+				{
+					return vMyPos + vRight* -2.f;
+				}
+				break;
+			case 2:
+				if (m_eDirState == DIR_STATE::DIR_LEFT || m_eDirState == DIR_STATE::DIR_RIGHT)
+				{
+					return vMyPos + vLook* 2.f;
+				}
+				else
+				{
+					return vMyPos + vRight* 2.f;
+				}
+
+				break;
+			}
+		}
+	}
+	return Get_Position();
+	//iter->second->Set_TargetPos
+	//return _float3();
+}
+
 
 HRESULT CPlayer::SetUp_Components()
 {
@@ -398,6 +469,16 @@ HRESULT CPlayer::SetUp_Components()
 	TransformDesc.fSpeedPerSec = 3.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);
+
+	/*MINIMAP		minidesc;
+	ZeroMemory(&minidesc, sizeof(MINIMAP));
+	minidesc.name = MIN_PLAYER;
+	minidesc.pointer = this;
+
+	LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);*/
+	
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
@@ -685,6 +766,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			{
 				Throw_Bomb(_fTimeDelta);
 				m_vecSkillDesc[0].bSkillUsed = true;
+
 
 				CInventory_Manager* inv = CInventory_Manager::Get_Instance();
 				auto i = inv->Get_Skill_list();
@@ -1186,15 +1268,8 @@ void CPlayer::Attack(_float _fTimeDelta)
 			break;
 		}
 		m_ePreState = m_eState;
-
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
-
-		CGameObject* npc = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC"));
-
-		static_cast<CNPC*>(npc)->Make_Interrupt(this, 1);
-
-		Safe_Release(pGameInstance);
+		
+		Notify_NPC(1);
 	}
 
 
@@ -1406,10 +1481,9 @@ void CPlayer::Damaged(_float _fTimeDelta)
 
 	}
 
-	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 2)
 	{
 		m_bMove = true;
-		m_bHited = true;
 	}
 }
 
@@ -1516,6 +1590,7 @@ void CPlayer::Revive(_float _fTimeDelta)
 		}
 		m_ePreState = m_eState;
 
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
 		CCamera* pCamera =  CCameraManager::Get_Instance()->Get_CurrentCamera();
 		dynamic_cast<CCameraDynamic*>(pCamera)->Set_CamMode(CCameraDynamic::CAM_REVIVE);
 	}
@@ -2051,6 +2126,15 @@ void CPlayer::Setup_Collider(void)
 
 }
 
+void CPlayer::Notify_NPC(_uint _iNum)
+{
+	for (auto& iter : m_vecParty)
+	{
+		iter.second->Make_Interrupt(this, _iNum);
+	}
+
+}
+
 void CPlayer::Sleep_Restore(_float _fTimeDelta)
 {
 	if (m_bSleeping)
@@ -2085,18 +2169,20 @@ void CPlayer::Talk_NPC(_float _fTimeDelta)
 	if (m_bActivated)
 	{
 		//m_bTalkMode = true;
-		
-		dynamic_cast<CNPC*>(m_pTarget)->Make_Interrupt(this, 0);
-
-		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(m_iTalkNum);
-
 		if (dynamic_cast<CNPC*>(m_pTarget)->Get_TalkCnt() == 2)
 		{
 			m_bSelect = true;
 		}
-		m_iTalkNum = 0;
+		else
+		{
+			m_iTalkNum = 0;
+		}
 		m_bActivated = false;
 		m_bOnlyActionKey = true;
+
+		dynamic_cast<CNPC*>(m_pTarget)->Make_Interrupt(this, 0);
+
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(m_iTalkNum);
 	}
 	switch (m_eDirState)
 	{
@@ -2764,6 +2850,11 @@ void CPlayer::Free()
 	Safe_Release(m_pShaderCom);
 
 	Safe_Release(m_Equipment);
+
+	/*for (auto& iter : m_vecParty)
+		Safe_Release((iter).second);*/
+
+	m_vecParty.clear();
 
 	for (auto& iter : m_mapTexture)
 		Safe_Release((iter).second);

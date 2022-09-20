@@ -154,6 +154,8 @@ HRESULT CPortal::Render()
 
 HRESULT CPortal::SetUp_Components(void* pArg)
 {
+
+
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
@@ -175,6 +177,30 @@ HRESULT CPortal::SetUp_Components(void* pArg)
 	TransformDesc.fSpeedPerSec = 0.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
 	TransformDesc.InitPos = *(_float3*)pArg;
+
+	MINIMAP		minidesc;
+	ZeroMemory(&minidesc, sizeof(MINIMAP));
+	minidesc.name = MIN_PORTAL;
+	if (m_ePortalDesc.m_eType == PORTAL_BOSS)
+		minidesc.name = MIN_BOSSPORTAL;
+	minidesc.pointer = this;
+	LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
+	switch (CurrentLevelndex)
+	{
+	case LEVEL_HUNT:
+		break;
+	case LEVEL_MAZE:
+		break;
+	case LEVEL_BOSS:
+		break;
+	default:
+		CurrentLevelndex = LEVEL_GAMEPLAY;
+		break;
+	}
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+	Safe_Release(pGameInstance);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;

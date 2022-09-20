@@ -129,13 +129,17 @@ public: /*Get&Set*/
 
 	void	Set_FPSMode(_bool type);
 	void	Set_Select(_bool _bSelect) { m_bSelect = _bSelect; }
-
+	void	Add_Party(const _tchar* _Name, class CNPC* _NPC) { m_vecParty.push_back(make_pair(_Name, _NPC)); }
+	void	Release_Party(const _tchar* _Name);
+	_float3	Set_PartyPostion(class CNPC* _NPC);
 public:
 	void	Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
 public:
 	void	Add_ActStack(ACTION_STATE _ACT_STATE) { m_ActStack.push(_ACT_STATE); m_bAutoMode = true; /*m_bMove = false; */}
 	//Test
 	void Check_Target(_bool _bDead) { if (_bDead) m_pTarget = nullptr; }
+
+
 private:/*Setup*/
 	HRESULT SetUp_Components();
 	HRESULT SetUp_KeySettings();
@@ -188,6 +192,7 @@ private: /**Actions*/
 	_bool	Find_NPC();
 	_bool	Check_Dead();
 	void	Setup_Collider(void);
+	void	Notify_NPC(_uint _iNum);
 
 	void	Invincible_Update(_float _fTimeDelta);
 	void	Cooltime_Update(_float _fTimeDelta);
@@ -299,6 +304,9 @@ private: /*for Auto*/
 	_bool					m_bSelect = false;
 	//for Keyboard
 	_bool					m_bActivated = false;
+
+	//for InParty
+	vector<pair<const _tchar*, class CNPC*>>			m_vecParty;
 private: // Test
 	_float3					m_vTargetPicking;
 	LEVEL					m_iCurrentLevelndex; //현재 레벨에 따라 불렛 생성 레벨이 다르기 때문에

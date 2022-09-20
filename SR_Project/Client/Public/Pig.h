@@ -19,6 +19,8 @@ class CPig final : public CMonster
 		MAX
 	};
 
+
+
 private:
 	CPig(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CPig(const CPig& rhs);

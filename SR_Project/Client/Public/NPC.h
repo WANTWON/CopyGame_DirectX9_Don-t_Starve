@@ -51,7 +51,11 @@ public: /*Get & Set*/
 	_bool	Get_NextAct(void) { return m_bNextAct; }
 	_bool	Get_Interrupted(void) { return m_bInterrupted; }
 	_uint	Get_TalkCnt(void) { return m_iTalkCnt; }
-	_bool	Get_HasOwner(void) { if (m_bOwner && !m_bFightMode) { m_pTarget = m_pOwner; } return m_bOwner; }//Attack�߰��� &&!AttackMode �߰�
+	_bool	Get_HasOwner(void) { if (m_bOwner && !m_bFightMode) {
+		Reset_Target();
+		m_pTarget = m_pOwner;
+		Safe_AddRef(m_pTarget);}
+	return m_bOwner; }
 	_bool	Get_FirstCall(void) { return m_bFirstCall; }
 	_bool	Get_CanAttack(void) { return m_bCanAttack; }
 	_bool	Get_FightMode(void) { return m_bFightMode; }
@@ -59,7 +63,7 @@ public: /*Get & Set*/
 	_bool	Get_CloseToOwner(void);
 	_bool	Get_CanSkill(void) { return m_bCanSkill; }
 	//Set
-	void	Reset_Target(void) { m_pTarget = nullptr; }
+	void	Reset_Target(void) { Safe_Release(m_pTarget); m_pTarget = nullptr; }
 	void	Set_IsArrive(_bool _bArrive) { m_bArrive = _bArrive; }
 	void	Reset_InteractTime(void) { m_fInteractTIme = 0.f; }
 	void	Set_Activate(NPC_STATE _eState, _bool _bAct) { m_NPCStates[_eState] = _bAct; }

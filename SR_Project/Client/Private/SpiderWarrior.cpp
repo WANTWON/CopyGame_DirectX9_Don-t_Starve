@@ -106,7 +106,7 @@ HRESULT CSpiderWarrior::SetUp_Components(void* pArg)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	Safe_Release(pGameInstance);
+	
 
 	/* For.Com_Texture */
 	Texture_Clone();
@@ -140,6 +140,15 @@ HRESULT CSpiderWarrior::SetUp_Components(void* pArg)
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.InitPos = *(_float3*)pArg;
+
+
+	MINIMAP		minidesc;
+	ZeroMemory(&minidesc, sizeof(MINIMAP));
+	minidesc.name = MIN_SPIDERWARRIOR;
+	minidesc.pointer = this;
+
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), LEVEL_HUNT, TEXT("MiniMap_Icon"), &minidesc);
+	Safe_Release(pGameInstance);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
@@ -338,6 +347,7 @@ _bool CSpiderWarrior::Picking(_float3 * PickingPoint)
 	}
 	else
 	{
+		m_bPickingTrue = false;
 		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 
 		auto i = pInvenManager->Get_Monsterinfo_list()->front();
@@ -357,6 +367,7 @@ _bool CSpiderWarrior::Picking(_float3 * PickingPoint)
 
 void CSpiderWarrior::PickingTrue()
 {
+	m_bPickingTrue = true;
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
 	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 

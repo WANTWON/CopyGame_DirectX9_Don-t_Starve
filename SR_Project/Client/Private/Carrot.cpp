@@ -119,6 +119,9 @@ HRESULT CCarrot::Drop_Items()
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_CARROT;
 
+	
+	
+
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), iLevelIndex, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
@@ -137,7 +140,7 @@ HRESULT CCarrot::SetUp_Components(void* pArg)
 	//if (FAILED(pGameInstance->Add_Timer(m_TimerTag)))
 	//return E_FAIL;
 
-	Safe_Release(pGameInstance);
+	
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
@@ -159,6 +162,15 @@ HRESULT CCarrot::SetUp_Components(void* pArg)
 	TransformDesc.fSpeedPerSec = 0.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(0.f);
 	TransformDesc.InitPos = *(_float3*)pArg;
+
+	MINIMAP		minidesc;
+	ZeroMemory(&minidesc, sizeof(MINIMAP));
+	minidesc.name = MIN_CARROT;
+	minidesc.pointer = this;
+
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), LEVEL_GAMEPLAY, TEXT("MiniMap_Icon"), &minidesc);
+
+	Safe_Release(pGameInstance);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;

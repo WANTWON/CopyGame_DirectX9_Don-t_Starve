@@ -72,6 +72,19 @@ int CWendy::Tick(_float fTimeDelta)
 			Owner_Pos.x -= 3.f;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
 		}	
+		else
+		{
+			Clear_Activated();
+			Reset_Target();
+		}
+		MINIMAP		minidesc;
+		ZeroMemory(&minidesc, sizeof(MINIMAP));
+		minidesc.name = MIN_WENDY;
+		minidesc.pointer = this;
+		LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 	}
 	__super::Tick(fTimeDelta);
@@ -127,7 +140,7 @@ HRESULT CWendy::SetUp_Components(void * pArg)
 	//if (FAILED(pGameInstance->Add_Timer(m_TimerTag)))
 	//return E_FAIL;
 
-	Safe_Release(pGameInstance);
+	
 
 	/* For.Com_Texture */
 	Texture_Clone();
@@ -154,6 +167,10 @@ HRESULT CWendy::SetUp_Components(void * pArg)
 	TransformDesc.fSpeedPerSec = 3.f / 1.13f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(0.f);
 	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);;
+
+	
+	
+	Safe_Release(pGameInstance);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
@@ -200,6 +217,8 @@ HRESULT CWendy::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 	/*Build*/
+	TextureDesc.m_iEndTex = 16;
+	TextureDesc.m_fSpeed = 20;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Build_Down"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Build_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
@@ -312,7 +331,9 @@ void CWendy::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 	switch (_InterruptNum)
 	{
 	case 0: // Talk
+		Reset_Target();
 		m_pTarget = pCauser;
+		Safe_AddRef(m_pTarget);
 		m_iInterruptNum = _InterruptNum;
 		m_bInterrupted = true;
 		break;
@@ -573,15 +594,14 @@ _bool CWendy::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 	if (m_pTarget == nullptr)
 		return false;
 
-	
-
 	_float fRange = 5.f;
-
 
 	switch (_iTarget)
 	{
 	case 0: //Target == Owner
+		Reset_Target();
 		m_pTarget = m_pOwner;
+		Safe_AddRef(m_pTarget);
 		if (!m_bFightMode)
 		{
 			fRange = m_fOwnerRadius;
@@ -596,7 +616,9 @@ _bool CWendy::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		break;
 
 	case 2://SkillRange
+		Reset_Target();
 		m_pTarget = m_pOwner;
+		Safe_AddRef(m_pTarget);
 		fRange = m_fSkillRange;
 		break;
 	default:
@@ -734,22 +756,18 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 		switch (m_iTalkCnt)
 		{
 		case 1:
-			cout << "hi" << endl;
 			break;
 		case 2:
-			cout << "Create Party?" << endl << "1. Yes 2. No" << endl;
 			break;
 		case 3:
 			if (m_bAccept)
 			{
-				cout << "Thanks" << endl;
 				m_bNextAct = true;
 
 			}
 			else
 			{
 				m_bNextAct = false;
-				cout << "bye" << endl;
 			}
 			break;
 		case 4:
@@ -763,9 +781,11 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 			{
 				m_bOwner = true;
 				m_pOwner = static_cast<CPawn*>(m_pTarget);
+				static_cast<CPlayer*>(m_pTarget)->Add_Party(TEXT("Wendy"), this);
 			}
 			else
 			{
+				Reset_Target();
 				m_pTarget = nullptr;
 			}
 			pinven->Get_Talk_list()->front()->setcheck(false);
@@ -778,21 +798,17 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 		switch (m_iTalkCnt)
 		{
 		case 1:
-			cout << "hi" << endl;
 			break;
 		case 2:
-			cout << " Party Off?" << endl << "1. Yes 2. No" << endl;
 			break;
 		case 3:
 			if (m_bAccept)
 			{
 				m_bNextAct = false;
-				cout << "Bye" << endl;
 			}
 			else
 			{
 				m_bNextAct = true;
-				cout << "Tha" << endl;
 			}
 			break;
 		case 4:
@@ -801,9 +817,11 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 			static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
 			if (!m_bNextAct)
 			{
+				static_cast<CPlayer*>(m_pTarget)->Release_Party(TEXT("Wendy"));
+				
+				Reset_Target();
 				m_bOwner = false;
 				m_pOwner = nullptr;
-				m_pTarget = nullptr;
 			}
 			m_iTalkCnt = 0;
 			m_bInteract = false;
@@ -1035,7 +1053,9 @@ void CWendy::Find_Priority()
 {
 	if (m_bOwner && !m_bFightMode)
 	{
+		Reset_Target();
 		m_pTarget = m_pOwner;
+		Safe_AddRef(m_pTarget);
 	}
 	else if (m_bFightMode)
 	{
@@ -1054,11 +1074,10 @@ void CWendy::Find_Priority()
 			break;
 		case 3:
 		case 4:
+			Reset_Target();
 			m_pTarget = nullptr;
 			break;
 		}
-		
-		
 	}
 	//Find_Enemy();
 	//Find_Player();
@@ -1075,7 +1094,7 @@ void CWendy::Find_Friend()
 		return;
 
 	_uint iIndex = 0;
-
+	Reset_Target();
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
@@ -1111,6 +1130,7 @@ void CWendy::Find_Friend()
 			continue;
 		}
 	}
+	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
 }
 
@@ -1125,7 +1145,8 @@ void CWendy::Find_Enemy()
 		return;
 
 	_uint iIndex = 0;
-	
+
+	Reset_Target();
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
@@ -1175,6 +1196,8 @@ void CWendy::Find_Enemy()
 		m_bFightMode = false;
 	}
 
+	Safe_AddRef(m_pTarget);
+
 	Safe_Release(pGameInstance);
 }
 
@@ -1190,7 +1213,7 @@ void CWendy::Find_Berry()
 		return;
 
 	_uint iIndex = 0;
-
+	Reset_Target();
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
@@ -1226,6 +1249,8 @@ void CWendy::Find_Berry()
 			continue;
 		}
 	}
+
+	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
 
 }
@@ -1234,8 +1259,11 @@ void CWendy::Find_Player()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
+	
+	Reset_Target();
 
 	m_pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	Safe_AddRef(m_pTarget);
 
 	Safe_Release(pGameInstance);
 }

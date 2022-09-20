@@ -16,7 +16,7 @@ BEGIN(Client)
 class CDecoObject final : public CGameObject
 {
 public:
-	enum DECOTYPE { FLOORFIRE, FLOOR_EFFECT, TORCH, FLIES, FLOOR, DECO_END };
+	enum DECOTYPE { FLOORFIRE, FLOOR_EFFECT, TORCH, FLIES, FLOOR, PARTY, DECO_END };
 
 	typedef struct DecoTag
 	{
@@ -62,7 +62,7 @@ private: /* For.Components */
 	CShader*		m_pShaderCom = nullptr;
 private:
 	void Check_Eruption(_float fTimeDelta);
-
+	void Set_FloorDecoTexture();
 private:
 	DECODECS m_DecoDesc;
 	const _tchar* m_TimerTag = TEXT("");

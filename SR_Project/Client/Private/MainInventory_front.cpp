@@ -217,16 +217,17 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 				(*iteminfo)->set_check(true);
 				(*iteminfo)->set_test(true);
 				(*iteminfo)->set_itemname(texnum);
-				//whatnum = iNum;
+				whatnum = iNum;
 
 			}
 			big = true;
 		}
-		else
+		else if (!PtInRect(&rcRect,ptMouse))
 		{
 			m_fSizeX = 40;
 			m_fSizeY = 40;
 			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+			if (iNum == whatnum)
 			(*iteminfo)->set_check(false);
 			big = false;
 			//whatnum = 30;

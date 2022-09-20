@@ -593,6 +593,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 
 	}
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Button"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_player"), LEVEL_STATIC, pLayerTag)))
+	//	return E_FAIL;
+
 	
 	
 	
@@ -811,11 +820,15 @@ HRESULT CLevel_GamePlay::Ready_LayerNPC(const _tchar * pLayerTag)
 	{
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Wendy"), LEVEL_STATIC, pLayerTag, _float3(10.f, 1.f, 5.f))))
 			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Winona"), LEVEL_STATIC, pLayerTag, _float3(20.f, 1.f, 10.f))))
+			return E_FAIL;
+
 	}
 	else
 	{
-		CNPC* pPlayer = (CNPC*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC"));
-		pPlayer->Set_Position(_float3(45.f, 0.5f, 27.f));
+		/*CNPC* pPlayer = (CNPC*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC"));
+		pPlayer->Set_Position(_float3(45.f, 0.5f, 27.f));*/
 	}
 
 	Safe_Release(pGameInstance);
