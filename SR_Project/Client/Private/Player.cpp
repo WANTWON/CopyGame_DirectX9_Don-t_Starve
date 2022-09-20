@@ -1597,6 +1597,7 @@ void CPlayer::Revive(_float _fTimeDelta)
 		}
 		m_ePreState = m_eState;
 
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
 		CCamera* pCamera =  CCameraManager::Get_Instance()->Get_CurrentCamera();
 		dynamic_cast<CCameraDynamic*>(pCamera)->Set_CamMode(CCameraDynamic::CAM_REVIVE);
 	}

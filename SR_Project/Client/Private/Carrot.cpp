@@ -60,7 +60,7 @@ void CCarrot::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 	
 	Change_Motion();
-	Change_Frame();
+	Change_Frame(fTimeDelta);
 }
 
 HRESULT CCarrot::Render()
@@ -205,7 +205,7 @@ HRESULT CCarrot::Texture_Clone()
 	return S_OK;
 }
 
-void CCarrot::Change_Frame()
+void CCarrot::Change_Frame(_float fTimeDelta)
 {
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	switch (m_eState)

@@ -10,6 +10,7 @@
 #include "Portal.h"
 #include "DecoObject.h"
 #include "Trap.h"
+#include "Shooting_Target.h"
 
 CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -103,8 +104,9 @@ HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	pPlayer->Set_Position(_float3(9.0, 0.5f, 7.f));
-
+	//pPlayer->Set_Position(_float3(9.0, 0.5f, 7.f));
+	pPlayer->Set_Position(_float3(39.75f, 0.f, 38.0f));
+	
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -249,14 +251,34 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	for (_uint i = 0; i < iNum; ++i)
 	{
 		ReadFile(hFile, &(tTrapDesc), sizeof(CTrap::TRAPDESC), &dwByte, nullptr);
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trap"), LEVEL_GAMEPLAY, TEXT("Layer_Trap"), &tTrapDesc)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trap"), LEVEL_MAZE, TEXT("Layer_Trap"), &tTrapDesc)))
 			return E_FAIL;
 	}
 	CloseHandle(hFile);
-
+	
 	
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Statue"), LEVEL_MAZE, TEXT("Layer_Statue"), _float3(39.75f, 0.f, 9.f));
 
+	CShooting_Target::TARGETDESC TargetDesc;
+	TargetDesc.eType = CShooting_Target::TARGET_BAD;
+	TargetDesc.vPosition = _float3(35.75f, 0.f, 42.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
+
+	TargetDesc.vPosition = _float3(37.75f, 0.f, 42.5f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
+
+	TargetDesc.vPosition = _float3(39.75f, 0.f, 43.0f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
+
+	TargetDesc.vPosition = _float3(41.75f, 0.f, 42.5f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
+
+	TargetDesc.eType = CShooting_Target::TARGET_GOOD;
+	TargetDesc.vPosition = _float3(43.75f, 0.f, 42.f);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
+
+
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Shooter"), LEVEL_MAZE, TEXT("Layer_Shooter"), _float3(39.75f, 0.f, 38.0f));
 
 	Safe_Release(pGameInstance);
 	return S_OK;

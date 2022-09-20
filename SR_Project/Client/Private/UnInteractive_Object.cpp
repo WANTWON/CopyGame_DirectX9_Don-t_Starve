@@ -38,7 +38,7 @@ int CUnInteractive_Object::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	
+	WalkingTerrain();
 	return OBJ_NOEVENT;
 }
 
@@ -55,7 +55,11 @@ void CUnInteractive_Object::Late_Tick(_float fTimeDelta)
 	}
 
 	if (m_pColliderCom)
+	{
+		memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	}
+		
 }
 
 HRESULT CUnInteractive_Object::Render()
@@ -101,6 +105,19 @@ void CUnInteractive_Object::Free()
 	m_vecTexture.clear();
 }
 
+
+void CUnInteractive_Object::Set_ShaderID()
+{
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	if (pGameObject->Get_Dead())
+		m_eShaderID = SHADER_DEAD;
+	else if (iLevel == LEVEL_MAZE)
+		m_eShaderID = SHADER_DARK;
+	else
+		m_eShaderID = SHADER_IDLE_ALPHATEST;
+}
 
 HRESULT CUnInteractive_Object::Change_Texture(const _tchar * LayerTag)
 {

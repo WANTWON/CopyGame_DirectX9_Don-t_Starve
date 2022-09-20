@@ -304,8 +304,6 @@
     <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona">
       <UniqueIdentifier>{724461a8-fb17-4306-a963-46de283b2bf5}</UniqueIdentifier>
     </Filter>
-<<<<<<< Updated upstream
-=======
     <Filter Include="02.GameObject\00. Pawn\01.Monster\Shooting_Target">
       <UniqueIdentifier>{09c144ef-7a08-4bbb-aace-2487ead5605b}</UniqueIdentifier>
     </Filter>
@@ -315,10 +313,12 @@
     <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Carnival Card">
       <UniqueIdentifier>{2f3a30fd-c6df-42fa-9a11-7e7a2390c3bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00. Pawn\Battery_Tower">
-      <UniqueIdentifier>{986ab3cb-c768-4450-979a-e9100d114f9d}</UniqueIdentifier>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Carnival Shoot Button">
+      <UniqueIdentifier>{4af10914-52ce-474e-b5c0-2903608ed5ba}</UniqueIdentifier>
     </Filter>
->>>>>>> Stashed changes
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Carnival Shooter">
+      <UniqueIdentifier>{b7058b92-ebc2-4c06-8fd8-400f7238a51e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -720,14 +720,15 @@
     <ClInclude Include="..\Public\MiniMap_button.h">
       <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Catapult.h">
+      <Filter>02.GameObject\00. Pawn\Skills</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Skill.h">
       <Filter>02.GameObject\00. Pawn\Skills</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Winona.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona</Filter>
     </ClInclude>
-<<<<<<< Updated upstream
-=======
     <ClInclude Include="..\Public\Shooting_Target.h">
       <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
     </ClInclude>
@@ -737,13 +738,9 @@
     <ClInclude Include="..\public\CarnivalMemory.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Catapult.h">
-      <Filter>02.GameObject\00. Pawn\01.Monster\Catapult</Filter>
+    <ClInclude Include="..\Public\Carnival_Shooter.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\Carnival Shooter</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Battery_Tower.h">
-      <Filter>02.GameObject\00. Pawn\Battery_Tower</Filter>
-    </ClInclude>
->>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1142,8 +1139,6 @@
     <ClCompile Include="..\Private\Winona.cpp">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona</Filter>
     </ClCompile>
-<<<<<<< Updated upstream
-=======
     <ClCompile Include="..\Private\Shooting_Target.cpp">
       <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
     </ClCompile>
@@ -1153,10 +1148,9 @@
     <ClCompile Include="..\private\CarnivalMemory.cpp">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Battery_Tower.cpp">
-      <Filter>02.GameObject\00. Pawn\Battery_Tower</Filter>
+    <ClCompile Include="..\Private\Carnival_Shooter.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\Carnival Shooter</Filter>
     </ClCompile>
->>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

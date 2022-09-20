@@ -56,6 +56,8 @@ void CPawn::Set_ShaderID()
 
 	if (pGameObject->Get_Dead())
 		m_eShaderID = SHADER_DEAD;
+	else if (m_bPickingTrue)
+		m_eShaderID = SHADER_PICKING;
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
 	else

@@ -41,7 +41,7 @@ protected:
 protected: /*For TextureCom */
 	virtual HRESULT Texture_Clone() = 0;
 	HRESULT Change_Texture(const _tchar* LayerTag);
-	virtual void Change_Frame() = 0;
+	virtual void Change_Frame(_float fTimeDelta) = 0;
 	virtual void Change_Motion() = 0;
 protected: /* For TransformCom*/
 	void SetUp_BillBoard();

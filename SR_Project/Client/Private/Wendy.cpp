@@ -300,7 +300,7 @@ HRESULT CWendy::Texture_Clone()
 	return S_OK;
 }
 
-void CWendy::Change_Frame()
+void CWendy::Change_Frame(_float fTimeDelta)
 {
 }
 

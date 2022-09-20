@@ -27,13 +27,10 @@
 #include "Catapult.h"
 #include "Statue.h"
 #include "Trap.h"
-<<<<<<< Updated upstream
 
-=======
 #include "CarnivalMemory.h"
 #include "CarnivalCard.h"
 #include "Battery_Tower.h"
->>>>>>> Stashed changes
 #include "Skill.h"
 #include "Wendy.h"
 #include "Winona.h"
@@ -128,6 +125,9 @@
 #include "MiniMap.h"
 #include "MiniMap_Icon.h"
 #include "MiniMap_button.h"
+
+#include "Shooting_Target.h"
+#include "Carnival_Shooter.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -1526,6 +1526,69 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		return E_FAIL;
 #pragma endregion Add_Texture_Trap
 
+#pragma region Add_Texture_CarnivalGame
+	/*For.Prototype_Component_Texture_CarnivalGame_Memory */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Hit"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Memory/Hit/Hit_%03d.png"), 9))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Idle_Off"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Memory/Idle_Off/Idle_Off_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Idle_On"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Memory/Idle_On/Idle_On_%03d.png"), 41))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Place"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Memory/Place/Place_%03d.png"), 27))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Turn_Off"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Memory/Turn_Off/Turn_Off_%03d.png"), 15))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Turn_On"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Memory/Turn_On/Turn_On_%03d.png"), 25))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Win"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Memory/Win/Win_%03d.png"), 21))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_CarnivalGame_Card */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Hint_Bad"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Card/Hint_Bad/Hint_Bad_%03d.png"), 33))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Hint_Good"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Card/Hint_Good/Hint_Good_%03d.png"), 33))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Off"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Card/Off/Off_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_On"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Card/On/On_%03d.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Bad"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Card/Reveal_Bad/Reveal_Bad_%03d.png"), 19))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Bad_Post"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Card/Reveal_Bad_Post/Reveal_Bad_Post_%03d.png"), 13))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Bad_Pre"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Card/Reveal_Bad_Pre/Reveal_Bad_Pre_%03d.png"), 5))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Good"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Card/Reveal_Good/Reveal_Good_%03d.png"), 19))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Good_Post"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Card/Reveal_Good_Post/Reveal_Good_Post_%03d.png"), 13))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Good_Pre"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Card/Reveal_Good_Pre/Reveal_Good_Pre_%03d.png"), 5))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Turn_Off"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Card/Turn_Off/Turn_Off_%03d.png"), 14))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Turn_On"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Card/Turn_On/Turn_On_%03d.png"), 17))))
+		return E_FAIL;
+#pragma endregion Add_Texture_CarnivalGame
+
 	if (FAILED(Loading_Prototype_Object()))
 		return E_FAIL;
 
@@ -2098,6 +2161,16 @@ HRESULT CLoader::Loading_Prototype_Object()
 		CTrap::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/*For.Prototype_GameObject_Carnival_Memory*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Carnival_Memory"),
+		CCarnivalMemory::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Carnival_Card*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Carnival_Card"),
+		CCarnivalCard::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/*For. Prototype_GameObject_Spider */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spider"),
 		CSpider::Create(m_pGraphic_Device))))
@@ -2144,8 +2217,6 @@ HRESULT CLoader::Loading_Prototype_Object()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Catapult"),
 		CCatapult::Create(m_pGraphic_Device))))
 		return E_FAIL;
-<<<<<<< Updated upstream
-=======
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Battery_Tower"),
 		CBattery_Tower::Create(m_pGraphic_Device))))
@@ -2155,7 +2226,10 @@ HRESULT CLoader::Loading_Prototype_Object()
 		CShooting_Target::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
->>>>>>> Stashed changes
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_CCarnival_Shooter"),
+		CCarnival_Shooter::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading_UI_Object"));
 
 #pragma region Add_Prototype UI Object
@@ -2437,6 +2511,8 @@ HRESULT CLoader::Loading_Prototype_Object()
 	
 
 #pragma endregion Add_Prototype UI Object
+
+
 }
 
 
@@ -2783,6 +2859,7 @@ HRESULT CLoader::Loading_ForMazeLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Spawn_Maze/Close_%03d.png"), 14))))
 		return E_FAIL;
 
+#pragma region Add Floor texture
 	/*For.Prototype_Component_Texture_Floor */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place1"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Floor/Floor1/Place_%03d.png"), 16))))
@@ -2806,6 +2883,11 @@ HRESULT CLoader::Loading_ForMazeLevel()
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place6"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Floor/Floor6/Place_%03d.png"), 11))))
+		return E_FAIL;
+
+#pragma endregion Add Floor texture
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Party"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/Complete_Particle/Particle_%03d.png"), 15))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_RockEffect */
@@ -2834,6 +2916,52 @@ HRESULT CLoader::Loading_ForMazeLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Dirt_Empty"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Dirt/Empty_%03d.png"), 1))))
 		return E_FAIL;
+
+#pragma region Add Carnival Shooting Game Texture
+	/*For.Prototype_Component_Texture_Shooting_target */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Bad"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/TargetBad/Idle/Idle_%03d.png"), 17))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Shooting_target */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Bad_Hit"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/TargetBad/Hit/Hit_%03d.png"), 9))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Shooting_target */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Bad_Stop"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/TargetBad/Stop/Stop_%03d.png"), 10))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Shooting_target */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Good"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/TargetGood/Idle/Idle_%03d.png"), 17))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Shooting_target */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Good_Hit"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/TargetGood/Hit/Hit_%03d.png"), 42))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Shooting_target */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Good_Stop"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/TargetGood/Stop/Stop_%03d.png"), 10))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Shooter*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooter_Idle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/Shooter/Idle_%03d.png"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooter_Shoot"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/Shooter/Shoot_%03d.png"), 5))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Carnival Arrow*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_MAZE, TEXT("Prototype_Component_Texture_Carnival_Arrow"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/Arrow/Arrow_%03d.png"), 1))))
+		return E_FAIL;
+#pragma endregion Add Carnival Shooting Game Texture
 
 	if (FAILED(Loading_Terrain_ForMazeLevel()))
 		return E_FAIL;

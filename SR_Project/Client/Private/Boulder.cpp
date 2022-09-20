@@ -79,7 +79,7 @@ void CBoulder::Late_Tick(_float fTimeDelta)
 	}
 
 	Change_Motion();
-	Change_Frame();
+	Change_Frame(fTimeDelta);
 }
 
 HRESULT CBoulder::Render()
@@ -240,7 +240,7 @@ HRESULT CBoulder::Texture_Clone()
 	return S_OK;
 }
 
-void CBoulder::Change_Frame()
+void CBoulder::Change_Frame(_float fTimeDelta)
 {
 	m_pTextureCom->MoveFrame(m_TimerTag);
 }

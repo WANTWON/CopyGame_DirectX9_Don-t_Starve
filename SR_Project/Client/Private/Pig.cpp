@@ -468,7 +468,7 @@ _bool CPig::Picking(_float3 * PickingPoint)
 		i->set_monstername(MONSTER_END);
 		i->set_check(false);
 
-
+		m_bPickingTrue = false;
 		for (auto j : *k)
 			j->set_check(false);
 		return false;
@@ -479,6 +479,7 @@ _bool CPig::Picking(_float3 * PickingPoint)
 
 void CPig::PickingTrue()
 {
+	m_bPickingTrue = true;
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
 	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 

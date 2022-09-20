@@ -185,6 +185,9 @@
     <ClInclude Include="..\Public\CameraFPS.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\CameraTarget.h" />
+    <ClInclude Include="..\public\CarnivalCard.h" />
+    <ClInclude Include="..\public\CarnivalMemory.h" />
+    <ClInclude Include="..\Public\Carnival_Shooter.h" />
     <ClInclude Include="..\public\Carrot.h" />
     <ClInclude Include="..\Public\Catapult.h" />
     <ClInclude Include="..\Public\Craftbutton.h" />
@@ -261,6 +264,7 @@
     <ClInclude Include="..\Public\Questpont.h" />
     <ClInclude Include="..\Public\ScreenEffect.h" />
     <ClInclude Include="..\public\ShockEffect.h" />
+    <ClInclude Include="..\Public\Shooting_Target.h" />
     <ClInclude Include="..\Public\Skeleton.h" />
     <ClInclude Include="..\Public\Skill.h" />
     <ClInclude Include="..\Public\Skill_Icon.h" />
@@ -322,6 +326,9 @@
     <ClCompile Include="..\Private\CameraFPS.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\CameraTarget.cpp" />
+    <ClCompile Include="..\private\CarnivalCard.cpp" />
+    <ClCompile Include="..\private\CarnivalMemory.cpp" />
+    <ClCompile Include="..\Private\Carnival_Shooter.cpp" />
     <ClCompile Include="..\private\Carrot.cpp" />
     <ClCompile Include="..\Private\Catapult.cpp" />
     <ClCompile Include="..\Private\Craftbutton.cpp" />
@@ -397,6 +404,7 @@
     <ClCompile Include="..\Private\Questpont.cpp" />
     <ClCompile Include="..\Private\ScreenEffect.cpp" />
     <ClCompile Include="..\private\ShockEffect.cpp" />
+    <ClCompile Include="..\Private\Shooting_Target.cpp" />
     <ClCompile Include="..\Private\Skeleton.cpp" />
     <ClCompile Include="..\Private\Skill.cpp" />
     <ClCompile Include="..\Private\Skill_Icon.cpp" />
