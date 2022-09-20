@@ -298,6 +298,9 @@
     <Filter Include="02.GameObject\98.UI\17.MiniMap">
       <UniqueIdentifier>{fe74532a-05d9-4e8f-ab98-f1df8b71ab47}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00. Pawn\01.Monster\Shooting_Target">
+      <UniqueIdentifier>{559bba6e-0fff-4ff0-b993-6996fbb2a048}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -702,6 +705,9 @@
     <ClInclude Include="..\Public\MiniMap_button.h">
       <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Shooting_Target.h">
+      <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1093,6 +1099,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\MiniMap_button.cpp">
       <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Shooting_Target.cpp">
+      <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

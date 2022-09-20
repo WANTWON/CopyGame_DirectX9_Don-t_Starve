@@ -263,13 +263,13 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	TargetDesc.vPosition = _float3(35.75f, 0.f, 41.9f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
 
-	TargetDesc.vPosition = _float3(37.75f, 0.f, 42.f);
+	TargetDesc.vPosition = _float3(37.75f, 0.f, 42.1f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
 
-	TargetDesc.vPosition = _float3(39.75f, 0.f, 42.f);
+	TargetDesc.vPosition = _float3(39.75f, 0.f, 42.1f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
 
-	TargetDesc.vPosition = _float3(41.75f, 0.f, 42.f);
+	TargetDesc.vPosition = _float3(41.75f, 0.f, 42.1f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
 
 	TargetDesc.eType = CShooting_Target::TARGET_GOOD;
