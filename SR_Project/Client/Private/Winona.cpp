@@ -249,7 +249,7 @@ HRESULT CWinona::Texture_Clone()
 	return S_OK;
 }
 
-void CWinona::Change_Frame()
+void CWinona::Change_Frame(_float fTimeDelta)
 {
 }
 
