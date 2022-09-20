@@ -58,7 +58,7 @@ int CMiniMap_player::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	pos = minidesc.pointer->Get_Position();//(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Position()) ;
 
-	
+	//minidesc.pointer->Get_Dead
 
 	/*CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
 	{
