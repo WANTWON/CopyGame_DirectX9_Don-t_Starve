@@ -62,6 +62,7 @@ public: /*Get & Set*/
 	_bool	Get_TargetDead(void);
 	_bool	Get_CloseToOwner(void);
 	_bool	Get_CanSkill(void) { return m_bCanSkill; }
+	_bool	Get_CanTalk(void) { return m_bCanTalk; }
 	//Set
 	void	Reset_Target(void) { Safe_Release(m_pTarget); m_pTarget = nullptr; }
 	void	Set_IsArrive(_bool _bArrive) { m_bArrive = _bArrive; }
@@ -144,9 +145,8 @@ protected:
 	_uint		m_iTalkCnt = 0;
 	_uint		m_iPreTalkCnt = 0;
 	_bool		m_bAccept = false;
-
+	_bool		m_bCanTalk = true;
 	_bool		m_bOwner = false;
-
 	//Fight Mode
 	_bool		m_bFightMode = false;
 	_float		m_fModeTime = 0.f;

@@ -20,6 +20,9 @@ public:
 	{
 		HEAL,
 		ICE_BLAST,
+		ELEC,
+		SPARK,
+		BURST,
 		SKILL_END
 	};
 
@@ -65,6 +68,9 @@ private:
 private:/*Act Skills*/
 	void Ice_Blast(_float _fTimeDelta);
 	void Heal(_float _fTimeDelta);
+	void Elec(_float _fTimeDelta);
+	void Spark(_float _fTimeDelta);
+	void Burst(_float _fTimeDelta);
 private:
 	const _tchar*		m_TimerTag = TEXT("");
 
@@ -88,6 +94,9 @@ private:
 
 	_bool				m_bTrigger = false;
 	_bool				m_bActivated = false;
+	_bool				m_bRender = true;
+	//Reverse
+	_uint			m_iReversTex = 0;
 public:
 	static CSkill* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

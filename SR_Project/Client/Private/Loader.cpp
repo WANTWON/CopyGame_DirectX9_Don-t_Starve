@@ -27,10 +27,13 @@
 #include "Catapult.h"
 #include "Statue.h"
 #include "Trap.h"
+
 #include "CarnivalMemory.h"
 #include "CarnivalCard.h"
 #include "Carnival_Shoot_Button.h"
 
+
+#include "Battery_Tower.h"
 #include "Skill.h"
 #include "Wendy.h"
 #include "Winona.h"
@@ -652,6 +655,18 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hit_Effect"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Hit_Effect/Hit_%03d.png"), 19))))
 		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Spark */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spark_Effect"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Spark/Sparks_%03d.png"), 17))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Burst_Effect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Burst_Effect"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Burst_Effect/Burst_%03d.png"), 20))))
+		return E_FAIL;
+
+
 #pragma  endregion Add_Texture_Effects
 	/*    ̴   ε    . */
 
@@ -922,10 +937,21 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Catapult/Place/Catapult_Place_%03d.png"), 45))))
 		return E_FAIL;
 
-	/*For Prototype Component_Texture_Catapult_Bettery */
+	/*For Prototype Component_Texture_Catapult_Battery */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Battery"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Catapult/Battery/Battery_%03d.png"), 7))))
 		return E_FAIL;
+
+	/*For Prototype Component_Texture_Battery_Tower_Place */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Battery_Tower_Place"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Battery_Tower/Battery_Tower_Place_%03d.png"), 75))))
+		return E_FAIL;
+
+	/*For Prototype Component_Texture_Battery_Tower_Attack */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Battery_Tower_Attack"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Battery_Tower/Battery_Tower_Attack_%03d.png"), 50))))
+		return E_FAIL;
+
 #pragma endregion Texture_Catapult
 	/*For Prototype Component_Texture_Bossloadingscene  */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_loadingboss"),
@@ -954,322 +980,6 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/skillicon/teleport_%03d.png"), 23))))
 		return E_FAIL;
 
-
-//	///*For.Prototype_Component_Texture_loadingscene */
-//	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_loading"),
-//	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/scene2/loading_%03d.png"), 125))))
-//	//	return E_FAIL;
-//#pragma endregion Add_Texture UI
-//	/* Others Prototype */
-//	lstrcpy(m_szLoadingText, TEXT("Loading_Object"));
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"),
-//		CPlayer::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Equipment"),
-//		CEquip_Animation::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet"),
-//		CBullet::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Picker"),
-//		CAttackRange::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Attack_Special"),
-//		CSpecial_Attack::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill"),
-//		CSkill::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*NPC Prototype*/
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NPC_Wendy"),
-//		CWendy::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	
-//
-//	lstrcpy(m_szLoadingText, TEXT("Loading_UI_Object"));
-//
-//#pragma region Add_Prototype UI Object
-//
-//
-//	/*For.Prototype_GameObject_Craftmain */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftmain"),
-//		CCraftmain::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftmain_back"),
-//		CCraftmain_back::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftmain_front"),
-//		CCraftmain_front::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Craftbutton"),
-//		CCraftbutton::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_CraftPont"),
-//		CCraftPont::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//
-//	/*For.Prototype_GameObject_MainInventory */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory"),
-//		CMainInventory::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainInToolbox */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox"),
-//		CToolboxWeapon::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainInToolbox */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox_back"),
-//		CToolboxWeapon_back::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainInToolbox */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WeaponToolbox_front"),
-//		CToolboxWeapon_front::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox"),
-//		CToolboxGather::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainInToolbox */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox_back"),
-//		CToolboxGather_back::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainInToolbox */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GatherToolbox_front"),
-//		CToolboxGather_front::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ConstructToolbox"),
-//		CToolboxConstruct::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainInToolbox */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ConstructToolbox_back"),
-//		CToolboxConstruct_back::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainInToolbox */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ConstructToolbox_front"),
-//		CToolboxConstruct_front::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MaterialToolbox"),
-//		CToolboxMaterial::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainInToolbox */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MaterialToolbox_back"),
-//		CToolboxMaterial_back::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainInToolbox */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MaterialToolbox_front"),
-//		CToolboxMaterial_front::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_MainInToolbox */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox"),
-//		CToolboxMain::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainIToolbox_back */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox_back"),
-//		CToolboxMain_back::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainIToolbox_back */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainToolbox_front"),
-//		CToolboxMain_front::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_BagInventory */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BagInventory"),
-//		CBagInventory::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainInventory_back */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory_back"),
-//		CMainInventory_back::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainInventory_front */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainInventory_front"),
-//		CMainInventory_front::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_Equipment_back */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Equipment_back"),
-//		CEquipment_back::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_MainInventory_front */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Equipment_front"),
-//		CEquipment_front::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_Pont */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pont"),
-//		CPont::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_Playerhp */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Playerhp"),
-//		CPlayerhp::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_Playerhunger */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Playerhunger"),
-//		CPlayerhunger::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_PlayerMentality */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerMentality"),
-//		CPlayerMentality::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//		/*For.Prototype_GameObject_Daycount */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Daycount"),
-//		CDaycount::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	/*For.Prototype_GameObject_Daycountpont */
-//    if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Daycountpont"),
-//		CDaycountpont::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	
-//
-//	/*For.Prototype_GameObject_HpPont */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HpPont"),
-//		CPlayerhp_pont::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_hungerPont */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_hungerPont"),
-//		CPlayerhunger_pont::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_MentalityPont */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MentalityPont"),
-//		CPlayerMentality_pont::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_MentalityPont */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse_item"),
-//		CMouse_item::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_MentalityPont */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse_iteminfo"),
-//		CMouse_iteminfo::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_MentalityPont */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse_Monster"),
-//		CMouse_Monster::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_Eateffect */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Eateffect"),
-//		CEateffect::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_quest */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_quest"),
-//		CQuest::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_questpont"),
-//		CQuestpont::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Line"),
-//		CLine::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_questbutton"),
-//		CQuestbutton::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	/*For.Prototype_GameObject_talk */
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_talk"),
-//		CTalk::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_logoscene"),
-//		CLogoscene::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_startbutton"),
-//		CStartbutton::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Potmain"),
-//		CPotMain::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pot_back"),
-//		CPot_back::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pot_front"),
-//		CPot_front::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Potbutton"),
-//		CPotbutton::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Deadmain"),
-//		CDeadmain::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Deadcount"),
-//		CDeadcountpont::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Daypont"),
-//		CDaypont::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Poteffect"),
-//		CPoteffect::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monsterhp_pont"),
-//		CMonsterhp_pont::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerStatus"),
-//		CStatus::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skillicon"),
-//		CSkill_Icon::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerStatus_pont"),
-//		CStatus_pont::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Dmg_pont"),
-//		CDmgpont::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Screen_Effect"),
-//		CScreenEffect::Create(m_pGraphic_Device))))
-//		return E_FAIL;
-//
-//
-//
-//	
-//
-//
-//
-//	/*For.Prototype_GameObject_talk */
-//	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Loadingscene"),
-//		CLoadingscene::Create(m_pGraphic_Device))))
-//		return E_FAIL;*/
-//
-//
-//#pragma endregion Add_Prototype UI Object
 
 	lstrcpy(m_szLoadingText, TEXT("Finished_Loading"));
 
@@ -2207,6 +1917,10 @@ HRESULT CLoader::Loading_Prototype_Object()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Catapult"),
 		CCatapult::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Battery_Tower"),
+		CBattery_Tower::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ShootingTarget"),

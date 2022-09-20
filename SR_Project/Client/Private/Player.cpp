@@ -274,6 +274,9 @@ HRESULT CPlayer::Render()
 
 _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
+	if (m_bInincibleMode)
+		return 0.f;
+
 	if ((m_eState != ACTION_STATE::DAMAGED || !m_bGhost) && !m_bHited)
 	{
 		m_tStat.fCurrentHealth -= fDamage;
@@ -938,6 +941,10 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 				m_pRange->Set_IsShow(false);
 				m_pPicker->Set_IsShow(false);
 			}
+		}
+		else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN9]))
+		{
+			m_bInincibleMode = !m_bInincibleMode;
 		}
 	}
 
@@ -2046,7 +2053,9 @@ _bool CPlayer::Find_NPC()
 
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
-		if ((*iter_Obj) == nullptr)
+
+
+		if ((*iter_Obj) == nullptr || !static_cast<CNPC*>(*iter_Obj)->Get_CanTalk())
 		{
 			++iIndex;
 			iter_Obj++;
