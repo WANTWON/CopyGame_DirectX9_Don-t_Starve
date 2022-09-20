@@ -354,6 +354,53 @@ void CPlayer::Release_Party(const _tchar * _Name)
 
 }
 
+_float3 CPlayer::Set_PartyPostion(CNPC * _NPC)
+{
+	_float3 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+	D3DXVec3Normalize(&vRight, &vRight);
+	_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	D3DXVec3Normalize(&vLook, &vLook);
+	_float3 vMyPos = Get_Position();
+
+
+	for (_uint i = 0; i < m_vecParty.size(); ++i)
+	{
+		if (m_vecParty[i].second == _NPC)
+		{
+			switch (i)
+			{
+			case 0:
+				return Get_Position();
+				break;
+			case 1:
+				if (m_eDirState == DIR_STATE::DIR_LEFT || m_eDirState == DIR_STATE::DIR_RIGHT)
+				{
+					return vMyPos + vLook* -2.f;
+				}
+				else
+				{
+					return vMyPos + vRight* -2.f;
+				}
+				break;
+			case 2:
+				if (m_eDirState == DIR_STATE::DIR_LEFT || m_eDirState == DIR_STATE::DIR_RIGHT)
+				{
+					return vMyPos + vLook* 2.f;
+				}
+				else
+				{
+					return vMyPos + vRight* 2.f;
+				}
+
+				break;
+			}
+		}
+	}
+	return Get_Position();
+	//iter->second->Set_TargetPos
+	//return _float3();
+}
+
 
 HRESULT CPlayer::SetUp_Components()
 {
@@ -2101,18 +2148,20 @@ void CPlayer::Talk_NPC(_float _fTimeDelta)
 	if (m_bActivated)
 	{
 		//m_bTalkMode = true;
-		
-		dynamic_cast<CNPC*>(m_pTarget)->Make_Interrupt(this, 0);
-
-		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(m_iTalkNum);
-
 		if (dynamic_cast<CNPC*>(m_pTarget)->Get_TalkCnt() == 2)
 		{
 			m_bSelect = true;
 		}
-		m_iTalkNum = 0;
+		else
+		{
+			m_iTalkNum = 0;
+		}
 		m_bActivated = false;
 		m_bOnlyActionKey = true;
+
+		dynamic_cast<CNPC*>(m_pTarget)->Make_Interrupt(this, 0);
+
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(m_iTalkNum);
 	}
 	switch (m_eDirState)
 	{
@@ -2780,6 +2829,9 @@ void CPlayer::Free()
 	Safe_Release(m_pShaderCom);
 
 	Safe_Release(m_Equipment);
+
+	/*for (auto& iter : m_vecParty)
+		Safe_Release((iter).second);*/
 
 	m_vecParty.clear();
 

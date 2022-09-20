@@ -1005,7 +1005,7 @@ void CBullet::Rock(_float _fTimeDelta)
 	//Dead
 	if (m_bActivated &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
-		m_bDead = true;
+		m_bDead = OBJ_DEAD;
 	}
 }
 

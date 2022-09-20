@@ -131,6 +131,7 @@ public: /*Get&Set*/
 	void	Set_Select(_bool _bSelect) { m_bSelect = _bSelect; }
 	void	Add_Party(const _tchar* _Name, class CNPC* _NPC) { m_vecParty.push_back(make_pair(_Name, _NPC)); }
 	void	Release_Party(const _tchar* _Name);
+	_float3	Set_PartyPostion(class CNPC* _NPC);
 public:
 	void	Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
 public:

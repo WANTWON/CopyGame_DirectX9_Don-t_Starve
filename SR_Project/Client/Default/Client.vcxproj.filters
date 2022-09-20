@@ -292,6 +292,12 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Trap">
       <UniqueIdentifier>{c76a6b74-f03a-46c9-acfa-026dbb7236d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00. Pawn\Catapult">
+      <UniqueIdentifier>{bc3616cb-5633-462f-b4a1-9648f1e02425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona">
+      <UniqueIdentifier>{13151f2a-a015-48f8-9295-998989996148}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -672,7 +678,6 @@
     <ClInclude Include="..\public\Dirt.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Skill.h" />
     <ClInclude Include="..\Public\ScreenEffect.h" />
     <ClInclude Include="..\Public\UnInteractive_Object.h">
       <Filter>02.GameObject\05.UnInteractive_Object</Filter>
@@ -682,6 +687,15 @@
     </ClInclude>
     <ClInclude Include="..\public\Trap.h">
       <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Catapult.h">
+      <Filter>02.GameObject\00. Pawn\Catapult</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill.h">
+      <Filter>02.GameObject\00. Pawn\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Winona.h">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1051,7 +1065,6 @@
     <ClCompile Include="..\private\Dirt.cpp">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Skill.cpp" />
     <ClCompile Include="..\Private\ScreenEffect.cpp" />
     <ClCompile Include="..\Private\UnInteractive_Object.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object</Filter>
@@ -1061,6 +1074,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Trap.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Catapult.cpp">
+      <Filter>02.GameObject\00. Pawn\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill.cpp">
+      <Filter>02.GameObject\00. Pawn\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Winona.cpp">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

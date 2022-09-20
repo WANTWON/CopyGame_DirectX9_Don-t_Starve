@@ -310,7 +310,9 @@ void CPigKing::Interact(_uint Damage)
 			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
 			pinven->Get_Talk_list()->front()->Set_StartText(true);
 		}
-		
+		else {
+			pPlayer->Set_bOnlyActionKey(false);
+		}
 		pinven->Get_Talk_list()->front()->Excute();
 
 		Safe_Release(pinven);

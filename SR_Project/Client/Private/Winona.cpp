@@ -285,7 +285,9 @@ void CWinona::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 	switch (_InterruptNum)
 	{
 	case 0: // Talk
+		Reset_Target();
 		m_pTarget = pCauser;
+		Safe_AddRef(m_pTarget);
 		m_iInterruptNum = _InterruptNum;
 		m_bInterrupted = true;
 		break;
@@ -527,7 +529,9 @@ _bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 	switch (_iTarget)
 	{
 	case 0: //Target == Owner
+		Reset_Target();
 		m_pTarget = m_pOwner;
+		Safe_AddRef(m_pTarget);
 		if (!m_bFightMode)
 		{
 			fRange = m_fOwnerRadius;
@@ -543,7 +547,9 @@ _bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		break;
 
 	case 2://SkillRange
+		Reset_Target();
 		m_pTarget = m_pOwner;
+		Safe_AddRef(m_pTarget);
 		fRange = m_fSkillRange;
 		break;
 	default:
@@ -707,7 +713,7 @@ void CWinona::Talk_Player(_float _fTimeDelta)
 			}
 			else
 			{
-				m_pTarget = nullptr;
+				Reset_Target();
 			}
 			pinven->Get_Talk_list()->front()->setcheck(false);
 			CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
@@ -740,8 +746,8 @@ void CWinona::Talk_Player(_float _fTimeDelta)
 			{
 				static_cast<CPlayer*>(m_pTarget)->Release_Party(TEXT("Winona"));
 				m_bOwner = false;
+				Reset_Target();
 				m_pOwner = nullptr;
-				m_pTarget = nullptr;
 			}
 			m_iTalkCnt = 0;
 			m_bInteract = false;
@@ -967,11 +973,19 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 			Owner_Pos.x -= 2.f;
 			Owner_Pos.z += 2.f;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
+			for (auto& iter = m_vecCatapults.begin(); iter != m_vecCatapults.end();)
+			{
+				Safe_Release(*iter);
+				iter++;
+			}
+			m_vecCatapults.clear();
 		}
 		else
 		{
+			
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(40.f, 0.5f, 27.f));
 			Clear_Activated();
+			Reset_Target();
 		}
 
 	}
@@ -1067,10 +1081,12 @@ DIR_STATE CWinona::Check_Direction(void)
 }
 
 void CWinona::Find_Priority()
-{
+ {
 	if (m_bOwner && !m_bFightMode)
 	{
+		Reset_Target();
 		m_pTarget = m_pOwner;
+		Safe_AddRef(m_pTarget);
 	}
 	else if (m_bFightMode)
 	{
@@ -1089,7 +1105,7 @@ void CWinona::Find_Priority()
 			break;
 		case 3:
 		case 4:
-			m_pTarget = nullptr;
+			Reset_Target();
 			break;
 		}
 	}
@@ -1106,7 +1122,7 @@ void CWinona::Find_Friend()
 		return;
 
 	_uint iIndex = 0;
-
+	Reset_Target();
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
@@ -1142,6 +1158,7 @@ void CWinona::Find_Friend()
 			continue;
 		}
 	}
+	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
 }
 
@@ -1156,7 +1173,7 @@ void CWinona::Find_Enemy()
 		return;
 
 	_uint iIndex = 0;
-
+	Reset_Target();
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
@@ -1205,7 +1222,7 @@ void CWinona::Find_Enemy()
 	{
 		m_bFightMode = false;
 	}
-
+	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
 }
 
@@ -1220,8 +1237,7 @@ void CWinona::Find_Berry()
 		return;
 
 	_uint iIndex = 0;
-
-	m_pTarget = nullptr;
+	Reset_Target();
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
 		if ((*iter_Obj) != nullptr && !dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_CanInteract()
@@ -1256,6 +1272,7 @@ void CWinona::Find_Berry()
 			continue;
 		}
 	}
+	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
 }
 
@@ -1264,8 +1281,9 @@ void CWinona::Find_Player()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	Reset_Target();
 	m_pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-
+	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
 }
 
