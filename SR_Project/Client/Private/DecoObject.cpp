@@ -270,7 +270,7 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 		break;
 	case DECOTYPE::PARTY:
 		TextureDesc.m_iEndTex = 14;
-		TextureDesc.m_fSpeed = 40.f;
+		TextureDesc.m_fSpeed = 20.f;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Party"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;

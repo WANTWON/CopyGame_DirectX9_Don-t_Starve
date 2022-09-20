@@ -7,6 +7,7 @@
 #include "ParticleSystem.h"
 #include "Particle.h"
 #include "Inventory.h"
+#include "DecoObject.h"
 
 CCarnivalMemory::CCarnivalMemory(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -152,6 +153,8 @@ void CCarnivalMemory::Play_Game(_float fTimeDelta)
 		else
 			m_fGameTimer += fTimeDelta;
 	}
+	else
+		m_fGameTimer += fTimeDelta;
 }
 
 void CCarnivalMemory::Start_Round(_float fTimeDelta)
@@ -200,6 +203,13 @@ void CCarnivalMemory::Check_Guesses()
 		{
 			m_eState = STATEMEMORY::WIN;
 			m_bCanPlay = false;
+
+			// Spawn Confetti Effect
+			CDecoObject::DECODECS DecoDesc;
+			DecoDesc.m_eState = CDecoObject::PARTY;
+			DecoDesc.vInitPosition = Get_Position();
+			DecoDesc.vInitPosition.y += 1.5f;
+			CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		}
 	}
 }

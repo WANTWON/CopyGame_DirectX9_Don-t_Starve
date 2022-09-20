@@ -305,14 +305,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	}
 	CloseHandle(hFile);
 
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_GAMEPLAY, pLayerTag, _float3(42.f, 1.f, 26.f));
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_GAMEPLAY, pLayerTag, _float3(41.f, 1.f, 25.f));
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_GAMEPLAY, pLayerTag, _float3(43.f, 1.f, 25.f));
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_GAMEPLAY, pLayerTag, _float3(42.f, 1.f, 25.f));
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_GAMEPLAY, pLayerTag, _float3(43.f, 1.f, 24.f));
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_GAMEPLAY, pLayerTag, _float3(41.f, 1.f, 24.f));
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_GAMEPLAY, pLayerTag, _float3(42.f, 1.f, 24.f));
-
 	Safe_Release(pGameInstance);
 	return S_OK;
 }

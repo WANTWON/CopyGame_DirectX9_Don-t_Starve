@@ -11,6 +11,7 @@
 #include "DecoObject.h"
 #include "Trap.h"
 #include "Shooting_Target.h"
+#include "Dirt.h"
 
 CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -225,14 +226,19 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	dwByte = 0;
-	_float3 vPosition = _float3(0.f, 0.f, 0.f);
 	iNum = 0;
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
+	_uint iRandKey = rand() % iNum;
 	for (_uint i = 0; i < iNum; ++i)
 	{
-		ReadFile(hFile, &(vPosition), sizeof(_float3), &dwByte, nullptr);
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dirt"), LEVEL_MAZE, pLayerTag, vPosition)))
+		CDirt::DIRTDESC DirtDesc;
+		ReadFile(hFile, &(DirtDesc.vInitPosition), sizeof(_float3), &dwByte, nullptr);
+
+		if (iRandKey == i)
+			DirtDesc.bHasKey = true;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dirt"), LEVEL_MAZE, pLayerTag, &DirtDesc)))
 			return E_FAIL;
 	}
 	CloseHandle(hFile);
@@ -275,6 +281,15 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	TargetDesc.eType = CShooting_Target::TARGET_GOOD;
 	TargetDesc.vPosition = _float3(43.75f, 0.f, 41.9f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
+
+
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, pLayerTag, _float3(11.0f, 2.f, 8.f));
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, _float3(10.0f, 2.f, 7.f));
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, _float3(11.0f, 2.f, 7.f));
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, _float3(12.0f, 2.f, 7.f));
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, _float3(10.0f, 2.f, 6.f));
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, _float3(11.0f, 2.f, 6.f));
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, _float3(12.0f, 2.f, 6.f));
 
 	Safe_Release(pGameInstance);
 	return S_OK;
