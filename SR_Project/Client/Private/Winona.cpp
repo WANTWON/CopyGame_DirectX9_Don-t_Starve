@@ -9,6 +9,7 @@
 #include "Skill.h"
 #include "Inventory.h"
 #include "Catapult.h"
+#include "Battery_Tower.h"
 CWinona::CWinona(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CNPC(pGraphic_Device)
 {
@@ -36,10 +37,10 @@ HRESULT CWinona::Initialize(void * pArg)
 	m_eObjID = OBJID::OBJ_NPC;
 	m_eNPCID = NPCID::NPC_WINONA;
 
-	m_fAtk_Max_CoolTime = 10.f;
+	m_fAtk_Max_CoolTime = 20.f;
 	m_fAtk_Cur_CoolTime = m_fAtk_Max_CoolTime;
 
-	m_fSkill_Max_CoolTime = 5.f;
+	m_fSkill_Max_CoolTime = 9.f;
 	m_fSkill_Cur_CoolTime = m_fSkill_Max_CoolTime;
 
 	m_fSkillRange = 20.f;
@@ -425,8 +426,22 @@ void CWinona::Attack(_float _fTimeDelta)
 	if (m_ePreState != m_eState)
 	{
 		m_bInteract = true;
-		cout << "Attack" << endl;
-		Change_Texture(TEXT("Com_Texture_Build_Down"));
+		
+		switch (m_eCur_Dir)
+		{
+		case DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Build_Up"));
+			break;
+
+		case DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Build_Down"));
+			break;
+
+		case DIR_LEFT:
+		case DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Build_Side"));
+			break;
+		}
 		m_ePreState = m_eState;
 
 		//cout << "Create_Bullet" << endl;
@@ -472,8 +487,21 @@ void CWinona::Skill(_float _fTimeDelta)
 	if (m_ePreState != m_eState)
 	{
 		m_bInteract = true;
-		cout << "Skill" << endl;
-		Change_Texture(TEXT("Com_Texture_Build_Down"));
+		switch (m_eCur_Dir)
+		{
+		case DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Build_Up"));
+			break;
+
+		case DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Build_Down"));
+			break;
+
+		case DIR_LEFT:
+		case DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Build_Side"));
+			break;
+		}
 		m_ePreState = m_eState;
 
 		//cout << "Create_Bullet" << endl;
@@ -798,17 +826,10 @@ void CWinona::Talk_Friend(_float _fTimeDelta)
 void CWinona::Create_Bullet(_float _fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	_float3 vInitPos = Get_Position();
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Battery_Tower"), m_iCurrentLevelndex, TEXT("Skill"), &vInitPos)))
+		return; 
 
-	CSkill::SKILL_DESC SkillDesc;
-
-	SkillDesc.eDirState = DIR_END;
-	SkillDesc.eSkill = CSkill::SKILL_TYPE::ICE_BLAST;
-	SkillDesc.vTargetPos = m_pTarget->Get_Position();
-	SkillDesc.vPosition = m_pTarget->Get_Position();
-	SkillDesc.vScale = static_cast<CMonster*>(m_pTarget)->Get_Scale();
-	SkillDesc.pTarget = this;
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skill"), m_iCurrentLevelndex, TEXT("Skill"), &SkillDesc)))
-		return;
 }
 
 void CWinona::Create_Catapult(_float _fTimeDelta)
@@ -960,7 +981,7 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 
 	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
 	{
-		
+		m_bCanTalk = false;
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 		return false;
 	}
@@ -979,10 +1000,11 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 				iter++;
 			}
 			m_vecCatapults.clear();
+			m_bCanTalk = true;
 		}
 		else
 		{
-			
+			m_bCanTalk = true;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(40.f, 0.5f, 27.f));
 			Clear_Activated();
 			Reset_Target();

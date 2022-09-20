@@ -27,7 +27,13 @@
 #include "Catapult.h"
 #include "Statue.h"
 #include "Trap.h"
+<<<<<<< Updated upstream
 
+=======
+#include "CarnivalMemory.h"
+#include "CarnivalCard.h"
+#include "Battery_Tower.h"
+>>>>>>> Stashed changes
 #include "Skill.h"
 #include "Wendy.h"
 #include "Winona.h"
@@ -646,6 +652,18 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hit_Effect"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Hit_Effect/Hit_%03d.png"), 19))))
 		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Spark */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spark_Effect"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Spark/Sparks_%03d.png"), 17))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Burst_Effect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Burst_Effect"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Burst_Effect/Burst_%03d.png"), 20))))
+		return E_FAIL;
+
+
 #pragma  endregion Add_Texture_Effects
 	/*    ̴   ε    . */
 
@@ -915,10 +933,21 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Catapult/Place/Catapult_Place_%03d.png"), 45))))
 		return E_FAIL;
 
-	/*For Prototype Component_Texture_Catapult_Bettery */
+	/*For Prototype Component_Texture_Catapult_Battery */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Battery"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Catapult/Battery/Battery_%03d.png"), 7))))
 		return E_FAIL;
+
+	/*For Prototype Component_Texture_Battery_Tower_Place */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Battery_Tower_Place"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Battery_Tower/Battery_Tower_Place_%03d.png"), 75))))
+		return E_FAIL;
+
+	/*For Prototype Component_Texture_Battery_Tower_Attack */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Battery_Tower_Attack"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Battery_Tower/Battery_Tower_Attack_%03d.png"), 50))))
+		return E_FAIL;
+
 #pragma endregion Texture_Catapult
 	/*For Prototype Component_Texture_Bossloadingscene  */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_loadingboss"),
@@ -2115,6 +2144,18 @@ HRESULT CLoader::Loading_Prototype_Object()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Catapult"),
 		CCatapult::Create(m_pGraphic_Device))))
 		return E_FAIL;
+<<<<<<< Updated upstream
+=======
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Battery_Tower"),
+		CBattery_Tower::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ShootingTarget"),
+		CShooting_Target::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+>>>>>>> Stashed changes
 	lstrcpy(m_szLoadingText, TEXT("Loading_UI_Object"));
 
 #pragma region Add_Prototype UI Object

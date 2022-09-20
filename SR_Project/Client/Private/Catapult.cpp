@@ -4,6 +4,8 @@
 #include "Monster.h"
 #include "Bullet.h"
 #include "Winona.h"
+#include "Skill.h"
+
 CCatapult::CCatapult(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CPawn(pGraphic_Device)
 {
@@ -33,7 +35,7 @@ HRESULT CCatapult::Initialize(void * pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-	m_eObjID = OBJID::OBJ_OBJECT;
+	m_eObjID = OBJID::OBJ_CATAPULT;
 	static_cast<CWinona*>(m_tDesc.pOwner)->Add_Catapult(this);
 	Safe_AddRef(this);
 
@@ -256,21 +258,42 @@ void CCatapult::Update_Delay(_float _fTimeDelta)
 		}
 	}
 	
+	if (m_bBurst)
+	{
+		m_fBurst_Time -= _fTimeDelta;
+		if (m_fBurst_Time <= 0.f)
+		{
+			m_bBurst = false;
+		}
+	}
+
 
 	if (!m_bCanAttack)
 	{
 		m_fAttackDelay -= _fTimeDelta;
 		if (m_fAttackDelay <= 0.f)
 		{
-			m_fAttackDelay = m_fAttackMaxDelay;
+			if (m_bBurst)
+			{
+				m_fAttackDelay = m_fBurst_AtckMaxDelay;
+			}
+			else {
+				m_fAttackDelay = m_fAtkMaxDelay;
+			}
 			m_bCanAttack = true;
 		}
 	}
 
+	m_fCreate_Effect_Time += _fTimeDelta;
 }
 
 void CCatapult::Behavior(_float _fTimeDelta)
 {
+	if (m_bBurst)
+	{
+		BurstMode(_fTimeDelta);
+	}
+
 	switch (m_eState)
 	{
 	case STATE::PLACE:
@@ -379,6 +402,29 @@ void CCatapult::Place(_float _fTimeDelta)
 
 }
 
+void CCatapult::BurstMode(_float _fTimeDelta)
+{
+	if (m_fCreate_Effect_Time >= 1.5f)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+		CSkill::SKILL_DESC SkillDesc;
+
+		SkillDesc.eDirState = DIR_END;
+		SkillDesc.eSkill = CSkill::SKILL_TYPE::BURST;
+		SkillDesc.vTargetPos = Get_Position();
+		SkillDesc.vPosition = Get_Position();
+		SkillDesc.vPosition.y += 0.3f;
+		SkillDesc.vScale = _float3(2.f, 2.f, 1.f);
+		SkillDesc.pTarget = nullptr;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skill"), m_iCurrentLevelndex, TEXT("Skill"), &SkillDesc)))
+			return;
+
+		m_fCreate_Effect_Time = 0.f;
+	}
+}
+
 _bool CCatapult::Find_Enemy(_float _fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -440,6 +486,11 @@ _bool CCatapult::Check_Distance(CGameObject* _pObj)
 
 void CCatapult::Interact(_uint Damage)
 {
+	if (!m_bBurst)
+	{
+		m_fBurst_Time = (_float)Damage;
+		m_bBurst = true;
+	}
 }
 
 CCatapult * CCatapult::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
