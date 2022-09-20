@@ -128,7 +128,7 @@ void CPortal::Late_Tick(_float fTimeDelta)
 		SetUp_BillBoard();
 
 	Change_Motion();
-	Change_Frame();
+	Change_Frame(fTimeDelta);
 
 	if (m_ePortalDesc.m_eType != PORTAL_BOSS)
 	{
@@ -248,7 +248,7 @@ HRESULT CPortal::Texture_Clone()
 	return S_OK;
 }
 
-void CPortal::Change_Frame()
+void CPortal::Change_Frame(_float fTimeDelta)
 {
 	switch (m_eState)
 	{

@@ -292,6 +292,12 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Trap">
       <UniqueIdentifier>{c76a6b74-f03a-46c9-acfa-026dbb7236d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory">
+      <UniqueIdentifier>{f8ca6e98-8273-48e5-96f9-55120a9352ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Carnival Card">
+      <UniqueIdentifier>{519b65bf-973f-4a24-9e0b-4f09a04cf2c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -683,6 +689,12 @@
     <ClInclude Include="..\public\Trap.h">
       <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\CarnivalMemory.h">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CarnivalCard.h">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Card</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1061,6 +1073,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Trap.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CarnivalMemory.cpp">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CarnivalCard.cpp">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Card</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

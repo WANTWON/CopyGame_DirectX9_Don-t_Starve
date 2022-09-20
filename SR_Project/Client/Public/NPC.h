@@ -35,7 +35,7 @@ protected:
 
 protected: /*For TextureCom */
 	virtual HRESULT Texture_Clone() override = 0;
-	virtual void Change_Frame() override = 0;
+	virtual void Change_Frame(_float fTimeDelta) override = 0;
 	virtual void Change_Motion() override = 0;
 
 protected:

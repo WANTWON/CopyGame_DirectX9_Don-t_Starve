@@ -49,7 +49,7 @@ void CGrass::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	Change_Motion();
-	Change_Frame();
+	Change_Frame(fTimeDelta);
 }
 
 HRESULT CGrass::Render()
@@ -196,7 +196,7 @@ HRESULT CGrass::Texture_Clone()
 	return S_OK;
 }
 
-void CGrass::Change_Frame()
+void CGrass::Change_Frame(_float fTimeDelta)
 {
 	switch (m_eState)
 	{

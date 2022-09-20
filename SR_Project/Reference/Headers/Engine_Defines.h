@@ -23,6 +23,7 @@ using namespace std;
 #include <array>
 #include <algorithm>
 #include <iostream>
+#include <random>
 
 
 #include "Engine_Macro.h"

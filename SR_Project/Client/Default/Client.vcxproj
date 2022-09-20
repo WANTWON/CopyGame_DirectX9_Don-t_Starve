@@ -184,6 +184,8 @@
     <ClInclude Include="..\Public\CameraFPS.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\CameraTarget.h" />
+    <ClInclude Include="..\public\CarnivalCard.h" />
+    <ClInclude Include="..\public\CarnivalMemory.h" />
     <ClInclude Include="..\public\Carrot.h" />
     <ClInclude Include="..\Public\Craftbutton.h" />
     <ClInclude Include="..\Public\Craftmain_back.h" />
@@ -315,6 +317,8 @@
     <ClCompile Include="..\Private\CameraFPS.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\CameraTarget.cpp" />
+    <ClCompile Include="..\private\CarnivalCard.cpp" />
+    <ClCompile Include="..\private\CarnivalMemory.cpp" />
     <ClCompile Include="..\private\Carrot.cpp" />
     <ClCompile Include="..\Private\Craftbutton.cpp" />
     <ClCompile Include="..\Private\Craftmain_back.cpp" />

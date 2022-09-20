@@ -60,7 +60,7 @@ void CTent::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	Change_Motion();
-	Change_Frame();
+	Change_Frame(fTimeDelta);
 }
 
 HRESULT CTent::Render()
@@ -172,7 +172,7 @@ HRESULT CTent::Texture_Clone()
 	return S_OK;
 }
 
-void CTent::Change_Frame()
+void CTent::Change_Frame(_float fTimeDelta)
 {
 	switch (m_eState)
 	{

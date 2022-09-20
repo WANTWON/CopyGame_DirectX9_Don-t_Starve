@@ -120,7 +120,7 @@ HRESULT CSkeleton::Texture_Clone()
 	return S_OK;
 }
 
-void CSkeleton::Change_Frame()
+void CSkeleton::Change_Frame(_float fTimeDelta)
 {
 }
 

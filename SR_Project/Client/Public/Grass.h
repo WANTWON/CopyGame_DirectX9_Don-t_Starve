@@ -41,7 +41,7 @@ private:
 
 private: /*For TextureCom */
 	virtual HRESULT Texture_Clone() override;
-	virtual void Change_Frame() override;
+	virtual void Change_Frame(_float fTimeDelta) override;
 	virtual void Change_Motion() override;
 
 private:

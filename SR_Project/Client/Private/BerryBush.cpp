@@ -46,7 +46,7 @@ void CBerryBush::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	Change_Motion();
-	Change_Frame();
+	Change_Frame(fTimeDelta);
 }
 
 HRESULT CBerryBush::Render()
@@ -197,7 +197,7 @@ HRESULT CBerryBush::Texture_Clone()
 	return S_OK;
 }
 
-void CBerryBush::Change_Frame()
+void CBerryBush::Change_Frame(_float fTimeDelta)
 {
 	switch (m_eState)
 	{
