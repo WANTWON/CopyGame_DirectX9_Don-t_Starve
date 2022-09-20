@@ -160,7 +160,11 @@ HRESULT CBullet::SetUp_Components()
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
 	TransformDesc.fSpeedPerSec = 5.f;
-	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
+
+	if(m_tBulletData.eWeaponType == CARNIVAL_ARROW)
+		TransformDesc.fRotationPerSec = D3DXToRadian(1.0f);
+	else
+		TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
 	switch (m_tBulletData.eDirState)
 	{
@@ -317,6 +321,8 @@ void CBullet::Excute(_float fTimeDelta)
 			Ice_Smoke(fTimeDelta);
 		case WEAPON_TYPE::WEAPON_ROCK:
 			Rock(fTimeDelta);
+		case WEAPON_TYPE::CARNIVAL_ARROW:
+			Rotation(fTimeDelta);
 		}
 	}
 }
@@ -330,6 +336,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 	{
 		switch (m_tBulletData.eWeaponType)
 		{
+		case WEAPON_TYPE::CARNIVAL_ARROW:
 		case WEAPON_TYPE::WEAPON_HAND:
 		case WEAPON_TYPE::WEAPON_SWORD:
 			m_bDead = OBJ_DEAD;
@@ -1009,6 +1016,30 @@ void CBullet::Rock(_float _fTimeDelta)
 	}
 }
 
+void CBullet::Rotation(_float fTimeDelta)
+{
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_MAZE, TEXT("Layer_Shooter"));
+	_float3 vCenterPos = pGameObject->Get_Position();
+	_float3 vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float vDistance = 1.f;
+
+	m_fAngle++;
+	if (m_fAngle >= 360)
+		m_fAngle = 0;
+
+	vPosition.x = vCenterPos.x + cosf(D3DXToRadian(m_fAngle))*vDistance - sin(D3DXToRadian(m_fAngle))*vDistance;
+	vPosition.z = vCenterPos.z + sin(D3DXToRadian(m_fAngle))*vDistance + cos(D3DXToRadian(m_fAngle))*vDistance;
+
+	_float fDegree =  D3DXVec3Dot(&vCenterPos, &vPosition);
+	acos(fDegree);
+
+	if (fDegree > 180)
+		fDegree = 360 - fDegree;
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+	m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fDegree);
+}
+
 HRESULT CBullet::Render_TextureState()
 {
 	switch (m_tBulletData.eWeaponType)
@@ -1144,7 +1175,9 @@ void CBullet::SetUp_BillBoard()
 
 	if (m_tBulletData.eDirState == DIR_STATE::DIR_END
 		&& m_tBulletData.eWeaponType == WEAPON_TYPE::WEAPON_MINE)
+		return;
 
+	if (m_tBulletData.eWeaponType == WEAPON_TYPE::CARNIVAL_ARROW)
 		return;
 
 	_float4x4		ViewMatrix;
@@ -1347,6 +1380,15 @@ HRESULT CBullet::Texture_Clone(void)
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
+
+	case WEAPON_TYPE::CARNIVAL_ARROW:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 0;
+		TextureDesc.m_fSpeed = 20;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Carnival"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Carnival_Arrow"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		break;
 	}
 
 
@@ -1418,6 +1460,10 @@ HRESULT CBullet::Init_Data(void)
 		break;
 	case WEAPON_TYPE::BOARRIOR_SPECIAL:
 		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+		break;
+	case WEAPON_TYPE::CARNIVAL_ARROW:
+		m_pTransformCom->Set_Scale(0.2f, 0.5f, 1.f);
+		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 90.f);
 		break;
 	default:
 		break;

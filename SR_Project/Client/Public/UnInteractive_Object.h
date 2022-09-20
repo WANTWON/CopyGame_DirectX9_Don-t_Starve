@@ -40,6 +40,7 @@ protected: /* For.Components */
 protected:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) = 0;
 	void Set_ShaderID();
+
 protected: /*For TextureCom */
 	virtual HRESULT Texture_Clone() { return S_OK;  };
 	HRESULT Change_Texture(const _tchar* LayerTag);

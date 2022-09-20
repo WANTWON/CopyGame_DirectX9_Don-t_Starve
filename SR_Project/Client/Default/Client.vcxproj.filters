@@ -313,6 +313,12 @@
     <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Carnival Card">
       <UniqueIdentifier>{2f3a30fd-c6df-42fa-9a11-7e7a2390c3bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Carnival Shoot Button">
+      <UniqueIdentifier>{4af10914-52ce-474e-b5c0-2903608ed5ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Carnival Shooter">
+      <UniqueIdentifier>{b7058b92-ebc2-4c06-8fd8-400f7238a51e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -732,6 +738,9 @@
     <ClInclude Include="..\public\CarnivalMemory.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Carnival_Shooter.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\Carnival Shooter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1138,6 +1147,9 @@
     </ClCompile>
     <ClCompile Include="..\private\CarnivalMemory.cpp">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Carnival_Shooter.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\Carnival Shooter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

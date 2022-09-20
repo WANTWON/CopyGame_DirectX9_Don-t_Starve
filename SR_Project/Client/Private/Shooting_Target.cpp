@@ -29,7 +29,7 @@ HRESULT CShooting_Target::Initialize_Prototype()
 
 HRESULT CShooting_Target::Initialize(void* pArg)
 {
-	memcpy(&m_ShootingTargetDesc, pArg, sizeof(TARGETDESC)); 
+	memcpy(&m_ShootingTargetDesc, pArg, sizeof(TARGETDESC));
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -50,13 +50,13 @@ int CShooting_Target::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	// A.I.
-	
+
 	/*if (  m_eState == IDLE  && m_dwIdleTime + rand() % 5000 + 3000 < GetTickCount())
 	{
 		m_dwAttackTime = GetTickCount();
 		m_eState = STOP;
 	}*/
-	
+
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -105,10 +105,6 @@ HRESULT CShooting_Target::Render()
 
 HRESULT CShooting_Target::SetUp_Components(void* pArg)
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	Safe_Release(pGameInstance);
 
 	/* For.Com_Texture */
 	Texture_Clone();
@@ -160,40 +156,40 @@ HRESULT CShooting_Target::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 20;
+	TextureDesc.m_fSpeed = 35;
 
-	
-		TextureDesc.m_iEndTex = 17;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_BAD"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Bad"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-			return E_FAIL;
-		m_vecTexture.push_back(m_pTextureCom);
 
-		TextureDesc.m_iEndTex = 8;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT_BAD"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Bad_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-			return E_FAIL;
-		m_vecTexture.push_back(m_pTextureCom);
+	TextureDesc.m_iEndTex = 17;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_BAD"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Bad"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
 
-		TextureDesc.m_iEndTex = 9;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_STOP_BAD"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Bad_Stop"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-			return E_FAIL;
-		m_vecTexture.push_back(m_pTextureCom);
-	
-		TextureDesc.m_iEndTex = 17;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_GOOD"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Good"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-			return E_FAIL;
-		m_vecTexture.push_back(m_pTextureCom);
+	TextureDesc.m_iEndTex = 8;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT_BAD"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Bad_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
 
-		TextureDesc.m_iEndTex = 41;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT_GOOD"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Good_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-			return E_FAIL;
-		m_vecTexture.push_back(m_pTextureCom);
+	TextureDesc.m_iEndTex = 9;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_STOP_BAD"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Bad_Stop"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
 
-		TextureDesc.m_iEndTex = 9;
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture_STOP_GOOD"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Good_Stop"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-			return E_FAIL;
-		m_vecTexture.push_back(m_pTextureCom);
-		
-	
+	TextureDesc.m_iEndTex = 17;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_GOOD"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Good"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 41;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT_GOOD"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Good_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	TextureDesc.m_iEndTex = 9;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_STOP_GOOD"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooting_Target_Good_Stop"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+
 	return S_OK;
 }
 
@@ -210,7 +206,7 @@ void CShooting_Target::Change_Frame(_float fTimeDelta)
 				iNum == 0 ? m_ShootingTargetDesc.eType = TARGET_BAD : m_ShootingTargetDesc.eType = TARGET_GOOD;
 				if (m_ShootingTargetDesc.eType == TARGET_BAD)
 					Change_Texture(TEXT("Com_Texture_IDLE_BAD"));
-				else 
+				else
 					Change_Texture(TEXT("Com_Texture_IDLE_GOOD"));
 			}
 		}
@@ -229,7 +225,7 @@ void CShooting_Target::Change_Frame(_float fTimeDelta)
 	}
 	case STATE::STOP:
 		m_pTextureCom->MoveFrame(m_TimerTag);
-		if(m_dwAttackTime + rand()%3000 < GetTickCount())
+		if (m_dwAttackTime + rand() % 3000 < GetTickCount())
 		{
 			m_dwIdleTime = GetTickCount();
 			m_bHit = false;
@@ -246,7 +242,7 @@ void CShooting_Target::Change_Motion()
 		switch (m_eState)
 		{
 		case STATE::IDLE:
-			if(m_ShootingTargetDesc.eType == TARGET_GOOD)
+			if (m_ShootingTargetDesc.eType == TARGET_GOOD)
 				Change_Texture(TEXT("Com_Texture_IDLE_GOOD"));
 			else
 				Change_Texture(TEXT("Com_Texture_IDLE_BAD"));
@@ -266,8 +262,8 @@ void CShooting_Target::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_HIT_BAD"));
 			break;
 		}
-			
-			
+
+
 		case STATE::STOP:
 			if (m_ShootingTargetDesc.eType == TARGET_GOOD)
 				Change_Texture(TEXT("Com_Texture_STOP_GOOD"));
@@ -304,7 +300,7 @@ _float CShooting_Target::Take_Damage(float fDamage, void * DamageType, CGameObje
 
 _bool CShooting_Target::IsDead()
 {
-	
+
 	return false;
 }
 
