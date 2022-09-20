@@ -96,6 +96,14 @@ PS_OUT PS_SCREENEFFECT(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MiniMap(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor = tex2D(TextureSampler, In.vTexUV);
+	Out.vColor.a -= g_alpha;
+	return Out;
+}
+
 
 technique		DefaultTechnique
 {
@@ -118,5 +126,16 @@ technique		DefaultTechnique
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_SCREENEFFECT();
+	}
+
+	pass MiniMap
+	{
+		AlphablendEnable = true;
+		SrcBlend = SrcAlpha;
+		DestBlend = InvSrcAlpha;
+		BlendOp = Add;
+		CULLMODE = NONE;
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_MiniMap();
 	}
 }

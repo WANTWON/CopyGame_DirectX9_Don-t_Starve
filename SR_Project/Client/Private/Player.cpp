@@ -78,6 +78,16 @@ int CPlayer::Tick(_float fTimeDelta)
 		Change_Texture(TEXT("Com_Texture_Idle_Side"));
 		m_bInPortal = false;
 		m_bMove = true;
+
+		
+		MINIMAP		minidesc;
+		ZeroMemory(&minidesc, sizeof(MINIMAP));
+		minidesc.name = MIN_PLAYER;
+		minidesc.pointer = this;
+
+		LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
 	}
 	m_iCameraMode = CCameraManager::Get_Instance()->Get_CamState();
 	
@@ -412,6 +422,16 @@ HRESULT CPlayer::SetUp_Components()
 	TransformDesc.fSpeedPerSec = 3.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);
+
+	/*MINIMAP		minidesc;
+	ZeroMemory(&minidesc, sizeof(MINIMAP));
+	minidesc.name = MIN_PLAYER;
+	minidesc.pointer = this;
+
+	LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);*/
+	
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;

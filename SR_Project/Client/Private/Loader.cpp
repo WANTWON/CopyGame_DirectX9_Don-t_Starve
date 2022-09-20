@@ -119,6 +119,9 @@
 #include "Status_pont.h"
 #include "Dmgpont.h"
 #include "ScreenEffect.h"
+#include "MiniMap.h"
+#include "MiniMap_Icon.h"
+#include "MiniMap_button.h"
 
 #include "Shooting_Target.h"
 
@@ -835,6 +838,23 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	/*For.Prototype_Component_Texture_DeadUI */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_ScreenEffect"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/screeneffect/screeneffect%d.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_DeadUI */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniMap_Icon"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/minimap/minimapicon%d.png"), 22))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_DeadUI */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniMapbutton"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/minimap/minimapbutton%d.png"), 1))))
+		return E_FAIL;
+
+	
+
+	/*For.Prototype_Component_Texture_DeadUI */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniMap"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/minimap/minimap%d.png"), 4))))
 		return E_FAIL;
 
 	/*For Prototype Component_Texture_rockWall */
@@ -2365,6 +2385,22 @@ HRESULT CLoader::Loading_Prototype_Object()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Screen_Effect"),
 		CScreenEffect::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniMap"),
+		CMiniMap::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniMap_Icon"),
+		CMiniMap_Icon::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniMap_Button"),
+		CMiniMap_button::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	
+
+	
 
 #pragma endregion Add_Prototype UI Object
 

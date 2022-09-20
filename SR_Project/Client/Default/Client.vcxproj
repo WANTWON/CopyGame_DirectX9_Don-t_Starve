@@ -218,6 +218,9 @@
     <ClInclude Include="..\Public\MainInventory_back.h" />
     <ClInclude Include="..\Public\MainInventory_front.h" />
     <ClInclude Include="..\Public\Craftmain.h" />
+    <ClInclude Include="..\Public\MiniMap.h" />
+    <ClInclude Include="..\Public\MiniMap_button.h" />
+    <ClInclude Include="..\Public\MiniMap_Icon.h" />
     <ClInclude Include="..\Public\Monsterhp_pont.h" />
     <ClInclude Include="..\Public\Mouse.h" />
     <ClInclude Include="..\Public\Mouse_item.h" />
@@ -352,6 +355,9 @@
     <ClCompile Include="..\Private\MainInventory_back.cpp" />
     <ClCompile Include="..\Private\MainInventory_front.cpp" />
     <ClCompile Include="..\Private\Craftmain.cpp" />
+    <ClCompile Include="..\Private\MiniMap.cpp" />
+    <ClCompile Include="..\Private\MiniMap_button.cpp" />
+    <ClCompile Include="..\Private\MiniMap_Icon.cpp" />
     <ClCompile Include="..\Private\Monsterhp_pont.cpp" />
     <ClCompile Include="..\Private\Mouse.cpp" />
     <ClCompile Include="..\Private\Mouse_item.cpp" />

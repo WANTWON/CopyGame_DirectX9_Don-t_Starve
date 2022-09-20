@@ -974,6 +974,14 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 			Clear_Activated();
 		}
 
+		MINIMAP		minidesc;
+		ZeroMemory(&minidesc, sizeof(MINIMAP));
+		minidesc.name = MIN_WINONA;
+		minidesc.pointer = this;
+		LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+
 	}
 
 	m_iPreLevelIndex = m_iCurrentLevelndex;
