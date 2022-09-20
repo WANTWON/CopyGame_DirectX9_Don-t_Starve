@@ -1,6 +1,6 @@
 #pragma once
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "UnInteractive_Object.h"
 #include "Transform.h"
 
 BEGIN(Engine)
@@ -8,11 +8,12 @@ class CTexture;
 class CRenderer;
 class CTransform;
 class CVIBuffer_Rect;
+class CCollider_Cube;
 class CShader;
 END
 
 BEGIN(Client)
-class CHouse final : public CGameObject
+class CHouse final : public CUnInteractive_Object
 {
 public:
 	enum HOUSETYPE { PIGHOUSE, SPIDERHOUSE, BOARONSPAWNER, MAZESPAWNER, HOUSE_END };
@@ -34,26 +35,17 @@ public:
 	virtual int Tick(_float fTimeDelta)override;
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
-
+	virtual void Set_Texture() override;
 public:
 	HOUSEDECS Get_Desc() { return m_HouseDesc; }
 	void Set_TerrainY(_float TerrainY) { m_fTerrain_Height = TerrainY; }
-	void Set_ShaderID();
+	
 private:
 	HRESULT SetUp_Components(void* pArg);
-	HRESULT SetUp_RenderState();
-	HRESULT Release_RenderState();
 
 private: /* For TransformCom*/
 	void SetUp_BillBoard();
 	void WalkingTerrain();
-
-private: /* For.Components */
-	CTexture* m_pTextureCom = nullptr;
-	CRenderer* m_pRendererCom = nullptr;
-	CTransform* m_pTransformCom = nullptr;
-	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
-	CShader*		m_pShaderCom = nullptr;
 
 private:
 	void Spawn_Spider(_float fTimeDelta);
@@ -63,13 +55,13 @@ public:
 
 private:
 	HOUSEDECS m_HouseDesc;
-	const _tchar* m_TimerTag = TEXT("");
+	//const _tchar* m_TimerTag = TEXT("");
 	_float m_fTerrain_Height = 0.f;
 
 	_int m_MonsterMaxCount = 0;
 	_float m_fSpawnTime = 999.f;
 	DWORD m_dwTime = GetTickCount();
-	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
+//	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
 public:
 	static CHouse* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

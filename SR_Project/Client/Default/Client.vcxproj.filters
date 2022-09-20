@@ -292,6 +292,9 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Trap">
       <UniqueIdentifier>{c76a6b74-f03a-46c9-acfa-026dbb7236d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00. Pawn\01.Monster\ShootingTarget">
+      <UniqueIdentifier>{14c5021f-9c2a-47b8-ae75-4c5f4c537ae1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -683,6 +686,11 @@
     <ClInclude Include="..\public\Trap.h">
       <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Catapult.h" />
+    <ClInclude Include="..\Public\Winona.h" />
+    <ClInclude Include="..\Public\Shooting_Target.h">
+      <Filter>02.GameObject\00. Pawn\01.Monster\ShootingTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1061,6 +1069,11 @@
     </ClCompile>
     <ClCompile Include="..\private\Trap.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Catapult.cpp" />
+    <ClCompile Include="..\Private\Winona.cpp" />
+    <ClCompile Include="..\Private\Shooting_Target.cpp">
+      <Filter>02.GameObject\00. Pawn\01.Monster\ShootingTarget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

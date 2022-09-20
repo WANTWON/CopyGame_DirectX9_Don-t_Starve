@@ -3,12 +3,12 @@
 #include "GameInstance.h"
 
 CHouse::CHouse(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CUnInteractive_Object(pGraphic_Device)
 {
 }
 
 CHouse::CHouse(const CHouse & rhs)
-	: CGameObject(rhs)
+	: CUnInteractive_Object(rhs)
 {
 }
 
@@ -41,9 +41,6 @@ HRESULT CHouse::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(SetUp_Components(&m_HouseDesc.vInitPosition)))
-		return E_FAIL;
-
 	switch (m_HouseDesc.m_eState)
 	{
 	case HOUSETYPE::BOARONSPAWNER:
@@ -72,9 +69,6 @@ HRESULT CHouse::Initialize(void* pArg)
 	{
 		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.f);
 		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
-
-		
-
 		break;
 	}
 	}
@@ -103,7 +97,7 @@ int CHouse::Tick(_float fTimeDelta)
 
 void CHouse::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
+	//__super::Late_Tick(fTimeDelta);
 
 	SetUp_BillBoard();
 
@@ -120,17 +114,11 @@ HRESULT CHouse::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
+	return S_OK;
+}
 
-	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
-
-	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
-	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
-	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
-
-
+void CHouse::Set_Texture()
+{
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	if (iLevel == LEVEL_HUNT && m_HouseDesc.m_eState == PIGHOUSE)
 		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(1));
@@ -140,31 +128,12 @@ HRESULT CHouse::Render()
 	{
 		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(0));
 	}
-
-	m_pTextureCom->MoveFrame(m_TimerTag);
-
-	m_pShaderCom->Begin(m_eShaderID);
-	m_pVIBufferCom->Render();
-	m_pShaderCom->End();
-
-	return S_OK;
 }
 
-void CHouse::Set_ShaderID()
-{
-	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-
-	if (pGameObject->Get_Dead())
-		m_eShaderID = SHADER_DEAD;
-	else if (iLevel == LEVEL_MAZE)
-		m_eShaderID = SHADER_DARK;
-	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
-}
 
 HRESULT CHouse::SetUp_Components(void* pArg)
 {
+	
 	/* For.Com_Texture */
 	CTexture::TEXTUREDESC TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
@@ -207,7 +176,7 @@ HRESULT CHouse::SetUp_Components(void* pArg)
 
 	TransformDesc.fSpeedPerSec = 0.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
-	TransformDesc.InitPos = *(_float3*)pArg;
+	TransformDesc.InitPos = *(_float3*)&m_HouseDesc.vInitPosition;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
@@ -215,28 +184,6 @@ HRESULT CHouse::SetUp_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CHouse::SetUp_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-
-	return S_OK;
-}
-
-HRESULT CHouse::Release_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
-	return S_OK;
-}
 
 void CHouse::SetUp_BillBoard()
 {
@@ -331,6 +278,7 @@ void CHouse::Spawn_RandomMonster(_float fTimeDelta)
 void CHouse::Spawn_Boaron(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
 	_float3 vSpawnPosition = Get_Position();
 
 	// Spawn Effect
@@ -347,6 +295,8 @@ void CHouse::Spawn_Boaron(_float fTimeDelta)
 		return;
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Boaron"), LEVEL_BOSS, TEXT("Layer_Monster"), vSpawnPosition + _float3(0.f, 0.f, .75f))))
 		return;
+
+	Safe_Release(pGameInstance);
 }
 
 CHouse* CHouse::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -379,10 +329,4 @@ CGameObject* CHouse::Clone(void* pArg)
 void CHouse::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pShaderCom);
 }

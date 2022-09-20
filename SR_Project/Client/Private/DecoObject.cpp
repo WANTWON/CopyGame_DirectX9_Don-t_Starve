@@ -72,7 +72,12 @@ HRESULT CDecoObject::Initialize(void* pArg)
 		m_fRadius = 0.002f;
 		break;
 	}
-		
+	case DECOTYPE::PARTY:
+	{
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+		m_fRadius = 2.f;
+		break;
+	}
 	}
 
 	return S_OK;
@@ -196,11 +201,28 @@ void CDecoObject::FloorUpdate()
 
 void CDecoObject::MoveFrame()
 {
-
-	if(m_DecoDesc.m_eState != FLOOR)
+	switch (m_DecoDesc.m_eState)
+	{
+	case FLOORFIRE:
 		m_pTextureCom->MoveFrame(m_TimerTag);
-	else
+		break;
+	case FLOOR_EFFECT:
+		m_pTextureCom->MoveFrame(m_TimerTag);
+		break;
+	case TORCH:
+		m_pTextureCom->MoveFrame(m_TimerTag);
+		break;
+	case FLIES:
+		m_pTextureCom->MoveFrame(m_TimerTag);
+		break;
+	case FLOOR:
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
+		break;
+	case PARTY:
+		if (m_pTextureCom->MoveFrame(m_TimerTag, false) == true)
+			m_bDead = true;
+		break;
+	}	
 }
 
 HRESULT CDecoObject::SetUp_Components(void* pArg)
@@ -242,10 +264,15 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Flies"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
-
 	case DECOTYPE::FLOOR:
 		
 		Set_FloorDecoTexture();
+		break;
+	case DECOTYPE::PARTY:
+		TextureDesc.m_iEndTex = 14;
+		TextureDesc.m_fSpeed = 40.f;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Party"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
 		break;
 	}
 
