@@ -304,6 +304,9 @@
     <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona">
       <UniqueIdentifier>{724461a8-fb17-4306-a963-46de283b2bf5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00. Pawn\01.Monster\Shooting_Target">
+      <UniqueIdentifier>{09c144ef-7a08-4bbb-aace-2487ead5605b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -714,6 +717,9 @@
     <ClInclude Include="..\Public\Winona.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Shooting_Target.h">
+      <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1111,6 +1117,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Winona.cpp">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Shooting_Target.cpp">
+      <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
