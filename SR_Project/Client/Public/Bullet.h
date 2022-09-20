@@ -100,7 +100,7 @@ private: //values
 	_float					m_MaxTime;
 
 	_float					m_fAttackRange = 1.f;
-	_float					m_fAngle = 0.0f;
+	_float					m_fAngle = 310.0f;
 	//for Anim
 	_bool					m_bReversAnim = false;
 

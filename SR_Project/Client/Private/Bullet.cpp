@@ -1043,21 +1043,25 @@ void CBullet::Carnival_Arrow(_float fTimeDelta)
 
 	_float vDistance = 0.5f;
 
-	m_fAngle++;
-	if (m_fAngle >= 360)
-		m_fAngle = 0;
+	m_fAngle+=2.f;
+	if (m_fAngle >= 360.f)
+		m_fAngle = 0.f;
 
 	vPosition.x = vCenterPos.x + cosf(D3DXToRadian(m_fAngle))*vDistance - sin(D3DXToRadian(m_fAngle))*vDistance;
 	vPosition.z = vCenterPos.z + sin(D3DXToRadian(m_fAngle))*vDistance + cos(D3DXToRadian(m_fAngle))*vDistance;
 
-	_float fDegree =  D3DXVec3Dot(&vCenterPos, &vPosition);
+	/*_float fDegree =  D3DXVec3Dot(&vCenterPos, &vPosition);
 	acos(fDegree);
 
 	if (fDegree > 180)
-		fDegree = 360 - fDegree;
+		fDegree = 360 - fDegree;*/
+
+	_float3 vUp = vPosition - vCenterPos;
+	D3DXVec3Normalize(&vUp, &vUp);
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
-	m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fDegree);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, vUp);
+	//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fDegree);
 }
 
 void CBullet::Shoot_Carnival_Arrow(_float fTimeDelta)
@@ -1490,9 +1494,16 @@ HRESULT CBullet::Init_Data(void)
 		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
 		break;
 	case WEAPON_TYPE::CARNIVAL_ARROW:
+	{
+		_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		_float fDot = D3DXVec3Dot(&vLook, &(_float3(0.f, 0.f, 0.1f)));
+		fDot = acos(fDot);
+
+
 		m_pTransformCom->Set_Scale(0.2f, 0.5f, 1.f);
-		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 90.f);
+		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.f - fDot);
 		break;
+	}
 	default:
 		break;
 
