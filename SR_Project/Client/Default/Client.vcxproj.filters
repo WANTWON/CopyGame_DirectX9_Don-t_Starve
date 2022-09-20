@@ -292,12 +292,6 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Trap">
       <UniqueIdentifier>{c76a6b74-f03a-46c9-acfa-026dbb7236d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory">
-      <UniqueIdentifier>{f8ca6e98-8273-48e5-96f9-55120a9352ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Carnival Card">
-      <UniqueIdentifier>{519b65bf-973f-4a24-9e0b-4f09a04cf2c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\98.UI\16.ScreenEfeect">
       <UniqueIdentifier>{41d51b07-9878-4059-8f5f-4d9817a6b565}</UniqueIdentifier>
     </Filter>
@@ -312,6 +306,12 @@
     </Filter>
     <Filter Include="02.GameObject\00. Pawn\01.Monster\Shooting_Target">
       <UniqueIdentifier>{09c144ef-7a08-4bbb-aace-2487ead5605b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory">
+      <UniqueIdentifier>{a4e6e053-8ea2-4cee-9879-34e47812cba9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Carnival Card">
+      <UniqueIdentifier>{2f3a30fd-c6df-42fa-9a11-7e7a2390c3bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -702,12 +702,6 @@
     <ClInclude Include="..\public\Trap.h">
       <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\CarnivalMemory.h">
-      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\CarnivalCard.h">
-      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Card</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\ScreenEffect.h">
       <Filter>02.GameObject\98.UI\16.ScreenEfeect</Filter>
     </ClInclude>
@@ -731,6 +725,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Shooting_Target.h">
       <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CarnivalCard.h">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Card</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CarnivalMemory.h">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1109,12 +1109,6 @@
     <ClCompile Include="..\private\Trap.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\CarnivalMemory.cpp">
-      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\CarnivalCard.cpp">
-      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Card</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\ScreenEffect.cpp">
       <Filter>02.GameObject\98.UI\16.ScreenEfeect</Filter>
     </ClCompile>
@@ -1138,6 +1132,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Shooting_Target.cpp">
       <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CarnivalCard.cpp">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Card</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CarnivalMemory.cpp">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
