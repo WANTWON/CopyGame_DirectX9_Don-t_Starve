@@ -319,6 +319,9 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Carnival Shooter">
       <UniqueIdentifier>{b7058b92-ebc2-4c06-8fd8-400f7238a51e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00. Pawn\Battery_Tower">
+      <UniqueIdentifier>{5a2da514-201b-4448-a7d0-461f755c85ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -741,6 +744,9 @@
     <ClInclude Include="..\Public\Carnival_Shooter.h">
       <Filter>02.GameObject\05.UnInteractive_Object\Carnival Shooter</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Battery_Tower.h">
+      <Filter>02.GameObject\00. Pawn\Battery_Tower</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1150,6 +1156,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Carnival_Shooter.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\Carnival Shooter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battery_Tower.cpp">
+      <Filter>02.GameObject\00. Pawn\Battery_Tower</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

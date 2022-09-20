@@ -319,10 +319,13 @@ void CBullet::Excute(_float fTimeDelta)
 			break;
 		case WEAPON_TYPE::WEAPON_ICESMOKE:
 			Ice_Smoke(fTimeDelta);
+			break;
 		case WEAPON_TYPE::WEAPON_ROCK:
 			Rock(fTimeDelta);
+			break;
 		case WEAPON_TYPE::CARNIVAL_ARROW:
 			Rotation(fTimeDelta);
+			break;
 		}
 	}
 }
