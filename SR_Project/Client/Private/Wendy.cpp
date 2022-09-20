@@ -77,6 +77,14 @@ int CWendy::Tick(_float fTimeDelta)
 			Clear_Activated();
 			Reset_Target();
 		}
+		MINIMAP		minidesc;
+		ZeroMemory(&minidesc, sizeof(MINIMAP));
+		minidesc.name = MIN_WENDY;
+		minidesc.pointer = this;
+		LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 	}
 	__super::Tick(fTimeDelta);
@@ -132,7 +140,7 @@ HRESULT CWendy::SetUp_Components(void * pArg)
 	//if (FAILED(pGameInstance->Add_Timer(m_TimerTag)))
 	//return E_FAIL;
 
-	Safe_Release(pGameInstance);
+	
 
 	/* For.Com_Texture */
 	Texture_Clone();
@@ -159,6 +167,10 @@ HRESULT CWendy::SetUp_Components(void * pArg)
 	TransformDesc.fSpeedPerSec = 3.f / 1.13f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(0.f);
 	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);;
+
+	
+	
+	Safe_Release(pGameInstance);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;

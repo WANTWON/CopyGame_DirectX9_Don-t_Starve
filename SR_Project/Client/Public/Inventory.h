@@ -56,7 +56,9 @@
 #include "Loadingscene.h"
 #include "Monsterhp_pont.h"
 #include "Skill_Icon.h"
-/*  생성된 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
+#include "MiniMap_Icon.h" 
+#include "MiniMap.h"
+/*  생성 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
 class CInventory_Manager final : public CBase
@@ -131,6 +133,9 @@ public:
 	list<CMonsterhp_pont*>*Get_Monsterhp_list(void) { return &m_Monsterhppontlist; }
 	list<CSkill_Icon*>*Get_Skill_list(void) { return &m_Skill; }
 
+	list<CMiniMap*>* Get_Minimap_list(void) { return &m_Minimaplist; }
+	list<CMiniMap_Icon*>* Get_Minimapicon_list(void) { return &m_Minimapiconlist; }
+
 	
 
 	void sethp(_uint hp) { m_ihp = hp; }
@@ -155,6 +160,8 @@ public:
 	void materialtool_on();
 	void materialtool_off();
 
+	
+
 	void Dead_on();
 	void Dead_off();
 
@@ -167,6 +174,8 @@ public:
 
 	void Set_PickingPot(_bool type) { m_PickingPot = type; }
 	_bool Get_PickingPot() { return m_PickingPot; }
+
+	void Iconreset(void) { m_Minimapiconlist.clear(); }
 
 public:
 	class CGameObject* Find_Objects(_uint iLevelIndex, const _tchar* pLayerTag);
@@ -233,6 +242,11 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CMonsterhp_pont*>m_Monsterhppontlist;
 
 	list<CSkill_Icon*> m_Skill;
+
+	list<CMiniMap*>m_Minimaplist;
+	list<CMiniMap_Icon*>m_Minimapiconlist;
+
+
 	
 
 

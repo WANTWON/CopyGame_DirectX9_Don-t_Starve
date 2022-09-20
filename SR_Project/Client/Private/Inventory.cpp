@@ -1075,11 +1075,16 @@ void CInventory_Manager::Free()
 	m_BagInventorylist.clear();
 	m_Mouseitemlist.clear();
 	m_Mouseiteminfolist.clear();
+
 	m_Toolboxweapon.clear();
 	m_Toolboxweapon_back.clear();
 	m_Toolboxweapon_front.clear();
+
 	m_Toolboxgather.clear();
-	
+	m_Toolboxgather_front.clear();
+	m_Toolboxgather_back.clear();
+
+
 	m_Hppontlist.clear();
 	m_Hungerpontlist.clear();
 	m_Mentalitiypontlist.clear();
@@ -1117,5 +1122,15 @@ void CInventory_Manager::Free()
 	m_Deadcountpont.clear();
 
 	m_Daycountpont.clear();
+
+	m_Mousemonsterinfolist.clear();
+	m_Loadingscenelist.clear();
+	m_Monsterhppontlist.clear();
+
+	m_Skill.clear();
+	m_Minimaplist.clear();
+	m_Minimapiconlist.clear();
+
+
 
 }
