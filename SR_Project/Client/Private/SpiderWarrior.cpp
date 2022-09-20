@@ -495,10 +495,13 @@ void CSpiderWarrior::Patrol(_float fTimeDelta)
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		if (!pGameInstance)
 			return;
-		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_HUNT, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+		CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+		if (!pLevelManager)
+			return;
+		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
 		if (!pVIBuffer_Terrain)
 			return;
-		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_HUNT, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
 		if (!pTransform_Terrain)
 			return;
 

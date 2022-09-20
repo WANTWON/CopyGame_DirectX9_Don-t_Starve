@@ -8,6 +8,8 @@
 #include "Level_Loading.h"
 #include "WoodWall.h"
 #include "Portal.h"
+#include "DecoObject.h"
+#include "Trap.h"
 
 CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -67,8 +69,9 @@ void CLevel_Maze::Tick(_float fTimeDelta)
 		CPickingMgr::Get_Instance()->Picking();
 	}
 
-	Start_Camera_Motion();
+	//Start_Camera_Motion();
 	Update_Camera_Motion();
+	Update_Floor_Motion();
 
 	Safe_Release(pGameInstance);
 }
@@ -159,10 +162,8 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, pLayerTag, &PortalDesc)))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dirt"), LEVEL_MAZE, pLayerTag, _float3(9.f, 2.f, 45.f))))
-		return E_FAIL;
 
-	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/RockWall_Stage4_Vertical_and_Horizontal.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/RockWall_Stage5_Vertical_and_Horizontal.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -199,6 +200,63 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_MAZE, TEXT("Layer_Wall"), &WallDesc);
 	}
 	CloseHandle(hFile);
+
+
+	// Test Spawner
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/House_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	CHouse::HOUSEDECS HouseDesc;
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(HouseDesc), sizeof(CHouse::HOUSEDECS), &dwByte, nullptr);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_House"), LEVEL_MAZE, TEXT("Layer_House"), &HouseDesc);
+	}
+	CloseHandle(hFile);
+
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Dirt_Stage4.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	_float3 vPosition = _float3(0.f, 0.f, 0.f);
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(vPosition), sizeof(_float3), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dirt"), LEVEL_MAZE, pLayerTag, vPosition)))
+			return E_FAIL;
+	}
+	CloseHandle(hFile);
+
+
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Trap_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	CTrap::TRAPDESC tTrapDesc;
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(tTrapDesc), sizeof(CTrap::TRAPDESC), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trap"), LEVEL_GAMEPLAY, TEXT("Layer_Trap"), &tTrapDesc)))
+			return E_FAIL;
+	}
+	CloseHandle(hFile);
+
+	
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Statue"), LEVEL_MAZE, TEXT("Layer_Statue"), _float3(39.75f, 0.f, 9.f));
+
 
 	Safe_Release(pGameInstance);
 	return S_OK;
@@ -299,6 +357,65 @@ void CLevel_Maze::Update_Camera_Motion()
 		m_bPlayerCam = false;
 	}
 	
+
+
+	
+
+}
+
+void CLevel_Maze::Update_Floor_Motion()
+{
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	if ((pGameObject->Get_Position().x > 35 && !m_bPuzzleStart[0]))
+	{
+		CDecoObject::DECODECS  DecoDesc;
+		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
+		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 9.f);
+		DecoDesc.fRotate = 3.f;
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		m_bPuzzleStart[0] = true;
+	}
+	else if ((pGameObject->Get_Position().x > 35) && (pGameObject->Get_Position().z > 20) && !m_bPuzzleStart[1])
+	{
+		CDecoObject::DECODECS  DecoDesc;
+		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
+		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 24.f);
+		DecoDesc.fRotate = 1.f;
+		//CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		m_bPuzzleStart[1] = true;
+	}
+	else if ((pGameObject->Get_Position().x > 35) && (pGameObject->Get_Position().z > 36) && !m_bPuzzleStart[2])
+	{
+		CDecoObject::DECODECS  DecoDesc;
+		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
+		DecoDesc.fRotate = 5.f;
+		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 42.f);
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		
+		DecoDesc.fRotate = 2.f;
+		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 38.f);
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		m_bPuzzleStart[2] = true;
+	}
+	else if ((pGameObject->Get_Position().x < 28) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[3])
+	{
+		CDecoObject::DECODECS  DecoDesc;
+		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
+		DecoDesc.vInitPosition = _float3(25.f, 0.f, 40.f);
+		DecoDesc.fRotate = 3.f;
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		m_bPuzzleStart[3] = true;
+	}
+	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[4])
+	{
+		CDecoObject::DECODECS  DecoDesc;
+		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
+		DecoDesc.vInitPosition = _float3(10.f, 0.f, 40.f);
+		DecoDesc.fRotate = 2.f;
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		m_bPuzzleStart[4] = true;
+	}
 
 }
 

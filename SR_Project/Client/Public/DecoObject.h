@@ -16,7 +16,7 @@ BEGIN(Client)
 class CDecoObject final : public CGameObject
 {
 public:
-	enum DECOTYPE { FLOORFIRE, FLOOR_EFFECT, TORCH, FLIES, DECO_END };
+	enum DECOTYPE { FLOORFIRE, FLOOR_EFFECT, TORCH, FLIES, FLOOR, DECO_END };
 
 	typedef struct DecoTag
 	{
@@ -39,6 +39,7 @@ public:
 
 public:
 	void FloorUpdate();
+	void MoveFrame();
 
 public:
 	DECODECS Get_Desc() { return m_DecoDesc; }
@@ -46,8 +47,7 @@ public:
 
 private:
 	HRESULT SetUp_Components(void* pArg);
-	HRESULT SetUp_RenderState();
-	HRESULT Release_RenderState();
+	void Set_ShaderID();
 
 private: /* For TransformCom*/
 	void SetUp_BillBoard();
@@ -62,7 +62,7 @@ private: /* For.Components */
 	CShader*		m_pShaderCom = nullptr;
 private:
 	void Check_Eruption(_float fTimeDelta);
-
+	void Set_FloorDecoTexture();
 private:
 	DECODECS m_DecoDesc;
 	const _tchar* m_TimerTag = TEXT("");

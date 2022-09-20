@@ -34,7 +34,7 @@ HRESULT CDirt::Initialize(void* pArg)
 	m_eObjID = OBJID::OBJ_OBJECT;
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::DIRT;
 
-	m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
 	return S_OK;
 }
@@ -83,42 +83,55 @@ HRESULT CDirt::Drop_Items()
 
 	_uint iLootType = rand() % 3 + 1;
 
+	// Random Position Drop based on Object Position
+	_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * .5f;
+	_int bSignX = rand() % 2;
+	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * .5f;
+	_float fPosX = bSignX ? (Get_Position().x + fOffsetX) : (Get_Position().x - fOffsetX);
+	_float fPosZ = Get_Position().z - fOffsetZ;
+
+	_float3 vDropPos = _float3(fPosX, Get_Position().y, fPosZ);
+
 	switch (iLootType)
 	{
 	// Monster
 	case 1:
 	{
 		_uint iMonsterIndex = rand() % m_lMonstersTable.size();
-		
-
+		pGameInstance->Add_GameObject(m_lMonstersTable[iMonsterIndex], LEVEL_HUNT, TEXT("Layer_Monster"), vDropPos);
 	}
 	break;
 	// Item
 	case 2:
-		break;
+	{
+		CItem::ITEMDESC ItemDesc;
+		ZeroMemory(&ItemDesc, sizeof(CItem::ITEMDESC));
+
+		ItemDesc.fPosition = vDropPos;
+		ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
+		ItemDesc.pTextureComponent = TEXT("Com_Texture_Dirt_Item");
+		
+		_uint iItemIndex = rand() % m_lItemIdTable.size();
+		ItemDesc.eItemName = (ITEMNAME)m_lItemIdTable[iItemIndex];
+
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_HUNT, TEXT("Layer_Object"), &ItemDesc);
+	}
+	break;
 	// Next Room Key
 	case 3:
-		break;
+	{
+		CItem::ITEMDESC ItemDesc;
+		ZeroMemory(&ItemDesc, sizeof(CItem::ITEMDESC));
+
+		ItemDesc.fPosition = vDropPos;
+		ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
+		ItemDesc.pTextureComponent = TEXT("Com_Texture_Dirt_Key");
+		ItemDesc.eItemName = ITEMNAME_KEY;
+
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_HUNT, TEXT("Layer_Object"), &ItemDesc);
 	}
-
-	CItem::ITEMDESC ItemDesc;
-	ZeroMemory(&ItemDesc, sizeof(CItem::ITEMDESC));
-
-	// Random Position Drop based on Object Position
-	_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * .5f;
-	_int bSignX = rand() % 2;
-	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * .5f;
-	_int bSignZ = rand() % 2;
-	_float fPosX = bSignX ? (Get_Position().x + fOffsetX) : (Get_Position().x - fOffsetX);
-	_float fPosZ = bSignZ ? (Get_Position().z + fOffsetZ) : (Get_Position().z - fOffsetZ);
-
-	ItemDesc.fPosition = _float3(fPosX, Get_Position().y, fPosZ);
-	ItemDesc.pTextureComponent = TEXT("Com_Texture_Carrot");
-	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
-	ItemDesc.eItemName = ITEMNAME::ITEMNAME_CARROT;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Object"), &ItemDesc)))
-		return E_FAIL;
+	break;
+	}
 
 	return S_OK;
 }

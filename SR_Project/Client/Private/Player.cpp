@@ -291,12 +291,8 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 
 		m_bMove = false;
 		m_bAutoMode = true;
-
-		
-
-		CGameObject* npc = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC"));
-
-		static_cast<CNPC*>(npc)->Make_Interrupt(this, 1);
+		m_bHited = true;
+		Notify_NPC(1);
 
 		Safe_Release(pGameInstance);
 	}
@@ -340,6 +336,24 @@ void CPlayer::Set_FPSMode(_bool type)
 	else 
 		m_bIsFPS = false; 
 }
+
+void CPlayer::Release_Party(const _tchar * _Name)
+{
+	auto iter = find_if(m_vecParty.begin(), m_vecParty.end(), [&](auto& MyPair)->bool {
+
+		if (MyPair.first == _Name)
+			return true;
+		
+		return false;
+	});
+
+	if (iter != m_vecParty.end())
+	{
+		iter = m_vecParty.erase(iter);
+	}
+
+}
+
 
 HRESULT CPlayer::SetUp_Components()
 {
@@ -685,6 +699,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			{
 				Throw_Bomb(_fTimeDelta);
 				m_vecSkillDesc[0].bSkillUsed = true;
+
 
 				CInventory_Manager* inv = CInventory_Manager::Get_Instance();
 				auto i = inv->Get_Skill_list();
@@ -1186,15 +1201,8 @@ void CPlayer::Attack(_float _fTimeDelta)
 			break;
 		}
 		m_ePreState = m_eState;
-
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
-
-		CGameObject* npc = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_NPC"));
-
-		static_cast<CNPC*>(npc)->Make_Interrupt(this, 1);
-
-		Safe_Release(pGameInstance);
+		
+		Notify_NPC(1);
 	}
 
 
@@ -1406,10 +1414,9 @@ void CPlayer::Damaged(_float _fTimeDelta)
 
 	}
 
-	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 2)
 	{
 		m_bMove = true;
-		m_bHited = true;
 	}
 }
 
@@ -2047,6 +2054,15 @@ void CPlayer::Setup_Collider(void)
 		else
 			vPosition.z -= vDistance.z;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+	}
+
+}
+
+void CPlayer::Notify_NPC(_uint _iNum)
+{
+	for (auto& iter : m_vecParty)
+	{
+		iter.second->Make_Interrupt(this, _iNum);
 	}
 
 }
@@ -2764,6 +2780,8 @@ void CPlayer::Free()
 	Safe_Release(m_pShaderCom);
 
 	Safe_Release(m_Equipment);
+
+	m_vecParty.clear();
 
 	for (auto& iter : m_mapTexture)
 		Safe_Release((iter).second);

@@ -286,11 +286,11 @@
     <Filter Include="02.GameObject\00. Pawn\Skills">
       <UniqueIdentifier>{95881df0-4775-4da0-a5ac-83f23d3802b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\98.UI\16.ScreenEffect">
-      <UniqueIdentifier>{a2c3893d-6335-484f-972d-8d0ca7522fbd}</UniqueIdentifier>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Statue">
+      <UniqueIdentifier>{9bc1c7fe-7140-4334-8f3f-90f30549f156}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\98.UI\17.MiniMap">
-      <UniqueIdentifier>{c1c9e014-449d-498d-9541-c736e4d1d091}</UniqueIdentifier>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Trap">
+      <UniqueIdentifier>{c76a6b74-f03a-46c9-acfa-026dbb7236d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -673,14 +673,15 @@
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Skill.h" />
-    <ClInclude Include="..\Public\ScreenEffect.h">
-      <Filter>02.GameObject\98.UI\16.ScreenEffect</Filter>
+    <ClInclude Include="..\Public\ScreenEffect.h" />
+    <ClInclude Include="..\Public\UnInteractive_Object.h">
+      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MiniMap.h">
-      <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
+    <ClInclude Include="..\Public\Statue.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\Statue</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MiniMap_player.h">
-      <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
+    <ClInclude Include="..\public\Trap.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1051,14 +1052,15 @@
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Skill.cpp" />
-    <ClCompile Include="..\Private\ScreenEffect.cpp">
-      <Filter>02.GameObject\98.UI\16.ScreenEffect</Filter>
+    <ClCompile Include="..\Private\ScreenEffect.cpp" />
+    <ClCompile Include="..\Private\UnInteractive_Object.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MiniMap.cpp">
-      <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
+    <ClCompile Include="..\Private\Statue.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\Statue</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MiniMap_player.cpp">
-      <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
+    <ClCompile Include="..\private\Trap.cpp">
+      <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

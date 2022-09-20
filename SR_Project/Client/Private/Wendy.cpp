@@ -573,10 +573,7 @@ _bool CWendy::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 	if (m_pTarget == nullptr)
 		return false;
 
-	
-
 	_float fRange = 5.f;
-
 
 	switch (_iTarget)
 	{
@@ -734,22 +731,18 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 		switch (m_iTalkCnt)
 		{
 		case 1:
-			cout << "hi" << endl;
 			break;
 		case 2:
-			cout << "Create Party?" << endl << "1. Yes 2. No" << endl;
 			break;
 		case 3:
 			if (m_bAccept)
 			{
-				cout << "Thanks" << endl;
 				m_bNextAct = true;
 
 			}
 			else
 			{
 				m_bNextAct = false;
-				cout << "bye" << endl;
 			}
 			break;
 		case 4:
@@ -763,6 +756,7 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 			{
 				m_bOwner = true;
 				m_pOwner = static_cast<CPawn*>(m_pTarget);
+				static_cast<CPlayer*>(m_pTarget)->Add_Party(TEXT("Wendy"), this);
 			}
 			else
 			{
@@ -778,21 +772,17 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 		switch (m_iTalkCnt)
 		{
 		case 1:
-			cout << "hi" << endl;
 			break;
 		case 2:
-			cout << " Party Off?" << endl << "1. Yes 2. No" << endl;
 			break;
 		case 3:
 			if (m_bAccept)
 			{
 				m_bNextAct = false;
-				cout << "Bye" << endl;
 			}
 			else
 			{
 				m_bNextAct = true;
-				cout << "Tha" << endl;
 			}
 			break;
 		case 4:
@@ -801,6 +791,7 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 			static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
 			if (!m_bNextAct)
 			{
+				static_cast<CPlayer*>(m_pTarget)->Release_Party(TEXT("Wendy"));
 				m_bOwner = false;
 				m_pOwner = nullptr;
 				m_pTarget = nullptr;
@@ -1057,8 +1048,6 @@ void CWendy::Find_Priority()
 			m_pTarget = nullptr;
 			break;
 		}
-		
-		
 	}
 	//Find_Enemy();
 	//Find_Player();
