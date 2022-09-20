@@ -35,6 +35,7 @@ HRESULT CCatapult::Initialize(void * pArg)
 
 	m_eObjID = OBJID::OBJ_OBJECT;
 	static_cast<CWinona*>(m_tDesc.pOwner)->Add_Catapult(this);
+	Safe_AddRef(this);
 
 	ZeroMemory(&m_tInfo, sizeof(OBJINFO));
 	m_tInfo.iMaxHp = 100.f;

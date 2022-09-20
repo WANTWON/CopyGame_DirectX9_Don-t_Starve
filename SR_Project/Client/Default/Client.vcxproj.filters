@@ -298,8 +298,11 @@
     <Filter Include="02.GameObject\98.UI\17.MiniMap">
       <UniqueIdentifier>{fe74532a-05d9-4e8f-ab98-f1df8b71ab47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00. Pawn\01.Monster\Shooting_Target">
-      <UniqueIdentifier>{559bba6e-0fff-4ff0-b993-6996fbb2a048}</UniqueIdentifier>
+    <Filter Include="02.GameObject\00. Pawn\01.Monster\Catapult">
+      <UniqueIdentifier>{d29f5be4-f141-47eb-9716-6bc0e8763443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona">
+      <UniqueIdentifier>{724461a8-fb17-4306-a963-46de283b2bf5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -681,7 +684,6 @@
     <ClInclude Include="..\public\Dirt.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Skill.h" />
     <ClInclude Include="..\Public\UnInteractive_Object.h">
       <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClInclude>
@@ -691,8 +693,6 @@
     <ClInclude Include="..\public\Trap.h">
       <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Catapult.h" />
-    <ClInclude Include="..\Public\Winona.h" />
     <ClInclude Include="..\Public\ScreenEffect.h">
       <Filter>02.GameObject\98.UI\16.ScreenEfeect</Filter>
     </ClInclude>
@@ -705,8 +705,14 @@
     <ClInclude Include="..\Public\MiniMap_button.h">
       <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Shooting_Target.h">
-      <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
+    <ClInclude Include="..\Public\Catapult.h">
+      <Filter>02.GameObject\00. Pawn\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill.h">
+      <Filter>02.GameObject\00. Pawn\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Winona.h">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1076,7 +1082,6 @@
     <ClCompile Include="..\private\Dirt.cpp">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Skill.cpp" />
     <ClCompile Include="..\Private\UnInteractive_Object.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClCompile>
@@ -1086,8 +1091,6 @@
     <ClCompile Include="..\private\Trap.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Catapult.cpp" />
-    <ClCompile Include="..\Private\Winona.cpp" />
     <ClCompile Include="..\Private\ScreenEffect.cpp">
       <Filter>02.GameObject\98.UI\16.ScreenEfeect</Filter>
     </ClCompile>
@@ -1100,8 +1103,14 @@
     <ClCompile Include="..\Private\MiniMap_button.cpp">
       <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Shooting_Target.cpp">
-      <Filter>02.GameObject\00. Pawn\01.Monster\Shooting_Target</Filter>
+    <ClCompile Include="..\Private\Catapult.cpp">
+      <Filter>02.GameObject\00. Pawn\01.Monster\Catapult</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill.cpp">
+      <Filter>02.GameObject\00. Pawn\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Winona.cpp">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
