@@ -182,7 +182,7 @@ HRESULT CCarnival_Shooter::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	TextureDesc.m_iEndTex = 5;
+	TextureDesc.m_iEndTex = 4;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_SHOOT"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Shooter_Shoot"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
@@ -199,6 +199,7 @@ void CCarnival_Shooter::Change_Frame()
 	case Client::CCarnival_Shooter::SHOOT:
 		if (m_pTextureCom->MoveFrame(m_TimerTag, false) == true)
 		{
+			m_bReady = false;
 			m_eState = IDLE;
 		}
 		break;

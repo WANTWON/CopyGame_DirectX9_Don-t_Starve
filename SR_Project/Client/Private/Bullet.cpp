@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "Level_Manager.h"
 #include "Interactive_Object.h"
+#include "Carnival_Shooter.h"
 
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CPawn(pGraphic_Device)
@@ -319,10 +320,16 @@ void CBullet::Excute(_float fTimeDelta)
 			break;
 		case WEAPON_TYPE::WEAPON_ICESMOKE:
 			Ice_Smoke(fTimeDelta);
+			break;
 		case WEAPON_TYPE::WEAPON_ROCK:
 			Rock(fTimeDelta);
+			break;
 		case WEAPON_TYPE::CARNIVAL_ARROW:
-			Rotation(fTimeDelta);
+			if (!m_bShoot)
+				Carnival_Arrow(fTimeDelta);
+			else
+				Shoot_Carnival_Arrow(fTimeDelta);
+			break;
 		}
 	}
 }
@@ -1016,12 +1023,25 @@ void CBullet::Rock(_float _fTimeDelta)
 	}
 }
 
-void CBullet::Rotation(_float fTimeDelta)
+void CBullet::Carnival_Arrow(_float fTimeDelta)
 {
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_MAZE, TEXT("Layer_Shooter"));
 	_float3 vCenterPos = pGameObject->Get_Position();
 	_float3 vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_float vDistance = 1.f;
+	
+	if (dynamic_cast<CCarnival_Shooter*>(pGameObject)->Get_bShoot() && !m_bShoot)
+	{
+		m_bShoot = true;
+		
+		_float3 vDir =  vPosition - vCenterPos;
+		D3DXVec3Normalize(&vDir, &vDir);
+		m_vShootDir = vDir;
+		dynamic_cast<CCarnival_Shooter*>(pGameObject)->Set_bShoot(false);
+		return;
+	}
+		
+
+	_float vDistance = 0.5f;
 
 	m_fAngle++;
 	if (m_fAngle >= 360)
@@ -1039,6 +1059,14 @@ void CBullet::Rotation(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 	m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fDegree);
 }
+
+void CBullet::Shoot_Carnival_Arrow(_float fTimeDelta)
+{
+	_float3 vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	vPosition += m_vShootDir;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+}
+
 
 HRESULT CBullet::Render_TextureState()
 {

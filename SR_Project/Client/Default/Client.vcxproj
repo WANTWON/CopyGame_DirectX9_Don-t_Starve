@@ -187,6 +187,7 @@
     <ClInclude Include="..\public\CarnivalCard.h" />
     <ClInclude Include="..\public\CarnivalMemory.h" />
     <ClInclude Include="..\Public\Carnival_Shooter.h" />
+    <ClInclude Include="..\Public\Carnival_Shoot_Button.h" />
     <ClInclude Include="..\public\Carrot.h" />
     <ClInclude Include="..\Public\Catapult.h" />
     <ClInclude Include="..\Public\Craftbutton.h" />
@@ -327,6 +328,7 @@
     <ClCompile Include="..\private\CarnivalCard.cpp" />
     <ClCompile Include="..\private\CarnivalMemory.cpp" />
     <ClCompile Include="..\Private\Carnival_Shooter.cpp" />
+    <ClCompile Include="..\Private\Carnival_Shoot_Button.cpp" />
     <ClCompile Include="..\private\Carrot.cpp" />
     <ClCompile Include="..\Private\Catapult.cpp" />
     <ClCompile Include="..\Private\Craftbutton.cpp" />

@@ -30,7 +30,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Set_Texture() override;
 
-	void Set_bShoot(_bool type) { m_bShoot = type; type ? m_eState = SHOOT : m_eState = IDLE; }
+	_bool Get_bShoot() { return m_bShoot; }
+	void Set_bShoot(_bool type) {m_bShoot = type; if (type) m_eState = SHOOT; }
 	void SetUp_BillBoard();
 private:
 	HRESULT SetUp_Components(void* pArg);

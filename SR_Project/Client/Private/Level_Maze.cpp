@@ -264,13 +264,13 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	TargetDesc.vPosition = _float3(35.75f, 0.f, 42.f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
 
-	TargetDesc.vPosition = _float3(37.75f, 0.f, 42.5f);
+	TargetDesc.vPosition = _float3(37.75f, 0.f, 42.2f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
 
-	TargetDesc.vPosition = _float3(39.75f, 0.f, 43.0f);
+	TargetDesc.vPosition = _float3(39.75f, 0.f, 42.3f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
 
-	TargetDesc.vPosition = _float3(41.75f, 0.f, 42.5f);
+	TargetDesc.vPosition = _float3(41.75f, 0.f, 42.2f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
 
 	TargetDesc.eType = CShooting_Target::TARGET_GOOD;
@@ -279,7 +279,9 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 
 
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Shooter"), LEVEL_MAZE, TEXT("Layer_Shooter"), _float3(39.75f, 0.f, 38.0f));
+	
 
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Shoot_Button"), LEVEL_MAZE, pLayerTag, _float3(41.75f, 0.f, 38.0f));
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
@@ -295,7 +297,7 @@ HRESULT CLevel_Maze::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CameraDesc.vDistance = _float3(0, 7, -6);
 
-	CameraDesc.CameraDesc.vEye = _float3(0.f, 2.f, -5.f);
+	CameraDesc.CameraDesc.vEye = _float3(0.f, 5.f, -5.f);
 	CameraDesc.CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 
 	CameraDesc.CameraDesc.fFovy = D3DXToRadian(30.0f);
@@ -316,8 +318,9 @@ HRESULT CLevel_Maze::Ready_Layer_Camera(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_MAZE, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
-	CameraDesc.CameraDesc.vEye = _float3(0.f, 6.f, -7.f);
-
+	CameraDesc.CameraDesc.fFovy = D3DXToRadian(30.0f);
+	CameraDesc.CameraDesc.vEye = _float3(0.f, 5.f, -8.f);
+	CameraDesc.vDistance = _float3(0, 7, -6);
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Target"), LEVEL_MAZE, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
