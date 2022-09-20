@@ -249,7 +249,7 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	for (_uint i = 0; i < iNum; ++i)
 	{
 		ReadFile(hFile, &(tTrapDesc), sizeof(CTrap::TRAPDESC), &dwByte, nullptr);
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trap"), LEVEL_GAMEPLAY, TEXT("Layer_Trap"), &tTrapDesc)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trap"), LEVEL_MAZE, TEXT("Layer_Trap"), &tTrapDesc)))
 			return E_FAIL;
 	}
 	CloseHandle(hFile);

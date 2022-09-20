@@ -527,6 +527,7 @@ _bool CBoarrior::Picking(_float3 * PickingPoint)
 	}
 	else
 	{
+		m_bPickingTrue = false;
 		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 		m_eShaderID = SHADER_IDLE_ALPHATEST;
 		auto i = pInvenManager->Get_Monsterinfo_list()->front();
@@ -546,6 +547,7 @@ _bool CBoarrior::Picking(_float3 * PickingPoint)
 
 void CBoarrior::PickingTrue()
 {
+	m_bPickingTrue = true;
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
 	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 

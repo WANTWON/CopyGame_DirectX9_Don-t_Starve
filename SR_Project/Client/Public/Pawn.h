@@ -32,6 +32,7 @@ public:
 	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
 protected:
 	OBJID m_eObjID;
+	_bool m_bPickingTrue = false;
 
 public:
 	virtual void Free() override;

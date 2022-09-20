@@ -1043,6 +1043,7 @@ _bool CBearger::Picking(_float3 * PickingPoint)
 	}
 	else
 	{
+		m_bPickingTrue = false;
 		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 
 		m_eShaderID = SHADER_IDLE_ALPHATEST;
@@ -1064,6 +1065,7 @@ _bool CBearger::Picking(_float3 * PickingPoint)
 
 void CBearger::PickingTrue()
 {
+	m_bPickingTrue = true;
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
 	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 
