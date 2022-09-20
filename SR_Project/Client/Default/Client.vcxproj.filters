@@ -292,6 +292,12 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Trap">
       <UniqueIdentifier>{c76a6b74-f03a-46c9-acfa-026dbb7236d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\16.ScreenEfeect">
+      <UniqueIdentifier>{41d51b07-9878-4059-8f5f-4d9817a6b565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\17.MiniMap">
+      <UniqueIdentifier>{fe74532a-05d9-4e8f-ab98-f1df8b71ab47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -673,7 +679,6 @@
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Skill.h" />
-    <ClInclude Include="..\Public\ScreenEffect.h" />
     <ClInclude Include="..\Public\UnInteractive_Object.h">
       <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClInclude>
@@ -682,6 +687,20 @@
     </ClInclude>
     <ClInclude Include="..\public\Trap.h">
       <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Catapult.h" />
+    <ClInclude Include="..\Public\Winona.h" />
+    <ClInclude Include="..\Public\ScreenEffect.h">
+      <Filter>02.GameObject\98.UI\16.ScreenEfeect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiniMap.h">
+      <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiniMap_Icon.h">
+      <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiniMap_button.h">
+      <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1052,7 +1071,6 @@
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Dirt</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Skill.cpp" />
-    <ClCompile Include="..\Private\ScreenEffect.cpp" />
     <ClCompile Include="..\Private\UnInteractive_Object.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object</Filter>
     </ClCompile>
@@ -1061,6 +1079,20 @@
     </ClCompile>
     <ClCompile Include="..\private\Trap.cpp">
       <Filter>02.GameObject\05.UnInteractive_Object\Trap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Catapult.cpp" />
+    <ClCompile Include="..\Private\Winona.cpp" />
+    <ClCompile Include="..\Private\ScreenEffect.cpp">
+      <Filter>02.GameObject\98.UI\16.ScreenEfeect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiniMap.cpp">
+      <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiniMap_Icon.cpp">
+      <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiniMap_button.cpp">
+      <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

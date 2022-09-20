@@ -45,8 +45,12 @@ private:
 
 	_uint texnum = 0;
 	_uint m_ihp;
-
+	_bool m_bcheck = false;
+	LEVEL					m_iCurrentLevelndex;
+	LEVEL                   m_iPreLevelIndex;
 public:
+	void set_check(bool tof) { m_bcheck = tof; }
+	bool get_check(void) { return m_bcheck;  }
 	static CMiniMap* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;

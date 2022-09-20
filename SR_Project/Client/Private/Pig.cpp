@@ -156,19 +156,19 @@ HRESULT CPig::SetUp_Components(void* pArg)
 	
 
 
-	typedef struct MINIMAP
-	{
-		MININAME name;
-		CGameObject* pointer;
+	//typedef struct MINIMAP
+	//{
+	//	MININAME name;
+	//	CGameObject* pointer;
 
-	}min;
+	//}min;
 
 	MINIMAP		minidesc;
 	ZeroMemory(&minidesc, sizeof(MINIMAP));
 	minidesc.name = MIN_PIG;
 	minidesc.pointer = this;
 
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_player"), LEVEL_STATIC, TEXT("minipig"), &minidesc);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), LEVEL_GAMEPLAY, TEXT("MiniMap_Icon"), &minidesc);
 	Safe_Release(pGameInstance);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))

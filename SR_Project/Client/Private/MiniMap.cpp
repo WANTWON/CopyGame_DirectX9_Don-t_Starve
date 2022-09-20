@@ -24,6 +24,7 @@ HRESULT CMiniMap::Initialize_Prototype()
 
 HRESULT CMiniMap::Initialize(void* pArg)
 {
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -47,6 +48,56 @@ int CMiniMap::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+		return OBJ_NOEVENT;
+
+	if (m_iCurrentLevelndex != m_iPreLevelIndex)
+	{
+		if (m_iCurrentLevelndex == LEVEL_GAMEPLAY) //*8
+		{
+			m_fSizeX = 640.f;
+			m_fSizeY = 400.f;
+			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+			texnum = 0;
+
+			m_iPreLevelIndex = m_iCurrentLevelndex;
+		}
+
+
+		else if (m_iCurrentLevelndex == LEVEL_HUNT) // *10
+		{
+			m_fSizeX = 600.f;
+			m_fSizeY = 400.f;
+			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+			texnum = 1;
+
+			m_iPreLevelIndex = m_iCurrentLevelndex;
+		}
+
+		else if (m_iCurrentLevelndex == LEVEL_MAZE) // *12
+		{
+			m_fSizeX = 600.f;
+			m_fSizeY = 600.f;
+			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+			texnum = 2;
+
+			m_iPreLevelIndex = m_iCurrentLevelndex;
+		}
+
+		else if (m_iCurrentLevelndex == LEVEL_BOSS) // *10
+		{
+			m_fSizeX = 300.f;
+			m_fSizeY = 300.f;
+			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+			texnum = 3;
+
+			m_iPreLevelIndex = m_iCurrentLevelndex;
+		}
+	}
+	
+	
 
 	//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	//CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
@@ -67,37 +118,47 @@ int CMiniMap::Tick(_float fTimeDelta)
 
 void CMiniMap::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
+	if (m_bcheck == true)
+	{
+		__super::Late_Tick(fTimeDelta);
 
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+	}
+	
 }
 
 HRESULT CMiniMap::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	if (m_bcheck == true)
+	{
 
-	_float4x4		WorldMatrix, ViewMatrix;
-	D3DXMatrixIdentity(&ViewMatrix);
+		if (FAILED(__super::Render()))
+			return E_FAIL;
 
-	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
-	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
+		_float4x4		WorldMatrix, ViewMatrix;
+		D3DXMatrixIdentity(&ViewMatrix);
 
-	m_pShaderCom->Set_RawValue("g_alpha", &alpha, sizeof(_float));
-	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
-	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
-	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&m_ProjMatrix, &m_ProjMatrix), sizeof(_float4x4));
+		m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+		WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
 
-	m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(0));
+		m_pShaderCom->Set_RawValue("g_alpha", &alpha, sizeof(_float));
+		m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+		m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+		m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&m_ProjMatrix, &m_ProjMatrix), sizeof(_float4x4));
 
-	m_pShaderCom->Begin(m_eShaderID);
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(texnum));
 
-	m_pVIBufferCom->Render();
-	m_pShaderCom->End();
+		m_pShaderCom->Begin(m_eShaderID);
 
-	return S_OK;
+		m_pVIBufferCom->Render();
+		m_pShaderCom->End();
+
+		return S_OK;
+	}
+
+	return E_FAIL;
 }
 
 HRESULT CMiniMap::SetUp_Components()
@@ -177,6 +238,8 @@ CGameObject * CMiniMap::Clone(void* pArg)
 		ERR_MSG(TEXT("Failed to Cloned : CMiniMap"));
 		Safe_Release(pInstance);
 	}
+
+	CInventory_Manager::Get_Instance()->Get_Minimap_list()->push_back(pInstance);
 
 	return pInstance;
 }

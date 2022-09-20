@@ -209,6 +209,34 @@ HRESULT CHouse::SetUp_Components(void* pArg)
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
 	TransformDesc.InitPos = *(_float3*)pArg;
 
+	MINIMAP		minidesc;
+	ZeroMemory(&minidesc, sizeof(MINIMAP));
+	
+	minidesc.pointer = this;
+	LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
+	switch (CurrentLevelndex)
+	{
+	case LEVEL_HUNT:
+		break;
+	case LEVEL_MAZE:
+		break;
+	case LEVEL_BOSS:
+		break;
+	default:
+		CurrentLevelndex = LEVEL_GAMEPLAY;
+		break;
+	}
+	minidesc.name = MIN_HOUSE;
+	if(CurrentLevelndex == LEVEL_GAMEPLAY)
+		minidesc.name = MIN_HOUSE2;
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+	Safe_Release(pGameInstance);
+
+
+	
+
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
