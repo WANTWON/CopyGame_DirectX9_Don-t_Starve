@@ -8,6 +8,7 @@
 #include "Particle.h"
 #include "Inventory.h"
 #include "DecoObject.h"
+#include "Carnival_Egg.h"
 
 CCarnivalMemory::CCarnivalMemory(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -43,6 +44,13 @@ HRESULT CCarnivalMemory::Initialize(void* pArg)
 		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 	else if (m_tStationDesc.eType == STATIONTYPE::STATION_BIRD)
 		m_pTransformCom->Set_Scale(1.3f, 1.3f, 1.f);
+	else if (m_tStationDesc.eType == STATIONTYPE::STATION_EGG)
+	{
+		m_pTransformCom->Set_Scale(1.3f, 2.5f, 1.f);
+		m_eState = PLACE;
+		m_dwEggSpawnTime = GetTickCount();
+	}
+		
 
 	m_eShaderID = SHADER_IDLE_ALPHABLEND;
 
@@ -64,6 +72,8 @@ int CCarnivalMemory::Tick(_float fTimeDelta)
 		Play_Memory(fTimeDelta);
 	else if (m_tStationDesc.eType == STATIONTYPE::STATION_BIRD)
 		Play_Bird(fTimeDelta);
+	else if (m_tStationDesc.eType == STATIONTYPE::STATION_EGG)
+		Play_Egg(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -115,6 +125,12 @@ void CCarnivalMemory::Interact(_uint Damage)
 	{
 		m_eState = STATESTATION::TURN_ON;
 		Start_Bird();
+	}
+	else if (m_tStationDesc.eType == STATIONTYPE::STATION_EGG)
+	{
+		m_eState = STATESTATION::TURN_ON;
+		Start_Egg();
+		m_bStart = true;
 	}
 
 	m_bInteract = false;
@@ -347,6 +363,88 @@ void CCarnivalMemory::Play_Bird(_float fTimeDelta)
 	}
 }
 
+void CCarnivalMemory::Start_Egg()
+{
+	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Egg"), LEVEL_MAZE, TEXT("Layer_Egg"), _float3(11.f, 0.5f, 41.f));
+	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Egg"), LEVEL_MAZE, TEXT("Layer_Egg"), _float3(12.f, 0.5f, 41.f));
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	list<CGameObject*>* lObjects = pGameInstance->Get_ObjectList(LEVEL_MAZE, TEXT("Layer_Egg"));
+	if (!lObjects)
+		return;
+
+	// Populate Card Vector
+	for (auto& iter = lObjects->begin(); iter != lObjects->end(); ++iter)
+	{
+		CCarnival_Egg* pEgg = dynamic_cast<CCarnival_Egg*>(*iter);
+		pEgg->Set_Memory(this);
+		m_iEggCount++;
+
+	}
+}
+
+void CCarnivalMemory::Play_Egg(_float fTimeDelta)
+{
+	if (m_eState == WIN)
+		return;
+
+	if (Check_Clear() && m_bStart)
+		m_eState = WIN;
+
+	if (m_dwEggSpawnTime + 10000 < GetTickCount() && !m_bIsWin)
+	{
+		Add_NewEgg();
+		m_dwEggSpawnTime = GetTickCount();
+	}
+		
+}
+
+_bool CCarnivalMemory::Check_Clear()
+{
+	if (m_iEggCount <= 0)
+	{
+		m_bIsWin = true;
+		return true;
+	}
+		
+
+	return false;
+}
+
+void CCarnivalMemory::Add_NewEgg()
+{
+	_float3 vPosition = Get_Position();
+	_bool isXMinus = rand() % 2 == 0 ? true : false;
+	_bool isZMinus = rand() % 2 == 0 ? true : false;
+
+	if (isXMinus)
+		vPosition.x += (((rand() % 1000)*0.001f) / float(m_fMaxDistance - m_fMinDistance)) + m_fMinDistance;
+	else
+		vPosition.x -= (((rand() % 1000)*0.001f) / float(m_fMaxDistance - m_fMinDistance)) + m_fMinDistance;
+
+	if (isZMinus)
+		vPosition.z += (((rand() % 1000)*0.001f) / float(m_fMaxDistance - m_fMinDistance)) + m_fMinDistance;
+	else
+		vPosition.z -= (((rand() % 1000)*0.001f) / float(m_fMaxDistance - m_fMinDistance)) + m_fMinDistance;
+
+	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Egg"), LEVEL_MAZE, TEXT("Layer_Egg"), vPosition);
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	list<CGameObject*>* lObjects = pGameInstance->Get_ObjectList(LEVEL_MAZE, TEXT("Layer_Egg"));
+	if (!lObjects)
+		return;
+
+	_uint iIndex = lObjects->size() -1;
+
+	CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_MAZE, TEXT("Layer_Egg"), iIndex);
+	dynamic_cast<CCarnival_Egg*>(pGameObject)->Set_Memory(this);
+	m_iEggCount++;
+	//CCarnival_Egg* pEgg = dynamic_cast<CCarnival_Egg*>(*iter);
+	//pEgg->Set_Memory(this);
+	
+	
+}
+
 HRESULT CCarnivalMemory::Drop_Items()
 {
 	return S_OK;
@@ -445,6 +543,33 @@ HRESULT CCarnivalMemory::Texture_Clone()
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 	}
+	else if (m_tStationDesc.eType == STATIONTYPE::STATION_EGG)
+	{
+		TextureDesc.m_iEndTex = 3;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_EggMom_Idle_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 15;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_EggMom_Idle_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 22;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Place"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_EggMom_Place"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 11;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_EggMom_Turn_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 12;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_EggMom_Turn_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 16;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Win"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_EggMom_Complete"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+	}
 
 	return S_OK;
 }
@@ -499,6 +624,10 @@ void CCarnivalMemory::Change_Frame(_float fTimeDelta)
 			m_fWinTimer += fTimeDelta;
 
 		break;
+	case COMPLETE:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = STATESTATION::IDLE_ON;
+		break;
 	}
 }
 
@@ -527,6 +656,9 @@ void CCarnivalMemory::Change_Motion()
 			Change_Texture(TEXT("Com_Texture_Turn_On"));
 			break;
 		case WIN:
+			Change_Texture(TEXT("Com_Texture_Win"));
+			break;
+		case COMPLETE:
 			Change_Texture(TEXT("Com_Texture_Win"));
 			break;
 		}

@@ -325,6 +325,9 @@
     <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Battery">
       <UniqueIdentifier>{374424ee-8740-4302-a37f-249d4c09ad81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00. Pawn\01.Monster\Carnival_Egg">
+      <UniqueIdentifier>{e1221791-2753-4ba9-a2b9-ee323586ef00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -756,6 +759,9 @@
     <ClInclude Include="..\Public\Battery.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Battery</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Carnival_Egg.h">
+      <Filter>02.GameObject\00. Pawn\01.Monster\Carnival_Egg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1174,6 +1180,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Battery.cpp">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Battery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Carnival_Egg.cpp">
+      <Filter>02.GameObject\00. Pawn\01.Monster\Carnival_Egg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

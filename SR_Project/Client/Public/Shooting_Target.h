@@ -35,6 +35,9 @@ public:
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
 
+public:
+	_bool Get_Complete() { if (m_ShootingTargetDesc.eType == TARGET_GOOD && m_eState == HIT) return true; else return false; }
+
 private:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
 

@@ -57,17 +57,19 @@ HRESULT CDecoObject::Initialize(void* pArg)
 	case DECOTYPE::FLOOR:
 	{
 		if (m_DecoDesc.fRotate == 1.f)
-			m_pTransformCom->Set_Scale(5.f, 5.f, 1.f);
+			m_pTransformCom->Set_Scale(7.f, 7.f, 1.f);
 		else if (m_DecoDesc.fRotate == 2.f)
 			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
 		else if (m_DecoDesc.fRotate == 3.f)
 			m_pTransformCom->Set_Scale(7.f, 7.f, 1.f);
 		else if(m_DecoDesc.fRotate == 4.f)
-			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
 		else if (m_DecoDesc.fRotate == 5.f)
 			m_pTransformCom->Set_Scale(10.f, 2.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(7.f, 7.f, 1.f);
+
+		m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 		m_pTransformCom->Turn(_float3(1, 0, 0), 90.f);
 		m_fRadius = 0.002f;
 		break;
@@ -83,6 +85,8 @@ HRESULT CDecoObject::Initialize(void* pArg)
 		break;
 	}
 
+	
+
 	return S_OK;
 }
 
@@ -92,6 +96,13 @@ int CDecoObject::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
+
+	if (m_DecoDesc.m_eState == FLOOR && m_DecoDesc.fRotate == 4)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PUSH, this);
+	}
+
 
 	WalkingTerrain();
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -133,6 +144,9 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 	}
 	
 	Compute_CamDistance(Get_Position());
+
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 
 	MoveFrame();
 	
@@ -249,24 +263,28 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 		TextureDesc.m_iEndTex = 43;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorDeco"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 		break;
 	case DECOTYPE::FLOOR_EFFECT:
 		TextureDesc.m_iEndTex = 32;
 		TextureDesc.m_fSpeed = rand() % 20 + 10;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_FloorParticle"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 		break;
 	case DECOTYPE::TORCH:
 		TextureDesc.m_iEndTex = 4;
 		TextureDesc.m_fSpeed = 30.f;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Torch"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 		break;
 	case DECOTYPE::FLIES:
 		TextureDesc.m_iEndTex = 54;
 		TextureDesc.m_fSpeed = 40.f;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_HUNT, TEXT("Prototype_Component_Texture_Flies"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 		break;
 	case DECOTYPE::FLOOR:
 		
@@ -277,6 +295,7 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 		TextureDesc.m_fSpeed = 20.f;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Party"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 		break;
 	case DECOTYPE::SPARKLE:
 		TextureDesc.m_iEndTex = 53;
@@ -322,6 +341,16 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 			if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 				return E_FAIL;
 		break;
+		case DECOTYPE::FLOOR:
+			if (m_DecoDesc.fRotate == 4.f)
+			{
+				CollRectDesc.fRadiusY = 0.3f;
+				CollRectDesc.fRadiusX = 0.3f;
+				CollRectDesc.fRadiusZ = 0.3f;
+				if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+					return E_FAIL;
+			}
+			break;
 	}
 
 	return S_OK;
@@ -441,24 +470,45 @@ void CDecoObject::Set_FloorDecoTexture()
 
 
 	if (m_DecoDesc.fRotate == 0.f)
+	{
 		__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place1"), (CComponent**)&m_pTextureCom, &TextureDesc);
-	
+		m_vecTexture.push_back(m_pTextureCom);
+	}
+		
 	if (m_DecoDesc.fRotate == 1.f)
+	{
 		__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place2"), (CComponent**)&m_pTextureCom, &TextureDesc);
+		m_vecTexture.push_back(m_pTextureCom);
+
+	}
 
 	if (m_DecoDesc.fRotate == 2.f)
+	{
 		__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place3"), (CComponent**)&m_pTextureCom, &TextureDesc);
+		m_vecTexture.push_back(m_pTextureCom);
+
+	}
 
 	if (m_DecoDesc.fRotate == 3.f)
+	{
 		__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place4"), (CComponent**)&m_pTextureCom, &TextureDesc);
+		m_vecTexture.push_back(m_pTextureCom);
+
+	}
 
 	if (m_DecoDesc.fRotate == 4.f)
+	{
 		__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place5"), (CComponent**)&m_pTextureCom, &TextureDesc);
+		m_vecTexture.push_back(m_pTextureCom);
+
+	}
 
 	if (m_DecoDesc.fRotate == 5.f)
 	{
 		TextureDesc.m_iEndTex = 10;
 		__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_MazeFloor_Place6"), (CComponent**)&m_pTextureCom, &TextureDesc);
+		m_vecTexture.push_back(m_pTextureCom);
+
 	}
 		
 }
@@ -498,4 +548,9 @@ void CDecoObject::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pShaderCom);
+
+	for (auto& iter : m_vecTexture)
+		Safe_Release(iter);
+
+	m_vecTexture.clear();
 }

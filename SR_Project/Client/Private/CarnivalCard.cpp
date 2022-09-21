@@ -173,7 +173,8 @@ HRESULT CCarnivalCard::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 25;
+	TextureDesc.m_fSpeed = 40;
+
 
 	if (m_tDesc.eType == TYPE::CARD)
 	{

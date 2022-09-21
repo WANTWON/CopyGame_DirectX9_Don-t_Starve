@@ -38,6 +38,7 @@ public:
 private:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
 	void Change_Camera();
+	_bool Check_EveryTarget_Complete();
 
 private: /*For TextureCom */
 	virtual HRESULT Texture_Clone() override;

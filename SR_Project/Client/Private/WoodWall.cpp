@@ -351,7 +351,7 @@ HRESULT CWoodWall::Texture_Clone()
 		TextureDesc.m_iEndTex = 3;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Idle"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
-
+		m_vecTexture.push_back(m_pTextureCom);
 		switch (iFenceType)
 		{
 		case 0:
@@ -361,11 +361,13 @@ HRESULT CWoodWall::Texture_Clone()
 			TextureDesc.m_iEndTex = 17;
 			if (FAILED(__super::Add_Components(TEXT("Com_Texture_GROW"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Grow0"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 				return E_FAIL;
+			m_vecTexture.push_back(m_pTextureCom);
 			TextureDesc.m_iStartTex = 0;
 			TextureDesc.m_iCurrentTex = TextureDesc.m_iStartTex;
 			TextureDesc.m_iEndTex = 27;
 			if (FAILED(__super::Add_Components(TEXT("Com_Texture_SHRINK"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Shrink0"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 				return E_FAIL;
+			m_vecTexture.push_back(m_pTextureCom);
 		}
 			break;
 		case 1:
@@ -375,11 +377,13 @@ HRESULT CWoodWall::Texture_Clone()
 			TextureDesc.m_iEndTex = 17;
 			if (FAILED(__super::Add_Components(TEXT("Com_Texture_GROW"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Grow1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 				return E_FAIL;
+			m_vecTexture.push_back(m_pTextureCom);
 			TextureDesc.m_iStartTex = 0;
 			TextureDesc.m_iCurrentTex = TextureDesc.m_iStartTex;
 			TextureDesc.m_iEndTex = 27;
 			if (FAILED(__super::Add_Components(TEXT("Com_Texture_SHRINK"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Shrink1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 				return E_FAIL;
+			m_vecTexture.push_back(m_pTextureCom);
 		}
 			break;
 		case 2:
@@ -389,11 +393,13 @@ HRESULT CWoodWall::Texture_Clone()
 			TextureDesc.m_iEndTex = 17;
 			if (FAILED(__super::Add_Components(TEXT("Com_Texture_GROW"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Grow2"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 				return E_FAIL;
+			m_vecTexture.push_back(m_pTextureCom);
 			TextureDesc.m_iStartTex = 0;
 			TextureDesc.m_iCurrentTex = TextureDesc.m_iStartTex;
 			TextureDesc.m_iEndTex = 26;
 			if (FAILED(__super::Add_Components(TEXT("Com_Texture_SHRINK"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fence_Shrink2"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 				return E_FAIL;
+			m_vecTexture.push_back(m_pTextureCom);
 		}
 			break;
 		}
