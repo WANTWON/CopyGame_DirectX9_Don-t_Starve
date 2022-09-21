@@ -146,6 +146,19 @@ HRESULT CTalk::Render()
 			if (FAILED(Release_RenderState()))
 				return E_FAIL;
 		}
+		else if (m_bforWinona)
+		{
+			if (FAILED(m_pTextureCom2->Bind_OnGraphicDev(texnum1)))
+				return E_FAIL;
+
+			if (FAILED(SetUp_RenderState()))
+				return E_FAIL;
+
+			m_pVIBufferCom->Render();
+
+			if (FAILED(Release_RenderState()))
+				return E_FAIL;
+		}
 		else
 		{
 			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))

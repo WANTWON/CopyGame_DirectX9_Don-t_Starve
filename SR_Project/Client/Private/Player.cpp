@@ -2184,6 +2184,7 @@ void CPlayer::Talk_NPC(_float _fTimeDelta)
 		}
 		else
 		{
+			m_bSelect = false;
 			m_iTalkNum = 0;
 		}
 		m_bTalkMode = true;

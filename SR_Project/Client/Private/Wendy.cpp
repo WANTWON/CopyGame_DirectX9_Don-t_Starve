@@ -748,7 +748,7 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 				if (!m_bOwner)
 					pinven->Get_Talk_list()->front()->Set_Texnum1(3);
 				else
-					pinven->Get_Talk_list()->front()->Set_Texnum1(7);
+					pinven->Get_Talk_list()->front()->Set_Texnum1(8);
 			}
 			break;
 		case 4:
