@@ -86,21 +86,21 @@ int CToolboxGather_back::Tick(_float fTimeDelta)
 	{
 		bool bok = false;
 		CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-		Safe_AddRef(pInventory_Manager);
+		//Safe_AddRef(pInventory_Manager);
 
 		pInventory_Manager->craft_on(MAKE_AXE);
 
-		Safe_Release(pInventory_Manager);
+		//Safe_Release(pInventory_Manager);
 	}
 	else if (iNum == 1 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
 		bool bok = false;
 		CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-		Safe_AddRef(pInventory_Manager);
+	//	Safe_AddRef(pInventory_Manager);
 
 		pInventory_Manager->craft_on(MAKE_PICK);
 
-		Safe_Release(pInventory_Manager);
+	//	Safe_Release(pInventory_Manager);
 	}
 
 	/*if (m_bItem)

@@ -52,22 +52,22 @@ int CPlayerMentality_pont::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+	//RECT		rcRect;
+	//SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
+	//POINT		ptMouse;
+	//GetCursorPos(&ptMouse);
+	//ScreenToClient(g_hWnd, &ptMouse);
 
-	if (PtInRect(&rcRect, ptMouse))
-	{
+	//if (PtInRect(&rcRect, ptMouse))
+	//{
 
-		m_fSizeX = 35.f;
-		m_fSizeY = 35.f;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-		//set_check(true);
-	}
+	//	m_fSizeX = 35.f;
+	//	m_fSizeY = 35.f;
+	//	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	//	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+	//	//set_check(true);
+	//}
 
 
 
@@ -80,22 +80,22 @@ void CPlayerMentality_pont::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
+	//RECT		rcRect;
+	//SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
 
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
+	//POINT		ptMouse;
+	//GetCursorPos(&ptMouse);
+	//ScreenToClient(g_hWnd, &ptMouse);
 
-	if (!PtInRect(&rcRect, ptMouse))
-	{
-		m_fSizeX = 20;
-		m_fSizeY = 20;
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	//if (!PtInRect(&rcRect, ptMouse))
+	//{
+	//	m_fSizeX = 20;
+	//	m_fSizeY = 20;
+	//	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 
 
-		//ERR_MSG(L"충돌");
-	}
+	//	//ERR_MSG(L"충돌");
+	//}
 	if (nullptr != m_pRendererCom)//&&m_bcheck)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 

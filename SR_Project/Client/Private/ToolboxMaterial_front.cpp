@@ -110,7 +110,7 @@ void CToolboxMaterial_front::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	CMouse*			pMouse = CMouse::Get_Instance();
-	Safe_AddRef(pMouse);
+	//Safe_AddRef(pMouse);
 
 	RECT		rcRect;
 	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
@@ -120,7 +120,7 @@ void CToolboxMaterial_front::Late_Tick(_float fTimeDelta)
 	ScreenToClient(g_hWnd, &ptMouse);
 
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pinv);
+	//Safe_AddRef(pinv);
 
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
 
@@ -153,8 +153,8 @@ void CToolboxMaterial_front::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
-	Safe_Release(pMouse);
-	Safe_Release(pinv);
+//	Safe_Release(pMouse);
+//	Safe_Release(pinv);
 	//set_check(false);
 }
 

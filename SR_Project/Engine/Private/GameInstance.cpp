@@ -430,6 +430,8 @@ void CGameInstance::Release_Engine()
 	CKeyMgr::Get_Instance()->Destroy_Instance();
 
 	CGraphic_Device::Get_Instance()->Destroy_Instance();
+
+
 }
 
 void CGameInstance::Free()

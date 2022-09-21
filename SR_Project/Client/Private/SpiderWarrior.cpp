@@ -352,6 +352,8 @@ _bool CSpiderWarrior::Picking(_float3 * PickingPoint)
 		auto i = pInvenManager->Get_Monsterinfo_list()->front();
 		auto k = pInvenManager->Get_Monsterhp_list();
 
+		Safe_Release(pInvenManager);
+
 		i->set_monstername(MONSTER_END);
 		i->set_check(false);
 

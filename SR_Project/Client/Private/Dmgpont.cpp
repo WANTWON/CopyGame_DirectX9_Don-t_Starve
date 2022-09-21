@@ -353,6 +353,7 @@ void CDmgpont::Free()
 	__super::Free();
 
 	Safe_Release(m_pTransformCom);
+	Safe_Release(m_pTransformCom1);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);

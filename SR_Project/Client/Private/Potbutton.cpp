@@ -71,7 +71,7 @@ int CPotbutton::Tick(_float fTimeDelta)
 	{
 		__super::Tick(fTimeDelta);
 		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-		Safe_AddRef(pinv);
+		//Safe_AddRef(pinv);
 
 		auto potfront = pinv->Get_Potfront_list();
 
@@ -336,12 +336,12 @@ ITEMNAME CPotbutton::craft()
 {
 
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pInventory_Manager);
+	//Safe_AddRef(pInventory_Manager);
 	auto potfront = pInventory_Manager->Get_Potfront_list();
 
 	auto pinven = pInventory_Manager->Get_Inven_list();
 
-	Safe_Release(pInventory_Manager);
+//	Safe_Release(pInventory_Manager);
 	
 	bool stop1 = false;
 	bool stop2 = false;

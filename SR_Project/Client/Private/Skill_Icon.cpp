@@ -52,17 +52,7 @@ int CSkill_Icon::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pGameInstance);
-	Safe_AddRef(pinv);
-
-
-
 	
-
-	Safe_Release(pGameInstance);
-	Safe_Release(pinv);
 
 
 	return OBJ_NOEVENT;
@@ -275,6 +265,9 @@ void CSkill_Icon::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pTextureCom1);
+	Safe_Release(m_pTextureCom2);
+	Safe_Release(m_pTextureCom3);
 }
 
 void CSkill_Icon::usebomb(_float time)
