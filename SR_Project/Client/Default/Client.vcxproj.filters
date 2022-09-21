@@ -298,9 +298,6 @@
     <Filter Include="02.GameObject\98.UI\17.MiniMap">
       <UniqueIdentifier>{fe74532a-05d9-4e8f-ab98-f1df8b71ab47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00. Pawn\01.Monster\Catapult">
-      <UniqueIdentifier>{d29f5be4-f141-47eb-9716-6bc0e8763443}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona">
       <UniqueIdentifier>{724461a8-fb17-4306-a963-46de283b2bf5}</UniqueIdentifier>
     </Filter>
@@ -319,14 +316,14 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Carnival Shooter">
       <UniqueIdentifier>{b7058b92-ebc2-4c06-8fd8-400f7238a51e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00. Pawn\Battery_Tower">
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Battery_Tower">
       <UniqueIdentifier>{5a2da514-201b-4448-a7d0-461f755c85ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NewFilter1">
-      <UniqueIdentifier>{374424ee-8740-4302-a37f-249d4c09ad81}</UniqueIdentifier>
+    <Filter Include="02.GameObject\05.UnInteractive_Object\Catapult">
+      <UniqueIdentifier>{d29f5be4-f141-47eb-9716-6bc0e8763443}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00. Pawn\01.Monster\Carnival_Egg">
-      <UniqueIdentifier>{834dd39d-d7f1-438b-9c61-6fb96b24bff6}</UniqueIdentifier>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Battery">
+      <UniqueIdentifier>{374424ee-8740-4302-a37f-249d4c09ad81}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -729,9 +726,6 @@
     <ClInclude Include="..\Public\MiniMap_button.h">
       <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Catapult.h">
-      <Filter>02.GameObject\00. Pawn\Skills</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Skill.h">
       <Filter>02.GameObject\00. Pawn\Skills</Filter>
     </ClInclude>
@@ -751,13 +745,16 @@
       <Filter>02.GameObject\05.UnInteractive_Object\Carnival Shooter</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battery_Tower.h">
-      <Filter>02.GameObject\00. Pawn\Battery_Tower</Filter>
+      <Filter>02.GameObject\05.UnInteractive_Object\Battery_Tower</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Carnival_Shoot_Button.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Shoot Button</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Carnival_Egg.h">
-      <Filter>02.GameObject\00. Pawn\01.Monster\Carnival_Egg</Filter>
+    <ClInclude Include="..\Public\Catapult.h">
+      <Filter>02.GameObject\05.UnInteractive_Object\Catapult</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battery.h">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Battery</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1149,7 +1146,7 @@
       <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Catapult.cpp">
-      <Filter>02.GameObject\00. Pawn\01.Monster\Catapult</Filter>
+      <Filter>02.GameObject\05.UnInteractive_Object\Catapult</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Skill.cpp">
       <Filter>02.GameObject\00. Pawn\Skills</Filter>
@@ -1170,13 +1167,13 @@
       <Filter>02.GameObject\05.UnInteractive_Object\Carnival Shooter</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battery_Tower.cpp">
-      <Filter>02.GameObject\00. Pawn\Battery_Tower</Filter>
+      <Filter>02.GameObject\05.UnInteractive_Object\Battery_Tower</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Carnival_Shoot_Button.cpp">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Shoot Button</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Carnival_Egg.cpp">
-      <Filter>02.GameObject\00. Pawn\01.Monster\Carnival_Egg</Filter>
+    <ClCompile Include="..\Private\Battery.cpp">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Battery</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

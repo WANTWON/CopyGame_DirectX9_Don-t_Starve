@@ -1051,17 +1051,26 @@ void CBullet::Carnival_Arrow(_float fTimeDelta)
 	vPosition.x = vCenterPos.x + cosf(D3DXToRadian(m_fAngle))*vDistance - sin(D3DXToRadian(m_fAngle))*vDistance;
 	vPosition.z = vCenterPos.z + sin(D3DXToRadian(m_fAngle))*vDistance + cos(D3DXToRadian(m_fAngle))*vDistance;
 
-	/*_float fDegree =  D3DXVec3Dot(&vCenterPos, &vPosition);
-	acos(fDegree);
-
-	if (fDegree > 180)
-		fDegree = 360 - fDegree;*/
-
 	_float3 vUp = vPosition - vCenterPos;
 	D3DXVec3Normalize(&vUp, &vUp);
+	
+	_float3 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+	D3DXVec3Normalize(&vRight, &vRight);
+
+	_float3 vLook;
+	D3DXVec3Cross(&vLook, &vRight, &vUp);
+	D3DXVec3Normalize(&vLook, &vLook);
+	
+	D3DXVec3Cross(&vRight, &vUp, &vLook);
+	D3DXVec3Normalize(&vRight, &vRight);
+
+
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
-	m_pTransformCom->Set_State(CTransform::STATE_UP, vUp);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, vUp *m_tBulletData.vScale.y);
+	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, vRight *m_tBulletData.vScale.x);
+	m_pTransformCom->Set_State(CTransform::STATE_LOOK, vLook *m_tBulletData.vScale.z);
+
 	//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fDegree);
 }
 
@@ -1501,7 +1510,7 @@ HRESULT CBullet::Init_Data(void)
 		fDot = acos(fDot);
 
 
-		m_pTransformCom->Set_Scale(0.2f, 0.5f, 1.f);
+		m_pTransformCom->Set_Scale(m_tBulletData.vScale.x, m_tBulletData.vScale.y, m_tBulletData.vScale.z);
 		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.f - fDot);
 		break;
 	}

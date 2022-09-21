@@ -37,6 +37,8 @@ public:
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
 
+public:// Get&Set
+	void	Set_Target(CGameObject* _pObj) { m_pTarget = _pObj; Safe_AddRef(_pObj); }
 private:
 	HRESULT SetUp_Components(void* pArg = nullptr);
 	void SetUp_BillBoard();
@@ -44,7 +46,7 @@ private:
 	HRESULT Change_Texture(const _tchar* LayerTag);
 private: /*For TextureCom */
 	HRESULT Texture_Clone(void);
-
+	
 private:
 	void Update_Delay(_float _fTimeDelta);
 	void Behavior(_float _fTimeDelta);
@@ -86,6 +88,8 @@ private:
 	//for Life
 	_float			m_fLifeTime = 10.f;
 	_bool			m_bDestroyed = true;
+	_uint			m_iCount = 6;
+	_uint			m_iCountMax = 6;
 	//Range
 	_float			m_fAttakRange = 3.f;
 	_float			m_fMaxRange = 15.f;

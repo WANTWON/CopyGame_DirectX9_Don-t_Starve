@@ -5,6 +5,7 @@
 #include "Bullet.h"
 #include "Winona.h"
 #include "Skill.h"
+#include "Battery.h"
 CBattery_Tower::CBattery_Tower(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CPawn(pGraphic_Device)
 {
@@ -234,11 +235,25 @@ void CBattery_Tower::Update_Delay(_float _fTimeDelta)
 {
 	if (!m_bDestroyed)
 	{
-		m_fLifeTime -= _fTimeDelta;
+		m_fLifeTime -= _fTimeDelta;		
+
 		if (m_fLifeTime <= 0.f)
 		{
 			m_bDestroyed = true;
 			m_eState = DESTROY;
+			static_cast<CBattery*>(m_pTarget)->Interact(7);
+			Safe_Release(m_pTarget);
+			m_pTarget = nullptr;
+		}
+		else {
+			if (m_pTarget != nullptr)
+			{
+				if (m_fLifeTime < (10.f / m_iCountMax) *m_iCount)
+				{
+					static_cast<CBattery*>(m_pTarget)->Interact(m_iCount--);
+				}
+
+			}
 		}
 	}
 
@@ -342,6 +357,20 @@ void CBattery_Tower::Place(_float _fTimeDelta)
 		m_bDestroyed = false;
 		m_eState = ATTACK;
 
+		CBattery::BatteryDesc BatteryDesc;
+		BatteryDesc.pOwner = this;
+		Safe_AddRef(this);
+		BatteryDesc.vInitPos = Get_Position();
+
+		_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		D3DXVec3Normalize(&vLook, &vLook);
+
+		BatteryDesc.vInitPos -= vLook * .1f;
+		
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Battery"), m_iCurrentLevelndex, TEXT("Layer_Battery"), &BatteryDesc)))
+			return;
 	}
 
 }

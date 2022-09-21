@@ -2184,8 +2184,10 @@ void CPlayer::Talk_NPC(_float _fTimeDelta)
 		}
 		else
 		{
+			m_bSelect = false;
 			m_iTalkNum = 0;
 		}
+		m_bTalkMode = true;
 		m_bActivated = false;
 		m_bOnlyActionKey = true;
 
@@ -2464,6 +2466,7 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 			if (!m_bTalkMode)
 			{
 				m_ActStack.pop();
+				Clear_ActStack();
 			}
 			break;
 		default:

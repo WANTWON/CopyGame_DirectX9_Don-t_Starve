@@ -33,7 +33,7 @@
 #include "Carnival_Shoot_Button.h"
 #include "Carnival_Egg.h"
 
-
+#include "Battery.h"
 #include "Battery_Tower.h"
 #include "Skill.h"
 #include "Wendy.h"
@@ -821,7 +821,12 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_talkwendy */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_talkwendy"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/talk/wtalk%d.png"), 8))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/talk/wtalk%d.png"), 9))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_talkwendy */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_talkwinona"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/talk/witalk%d.png"), 9))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_logoscene */
@@ -1962,6 +1967,10 @@ HRESULT CLoader::Loading_Prototype_Object()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Battery_Tower"),
 		CBattery_Tower::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Battery"),
+		CBattery::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ShootingTarget"),
