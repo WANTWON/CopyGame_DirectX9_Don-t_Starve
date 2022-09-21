@@ -67,6 +67,7 @@ void CCarnival_Shooter::Late_Tick(_float fTimeDelta)
 		BulletData.bIsPlayerBullet = true;
 		BulletData.eWeaponType = CARNIVAL_ARROW;
 		BulletData.vPosition = vPosition;
+		BulletData.vScale = _float3(0.2f, 0.5f, 1.f);
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_MAZE, TEXT("Layer_Bullet"), &BulletData);
 		m_bReady = true;
 	}
