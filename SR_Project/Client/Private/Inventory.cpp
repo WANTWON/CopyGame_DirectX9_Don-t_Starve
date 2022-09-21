@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "GameInstance.h"
 
+
 IMPLEMENT_SINGLETON(CInventory_Manager)
 CInventory_Manager::CInventory_Manager()
 {
@@ -115,7 +116,7 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 
 
 	CMouse*			pMouse = CMouse::Get_Instance();
-	Safe_AddRef(pMouse);
+	
 
 
 
@@ -250,7 +251,7 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 	update_questpont();
 
 
-	Safe_Release(pMouse);
+	
 
 
 }
@@ -1067,68 +1068,168 @@ void CInventory_Manager::update_questpont() //for questpont
 void CInventory_Manager::Free()
 {
 	//__super::Free();
+	//unsigned long refcnt = get_refcnt();
 
+	//for (auto& iter : m_MainInventorylist)
+	//	Safe_Release(iter);
 	m_MainInventorylist.clear();
+	//for (auto& iter : m_MainInventorybacklist)
+	//	Safe_Release(iter);
 	m_MainInventorybacklist.clear();
+	//for (auto& iter : m_Equipmentlist)
+	//	Safe_Release(iter);
 	m_Equipmentlist.clear();
+	//for (auto& iter : m_Pontlist)
+		//Safe_Release(iter);
 	m_Pontlist.clear();
+	//for (auto& iter : m_BagInventorylist)
+		//Safe_Release(iter);
 	m_BagInventorylist.clear();
+	//for (auto& iter : m_Mouseitemlist)
+		//Safe_Release(iter);
 	m_Mouseitemlist.clear();
+	//for (auto& iter : m_Mouseiteminfolist)
+		//Safe_Release(iter);
 	m_Mouseiteminfolist.clear();
-
+	
+	//for (auto& iter : m_Toolboxweapon)
+		//Safe_Release(iter);
 	m_Toolboxweapon.clear();
+	//for (auto& iter : m_Toolboxweapon_back)
+		//Safe_Release(iter);
 	m_Toolboxweapon_back.clear();
+	//for (auto& iter : m_Toolboxweapon_front)
+		//Safe_Release(iter);
 	m_Toolboxweapon_front.clear();
 
+
+	//for (auto& iter : m_Toolboxgather)
+		//Safe_Release(iter);
 	m_Toolboxgather.clear();
+	//for (auto& iter : m_Toolboxgather_front)
+		//Safe_Release(iter);
 	m_Toolboxgather_front.clear();
+	//for (auto& iter : m_Toolboxgather_back)
+	//	Safe_Release(iter);
 	m_Toolboxgather_back.clear();
 
 
+	//for (auto& iter : m_Hppontlist)
+	//	Safe_Release(iter);
 	m_Hppontlist.clear();
+	//for (auto& iter : m_Hungerpontlist)
+	//	Safe_Release(iter);
 	m_Hungerpontlist.clear();
+	//for (auto& iter : m_Mentalitiypontlist)
+	//	Safe_Release(iter);
 	m_Mentalitiypontlist.clear();
 
+
+	//for (auto& iter : m_Toolboxconstruct)
+	//	Safe_Release(iter);
 	m_Toolboxconstruct.clear();
+	//for (auto& iter : m_Toolboxconstruct_back)
+	//	Safe_Release(iter);
 	m_Toolboxconstruct_back.clear();
+	//for (auto& iter : m_Toolboxconstruct_front)
+	//	Safe_Release(iter);
 	m_Toolboxconstruct_front.clear();
 
+	//for (auto& iter : m_Toolboxmaterial)
+	//	Safe_Release(iter);
 	m_Toolboxmaterial.clear();
+	//for (auto& iter : m_Toolboxmaterial_back)
+	//	Safe_Release(iter);
 	m_Toolboxmaterial_back.clear();
+	//for (auto& iter : m_Toolboxmaterial_front)
+	//	Safe_Release(iter);
 	m_Toolboxmaterial_front.clear();
 
-
+    //for (auto& iter : m_Craftmain)
+	//	Safe_Release(iter);
 	m_Craftmain.clear();
+	//for (auto& iter : m_Craftmainback)
+	//	Safe_Release(iter);
 	m_Craftmainback.clear();
+	//for (auto& iter : m_Craftmainfront)
+		//Safe_Release(iter);
 	m_Craftmainfront.clear();
 
+
+	//for (auto& iter : m_Craftbutton)
+		//Safe_Release(iter);
 	m_Craftbutton.clear();
+	//for (auto& iter : m_Craftpont)
+	//	Safe_Release(iter);
 	m_Craftpont.clear();
 
+	//for (auto& iter : m_Quest)
+	//	Safe_Release(iter);
 	m_Quest.clear();
+	//for (auto& iter : m_Questpont)
+	//	Safe_Release(iter);
 	m_Questpont.clear();
+	//for (auto& iter : m_Line)
+	//	Safe_Release(iter);
 	m_Line.clear();
+	//for (auto& iter : m_Talk)
+	//	Safe_Release(iter);
 	m_Talk.clear();
 
+
+	//for (auto& iter : m_Pot)
+		//Safe_Release(iter);
 	m_Pot.clear();
+	//for (auto& iter : m_Potback)
+	//	Safe_Release(iter);
 	m_Potback.clear();
+	//for (auto& iter : m_Potfront)
+	//	Safe_Release(iter);
 	m_Potfront.clear();
+	//for (auto& iter : m_Potbutton)
+	//	Safe_Release(iter);
 	m_Potbutton.clear();
 
+
+	//for (auto& iter : m_Eateffect)
+	//	Safe_Release(iter);
 	m_Eateffect.clear();
 
+
+	//for (auto& iter : m_Daypont)
+	//	Safe_Release(iter);
 	m_Daypont.clear();
+	//for (auto& iter : m_Deadmain)
+	//	Safe_Release(iter);
 	m_Deadmain.clear();
+	//for (auto& iter : m_Deadcountpont)
+	//	Safe_Release(iter);
 	m_Deadcountpont.clear();
 
+
+	//for (auto& iter : m_Daycountpont)
+	//	Safe_Release(iter);
 	m_Daycountpont.clear();
 
+	//for (auto& iter : m_Mousemonsterinfolist)
+	//	Safe_Release(iter);
 	m_Mousemonsterinfolist.clear();
+//	for (auto& iter : m_Loadingscenelist)
+//		Safe_Release(iter);
 	m_Loadingscenelist.clear();
+	//for (auto& iter : m_Monsterhppontlist)
+	//	Safe_Release(iter);
 	m_Monsterhppontlist.clear();
 
+
+	//for (auto& iter : m_Skill)
+	//	Safe_Release(iter);
 	m_Skill.clear();
+	//for (auto& iter : m_Minimaplist)
+	//	Safe_Release(iter);
 	m_Minimaplist.clear();
+	//for (auto& iter : m_Minimapiconlist)
+	//	Safe_Release(iter);
 	m_Minimapiconlist.clear();
 
 

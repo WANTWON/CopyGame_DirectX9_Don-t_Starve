@@ -176,14 +176,16 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	Safe_Release(m_pRenderer);
+	CInventory_Manager::Get_Instance()->Free();
+	CInventory_Manager::Get_Instance()->Destroy_Instance();
+ 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pGameInstance);
 
 	CGameInstance::Release_Engine();	
-	CInventory_Manager::Get_Instance()->Free();
+	
 	CPickingMgr::Get_Instance()->Destroy_Instance();
-	CInventory_Manager::Get_Instance()->Destroy_Instance();
+	
 	CCameraManager::Get_Instance()->Destroy_Instance();
 	CMouse::Get_Instance()->Destroy_Instance();
 }

@@ -59,6 +59,9 @@ int CCameraTarget::Tick(_float fTimeDelta)
 	case Client::CCameraTarget::CAM_IDLE:
 		Idle_Camera(fTimeDelta);
 		break;
+	case Client::CCameraTarget::CAM_POSITION:
+		Position_Target(fTimeDelta, m_vPosition);
+		break;
 	default:
 		break;
 	}
@@ -246,6 +249,32 @@ void CCameraTarget::Going_Target(_float fTimeDelta, CGameObject * pGameObject)
 	}
 	m_pTransform->Set_State(CTransform::STATE_POSITION, vCameraPos);
 }
+
+void CCameraTarget::Position_Target(_float fTimeDelta, _float3 pPosition)
+{
+
+	_float3 m_TargetPos = pPosition;
+	m_TargetPos.y -= m_CameraDesc.vAt.y;
+	_float3 vCameraPos = Get_Position();
+
+	_float3 vDistance = m_CameraDesc.vEye;
+	_float3 vDir = (m_TargetPos + vDistance) - vCameraPos;
+
+	if (fabsf(vDir.y) < 0.1f && fabsf(vDir.z) < 0.1f)
+	{
+		m_pTransform->LookAt(m_TargetPos);
+		m_vDistance = vDistance;
+		m_eCamMode = CAM_FOLLOW;
+	}
+	else
+	{
+		D3DXVec3Normalize(&vDir, &vDir);
+		vCameraPos += vDir*0.2f;
+		m_pTransform->LookAt(m_TargetPos);
+	}
+	m_pTransform->Set_State(CTransform::STATE_POSITION, vCameraPos);
+}
+
 
 void CCameraTarget::Return_Camera(_float fTimeDelta)
 {

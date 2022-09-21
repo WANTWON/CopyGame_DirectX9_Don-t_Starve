@@ -368,12 +368,15 @@ _bool CSpider::Picking(_float3 * PickingPoint)
 		auto i = pInvenManager->Get_Monsterinfo_list()->front();
 		auto k = pInvenManager->Get_Monsterhp_list();
 
+		
+
 		i->set_monstername(MONSTER_END);
 		i->set_check(false);
 		m_bPickingTrue = false;
 
 		for (auto j : *k)
 			j->set_check(false);
+		Safe_Release(pInvenManager);
 		return false;
 	}
 

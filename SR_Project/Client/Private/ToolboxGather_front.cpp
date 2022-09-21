@@ -121,7 +121,7 @@ void CToolboxGather_front::Late_Tick(_float fTimeDelta)
 	ScreenToClient(g_hWnd, &ptMouse);
 
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pinv);
+	//Safe_AddRef(pinv);
 
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
 
@@ -155,7 +155,7 @@ void CToolboxGather_front::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 
-	Safe_Release(pinv);
+//	Safe_Release(pinv);
 	//set_check(false);
 }
 

@@ -70,7 +70,7 @@ HRESULT CLine::Initialize(void* pArg)
 int CLine::Tick(_float fTimeDelta)
 {
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pInventory_Manager);
+	//Safe_AddRef(pInventory_Manager);
 	set_line();
 	
 	if (m_bcheck == true && pInventory_Manager->Get_Quest_list()->front()->get_onoff() == true)
@@ -102,14 +102,14 @@ int CLine::Tick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
 	}
-	Safe_Release(pInventory_Manager);
+	//Safe_Release(pInventory_Manager);
 	return OBJ_NOEVENT;
 }
 
 void CLine::Late_Tick(_float fTimeDelta)
 {
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pInventory_Manager);
+//	Safe_AddRef(pInventory_Manager);
 	
 	if (m_bcheck == true && pInventory_Manager->Get_Quest_list()->front()->get_onoff() == true)
 	{
@@ -136,7 +136,7 @@ void CLine::Late_Tick(_float fTimeDelta)
 
 		//set_check(false);
 	}
-	Safe_Release(pInventory_Manager);
+//	Safe_Release(pInventory_Manager);
 	
 }
 

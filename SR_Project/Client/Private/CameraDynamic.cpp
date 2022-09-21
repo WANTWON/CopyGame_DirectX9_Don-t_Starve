@@ -32,7 +32,6 @@ HRESULT CCameraDynamic::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_vDistance = ((CAMERADESC_DERIVED*)pArg)->vDistance;
-
 	return S_OK;
 }
 

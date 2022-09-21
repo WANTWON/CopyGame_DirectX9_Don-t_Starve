@@ -38,7 +38,7 @@ int CUnInteractive_Object::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	
+	WalkingTerrain();
 	return OBJ_NOEVENT;
 }
 
@@ -55,7 +55,11 @@ void CUnInteractive_Object::Late_Tick(_float fTimeDelta)
 	}
 
 	if (m_pColliderCom)
+	{
+		memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	}
+		
 }
 
 HRESULT CUnInteractive_Object::Render()

@@ -13,6 +13,8 @@ public:
 	{
 		_float3						vDistance = _float3(0, 6, -10);
 		CCamera::CAMERADESC			CameraDesc;
+		_float3						vOffset = _float3(0, 0, 0);
+
 	}CAMERADESC_DERIVED;
 private:
 	CCameraDynamic(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -39,6 +41,7 @@ public: //SetEnum
 	void Set_TalkingMode(_bool type) {if (type) m_eCamMode = CAM_ZOOMIN; else m_eCamMode = CAM_ZOOMOUT;}
 	void Set_Target(class CGameObject* pGameObject) { m_pTarget = pGameObject; }
 
+
 private:
 	void Player_Camera(_float fTimeDelta);
 	void Turn_Camera(_float fTimeDelta);
@@ -49,6 +52,7 @@ private:
 	void Shaking_Camera(_float fTimeDelta, _float fPower);
 
 private:
+
 	_float3			m_vDistance;
 	_long			m_lMouseWheel = 0;
 	CAMERAMODE		m_eCamMode = CAM_PLAYER;

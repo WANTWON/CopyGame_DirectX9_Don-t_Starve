@@ -62,18 +62,24 @@ int CWendy::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 
 	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
+	{
+		m_bCanTalk = false;
 		return OBJ_NOEVENT;
+	}
+
 	
 	if (m_iCurrentLevelndex != m_iPreLevelIndex)
 	{
 		if (m_bOwner)
 		{
+			m_bCanTalk = true;
 			_float3 Owner_Pos = static_cast<CPlayer*>(m_pOwner)->Get_Pos();
 			Owner_Pos.x -= 3.f;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
 		}	
 		else
 		{
+			m_bCanTalk = true;
 			Clear_Activated();
 			Reset_Target();
 		}
@@ -742,7 +748,7 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 				if (!m_bOwner)
 					pinven->Get_Talk_list()->front()->Set_Texnum1(3);
 				else
-					pinven->Get_Talk_list()->front()->Set_Texnum1(7);
+					pinven->Get_Talk_list()->front()->Set_Texnum1(8);
 			}
 			break;
 		case 4:

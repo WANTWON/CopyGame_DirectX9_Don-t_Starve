@@ -9,6 +9,7 @@
 #include "Skill.h"
 #include "Inventory.h"
 #include "Catapult.h"
+#include "Battery_Tower.h"
 CWinona::CWinona(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CNPC(pGraphic_Device)
 {
@@ -36,10 +37,10 @@ HRESULT CWinona::Initialize(void * pArg)
 	m_eObjID = OBJID::OBJ_NPC;
 	m_eNPCID = NPCID::NPC_WINONA;
 
-	m_fAtk_Max_CoolTime = 10.f;
+	m_fAtk_Max_CoolTime = 20.f;
 	m_fAtk_Cur_CoolTime = m_fAtk_Max_CoolTime;
 
-	m_fSkill_Max_CoolTime = 5.f;
+	m_fSkill_Max_CoolTime = 9.f;
 	m_fSkill_Cur_CoolTime = m_fSkill_Max_CoolTime;
 
 	m_fSkillRange = 20.f;
@@ -425,8 +426,22 @@ void CWinona::Attack(_float _fTimeDelta)
 	if (m_ePreState != m_eState)
 	{
 		m_bInteract = true;
-		cout << "Attack" << endl;
-		Change_Texture(TEXT("Com_Texture_Build_Down"));
+		
+		switch (m_eCur_Dir)
+		{
+		case DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Build_Up"));
+			break;
+
+		case DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Build_Down"));
+			break;
+
+		case DIR_LEFT:
+		case DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Build_Side"));
+			break;
+		}
 		m_ePreState = m_eState;
 
 		//cout << "Create_Bullet" << endl;
@@ -472,8 +487,21 @@ void CWinona::Skill(_float _fTimeDelta)
 	if (m_ePreState != m_eState)
 	{
 		m_bInteract = true;
-		cout << "Skill" << endl;
-		Change_Texture(TEXT("Com_Texture_Build_Down"));
+		switch (m_eCur_Dir)
+		{
+		case DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Build_Up"));
+			break;
+
+		case DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Build_Down"));
+			break;
+
+		case DIR_LEFT:
+		case DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Build_Side"));
+			break;
+		}
 		m_ePreState = m_eState;
 
 		//cout << "Create_Bullet" << endl;
@@ -613,7 +641,7 @@ void CWinona::Revive_Berry(_float _fTimeDelta)
 
 void CWinona::Talk_Player(_float _fTimeDelta)
 {
-	CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(true);
+	CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WinonaTalk(true);
 
 	CInventory_Manager* pinven = CInventory_Manager::Get_Instance();
 	pinven->Get_Talk_list()->front()->setcheck(true);
@@ -639,123 +667,95 @@ void CWinona::Talk_Player(_float _fTimeDelta)
 		m_ePreState = m_eState;
 
 	}
-
 	if (m_iPreTalkCnt != m_iTalkCnt)
 	{
-		switch (m_iTalkCnt)
-		{
-		case 1:
-			if (!m_bOwner)
+		if (!m_bOwner)
+		{//IsPartyed
+			switch (m_iTalkCnt)
+			{
+			case 1:
 				pinven->Get_Talk_list()->front()->Set_Texnum1(0);
-			else
-				pinven->Get_Talk_list()->front()->Set_Texnum1(4);
-			break;
-		case 2:
-			if (!m_bOwner)
+				break;
+			case 2:
 				pinven->Get_Talk_list()->front()->Set_Texnum1(1);
-			else
-				pinven->Get_Talk_list()->front()->Set_Texnum1(5);
-			break;
-
-		case 3:
-			if (m_bAccept)
-			{
-				if (!m_bOwner)
+				break;
+			case 3:
+				if (m_bAccept)
+				{
 					pinven->Get_Talk_list()->front()->Set_Texnum1(2);
+					m_bNextAct = true;
+
+				}
 				else
-					pinven->Get_Talk_list()->front()->Set_Texnum1(6);
-			}
-			else
-			{
-				if (!m_bOwner)
+				{
 					pinven->Get_Talk_list()->front()->Set_Texnum1(3);
+					m_bNextAct = false;
+				}
+				break;
+			case 4:
+				Clear_Activated();
+				static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
+				static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
+				m_iTalkCnt = 0;
+				m_bInteract = false;
+				m_bFirstCall = false;
+				if (m_bNextAct)
+				{
+					m_bOwner = true;
+					m_pOwner = static_cast<CPawn*>(m_pTarget);
+					static_cast<CPlayer*>(m_pTarget)->Add_Party(TEXT("Winona"), this);
+				}
 				else
-					pinven->Get_Talk_list()->front()->Set_Texnum1(7);
+				{
+					Reset_Target();
+				}
+				pinven->Get_Talk_list()->front()->setcheck(false);
+				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WinonaTalk(false);
+				break;
 			}
-			break;
-		case 4:
-			break;
 		}
+		else
+		{//Solo
+			switch (m_iTalkCnt)
+			{
+			case 1:
+				pinven->Get_Talk_list()->front()->Set_Texnum1(4);
+				break;
+			case 2:
+				pinven->Get_Talk_list()->front()->Set_Texnum1(5);
+				break;
+			case 3:
+				if (m_bAccept)
+				{
+					pinven->Get_Talk_list()->front()->Set_Texnum1(6);
+					m_bNextAct = false;
+				}
+				else
+				{
+					pinven->Get_Talk_list()->front()->Set_Texnum1(8);
+					m_bNextAct = true;
+				}
+				break;
+			case 4:
+				Clear_Activated();
+				static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
+				static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
+				if (!m_bNextAct)
+				{
+					static_cast<CPlayer*>(m_pTarget)->Release_Party(TEXT("Winona"));
+					m_bOwner = false;
+					Reset_Target();
+					m_pOwner = nullptr;
+				}
+				m_iTalkCnt = 0;
+				m_bInteract = false;
+				m_bFirstCall = false;
+				pinven->Get_Talk_list()->front()->setcheck(false);
+				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WinonaTalk(false);
+				break;
+			}
+		}		
 		m_iPreTalkCnt = m_iTalkCnt;
-	}
-
-	if (!m_bOwner)
-	{//IsPartyed
-		switch (m_iTalkCnt)
-		{
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			if (m_bAccept)
-			{
-				m_bNextAct = true;
-
-			}
-			else
-			{
-				m_bNextAct = false;
-			}
-			break;
-		case 4:
-			Clear_Activated();
-			static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
-			static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
-			m_iTalkCnt = 0;
-			m_bInteract = false;
-			m_bFirstCall = false;
-			if (m_bNextAct)
-			{
-				m_bOwner = true;
-				m_pOwner = static_cast<CPawn*>(m_pTarget);
-				static_cast<CPlayer*>(m_pTarget)->Add_Party(TEXT("Winona"), this);
-			}
-			else
-			{
-				Reset_Target();
-			}
-			pinven->Get_Talk_list()->front()->setcheck(false);
-			CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
-			break;
-		}
-	}
-	else
-	{//Solo
-		switch (m_iTalkCnt)
-		{
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			if (m_bAccept)
-			{
-				m_bNextAct = false;
-			}
-			else
-			{
-				m_bNextAct = true;
-			}
-			break;
-		case 4:
-			Clear_Activated();
-			static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
-			static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
-			if (!m_bNextAct)
-			{
-				static_cast<CPlayer*>(m_pTarget)->Release_Party(TEXT("Winona"));
-				m_bOwner = false;
-				Reset_Target();
-				m_pOwner = nullptr;
-			}
-			m_iTalkCnt = 0;
-			m_bInteract = false;
-			m_bFirstCall = false;
-			pinven->Get_Talk_list()->front()->setcheck(false);
-			CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
-			break;
-		}
 	}
 }
 
@@ -769,7 +769,6 @@ void CWinona::Talk_Friend(_float _fTimeDelta)
 	{
 		m_fInteractTIme = 0.f;
 		m_bInteract = true;
-		cout << "Talk" << endl;
 		Change_Texture(TEXT("Com_Texture_Talk"));
 		m_ePreState = m_eState;
 		static_cast<CPig*>(m_pTarget)->Interact(_fTimeDelta, 0);
@@ -777,7 +776,6 @@ void CWinona::Talk_Friend(_float _fTimeDelta)
 
 	if (2.f < m_fInteractTIme)
 	{
-		cout << "TalkEnd" << endl;
 		m_fInteractTIme = 0.f;
 		m_bInteract = false;
 
@@ -798,17 +796,10 @@ void CWinona::Talk_Friend(_float _fTimeDelta)
 void CWinona::Create_Bullet(_float _fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	_float3 vInitPos = Get_Position();
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Battery_Tower"), m_iCurrentLevelndex, TEXT("Skill"), &vInitPos)))
+		return; 
 
-	CSkill::SKILL_DESC SkillDesc;
-
-	SkillDesc.eDirState = DIR_END;
-	SkillDesc.eSkill = CSkill::SKILL_TYPE::ICE_BLAST;
-	SkillDesc.vTargetPos = m_pTarget->Get_Position();
-	SkillDesc.vPosition = m_pTarget->Get_Position();
-	SkillDesc.vScale = static_cast<CMonster*>(m_pTarget)->Get_Scale();
-	SkillDesc.pTarget = this;
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skill"), m_iCurrentLevelndex, TEXT("Skill"), &SkillDesc)))
-		return;
 }
 
 void CWinona::Create_Catapult(_float _fTimeDelta)
@@ -960,7 +951,7 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 
 	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
 	{
-		
+		m_bCanTalk = false;
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 		return false;
 	}
@@ -979,10 +970,11 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 				iter++;
 			}
 			m_vecCatapults.clear();
+			m_bCanTalk = true;
 		}
 		else
 		{
-			
+			m_bCanTalk = true;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(40.f, 0.5f, 27.f));
 			Clear_Activated();
 			Reset_Target();

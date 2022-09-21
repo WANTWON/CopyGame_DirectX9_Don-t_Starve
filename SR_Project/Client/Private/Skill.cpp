@@ -5,6 +5,8 @@
 #include "Level_Manager.h"
 #include "Interactive_Object.h"
 #include "Player.h"
+
+
 CSkill::CSkill(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CPawn(pGraphic_Device)
 {
@@ -86,30 +88,31 @@ void CSkill::Late_Tick(_float fTimeDelta)
 
 HRESULT CSkill::Render()
 {
-	m_pTextureCom->MoveFrame(m_TimerTag);
+	if (m_bRender)
+	{
+		if (FAILED(__super::Render()))
+			return E_FAIL;
 
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+		_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
 
-	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
+		WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
+		m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+		m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
 
-	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+		m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+		m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+		m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
 
-	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
-	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
-	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
+		//Render_TextureState();
 
-	m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
-	//Render_TextureState();
+		m_pShaderCom->Begin(m_eShaderID);
 
-	m_pShaderCom->Begin(m_eShaderID);
+		m_pVIBufferCom->Render();
 
-	m_pVIBufferCom->Render();
+		m_pShaderCom->End();
+	}
 	
-	m_pShaderCom->End();
-
 #ifdef _DEBUG
 	if (g_ColliderRender)
 	{
@@ -117,7 +120,7 @@ HRESULT CSkill::Render()
 		m_pColliderCom->Render_ColliderBox();
 	}
 #endif // _DEBUG
-
+	m_pTextureCom->MoveFrame(m_TimerTag);
 
 	return S_OK;
 }
@@ -252,6 +255,20 @@ HRESULT CSkill::Init_Data(void)
 		m_pTransformCom->Set_Scale(m_tSkillDesc.vScale.x, m_tSkillDesc.vScale.y, m_tSkillDesc.vScale.z);
 		m_fDamage = 30.f;
 		break;
+	case SKILL_TYPE::ELEC:
+		m_pTransformCom->Set_Scale(3.f, 1.f, 3.f);
+		m_bRender = false;
+		break;
+	case SKILL_TYPE::SPARK:
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+		m_fDamage = 0.f;
+		break;
+	case SKILL_TYPE::BURST:
+		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+		m_fDamage = 0.f;
+		m_iReversTex = m_pTextureCom->Get_Frame().m_iEndTex - 1;
+		m_pTextureCom->Get_Frame().m_iCurrentTex = m_iReversTex;
+		break;
 	}
 
 
@@ -264,11 +281,10 @@ HRESULT CSkill::Texture_Clone(void)
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 	TextureDesc.m_iStartTex = 0;
 
-
 	/*Ice_Blast*/
-
 	switch (m_tSkillDesc.eSkill)
 	{
+	case SKILL_TYPE::ELEC:
 	case SKILL_TYPE::HEAL:
 		TextureDesc.m_iEndTex = 38;
 		TextureDesc.m_fSpeed = 60;
@@ -276,10 +292,9 @@ HRESULT CSkill::Texture_Clone(void)
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
-
 	case SKILL_TYPE::ICE_BLAST:
 		TextureDesc.m_iEndTex = 19;
-		TextureDesc.m_fSpeed = 60;
+		TextureDesc.m_fSpeed = 40;
 
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceBlast_Pre"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Ice_Blast_Pre"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
@@ -291,9 +306,21 @@ HRESULT CSkill::Texture_Clone(void)
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
-
+	case SKILL_TYPE::SPARK:
+		TextureDesc.m_iEndTex = 16;
+		TextureDesc.m_fSpeed = 40;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Spark"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spark_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		break;
+	case SKILL_TYPE::BURST:
+		TextureDesc.m_iEndTex = 19;
+		TextureDesc.m_fSpeed = 40;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Burst"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Burst_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		break;
 	}
-	
 
 	return S_OK;
 }
@@ -340,6 +367,38 @@ void CSkill::Heal(_float _fTimeDelta)
 	{
 		static_cast<CPlayer*>(m_tSkillDesc.pTarget)->Set_HP(30.f);
 		m_bDead = true;
+	}
+}
+
+void CSkill::Elec(_float _fTimeDelta)
+{
+	//Test
+	m_fAccDeadTimer += _fTimeDelta;
+	if (m_fAccDeadTimer > 1.f)
+	{
+		m_bActivated = true;
+	}
+
+}
+
+void CSkill::Spark(_float _fTimeDelta)
+{
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	{
+		m_bDead = true;
+	}
+}
+
+void CSkill::Burst(_float _fTimeDelta)
+{
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex <= m_pTextureCom->Get_Frame().m_iStartTex + 1)
+	{
+		m_bDead = true;
+		m_pTextureCom->Get_Frame().m_iCurrentTex = 0;
+	}
+	else
+	{
+		m_pTextureCom->Get_Frame().m_iCurrentTex = --m_iReversTex;
 	}
 }
 
@@ -397,7 +456,15 @@ void CSkill::Excute(_float _fTimeDelta)
 	case SKILL_TYPE::ICE_BLAST:
 		Ice_Blast(_fTimeDelta);
 		break;
-
+	case SKILL_TYPE::ELEC:
+		Elec(_fTimeDelta);
+		break;
+	case SKILL_TYPE::BURST:
+		Burst(_fTimeDelta);
+		break;
+	case SKILL_TYPE::SPARK:
+		Spark(_fTimeDelta);
+		break;
 	}
 }
 
@@ -420,7 +487,18 @@ void CSkill::Activate_Check(_float _fTimeDelta)
 				goto Attack;
 			}
 			break;
+		case SKILL_TYPE::ELEC:
+			if (m_bActivated)
+			{
+				m_fDamage = 10.f;
+				m_bDead = true;
+				goto Attack;
 
+			}
+			break;
+		case SKILL_TYPE::SPARK:
+
+			break;
 		}
 
 		return;
@@ -440,7 +518,7 @@ void CSkill::Dead_Check(_float _fTimeDelta)
 	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
 	m_fAccDeadTimer += _fTimeDelta;
-
+	//ForA
 	switch (m_tSkillDesc.eSkill)
 	{
 	case SKILL_TYPE::HEAL:
