@@ -173,6 +173,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\AttackRange.h" />
     <ClInclude Include="..\Public\BagInventory.h" />
+    <ClInclude Include="..\Public\Battery.h" />
     <ClInclude Include="..\Public\Battery_Tower.h" />
     <ClInclude Include="..\Public\Bearger.h" />
     <ClInclude Include="..\Public\Behavior_Tree.h" />
@@ -315,6 +316,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\AttackRange.cpp" />
     <ClCompile Include="..\Private\BagInventory.cpp" />
+    <ClCompile Include="..\Private\Battery.cpp" />
     <ClCompile Include="..\Private\Battery_Tower.cpp" />
     <ClCompile Include="..\Private\Bearger.cpp" />
     <ClCompile Include="..\Private\Behavior_Tree.cpp" />

@@ -32,7 +32,7 @@
 #include "CarnivalCard.h"
 #include "Carnival_Shoot_Button.h"
 
-
+#include "Battery.h"
 #include "Battery_Tower.h"
 #include "Skill.h"
 #include "Wendy.h"
@@ -1921,6 +1921,10 @@ HRESULT CLoader::Loading_Prototype_Object()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Battery_Tower"),
 		CBattery_Tower::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Battery"),
+		CBattery::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ShootingTarget"),
