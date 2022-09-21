@@ -45,7 +45,7 @@ private:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr);
 	void SetUp_BillBoard();
 	void SetUp_FPSBillBoard();
-	void WalkingTerrain();
+	virtual void WalkingTerrain() override;
 	HRESULT Change_Texture(const _tchar* LayerTag);
 
 	void Set_ShaderID();

@@ -31,6 +31,7 @@ public: //SetEnum
 	void Set_PositionMode(_bool type) { if (type)m_eCamMode = CAM_POSITION; else m_eCamMode = CAM_RETURN; }
 	void Set_Target(class CGameObject* pGameObject) { m_pTarget = pGameObject; }
 	void Set_Position(_float3 pPosition) { m_vPosition = pPosition; }
+	void Set_OffSetDistance(_float3 pPosition) { m_vOffSetDistance = pPosition; }
 
 private:
 	void Idle_Camera(_float fTimeDelta);
@@ -46,12 +47,18 @@ private:
 	_long			m_lMouseWheel = 0;
 	_float3			m_vDistance;
 	_float3			m_vInitDistance;
-	_float3			m_TargetPos;
+	
+
+private:
 	class CGameObject*	m_pTarget = nullptr;
+	_float3			m_TargetPos;
 	_bool			m_bTalkingMode = false;
 	_bool			m_bOutZoom = false;
 	_bool			m_bChange = false;
 	_float3			m_vPosition;
+
+	_float3			m_vOffSetDistance;
+
 
 public:
 	static CCameraTarget* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

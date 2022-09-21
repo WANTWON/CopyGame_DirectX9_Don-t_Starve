@@ -66,7 +66,7 @@ public: /*For Picking */
 
 public:
 	virtual void Interact(_uint Damage = 0) override;
-	
+	void CameraChange();
 	void Make_Guess(_bool bGuess) { m_vecGuesses.push_back(bGuess); }
 	virtual HRESULT Drop_Items() override;
 
@@ -120,6 +120,10 @@ private:
 	_float m_fMaxDistance = 5.f;
 	_bool m_bStart = false;
 	_bool m_bIsWin = false;
+
+	_float m_fCameraSettingDistance = 3.f;
+	_float3 m_vCamSettingPosOffset = _float3(0.f, 0.f, 0.f);
+	_float3 m_vCamSettingDistanceOffset = _float3(0.f,0.f,0.f);
 
 
 public:

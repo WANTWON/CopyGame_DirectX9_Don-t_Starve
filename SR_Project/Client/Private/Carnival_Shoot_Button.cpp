@@ -124,9 +124,13 @@ HRESULT CCarnival_Shoot_Button::SetUp_Components(void* pArg)
 
 void CCarnival_Shoot_Button::Change_Camera()
 {
+	if (m_bFinished)
+		return;
+
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	if (Check_EveryTarget_Complete() == true)
 	{
+		m_bFinished = true;
 		if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
 		{
 			CCamera* pCamera = pCameraManager->Get_CurrentCamera();
@@ -147,6 +151,7 @@ void CCarnival_Shoot_Button::Change_Camera()
 		_float3 vShooterPos = pShooter->Get_Position();
 		vShooterPos.z += 2.f;
 		CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+		dynamic_cast<CCameraTarget*>(pCamera)->Set_OffSetDistance(_float3(0.f, 7.f, -6.f));
 		dynamic_cast<CCameraTarget*>(pCamera)->Set_Position(vShooterPos);
 		dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(true);
 	}

@@ -9,6 +9,7 @@
 #include "Inventory.h"
 #include "DecoObject.h"
 #include "Carnival_Egg.h"
+#include "CameraManager.h"
 
 CCarnivalMemory::CCarnivalMemory(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -76,7 +77,7 @@ int CCarnivalMemory::Tick(_float fTimeDelta)
 		Play_Egg(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
+	CameraChange();
 	return OBJ_NOEVENT;
 }
 
@@ -118,22 +119,65 @@ void CCarnivalMemory::Interact(_uint Damage)
 {
 	if (m_tStationDesc.eType == STATIONTYPE::STATION_MEMORY)
 	{
+		m_vCamSettingDistanceOffset = _float3(0.f, 5.f, -5.f);
+		m_vCamSettingPosOffset = _float3(0.f, 0.f, 2.f);
+		m_fCameraSettingDistance = 5.f;
 		m_eState = STATESTATION::HIT;
 		Start_Memory();
 	}
 	else if (m_tStationDesc.eType == STATIONTYPE::STATION_BIRD)
 	{
+		m_fCameraSettingDistance = 5.f;
+		m_vCamSettingPosOffset = _float3(0.f, 0.f, 1.f);
+		m_vCamSettingDistanceOffset = _float3(0.f, 7.f, -6.f);
 		m_eState = STATESTATION::TURN_ON;
 		Start_Bird();
 	}
 	else if (m_tStationDesc.eType == STATIONTYPE::STATION_EGG)
 	{
+		m_fCameraSettingDistance = 5.f;
+		m_vCamSettingPosOffset = _float3(0.f, 0.f, 1.f);
+		m_vCamSettingDistanceOffset = _float3(0.f, 7.f, -7.f);
 		m_eState = STATESTATION::TURN_ON;
 		Start_Egg();
 		m_bStart = true;
 	}
 
 	m_bInteract = false;
+	CameraChange();
+}
+
+void CCarnivalMemory::CameraChange()
+{
+	if (m_bIsWin || m_bInteract == true)
+		return;
+
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	CGameInstance* pGameInstace = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstace);
+	CGameObject* pGameObject = pGameInstace->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	_float vDistance = D3DXVec3Length(&(Get_Position() - pGameObject->Get_Position()));
+
+	if (vDistance < m_fCameraSettingDistance)
+	{
+		pCameraManager->Set_CamState(CCameraManager::CAM_TARGET);
+		_float3 vZoomPos = Get_Position();
+		vZoomPos -= m_vCamSettingPosOffset;
+		CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+		dynamic_cast<CCameraTarget*>(pCamera)->Set_OffSetDistance(m_vCamSettingDistanceOffset);
+		dynamic_cast<CCameraTarget*>(pCamera)->Set_Position(vZoomPos);
+		dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(true);
+	}
+	else
+	{
+		if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
+		{
+			CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+			dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(false);
+		}
+	}
+
+	Safe_Release(pGameInstace);
 }
 
 void CCarnivalMemory::Start_Memory()
@@ -235,7 +279,13 @@ void CCarnivalMemory::Check_Guesses()
 		{
 			m_eState = STATESTATION::WIN;
 			m_bCanPlay = false;
-
+			m_bIsWin = true;
+			CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+			if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
+			{
+				CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+				dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(false);
+			}
 			// Spawn Confetti Effect
 			CDecoObject::DECODECS DecoDesc;
 			DecoDesc.m_eState = CDecoObject::PARTY;
@@ -358,6 +408,13 @@ void CCarnivalMemory::Play_Bird(_float fTimeDelta)
 				m_eState = STATESTATION::TURN_OFF;
 			}
 
+			m_bIsWin = true;
+			CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+			if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
+			{
+				CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+				dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(false);
+			}
 			m_bCanPlay = false;
 		}
 	}
@@ -388,10 +445,10 @@ void CCarnivalMemory::Play_Egg(_float fTimeDelta)
 	if (m_eState == WIN)
 		return;
 
-	if (Check_Clear() && m_bStart)
+	if (Check_Clear() && m_bIsWin && m_bStart)
 		m_eState = WIN;
 
-	if (m_dwEggSpawnTime + 10000 < GetTickCount() && !m_bIsWin)
+	if (m_dwEggSpawnTime + 20000 < GetTickCount() && !m_bIsWin)
 	{
 		Add_NewEgg();
 		m_dwEggSpawnTime = GetTickCount();
@@ -401,8 +458,17 @@ void CCarnivalMemory::Play_Egg(_float fTimeDelta)
 
 _bool CCarnivalMemory::Check_Clear()
 {
+	if (!m_bStart || m_bInteract == true )
+		return false;
+
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	if (m_iEggCount <= 0)
 	{
+		if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
+		{
+			CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+			dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(false);
+		}
 		m_bIsWin = true;
 		return true;
 	}
@@ -613,17 +679,26 @@ void CCarnivalMemory::Change_Frame(_float fTimeDelta)
 			m_eState = STATESTATION::IDLE_ON;
 		break;
 	case WIN:
-		m_pTextureCom->MoveFrame(m_TimerTag);
-
-		if (m_fWinTimer > 2.f)
+	{
+		if (m_eState == STATION_EGG)
 		{
-			m_fWinTimer = 0.f;
-			m_eState = STATESTATION::TURN_OFF;
+			if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+				m_eState = STATESTATION::TURN_OFF;
 		}
 		else
-			m_fWinTimer += fTimeDelta;
+		{
+			m_pTextureCom->MoveFrame(m_TimerTag);
 
+			if (m_fWinTimer > 2.f)
+			{
+				m_fWinTimer = 0.f;
+				m_eState = STATESTATION::TURN_OFF;
+			}
+			else
+				m_fWinTimer += fTimeDelta;
+		}
 		break;
+	}	
 	case COMPLETE:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 			m_eState = STATESTATION::IDLE_ON;

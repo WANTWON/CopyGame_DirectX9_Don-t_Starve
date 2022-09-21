@@ -106,8 +106,8 @@ HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	//pPlayer->Set_Position(_float3(9.0, 0.5f, 7.f));
-	pPlayer->Set_Position(_float3(39.75f, 0.5f, 38.0f));
+	pPlayer->Set_Position(_float3(9.0, 0.5f, 7.f));
+	//pPlayer->Set_Position(_float3(39.75f, 0.5f, 38.0f));
 
 	Safe_Release(pGameInstance);
 
@@ -237,7 +237,6 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 			return E_FAIL;
 	}
 	CloseHandle(hFile);
-
 
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Statue"), LEVEL_MAZE, TEXT("Layer_Statue"), _float3(39.75f, 0.f, 9.f));
 

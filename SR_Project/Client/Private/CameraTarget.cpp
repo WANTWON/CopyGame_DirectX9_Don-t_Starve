@@ -257,13 +257,12 @@ void CCameraTarget::Position_Target(_float fTimeDelta, _float3 pPosition)
 	m_TargetPos.y -= m_CameraDesc.vAt.y;
 	_float3 vCameraPos = Get_Position();
 
-	_float3 vDistance = m_CameraDesc.vEye;
-	_float3 vDir = (m_TargetPos + vDistance) - vCameraPos;
+	_float3 vDir = (m_TargetPos + m_vOffSetDistance) - vCameraPos;
 
 	if (fabsf(vDir.y) < 0.1f && fabsf(vDir.z) < 0.1f)
 	{
 		m_pTransform->LookAt(m_TargetPos);
-		m_vDistance = vDistance;
+		m_vDistance = m_vOffSetDistance;
 		m_eCamMode = CAM_FOLLOW;
 	}
 	else

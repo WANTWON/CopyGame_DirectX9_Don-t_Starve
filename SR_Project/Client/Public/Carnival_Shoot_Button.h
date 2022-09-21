@@ -51,6 +51,7 @@ public:
 private:
 	STATECARD m_eState = IDLE;
 	STATECARD m_ePreState = MAX;
+	_bool m_bFinished = false;
 
 public:
 	static CCarnival_Shoot_Button* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
