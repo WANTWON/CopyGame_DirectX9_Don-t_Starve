@@ -1326,7 +1326,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Turn_On"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Bird/Turn_On/Turn_On_%03d.png"), 29))))
-
+		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Carnival_Shooting_Button_Idle"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/Button/Idle_%03d.png"), 6))))
 		return E_FAIL;
