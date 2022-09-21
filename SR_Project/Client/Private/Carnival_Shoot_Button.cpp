@@ -167,6 +167,7 @@ _bool CCarnival_Shoot_Button::Check_EveryTarget_Complete()
 	CGameInstance* pGameInstace = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstace);
 	list<CGameObject*>* pGameObjects = pGameInstace->Get_ObjectList(LEVEL_MAZE, TEXT("Layer_Shooting"));
+	Safe_Release(pGameInstace);
 	if (pGameObjects == nullptr)
 		return false;
 
@@ -174,6 +175,7 @@ _bool CCarnival_Shoot_Button::Check_EveryTarget_Complete()
 	{
 		if (dynamic_cast<CShooting_Target*>(iter)->Get_Complete() == false)
 			return false;
+
 	}
 
 	return true;

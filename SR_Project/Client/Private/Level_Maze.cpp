@@ -282,6 +282,29 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	
 
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Shoot_Button"), LEVEL_MAZE, pLayerTag, _float3(41.75f, 0.f, 39.0f));
+	
+#pragma region Carnival_Memory
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Carnival_Card_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	vPosition = _float3(0.f, 0.f, 0.f);
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(vPosition), sizeof(_float3), &dwByte, nullptr);
+		vPosition += _float3(-3.f, 0.f, 1.f);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, vPosition)))
+			return E_FAIL;
+	}
+	CloseHandle(hFile);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, pLayerTag, _float3(25.f, 1.f, 41.f));
+#pragma endregion Carnival_Memory
+
+	
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
