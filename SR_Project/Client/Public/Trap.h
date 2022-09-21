@@ -51,7 +51,7 @@ private: /* For.Components */
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 	CCollider_Cube* m_pColliderCom = nullptr;
 	CShader* m_pShaderCom = nullptr;
-
+	vector<CTexture*> m_vecTexture;
 private: /*For TextureCom */
 	HRESULT Texture_Clone();
 	HRESULT Change_Texture(const _tchar* LayerTag);

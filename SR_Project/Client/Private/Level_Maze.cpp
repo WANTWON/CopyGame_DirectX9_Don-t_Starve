@@ -105,8 +105,8 @@ HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 	//pPlayer->Set_Position(_float3(9.0, 0.5f, 7.f));
-	pPlayer->Set_Position(_float3(39.75f, 0.f, 38.0f));
-	
+	pPlayer->Set_Position(_float3(39.75f, 0.5f, 38.0f));
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -115,31 +115,6 @@ HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
 HRESULT CLevel_Maze::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Spider_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
-
-	_ulong		dwByte = 0;
-	_float3 ObjectPos(0, 0, 0);
-	_uint iNum = 0;
-
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
-	for (_uint i = 0; i < iNum; ++i)
-	{
-		ReadFile(hFile, &(ObjectPos), sizeof(_float3), &dwByte, nullptr);
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spider"), LEVEL_MAZE, pLayerTag, ObjectPos)))
-			return E_FAIL;
-	}
-
-	CloseHandle(hFile);
-
-
-
-	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
@@ -255,8 +230,8 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 			return E_FAIL;
 	}
 	CloseHandle(hFile);
-	
-	
+
+
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Statue"), LEVEL_MAZE, TEXT("Layer_Statue"), _float3(39.75f, 0.f, 9.f));
 
 	CShooting_Target::TARGETDESC TargetDesc;
@@ -279,32 +254,32 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 
 
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Shooter"), LEVEL_MAZE, TEXT("Layer_Shooter"), _float3(39.75f, 0.f, 38.0f));
-	
+
 
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Shoot_Button"), LEVEL_MAZE, pLayerTag, _float3(41.75f, 0.f, 39.0f));
-	
-#pragma region Carnival_Memory
-	hFile = CreateFile(TEXT("../Bin/Resources/Data/Carnival_Card_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
-
-	dwByte = 0;
-	vPosition = _float3(0.f, 0.f, 0.f);
-	iNum = 0;
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
-	for (_uint i = 0; i < iNum; ++i)
-	{
-		ReadFile(hFile, &(vPosition), sizeof(_float3), &dwByte, nullptr);
-		vPosition += _float3(-3.f, 0.f, 1.f);
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, vPosition)))
+		
+	#pragma region Carnival_Memory
+		hFile = CreateFile(TEXT("../Bin/Resources/Data/Carnival_Card_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		if (0 == hFile)
 			return E_FAIL;
-	}
-	CloseHandle(hFile);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, pLayerTag, _float3(25.f, 1.f, 41.f));
-#pragma endregion Carnival_Memory
-
 	
+		dwByte = 0;
+		vPosition = _float3(0.f, 0.f, 0.f);
+		iNum = 0;
+		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	
+		for (_uint i = 0; i < iNum; ++i)
+		{
+			ReadFile(hFile, &(vPosition), sizeof(_float3), &dwByte, nullptr);
+			vPosition += _float3(+0.7f, 0.f, 1.f);
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, vPosition)))
+				return E_FAIL;
+		}
+		CloseHandle(hFile);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, pLayerTag, _float3(25.f, 1.f, 41.f));
+	#pragma endregion Carnival_Memory
+
+
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
@@ -391,12 +366,12 @@ void CLevel_Maze::Update_Camera_Motion()
 
 
 	if (pGameObject->Get_Position().x > 19 && pGameObject->Get_Position().z > 0.5 &&
-		pGameObject->Get_Position().x < 29 && pGameObject->Get_Position().z < 13 )
+		pGameObject->Get_Position().x < 29 && pGameObject->Get_Position().z < 13)
 	{
 		dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(true);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_FPS);
 		m_bPlayerCam = true;
-	
+
 	}
 	else if (m_bPlayerCam)
 	{
@@ -404,10 +379,10 @@ void CLevel_Maze::Update_Camera_Motion()
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
 		m_bPlayerCam = false;
 	}
-	
 
 
-	
+
+
 
 }
 
@@ -440,7 +415,7 @@ void CLevel_Maze::Update_Floor_Motion()
 		DecoDesc.fRotate = 5.f;
 		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 42.f);
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
-		
+
 		DecoDesc.fRotate = 2.f;
 		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 38.f);
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);

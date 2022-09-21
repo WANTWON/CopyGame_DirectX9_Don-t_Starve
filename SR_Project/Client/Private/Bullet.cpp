@@ -89,6 +89,7 @@ void CBullet::Late_Tick(_float fTimeDelta)
 		m_bDead = true;
 
 	Compute_CamDistance(Get_Position());
+	Set_ShaderID();
 }
 
 HRESULT CBullet::Render()

@@ -129,7 +129,7 @@ HRESULT CCarnivalCard::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 30;
+	TextureDesc.m_fSpeed = 40;
 
 	TextureDesc.m_iEndTex = 32;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hint_Bad"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Hint_Bad"), (CComponent**)&m_pTextureCom, &TextureDesc)))
