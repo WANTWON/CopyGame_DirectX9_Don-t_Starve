@@ -281,7 +281,7 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Shooter"), LEVEL_MAZE, TEXT("Layer_Shooter"), _float3(39.75f, 0.f, 38.0f));
 	
 
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Shoot_Button"), LEVEL_MAZE, pLayerTag, _float3(41.75f, 0.f, 38.0f));
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Shoot_Button"), LEVEL_MAZE, pLayerTag, _float3(41.75f, 0.f, 39.0f));
 	Safe_Release(pGameInstance);
 	return S_OK;
 }

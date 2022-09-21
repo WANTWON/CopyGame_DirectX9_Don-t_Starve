@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "CameraManager.h"
 #include "Carnival_Shooter.h"
+#include "Shooting_Target.h"
 
 CCarnival_Shoot_Button::CCarnival_Shoot_Button(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -123,6 +124,17 @@ HRESULT CCarnival_Shoot_Button::SetUp_Components(void* pArg)
 
 void CCarnival_Shoot_Button::Change_Camera()
 {
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	if (Check_EveryTarget_Complete() == true)
+	{
+		if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
+		{
+			CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+			dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(false);
+		}
+		return;
+	}
+
 	CGameInstance* pGameInstace = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstace);
 	CGameObject* pGameObject = pGameInstace->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
@@ -130,25 +142,41 @@ void CCarnival_Shoot_Button::Change_Camera()
 
 	if (vDistance < 1.f)
 	{
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
+		pCameraManager->Set_CamState(CCameraManager::CAM_TARGET);
 		CGameObject* pShooter = pGameInstace->Get_Object(LEVEL_MAZE, TEXT("Layer_Shooter"));
 		_float3 vShooterPos = pShooter->Get_Position();
 		vShooterPos.z += 2.f;
-		CCamera* pCamera = CCameraManager::Get_Instance()->Get_CurrentCamera();
+		CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 		dynamic_cast<CCameraTarget*>(pCamera)->Set_Position(vShooterPos);
 		dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(true);
 	}
 	else
 	{
-		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_TARGET)
+		if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
 		{
-			CCamera* pCamera = CCameraManager::Get_Instance()->Get_CurrentCamera();
+			CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 			dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(false);
 		}
-			
 	}
 
 	Safe_Release(pGameInstace);
+}
+
+_bool CCarnival_Shoot_Button::Check_EveryTarget_Complete()
+{
+	CGameInstance* pGameInstace = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstace);
+	list<CGameObject*>* pGameObjects = pGameInstace->Get_ObjectList(LEVEL_MAZE, TEXT("Layer_Shooting"));
+	if (pGameObjects == nullptr)
+		return false;
+
+	for (auto& iter : *pGameObjects)
+	{
+		if (dynamic_cast<CShooting_Target*>(iter)->Get_Complete() == false)
+			return false;
+	}
+
+	return true;
 }
 
 HRESULT CCarnival_Shoot_Button::Texture_Clone()
