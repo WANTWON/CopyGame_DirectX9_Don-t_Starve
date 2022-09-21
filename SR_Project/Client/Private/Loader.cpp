@@ -2470,7 +2470,7 @@ HRESULT CLoader::Loading_ForBossLevel()
 		return E_FAIL;
 	/*For.Prototype_Component_Texture_Totem_Effect_Shield */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Shield"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Shield/Shield_%03d.png"), 18))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Totem_Shield/Shield_%03d.png"), 16))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Totem_Effect_Heal */

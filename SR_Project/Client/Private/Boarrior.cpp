@@ -82,9 +82,6 @@ int CBoarrior::Tick(_float fTimeDelta)
 	Check_Totem_Effect(fTimeDelta);
 	Check_Health_Percent();
 
-	if (CKeyMgr::Get_Instance()->Key_Down('O'))
-		m_bStun = true;
-
 	// A.I.
 	AI_Behaviour(fTimeDelta);
 

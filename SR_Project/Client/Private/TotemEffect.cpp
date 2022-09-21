@@ -237,7 +237,7 @@ HRESULT CTotemEffect::Texture_Clone()
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
 	case TOTEM_EFFECT_TYPE::SHIELD:
-		TextureDesc.m_iEndTex = 17;
+		TextureDesc.m_iEndTex = 15;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Shield_Effect"), LEVEL_BOSS, TEXT("Prototype_Component_Texture_Totem_Effect_Shield"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
