@@ -107,7 +107,7 @@ void CToolboxMain_front::Late_Tick(_float fTimeDelta)
 	ScreenToClient(g_hWnd, &ptMouse);
 
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pinv);
+	//Safe_AddRef(pinv);
 
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
 
@@ -141,7 +141,7 @@ void CToolboxMain_front::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	
-	Safe_Release(pinv);
+	//Safe_Release(pinv);
 	//set_check(false);
 }
 
@@ -269,34 +269,3 @@ void CToolboxMain_front::Free()
 	Safe_Release(m_pTextureCom);
 }
 
-//void CMainInventory_front::Use_item(ITEMNAME item)
-//{
-//	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-//	Safe_AddRef(pGameInstance);
-//	switch (item)
-//	{
-//	case ITEMNAME_CARROT:
-//
-//
-//
-//		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_HP(10));
-//		item_number -= 1;
-//		//minus_itemcount();
-//		break;
-//
-//
-//	case ITEMNAME_BERRY:
-//
-//
-//
-//		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player")))->Set_Hungry(10));
-//		minus_itemcount();
-//		break;
-//
-//
-//
-//	}
-//
-//
-//	Safe_Release(pGameInstance);
-//}

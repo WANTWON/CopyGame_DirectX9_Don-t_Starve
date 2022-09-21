@@ -146,7 +146,7 @@ void CQuestpont::Late_Tick(_float fTimeDelta)
 {
 
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pInventory_Manager);
+//	Safe_AddRef(pInventory_Manager);
 
 
 	if (m_bcheck == true && pInventory_Manager->Get_Quest_list()->front()->get_onoff() == true )
@@ -175,7 +175,7 @@ void CQuestpont::Late_Tick(_float fTimeDelta)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	}
-	Safe_Release(pInventory_Manager);
+	//Safe_Release(pInventory_Manager);
 
 	//set_check(false);
 }
