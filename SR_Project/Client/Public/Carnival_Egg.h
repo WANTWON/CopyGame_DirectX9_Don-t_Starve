@@ -2,6 +2,7 @@
 #include "Client_Defines.h"
 #include "Monster.h"
 #include "Transform.h"
+#include "CarnivalMemory.h"
 
 BEGIN(Client)
 class CCarnival_Egg final : public CMonster
@@ -11,6 +12,7 @@ class CCarnival_Egg final : public CMonster
 		IDLE,
 		WALK,
 		COMPLETE, 
+		PLACE,
 		MAX
 	};
 
@@ -27,10 +29,10 @@ public:
 	virtual int Tick(_float fTimeDelta)override;
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
-
+	void Set_Memory(CCarnivalMemory* pMemory) { m_pMemory = pMemory; }
 private:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
-
+	
 private: /*For TextureCom */
 	virtual HRESULT Texture_Clone() override;
 	virtual void Change_Frame(_float fTimeDelta) override;
@@ -46,8 +48,9 @@ private:
 	STATE m_ePreState = STATE::MAX;
 	_float fHappyTimer = 0.f;
 	_float3 m_vecOutPos; // For Picking
+	_bool	m_bMove = false;
 
-	_bool	m_bMove = true;
+	CCarnivalMemory* m_pMemory = nullptr;
 
 private:
 	virtual void AI_Behaviour(_float fTimeDelta) override;

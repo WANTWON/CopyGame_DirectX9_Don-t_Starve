@@ -57,17 +57,19 @@ HRESULT CDecoObject::Initialize(void* pArg)
 	case DECOTYPE::FLOOR:
 	{
 		if (m_DecoDesc.fRotate == 1.f)
-			m_pTransformCom->Set_Scale(5.f, 5.f, 1.f);
+			m_pTransformCom->Set_Scale(7.f, 7.f, 1.f);
 		else if (m_DecoDesc.fRotate == 2.f)
 			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
 		else if (m_DecoDesc.fRotate == 3.f)
 			m_pTransformCom->Set_Scale(7.f, 7.f, 1.f);
 		else if(m_DecoDesc.fRotate == 4.f)
-			m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+			m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
 		else if (m_DecoDesc.fRotate == 5.f)
 			m_pTransformCom->Set_Scale(10.f, 2.f, 1.f);
 		else
 			m_pTransformCom->Set_Scale(7.f, 7.f, 1.f);
+
+		m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 		m_pTransformCom->Turn(_float3(1, 0, 0), 90.f);
 		m_fRadius = 0.002f;
 		break;
@@ -83,6 +85,8 @@ HRESULT CDecoObject::Initialize(void* pArg)
 		break;
 	}
 
+	
+
 	return S_OK;
 }
 
@@ -92,6 +96,13 @@ int CDecoObject::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
+
+	if (m_DecoDesc.m_eState == FLOOR && m_DecoDesc.fRotate == 4)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PUSH, this);
+	}
+
 
 	WalkingTerrain();
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -133,6 +144,9 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 	}
 	
 	Compute_CamDistance(Get_Position());
+
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 
 	MoveFrame();
 	
@@ -327,6 +341,16 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 			if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 				return E_FAIL;
 		break;
+		case DECOTYPE::FLOOR:
+			if (m_DecoDesc.fRotate == 4.f)
+			{
+				CollRectDesc.fRadiusY = 0.3f;
+				CollRectDesc.fRadiusX = 0.3f;
+				CollRectDesc.fRadiusZ = 0.3f;
+				if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+					return E_FAIL;
+			}
+			break;
 	}
 
 	return S_OK;

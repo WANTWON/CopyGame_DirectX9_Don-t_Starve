@@ -27,13 +27,12 @@ HRESULT CCarnival_Egg::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(0.3f, 0.3f, 1.f);
+	m_pTransformCom->Set_Scale(0.5f, 0.5f, 0.5f);
 
 	m_tInfo.iMaxHp = 150;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 
 	m_fAttackRadius = 1.f;
-	m_eMonsterID = PIG;
 	m_eState = IDLE;
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 
@@ -42,9 +41,16 @@ HRESULT CCarnival_Egg::Initialize(void* pArg)
 
 int CCarnival_Egg::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
+
+	if (__super::Tick(fTimeDelta))
+	{
+		
+		return OBJ_DEAD;
+	}
+
 	// A.I.
-	AI_Behaviour(fTimeDelta);
+	if(m_eState != COMPLETE && m_eState != PLACE)
+		AI_Behaviour(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -60,6 +66,24 @@ void CCarnival_Egg::Late_Tick(_float fTimeDelta)
 
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+
+	_float3 vDistance = _float3(0, 0, 0);
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	if (pGameInstance->Collision_with_Group(CCollider_Manager::COLLISION_BLOCK, this, CCollider_Manager::COLLSIION_BOX, &vDistance))
+	{
+		_float3 vPosition = Get_Position();
+
+		if (fabsf(vDistance.x) < fabsf(vDistance.z))
+			vPosition.x -= vDistance.x;
+		else
+			vPosition.z -= vDistance.z;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+	}
+	if (pGameInstance->Collision_with_Group(CCollider_Manager::COLLISION_PUSH, this, CCollider_Manager::COLLSIION_BOX, &vDistance))
+	{
+		m_eState = COMPLETE;
+	 }
+		
 
 }
 
@@ -132,7 +156,7 @@ HRESULT CCarnival_Egg::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 45;
+	TextureDesc.m_fSpeed = 25;
 
 	TextureDesc.m_iEndTex = 5;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_DOWN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Carnival_Egg_Idle_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
@@ -164,16 +188,15 @@ HRESULT CCarnival_Egg::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
-	TextureDesc.m_iEndTex = 2;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_PLACE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Carnival_Egg_Place"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-
-	TextureDesc.m_iEndTex = 17;
+	TextureDesc.m_iEndTex = 25;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_COMPLETE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Carnival_Egg_Complete"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
+	TextureDesc.m_iEndTex = 2;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_PLACE"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Carnival_Egg_Place"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
 	return S_OK;
 }
 
@@ -183,26 +206,33 @@ void CCarnival_Egg::Change_Frame(_float fTimeDelta)
 	{
 	case STATE::IDLE:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
+			m_pTransformCom->Set_Scale(-0.5f, 0.5f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+			m_pTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
 
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::WALK:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
-			m_pTransformCom->Set_Scale(-2.f, 2.f, 1.f);
+			m_pTransformCom->Set_Scale(-0.5f, 0.5f, 1.f);
 		else
-			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+			m_pTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
+
 
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::COMPLETE:
-	{
 		if (m_pTextureCom->MoveFrame(m_TimerTag, false) == true)
+		{
 			m_bDead = true;
+		}		
+		break;	
+	case STATE::PLACE:
+		if (m_pTextureCom->MoveFrame(m_TimerTag, false) == true)
+		{
+			m_eState = IDLE;
+		}		
 		break;
-	}	
 	}
 }
 
@@ -248,10 +278,13 @@ void CCarnival_Egg::Change_Motion()
 				m_ePreDir = m_eDir;
 			break;
 		case STATE::COMPLETE:
+			m_pMemory->Set_EggCount();
 			Change_Texture(TEXT("Com_Texture_COMPLETE"));
 			break;
+		case STATE::PLACE:
+			Change_Texture(TEXT("Com_Texture_PLACE"));
+			break;
 		}
-
 		if (m_eState != m_ePreState)
 			m_ePreState = m_eState;
 	}
@@ -260,22 +293,27 @@ void CCarnival_Egg::Change_Motion()
 
 void CCarnival_Egg::AI_Behaviour(_float fTimeDelta)
 {
-	
-		Find_Target();
+	Find_Target();
+	if (m_fDistanceToTarget < m_fAttackRadius)
+	{
+		m_bAggro = true;
+		m_eState = STATE::WALK;
+		
+	}
+	else
+	{
+		m_bAggro = false;
+	}
+
+	if (m_bAggro)
+	{
 		if (m_pTarget)
 		{
-			// If in AttackRadius > Attack
-			if (m_fDistanceToTarget < m_fAttackRadius)
-			{
-				m_eState = STATE::WALK;
-				Follow_Target(fTimeDelta);
-			}
-			else
-			{
-				m_eState = STATE::IDLE;
-				Patrol(fTimeDelta);
-			}
+			Follow_Target(fTimeDelta);
 		}
+	}
+	else
+		Patrol(fTimeDelta);
 		
 }
 
@@ -411,6 +449,8 @@ HRESULT CCarnival_Egg::Drop_Items()
 
 _bool CCarnival_Egg::IsDead()
 {
+	if (m_bDead)
+		return true;
 
 	return false;
 }

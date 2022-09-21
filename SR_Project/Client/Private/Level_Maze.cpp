@@ -259,48 +259,55 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	TargetDesc.vPosition = _float3(43.75f, 0.f, 42.f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingTarget"), LEVEL_MAZE, TEXT("Layer_Shooting"), &TargetDesc);
 
-	// Test
+	// Carnival Memory Game
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Carnival_Card_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
+	CCarnivalCard::DESC Desc;
+	Desc.eType = CCarnivalCard::TYPE::CARD;
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(Desc.vInitPosition), sizeof(_float3), &dwByte, nullptr);
+		Desc.vInitPosition += _float3(0.7f, 0.f, 1.f);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc)))
+			return E_FAIL;
+	}
+	CloseHandle(hFile);
+
 	CCarnivalMemory::STATIONDESC StationDesc;
 	StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_MEMORY;
-	StationDesc.vInitPosition = _float3(11.0f, 2.f, 8.f);
+	StationDesc.vInitPosition = _float3(25.00f, 0.f, 41.8f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, pLayerTag, &StationDesc);
 
 	StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_BIRD;
-	StationDesc.vInitPosition = _float3(7.0f, 2.f, 8.f);
+	StationDesc.vInitPosition = _float3(9.5f, 0.f, 24.f);
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, pLayerTag, &StationDesc);
 
-	CCarnivalCard::DESC Desc;
-	Desc.eType = CCarnivalCard::TYPE::CARD;
-	Desc.vInitPosition = _float3(10.0f, 2.f, 7.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc);
-	Desc.vInitPosition = _float3(11.0f, 2.f, 7.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc);
-	Desc.vInitPosition = _float3(12.0f, 2.f, 7.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc);
-	Desc.vInitPosition = _float3(10.0f, 2.f, 6.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc);
-	Desc.vInitPosition = _float3(11.0f, 2.f, 6.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc);
-	Desc.vInitPosition = _float3(12.0f, 2.f, 6.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc);
 
+	hFile = CreateFile(TEXT("../Bin/Resources/Data/Carnival_Bird_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	dwByte = 0;
 	Desc.eType = CCarnivalCard::TYPE::BIRD;
-	Desc.vInitPosition = _float3(6.0f, 2.f, 7.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc);
-	Desc.vInitPosition = _float3(7.0f, 2.f, 7.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc);
-	Desc.vInitPosition = _float3(8.0f, 2.f, 7.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc);
-	Desc.vInitPosition = _float3(6.0f, 2.f, 6.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc);
-	Desc.vInitPosition = _float3(7.0f, 2.f, 6.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc);
-	Desc.vInitPosition = _float3(8.0f, 2.f, 6.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc);
+	iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(Desc.vInitPosition), sizeof(_float3), &dwByte, nullptr);
+		Desc.vInitPosition += _float3(0.1f, 0.f, 0.0f);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_MAZE, pLayerTag, &Desc)))
+			return E_FAIL;
+	}
+	CloseHandle(hFile);
 
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Shooter"), LEVEL_MAZE, TEXT("Layer_Shooter"), _float3(39.75f, 0.f, 38.0f));
-
-
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Shoot_Button"), LEVEL_MAZE, pLayerTag, _float3(41.75f, 0.f, 39.0f));
 
 	Safe_Release(pGameInstance);
@@ -455,12 +462,26 @@ void CLevel_Maze::Update_Floor_Motion()
 	}
 	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[4])
 	{
+		CCarnivalMemory::STATIONDESC StationDesc;
+		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_EGG;
+		StationDesc.vInitPosition = _float3(9.5f, 0.f, 40.f);
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+
 		CDecoObject::DECODECS  DecoDesc;
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
-		DecoDesc.vInitPosition = _float3(10.f, 0.f, 40.f);
-		DecoDesc.fRotate = 2.f;
+		DecoDesc.vInitPosition = _float3(9.5f, 0.f, 40.f);
+		DecoDesc.fRotate = 4.f;
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[4] = true;
+	}
+	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z < 27) && (pGameObject->Get_Position().z > 20) && !m_bPuzzleStart[5])
+	{
+		CDecoObject::DECODECS  DecoDesc;
+		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
+		DecoDesc.vInitPosition = _float3(11.f, 0.f, 24.f);
+		DecoDesc.fRotate = 1.f;
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		m_bPuzzleStart[5] = true;
 	}
 
 }

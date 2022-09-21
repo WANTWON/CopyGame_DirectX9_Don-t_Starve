@@ -18,7 +18,7 @@ BEGIN(Client)
 class CCarnivalMemory final : public CInteractive_Object
 {
 public:
-	enum STATIONTYPE { STATION_MEMORY, STATION_BIRD, STATION_MAX };
+	enum STATIONTYPE { STATION_MEMORY, STATION_BIRD, STATION_EGG, STATION_MAX };
 
 	typedef struct StationTagDesc
 	{
@@ -36,6 +36,7 @@ public:
 		TURN_OFF,
 		TURN_ON,
 		WIN,
+		COMPLETE,
 		MAX
 	};
 
@@ -83,6 +84,13 @@ public:
 	void Start_Bird();
 	void Play_Bird(_float fTimeDelta);
 
+	//Egg-Game
+	void Start_Egg();
+	void Play_Egg(_float fTimeDelta);
+	_bool Check_Clear();
+	void Add_NewEgg();
+	void Set_EggCount() { m_iEggCount--; m_eState = COMPLETE; }
+
 private:
 	STATIONDESC m_tStationDesc;
 	STATESTATION m_eState = IDLE_OFF;
@@ -104,6 +112,15 @@ private:
 
 	// Bird Variables
 	_uint m_iFedGoal = 15;
+
+	// Egg Variables
+	DWORD m_dwEggSpawnTime;
+	_int m_iEggCount = 0;
+	_float m_fMinDistance = 2.f;
+	_float m_fMaxDistance = 5.f;
+	_bool m_bStart = false;
+	_bool m_bIsWin = false;
+
 
 public:
 	static CCarnivalMemory* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
