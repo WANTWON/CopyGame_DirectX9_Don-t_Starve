@@ -279,16 +279,6 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	}
 	CloseHandle(hFile);
 
-	CCarnivalMemory::STATIONDESC StationDesc;
-	StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_MEMORY;
-	StationDesc.vInitPosition = _float3(25.00f, 0.f, 41.8f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, pLayerTag, &StationDesc);
-
-	StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_BIRD;
-	StationDesc.vInitPosition = _float3(9.5f, 0.f, 24.f);
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, pLayerTag, &StationDesc);
-
-
 	hFile = CreateFile(TEXT("../Bin/Resources/Data/Carnival_Bird_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
@@ -422,6 +412,7 @@ void CLevel_Maze::Update_Floor_Motion()
 
 	if ((pGameObject->Get_Position().x > 35 && !m_bPuzzleStart[0]))
 	{
+		// Defend the Tower
 		CDecoObject::DECODECS  DecoDesc;
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 9.f);
@@ -431,15 +422,17 @@ void CLevel_Maze::Update_Floor_Motion()
 	}
 	else if ((pGameObject->Get_Position().x > 35) && (pGameObject->Get_Position().z > 20) && !m_bPuzzleStart[1])
 	{
-		CDecoObject::DECODECS  DecoDesc;
+		// Find the Key
+		/*CDecoObject::DECODECS  DecoDesc;
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 24.f);
 		DecoDesc.fRotate = 1.f;
-		//CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);*/
 		m_bPuzzleStart[1] = true;
 	}
 	else if ((pGameObject->Get_Position().x > 35) && (pGameObject->Get_Position().z > 36) && !m_bPuzzleStart[2])
 	{
+		// Shooting
 		CDecoObject::DECODECS  DecoDesc;
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.fRotate = 5.f;
@@ -453,15 +446,22 @@ void CLevel_Maze::Update_Floor_Motion()
 	}
 	else if ((pGameObject->Get_Position().x < 28) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[3])
 	{
+		// Memory
 		CDecoObject::DECODECS  DecoDesc;
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.vInitPosition = _float3(25.f, 0.f, 40.f);
 		DecoDesc.fRotate = 3.f;
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[3] = true;
+
+		CCarnivalMemory::STATIONDESC StationDesc;
+		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_MEMORY;
+		StationDesc.vInitPosition = _float3(25.00f, 0.f, 41.8f);
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
 	}
 	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[4])
 	{
+		// Egg
 		CCarnivalMemory::STATIONDESC StationDesc;
 		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_EGG;
 		StationDesc.vInitPosition = _float3(9.5f, 0.f, 40.f);
@@ -476,14 +476,19 @@ void CLevel_Maze::Update_Floor_Motion()
 	}
 	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z < 27) && (pGameObject->Get_Position().z > 20) && !m_bPuzzleStart[5])
 	{
+		// Bird
 		CDecoObject::DECODECS  DecoDesc;
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
-		DecoDesc.vInitPosition = _float3(11.f, 0.f, 24.f);
+		DecoDesc.vInitPosition = _float3(9.5f, 0.f, 24.f);
 		DecoDesc.fRotate = 1.f;
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[5] = true;
-	}
 
+		CCarnivalMemory::STATIONDESC StationDesc;
+		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_BIRD;
+		StationDesc.vInitPosition = _float3(9.5f, 0.f, 24.f);
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+	}
 }
 
 

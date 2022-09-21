@@ -93,7 +93,7 @@ public:
 
 private:
 	STATIONDESC m_tStationDesc;
-	STATESTATION m_eState = IDLE_OFF;
+	STATESTATION m_eState = PLACE;
 	STATESTATION m_ePreState = MAX;
 
 	// Game Variables
