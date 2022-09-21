@@ -357,6 +357,7 @@ _bool CBoaron::Picking(_float3 * PickingPoint)
 	}
 	else
 	{
+		m_bPickingTrue = false;
 		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 
 		auto i = pInvenManager->Get_Monsterinfo_list()->front();
@@ -378,6 +379,7 @@ _bool CBoaron::Picking(_float3 * PickingPoint)
 
 void CBoaron::PickingTrue()
 {
+	m_bPickingTrue = true;
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
 	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 

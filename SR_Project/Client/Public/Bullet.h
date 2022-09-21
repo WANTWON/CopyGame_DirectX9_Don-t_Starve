@@ -52,6 +52,9 @@ private:/*Act Player`s Bullets*/
 	void Ice_Smoke(_float _fTimeDelta);
 	void Ice_Blast(_float _fTimeDelta);
 	void Rock(_float _fTimeDelta);
+	void Carnival_Arrow(_float fTimeDelta);
+	void Shoot_Carnival_Arrow(_float fTimeDelta);
+
 private://ApplyDamage
 	//virtual void	Apply_Damage(_float Damage, CGameObject* DamagedObj, void* AttackType = nullptr);
 	//virtual void	Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, void* AttackType = nullptr);
@@ -97,9 +100,13 @@ private: //values
 	_float					m_MaxTime;
 
 	_float					m_fAttackRange = 1.f;
-
+	_float					m_fAngle = 310.0f;
 	//for Anim
 	_bool					m_bReversAnim = false;
+
+	//for Carnival Bullet
+	_bool					m_bShoot = false;
+	_float3					m_vShootDir;
 
 	
 

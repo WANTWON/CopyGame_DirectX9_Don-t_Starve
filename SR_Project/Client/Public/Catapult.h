@@ -58,7 +58,7 @@ private:
 	void Idle(_float _fTimeDelta);
 	void Destroy(_float _fTimeDelta);
 	void Place(_float _fTimeDelta);
-
+	void BurstMode(_float _fTimeDelta);
 private:
 	_bool	Find_Enemy(_float _fTimeDelta);
 	_bool	Check_Distance(CGameObject* _pObj);
@@ -84,9 +84,9 @@ private:
 	//for Attack
 	_bool			m_bBurst = false;
 	_bool			m_bCanAttack = true;
-	_float			m_fAttackMaxDelay = 3.f;
-	_float			m_fAttackDelay = m_fAttackMaxDelay;
-	_float			m_fBurst_Time = 5.f;
+	_float			m_fAtkMaxDelay = 4.f;
+	_float			m_fAttackDelay = m_fAtkMaxDelay;
+	
 	CGameObject*	m_pTarget = nullptr;
 	_float3			m_fSavePos;
 	//for Life
@@ -96,6 +96,10 @@ private:
 	_float			m_fMaxRange = 15.f;
 	_float			m_fMinRange = 5.f;
 
+	//forBurstMode
+	_float			m_fBurst_Time = 5.f;
+	_float			m_fBurst_AtckMaxDelay = 2.f;
+	_float			m_fCreate_Effect_Time = 0.f;
 public:
 	void Interact(_uint Damage = 0);
 

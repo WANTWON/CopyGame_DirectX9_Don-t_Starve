@@ -274,6 +274,9 @@ HRESULT CPlayer::Render()
 
 _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
+	if (m_bInincibleMode)
+		return 0.f;
+
 	if ((m_eState != ACTION_STATE::DAMAGED || !m_bGhost) && !m_bHited)
 	{
 		m_tStat.fCurrentHealth -= fDamage;
@@ -362,6 +365,53 @@ void CPlayer::Release_Party(const _tchar * _Name)
 		iter = m_vecParty.erase(iter);
 	}
 
+}
+
+_float3 CPlayer::Set_PartyPostion(CNPC * _NPC)
+{
+	_float3 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+	D3DXVec3Normalize(&vRight, &vRight);
+	_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	D3DXVec3Normalize(&vLook, &vLook);
+	_float3 vMyPos = Get_Position();
+
+
+	for (_uint i = 0; i < m_vecParty.size(); ++i)
+	{
+		if (m_vecParty[i].second == _NPC)
+		{
+			switch (i)
+			{
+			case 0:
+				return Get_Position();
+				break;
+			case 1:
+				if (m_eDirState == DIR_STATE::DIR_LEFT || m_eDirState == DIR_STATE::DIR_RIGHT)
+				{
+					return vMyPos + vLook* -2.f;
+				}
+				else
+				{
+					return vMyPos + vRight* -2.f;
+				}
+				break;
+			case 2:
+				if (m_eDirState == DIR_STATE::DIR_LEFT || m_eDirState == DIR_STATE::DIR_RIGHT)
+				{
+					return vMyPos + vLook* 2.f;
+				}
+				else
+				{
+					return vMyPos + vRight* 2.f;
+				}
+
+				break;
+			}
+		}
+	}
+	return Get_Position();
+	//iter->second->Set_TargetPos
+	//return _float3();
 }
 
 
@@ -891,6 +941,10 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 				m_pRange->Set_IsShow(false);
 				m_pPicker->Set_IsShow(false);
 			}
+		}
+		else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN9]))
+		{
+			m_bInincibleMode = !m_bInincibleMode;
 		}
 	}
 
@@ -1543,6 +1597,7 @@ void CPlayer::Revive(_float _fTimeDelta)
 		}
 		m_ePreState = m_eState;
 
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
 		CCamera* pCamera =  CCameraManager::Get_Instance()->Get_CurrentCamera();
 		dynamic_cast<CCameraDynamic*>(pCamera)->Set_CamMode(CCameraDynamic::CAM_REVIVE);
 	}
@@ -1998,7 +2053,9 @@ _bool CPlayer::Find_NPC()
 
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
-		if ((*iter_Obj) == nullptr)
+
+
+		if ((*iter_Obj) == nullptr || !static_cast<CNPC*>(*iter_Obj)->Get_CanTalk())
 		{
 			++iIndex;
 			iter_Obj++;
@@ -2121,18 +2178,20 @@ void CPlayer::Talk_NPC(_float _fTimeDelta)
 	if (m_bActivated)
 	{
 		//m_bTalkMode = true;
-		
-		dynamic_cast<CNPC*>(m_pTarget)->Make_Interrupt(this, 0);
-
-		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(m_iTalkNum);
-
 		if (dynamic_cast<CNPC*>(m_pTarget)->Get_TalkCnt() == 2)
 		{
 			m_bSelect = true;
 		}
-		m_iTalkNum = 0;
+		else
+		{
+			m_iTalkNum = 0;
+		}
 		m_bActivated = false;
 		m_bOnlyActionKey = true;
+
+		dynamic_cast<CNPC*>(m_pTarget)->Make_Interrupt(this, 0);
+
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(m_iTalkNum);
 	}
 	switch (m_eDirState)
 	{
@@ -2800,6 +2859,9 @@ void CPlayer::Free()
 	Safe_Release(m_pShaderCom);
 
 	Safe_Release(m_Equipment);
+
+	/*for (auto& iter : m_vecParty)
+		Safe_Release((iter).second);*/
 
 	m_vecParty.clear();
 

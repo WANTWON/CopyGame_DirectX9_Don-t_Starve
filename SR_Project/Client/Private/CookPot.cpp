@@ -66,7 +66,7 @@ void CCookPot::Late_Tick(_float fTimeDelta)
 	
 
 	Change_Motion();
-	Change_Frame();
+	Change_Frame(fTimeDelta);
 }
 
 HRESULT CCookPot::Render()
@@ -160,7 +160,7 @@ HRESULT CCookPot::Texture_Clone()
 	return S_OK;
 }
 
-void CCookPot::Change_Frame()
+void CCookPot::Change_Frame(_float fTimeDelta)
 {
 	switch (m_eState)
 	{

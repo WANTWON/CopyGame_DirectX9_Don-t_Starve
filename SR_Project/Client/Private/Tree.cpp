@@ -80,7 +80,7 @@ void CTree::Late_Tick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 
 	Change_Motion();
-	Change_Frame();
+	Change_Frame(fTimeDelta);
 }
 
 HRESULT CTree::Render()
@@ -285,7 +285,7 @@ HRESULT CTree::Texture_Clone()
 	return S_OK;
 }
 
-void CTree::Change_Frame()
+void CTree::Change_Frame(_float fTimeDelta)
 {
 	switch (m_eState)
 	{

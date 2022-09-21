@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\NPC.h"
 #include "GameInstance.h"
-
+#include "Player.h"
 
 CNPC::CNPC(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CInteractive_Object(pGraphic_Device)
@@ -107,7 +107,9 @@ _bool CNPC::Get_CloseToOwner(void)
 	}
 	else
 	{
+		Reset_Target();
 		m_pTarget = m_pOwner;
+		Safe_AddRef(m_pTarget);
 		Clear_Activated();
 		return false;
 	}
@@ -119,6 +121,7 @@ _bool CNPC::Get_CloseToOwner(void)
 void CNPC::Free()
 {
 	__super::Free();
+	Reset_Target();
 }
 
 void CNPC::Attack(_float _fTimeDelta)
@@ -147,7 +150,24 @@ _bool CNPC::Set_TargetPos()
 	if (m_pTarget == nullptr)
 		return false;
 
-	m_vTargetPos = m_pTarget->Get_Position();
+	//m_bOwner로 구분해줘야할 듯
+	if (m_bOwner)
+	{
+		if (m_pTarget != m_pOwner)
+		{
+			m_vTargetPos = m_pTarget->Get_Position();
+		}
+		else
+		{
+			m_vTargetPos = static_cast<CPlayer*>(m_pOwner)->Set_PartyPostion(this);
+		}
+	}
+	else
+	{
+		m_vTargetPos = m_pTarget->Get_Position();
+	}
+	
+	
 	return true;
 }
 

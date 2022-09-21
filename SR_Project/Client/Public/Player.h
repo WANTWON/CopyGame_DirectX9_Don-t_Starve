@@ -35,7 +35,7 @@ public:
 		KEY_INVEN6,
 		KEY_INVEN7,
 		KEY_INVEN8,
-		KEY_INVEN9,
+		KEY_INVEN9,//for InvincibleMode
 		KEY_INVEN0,//0
 		KEY_MENU, //VK_ESCAPE
 		KEY_DEBUG,//VK_OEM_6 (]) 
@@ -131,6 +131,7 @@ public: /*Get&Set*/
 	void	Set_Select(_bool _bSelect) { m_bSelect = _bSelect; }
 	void	Add_Party(const _tchar* _Name, class CNPC* _NPC) { m_vecParty.push_back(make_pair(_Name, _NPC)); }
 	void	Release_Party(const _tchar* _Name);
+	_float3	Set_PartyPostion(class CNPC* _NPC);
 public:
 	void	Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }
 public:
@@ -269,6 +270,7 @@ private: /*for Auto*/
 	_bool					m_bMove = true;
 	_bool					m_bHited = false;
 	_float					m_fInvincible_Time = 0.f;
+	_bool					m_bInincibleMode = false;
 	//only use spacebar
 	_bool					m_bOnlyActionKey = false;
 	_float					m_fInteract_Range = 0.f;
@@ -303,7 +305,6 @@ private: /*for Auto*/
 	_bool					m_bSelect = false;
 	//for Keyboard
 	_bool					m_bActivated = false;
-
 	//for InParty
 	vector<pair<const _tchar*, class CNPC*>>			m_vecParty;
 private: // Test

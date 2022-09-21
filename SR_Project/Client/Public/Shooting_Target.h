@@ -7,14 +7,21 @@
 BEGIN(Client)
 class CShooting_Target final : public CMonster
 {
+public:
+	enum TARGETTYPE {TARGET_BAD, TARGET_GOOD};
 	enum STATE
 	{
 		IDLE,
-		MOVE,
 		HIT,
-		DIE,
+		STOP,
 		MAX
 	};
+
+	typedef struct ShootingtargetDesc
+	{
+		TARGETTYPE eType = TARGET_BAD;
+		_float3 vPosition;
+	}TARGETDESC;
 
 private:
 	CShooting_Target(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -40,10 +47,9 @@ private:
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
 	_float3 m_vecOutPos; // For Picking
+	TARGETDESC m_ShootingTargetDesc;
 
 private:
-	virtual void AI_Behaviour(_float fTimeDelta) override;
-	void Patrol(_float fTimeDelta);
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 	virtual _bool IsDead() override;
 

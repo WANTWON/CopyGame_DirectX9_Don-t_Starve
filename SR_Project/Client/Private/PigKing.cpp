@@ -57,7 +57,7 @@ void CPigKing::Late_Tick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 
 	Change_Motion();
-	Change_Frame();
+	Change_Frame(fTimeDelta);
 }
 
 HRESULT CPigKing::Render()
@@ -141,7 +141,7 @@ HRESULT CPigKing::Texture_Clone()
 	return S_OK;
 }
 
-void CPigKing::Change_Frame()
+void CPigKing::Change_Frame(_float fTimeDelta)
 {
 	switch (m_eState)
 	{
@@ -318,7 +318,9 @@ void CPigKing::Interact(_uint Damage)
 			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
 			pinven->Get_Talk_list()->front()->Set_StartText(true);
 		}
-		
+		else {
+			pPlayer->Set_bOnlyActionKey(false);
+		}
 		pinven->Get_Talk_list()->front()->Excute();
 
 		Safe_Release(pinven);

@@ -9,6 +9,7 @@
 #include "Skill.h"
 #include "Inventory.h"
 #include "Catapult.h"
+#include "Battery_Tower.h"
 CWinona::CWinona(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CNPC(pGraphic_Device)
 {
@@ -36,10 +37,10 @@ HRESULT CWinona::Initialize(void * pArg)
 	m_eObjID = OBJID::OBJ_NPC;
 	m_eNPCID = NPCID::NPC_WINONA;
 
-	m_fAtk_Max_CoolTime = 10.f;
+	m_fAtk_Max_CoolTime = 20.f;
 	m_fAtk_Cur_CoolTime = m_fAtk_Max_CoolTime;
 
-	m_fSkill_Max_CoolTime = 5.f;
+	m_fSkill_Max_CoolTime = 9.f;
 	m_fSkill_Cur_CoolTime = m_fSkill_Max_CoolTime;
 
 	m_fSkillRange = 20.f;
@@ -249,7 +250,7 @@ HRESULT CWinona::Texture_Clone()
 	return S_OK;
 }
 
-void CWinona::Change_Frame()
+void CWinona::Change_Frame(_float fTimeDelta)
 {
 }
 
@@ -285,7 +286,9 @@ void CWinona::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 	switch (_InterruptNum)
 	{
 	case 0: // Talk
+		Reset_Target();
 		m_pTarget = pCauser;
+		Safe_AddRef(m_pTarget);
 		m_iInterruptNum = _InterruptNum;
 		m_bInterrupted = true;
 		break;
@@ -423,8 +426,22 @@ void CWinona::Attack(_float _fTimeDelta)
 	if (m_ePreState != m_eState)
 	{
 		m_bInteract = true;
-		cout << "Attack" << endl;
-		Change_Texture(TEXT("Com_Texture_Build_Down"));
+		
+		switch (m_eCur_Dir)
+		{
+		case DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Build_Up"));
+			break;
+
+		case DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Build_Down"));
+			break;
+
+		case DIR_LEFT:
+		case DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Build_Side"));
+			break;
+		}
 		m_ePreState = m_eState;
 
 		//cout << "Create_Bullet" << endl;
@@ -470,8 +487,21 @@ void CWinona::Skill(_float _fTimeDelta)
 	if (m_ePreState != m_eState)
 	{
 		m_bInteract = true;
-		cout << "Skill" << endl;
-		Change_Texture(TEXT("Com_Texture_Build_Down"));
+		switch (m_eCur_Dir)
+		{
+		case DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Build_Up"));
+			break;
+
+		case DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Build_Down"));
+			break;
+
+		case DIR_LEFT:
+		case DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Build_Side"));
+			break;
+		}
 		m_ePreState = m_eState;
 
 		//cout << "Create_Bullet" << endl;
@@ -527,7 +557,9 @@ _bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 	switch (_iTarget)
 	{
 	case 0: //Target == Owner
+		Reset_Target();
 		m_pTarget = m_pOwner;
+		Safe_AddRef(m_pTarget);
 		if (!m_bFightMode)
 		{
 			fRange = m_fOwnerRadius;
@@ -543,7 +575,9 @@ _bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		break;
 
 	case 2://SkillRange
+		Reset_Target();
 		m_pTarget = m_pOwner;
+		Safe_AddRef(m_pTarget);
 		fRange = m_fSkillRange;
 		break;
 	default:
@@ -707,7 +741,7 @@ void CWinona::Talk_Player(_float _fTimeDelta)
 			}
 			else
 			{
-				m_pTarget = nullptr;
+				Reset_Target();
 			}
 			pinven->Get_Talk_list()->front()->setcheck(false);
 			CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
@@ -740,8 +774,8 @@ void CWinona::Talk_Player(_float _fTimeDelta)
 			{
 				static_cast<CPlayer*>(m_pTarget)->Release_Party(TEXT("Winona"));
 				m_bOwner = false;
+				Reset_Target();
 				m_pOwner = nullptr;
-				m_pTarget = nullptr;
 			}
 			m_iTalkCnt = 0;
 			m_bInteract = false;
@@ -792,17 +826,10 @@ void CWinona::Talk_Friend(_float _fTimeDelta)
 void CWinona::Create_Bullet(_float _fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	_float3 vInitPos = Get_Position();
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Battery_Tower"), m_iCurrentLevelndex, TEXT("Skill"), &vInitPos)))
+		return; 
 
-	CSkill::SKILL_DESC SkillDesc;
-
-	SkillDesc.eDirState = DIR_END;
-	SkillDesc.eSkill = CSkill::SKILL_TYPE::ICE_BLAST;
-	SkillDesc.vTargetPos = m_pTarget->Get_Position();
-	SkillDesc.vPosition = m_pTarget->Get_Position();
-	SkillDesc.vScale = static_cast<CMonster*>(m_pTarget)->Get_Scale();
-	SkillDesc.pTarget = this;
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skill"), m_iCurrentLevelndex, TEXT("Skill"), &SkillDesc)))
-		return;
 }
 
 void CWinona::Create_Catapult(_float _fTimeDelta)
@@ -954,7 +981,7 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 
 	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
 	{
-		
+		m_bCanTalk = false;
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 		return false;
 	}
@@ -967,11 +994,20 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 			Owner_Pos.x -= 2.f;
 			Owner_Pos.z += 2.f;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
+			for (auto& iter = m_vecCatapults.begin(); iter != m_vecCatapults.end();)
+			{
+				Safe_Release(*iter);
+				iter++;
+			}
+			m_vecCatapults.clear();
+			m_bCanTalk = true;
 		}
 		else
 		{
+			m_bCanTalk = true;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(40.f, 0.5f, 27.f));
 			Clear_Activated();
+			Reset_Target();
 		}
 
 		MINIMAP		minidesc;
@@ -1075,10 +1111,12 @@ DIR_STATE CWinona::Check_Direction(void)
 }
 
 void CWinona::Find_Priority()
-{
+ {
 	if (m_bOwner && !m_bFightMode)
 	{
+		Reset_Target();
 		m_pTarget = m_pOwner;
+		Safe_AddRef(m_pTarget);
 	}
 	else if (m_bFightMode)
 	{
@@ -1097,7 +1135,7 @@ void CWinona::Find_Priority()
 			break;
 		case 3:
 		case 4:
-			m_pTarget = nullptr;
+			Reset_Target();
 			break;
 		}
 	}
@@ -1114,7 +1152,7 @@ void CWinona::Find_Friend()
 		return;
 
 	_uint iIndex = 0;
-
+	Reset_Target();
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
@@ -1150,6 +1188,7 @@ void CWinona::Find_Friend()
 			continue;
 		}
 	}
+	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
 }
 
@@ -1164,7 +1203,7 @@ void CWinona::Find_Enemy()
 		return;
 
 	_uint iIndex = 0;
-
+	Reset_Target();
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
@@ -1213,7 +1252,7 @@ void CWinona::Find_Enemy()
 	{
 		m_bFightMode = false;
 	}
-
+	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
 }
 
@@ -1228,8 +1267,7 @@ void CWinona::Find_Berry()
 		return;
 
 	_uint iIndex = 0;
-
-	m_pTarget = nullptr;
+	Reset_Target();
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
 		if ((*iter_Obj) != nullptr && !dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_CanInteract()
@@ -1264,6 +1302,7 @@ void CWinona::Find_Berry()
 			continue;
 		}
 	}
+	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
 }
 
@@ -1272,8 +1311,9 @@ void CWinona::Find_Player()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	Reset_Target();
 	m_pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-
+	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
 }
 
