@@ -645,10 +645,15 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Eruption"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Boarrior_Eruption/Boarrior_Eruption_%03d.png"), 32))))
 		return E_FAIL;
-
+	
 	/*For.Prototype_Component_Texture_Hit_Effect */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hit_Effect"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Hit_Effect/Hit_%03d.png"), 19))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Sparkle_Effect */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sparkle_Effect"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Sparkle/Sparkle_%03d.png"), 54))))
 		return E_FAIL;
 #pragma  endregion Add_Texture_Effects
 	/*    ̴   ε    . */
@@ -1572,6 +1577,9 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Nest_Place"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Nest/Place/Place_%03d.png"), 27))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Nest_Turn_Off"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Nest/Turn_Off/Turn_Off_%03d.png"), 27))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Nest_Turn_On"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/CarnivalGame_Nest/Turn_On/Turn_On_%03d.png"), 26))))

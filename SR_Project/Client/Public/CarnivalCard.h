@@ -75,24 +75,39 @@ public: /*For Picking */
 
 public:
 	DESC Get_Desc() { return m_tDesc; }
+	_bool Get_IsHungry() { return m_bIsHungry; }
 	void Set_Memory(CCarnivalMemory* pMemory) { m_pMemory = pMemory; }
+	void Set_GameWon() { m_bIsGameWon = true; }
 	void Turn_On() { m_eState = STATE::TURN_ON; }
+	void Turn_Off() { m_eState = STATE::TURN_OFF; }
+	void Hungry_On() { m_eState = STATE::HUNGRY_PRE; m_bIsHungry = true; }
 	void Give_Hint(_bool isGood) 
 	{
 		m_bIsGood = isGood;
 		isGood ? m_eState = STATE::HINT_GOOD : m_eState = STATE::HINT_BAD;
 	}
+	_bool Check_Hungry(_float fTimeDelta);
 	virtual void Interact(_uint Damage = 0) override;
 	virtual HRESULT Drop_Items() override;
 
 private:
+	// Game Variables
 	DESC m_tDesc;
 	STATE m_eState = OFF;
 	STATE m_ePreState = STATE_MAX;
+	
+	// Memory Variables
 	CCarnivalMemory* m_pMemory = nullptr;
 	_bool m_bIsGood = false;
+
+	// Bird Variables
 	_float m_fIdleTime = 0.f;
-	_float m_fRandomIdlePause = rand() % 3;
+	_float m_fRandomIdlePause = rand() % 10 + 1;
+	_bool m_bIsHungry = false;
+	_uint m_iFeedMultiplier = 8;
+	_float m_fFeedRandomTimeLimit = rand() % m_iFeedMultiplier + 1;
+	_float m_fFeedTime = 0.f;
+	_bool m_bIsGameWon = false;
 
 public:
 	static CCarnivalCard* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

@@ -78,6 +78,9 @@ HRESULT CDecoObject::Initialize(void* pArg)
 		m_fRadius = 2.f;
 		break;
 	}
+	case DECOTYPE::SPARKLE:
+		m_pTransformCom->Set_Scale(.5f, .5f, 1.f);
+		break;
 	}
 
 	return S_OK;
@@ -113,7 +116,7 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 	{
-		if (m_DecoDesc.m_eState == DECOTYPE::TORCH || m_DecoDesc.m_eState == DECOTYPE::FLOOR_EFFECT)
+		if (m_DecoDesc.m_eState == DECOTYPE::FLOOR_EFFECT || m_DecoDesc.m_eState == DECOTYPE::SPARKLE)
 		{
 			m_eShaderID = SHADER_IDLE_ALPHABLEND;
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
@@ -125,8 +128,8 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		}
 
-		Set_ShaderID();
-			
+		if (m_DecoDesc.m_eState != DECOTYPE::FLOOR_EFFECT && m_DecoDesc.m_eState != DECOTYPE::SPARKLE)
+			Set_ShaderID();
 	}
 	
 	Compute_CamDistance(Get_Position());
@@ -219,6 +222,7 @@ void CDecoObject::MoveFrame()
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
 		break;
 	case PARTY:
+	case SPARKLE:
 		if (m_pTextureCom->MoveFrame(m_TimerTag, false) == true)
 			m_bDead = true;
 		break;
@@ -272,6 +276,12 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 		TextureDesc.m_iEndTex = 14;
 		TextureDesc.m_fSpeed = 20.f;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_MAZE, TEXT("Prototype_Component_Texture_Party"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		break;
+	case DECOTYPE::SPARKLE:
+		TextureDesc.m_iEndTex = 53;
+		TextureDesc.m_fSpeed = 40.f;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sparkle_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
 	}
@@ -382,7 +392,7 @@ void CDecoObject::Check_Eruption(_float fTimeDelta)
 	// Spawn Warning
 	else
 	{
-		// Every 2 seconds there is a random chance of Eruption (Warning)
+		// Every 1 to 3 seconds there is a random chance of Eruption (Warning)
 		if (m_fWarningTime < m_fRandomWarningLimit)
 			m_fWarningTime += fTimeDelta;
 		else

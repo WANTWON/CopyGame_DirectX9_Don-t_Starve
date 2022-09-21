@@ -76,6 +76,8 @@ public:
 	void Check_Guesses();
 	void Reset_Round();
 	_uint Get_Round_Good_Hint();
+	_uint Get_Hungry_Max();
+	void Set_FedGoal(_bool bFed) { bFed ? m_iFedGoal-- : m_iFedGoal++; }
 
 	// Bird Game
 	void Start_Bird();
@@ -86,17 +88,22 @@ private:
 	STATESTATION m_eState = IDLE_OFF;
 	STATESTATION m_ePreState = MAX;
 
+	// Game Variables
 	vector<CCarnivalCard*> m_vecCards;
 	vector<_uint> m_vecHints;
 	_bool m_bCanPlay = false;
+
+	// Memory Variables
 	_bool m_bIsRoundActive = false;
 	_uint m_iTurnCount = 5;
 	vector<_bool> m_vecGuesses;
 	_bool m_bShouldResetRound = false;
-
 	_float m_fGameTimer = 0.f;
 	_float m_fIdleOnTimer = 0.f;
 	_float m_fWinTimer = 0.f;
+
+	// Bird Variables
+	_uint m_iFedGoal = 15;
 
 public:
 	static CCarnivalMemory* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

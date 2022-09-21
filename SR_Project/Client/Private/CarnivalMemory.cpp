@@ -42,7 +42,7 @@ HRESULT CCarnivalMemory::Initialize(void* pArg)
 	if (m_tStationDesc.eType == STATIONTYPE::STATION_MEMORY)
 		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 	else if (m_tStationDesc.eType == STATIONTYPE::STATION_BIRD)
-		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_pTransformCom->Set_Scale(1.3f, 1.3f, 1.f);
 
 	m_eShaderID = SHADER_IDLE_ALPHABLEND;
 
@@ -255,6 +255,16 @@ _uint CCarnivalMemory::Get_Round_Good_Hint()
 	}
 }
 
+_uint CCarnivalMemory::Get_Hungry_Max()
+{
+	if (m_iFedGoal <= 5)
+		return 3;
+	else if (m_iFedGoal <= 10)
+		return 2;
+	else if (m_iFedGoal <= 15)
+		return 1;
+}
+
 void CCarnivalMemory::Start_Bird()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -264,14 +274,14 @@ void CCarnivalMemory::Start_Bird()
 	if (!lObjects)
 		return;
 
-	_uint iHintCounter = 0;
-
 	// Populate Card Vector
 	for (auto& iter = lObjects->begin(); iter != lObjects->end(); ++iter)
 	{
 		CCarnivalCard* pCard = dynamic_cast<CCarnivalCard*>(*iter);
 		if (pCard && pCard->Get_Desc().eType == CCarnivalCard::TYPE::BIRD)
 		{
+			m_vecCards.push_back(pCard);
+			pCard->Set_Memory(this);
 			pCard->Turn_On();
 			pCard->Set_Interact(true);
 		}
@@ -282,6 +292,59 @@ void CCarnivalMemory::Start_Bird()
 
 void CCarnivalMemory::Play_Bird(_float fTimeDelta)
 {
+	if (!m_bCanPlay)
+		return;
+
+	// Play Game
+	if (m_iFedGoal > 0)
+	{
+		// Check how many Hungry Birds there are
+		_uint iHungryCounter = 0;
+		for (auto& pBird : m_vecCards)
+		{
+			_bool bIsHungry = pBird->Get_IsHungry();
+			if (bIsHungry)
+				iHungryCounter++;
+		}
+
+		// Iterate through Birds and set them Hungry
+		for (auto& pBird : m_vecCards)
+		{
+			// Already Maximum of Birds are Hungry at the same time
+			if (iHungryCounter >= Get_Hungry_Max())
+				return;
+
+			// Set Birds Hungry
+			_bool bIsHungry = pBird->Check_Hungry(fTimeDelta);
+			if (bIsHungry)
+			{
+				iHungryCounter++;
+			}
+		}
+	}
+	else
+	{
+		// Game Won
+		if (m_bCanPlay)
+		{
+			// Spawn Confetti Effect
+			CDecoObject::DECODECS DecoDesc;
+			DecoDesc.m_eState = CDecoObject::PARTY;
+			DecoDesc.vInitPosition = Get_Position();
+			DecoDesc.vInitPosition.y += 1.f;
+			CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+
+			for (auto& pBird : m_vecCards)
+			{
+				pBird->Set_GameWon();
+				pBird->Set_Interact(false);
+
+				m_eState = STATESTATION::TURN_OFF;
+			}
+
+			m_bCanPlay = false;
+		}
+	}
 }
 
 HRESULT CCarnivalMemory::Drop_Items()
@@ -371,6 +434,10 @@ HRESULT CCarnivalMemory::Texture_Clone()
 		m_vecTexture.push_back(m_pTextureCom);
 		TextureDesc.m_iEndTex = 26;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Place"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Nest_Place"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 26;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Nest_Turn_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 		TextureDesc.m_iEndTex = 25;

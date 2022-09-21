@@ -8,6 +8,7 @@
 #include "Particle.h"
 #include "Inventory.h"
 #include "CarnivalMemory.h"
+#include "DecoObject.h"
 
 CCarnivalCard::CCarnivalCard(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -82,6 +83,27 @@ HRESULT CCarnivalCard::Render()
 	return S_OK;
 }
 
+_bool CCarnivalCard::Check_Hungry(_float fTimeDelta)
+{
+	if (m_bIsHungry)
+		return false;
+	
+	if (m_fFeedTime > m_fFeedRandomTimeLimit)
+	{
+		m_fFeedTime = 0.f;
+		m_fFeedRandomTimeLimit = rand() % m_iFeedMultiplier;
+
+		m_eState = STATE::HUNGRY_PRE;
+		m_bIsHungry = true;
+
+		return true;
+	}
+	else
+		m_fFeedTime += fTimeDelta;
+
+	return false;
+}
+
 void CCarnivalCard::Interact(_uint Damage)
 {
 	m_bInteract = false;
@@ -93,7 +115,19 @@ void CCarnivalCard::Interact(_uint Damage)
 	}
 	else if (m_tDesc.eType == TYPE::BIRD)
 	{
+		if (m_bIsHungry)
+		{
+			m_eState = STATE::FED;
+			m_pMemory->Set_FedGoal(true);
 
+			// Spawn Effect
+			CDecoObject::DECODECS DecoDesc;
+			DecoDesc.m_eState = CDecoObject::DECOTYPE::SPARKLE;
+			DecoDesc.vInitPosition = Get_Position();
+			CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		}
+		else
+			m_pMemory->Set_FedGoal(false);
 	}
 }
 
@@ -288,11 +322,18 @@ void CCarnivalCard::Change_Frame(_float fTimeDelta)
 		break;
 	case FED:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		{
 			m_eState = STATE::IDLE;
+			m_bIsHungry = false;
+			m_bInteract = true;
+		}
 		break;
 	case HUNGRY:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		{
 			m_eState = STATE::HUNGRY_POST;
+			m_bIsHungry = false;
+		}
 		break;
 	case HUNGRY_POST:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
@@ -300,19 +341,28 @@ void CCarnivalCard::Change_Frame(_float fTimeDelta)
 		break;
 	case HUNGRY_PRE:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		{
 			m_eState = STATE::HUNGRY;
+			m_bInteract = true;
+		}
 		break;
 	case IDLE:
-		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		if (m_bIsGameWon)
+			m_eState = STATE::TURN_OFF;
+		else
 		{
-			// TODO: ..
-			/*if (m_fIdleTime > m_fRandomIdlePause)
+			if (m_fIdleTime > m_fRandomIdlePause)
 			{
-				m_pTextureCom->Get_Frame().m_iCurrentTex = 0;
-				m_fIdleTime = 0.f;
+				if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+				{
+					m_pTextureCom->Get_Frame().m_iCurrentTex = 0;
+					m_fIdleTime = 0.f;
+					m_fRandomIdlePause = rand() % 10 + 1;
+					m_bInteract = true;
+				}
 			}
 			else
-				m_fIdleTime += fTimeDelta;*/
+				m_fIdleTime += fTimeDelta;
 		}
 		break;
 	}
