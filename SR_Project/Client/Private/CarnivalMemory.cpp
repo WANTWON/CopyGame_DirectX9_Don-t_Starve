@@ -30,13 +30,19 @@ HRESULT CCarnivalMemory::Initialize_Prototype()
 
 HRESULT CCarnivalMemory::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	ZeroMemory(&m_tStationDesc, sizeof(STATIONDESC));
+	memcpy(&m_tStationDesc, (STATIONDESC*)pArg, sizeof(STATIONDESC));
+
+	if (FAILED(__super::Initialize(m_tStationDesc.vInitPosition)))
 		return E_FAIL;
 
 	m_eObjID = OBJID::OBJ_OBJECT;
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::COOKPOT;
 
-	m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+	if (m_tStationDesc.eType == STATIONTYPE::STATION_MEMORY)
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
+	else if (m_tStationDesc.eType == STATIONTYPE::STATION_BIRD)
+		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
 	m_eShaderID = SHADER_IDLE_ALPHABLEND;
 
@@ -54,7 +60,10 @@ int CCarnivalMemory::Tick(_float fTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPickingPos);
 	}
 
-	Play_Game(fTimeDelta);
+	if (m_tStationDesc.eType == STATIONTYPE::STATION_MEMORY)
+		Play_Memory(fTimeDelta);
+	else if (m_tStationDesc.eType == STATIONTYPE::STATION_BIRD)
+		Play_Bird(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -97,14 +106,21 @@ HRESULT CCarnivalMemory::Render()
 
 void CCarnivalMemory::Interact(_uint Damage)
 {
-	m_eState = STATEMEMORY::HIT;
-	
-	Start_Game();
+	if (m_tStationDesc.eType == STATIONTYPE::STATION_MEMORY)
+	{
+		m_eState = STATESTATION::HIT;
+		Start_Memory();
+	}
+	else if (m_tStationDesc.eType == STATIONTYPE::STATION_BIRD)
+	{
+		m_eState = STATESTATION::TURN_ON;
+		Start_Bird();
+	}
 
 	m_bInteract = false;
 }
 
-void CCarnivalMemory::Start_Game()
+void CCarnivalMemory::Start_Memory()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
@@ -119,7 +135,7 @@ void CCarnivalMemory::Start_Game()
 	for (auto& iter = lObjects->begin(); iter != lObjects->end(); ++iter)
 	{
 		CCarnivalCard* pCard = dynamic_cast<CCarnivalCard*>(*iter);
-		if (pCard)
+		if (pCard && pCard->Get_Desc().eType == CCarnivalCard::TYPE::CARD)
 		{
 			pCard->Set_Memory(this);
 
@@ -137,7 +153,7 @@ void CCarnivalMemory::Start_Game()
 	m_bCanPlay = true;
 }
 
-void CCarnivalMemory::Play_Game(_float fTimeDelta)
+void CCarnivalMemory::Play_Memory(_float fTimeDelta)
 {
 	if (m_bCanPlay)
 	{
@@ -183,7 +199,7 @@ void CCarnivalMemory::Check_Guesses()
 			m_bShouldResetRound = true;
 
 			// Lose Round
-			m_eState = STATEMEMORY::HIT;
+			m_eState = STATESTATION::HIT;
 			m_vecGuesses.clear();
 			return;
 		}
@@ -194,14 +210,14 @@ void CCarnivalMemory::Check_Guesses()
 		m_bShouldResetRound = true;
 
 		// Win Round
-		m_eState = STATEMEMORY::TURN_ON;
+		m_eState = STATESTATION::TURN_ON;
 		m_vecGuesses.clear();
 		m_iTurnCount--;
 
 		// Win Game
 		if (m_iTurnCount == 0)
 		{
-			m_eState = STATEMEMORY::WIN;
+			m_eState = STATESTATION::WIN;
 			m_bCanPlay = false;
 
 			// Spawn Confetti Effect
@@ -237,6 +253,35 @@ _uint CCarnivalMemory::Get_Round_Good_Hint()
 	case 1:
 		return 3;
 	}
+}
+
+void CCarnivalMemory::Start_Bird()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+
+	list<CGameObject*>* lObjects = pGameInstance->Get_ObjectList(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Object"));
+	if (!lObjects)
+		return;
+
+	_uint iHintCounter = 0;
+
+	// Populate Card Vector
+	for (auto& iter = lObjects->begin(); iter != lObjects->end(); ++iter)
+	{
+		CCarnivalCard* pCard = dynamic_cast<CCarnivalCard*>(*iter);
+		if (pCard && pCard->Get_Desc().eType == CCarnivalCard::TYPE::BIRD)
+		{
+			pCard->Turn_On();
+			pCard->Set_Interact(true);
+		}
+	}
+
+	m_bCanPlay = true;
+}
+
+void CCarnivalMemory::Play_Bird(_float fTimeDelta)
+{
 }
 
 HRESULT CCarnivalMemory::Drop_Items()
@@ -283,34 +328,56 @@ HRESULT CCarnivalMemory::Texture_Clone()
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_fSpeed = 30;
 
-	TextureDesc.m_iEndTex = 8;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hit"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Idle_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 40;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Idle_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 26;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Place"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Place"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 14;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Turn_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 24;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Turn_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 20;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Win"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Win"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	if (m_tStationDesc.eType == STATIONTYPE::STATION_MEMORY)
+	{
+		TextureDesc.m_iEndTex = 8;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hit"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 0;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Idle_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 40;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Idle_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 26;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Place"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Place"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 14;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Turn_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 24;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Turn_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 20;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Win"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Memory_Win"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+	}
+	else if (m_tStationDesc.eType == STATIONTYPE::STATION_BIRD)
+	{
+		TextureDesc.m_iEndTex = 0;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Nest_Idle_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 32;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Nest_Idle_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 26;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Place"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Nest_Place"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 25;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Nest_Turn_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+	}
 
 	return S_OK;
 }
@@ -321,7 +388,7 @@ void CCarnivalMemory::Change_Frame(_float fTimeDelta)
 	{
 	case HIT:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATEMEMORY::IDLE_OFF;
+			m_eState = STATESTATION::IDLE_OFF;
 		break;
 	case IDLE_OFF:
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
@@ -329,26 +396,29 @@ void CCarnivalMemory::Change_Frame(_float fTimeDelta)
 	case IDLE_ON:
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		
-		if (m_fIdleOnTimer > 2.f)
+		if (m_tStationDesc.eType == STATIONTYPE::STATION_MEMORY)
 		{
-			m_fIdleOnTimer = 0.f;
-			m_eState = STATEMEMORY::TURN_OFF;
+			if (m_fIdleOnTimer > 2.f)
+			{
+				m_fIdleOnTimer = 0.f;
+				m_eState = STATESTATION::TURN_OFF;
+			}
+			else
+				m_fIdleOnTimer += fTimeDelta;
 		}
-		else
-			m_fIdleOnTimer += fTimeDelta;
 		
 		break;
 	case PLACE:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATEMEMORY::IDLE_OFF;
+			m_eState = STATESTATION::IDLE_OFF;
 		break;
 	case TURN_OFF:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATEMEMORY::IDLE_OFF;
+			m_eState = STATESTATION::IDLE_OFF;
 		break;
 	case TURN_ON:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATEMEMORY::IDLE_ON;
+			m_eState = STATESTATION::IDLE_ON;
 		break;
 	case WIN:
 		m_pTextureCom->MoveFrame(m_TimerTag);
@@ -356,7 +426,7 @@ void CCarnivalMemory::Change_Frame(_float fTimeDelta)
 		if (m_fWinTimer > 2.f)
 		{
 			m_fWinTimer = 0.f;
-			m_eState = STATEMEMORY::TURN_OFF;
+			m_eState = STATESTATION::TURN_OFF;
 		}
 		else
 			m_fWinTimer += fTimeDelta;

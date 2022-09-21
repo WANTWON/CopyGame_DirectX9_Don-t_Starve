@@ -30,7 +30,10 @@ HRESULT CCarnivalCard::Initialize_Prototype()
 
 HRESULT CCarnivalCard::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	ZeroMemory(&m_tDesc, sizeof(DESC));
+	memcpy(&m_tDesc, (DESC*)pArg, sizeof(DESC));
+
+	if (FAILED(__super::Initialize(m_tDesc.vInitPosition)))
 		return E_FAIL;
 
 	m_eObjID = OBJID::OBJ_OBJECT;
@@ -83,8 +86,15 @@ void CCarnivalCard::Interact(_uint Damage)
 {
 	m_bInteract = false;
 
-	m_eState = m_bIsGood ? STATECARD::REVEAL_GOOD_PRE : STATECARD::REVEAL_BAD_PRE;
-	m_pMemory->Make_Guess(m_bIsGood ? true : false);
+	if (m_tDesc.eType == TYPE::CARD)
+	{
+		m_eState = m_bIsGood ? STATE::REVEAL_GOOD_PRE : STATE::REVEAL_BAD_PRE;
+		m_pMemory->Make_Guess(m_bIsGood ? true : false);
+	}
+	else if (m_tDesc.eType == TYPE::BIRD)
+	{
+
+	}
 }
 
 HRESULT CCarnivalCard::Drop_Items()
@@ -129,56 +139,94 @@ HRESULT CCarnivalCard::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 30;
+	TextureDesc.m_fSpeed = 25;
 
-	TextureDesc.m_iEndTex = 32;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hint_Bad"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Hint_Bad"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 32;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hint_Good"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Hint_Good"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 0;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 18;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reveal_Bad"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Bad"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 12;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reveal_Bad_Post"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Bad_Post"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 4;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reveal_Bad_Pre"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Bad_Pre"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 18;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reveal_Good"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Good"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 12;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reveal_Good_Post"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Good_Post"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 4;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reveal_Good_Pre"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Good_Pre"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 13;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Turn_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
-	TextureDesc.m_iEndTex = 16;
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Turn_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
-	m_vecTexture.push_back(m_pTextureCom);
+	if (m_tDesc.eType == TYPE::CARD)
+	{
+		TextureDesc.m_iEndTex = 32;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hint_Bad"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Hint_Bad"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 32;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hint_Good"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Hint_Good"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 0;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 0;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 18;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reveal_Bad"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Bad"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 12;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reveal_Bad_Post"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Bad_Post"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 4;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reveal_Bad_Pre"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Bad_Pre"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 18;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reveal_Good"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Good"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 12;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reveal_Good_Post"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Good_Post"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 4;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reveal_Good_Pre"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Reveal_Good_Pre"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 13;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Turn_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 16;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Card_Turn_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+	}
+	else if (m_tDesc.eType == TYPE::BIRD)
+	{
+		TextureDesc.m_iEndTex = 45;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Fed"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Fed"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 48;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hungry"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Hungry"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 12;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hungry_Post"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Hungry_Post"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 3;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hungry_Pre"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Hungry_Pre"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 40;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Idle"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 0;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 27;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_Off"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Turn_Off"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_iEndTex = 28;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Turn_On"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Turn_On"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+	}
 
 	return S_OK;
 }
@@ -189,11 +237,11 @@ void CCarnivalCard::Change_Frame(_float fTimeDelta)
 	{
 	case HINT_BAD:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATECARD::ON;
+			m_eState = STATE::ON;
 		break;
 	case HINT_GOOD:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATECARD::ON;
+			m_eState = STATE::ON;
 		break;
 	case OFF:
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
@@ -203,35 +251,69 @@ void CCarnivalCard::Change_Frame(_float fTimeDelta)
 		break;
 	case REVEAL_BAD:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATECARD::REVEAL_BAD_POST;
+			m_eState = STATE::REVEAL_BAD_POST;
 		break;
 	case REVEAL_BAD_POST:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATECARD::ON;
+			m_eState = STATE::ON;
 		break;
 	case REVEAL_BAD_PRE:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATECARD::REVEAL_BAD;
+			m_eState = STATE::REVEAL_BAD;
 		break;
 	case REVEAL_GOOD:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATECARD::REVEAL_GOOD_POST;
+			m_eState = STATE::REVEAL_GOOD_POST;
 		break;
 	case REVEAL_GOOD_POST:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATECARD::ON;
+			m_eState = STATE::ON;
 		break;
 	case REVEAL_GOOD_PRE:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATECARD::HINT_GOOD;
+			m_eState = STATE::HINT_GOOD;
 		break;
 	case TURN_OFF:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATECARD::OFF;
+			m_eState = STATE::OFF;
 		break;
 	case TURN_ON:
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
-			m_eState = STATECARD::ON;
+		{
+			if (m_tDesc.eType == TYPE::CARD)
+				m_eState = STATE::ON;
+			else if (m_tDesc.eType == TYPE::BIRD)
+				m_eState = STATE::IDLE;
+		}
+		break;
+	case FED:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = STATE::IDLE;
+		break;
+	case HUNGRY:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = STATE::HUNGRY_POST;
+		break;
+	case HUNGRY_POST:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = STATE::IDLE;
+		break;
+	case HUNGRY_PRE:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			m_eState = STATE::HUNGRY;
+		break;
+	case IDLE:
+		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+		{
+			// TODO: ..
+			/*if (m_fIdleTime > m_fRandomIdlePause)
+			{
+				m_pTextureCom->Get_Frame().m_iCurrentTex = 0;
+				m_fIdleTime = 0.f;
+			}
+			else
+				m_fIdleTime += fTimeDelta;*/
+		}
 		break;
 	}
 }
@@ -277,6 +359,21 @@ void CCarnivalCard::Change_Motion()
 			break;
 		case TURN_ON:
 			Change_Texture(TEXT("Com_Texture_Turn_On"));
+			break;
+		case FED:
+			Change_Texture(TEXT("Com_Texture_Fed"));
+			break;
+		case HUNGRY:
+			Change_Texture(TEXT("Com_Texture_Hungry"));
+			break;
+		case HUNGRY_POST:
+			Change_Texture(TEXT("Com_Texture_Hungry_Post"));
+			break;
+		case HUNGRY_PRE:
+			Change_Texture(TEXT("Com_Texture_Hungry_Pre"));
+			break;
+		case IDLE:
+			Change_Texture(TEXT("Com_Texture_Idle"));
 			break;
 		}
 

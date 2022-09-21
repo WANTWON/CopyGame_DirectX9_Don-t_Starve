@@ -18,7 +18,16 @@ BEGIN(Client)
 class CCarnivalMemory final : public CInteractive_Object
 {
 public:
-	enum STATEMEMORY
+	enum STATIONTYPE { STATION_MEMORY, STATION_BIRD, STATION_MAX };
+
+	typedef struct StationTagDesc
+	{
+		_float3 vInitPosition = _float3(0.f, 0.f, 0.f);
+		STATIONTYPE eType = STATION_MAX;
+	} STATIONDESC;
+
+public:
+	enum STATESTATION
 	{
 		HIT,
 		IDLE_OFF,
@@ -60,17 +69,22 @@ public:
 	void Make_Guess(_bool bGuess) { m_vecGuesses.push_back(bGuess); }
 	virtual HRESULT Drop_Items() override;
 
-	// Game Functions
-	void Start_Game();
-	void Play_Game(_float fTimeDelta);
+	// Memory Game
+	void Start_Memory();
+	void Play_Memory(_float fTimeDelta);
 	void Start_Round(_float fTimeDelta);
 	void Check_Guesses();
 	void Reset_Round();
 	_uint Get_Round_Good_Hint();
 
+	// Bird Game
+	void Start_Bird();
+	void Play_Bird(_float fTimeDelta);
+
 private:
-	STATEMEMORY m_eState = IDLE_OFF;
-	STATEMEMORY m_ePreState = MAX;
+	STATIONDESC m_tStationDesc;
+	STATESTATION m_eState = IDLE_OFF;
+	STATESTATION m_ePreState = MAX;
 
 	vector<CCarnivalCard*> m_vecCards;
 	vector<_uint> m_vecHints;
