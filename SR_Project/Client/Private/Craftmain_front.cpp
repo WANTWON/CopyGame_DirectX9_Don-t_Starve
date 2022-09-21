@@ -281,6 +281,7 @@ void CCraftmain_front::Late_Tick(_float fTimeDelta)
 
 	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 	//Safe_AddRef(pinv);
+	
 
 	auto mouse = pinv->Get_Mouse_item_list()->begin();
 
@@ -313,6 +314,13 @@ void CCraftmain_front::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom &&m_bonof == true)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
+	/*Safe_Release(pinv);
+	Safe_Release(pinv);
+	Safe_Release(pinv);
+	Safe_Release(pinv);
+	Safe_Release(pinv);
+	Safe_Release(pinv);*/
+	//Safe_Release(pinv);
 	//	Safe_Release(pinv);
 	//set_check(false);
 }

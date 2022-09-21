@@ -548,7 +548,8 @@ _bool CBoarrior::Picking(_float3 * PickingPoint)
 
 		for (auto j : *k)
 			j->set_check(false);
-		return false;
+		Safe_Release(pInvenManager);
+			return false;
 	}
 
 	return true;

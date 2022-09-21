@@ -250,7 +250,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	
 
 
-	typedef list<CMainInventory_front*> INVENLIST;
+	//typedef list<CMainInventory_front*> INVENLIST;
 
 	_uint m_ihp = 7;
 	_uint m_ihunger = 7;

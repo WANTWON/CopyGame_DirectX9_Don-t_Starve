@@ -83,7 +83,7 @@ int CToolboxMaterial_back::Tick(_float fTimeDelta)
 	}
 
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pInventory_Manager);
+	//Safe_AddRef(pInventory_Manager);
 	//pInventory_Manager->craft_on(MAKE_AXE);
 	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
@@ -105,7 +105,7 @@ int CToolboxMaterial_back::Tick(_float fTimeDelta)
 	}
 
 
-	Safe_Release(pInventory_Manager);
+	//Safe_Release(pInventory_Manager);
 
 	return OBJ_NOEVENT;
 }
