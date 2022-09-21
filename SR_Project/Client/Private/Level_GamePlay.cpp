@@ -304,7 +304,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carrot"), LEVEL_GAMEPLAY, pLayerTag, ObjectPos);
 	}
 	CloseHandle(hFile);
-	
+
 
 	Safe_Release(pGameInstance);
 	return S_OK;

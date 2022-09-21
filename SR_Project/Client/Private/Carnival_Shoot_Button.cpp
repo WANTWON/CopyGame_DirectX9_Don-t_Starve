@@ -189,7 +189,7 @@ HRESULT CCarnival_Shoot_Button::Texture_Clone()
 	TextureDesc.m_iStartTex = 0;
 	TextureDesc.m_fSpeed = 15;
 
-	TextureDesc.m_iEndTex = 6;
+	TextureDesc.m_iEndTex = 5;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Carnival_Shooting_Button_Idle"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);

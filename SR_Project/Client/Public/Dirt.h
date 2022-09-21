@@ -16,6 +16,13 @@ BEGIN(Client)
 class CDirt final : public CInteractive_Object
 {
 public:
+	typedef struct DirtDescription
+	{
+		_bool bHasKey = false;
+		_float3 vInitPosition = _float3(0.f, 0.f, 0.f);
+	}DIRTDESC;
+
+public:
 	enum STATE
 	{
 		IDLE,
@@ -44,6 +51,7 @@ private: /*For TextureCom */
 	virtual void Change_Motion() override;
 
 private:
+	DIRTDESC m_tDirtDesc;
 	STATE m_eState = IDLE;
 	STATE m_ePreState = MAX;
 
