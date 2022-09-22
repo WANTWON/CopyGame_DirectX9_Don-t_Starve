@@ -23,6 +23,8 @@ public:
 		ELEC,
 		SPARK,
 		BURST,
+		CRACKLE,
+		CRACKLE_HIT,
 		SKILL_END
 	};
 
@@ -71,6 +73,8 @@ private:/*Act Skills*/
 	void Elec(_float _fTimeDelta);
 	void Spark(_float _fTimeDelta);
 	void Burst(_float _fTimeDelta);
+	void Crackle(_float _fTimeDelta);
+	void Crackle_Hit(_float _fTimeDelta);
 private:
 	const _tchar*		m_TimerTag = TEXT("");
 

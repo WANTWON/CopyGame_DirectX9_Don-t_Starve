@@ -74,6 +74,7 @@ public: /*Get & Set*/
 	void	Set_HasOwner(_bool _bAccept) { m_bOwner = _bAccept; }
 	void	Set_Position(_float3 _vPos) { m_pTransformCom->Set_State(CTransform::STATE_POSITION, _vPos); }
 	void	Set_MoveNum(_uint _iNum) { m_MoveNum = _iNum; }
+	void	Set_Target(CGameObject* pTarget) { Reset_Target(); m_pTarget = pTarget; Safe_AddRef(pTarget); }
 public:/*for Actions*/
 	virtual void Interact(_uint Damage = 0) = 0;
 	virtual HRESULT Drop_Items() = 0;
@@ -108,6 +109,8 @@ protected:
 	_float	m_fAtkRange = 3.f;
 	_uint	m_MoveNum = 0;
 	_float	m_fSkillRange = 5.f;
+	_float	m_fMinRange = 5.f;
+	_float  m_fDetectRange = 10.f;
 	//For RandPos
 	_float m_fPatrolRadius = 3.f;
 	_float m_fPatrolPosX = 0.f;
@@ -120,6 +123,7 @@ protected:
 	
 	//InteractTime
 	_float			m_fInteractTIme = 0.f;
+	_bool			m_bFinishInteract = false;
 	//
 	_bool					m_bNextAct = false;
 	_bool					m_bActivate = false;

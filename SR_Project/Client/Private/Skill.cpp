@@ -269,6 +269,14 @@ HRESULT CSkill::Init_Data(void)
 		m_iReversTex = m_pTextureCom->Get_Frame().m_iEndTex - 1;
 		m_pTextureCom->Get_Frame().m_iCurrentTex = m_iReversTex;
 		break;
+	case SKILL_TYPE::CRACKLE:
+		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		m_fDamage = 0.f;
+		break;
+	case SKILL_TYPE::CRACKLE_HIT:
+		m_pTransformCom->Set_Scale(3.f, 5.f, 1.f);
+		m_fDamage = 50.f;
+		break;
 	}
 
 
@@ -317,6 +325,20 @@ HRESULT CSkill::Texture_Clone(void)
 		TextureDesc.m_iEndTex = 19;
 		TextureDesc.m_fSpeed = 40;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Burst"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Burst_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		break;
+	case SKILL_TYPE::CRACKLE:
+		TextureDesc.m_iEndTex = 13;
+		TextureDesc.m_fSpeed = 50;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Crackle"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Crackle"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		break;
+	case SKILL_TYPE::CRACKLE_HIT:
+		TextureDesc.m_iEndTex = 44;
+		TextureDesc.m_fSpeed = 40;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Crackle_Hit"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Crackle_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
@@ -402,6 +424,33 @@ void CSkill::Burst(_float _fTimeDelta)
 	}
 }
 
+void CSkill::Crackle(_float _fTimeDelta)
+{
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	{
+		m_bDead = true;
+	}
+}
+
+void CSkill::Crackle_Hit(_float _fTimeDelta)
+{
+	m_fDamageTimger += _fTimeDelta;
+	m_fAccDeadTimer += _fTimeDelta;
+	if (m_fAccDeadTimer <= 1.f)
+	{
+		if (m_fDamageTimger >= 0.2f)
+		{
+			m_bActivated = true;
+			m_fDamageTimger = 0.f;
+		}
+	}
+
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	{
+		m_bDead = true;
+	}
+}
+
 CSkill * CSkill::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
 	CSkill*	pInstance = new CSkill(pGraphic_Device);
@@ -465,6 +514,12 @@ void CSkill::Excute(_float _fTimeDelta)
 	case SKILL_TYPE::SPARK:
 		Spark(_fTimeDelta);
 		break;
+	case SKILL_TYPE::CRACKLE:
+		Crackle(_fTimeDelta);
+		break;
+	case SKILL_TYPE::CRACKLE_HIT:
+		Crackle_Hit(_fTimeDelta);
+		break;
 	}
 }
 
@@ -497,8 +552,15 @@ void CSkill::Activate_Check(_float _fTimeDelta)
 			}
 			break;
 		case SKILL_TYPE::SPARK:
-
+		case SKILL_TYPE::CRACKLE:
 			break;
+		case SKILL_TYPE::CRACKLE_HIT:
+			if (m_bActivated)
+			{
+				m_bActivated = false;
+				m_fDamage = 10.f;
+				goto Attack;
+			}
 		}
 
 		return;

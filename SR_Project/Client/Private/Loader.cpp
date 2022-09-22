@@ -38,7 +38,7 @@
 #include "Skill.h"
 #include "Wendy.h"
 #include "Winona.h"
-
+#include "Woodie.h"
 #include "MainInventory.h"
 #include "MainInventory_back.h"
 #include "MainInventory_front.h"
@@ -674,6 +674,16 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Burst_Effect/Burst_%03d.png"), 20))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_Crackle */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Crackle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Crackle/Crackle_%03d.png"), 14))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_Crakle_Hit*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Crackle_Hit"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Crackle_Hit/Crackle_Hit_%03d.png"), 45))))
+		return E_FAIL;
+
 #pragma  endregion Add_Texture_Effects
 	/*    ̴   ε    . */
 
@@ -1177,6 +1187,78 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Winona/Talk/Winona_Talk_%03d.png"), 52))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Winona
+
+#pragma region Add_Texture_Woodie
+	//Woodie Idle
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Idle_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Idle/Woodie_Idle_Down_%03d.png"), 30))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Idle_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Idle/Woodie_Idle_Up_%03d.png"), 30))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Idle_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Idle/Woodie_Idle_Side_%03d.png"), 30))))
+		return E_FAIL;
+	//Woodie Run
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Run_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Run/Woodie_Run_Down_%03d.png"), 25))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Run_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Run/Woodie_Run_Up_%03d.png"), 25))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Run_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Run/Woodie_Run_Side_%03d.png"), 25))))
+		return E_FAIL;
+	//Woodie Build
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Build_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Build/Woodie_Build_Down_%03d.png"), 17))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Build_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Build/Woodie_Build_Up_%03d.png"), 17))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Build_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Build/Woodie_Build_Side_%03d.png"), 17))))
+		return E_FAIL;
+	//Woodie PickUp
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Pickup_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Pickup/Woodie_Pickup_Down_%03d.png"), 7))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Pickup_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Pickup/Woodie_Pickup_Up_%03d.png"), 7))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Pickup_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Pickup/Woodie_Pickup_Side_%03d.png"), 7))))
+		return E_FAIL;
+	//Woodie Dance
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Dance"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Dance/Woodie_Dance_%03d.png"), 40))))
+		return E_FAIL;
+	//Woodie Talk
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Talk"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Talk/Woodie_Talk_%03d.png"), 52))))
+		return E_FAIL;
+	//Woodie Attack
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Attack_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Attack/Woodie_Attack_Down_%03d.png"), 19))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Attack_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Attack/Woodie_Attack_Up_%03d.png"), 19))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Attack_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Attack/Woodie_Attack_Side_%03d.png"), 19))))
+		return E_FAIL;
+
+	//Woodie Give
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Give_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Give/Woodie_Give_Down_%03d.png"), 18))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Give_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Give/Woodie_Give_Up_%03d.png"), 18))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Give_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Give/Woodie_Give_Side_%03d.png"), 18))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Woodie
 	/*For.Prototype_Component_SpiderHouse Texture */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spider_House"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/SpiderHouse.png"), 1))))
@@ -2046,6 +2128,10 @@ HRESULT CLoader::Loading_Prototype_Object()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NPC_Winona"),
 		CWinona::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NPC_Woodie"),
+		CWoodie::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Catapult"),

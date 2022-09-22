@@ -258,6 +258,7 @@
     <ClInclude Include="..\Public\PlayerMentality.h" />
     <ClInclude Include="..\Public\PlayerMentality_pont.h" />
     <ClInclude Include="..\Public\Pont.h" />
+    <ClInclude Include="..\Public\Portable_Pot.h" />
     <ClInclude Include="..\Public\Portal.h" />
     <ClInclude Include="..\Public\Potbutton.h" />
     <ClInclude Include="..\Public\Poteffect.h" />
@@ -310,6 +311,7 @@
     <ClInclude Include="..\Public\Water.h" />
     <ClInclude Include="..\Public\Wendy.h" />
     <ClInclude Include="..\Public\Winona.h" />
+    <ClInclude Include="..\Public\Woodie.h" />
     <ClInclude Include="..\Public\WoodWall.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -403,6 +405,7 @@
     <ClCompile Include="..\Private\PlayerMentality.cpp" />
     <ClCompile Include="..\Private\PlayerMentality_pont.cpp" />
     <ClCompile Include="..\Private\Pont.cpp" />
+    <ClCompile Include="..\Private\Portable_Pot.cpp" />
     <ClCompile Include="..\Private\Portal.cpp" />
     <ClCompile Include="..\Private\Potbutton.cpp" />
     <ClCompile Include="..\Private\Poteffect.cpp" />
@@ -455,6 +458,7 @@
     <ClCompile Include="..\Private\Water.cpp" />
     <ClCompile Include="..\Private\Wendy.cpp" />
     <ClCompile Include="..\Private\Winona.cpp" />
+    <ClCompile Include="..\Private\Woodie.cpp" />
     <ClCompile Include="..\Private\WoodWall.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">

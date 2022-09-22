@@ -328,8 +328,11 @@
     <Filter Include="02.GameObject\00. Pawn\01.Monster\Carnival_Egg">
       <UniqueIdentifier>{e1221791-2753-4ba9-a2b9-ee323586ef00}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\98.UI\18.CardGame">
-      <UniqueIdentifier>{6e04e675-39aa-4ea3-9c41-95114190b4bb}</UniqueIdentifier>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NPC\Woodie">
+      <UniqueIdentifier>{dc61e49f-bbb7-439e-9e51-d763d3411d30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Portable_Pot">
+      <UniqueIdentifier>{074cbb53-78be-40de-a93d-73665376e287}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -765,11 +768,11 @@
     <ClInclude Include="..\Public\Carnival_Egg.h">
       <Filter>02.GameObject\00. Pawn\01.Monster\Carnival_Egg</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Cardgame.h">
-      <Filter>02.GameObject\98.UI\18.CardGame</Filter>
+    <ClInclude Include="..\Public\Woodie.h">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Woodie</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CardEffect.h">
-      <Filter>02.GameObject\98.UI\18.CardGame</Filter>
+    <ClInclude Include="..\Public\Portable_Pot.h">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Portable_Pot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1193,11 +1196,11 @@
     <ClCompile Include="..\Private\Carnival_Egg.cpp">
       <Filter>02.GameObject\00. Pawn\01.Monster\Carnival_Egg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Cardgame.cpp">
-      <Filter>02.GameObject\98.UI\18.CardGame</Filter>
+    <ClCompile Include="..\Private\Woodie.cpp">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Woodie</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CardEffect.cpp">
-      <Filter>02.GameObject\98.UI\18.CardGame</Filter>
+    <ClCompile Include="..\Private\Portable_Pot.cpp">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Portable_Pot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
