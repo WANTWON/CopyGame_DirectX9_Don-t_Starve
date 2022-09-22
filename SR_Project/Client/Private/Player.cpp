@@ -66,6 +66,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
+	if (CKeyMgr::Get_Instance()->Key_Up('8'))
+	{
+		CInventory_Manager::Get_Instance()->Start_Cardgame();
+	}
+
+
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	
 	if (m_iCurrentLevelndex == LEVEL_LOADING)

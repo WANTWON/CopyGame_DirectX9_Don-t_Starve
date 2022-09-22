@@ -293,6 +293,8 @@ void CPortal::Change_Frame(_float fTimeDelta)
 		{
 			m_eState = STATE::IDLE_CLOSE;
 
+			
+
 			if (!m_bInteract)
 				m_bShouldTeleport = true;
 		}

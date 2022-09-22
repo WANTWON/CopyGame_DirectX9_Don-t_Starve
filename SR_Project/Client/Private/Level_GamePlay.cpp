@@ -590,6 +590,20 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Button"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
+
+
+	for (int i = 0; i < 9; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+	
+
+	
+
 	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_player"), LEVEL_STATIC, pLayerTag)))
 	//	return E_FAIL;
 
@@ -815,6 +829,8 @@ HRESULT CLevel_GamePlay::Ready_LayerNPC(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Winona"), LEVEL_STATIC, pLayerTag, _float3(20.f, 1.f, 10.f))))
 			return E_FAIL;
 
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Woodie"), LEVEL_STATIC, pLayerTag, _float3(20.f, 1.f, 10.f))))
+			return E_FAIL;
 	}
 	else
 	{

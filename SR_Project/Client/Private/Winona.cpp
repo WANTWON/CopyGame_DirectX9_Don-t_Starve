@@ -632,7 +632,7 @@ void CWinona::Revive_Berry(_float _fTimeDelta)
 
 	if (1.5f < m_fInteractTIme)
 	{
-		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(0);
+		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(60);
 		m_fInteractTIme = 0.f;
 
 		m_bInteract = false;
@@ -1240,8 +1240,8 @@ void CWinona::Find_Berry()
 	Reset_Target();
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
 	{
-		if ((*iter_Obj) != nullptr && !dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_CanInteract()
-			&& dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::BERRYBUSH)
+		if ((*iter_Obj) != nullptr && dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_CanInteract()
+			&& dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::BOULDER)
 		{
 
 			if (m_pTarget == nullptr)

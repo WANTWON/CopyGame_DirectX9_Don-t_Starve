@@ -718,125 +718,100 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 
 	}
 
+	
 	if (m_iPreTalkCnt != m_iTalkCnt)
 	{
-		switch (m_iTalkCnt)
-		{
-		case 1:
-			if (!m_bOwner)
+		if (!m_bOwner)
+		{//IsPartyed
+			switch (m_iTalkCnt)
+			{
+			case 1:
 				pinven->Get_Talk_list()->front()->Set_Texnum1(0);
-			else
-				pinven->Get_Talk_list()->front()->Set_Texnum1(4);
-			break;
-		case 2:
-			if (!m_bOwner)
+				break;
+			case 2:
 				pinven->Get_Talk_list()->front()->Set_Texnum1(1);
-			else
-				pinven->Get_Talk_list()->front()->Set_Texnum1(5);
-			break;
-
-		case 3:
-			if(m_bAccept)
-			{
-				if (!m_bOwner)
+				break;
+			case 3:
+				if (m_bAccept)
+				{
 					pinven->Get_Talk_list()->front()->Set_Texnum1(2);
+					m_bNextAct = true;
+
+				}
 				else
-					pinven->Get_Talk_list()->front()->Set_Texnum1(6);
-			}
-			else
-			{
-				if (!m_bOwner)
+				{
 					pinven->Get_Talk_list()->front()->Set_Texnum1(3);
+					m_bNextAct = false;
+				}
+				break;
+			case 4:
+				Clear_Activated();
+				static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
+				static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
+				m_iTalkCnt = 0;
+				m_bInteract = false;
+				m_bFirstCall = false;
+				if (m_bNextAct)
+				{
+					m_bOwner = true;
+					m_pOwner = static_cast<CPawn*>(m_pTarget);
+					static_cast<CPlayer*>(m_pTarget)->Add_Party(TEXT("Wendy"), this);
+				}
 				else
-					pinven->Get_Talk_list()->front()->Set_Texnum1(8);
+				{
+					Reset_Target();
+					m_pTarget = nullptr;
+				}
+				pinven->Get_Talk_list()->front()->setcheck(false);
+				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
+				break;
 			}
-			break;
-		case 4:
-			break;
-		}	
+		}
+		else
+		{//Solo
+			switch (m_iTalkCnt)
+			{
+			case 1:
+				pinven->Get_Talk_list()->front()->Set_Texnum1(4);
+				break;
+			case 2:
+				pinven->Get_Talk_list()->front()->Set_Texnum1(5);
+				break;
+			case 3:
+				if (m_bAccept)
+				{
+					pinven->Get_Talk_list()->front()->Set_Texnum1(6);
+					m_bNextAct = false;
+				}
+				else
+				{
+					pinven->Get_Talk_list()->front()->Set_Texnum1(8);
+					m_bNextAct = true;
+				}
+				break;
+			case 4:
+				Clear_Activated();
+				static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
+				static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
+				if (!m_bNextAct)
+				{
+					static_cast<CPlayer*>(m_pTarget)->Release_Party(TEXT("Wendy"));
+
+					Reset_Target();
+					m_bOwner = false;
+					m_pOwner = nullptr;
+				}
+				m_iTalkCnt = 0;
+				m_bInteract = false;
+				m_bFirstCall = false;
+				pinven->Get_Talk_list()->front()->setcheck(false);
+				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
+				break;
+			}
+		}
 		m_iPreTalkCnt = m_iTalkCnt;
 	}
-
-	if (!m_bOwner)
-	{//IsPartyed
-		switch (m_iTalkCnt)
-		{
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			if (m_bAccept)
-			{
-				m_bNextAct = true;
-
-			}
-			else
-			{
-				m_bNextAct = false;
-			}
-			break;
-		case 4:
-			Clear_Activated();
-			static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
-			static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
-			m_iTalkCnt = 0;
-			m_bInteract = false;
-			m_bFirstCall = false;
-			if (m_bNextAct)
-			{
-				m_bOwner = true;
-				m_pOwner = static_cast<CPawn*>(m_pTarget);
-				static_cast<CPlayer*>(m_pTarget)->Add_Party(TEXT("Wendy"), this);
-			}
-			else
-			{
-				Reset_Target();
-				m_pTarget = nullptr;
-			}
-			pinven->Get_Talk_list()->front()->setcheck(false);
-			CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
-			break;
-		}
-	}
-	else
-	{//Solo
-		switch (m_iTalkCnt)
-		{
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			if (m_bAccept)
-			{
-				m_bNextAct = false;
-			}
-			else
-			{
-				m_bNextAct = true;
-			}
-			break;
-		case 4:
-			Clear_Activated();
-			static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
-			static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
-			if (!m_bNextAct)
-			{
-				static_cast<CPlayer*>(m_pTarget)->Release_Party(TEXT("Wendy"));
-				
-				Reset_Target();
-				m_bOwner = false;
-				m_pOwner = nullptr;
-			}
-			m_iTalkCnt = 0;
-			m_bInteract = false;
-			m_bFirstCall = false;
-			pinven->Get_Talk_list()->front()->setcheck(false);
-			CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
-			break;
-		}
-	}
+	
 
 
 }
