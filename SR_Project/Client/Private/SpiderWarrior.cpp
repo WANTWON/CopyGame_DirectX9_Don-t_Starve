@@ -294,9 +294,6 @@ void CSpiderWarrior::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_MOVE_SIDE"));
 				break;
 			}
-
-			if (m_eDir != m_ePreDir)
-				m_ePreDir = m_eDir;
 			break;
 		case STATE::ATTACK:
 			switch (m_eDir)
@@ -312,9 +309,6 @@ void CSpiderWarrior::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_ATTACK_SIDE"));
 				break;
 			}
-
-			if (m_eDir != m_ePreDir)
-				m_ePreDir = m_eDir;
 			break;
 		case STATE::TAUNT:
 			Change_Texture(TEXT("Com_Texture_TAUNT"));
@@ -329,6 +323,9 @@ void CSpiderWarrior::Change_Motion()
 
 		if (m_eState != m_ePreState)
 			m_ePreState = m_eState;
+
+		if (m_eDir != m_ePreDir)
+			m_ePreDir = m_eDir;
 	}
 }
 
@@ -391,6 +388,9 @@ void CSpiderWarrior::PickingTrue()
 
 void CSpiderWarrior::AI_Behaviour(_float fTimeDelta)
 {
+	if (m_bDead)
+		return;
+
 	if (m_bHit)
 		m_eState = STATE::HIT;
 

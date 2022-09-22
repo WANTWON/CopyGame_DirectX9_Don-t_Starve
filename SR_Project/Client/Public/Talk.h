@@ -53,7 +53,8 @@ private:
 	_bool m_bActivated = false;
 	_bool	m_bTalkEnd = false;
 	_bool	m_bIsStartText = true;
-	_bool m_bforwendy = false;
+	_bool	m_bforwendy = false;
+	_bool	m_bforWinona = false;
 public:
 	bool getcheck() { return m_bcheck;  }
 	void setcheck(bool tof) { m_bcheck = tof; }
@@ -73,6 +74,8 @@ public:
 	void Set_WendyTalk(_bool _Activated) { m_bforwendy = _Activated; }
 
 	void Set_Texnum1(_uint _iNum) { texnum1 = _iNum; }
+
+	void Set_WinonaTalk(_bool _Activated) { m_bforWinona = _Activated; }
 public:
 	static CTalk* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

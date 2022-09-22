@@ -62,11 +62,12 @@ void CCarnival_Shooter::Late_Tick(_float fTimeDelta)
 
 		BULLETDATA BulletData;
 		ZeroMemory(&BulletData, sizeof(BulletData));
-		BulletData.vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		BulletData.vLook = _float3(0.f,1.f,0.f);
 		BulletData.eDirState = DIR_END;
 		BulletData.bIsPlayerBullet = true;
 		BulletData.eWeaponType = CARNIVAL_ARROW;
 		BulletData.vPosition = vPosition;
+		BulletData.vScale = _float3(0.2f, 0.5f, 1.f);
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), LEVEL_MAZE, TEXT("Layer_Bullet"), &BulletData);
 		m_bReady = true;
 	}

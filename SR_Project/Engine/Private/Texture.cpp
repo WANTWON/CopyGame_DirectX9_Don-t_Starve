@@ -76,7 +76,7 @@ bool CTexture::MoveFrame(const _tchar* TimerTag, _bool bLoop)
 
 	// Looping Animation
 	if (bLoop)
-	{
+	{ 
 		if (m_fTimeAcc > 1.f / m_TextureDesc.m_fSpeed)
 		{
 			m_TextureDesc.m_iCurrentTex++;

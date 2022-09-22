@@ -49,7 +49,7 @@ protected: /*For TextureCom */
 
 protected: /* For TransformCom*/
 	void SetUp_BillBoard();
-	void WalkingTerrain();
+	virtual void WalkingTerrain();
 
 protected:
 	const _tchar* m_TimerTag = TEXT("");

@@ -28,7 +28,10 @@ HRESULT CDirt::Initialize_Prototype()
 
 HRESULT CDirt::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	ZeroMemory(&m_tDirtDesc, sizeof(DIRTDESC));
+	memcpy(&m_tDirtDesc, (DIRTDESC*)pArg, sizeof(DIRTDESC));
+
+	if (FAILED(__super::Initialize(m_tDirtDesc.vInitPosition)))
 		return E_FAIL;
 
 	m_eObjID = OBJID::OBJ_OBJECT;
@@ -78,10 +81,8 @@ void CDirt::Interact(_uint Damage)
 
 HRESULT CDirt::Drop_Items()
 {
-	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-	_uint iLootType = rand() % 3 + 1;
+	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
 
 	// Random Position Drop based on Object Position
 	_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * .5f;
@@ -92,34 +93,9 @@ HRESULT CDirt::Drop_Items()
 
 	_float3 vDropPos = _float3(fPosX, Get_Position().y, fPosZ);
 
-	switch (iLootType)
+	if (m_tDirtDesc.bHasKey)
 	{
-	// Monster
-	case 1:
-	{
-		_uint iMonsterIndex = rand() % m_lMonstersTable.size();
-		pGameInstance->Add_GameObject(m_lMonstersTable[iMonsterIndex], LEVEL_HUNT, TEXT("Layer_Monster"), vDropPos);
-	}
-	break;
-	// Item
-	case 2:
-	{
-		CItem::ITEMDESC ItemDesc;
-		ZeroMemory(&ItemDesc, sizeof(CItem::ITEMDESC));
-
-		ItemDesc.fPosition = vDropPos;
-		ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
-		ItemDesc.pTextureComponent = TEXT("Com_Texture_Dirt_Item");
-		
-		_uint iItemIndex = rand() % m_lItemIdTable.size();
-		ItemDesc.eItemName = (ITEMNAME)m_lItemIdTable[iItemIndex];
-
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_HUNT, TEXT("Layer_Object"), &ItemDesc);
-	}
-	break;
-	// Next Room Key
-	case 3:
-	{
+		// Next Room Key
 		CItem::ITEMDESC ItemDesc;
 		ZeroMemory(&ItemDesc, sizeof(CItem::ITEMDESC));
 
@@ -128,9 +104,37 @@ HRESULT CDirt::Drop_Items()
 		ItemDesc.pTextureComponent = TEXT("Com_Texture_Dirt_Key");
 		ItemDesc.eItemName = ITEMNAME_KEY;
 
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_HUNT, TEXT("Layer_Object"), &ItemDesc);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Object"), &ItemDesc);
 	}
-	break;
+	else
+	{
+		_uint iLootType = rand() % 2 + 1;
+		switch (iLootType)
+		{
+			// Monster
+		case 1:
+		{
+			_uint iMonsterIndex = rand() % m_lMonstersTable.size();
+			pGameInstance->Add_GameObject(m_lMonstersTable[iMonsterIndex], pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Monster"), vDropPos);
+		}
+		break;
+		// Item
+		case 2:
+		{
+			CItem::ITEMDESC ItemDesc;
+			ZeroMemory(&ItemDesc, sizeof(CItem::ITEMDESC));
+
+			ItemDesc.fPosition = vDropPos;
+			ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
+			ItemDesc.pTextureComponent = TEXT("Com_Texture_Dirt_Item");
+
+			_uint iItemIndex = rand() % m_lItemIdTable.size();
+			ItemDesc.eItemName = (ITEMNAME)m_lItemIdTable[iItemIndex];
+
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Object"), &ItemDesc);
+		}
+		break;
+		}
 	}
 
 	return S_OK;
