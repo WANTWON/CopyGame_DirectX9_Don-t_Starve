@@ -591,7 +591,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 		return E_FAIL;
 
 
+	
 
+	
+	
 	for (int i = 0; i < 9; ++i)
 	{
 		int number = i;
@@ -600,6 +603,37 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 			return E_FAIL;
 
 	}
+	
+
+
+	/*vector<_uint> randombox;  //CardGame random shufflle
+
+	for (int i = 0; i < 4; i++)
+	{
+		randombox.push_back(i);
+		randombox.push_back(i);
+	}
+
+	randombox.push_back(4);
+
+	random_shuffle(randombox.begin(), randombox.end());
+
+	for (auto& iter = randombox.begin(); iter != randombox.end();)
+	{
+		
+		for (int i = 0; i < 9; ++i)
+		{
+			int number = *iter;
+
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_GAMEPLAY, pLayerTag, (int*)&number)))
+				return E_FAIL;
+
+			++iter;
+
+		}
+	}*/
+
+	
 	
 
 	
