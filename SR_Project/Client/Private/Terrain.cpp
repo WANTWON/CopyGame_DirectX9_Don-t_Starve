@@ -235,6 +235,17 @@ _bool CTerrain::Picking(_float3* PickingPoint)
 	if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
 	{
 		m_vecOutPos = *PickingPoint;
+
+		CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+		CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+		Safe_Release(pGameInstance);
+		//for Character Skill
+		if (pPlayer->Get_SkillShow())
+		{
+			m_vecOutPos.y += 0.02f;
+			pPlayer->Set_PickingTarget(m_vecOutPos);
+		}
 		return true;
 	}
 	else
@@ -256,11 +267,6 @@ void CTerrain::PickingTrue()
 	Safe_Release(pinv);
 	int iNum = pMouse->Get_Item_count();
 	
-	//for Character Skill
-	if (pPlayer->Get_SkillShow())
-	{
-		pPlayer->Set_PickingTarget(m_vecOutPos);
-	}
 	//pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
 	//TestCode
 	if (pGameInstance->Key_Up('P'))

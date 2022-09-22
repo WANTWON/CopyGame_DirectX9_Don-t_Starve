@@ -64,6 +64,7 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	m_fTimeAcc += fTimeDelta;
 
+	// ∂À¿Ô¿Ã
 
 }
 
