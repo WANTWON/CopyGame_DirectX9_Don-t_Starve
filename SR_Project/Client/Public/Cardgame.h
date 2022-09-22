@@ -46,7 +46,7 @@ private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
-	CTransform*				m_pTransformCom1 = nullptr;
+	//CTransform*				m_pTransformCom1 = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 
 private:
@@ -73,29 +73,52 @@ public:
 	virtual _bool Picking(_float3* PickingPoint) override;
 	virtual void PickingTrue() override;
 
+	_bool Get_frontcard() { return frontcard; }
+	void Set_frontcard(bool tof) { frontcard = tof; }
+	_uint Get_texnum() { return texnum; }
+	_uint Get_texnum1() { return texnum1; }
+	void Set_dead(bool tof) { m_bdead = tof; }
+	
+
+	void set_turn(bool tof) { turn = tof;  }
+	void set_lastdance(bool tof) { m_blastdance = tof; }
+	void set_wrong(bool tof) { m_bwrong = tof; }
+
+	
+
 private:
 
 	int* iNumber = nullptr;
 	int iNum = 0;
 	bool m_bcheck_bag = true;
-	bool m_bcheck = true;
+	bool m_bcheck = false;
 	bool m_Lclick = true;
 	bool one = false;
 	bool turn = false;
 	bool bfirst = false;
+	bool m_blastdance = false;
 
+	
 	_float3 m_vecOutPos;
 
 	_float ftime = 0.f;
+	_float ftime2 = 0.f;
+	_float ftime3 = 0.f; 
 
-	_uint texnum = 1;
+	_uint texnum = 5;
 	_uint texnum1 = 0;
 	_uint random = 0;
+
+	
+	
 
 	bool m_bfirst = false;
 	bool m_bdead = false;
 	_bool m_bPicking = false;
 	_bool m_bPickingTrue = false;
+    
+	_bool m_bwrong = false;
+	_bool frontcard = false;
 	//bool m_bcheck = true;
 };
 

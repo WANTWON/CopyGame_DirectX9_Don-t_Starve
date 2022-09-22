@@ -133,6 +133,7 @@
 #include "Shooting_Target.h"
 #include "Carnival_Shooter.h"
 #include "Cardgame.h"
+#include "CardEffect.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -882,6 +883,16 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	/*For.Prototype_Component_Texture_DeadUI */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Cardgame"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/cardgame/cardfront%d.png"), 6))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_DeadUI */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_BlackThunder"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/cardgame/attack2.info.hit_%d.png"), 7))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_DeadUI */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Card_die"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/cardgame/hit.0_%d.png"), 10))))
 		return E_FAIL;
 
 #pragma endregion Add_Texture UI
@@ -2339,6 +2350,10 @@ HRESULT CLoader::Loading_Prototype_Object()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Cardgame"),
 		CCardgame::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_CardEffect"),
+		CardEffect::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	

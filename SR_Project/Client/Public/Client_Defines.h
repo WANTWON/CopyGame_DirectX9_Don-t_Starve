@@ -57,6 +57,7 @@ namespace Client
 		_float3 pos;
 		_float dmg;
 		ITEMNAME itemname;
+		_uint whateffect;
 
 	}Poteffect;
 

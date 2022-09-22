@@ -38,9 +38,31 @@ HRESULT CCardgame::Initialize(void* pArg)
 		return E_FAIL;
 
 
+	iNumber = (int*)pArg;
+
+	iNum = *iNumber;
 
 
-	pos = { 40.f + (iNum*0.5f) , 0.5f, 25.f };
+
+	pos = { 40.f + (iNum*0.6f) , 0.5f, 25.f };
+
+	
+	if (iNum == 0 || iNum == 8)
+		texnum1 = 0;
+
+	else if (iNum == 1 || iNum == 7)
+		texnum1 = 1;
+
+	else if (iNum == 2 || iNum == 6)
+		texnum1 = 2;
+
+	else if (iNum == 3 || iNum == 5)
+		texnum1 = 3;
+	else
+		texnum1 = 4;
+
+
+
 
 	/*if(iNum >= 3 )
 
@@ -74,136 +96,94 @@ HRESULT CCardgame::Initialize(void* pArg)
 	//	m_pTransformCom1->Set_State(CTransform::STATE_POSITION, pos);d
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(mypos.x - g_iWinSizeX * 0.5f, -pos.y + g_iWinSizeY * 0.5f, 0.f));
 
+	
+
 	return S_OK;
 }
 
 int CCardgame::Tick(_float fTimeDelta)
 {
 
+	
 	if (m_bdead == true)
 	{
 		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
 		return OBJ_DEAD;
 	}
 	
-
-
-	WalkingTerrain();
-
-
-	if (CKeyMgr::Get_Instance()->Key_Up('6'))
-	m_pTransformCom->Turn(_float3(0.f, 0.f, 1.f), fTimeDelta);
-
-	if (CKeyMgr::Get_Instance()->Key_Up('7'))
-		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
-
-	
-	if (CKeyMgr::Get_Instance()->Key_Up('8'))
+	if (m_bcheck)
 	{
-		bfirst = false;
-		//ftime = fTimeDelta;
-		turn = true;
-	}
+		WalkingTerrain();
 
 
-	
-	
+		if (CKeyMgr::Get_Instance()->Key_Up('6'))
+			m_pTransformCom->Turn(_float3(0.f, 0.f, 1.f), fTimeDelta);
 
-	
-	if (turn == true && 1.f > ftime && ftime > 0.5f && bfirst == false )
-	{
-		
+		if (CKeyMgr::Get_Instance()->Key_Up('7'))
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
+
+
+		//if (CKeyMgr::Get_Instance()->Key_Up('8'))
+		//{
+		//	bfirst = false;
+		//	//ftime = fTimeDelta;
+		//	turn = true;
+		//}
+
+
+
+
+
+
+		if (turn == true && 1.f > ftime && ftime > 0.5f && bfirst == false)
+		{
+
 			if (texnum == 5)
-				texnum = 1;
+				texnum = texnum1;
 
-			else if (texnum == 1)
+			else if (texnum == texnum1)
 				texnum = 5;
+
+
+			bfirst = true;
+
+		}
+
+
+
+
+
+
+		if (turn == true && ftime > 1.f)
+		{
+			//texnum = 1;
+			ftime = 0.f;
+			turn = false;
+
+			//float fTemp = ftime - fTimeDelta*5.f;
+			//m_pTransformCom->Turn(_float3(0.f, 0.f, 1.f), -fTemp);
+		}
+
+
+
+		if (turn == true)
+		{
+			ftime += fTimeDelta;
+			m_pTransformCom->Turn(_float3(0.f, 0.f, 1.f), fTimeDelta);
+		}
+
+
+
+		
 		
 
-		bfirst = true;
-		
+
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, pos);
+		//m_pTransformCom1->Set_State(CTransform::STATE_POSITION, pos);
 	}
 
-	
 
 	
-
-
-	if ( turn == true && ftime > 1.f)
-	{
-		//texnum = 1;
-		ftime = 0.f;
-		turn = false;
-
-		//float fTemp = ftime - fTimeDelta*5.f;
-		//m_pTransformCom->Turn(_float3(0.f, 0.f, 1.f), -fTemp);
-	}
- 
-	
-	
-	if (turn == true)
-	{
-		ftime += fTimeDelta;
-		m_pTransformCom->Turn(_float3(0.f, 0.f, 1.f), fTimeDelta);
-	}
-	
-
-
-	//if (GetTickCount() > m_dwDeadtime + 400)
-	//{
-	//	m_dwDeadtime = GetTickCount();
-//		return OBJ_DEAD;
-//	}
-
-	/*_float3 vRight;
-
-	vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
-	*D3DXVec3Normalize(&vRight, &vRight);*/
-
-
-
-
-
-	//if (random == 0)
-	//{
-	//	//effectdesc.pos.x += 0.02f;
-	//	effectdesc.pos += (vRight*0.02f);
-	//	if (GetTickCount() > m_dwDeadtime + 200)
-	//	{
-	//		effectdesc.pos.y -= 0.02f;
-
-	//	}
-	//	else
-	//		effectdesc.pos.y += 0.02f;
-	//}
-	//else
-
-	//{
-	//	//effectdesc.pos.x -= 0.02f;
-	//	effectdesc.pos -= (vRight*0.02f);
-	//	if (GetTickCount() > m_dwDeadtime + 200)
-	//	{
-	//		effectdesc.pos.y -= 0.02f;
-
-	//	}
-	//	else
-	//		effectdesc.pos.y += 0.02f;
-	//}
-
-
-
-
-	//pos = effectdesc.pos + (vRight * 0.25f);
-
-
-
-
-	////pos.y = effectdesc.pos.y; 
-
-
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, pos);
-    //m_pTransformCom1->Set_State(CTransform::STATE_POSITION, pos);
 
 
 
@@ -234,7 +214,46 @@ void CCardgame::Late_Tick(_float fTimeDelta)
 		//	m_fSizeX = 40;
 		//	m_fSizeY = 40;
 		//	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		if (m_blastdance == true)
+		{
+			ftime2 += fTimeDelta;
 
+			if (ftime2 > 1.f)
+			{
+				m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), 0.3f);
+			}
+			if (ftime2 > 2.f)
+			{
+				m_bcheck = false;
+
+				foreffect		effectdesc;
+				ZeroMemory(&effectdesc, sizeof(foreffect));
+				Update_Position(pos);
+				effectdesc.pos = Get_Position();
+				effectdesc.pos.y += 0.5f;
+				effectdesc.whateffect = 1;
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CardEffect"), LEVEL_GAMEPLAY, TEXT("Layer_Cardeffect_bomb"), &effectdesc);
+					
+			}
+
+		}
+
+		if (m_bwrong == true)
+		{
+			ftime3 += fTimeDelta;
+
+			if (ftime3 > 1.f)
+			{
+				bfirst = false;
+
+				turn = true;
+				ftime3 = 0.f;
+				m_bwrong = false;
+			}
+			
+
+		}
 
 		//	//ERR_MSG(L"Ãæµ¹");
 		//}
@@ -314,11 +333,14 @@ void CCardgame::PickingTrue()
 		bfirst = false;
 		
 		turn = true;
+
+		frontcard = true;
 		
 	}
 
 	
 }
+
 
 
 HRESULT CCardgame::Render()
@@ -385,8 +407,8 @@ HRESULT CCardgame::SetUp_Components()
 
 
 
-	if (FAILED(__super::Add_Components(TEXT("Com_Transform1"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom1, &TransformDesc)))
-		return E_FAIL;
+	/*if (FAILED(__super::Add_Components(TEXT("Com_Transform1"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom1, &TransformDesc)))
+		return E_FAIL;*/
 
 
 	return S_OK;
@@ -402,6 +424,8 @@ HRESULT CCardgame::SetUp_RenderState()
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+
 
 	return S_OK;
 }
@@ -419,9 +443,9 @@ void CCardgame::SetUp_BillBoard()
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
-	m_pTransformCom1->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	/*m_pTransformCom1->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 	m_pTransformCom1->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
-	m_pTransformCom1->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+	m_pTransformCom1->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);*/
 }
 
 HRESULT CCardgame::Release_RenderState()
@@ -455,7 +479,9 @@ CGameObject * CCardgame::Clone(void* pArg)
 		Safe_Release(pInstance);
 	}
 
-	//CInventory_Manager::Get_Instance()->Get_Eatitem_list()->push_back(pInstance);
+	CInventory_Manager::Get_Instance()->Get_Cardgame_list()->push_back(pInstance);
+
+	
 
 	return pInstance;
 }
@@ -466,7 +492,7 @@ void CCardgame::Free()
 	__super::Free();
 
 	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pTransformCom1);
+	//Safe_Release(m_pTransformCom1);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);

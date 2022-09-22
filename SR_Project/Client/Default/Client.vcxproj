@@ -186,6 +186,7 @@
     <ClInclude Include="..\Public\CameraFPS.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\CameraTarget.h" />
+    <ClInclude Include="..\Public\CardEffect.h" />
     <ClInclude Include="..\Public\Cardgame.h" />
     <ClInclude Include="..\public\CarnivalCard.h" />
     <ClInclude Include="..\public\CarnivalMemory.h" />
@@ -331,6 +332,7 @@
     <ClCompile Include="..\Private\CameraFPS.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\CameraTarget.cpp" />
+    <ClCompile Include="..\Private\CardEffect.cpp" />
     <ClCompile Include="..\Private\Cardgame.cpp" />
     <ClCompile Include="..\private\CarnivalCard.cpp" />
     <ClCompile Include="..\private\CarnivalMemory.cpp" />
