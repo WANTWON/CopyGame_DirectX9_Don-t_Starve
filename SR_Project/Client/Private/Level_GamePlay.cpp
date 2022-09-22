@@ -824,6 +824,8 @@ HRESULT CLevel_GamePlay::Ready_LayerNPC(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Winona"), LEVEL_STATIC, pLayerTag, _float3(20.f, 1.f, 10.f))))
 			return E_FAIL;
 
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NPC_Woodie"), LEVEL_STATIC, pLayerTag, _float3(20.f, 1.f, 10.f))))
+			return E_FAIL;
 	}
 	else
 	{

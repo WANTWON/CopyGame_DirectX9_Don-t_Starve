@@ -316,14 +316,20 @@
     <Filter Include="02.GameObject\05.UnInteractive_Object\Carnival Shooter">
       <UniqueIdentifier>{b7058b92-ebc2-4c06-8fd8-400f7238a51e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\05.UnInteractive_Object\Battery_Tower">
-      <UniqueIdentifier>{5a2da514-201b-4448-a7d0-461f755c85ef}</UniqueIdentifier>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NPC\Woodie">
+      <UniqueIdentifier>{ca083f93-eb25-463f-92bd-bc9c25e29b58}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\05.UnInteractive_Object\Catapult">
+    <Filter Include="02.GameObject\00. Pawn\Portable_Pot">
+      <UniqueIdentifier>{3e61d11d-0365-4210-9679-4b50fb861b19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona\Catapult">
       <UniqueIdentifier>{d29f5be4-f141-47eb-9716-6bc0e8763443}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Battery">
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona\Battery">
       <UniqueIdentifier>{374424ee-8740-4302-a37f-249d4c09ad81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona\Battery_Tower">
+      <UniqueIdentifier>{5a2da514-201b-4448-a7d0-461f755c85ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -383,9 +389,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Boulder.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Boulder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\BerryBush.h">
-      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Berry Bush</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Mouse.h">
       <Filter>03.Mouse</Filter>
@@ -745,16 +748,25 @@
       <Filter>02.GameObject\05.UnInteractive_Object\Carnival Shooter</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battery_Tower.h">
-      <Filter>02.GameObject\05.UnInteractive_Object\Battery_Tower</Filter>
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona\Battery_Tower</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Carnival_Shoot_Button.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Shoot Button</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Catapult.h">
-      <Filter>02.GameObject\05.UnInteractive_Object\Catapult</Filter>
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona\Catapult</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battery.h">
-      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Battery</Filter>
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona\Battery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Woodie.h">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Woodie</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Portable_Pot.h">
+      <Filter>02.GameObject\00. Pawn\Portable_Pot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BerryBush.h">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Berry Bush</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1146,7 +1158,7 @@
       <Filter>02.GameObject\98.UI\17.MiniMap</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Catapult.cpp">
-      <Filter>02.GameObject\05.UnInteractive_Object\Catapult</Filter>
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona\Catapult</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Skill.cpp">
       <Filter>02.GameObject\00. Pawn\Skills</Filter>
@@ -1167,13 +1179,19 @@
       <Filter>02.GameObject\05.UnInteractive_Object\Carnival Shooter</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battery_Tower.cpp">
-      <Filter>02.GameObject\05.UnInteractive_Object\Battery_Tower</Filter>
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona\Battery_Tower</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Carnival_Shoot_Button.cpp">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Shoot Button</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battery.cpp">
-      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Battery</Filter>
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Winona\Battery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Woodie.cpp">
+      <Filter>02.GameObject\00. Pawn\04.Interactive_Object\NPC\Woodie</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Portable_Pot.cpp">
+      <Filter>02.GameObject\00. Pawn\Portable_Pot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
