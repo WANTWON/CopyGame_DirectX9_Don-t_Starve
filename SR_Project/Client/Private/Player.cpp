@@ -2267,7 +2267,10 @@ void CPlayer::RangeCheck(_float _fTimeDelta)
 		+ (m_vTargetPicking.z - Get_Pos().z)*(m_vTargetPicking.z - Get_Pos().z);
 
 	m_pPicker->Set_Pos(m_vTargetPicking);
-	m_pRange->Set_Pos(Get_Pos());
+
+	_float3 vPosition = Get_Pos();
+	vPosition.y -= 0.4f;
+	m_pRange->Set_Pos(vPosition);
 
 	if (m_fAtkRange > Compare_Range)
 	{
