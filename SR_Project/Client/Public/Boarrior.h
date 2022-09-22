@@ -93,6 +93,7 @@ private:
 	void Spawn_Bullet(_float fTimeDelta);
 	void Spawn_Adds(_float fTimeDelta);
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
+	void Set_Stun() { m_bStun = true; }
 	virtual HRESULT Drop_Items() override;
 	virtual _bool IsDead() override;
 

@@ -53,6 +53,7 @@ void CSpawnSmokeEffect::Late_Tick(_float fTimeDelta)
 
 	SetUp_BillBoard();
 
+	Compute_CamDistance(Get_Position());
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 

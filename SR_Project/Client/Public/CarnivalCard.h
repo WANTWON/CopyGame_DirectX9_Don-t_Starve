@@ -19,7 +19,15 @@ class CCarnivalMemory;
 class CCarnivalCard final : public CInteractive_Object
 {
 public:
-	enum STATECARD
+	enum TYPE { CARD, BIRD, TYPE_MAX };
+
+	typedef struct TagDescription
+	{
+		_float3 vInitPosition = _float3(0.f, 0.f, 0.f);
+		TYPE eType = TYPE_MAX;
+	}DESC;
+
+	enum STATE
 	{
 		HINT_BAD,
 		HINT_GOOD,
@@ -33,7 +41,12 @@ public:
 		REVEAL_GOOD_PRE,
 		TURN_OFF,
 		TURN_ON,
-		MAX
+		FED,
+		HUNGRY,
+		HUNGRY_POST,
+		HUNGRY_PRE,
+		IDLE,
+		STATE_MAX
 	};
 
 private:
@@ -61,21 +74,40 @@ public: /*For Picking */
 	virtual void PickingTrue() override;
 
 public:
+	DESC Get_Desc() { return m_tDesc; }
+	_bool Get_IsHungry() { return m_bIsHungry; }
 	void Set_Memory(CCarnivalMemory* pMemory) { m_pMemory = pMemory; }
-	void Turn_On() { m_eState = STATECARD::TURN_ON; }
+	void Set_GameWon() { m_bIsGameWon = true; }
+	void Turn_On() { m_eState = STATE::TURN_ON; }
+	void Turn_Off() { m_eState = STATE::TURN_OFF; }
+	void Hungry_On() { m_eState = STATE::HUNGRY_PRE; m_bIsHungry = true; }
 	void Give_Hint(_bool isGood) 
 	{
 		m_bIsGood = isGood;
-		isGood ? m_eState = STATECARD::HINT_GOOD : m_eState = STATECARD::HINT_BAD;
+		isGood ? m_eState = STATE::HINT_GOOD : m_eState = STATE::HINT_BAD;
 	}
+	_bool Check_Hungry(_float fTimeDelta);
 	virtual void Interact(_uint Damage = 0) override;
 	virtual HRESULT Drop_Items() override;
 
 private:
-	STATECARD m_eState = OFF;
-	STATECARD m_ePreState = MAX;
+	// Game Variables
+	DESC m_tDesc;
+	STATE m_eState = OFF;
+	STATE m_ePreState = STATE_MAX;
+	
+	// Memory Variables
 	CCarnivalMemory* m_pMemory = nullptr;
 	_bool m_bIsGood = false;
+
+	// Bird Variables
+	_float m_fIdleTime = 0.f;
+	_float m_fRandomIdlePause = rand() % 10 + 1;
+	_bool m_bIsHungry = false;
+	_uint m_iFeedMultiplier = 8;
+	_float m_fFeedRandomTimeLimit = rand() % m_iFeedMultiplier + 1;
+	_float m_fFeedTime = 0.f;
+	_bool m_bIsGameWon = false;
 
 public:
 	static CCarnivalCard* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

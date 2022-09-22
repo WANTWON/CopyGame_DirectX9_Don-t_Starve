@@ -216,15 +216,19 @@ HRESULT CTrap::Texture_Clone()
 		TextureDesc.m_iEndTex = 16;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Ready"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Star_Idle_Ready"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 		TextureDesc.m_iEndTex = 16;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Trap"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Star_Idle_Trap"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 		TextureDesc.m_iEndTex = 48;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Trap"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Star_Trap"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 		TextureDesc.m_iEndTex = 16;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reset"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Star_Reset"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 	}
 	break;
 	case TRAPTYPE::TRAP_PLANT:
@@ -232,15 +236,19 @@ HRESULT CTrap::Texture_Clone()
 		TextureDesc.m_iEndTex = 0;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Ready"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Plant_Idle_Ready"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 		TextureDesc.m_iEndTex = 2;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Idle_Trap"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Plant_Idle_Trap"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 		TextureDesc.m_iEndTex = 23;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Trap"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Plant_Trap"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 		TextureDesc.m_iEndTex = 15;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Reset"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Plant_Reset"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
 	}
 	break;
 	}
@@ -392,4 +400,9 @@ void CTrap::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pShaderCom);
+
+	for (auto& iter : m_vecTexture)
+		Safe_Release(iter);
+
+	m_vecTexture.clear();
 }

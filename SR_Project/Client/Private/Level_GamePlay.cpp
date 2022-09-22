@@ -150,8 +150,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 
-	//pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig"), LEVEL_GAMEPLAY, pLayerTag, _float3(20.f, 0.f, 10.f));
-
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Pig_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
@@ -305,13 +303,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 	}
 	CloseHandle(hFile);
 
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_GAMEPLAY, pLayerTag, _float3(42.f, 1.f, 26.f));
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_GAMEPLAY, pLayerTag, _float3(41.f, 1.f, 25.f));
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_GAMEPLAY, pLayerTag, _float3(43.f, 1.f, 25.f));
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_GAMEPLAY, pLayerTag, _float3(42.f, 1.f, 25.f));
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_GAMEPLAY, pLayerTag, _float3(43.f, 1.f, 24.f));
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_GAMEPLAY, pLayerTag, _float3(41.f, 1.f, 24.f));
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Card"), LEVEL_GAMEPLAY, pLayerTag, _float3(42.f, 1.f, 24.f));
 
 	Safe_Release(pGameInstance);
 	return S_OK;

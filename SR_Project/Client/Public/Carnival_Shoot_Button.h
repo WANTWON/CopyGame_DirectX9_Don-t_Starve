@@ -38,6 +38,7 @@ public:
 private:
 	virtual HRESULT SetUp_Components(void* pArg = nullptr) override;
 	void Change_Camera();
+	_bool Check_EveryTarget_Complete();
 
 private: /*For TextureCom */
 	virtual HRESULT Texture_Clone() override;
@@ -50,6 +51,7 @@ public:
 private:
 	STATECARD m_eState = IDLE;
 	STATECARD m_ePreState = MAX;
+	_bool m_bFinished = false;
 
 public:
 	static CCarnival_Shoot_Button* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
