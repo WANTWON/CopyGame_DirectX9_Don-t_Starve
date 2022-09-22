@@ -153,9 +153,11 @@ void CMainInventory_back::Late_Tick(_float fTimeDelta)
 		//ERR_MSG(L"Ãæµ¹");
 	}
 
+	
+
 	/*if (m_bItem)
 	{
-
+	
 	}*/
 
 	if (nullptr != m_pRendererCom && iNum < 10)
@@ -217,7 +219,7 @@ HRESULT CMainInventory_back::SetUp_Components()
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
 	TransformDesc.fSpeedPerSec = 5.f;
-	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
+	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;

@@ -99,7 +99,7 @@ int CDmgpont::Tick(_float fTimeDelta)
 	*D3DXVec3Normalize(&vRight, &vRight);
 
 
-
+	
 	
 
 	if (random == 0)

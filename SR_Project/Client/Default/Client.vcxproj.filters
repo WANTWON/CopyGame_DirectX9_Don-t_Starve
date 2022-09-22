@@ -325,6 +325,9 @@
     <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NewFilter1">
       <UniqueIdentifier>{374424ee-8740-4302-a37f-249d4c09ad81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\18.Cardgame">
+      <UniqueIdentifier>{deb8da98-e4c8-4ec1-bdd0-3800e951f315}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -753,6 +756,9 @@
     <ClInclude Include="..\Public\Carnival_Shoot_Button.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Shoot Button</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Cardgame.h">
+      <Filter>02.GameObject\98.UI\18.Cardgame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1168,6 +1174,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Carnival_Shoot_Button.cpp">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Carnival Shoot Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cardgame.cpp">
+      <Filter>02.GameObject\98.UI\18.Cardgame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
