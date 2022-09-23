@@ -4,17 +4,17 @@
 #include "Player.h"
 #include "Inventory.h"
 
-CardEffect::CardEffect(LPDIRECT3DDEVICE9 pGraphic_Device)
+CCardEffect::CCardEffect(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CardEffect::CardEffect(const CardEffect & rhs)
+CCardEffect::CCardEffect(const CCardEffect & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CardEffect::Initialize_Prototype()
+HRESULT CCardEffect::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -22,7 +22,7 @@ HRESULT CardEffect::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CardEffect::Initialize(void* pArg)
+HRESULT CCardEffect::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -52,7 +52,7 @@ HRESULT CardEffect::Initialize(void* pArg)
 
 	if (thunder == true)
 	{
-		m_eShaderID == UI_SHADER_MINIMAP;
+		m_eShaderID = UI_SHADER_MINIMAP;
 		m_pTransformCom->Set_Scale(1.5f, 3.f, 1.f);
 		m_bcheck = false;
 	}
@@ -66,7 +66,7 @@ HRESULT CardEffect::Initialize(void* pArg)
 	return S_OK;
 }
 
-int CardEffect::Tick(_float fTimeDelta)
+int CCardEffect::Tick(_float fTimeDelta)
 {
 	if(!thunder)
 	SetUp_BillBoard();
@@ -83,7 +83,12 @@ int CardEffect::Tick(_float fTimeDelta)
 	}
 
 	if (m_bdead == true)
+	{
+		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+		pinv->plus_cardgamecount();
 		return OBJ_DEAD;
+	}
+		
 
 	if (m_bcheck == true)
 	{
@@ -117,7 +122,7 @@ int CardEffect::Tick(_float fTimeDelta)
 	return OBJ_NOEVENT;
 }
 
-void CardEffect::Late_Tick(_float fTimeDelta)
+void CCardEffect::Late_Tick(_float fTimeDelta)
 {
 	if (m_bcheck == true)
 	{
@@ -143,8 +148,7 @@ void CardEffect::Late_Tick(_float fTimeDelta)
 			if (texnum == 9)
 			{
 				m_bdead = true;
-		//		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-		//		pinv->plus_cardgamecount();
+				
 			}
 				
 		}
@@ -155,7 +159,7 @@ void CardEffect::Late_Tick(_float fTimeDelta)
 
 }
 
-HRESULT CardEffect::Render()
+HRESULT CCardEffect::Render()
 {
 	if (m_bcheck == true)
 	{
@@ -200,7 +204,7 @@ HRESULT CardEffect::Render()
 	return E_FAIL;
 }
 
-HRESULT CardEffect::SetUp_Components()
+HRESULT CCardEffect::SetUp_Components()
 {
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), (CComponent**)&m_pShaderCom)))
@@ -237,7 +241,7 @@ HRESULT CardEffect::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CardEffect::SetUp_RenderState()
+HRESULT CCardEffect::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -260,7 +264,7 @@ HRESULT CardEffect::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CardEffect::Release_RenderState()
+HRESULT CCardEffect::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -270,26 +274,26 @@ HRESULT CardEffect::Release_RenderState()
 	return S_OK;
 }
 
-CardEffect * CardEffect::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CCardEffect * CCardEffect::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CardEffect*	pInstance = new CardEffect(pGraphic_Device);
+	CCardEffect*	pInstance = new CCardEffect(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CardEffect"));
+		ERR_MSG(TEXT("Failed to Created : CCardEffect"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CardEffect::Clone(void* pArg)
+CGameObject * CCardEffect::Clone(void* pArg)
 {
-	CardEffect*	pInstance = new CardEffect(*this);
+	CCardEffect*	pInstance = new CCardEffect(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CardEffect"));
+		ERR_MSG(TEXT("Failed to Cloned : CCardEffect"));
 		Safe_Release(pInstance);
 	}
 
@@ -303,7 +307,7 @@ CGameObject * CardEffect::Clone(void* pArg)
 }
 
 
-void CardEffect::Free()
+void CCardEffect::Free()
 {
 	__super::Free();
 
@@ -316,7 +320,7 @@ void CardEffect::Free()
 }
 
 
-void CardEffect::SetUp_BillBoard()
+void CCardEffect::SetUp_BillBoard()
 {
 	_float4x4 ViewMatrix;
 

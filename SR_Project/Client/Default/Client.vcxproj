@@ -179,6 +179,7 @@
     <ClInclude Include="..\Public\Behavior_Tree.h" />
     <ClInclude Include="..\public\Boaron.h" />
     <ClInclude Include="..\public\Boarrior.h" />
+    <ClInclude Include="..\Public\BossName.h" />
     <ClInclude Include="..\Public\BT_NPC.h" />
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\public\BerryBush.h" />
@@ -238,6 +239,8 @@
     <ClInclude Include="..\Public\NPC.h" />
     <ClInclude Include="..\Public\Particle.h" />
     <ClInclude Include="..\Public\ParticleSystem.h" />
+    <ClInclude Include="..\Public\Party.h" />
+    <ClInclude Include="..\Public\Partyhp.h" />
     <ClInclude Include="..\Public\Pawn.h" />
     <ClInclude Include="..\Public\PickingMgr.h" />
     <ClInclude Include="..\public\Pig.h" />
@@ -327,6 +330,7 @@
     <ClCompile Include="..\Private\Behavior_Tree.cpp" />
     <ClCompile Include="..\private\Boaron.cpp" />
     <ClCompile Include="..\private\Boarrior.cpp" />
+    <ClCompile Include="..\Private\BossName.cpp" />
     <ClCompile Include="..\Private\BT_NPC.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\private\BerryBush.cpp" />
@@ -386,6 +390,8 @@
     <ClCompile Include="..\Private\NPC.cpp" />
     <ClCompile Include="..\Private\Particle.cpp" />
     <ClCompile Include="..\Private\ParticleSystem.cpp" />
+    <ClCompile Include="..\Private\Party.cpp" />
+    <ClCompile Include="..\Private\Partyhp.cpp" />
     <ClCompile Include="..\Private\Pawn.cpp" />
     <ClCompile Include="..\Private\PickingMgr.cpp" />
     <ClCompile Include="..\private\Pig.cpp" />

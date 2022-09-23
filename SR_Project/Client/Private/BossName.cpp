@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "..\Public\ScreenEffect.h"
+#include "..\Public\BossName.h"
 #include "GameInstance.h"
 #include "Player.h"
 #include "Inventory.h"
 
-CScreenEffect::CScreenEffect(LPDIRECT3DDEVICE9 pGraphic_Device)
+CBossName::CBossName(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CScreenEffect::CScreenEffect(const CScreenEffect & rhs)
+CBossName::CBossName(const CBossName & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CScreenEffect::Initialize_Prototype()
+HRESULT CBossName::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -22,40 +22,40 @@ HRESULT CScreenEffect::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CScreenEffect::Initialize(void* pArg)
+HRESULT CBossName::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 1280;
-	m_fSizeY = 720.f;
+	m_fSizeX = 300.f;
+	m_fSizeY = 100.f;
 	m_fX = 640.f;
-	m_fY = 360.f;
+	m_fY = 125.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+	m_bbearger = *(_bool*)pArg;
 
-	m_bforboss = *(_bool*)pArg;
 
-	if (m_bforboss == true)
+	if (m_bbearger == false)
 	{
 		texnum = 1;
-		alpha = 1.f;
+		//alpha = 1.f;
 	}
 
 	return S_OK;
 }
 
-int CScreenEffect::Tick(_float fTimeDelta)
+int CBossName::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_bforboss == false)
+	/*if (m_bbearger == false)
 	{
 		alpha += 0.06f;
 
@@ -66,9 +66,9 @@ int CScreenEffect::Tick(_float fTimeDelta)
 		}
 	}
 	else
-	{
+	{*/
 
-		if (GetTickCount() > m_dwDeadtime + 7000)
+		if (GetTickCount() > m_dwDeadtime + 8000)
 		{
 			m_dwDeadtime = GetTickCount();
 			return OBJ_DEAD;
@@ -87,19 +87,19 @@ int CScreenEffect::Tick(_float fTimeDelta)
 			alpha += 0.007f;
 		}
 
-		
 
-	}
-	
 
-	
+	//}
+
+
+
 
 
 
 	return OBJ_NOEVENT;
 }
 
-void CScreenEffect::Late_Tick(_float fTimeDelta)
+void CBossName::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
@@ -108,11 +108,11 @@ void CScreenEffect::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 }
 
-HRESULT CScreenEffect::Render()
+HRESULT CBossName::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
-	
+
 	_float4x4		WorldMatrix, ViewMatrix;
 	D3DXMatrixIdentity(&ViewMatrix);
 
@@ -135,7 +135,7 @@ HRESULT CScreenEffect::Render()
 	return S_OK;
 }
 
-HRESULT CScreenEffect::SetUp_Components()
+HRESULT CBossName::SetUp_Components()
 {
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), (CComponent**)&m_pShaderCom)))
@@ -146,7 +146,7 @@ HRESULT CScreenEffect::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_ScreenEffect"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_BossName"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -168,7 +168,7 @@ HRESULT CScreenEffect::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CScreenEffect::SetUp_RenderState()
+HRESULT CBossName::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -182,7 +182,7 @@ HRESULT CScreenEffect::SetUp_RenderState()
 	return S_OK;
 }
 
-HRESULT CScreenEffect::Release_RenderState()
+HRESULT CBossName::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -190,26 +190,26 @@ HRESULT CScreenEffect::Release_RenderState()
 	return S_OK;
 }
 
-CScreenEffect * CScreenEffect::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CBossName * CBossName::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CScreenEffect*	pInstance = new CScreenEffect(pGraphic_Device);
+	CBossName*	pInstance = new CBossName(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CScreenEffect"));
+		ERR_MSG(TEXT("Failed to Created : CBossName"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CScreenEffect::Clone(void* pArg)
+CGameObject * CBossName::Clone(void* pArg)
 {
-	CScreenEffect*	pInstance = new CScreenEffect(*this);
+	CBossName*	pInstance = new CBossName(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CScreenEffect"));
+		ERR_MSG(TEXT("Failed to Cloned : CBossName"));
 		Safe_Release(pInstance);
 	}
 
@@ -217,7 +217,7 @@ CGameObject * CScreenEffect::Clone(void* pArg)
 }
 
 
-void CScreenEffect::Free()
+void CBossName::Free()
 {
 	__super::Free();
 

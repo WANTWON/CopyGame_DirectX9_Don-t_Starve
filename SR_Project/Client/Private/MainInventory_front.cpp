@@ -30,6 +30,8 @@ HRESULT CMainInventory_front::Initialize_Prototype()
 
 HRESULT CMainInventory_front::Initialize(void* pArg)
 {
+	
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -186,6 +188,12 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 
 int CMainInventory_front::Tick(_float fTimeDelta)
 {
+	if (iNum >= 10 && m_bcheck_bag == false)
+	{
+		//m_bpontcheck = false;
+		return OBJ_NOEVENT;
+	}
+
 	__super::Tick(fTimeDelta);
 
 	RECT		rcRect;
@@ -270,6 +278,12 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 
 void CMainInventory_front::Late_Tick(_float fTimeDelta)
 {
+
+	if (iNum >= 10 && m_bcheck_bag == false)
+	{
+		m_bpontcheck = false;
+		return ;
+	}
 	__super::Late_Tick(fTimeDelta);
 
 	CMouse*			pMouse = CMouse::Get_Instance();

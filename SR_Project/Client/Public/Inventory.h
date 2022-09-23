@@ -59,6 +59,8 @@
 #include "MiniMap_Icon.h" 
 #include "MiniMap.h"
 #include "Cardgame.h"
+#include "Party.h"
+#include "Partyhp.h"
 /*  생성 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -138,6 +140,9 @@ public:
 	list<CMiniMap_Icon*>* Get_Minimapicon_list(void) { return &m_Minimapiconlist; }
 
 	list<CCardgame*>* Get_Cardgame_list(void) { return &m_Cardgamelist; }
+
+	list<CParty*>* Get_Party_list(void) { return &m_Partylist; }
+	list<CPartyhp*>* Get_Partyhp_list(void) { return &m_Partyhplist; }
 
 	
 
@@ -257,6 +262,9 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CMiniMap_Icon*>m_Minimapiconlist;
 
 	list<CCardgame*> m_Cardgamelist;
+
+	list<CParty*> m_Partylist;
+	list<CPartyhp*> m_Partyhplist;
 
 
 	

@@ -420,6 +420,11 @@ HRESULT CTalk::Excute(void)
 				pCamera->Set_Target(pGameObject);
 				m_SetTargetBearger = true;
 
+				_bool bearger = true;
+
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BossName"), LEVEL_STATIC, TEXT("Layer_BossName"), (bool*)&bearger)))
+					return E_FAIL;
+
 			}
 			else if (m_SetTargetBearger)
 			{

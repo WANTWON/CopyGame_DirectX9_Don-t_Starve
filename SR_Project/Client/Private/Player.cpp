@@ -302,8 +302,9 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
-		
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"))))
+		_bool forboss = false;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"),&forboss)))
 			return OBJ_NOEVENT;
 
 		m_ActStack.push(ACTION_STATE::DAMAGED);

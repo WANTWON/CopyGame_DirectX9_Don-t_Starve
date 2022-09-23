@@ -88,6 +88,93 @@ HRESULT CPont::Initialize(void* pArg)
 	   m_fX = 745.f;
    else if (iNum == 19)
 	   m_fX = 758.f;
+
+
+ 
+
+   else if (iNum == 20)
+   {
+	   m_fX = 1180.f;
+	   m_fY = 425.f;
+   }
+	   
+   else if (iNum == 21)
+   {
+	   m_fX = 1193.f;
+	   m_fY = 425.f;
+   }
+   else if (iNum == 22)
+   {
+	   m_fX = 1230.f;
+	   m_fY = 425.f;
+   }
+   else if (iNum == 23)
+   {
+	   m_fX = 1243.f;
+	   m_fY = 425.f;
+   }
+   else if (iNum == 24)
+   {
+	   m_fX = 1180.f;
+	   m_fY = 475.f;
+   }
+   else if (iNum == 25)
+   {
+	   m_fX = 1193.f;
+	   m_fY = 475.f;
+   }
+   else if (iNum == 26)
+   {
+	   m_fX = 1230.f;
+	   m_fY = 475.f;
+   }
+   else if (iNum == 27)
+   {
+	   m_fX = 1243.f;
+	   m_fY = 475.f;
+
+   }
+   else if (iNum == 28)
+   {
+	   m_fX = 1180.f;
+	   m_fY = 525.f;
+   }
+   else if (iNum == 29)
+   {
+	   m_fX = 1193.f;
+	   m_fY = 525.f;
+   }
+   else if (iNum == 30)
+   {
+	   m_fX = 1230.f;
+	   m_fY = 525.f;
+   }
+   else if (iNum == 31)
+   {
+	   m_fX = 1243.f;
+	   m_fY = 525.f;
+   }
+   else if (iNum == 32)
+   {
+	   m_fX = 1180.f;
+	   m_fY = 575.f;
+   }
+   else if (iNum == 33)
+   {
+	   m_fX = 1193.f;
+	   m_fY = 575.f;
+   }
+   else if (iNum == 34)
+   {
+	   m_fX = 1230.f;
+	   m_fY = 575.f;
+   }
+   else if (iNum == 35)
+   {
+	   m_fX = 1243.f;
+	   m_fY = 575.f;
+   }
+
    
 			
 	if (FAILED(SetUp_Components()))

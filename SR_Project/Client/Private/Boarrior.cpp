@@ -346,16 +346,30 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		Attack(fTimeDelta, m_eState);
 		break;
 	case STATE::SPAWN:
-		m_pTextureCom->MoveFrame(m_TimerTag);
+	{m_pTextureCom->MoveFrame(m_TimerTag);
+	
+	
+	
 
-		m_fSpawnTime += fTimeDelta;
-		if (m_fSpawnTime > 2.f)
-		{
-			m_fSpawnTime = 0.f;
-			m_eState = STATE::IDLE;
+	if (m_bfirst == true)
+	{
+		_bool forboss = true;
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_BOSS, TEXT("Layer_Screeneffect"), (bool*)&forboss);
+		m_bfirst = false;
+	}
+	
 
-			Spawn_Adds(fTimeDelta);
-		}
+	m_fSpawnTime += fTimeDelta;
+	if (m_fSpawnTime > 2.f)
+	{
+		m_fSpawnTime = 0.f;
+		m_eState = STATE::IDLE;
+		m_bfirst = true;
+		Spawn_Adds(fTimeDelta);
+	}
+	}
+	
 		break;
 	case STATE::STUN:
 		m_pTextureCom->MoveFrame(m_TimerTag);
