@@ -388,6 +388,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 			m_vAttackPos = _float3(0.f, 0.f, 0.f);
 			m_bShouldSpawn = false;
 			m_fFollowTime = 0.f;
+			iAnimFrameSyncCounter = 0;
 		}
 			
 		break;
@@ -934,6 +935,7 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 		m_bDidDamage = false;
 		m_iPattern = 0; 
 		m_vAttackPos = _float3(0.f, 0.f, 0.f);
+		iAnimFrameSyncCounter = 0;
 	}
 	else 
 	{
@@ -975,10 +977,114 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 			
 			m_pTransformCom->Go_PosTarget(fTimeDelta, m_vAttackPos, _float3(0, 0, 0));
 
+			// Spawn Fire Effect
+			BULLETDATA BulletData;
+			ZeroMemory(&BulletData, sizeof(BulletData));
+
+			BulletData.bIsPlayerBullet = false;
+			BulletData.eWeaponType = WEAPON_TYPE::BOARRIOR_FIRE;
+			
+			_float3 vCenterPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
+			_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE::STATE_LOOK);
+			D3DXVec3Normalize(&vLook, &vLook);
+			_float fDistance = 1.f;
+
+			BulletData.vPosition = vCenterPosition - _float3(vLook.x * fDistance, 0.f, vLook.z * fDistance);
+			
+			switch (m_pTextureCom->Get_Frame().m_iCurrentTex)
+			{
+			case 12:
+				if (iAnimFrameSyncCounter == 0)
+				{
+					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+						return;
+
+					iAnimFrameSyncCounter++;
+				}
+				break;
+			case 13:
+				if (iAnimFrameSyncCounter == 1)
+				{
+					BulletData.vPosition.x = vCenterPosition.x + cosf(D3DXToRadian(315.f)) * fDistance - sin(D3DXToRadian(315.f)) * fDistance;
+					BulletData.vPosition.z = vCenterPosition.z + sin(D3DXToRadian(315.f)) * fDistance + cos(D3DXToRadian(315.f)) * fDistance;
+					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+						return;
+
+					iAnimFrameSyncCounter++;
+				}
+				break;
+			case 15:
+				if (iAnimFrameSyncCounter == 2)
+				{
+					BulletData.vPosition.x = vCenterPosition.x + cosf(D3DXToRadian(360.f)) * fDistance - sin(D3DXToRadian(360.f)) * fDistance;
+					BulletData.vPosition.z = vCenterPosition.z + sin(D3DXToRadian(360.f)) * fDistance + cos(D3DXToRadian(360.f)) * fDistance;
+					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+						return;
+
+					iAnimFrameSyncCounter++;
+				}
+				break;
+			case 17:
+				if (iAnimFrameSyncCounter == 3)
+				{
+					BulletData.vPosition.x = vCenterPosition.x + cosf(D3DXToRadian(45.f)) * fDistance - sin(D3DXToRadian(45.f)) * fDistance;
+					BulletData.vPosition.z = vCenterPosition.z + sin(D3DXToRadian(45.f)) * fDistance + cos(D3DXToRadian(45.f)) * fDistance;
+					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+						return;
+
+					iAnimFrameSyncCounter++;
+				}
+				break;
+			case 19:
+				if (iAnimFrameSyncCounter == 4)
+				{
+					BulletData.vPosition.x = vCenterPosition.x + cosf(D3DXToRadian(90.f)) * fDistance - sin(D3DXToRadian(90.f)) * fDistance;
+					BulletData.vPosition.z = vCenterPosition.z + sin(D3DXToRadian(90.f)) * fDistance + cos(D3DXToRadian(90.f)) * fDistance;
+					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+						return;
+
+					iAnimFrameSyncCounter++;
+				}
+				break;
+			case 20:
+				if (iAnimFrameSyncCounter == 5)
+				{
+					BulletData.vPosition.x = vCenterPosition.x + cosf(D3DXToRadian(135.f)) * fDistance - sin(D3DXToRadian(135.f)) * fDistance;
+					BulletData.vPosition.z = vCenterPosition.z + sin(D3DXToRadian(135.f)) * fDistance + cos(D3DXToRadian(135.f)) * fDistance;
+					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+						return;
+
+					iAnimFrameSyncCounter++;
+				}
+				break;
+			case 22:
+				if (iAnimFrameSyncCounter == 6)
+				{
+					BulletData.vPosition.x = vCenterPosition.x + cosf(D3DXToRadian(180.f)) * fDistance - sin(D3DXToRadian(180.f)) * fDistance;
+					BulletData.vPosition.z = vCenterPosition.z + sin(D3DXToRadian(180.f)) * fDistance + cos(D3DXToRadian(180.f)) * fDistance;
+					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+						return;
+
+					iAnimFrameSyncCounter++;
+				}
+				break;
+			case 25:
+				if (iAnimFrameSyncCounter == 7)
+				{
+					BulletData.vPosition.x = vCenterPosition.x + cosf(D3DXToRadian(225.f)) * fDistance - sin(D3DXToRadian(225.f)) * fDistance;
+					BulletData.vPosition.z = vCenterPosition.z + sin(D3DXToRadian(225.f)) * fDistance + cos(D3DXToRadian(225.f)) * fDistance;
+					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+						return;
+
+					iAnimFrameSyncCounter++;
+				}
+				break;
+			}
+
 			// If did NOT Apply Damage yet
 			if (!m_bDidDamage)
 			{
-				// If Spider is Colliding with Player 
+				// If Colliding with Player 
 				vector<CGameObject*> vecDamagedActor;
 				if (pGameInstance->Collision_Check_Group_Multi(CCollider_Manager::COLLISION_PLAYER, vecDamagedActor, this, CCollider_Manager::COLLSIION_BOX))
 				{
@@ -1028,7 +1134,7 @@ void CBoarrior::Spawn_Bullet(_float fTimeDelta)
 		BulletData1.vPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 		BulletData2.vPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 
-		_float fForwardOffset = 1.f;
+		_float fForwardOffset = 1.25f;
 		_float fSideOffset = 0.4f;
 
 		switch (Get_Unprocessed_Dir(m_eDir))
@@ -1076,6 +1182,7 @@ void CBoarrior::Spawn_Adds(_float fTimeDelta)
 	m_vAttackPos = _float3(0.f, 0.f, 0.f);
 	m_bShouldSpawn = false;
 	m_fFollowTime = 0.f;
+	iAnimFrameSyncCounter = 0;
 
 	// Shake
 	CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
@@ -1205,6 +1312,7 @@ ApplyDamage:
 				m_fStaggerDamage = 0.f;
 				m_fSpawnTime = 0.f;
 				m_fFollowTime = 0.f;
+				iAnimFrameSyncCounter = 0;
 			}
 			else
 				m_fStaggerDamage += fDamage;
