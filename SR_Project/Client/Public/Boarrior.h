@@ -78,6 +78,8 @@ private:
 	_bool m_bHasDefenseBoost = false;
 	_float m_fHealTimer = 0.f;
 
+	_bool m_bfirst = true;
+
 	_float3 m_vecOutPos; // For Picking
 
 	

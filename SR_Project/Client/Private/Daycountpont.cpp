@@ -53,8 +53,22 @@ int CDaycountpont::Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 	Safe_AddRef(pinv);
 */
+	if (GetTickCount() > m_dwdaynight + 30000)
+	{
+		if (nightandday == DAY_MORNING)
+			nightandday = DAY_NIGHT;
 
-	if (GetTickCount() > m_dwdaytime + 45000)
+		else if (nightandday == DAY_NIGHT)
+			nightandday = DAY_MORNING;
+
+		m_dwdaynight = GetTickCount();
+		
+	}
+
+
+
+
+	if (GetTickCount() > m_dwdaytime + 60000)
 	{
 		++texnum;
 		m_dwdaytime = GetTickCount();

@@ -109,6 +109,43 @@ void CInventory_Manager::Tick(_float fTimeDelta)
 		}
 	}
 
+
+	
+	auto iterparty = m_Partylist.begin();
+	auto iterpartyhp = m_Partyhplist.begin();
+	bool bcheck1 = true;
+
+	while (bcheck1 && !m_MainInventorylist.empty() && !m_Pontlist.empty())
+	{
+
+
+
+
+
+		if ((*iterparty)->Get_check() == false)  //�κ��丮�� ��Ʈ�� false��
+		{
+			(*iterpartyhp)->Set_check(false);//��Ʈâ�� �ȶ߰��ұ���
+		}
+		else if ((*iterparty)->Get_check() == true)
+		{
+			(*iterpartyhp)->Set_check(true);
+		}
+
+		
+		
+		++iterpartyhp;
+		++iterparty;
+			
+	
+
+
+
+		if (iterparty == m_Partylist.end() || iterpartyhp == m_Partyhplist.end())
+		{
+			bcheck1 = false;
+		}
+	}
+
 }
 
 void CInventory_Manager::Late_Tick(_float fTimeDelta)
@@ -254,7 +291,7 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 		Cardgame();
 
 	
-	if (icardgamecount == 4)
+	if (icardgamecount == 8)
 	{
 		for (auto& k : m_Cardgamelist)
 			k->set_check(false);
@@ -565,7 +602,7 @@ void CInventory_Manager::Cardgame()
 						++count2;
 						if (count2 == 2)
 						{
-							++icardgamecount;//함수로뺴
+							//++icardgamecount;//함수로뺴
 							break;
 						}
 							
@@ -619,7 +656,11 @@ void CInventory_Manager::Start_Cardgame()
 
 
 	for (auto& k : m_Cardgamelist)
+	{
 		k->set_check(true);
+		k->set_goback(true);
+	}
+		
 }
 
 void CInventory_Manager::Dead_on()

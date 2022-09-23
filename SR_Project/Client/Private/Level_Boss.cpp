@@ -257,10 +257,17 @@ void CLevel_Boss::Start_Camera_Motion()
 {
 	if (!m_bTargetCam && m_dwTime + 1000 < GetTickCount())
 	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
 		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_BOSS, TEXT("Layer_Monster"));
 		pCamera->Set_Target(pGameObject);
+
+		_bool bearger = false;
+
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BossName"), LEVEL_STATIC, TEXT("Layer_BossName"), (bool*)&bearger);
+			
+			
 		pCamera->Set_TalkingMode(true);
 		m_dwTime = GetTickCount();
 		m_bFirst = true;

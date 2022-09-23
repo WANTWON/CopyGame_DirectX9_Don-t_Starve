@@ -35,6 +35,9 @@ public:
 	void set_first(bool tof) { m_bfirst = tof; }
 	void SetUp_BillBoard();
 
+	//void setcardback() { texnum = 5; }
+
+
 	foreffect effectdesc;
 
 	DWORD m_dwDeadtime = GetTickCount();
@@ -84,6 +87,7 @@ public:
 	void set_lastdance(bool tof) { m_blastdance = tof; }
 	void set_wrong(bool tof) { m_bwrong = tof; }
 
+	void set_goback(bool tof) { goback = tof; }
 	
 
 private:
@@ -98,12 +102,15 @@ private:
 	bool bfirst = false;
 	bool m_blastdance = false;
 
+	_bool goback = false;
+
 	
 	_float3 m_vecOutPos;
 
 	_float ftime = 0.f;
 	_float ftime2 = 0.f;
 	_float ftime3 = 0.f; 
+	_float ftime4 = 0.f;
 
 	_uint texnum = 5;
 	_uint texnum1 = 0;

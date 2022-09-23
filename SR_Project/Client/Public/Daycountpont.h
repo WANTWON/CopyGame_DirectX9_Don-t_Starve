@@ -44,6 +44,9 @@ private:
 	_uint m_ihp;
 
 	DWORD m_dwdaytime = GetTickCount();
+	DWORD m_dwdaynight = GetTickCount();
+
+	DAY_STATE nightandday = DAY_MORNING;
 
 public:
 	static CDaycountpont* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

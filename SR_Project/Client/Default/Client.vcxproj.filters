@@ -325,14 +325,23 @@
     <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Battery">
       <UniqueIdentifier>{374424ee-8740-4302-a37f-249d4c09ad81}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00. Pawn\01.Monster\Carnival_Egg">
-      <UniqueIdentifier>{e1221791-2753-4ba9-a2b9-ee323586ef00}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\NPC\Woodie">
       <UniqueIdentifier>{dc61e49f-bbb7-439e-9e51-d763d3411d30}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\00. Pawn\04.Interactive_Object\Portable_Pot">
       <UniqueIdentifier>{074cbb53-78be-40de-a93d-73665376e287}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\18.CardGame">
+      <UniqueIdentifier>{7f283f85-115f-443b-b5ab-69da96f87038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00. Pawn\01.Monster\Carnival_Egg">
+      <UniqueIdentifier>{e1221791-2753-4ba9-a2b9-ee323586ef00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\19.BossName">
+      <UniqueIdentifier>{abd31895-97da-4328-a2a8-8e04d70c7cd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.UI\20.Party">
+      <UniqueIdentifier>{738e7b0b-0fe8-4beb-a774-371356cbc7fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -774,6 +783,21 @@
     <ClInclude Include="..\Public\Portable_Pot.h">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Portable_Pot</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CardEffect.h">
+      <Filter>02.GameObject\98.UI\18.CardGame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cardgame.h">
+      <Filter>02.GameObject\98.UI\18.CardGame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BossName.h">
+      <Filter>02.GameObject\98.UI\19.BossName</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Party.h">
+      <Filter>02.GameObject\98.UI\20.Party</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Partyhp.h">
+      <Filter>02.GameObject\98.UI\20.Party</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1201,6 +1225,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Portable_Pot.cpp">
       <Filter>02.GameObject\00. Pawn\04.Interactive_Object\Portable_Pot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CardEffect.cpp">
+      <Filter>02.GameObject\98.UI\18.CardGame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cardgame.cpp">
+      <Filter>02.GameObject\98.UI\18.CardGame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossName.cpp">
+      <Filter>02.GameObject\98.UI\19.BossName</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Party.cpp">
+      <Filter>02.GameObject\98.UI\20.Party</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Partyhp.cpp">
+      <Filter>02.GameObject\98.UI\20.Party</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

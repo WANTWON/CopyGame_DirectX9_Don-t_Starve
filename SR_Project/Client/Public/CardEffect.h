@@ -13,12 +13,12 @@ END
 
 BEGIN(Client)
 
-class CardEffect final : public CGameObject
+class CCardEffect final : public CGameObject
 {
 private:
-	CardEffect(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CardEffect(const CardEffect& rhs);
-	virtual ~CardEffect() = default;
+	CCardEffect(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CCardEffect(const CCardEffect& rhs);
+	virtual ~CCardEffect() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -80,7 +80,7 @@ public:
 	bool get_check(void) { return m_bcheck; }
 	/*void Set_portalpos(_float3 pos) { portalpos = pos; }
 	void Set_portalpos2(_float3 pos) { portalpos2 = pos; }*/
-	static CardEffect* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CCardEffect* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

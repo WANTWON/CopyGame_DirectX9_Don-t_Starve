@@ -29,6 +29,7 @@ private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
 	CTexture*				m_pTextureCom1 = nullptr;
 	CTexture*				m_pTextureCom2 = nullptr;
+	CTexture*				m_pTextureCom3 = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
@@ -55,6 +56,7 @@ private:
 	_bool	m_bIsStartText = true;
 	_bool	m_bforwendy = false;
 	_bool	m_bforWinona = false;
+	_bool   m_bforWoody = false;
 public:
 	bool getcheck() { return m_bcheck;  }
 	void setcheck(bool tof) { m_bcheck = tof; }
@@ -76,6 +78,8 @@ public:
 	void Set_Texnum1(_uint _iNum) { texnum1 = _iNum; }
 
 	void Set_WinonaTalk(_bool _Activated) { m_bforWinona = _Activated; }
+
+	void Set_WoodyTalk(_bool _Activated) { m_bforWoody = _Activated; }
 public:
 	static CTalk* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

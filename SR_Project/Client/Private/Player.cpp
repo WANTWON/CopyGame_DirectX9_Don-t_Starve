@@ -302,8 +302,9 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
+		_bool forboss = false;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"))))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"),&forboss)))
 			return OBJ_NOEVENT;
 
 		m_ActStack.push(ACTION_STATE::DAMAGED);
@@ -2273,7 +2274,10 @@ void CPlayer::RangeCheck(_float _fTimeDelta)
 		+ (m_vTargetPicking.z - Get_Pos().z)*(m_vTargetPicking.z - Get_Pos().z);
 
 	m_pPicker->Set_Pos(m_vTargetPicking);
-	m_pRange->Set_Pos(Get_Pos());
+
+	_float3 vPosition = Get_Pos();
+	vPosition.y -= 0.4f;
+	m_pRange->Set_Pos(vPosition);
 
 	if (m_fAtkRange > Compare_Range)
 	{

@@ -40,6 +40,14 @@ HRESULT CScreenEffect::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 
+	m_bforboss = *(_bool*)pArg;
+
+	if (m_bforboss == true)
+	{
+		texnum = 1;
+		alpha = 1.f;
+	}
+
 	return S_OK;
 }
 
@@ -47,15 +55,46 @@ int CScreenEffect::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	alpha += 0.06f;
-
-	if (GetTickCount() > m_dwDeadtime + 10000)
+	if (m_bforboss == false)
 	{
-		m_dwDeadtime = GetTickCount();
-		return OBJ_DEAD;
+		alpha += 0.06f;
+
+		if (GetTickCount() > m_dwDeadtime + 5000)
+		{
+			m_dwDeadtime = GetTickCount();
+			return OBJ_DEAD;
+		}
 	}
+	else
+	{
+
+		if (GetTickCount() > m_dwDeadtime + 7000)
+		{
+			m_dwDeadtime = GetTickCount();
+			return OBJ_DEAD;
+		}
+
+		if (alpha >= 0 && m_bfirst == true)
+			alpha -= 0.007f;
+
+		if (alpha <= 0)
+		{
+			m_bfirst = false;
+		}
+
+		if (m_bfirst == false)
+		{
+			alpha += 0.007f;
+		}
+
+		
+
+	}
+	
 
 	
+
+
 
 	return OBJ_NOEVENT;
 }
@@ -86,7 +125,7 @@ HRESULT CScreenEffect::Render()
 	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
 	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&m_ProjMatrix, &m_ProjMatrix), sizeof(_float4x4));
 
-	m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(0));
+	m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(texnum));
 
 	m_pShaderCom->Begin(m_eShaderID);
 

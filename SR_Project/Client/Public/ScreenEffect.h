@@ -46,6 +46,11 @@ private:
 
 	_uint texnum = 0;
 	_uint m_ihp;
+   
+
+	_bool m_bforboss = false;
+
+	_bool m_bfirst = true;
 
 public:
 	static CScreenEffect* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

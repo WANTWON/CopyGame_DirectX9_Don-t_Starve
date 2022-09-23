@@ -70,7 +70,7 @@ HRESULT CCardgame::Initialize(void* pArg)
 	
 
 
-
+	texnum = texnum1;
 	//pos.x += 2.f;
 
 
@@ -131,7 +131,22 @@ int CCardgame::Tick(_float fTimeDelta)
 		//}
 
 
+		if (goback == true)
+		{
+			ftime4 += fTimeDelta;
 
+			if (ftime4 >= 2.f)
+			{
+				texnum = 5;
+
+				ftime4 = 0;
+
+				goback = false;
+			}
+
+			
+
+		}
 
 
 
@@ -264,6 +279,9 @@ void CCardgame::Late_Tick(_float fTimeDelta)
 		{
 
 		}*/
+
+		
+
 
 		if (nullptr != m_pRendererCom)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
