@@ -37,6 +37,7 @@ private:
 	_float4x4				m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
 	_float alpha = 1.f;
+	_float ftime = 0.f;
 
 	DWORD m_dwDeadtime = GetTickCount();
 private:

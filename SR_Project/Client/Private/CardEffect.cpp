@@ -145,7 +145,7 @@ void CCardEffect::Late_Tick(_float fTimeDelta)
 		}
 		else
 		{
-			if (texnum == 9)
+			if (texnum == 14)
 			{
 				m_bdead = true;
 				
@@ -219,7 +219,7 @@ HRESULT CCardEffect::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Card_die"), (CComponent**)&m_pTextureCom1)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_cardeffect"), (CComponent**)&m_pTextureCom1)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */

@@ -75,7 +75,7 @@ int CScreenEffect::Tick(_float fTimeDelta)
 		}
 
 		if (alpha >= 0 && m_bfirst == true)
-			alpha -= 0.007f;
+			alpha -= 0.1;
 
 		if (alpha <= 0)
 		{
@@ -84,7 +84,7 @@ int CScreenEffect::Tick(_float fTimeDelta)
 
 		if (m_bfirst == false)
 		{
-			alpha += 0.007f;
+			alpha += 0.1;
 		}
 
 		

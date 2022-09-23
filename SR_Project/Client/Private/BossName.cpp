@@ -29,8 +29,8 @@ HRESULT CBossName::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-	m_fSizeX = 300.f;
-	m_fSizeY = 100.f;
+	m_fSizeX = 800.f;
+	m_fSizeY = 300.f;
 	m_fX = 640.f;
 	m_fY = 125.f;
 
@@ -83,6 +83,11 @@ int CBossName::Tick(_float fTimeDelta)
 		}
 
 		if (m_bfirst == false)
+		{
+			ftime += fTimeDelta;
+		}
+
+		if (m_bfirst == false && ftime > 0.5f)
 		{
 			alpha += 0.007f;
 		}

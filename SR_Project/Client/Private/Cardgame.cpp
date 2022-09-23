@@ -41,7 +41,6 @@ HRESULT CCardgame::Initialize(void* pArg)
 	iNum = m_CaedDesc.iNumber;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_CaedDesc.pos);
 
-
 	//pos = { 40.f + (iNum*0.6f) , 0.5f, 25.f };
 
 	
@@ -72,7 +71,7 @@ HRESULT CCardgame::Initialize(void* pArg)
 	//pos.x += 2.f;
 
 
-	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+	m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 	//m_pTransformCom1->Set_Scale(0.5f, 0.5f, 1.f);
 
 	m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 0.5f);
@@ -268,7 +267,7 @@ void CCardgame::Late_Tick(_float fTimeDelta)
 
 		}
 
-		//	//ERR_MSG(L"�浹");
+		//	//ERR_MSG(L"�浹");
 		//}
 
 

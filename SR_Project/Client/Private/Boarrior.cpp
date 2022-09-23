@@ -348,8 +348,8 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 	case STATE::SPAWN:
 	{m_pTextureCom->MoveFrame(m_TimerTag);
 	
-	
-	
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
+		m_bfirst = true;
 
 	if (m_bfirst == true)
 	{
