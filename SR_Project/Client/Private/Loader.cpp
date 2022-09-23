@@ -919,8 +919,12 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_DeadUI */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Party"),
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Partyy"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/party/party%d.png"), 3))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_cardeffect"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/Complete_Particle/Particle_%03d.png"), 15))))
 		return E_FAIL;
 
 #pragma endregion Add_Texture UI

@@ -62,6 +62,7 @@ private:
 	//bool noboss = true;
 
 	_uint m_iattack = 0;
+	_uint m_iarmor = 0;
 };
 
 END
