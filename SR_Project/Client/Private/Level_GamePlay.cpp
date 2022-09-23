@@ -595,14 +595,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 
 	
 	
-	for (int i = 0; i < 9; ++i)
-	{
-		int number = i;
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
-			return E_FAIL;
-
-	}
 	
 	/*_bool bearger = true; //for bossnametest
 

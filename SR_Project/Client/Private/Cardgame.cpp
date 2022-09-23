@@ -27,24 +27,22 @@ HRESULT CCardgame::Initialize_Prototype()
 
 HRESULT CCardgame::Initialize(void* pArg)
 {
+	if (pArg != nullptr)
+		memcpy(&m_CaedDesc, pArg, sizeof(CARDDESC));
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
-
-
 
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
 
-	iNumber = (int*)pArg;
-
-	iNum = *iNumber;
-
+	iNum = m_CaedDesc.iNumber;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_CaedDesc.pos);
 
 
-	pos = { 40.f + (iNum*0.6f) , 0.5f, 25.f };
+	//pos = { 40.f + (iNum*0.6f) , 0.5f, 25.f };
 
 	
 	if (iNum == 0 || iNum == 8)
@@ -74,7 +72,7 @@ HRESULT CCardgame::Initialize(void* pArg)
 	//pos.x += 2.f;
 
 
-	m_pTransformCom->Set_Scale(0.5f, 0.5f, 1.f);
+	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 	//m_pTransformCom1->Set_Scale(0.5f, 0.5f, 1.f);
 
 	m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 0.5f);
@@ -193,7 +191,7 @@ int CCardgame::Tick(_float fTimeDelta)
 		
 
 
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, pos);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_CaedDesc.pos);
 		//m_pTransformCom1->Set_State(CTransform::STATE_POSITION, pos);
 	}
 
@@ -243,7 +241,7 @@ void CCardgame::Late_Tick(_float fTimeDelta)
 
 				foreffect		effectdesc;
 				ZeroMemory(&effectdesc, sizeof(foreffect));
-				Update_Position(pos);
+				Update_Position(m_CaedDesc.pos);
 				effectdesc.pos = Get_Position();
 				effectdesc.pos.y += 0.5f;
 				effectdesc.whateffect = 1;

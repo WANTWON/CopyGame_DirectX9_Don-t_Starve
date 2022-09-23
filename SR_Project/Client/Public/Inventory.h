@@ -280,7 +280,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	
 	_bool m_PickingPot = false;
 
-	_bool m_bcardgameon = false;
+	_bool m_bcardgameon = true;
 
 
 	//private:

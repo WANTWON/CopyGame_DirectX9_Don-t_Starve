@@ -50,18 +50,21 @@ private: /* For TransformCom*/
 private:
 	void Spawn_Spider(_float fTimeDelta);
 	void Spawn_RandomMonster(_float fTimeDelta);
+	_bool Check_AllClear();
+	_bool Get_Clear() { return m_bClear; }
 public:
 	void Spawn_Boaron(_float fTimeDelta);
 
 private:
 	HOUSEDECS m_HouseDesc;
-	//const _tchar* m_TimerTag = TEXT("");
 	_float m_fTerrain_Height = 0.f;
 
 	_int m_MonsterMaxCount = 0;
 	_float m_fSpawnTime = 999.f;
 	DWORD m_dwTime = GetTickCount();
-//	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
+	_bool m_bClear = false; 
+	_bool m_bFenceOpen = false;
+
 public:
 	static CHouse* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

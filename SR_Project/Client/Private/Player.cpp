@@ -66,11 +66,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
-	if (CKeyMgr::Get_Instance()->Key_Up('8'))
-	{
-		CInventory_Manager::Get_Instance()->Start_Cardgame();
-	}
-
 	m_fMentalitytime += fTimeDelta;
 	m_fHungertime += fTimeDelta;
 	if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT && m_fMentalitytime > 1.f)

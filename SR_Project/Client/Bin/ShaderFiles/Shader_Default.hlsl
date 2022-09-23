@@ -198,10 +198,10 @@ technique		DefaultTechnique
 
 	pass DefaultPass_with_AlphaBlend
 	{
-		AlphablendEnable = true;
-		SrcBlend = SrcAlpha;
-		DestBlend = InvSrcAlpha;
-		BlendOp = Add;
+		ALPHABLENDENABLE = true;
+		SRCBLEND = SRCALPHA;
+		DESTBLEND = INVSRCALPHA;
+	//	BlendOp = Add;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_MAIN();

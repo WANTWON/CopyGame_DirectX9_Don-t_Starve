@@ -5,6 +5,7 @@
 #include "CameraManager.h"
 #include "Carnival_Shooter.h"
 #include "Shooting_Target.h"
+#include "Level_Maze.h"
 
 CCarnival_Shoot_Button::CCarnival_Shoot_Button(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -127,9 +128,14 @@ void CCarnival_Shoot_Button::Change_Camera()
 	if (m_bFinished)
 		return;
 
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == false)
+		return;
+	
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	if (Check_EveryTarget_Complete() == true)
 	{
+		CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+		dynamic_cast<CLevel_Maze*>(pLevel)->Set_PuzzleSolved(true);
 		m_bFinished = true;
 		if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
 		{
