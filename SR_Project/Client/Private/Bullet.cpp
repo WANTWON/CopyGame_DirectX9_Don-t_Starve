@@ -1397,6 +1397,16 @@ HRESULT CBullet::Texture_Clone(void)
 
 		break;
 
+	case WEAPON_TYPE::BOARRIOR_FIRE:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 46;
+		TextureDesc.m_fSpeed = 30;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Boarrior_Fire"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Fire"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+
+		break;
+
 	case WEAPON_TYPE::WEAPON_PUFF:
 		TextureDesc.m_iStartTex = 0;
 		TextureDesc.m_iEndTex = 16;
