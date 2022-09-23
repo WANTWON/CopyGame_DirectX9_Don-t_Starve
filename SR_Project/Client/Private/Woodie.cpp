@@ -734,7 +734,7 @@ void CWoodie::Revive_Berry(_float _fTimeDelta)
 
 void CWoodie::Talk_Player(_float _fTimeDelta)
 {
-	CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(true);
+	CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WoodyTalk(true);
 
 	CInventory_Manager* pinven = CInventory_Manager::Get_Instance();
 	pinven->Get_Talk_list()->front()->setcheck(true);
@@ -817,7 +817,7 @@ void CWoodie::Talk_Player(_float _fTimeDelta)
 					m_pTarget = nullptr;
 				}
 				pinven->Get_Talk_list()->front()->setcheck(false);
-				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
+				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WoodyTalk(false);
 				break;
 			}
 		}
@@ -871,7 +871,7 @@ void CWoodie::Talk_Player(_float _fTimeDelta)
 				m_bInteract = false;
 				m_bFirstCall = false;
 				pinven->Get_Talk_list()->front()->setcheck(false);
-				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
+				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WoodyTalk(false);
 				break;
 			}
 		}
