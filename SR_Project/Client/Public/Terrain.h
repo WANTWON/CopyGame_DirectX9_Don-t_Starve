@@ -63,11 +63,18 @@ private:
 public:
 	virtual _bool Picking(_float3* PickingPoint);
 	virtual void PickingTrue();
+	void Check_ShaderColor();
 
 private:
 	_float3 m_vecOutPos;
 	_bool m_bPicking;
 
+	/* for test Shader Color*/
+	_float g_fDinnerDelta = 0.f;
+	_float g_fNightDelta = 0.f;
+	_float g_fNightAlpha = 0.f;
+	DAY_STATE g_eDayState = DAY_MORNING;
+	DWORD g_dwDayNightTimer;
 public:
 	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -24,6 +24,13 @@ float4x4		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture			g_Texture;
 bool			g_isColl;
 
+float			g_fDinnerMinRange = 3.f;
+float			g_fDinnerMaxRange = 15.f;
+
+float			g_fDinnerDelta = 0.f;
+float			g_fNightDelta = 0.f;
+float			g_fNightDarkAlpha = 0.f;
+
 float			g_fMinRange = 3.f;
 float			g_fMaxRange = 15.f;
 
@@ -182,6 +189,24 @@ PS_OUT PS_DARKWITHLIGHT(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_DINNER(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor = tex2D(TextureSampler, In.vTexUV);
+
+	Out.vColor.r += g_fDinnerDelta;
+	Out.vColor.b += g_fNightDelta;
+
+	float4		vFogColor = vector(g_fNightDarkAlpha, g_fNightDarkAlpha, g_fNightDarkAlpha, 0.f);
+	float		fDistance = length(g_PlayerPosition - In.vWorldPos);
+
+	float		fFogPower = max(fDistance - g_fDinnerMinRange, 0.f) / (g_fDinnerMaxRange - g_fDinnerMinRange);
+
+	Out.vColor -= vFogColor * fFogPower;
+
+	return Out;
+}
+
 
 
 technique		DefaultTechnique
@@ -265,6 +290,16 @@ technique		DefaultTechnique
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_DARKWITHLIGHT();
+	}
+
+	pass Dinner
+	{
+		AlphaTestEnable = TRUE;
+		AlphaFunc = greater;
+		AlphaRef = 50;
+		CULLMODE = NONE;
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_DINNER();
 	}
 }
 
