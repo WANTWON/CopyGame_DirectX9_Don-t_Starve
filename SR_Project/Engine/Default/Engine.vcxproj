@@ -183,7 +183,6 @@
     <ClInclude Include="..\public\Renderer.h" />
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\Sound_Manager.h" />
-    <ClInclude Include="..\Public\Subject.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Timer.h" />
     <ClInclude Include="..\public\Timer_Manager.h" />

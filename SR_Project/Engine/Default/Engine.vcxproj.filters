@@ -296,9 +296,6 @@
     <ClInclude Include="..\Public\Shader.h">
       <Filter>01.Utility\03.Components\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Subject.h">
-      <Filter>01.Utility\05.ObserverPattern</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Observer.h">
       <Filter>01.Utility\05.ObserverPattern</Filter>
     </ClInclude>
