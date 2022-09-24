@@ -66,9 +66,18 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
-	if (CKeyMgr::Get_Instance()->Key_Up('8'))
+	m_fMentalitytime += fTimeDelta;
+	m_fHungertime += fTimeDelta;
+	if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT && m_fMentalitytime > 1.f)
 	{
-		CInventory_Manager::Get_Instance()->Start_Cardgame();
+		--m_tStat.fCurrentMental;
+		m_fMentalitytime = 0.f;
+	}
+
+	if (m_fHungertime > 5.f)
+	{
+		--m_tStat.fCurrentHungry;
+		m_fHungertime = 0.f;
 	}
 
 
@@ -176,7 +185,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	Setup_Collider();
 
-	
+	Set_ShaderID();
 
 
 	Create_Bullet();

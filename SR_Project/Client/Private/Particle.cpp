@@ -68,6 +68,8 @@ void CParticle::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 	SetUp_BillBoard();
+
+	Set_ShaderID();
 }
 
 HRESULT CParticle::Render()
@@ -167,6 +169,19 @@ void CParticle::SetUp_BillBoard()
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+}
+
+void CParticle::Set_ShaderID()
+{
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	if (pGameObject->Get_Dead())
+		m_eShaderID = SHADER_DEAD;
+	else if (iLevel == LEVEL_MAZE)
+		m_eShaderID = SHADER_DARK;
+	else
+		m_eShaderID = SHADER_DAYCYClE;
 }
 
 CParticle * CParticle::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

@@ -82,7 +82,8 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
-	pGameInstance->PlayBGM(TEXT("Filed.mp3"), 0.1f);
+	//pGameInstance->PlayBGM(TEXT("Filed.mp3"), 0.1f);
+	pGameInstance->PlaySounds(TEXT("pengull_step_1.wav"), LEVEL_GAMEPLAY, 0.1f);
 
 	if (m_bNextLevel)
 	{
@@ -597,14 +598,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 
 	
 	
-	for (int i = 0; i < 9; ++i)
-	{
-		int number = i;
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
-			return E_FAIL;
-
-	}
 	
 	/*_bool bearger = true; //for bossnametest
 
@@ -635,32 +628,32 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 
 
 
-	/*vector<_uint> randombox;  //CardGame random shufflle
+	//vector<_uint> randombox;  //CardGame random shufflle
 
-	for (int i = 0; i < 4; i++)
-	{
-		randombox.push_back(i);
-		randombox.push_back(i);
-	}
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	randombox.push_back(i);
+	//	randombox.push_back(i);
+	//}
 
-	randombox.push_back(4);
+	//randombox.push_back(4);
 
-	random_shuffle(randombox.begin(), randombox.end());
+	//random_shuffle(randombox.begin(), randombox.end());
 
-	for (auto& iter = randombox.begin(); iter != randombox.end();)
-	{
-		
-		for (int i = 0; i < 9; ++i)
-		{
-			int number = *iter;
+	//for (auto& iter = randombox.begin(); iter != randombox.end();)
+	//{
+	//	
+	//	for (int i = 0; i < 9; ++i)
+	//	{
+	//		int number = *iter;
 
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_GAMEPLAY, pLayerTag, (int*)&number)))
-				return E_FAIL;
+	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_GAMEPLAY, pLayerTag, (int*)&number)))
+	//			return E_FAIL;
 
-			++iter;
+	//		++iter;
 
-		}
-	}*/
+	//	}
+	//}
 
 	
 	

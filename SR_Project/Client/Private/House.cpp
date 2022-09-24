@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "../Public/House.h"
 #include "GameInstance.h"
+#include "Level_Maze.h"
 
 CHouse::CHouse(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CUnInteractive_Object(pGraphic_Device)
@@ -34,7 +35,7 @@ HRESULT CHouse::Initialize(void* pArg)
 		m_MonsterMaxCount = 3;
 		break;
 	case HOUSETYPE::MAZESPAWNER:
-		m_MonsterMaxCount = 10;
+		m_MonsterMaxCount = 5;
 		break;
 	}
 
@@ -101,9 +102,11 @@ void CHouse::Late_Tick(_float fTimeDelta)
 
 	SetUp_BillBoard();
 
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+	{
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	}
 	Set_ShaderID();
 }
 
@@ -278,6 +281,9 @@ void CHouse::Spawn_Spider(_float fTimeDelta)
 
 void CHouse::Spawn_RandomMonster(_float fTimeDelta)
 {
+	if (Check_AllClear())
+		return;
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 	_float3 vTargetPos = pTarget->Get_Position();
@@ -298,9 +304,31 @@ void CHouse::Spawn_RandomMonster(_float fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spawn_Effect"), LEVEL_MAZE, TEXT("Layer_Effect"), vSpawnPosition)))
 				return;
 			m_MonsterMaxCount--;
+			if (m_MonsterMaxCount == 0)
+				m_bClear = true;
 			m_fSpawnTime = 0.f;
 		}
 	}
+}
+
+_bool CHouse::Check_AllClear()
+{
+	if (m_bFenceOpen)
+		return true;
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	list<CGameObject*>* pHouselist = pGameInstance->Get_ObjectList(LEVEL_MAZE, TEXT("Layer_House"));
+	for (auto& iter : *pHouselist)
+	{
+		if (dynamic_cast<CHouse*>(iter)->Get_Clear() == false)
+			return false;
+	} 
+
+	CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+	dynamic_cast<CLevel_Maze*>(pLevel)->Set_PuzzleSolved(true);
+	m_bFenceOpen = true;
+
+	return true;
 }
 
 void CHouse::Spawn_Boaron(_float fTimeDelta)

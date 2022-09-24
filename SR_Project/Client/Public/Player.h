@@ -54,9 +54,9 @@ public:
 		_float fSpeed = 0.f;
 		_float fMaxHealth = 999.f;
 		_float fCurrentHealth = fMaxHealth;
-		_float fMaxMental = 100.f;
+		_float fMaxMental = 999.f;
 		_float fCurrentMental = fMaxMental;
-		_float fMaxHungry = 100.f;
+		_float fMaxHungry = 999.f;
 		_float fCurrentHungry = fMaxHungry;
 		_float fAtk = 20.f;
 		_float fArmor = 0.f;
@@ -74,6 +74,8 @@ public:
 		_float	fMaxCoolTime;
 		_float	fCurrent_CoolTime;
 		_bool	bSkillUsed;
+
+		
 	}SKILLDESC;
 
 
@@ -312,6 +314,9 @@ private: // Test
 	LEVEL					m_iCurrentLevelndex; //현재 레벨에 따라 불렛 생성 레벨이 다르기 때문에
 	LEVEL					m_iPreLevelIndex;
 	_uint					m_iTalkNum = 0;
+
+	_float m_fHungertime = 0.f;
+	_float m_fMentalitytime = 0.f;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

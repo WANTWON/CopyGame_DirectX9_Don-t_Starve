@@ -54,6 +54,8 @@ public:
 	virtual void Free() override;
 
 	_uint get_daycount() { return texnum; }
+
+	DAY_STATE Get_nightandday() { return nightandday; }
 };
 
 END

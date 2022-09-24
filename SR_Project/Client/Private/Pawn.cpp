@@ -63,7 +63,7 @@ void CPawn::Set_ShaderID(_bool bIsAlphaBlend)
 	else if (bIsAlphaBlend)
 		m_eShaderID = SHADER_IDLE_ALPHABLEND;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_DAYCYClE;
 }
 
 void CPawn::Free()
