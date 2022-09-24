@@ -535,23 +535,20 @@ void CTerrorbeak::Attack(_float fTimeDelta)
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 0)
+		// Normal Attack
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
 		{
 			if (m_bFirstFrame)
 			{
 				// Play Attack Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("terrorbeak_attack_%03d.wav"), rand() % 6);
-				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .4f);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .3f);
 
 				m_bFirstFrame = false;
 			}
 		}
-		else
-			m_bFirstFrame = true;
-
-		// Normal Attack
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 4 && !m_bDidDamage)
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 4 && !m_bDidDamage)
 		{
 			// Create Standard Bullet
 			BULLETDATA BulletData;
@@ -569,6 +566,8 @@ void CTerrorbeak::Attack(_float fTimeDelta)
 
 			m_bDidDamage = true;
 		}
+		else 
+			m_bFirstFrame = true;
 	}
 }
 
@@ -595,14 +594,14 @@ _float CTerrorbeak::Take_Damage(float fDamage, void * DamageType, CGameObject * 
 			// Play Hit Sound
 			_tchar szFileName[MAX_PATH] = TEXT("");
 			wsprintf(szFileName, TEXT("terrorbeak_hit_%03d.wav"), rand() % 6);
-			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .4f);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .3f);
 		}
 		else
 		{
 			// Play Death Sound
 			_tchar szFileName[MAX_PATH] = TEXT("");
 			wsprintf(szFileName, TEXT("terrorbeak_die_%03d.wav"), rand() % 11);
-			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .4f);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .3f);
 		}
 
 		m_bIsAttacking = false;
