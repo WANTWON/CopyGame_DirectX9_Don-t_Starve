@@ -13,6 +13,7 @@
 #include "Shooting_Target.h"
 #include "Dirt.h"
 #include "CarnivalMemory.h"
+#include "Cardgame.h"
 
 CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -51,14 +52,6 @@ void CLevel_Maze::Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 	__super::Tick(fTimeDelta);
 
-	if (pGameInstance->Key_Up('0'))
-	{
-		if (m_bPuzzleSolved)
-			m_bPuzzleSolved = false;
-		else
-			m_bPuzzleSolved = true;
-	}
-
 
 	if (m_bNextLevel)
 	{
@@ -73,6 +66,7 @@ void CLevel_Maze::Tick(_float fTimeDelta)
 	}
 
 	//Start_Camera_Motion();
+	Update_Fence_Motion();
 	Update_Camera_Motion();
 	Update_Floor_Motion();
 
@@ -299,6 +293,21 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Shooter"), LEVEL_MAZE, TEXT("Layer_Shooter"), _float3(39.75f, 0.f, 38.0f));
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Shoot_Button"), LEVEL_MAZE, pLayerTag, _float3(41.75f, 0.f, 39.0f));
 
+
+	CCardgame::CARDDESC CardDesc;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		for (int j = 0; j < 3; ++j)
+		{
+			CardDesc.iNumber = i*3 + j;
+			CardDesc.pos = _float3(22.f + i + 3.f, 0.1f, 22.f + j + 3.f);
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_MAZE, TEXT("Layer_Card"), &CardDesc)))
+				return E_FAIL;
+		}
+	}
+
+
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
@@ -385,7 +394,7 @@ void CLevel_Maze::Update_Camera_Motion()
 
 
 	if (pGameObject->Get_Position().x > 19 && pGameObject->Get_Position().z > 0.5 &&
-		pGameObject->Get_Position().x < 29 && pGameObject->Get_Position().z < 13)
+		pGameObject->Get_Position().x < 29 && pGameObject->Get_Position().z < 15)
 	{
 		dynamic_cast<CPlayer*>(pGameObject)->Set_FPSMode(true);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_FPS);
@@ -415,7 +424,7 @@ void CLevel_Maze::Update_Floor_Motion()
 		CDecoObject::DECODECS  DecoDesc;
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 9.f);
-		DecoDesc.fRotate = 3.f;
+		DecoDesc.fRotate = 0.f;
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[0] = true;
 	}
@@ -487,6 +496,42 @@ void CLevel_Maze::Update_Floor_Motion()
 		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_BIRD;
 		StationDesc.vInitPosition = _float3(9.5f, 0.f, 24.f);
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+	}
+}
+
+void CLevel_Maze::Update_Fence_Motion()
+{
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	if ((pGameObject->Get_Position().x > 13 && pGameObject->Get_Position().x < 20 ) && !m_bPuzzleStart[0])
+		Set_PuzzleSolved(true);
+	else if ( pGameObject->Get_Position().x > 20 && pGameObject->Get_Position().x < 29 && !m_bPuzzleStart[0])
+		Set_PuzzleSolved(false);
+	else if (pGameObject->Get_Position().x > 29 && !m_bPuzzleStart[0])
+		Set_PuzzleSolved(true);
+	if ((pGameObject->Get_Position().x > 35 && !m_bPuzzleStart[0]))
+	{
+		Set_PuzzleSolved(false);
+	}
+	else if ((pGameObject->Get_Position().x > 35) && (pGameObject->Get_Position().z > 20) && !m_bPuzzleStart[1])
+	{
+		Set_PuzzleSolved(false);
+	}
+	else if ((pGameObject->Get_Position().x > 35) && (pGameObject->Get_Position().z > 36) && !m_bPuzzleStart[2])
+	{
+		Set_PuzzleSolved(false);
+	}
+	else if ((pGameObject->Get_Position().x < 28) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[3])
+	{
+		Set_PuzzleSolved(false);
+	}
+	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[4])
+	{
+		Set_PuzzleSolved(false);
+	}
+	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z < 27) && (pGameObject->Get_Position().z > 20) && !m_bPuzzleStart[5])
+	{
+		Set_PuzzleSolved(false);
 	}
 }
 

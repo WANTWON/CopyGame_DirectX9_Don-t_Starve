@@ -48,7 +48,7 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, LEVEL TerrainLevel
 		return E_FAIL;
 
 	m_bPicking = false;
-
+	g_dwDayNightTimer = GetTickCount();
 	return S_OK;
 }
 
@@ -70,12 +70,15 @@ void CTerrain::Late_Tick(_float fTimeDelta)
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
+	Check_ShaderColor();
+
 	if (pGameObject->Get_Dead())
 		m_eShaderID = SHADER_DEAD;
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_DAYCYClE;
+	
 }
 
 HRESULT CTerrain::Render()
@@ -356,6 +359,81 @@ void CTerrain::PickingTrue()
 	//cout << "Collision Terrain : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
 
 	Safe_Release(pGameInstance);
+}
+
+void CTerrain::Check_ShaderColor()
+{
+	_float Tickcount = GetTickCount();
+	if (g_dwDayNightTimer + 30000 < Tickcount)
+	{
+		switch (g_eDayState)
+		{
+		case Client::DAY_MORNING:
+			g_eDayState = DAY_DINNER;
+			break;
+		case Client::DAY_DINNER:
+			g_eDayState = DAY_NIGHT;
+			break;
+		case Client::DAY_NIGHT:
+			g_eDayState = DAY_MORNING;
+			break;
+		}
+		g_dwDayNightTimer = GetTickCount();
+
+	}
+
+	if (g_eDayState == DAY_DINNER)
+	{
+		if (g_fDinnerDelta >= 0.1f)
+			g_fDinnerDelta = 0.1f;
+		else
+			g_fDinnerDelta += 0.001f;
+	}
+	else if (g_eDayState == DAY_NIGHT)
+	{
+		if (g_fDinnerDelta <= 0.0f)
+			g_fDinnerDelta = 0.0f;
+		else
+			g_fDinnerDelta -= 0.001f;
+
+		
+		g_fNightAlpha += 0.01f;
+
+		if (g_fNightAlpha >= 1.f)
+			g_fNightAlpha = 1.f;
+
+		if (g_fNightAlpha == 1.f)
+		{
+			if (g_fNightDelta >= 0.2f)
+				g_fNightDelta = 0.2f;
+			else
+				g_fNightDelta += 0.002f;
+
+		}
+			
+	}
+	else if (g_eDayState == DAY_MORNING)
+	{
+		if (g_fNightAlpha <= 0.0f)
+			g_fNightAlpha = 0.0f;
+		else
+			g_fNightAlpha -= 0.01f;
+
+		if (g_fNightAlpha == 0.0f)
+		{
+			if (g_fNightDelta <= 0.0f)
+				g_fNightDelta = 0.0f;
+			else
+				g_fNightDelta -= 0.002f;
+		}
+	}
+		
+
+	m_pShaderCom->Set_RawValue("g_fDinnerDelta", &g_fDinnerDelta, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fNightDelta", &g_fNightDelta, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fNightDarkAlpha", &g_fNightAlpha, sizeof(_float));
+
+	
 }
 
 

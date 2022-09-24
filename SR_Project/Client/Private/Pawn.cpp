@@ -61,7 +61,7 @@ void CPawn::Set_ShaderID()
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_DAYCYClE;
 }
 
 void CPawn::Free()

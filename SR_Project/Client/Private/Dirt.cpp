@@ -105,6 +105,9 @@ HRESULT CDirt::Drop_Items()
 		ItemDesc.eItemName = ITEMNAME_KEY;
 
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Object"), &ItemDesc);
+
+		CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+		dynamic_cast<CLevel_Maze*>(pLevel)->Set_PuzzleSolved(true);
 	}
 	else
 	{

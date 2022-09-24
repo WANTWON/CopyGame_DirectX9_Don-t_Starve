@@ -69,7 +69,7 @@ public: /* For. Key Manager*/
 	bool		Key_Down(int _Key);		// ´­·¶À» ¶§
 
 public: /* For. Sound Manager */
-	void PlaySound(TCHAR* pSoundKey, const _uint& eID, const float& fVolume);
+	void PlaySounds(TCHAR* pSoundKey, const _uint& eID, const float& fVolume);
 	void PlayBGM(TCHAR * pSoundKey, const float& fVolume);
 	void StopSound(const _uint& eID);
 	void StopAll();

@@ -52,13 +52,15 @@ void CUnInteractive_Object::Late_Tick(_float fTimeDelta)
 	{
 		if (nullptr != m_pRendererCom)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
+		if (m_pColliderCom)
+		{
+			memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+			m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+		}
 	}
 
-	if (m_pColliderCom)
-	{
-		memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
-		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
-	}
+	Set_ShaderID();
 		
 }
 
@@ -116,7 +118,7 @@ void CUnInteractive_Object::Set_ShaderID()
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_DAYCYClE;
 }
 
 HRESULT CUnInteractive_Object::Change_Texture(const _tchar * LayerTag)
