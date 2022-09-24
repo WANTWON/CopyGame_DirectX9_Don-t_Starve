@@ -82,7 +82,8 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
-	pGameInstance->PlayBGM(TEXT("Filed.mp3"), 0.1f);
+	//pGameInstance->PlayBGM(TEXT("Filed.mp3"), 0.1f);
+	pGameInstance->PlaySounds(TEXT("pengull_step_1.wav"), LEVEL_GAMEPLAY, 0.1f);
 
 	if (m_bNextLevel)
 	{

@@ -60,7 +60,7 @@ void CUnInteractive_Object::Late_Tick(_float fTimeDelta)
 		}
 	}
 
-	
+	Set_ShaderID();
 		
 }
 
@@ -118,7 +118,7 @@ void CUnInteractive_Object::Set_ShaderID()
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_DAYCYClE;
 }
 
 HRESULT CUnInteractive_Object::Change_Texture(const _tchar * LayerTag)

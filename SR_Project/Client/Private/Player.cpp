@@ -185,7 +185,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	Setup_Collider();
 
-	
+	Set_ShaderID();
 
 
 	Create_Bullet();

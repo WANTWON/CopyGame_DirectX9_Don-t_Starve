@@ -77,7 +77,7 @@ void CTerrain::Late_Tick(_float fTimeDelta)
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
 	else
-		m_eShaderID = SHADER_DINNER;
+		m_eShaderID = SHADER_DAYCYClE;
 	
 }
 
@@ -364,7 +364,7 @@ void CTerrain::PickingTrue()
 void CTerrain::Check_ShaderColor()
 {
 	_float Tickcount = GetTickCount();
-	if (g_dwDayNightTimer + 15000 < Tickcount)
+	if (g_dwDayNightTimer + 30000 < Tickcount)
 	{
 		switch (g_eDayState)
 		{
@@ -382,14 +382,14 @@ void CTerrain::Check_ShaderColor()
 
 	}
 
-	if (g_eDayState == DAY_MORNING)
+	if (g_eDayState == DAY_DINNER)
 	{
 		if (g_fDinnerDelta >= 0.1f)
 			g_fDinnerDelta = 0.1f;
 		else
 			g_fDinnerDelta += 0.001f;
 	}
-	else if (g_eDayState == DAY_DINNER)
+	else if (g_eDayState == DAY_NIGHT)
 	{
 		if (g_fDinnerDelta <= 0.0f)
 			g_fDinnerDelta = 0.0f;
@@ -412,7 +412,7 @@ void CTerrain::Check_ShaderColor()
 		}
 			
 	}
-	else if (g_eDayState == DAY_NIGHT)
+	else if (g_eDayState == DAY_MORNING)
 	{
 		if (g_fNightAlpha <= 0.0f)
 			g_fNightAlpha = 0.0f;
