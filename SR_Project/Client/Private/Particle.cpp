@@ -59,16 +59,14 @@ void CParticle::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	Compute_CamDistance(Get_Position());
-
 	if (m_vPosition.y < 0)
 		m_bDead = true;
 
 	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 
 	SetUp_BillBoard();
-
+	Compute_CamDistance(Get_Position());
 	Set_ShaderID();
 }
 
@@ -103,7 +101,7 @@ HRESULT CParticle::SetUp_Components(void * pArg)
 	Safe_AddRef(pGameInstance);
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
