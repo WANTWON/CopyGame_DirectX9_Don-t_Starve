@@ -31,6 +31,7 @@ HRESULT CSky::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
+	CDayCycle::Get_Instance()->RegisterObserver(this);
 	return S_OK;
 }
 

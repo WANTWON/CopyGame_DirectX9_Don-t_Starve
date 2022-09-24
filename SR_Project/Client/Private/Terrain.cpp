@@ -39,7 +39,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_bPicking = false;
-
+	CDayCycle::Get_Instance()->RegisterObserver(this);
 	return S_OK;
 }
 
@@ -49,7 +49,7 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, LEVEL TerrainLevel
 		return E_FAIL;
 
 	m_bPicking = false;
-	
+	CDayCycle::Get_Instance()->RegisterObserver(this);
 	return S_OK;
 }
 

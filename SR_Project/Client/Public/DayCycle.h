@@ -1,16 +1,17 @@
 #pragma once
 #include "Client_Defines.h"
-#include "Subject.h"
+#include "ObserverTarget.h"
 
 BEGIN(Engine)
 class CObserver;
-class CSubject;
+class CObserverTarget;
 END
 
 BEGIN(Client)
-class CDayCycle : public CSubject
+class CDayCycle : public CObserverTarget
 {
 	DECLARE_SINGLETON(CDayCycle);
+
 public:
 	CDayCycle();
 	virtual ~CDayCycle() = default;
@@ -28,7 +29,7 @@ private:
 
 private:
 	vector<CObserver*> m_Observer;
-	DAY_STATE m_eDayState;
+	DAY_STATE m_eDayState = DAY_MORNING;
 	DWORD m_dwTime;
 
 public:

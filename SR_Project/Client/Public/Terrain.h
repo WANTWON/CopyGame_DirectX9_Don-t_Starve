@@ -14,7 +14,7 @@ END
 
 BEGIN(Client)
 
-class CTerrain final : public CGameObject , public CObserver
+class CTerrain final : public CGameObject, public CObserver
 {
 public:
 	typedef struct TerrainDesc

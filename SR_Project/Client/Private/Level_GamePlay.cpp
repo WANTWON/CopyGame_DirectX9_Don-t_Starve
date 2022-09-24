@@ -14,6 +14,7 @@
 #include <time.h>
 
 #include "NPC.h"
+#include "DayCycle.h"
 
 
 _bool g_bUIMadefirst = false;
@@ -80,6 +81,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	CDayCycle::Get_Instance()->DayCycleTick();
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
