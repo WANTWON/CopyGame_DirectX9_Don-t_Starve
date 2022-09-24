@@ -84,7 +84,10 @@ int CEquipment_front::Tick(_float fTimeDelta)
 		Safe_AddRef(pInventory_Manager);
 		if (texnum == ITEMNAME_BAG)
 		{
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			pInstance->PlaySounds(TEXT("Backpack_close.wav"), SOUND_UICLOSE, 0.9f);
 			pInventory_Manager->Off_bag();
+			
 		}
 		auto Maininvenlist = pInventory_Manager->Get_Inven_list();
 		Safe_Release(pInventory_Manager);

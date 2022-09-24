@@ -417,6 +417,9 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 			if (m_itemtype == ITEM_BAG)
 			{
+				
+				CGameInstance* pInstance = CGameInstance::Get_Instance();
+				pInstance->PlaySounds(TEXT("Backpack_open.wav"), SOUND_UIOPEN, 0.9f);
 				pinv->Late_Tick(fTimeDelta);
 				pinv->Use_bag();
 				

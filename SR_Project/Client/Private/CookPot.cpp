@@ -224,6 +224,8 @@ void CCookPot::PickingTrue()
 		if (!pInvenManager->Get_PickingPot())
 		{
 			pInvenManager->Use_pot(this);
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			pInstance->PlaySounds(TEXT("cookpot_open.wav"), SOUND_UIOPEN, 0.9f);
 			/*CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 			_float3 pos = Get_Position();
 			pos.y += 1.f;
@@ -235,6 +237,8 @@ void CCookPot::PickingTrue()
 		else
 		{
 			pInvenManager->Off_pot();
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			pInstance->PlaySounds(TEXT("cookpot_close.wav"), SOUND_UICLOSE, 0.9f);
 			pInvenManager->Set_PickingPot(false);
 		}
 			

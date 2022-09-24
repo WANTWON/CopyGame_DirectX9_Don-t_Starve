@@ -607,7 +607,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Party"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Party"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -616,7 +616,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 	{
 		int number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Partyhp"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Partyhp"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
 	}
@@ -627,7 +627,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 
 
 
-	//vector<_uint> randombox;  //CardGame random shufflle
+	//vector<_uint> randombox;  //cardgame random shufflle
 
 	//for (int i = 0; i < 4; i++)
 	//{
@@ -646,8 +646,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 	//	{
 	//		int number = *iter;
 
-	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_GAMEPLAY, pLayerTag, (int*)&number)))
-	//			return E_FAIL;
+	//		if (failed(pgameinstance->add_gameobject(text("prototype_gameobject_cardgame"), level_gameplay, playertag, (int*)&number)))
+	//			return e_fail;
 
 	//		++iter;
 
