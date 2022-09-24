@@ -43,7 +43,7 @@ namespace Client
 
 	enum DAY_STATE { DAY_MORNING, DAY_DINNER, DAY_NIGHT };
 
-	enum SOUND_ID {SOUND_UI , SOUND_END};
+	enum SOUND_ID {SOUND_UI, SOUND_MONSTER, SOUND_WORLD, SOUND_END};
 
 	const  _float  g_iWinSizeX = 1280;
 	const  _float  g_iWinSizeY = 720;

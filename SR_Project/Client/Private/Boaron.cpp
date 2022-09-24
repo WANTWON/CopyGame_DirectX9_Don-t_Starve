@@ -422,6 +422,10 @@ void CBoaron::AI_Behaviour(_float fTimeDelta)
 			{
 				m_eState = STATE::ATTACK;
 				m_bIsAttacking = true;
+
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("attack1_Boaron_0%d.wav"), rand() % 15 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, 1.f);
 			}
 			else
 				m_eState = STATE::IDLE;
@@ -579,8 +583,23 @@ _float CBoaron::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dmg_pont"), LEVEL_GAMEPLAY, TEXT("Layer_dmgp"), &effectdesc)))
 			return OBJ_NOEVENT;
+		
 		if (!m_bDead)
+		{
 			m_bHit = true;
+
+			// Play Hit Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("hit_Boaron_0%d.wav"), rand() % 4 + 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, .7f);
+		}
+		else
+		{
+			// Play Death Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("death_Boaron_0%d.wav"), rand() % 2 + 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, .7f);
+		}
 
 		m_bIsAttacking = false;
 		m_dwAttackTime = GetTickCount();

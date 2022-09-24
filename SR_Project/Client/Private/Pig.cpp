@@ -779,11 +779,14 @@ _float CPig::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageC
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dmg_pont"), LEVEL_GAMEPLAY, TEXT("Layer_dmgp"), &effectdesc)))
 			return OBJ_NOEVENT;
 
-		
-		
-
 		if (!m_bDead)
 			m_bHit = true;
+		else
+		{
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("Pig_death_%d.wav"), rand() % 2 + 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, 1.f);
+		}
 		
 		m_bAggro = true;
 		m_bIsAttacking = false;

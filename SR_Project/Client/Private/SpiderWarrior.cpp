@@ -407,6 +407,10 @@ void CSpiderWarrior::AI_Behaviour(_float fTimeDelta)
 			{
 				m_eState = STATE::ATTACK;
 				m_bIsAttacking = true;
+
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("Spider_attack_%d.wav"), rand() % 15 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, 1.f);
 			}
 			else if (!m_bIsAttacking)
 				m_eState = STATE::IDLE;
@@ -574,6 +578,12 @@ _float CSpiderWarrior::Take_Damage(float fDamage, void * DamageType, CGameObject
 			return OBJ_NOEVENT;
 		if (!m_bDead)
 			m_bHit = true;
+		else
+		{
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("Spider_death_%d.wav"), rand() % 3 + 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, 1.f);
+		}
 
 		m_bIsAttacking = false;
 		m_dwAttackTime = GetTickCount();

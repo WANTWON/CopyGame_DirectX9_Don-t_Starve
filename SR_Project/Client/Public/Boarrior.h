@@ -56,6 +56,7 @@ private:
 	_bool m_bStun = false;
 	_float m_fStunTime = 0.f;
 	_float m_fStunTimeLimit = 3.f;
+	_bool m_bfirst = true;
 	
 	// Bullet Variables
 	_bool m_bShouldSpawnBullet = false;
@@ -79,12 +80,13 @@ private:
 	_bool m_bHasDefenseBoost = false;
 	_float m_fHealTimer = 0.f;
 
-	_bool m_bfirst = true;
+	// For Picking
+	_float3 m_vecOutPos; 
 
-	_float3 m_vecOutPos; // For Picking
-
+	_bool m_bFirstFrame = false;
 	
 private:
+	void Check_CameraShake();
 	void Check_Totem_Effect(_float fTimeDelta);
 	void Totem_Heal(_float fTimeDelta);
 	void Check_Health_Percent();
