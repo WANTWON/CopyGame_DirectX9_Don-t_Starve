@@ -77,7 +77,7 @@ private:
 	_float m_fWarningTime = 0.f;
 	_float m_fRandomWarningLimit = 0.f;
 	_float m_fEruptionTime = 0.f;
-	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
+	SHADER_STATE m_eShaderID = SHADER_IDLE;
 public:
 	static CDecoObject* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

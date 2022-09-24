@@ -1276,7 +1276,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Default.hlsl">
       <Filter>95.ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Terrain.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_DefaultBlend.hlsl">
       <Filter>95.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

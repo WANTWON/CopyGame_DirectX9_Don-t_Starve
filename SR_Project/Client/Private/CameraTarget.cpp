@@ -109,8 +109,8 @@ void CCameraTarget::Idle_Camera(_float fTimeDelta)
 		if (m_vDistance.y > 15 || m_vDistance.y < 3)
 			return;
 
-		m_vDistance.y -= (fTimeDelta*m_lMouseWheel*0.01f);
-		m_vDistance.z += (fTimeDelta*m_lMouseWheel*0.01f);
+		m_vDistance.y -= _float(fTimeDelta*m_lMouseWheel*0.01f);
+		m_vDistance.z += _float(fTimeDelta*m_lMouseWheel*0.01f);
 	}
 
 	if (pGameInstance->Key_Pressing(VK_DOWN))

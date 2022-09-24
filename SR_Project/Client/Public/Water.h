@@ -52,7 +52,7 @@ private: /* For.Components */
 	CShader*				m_pShaderCom = nullptr;
 private:
 	TERRAINDESC				m_TerrainDesc;
-	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
+	SHADER_STATE m_eShaderID = SHADER_IDLE;
 private:
 	HRESULT SetUp_Components(void* pArg);
 	HRESULT SetUp_Components(const _tchar* VIBufferTag, void* pArg = nullptr);

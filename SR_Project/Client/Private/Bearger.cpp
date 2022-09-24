@@ -418,7 +418,7 @@ void CBearger::Change_Frame(_float fTimeDelta)
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
 		{
-			m_eShaderID = SHADER_IDLE_ALPHATEST;
+			m_eShaderID = SHADER_IDLE;
 			m_bHit = false;
 		}
 			
@@ -1054,7 +1054,7 @@ _bool CBearger::Picking(_float3 * PickingPoint)
 		m_bPickingTrue = false;
 		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_IDLE;
 		auto i = pInvenManager->Get_Monsterinfo_list()->front();
 		auto k = pInvenManager->Get_Monsterhp_list();
 
@@ -1090,7 +1090,7 @@ void CBearger::PickingTrue()
 	for (auto j : *k)
 	{
 		j->set_check(true);
-		j->set_hp(m_tInfo.iCurrentHp);
+		j->set_hp((_uint)m_tInfo.iCurrentHp);
 	}
 
 	Safe_Release(pGameInstance);

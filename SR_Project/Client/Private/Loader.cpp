@@ -2530,7 +2530,7 @@ HRESULT CLoader::Loading_Prototype_Object()
 
 #pragma endregion Add_Prototype UI Object
 
-
+	return S_OK;
 }
 
 

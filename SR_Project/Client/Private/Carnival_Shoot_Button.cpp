@@ -36,7 +36,7 @@ HRESULT CCarnival_Shoot_Button::Initialize(void* pArg)
 
 	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
-	m_eShaderID = SHADER_IDLE_ALPHABLEND;
+	m_eShaderID = SHADER_IDLE;
 
 	return S_OK;
 }
@@ -95,7 +95,7 @@ void CCarnival_Shoot_Button::Interact(_uint Damage)
 HRESULT CCarnival_Shoot_Button::SetUp_Components(void* pArg)
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
