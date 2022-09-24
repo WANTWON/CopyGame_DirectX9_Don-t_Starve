@@ -109,8 +109,8 @@ void CDaycountpont::Update(_uint eDayState)
 {
 	m_eDayState = (DAY_STATE)eDayState;
 
-	if(eDayState == DAY_MORNING)
-		++m_iTexNum;
+	//if(eDayState == DAY_MORNING)
+		//++m_iTexNum;
 }
 
 HRESULT CDaycountpont::SetUp_Components()
