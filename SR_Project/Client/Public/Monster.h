@@ -85,6 +85,7 @@ protected:
 	DWORD m_dwAttackTime = GetTickCount();
 	DWORD m_dwDeathTime = GetTickCount();
 	_bool m_bDeadAnimExpired = false;
+	_bool m_bItemDropped = false;
 	MONSTER_ID	m_eMonsterID;
 	
 
