@@ -14,6 +14,7 @@
 #include "Bearger.h"
 #include "Boarrior.h"
 #include "Boaron.h"
+#include "Terrorbeak.h"
 #include "Totem.h"
 #include "Terrain.h"
 #include "Sky.h"
@@ -492,6 +493,42 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Pig/Happy/Happy_%03d.png"), 34))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Pig
+	
+#pragma region Add_Texture_Terrorbeak
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Appear"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Terrorbeak/Appear/Appear_%03d.png"), 16))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Attack_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Terrorbeak/Attack_Down/Attack_Down_%03d.png"), 15))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Attack_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Terrorbeak/Attack_Side/Attack_Side_%03d.png"), 17))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Attack_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Terrorbeak/Attack_Up/Attack_Up_%03d.png"), 18))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Disappear"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Terrorbeak/Disappear/Disappear_%03d.png"), 14))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Idle_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Terrorbeak/Idle_Down/Idle_Down_%03d.png"), 43))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Idle_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Terrorbeak/Idle_Side/Idle_Side_%03d.png"), 43))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Idle_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Terrorbeak/Idle_Up/Idle_Up_%03d.png"), 43))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Walk_Down"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Terrorbeak/Walk_Down/Walk_Down_%03d.png"), 26))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Walk_Side"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Terrorbeak/Walk_Side/Walk_Side_%03d.png"), 34))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Walk_Up"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Terrorbeak/Walk_Up/Walk_Up_%03d.png"), 26))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Terrorbeak
 
 #pragma  region Add_Texture_others
 	/*Skeleton*/
@@ -655,6 +692,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	/*Boarrior_Eruption*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Eruption"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Boarrior_Eruption/Boarrior_Eruption_%03d.png"), 32))))
+		return E_FAIL;
+
+	/*Boarrior_Fire*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Fire"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Boarrior_Fire/Fire_%03d.png"), 47))))
 		return E_FAIL;
 	
 	/*For.Prototype_Component_Texture_Hit_Effect */
@@ -1943,6 +1985,11 @@ HRESULT CLoader::Loading_Prototype_Object()
 	/*For.Prototype_GameObject_Boaron*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boaron"),
 		CBoaron::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Terrorbeak*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrorbeak"),
+		CTerrorbeak::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Water"),

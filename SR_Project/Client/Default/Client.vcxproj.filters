@@ -343,6 +343,9 @@
     <Filter Include="02.GameObject\98.UI\20.Party">
       <UniqueIdentifier>{738e7b0b-0fe8-4beb-a774-371356cbc7fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00. Pawn\01.Monster\Terrorbeak">
+      <UniqueIdentifier>{c06fbb5e-bf02-40a9-a919-78db20b98288}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -798,6 +801,9 @@
     <ClInclude Include="..\Public\Partyhp.h">
       <Filter>02.GameObject\98.UI\20.Party</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Terrorbeak.h">
+      <Filter>02.GameObject\00. Pawn\01.Monster\Terrorbeak</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1240,6 +1246,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Partyhp.cpp">
       <Filter>02.GameObject\98.UI\20.Party</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Terrorbeak.cpp">
+      <Filter>02.GameObject\00. Pawn\01.Monster\Terrorbeak</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

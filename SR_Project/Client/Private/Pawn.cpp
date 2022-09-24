@@ -50,7 +50,7 @@ HRESULT CPawn::Render()
 	return S_OK;
 }
 
-void CPawn::Set_ShaderID()
+void CPawn::Set_ShaderID(_bool bIsAlphaBlend)
 {
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));

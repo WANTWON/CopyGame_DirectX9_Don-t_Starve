@@ -61,6 +61,7 @@ private:
 	_bool m_bShouldSpawnBullet = false;
 	_float m_fBulletAliveTime = 999.f;
 	_uint m_iBulletCount = 0;
+	_uint iAnimFrameSyncCounter = 0;
 
 	// Stagger Variables
 	_float m_fStaggerDamageLimit = 80.f;

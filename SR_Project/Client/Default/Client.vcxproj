@@ -290,6 +290,7 @@
     <ClInclude Include="..\Public\Talk.h" />
     <ClInclude Include="..\public\Tent.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\public\Terrorbeak.h" />
     <ClInclude Include="..\Public\ToolboxConstruct.h" />
     <ClInclude Include="..\Public\ToolboxConstruct_back.h" />
     <ClInclude Include="..\Public\ToolboxConstruct_front.h" />
@@ -440,6 +441,7 @@
     <ClCompile Include="..\Private\Talk.cpp" />
     <ClCompile Include="..\private\Tent.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\private\Terrorbeak.cpp" />
     <ClCompile Include="..\Private\ToolboxConstruct.cpp" />
     <ClCompile Include="..\Private\ToolboxConstruct_back.cpp" />
     <ClCompile Include="..\Private\ToolboxConstruct_front.cpp" />

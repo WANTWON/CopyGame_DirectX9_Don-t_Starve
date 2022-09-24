@@ -5,6 +5,7 @@
 #include "Level_Manager.h"
 #include "Interactive_Object.h"
 #include "Carnival_Shooter.h"
+#include "Boarrior.h"
 
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CPawn(pGraphic_Device)
@@ -47,6 +48,7 @@ HRESULT CBullet::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+	m_eShaderID = SHADER_IDLE_ALPHABLEND;
 	return S_OK;
 }
 
@@ -88,8 +90,7 @@ void CBullet::Late_Tick(_float fTimeDelta)
 		m_bDead = true;
 
 	Compute_CamDistance(Get_Position());
-	Set_ShaderID();
-
+	Set_ShaderID(true);
 }
 
 HRESULT CBullet::Render()
@@ -190,7 +191,7 @@ HRESULT CBullet::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	Init_Data();
@@ -236,102 +237,92 @@ HRESULT CBullet::Release_RenderState()
 
 void CBullet::Excute(_float fTimeDelta)
 {
-	//Monster
-	if (!m_tBulletData.bIsPlayerBullet)
+	switch (m_tBulletData.eWeaponType)
 	{
-		switch (m_tBulletData.eWeaponType)
-		{
-		case WEAPON_TYPE::WEAPON_HAND:
-			break;
-		}
-	}
-	//Player
-	else
-	{
-		switch (m_tBulletData.eWeaponType)
-		{
-		case WEAPON_TYPE::WEAPON_HAND:
-		case WEAPON_TYPE::WEAPON_SWORD:
+	case WEAPON_TYPE::WEAPON_HAND:
+	case WEAPON_TYPE::WEAPON_SWORD:
 
+		break;
+	case WEAPON_TYPE::WEAPON_STAFF:
+		switch (m_tBulletData.eDirState)
+		{
+		case DIR_STATE::DIR_UP:
+			m_pTransformCom->Go_Straight(fTimeDelta);
 			break;
-		case WEAPON_TYPE::WEAPON_STAFF:
-			switch (m_tBulletData.eDirState)
-			{
-			case DIR_STATE::DIR_UP:
-				m_pTransformCom->Go_Straight(fTimeDelta);
-				break;
-			case DIR_STATE::DIR_DOWN:
-				m_pTransformCom->Go_Backward(fTimeDelta);
-				break;
-			case DIR_STATE::DIR_RIGHT:
-				m_pTransformCom->Go_Right(fTimeDelta);
-				break;
-			case DIR_STATE::DIR_LEFT:
-				m_pTransformCom->Go_Right(fTimeDelta);
-				break;
-			case DIR_STATE::DIR_END:
-				m_pTransformCom->Go_PosDir(fTimeDelta, m_tBulletData.vLook);
-				//m_pTransformCom->Go_Straight(fTimeDelta);
-				break;
-			default:
-				break;
-			}
+		case DIR_STATE::DIR_DOWN:
+			m_pTransformCom->Go_Backward(fTimeDelta);
 			break;
-		case WEAPON_TYPE::WEAPON_DART:
-			switch (m_tBulletData.eDirState)
-			{
-			case DIR_STATE::DIR_UP:
-				m_pTransformCom->Go_Straight(fTimeDelta);
-				break;
-			case DIR_STATE::DIR_DOWN:
-				m_pTransformCom->Go_Backward(fTimeDelta);
-				break;
-			case DIR_STATE::DIR_RIGHT:
-				m_pTransformCom->Go_Right(fTimeDelta);
-				break;
-			case DIR_STATE::DIR_LEFT:
-				m_pTransformCom->Go_Right(fTimeDelta);
-				break;
-			case DIR_STATE::DIR_END:
-				m_pTransformCom->Go_PosDir(fTimeDelta, m_tBulletData.vLook);
-				break;
-			default:
-				break;
-			}
+		case DIR_STATE::DIR_RIGHT:
+			m_pTransformCom->Go_Right(fTimeDelta);
 			break;
-		case WEAPON_TYPE::WEAPON_BOMB:
-			Bomb();
+		case DIR_STATE::DIR_LEFT:
+			m_pTransformCom->Go_Right(fTimeDelta);
 			break;
-		case WEAPON_TYPE::WEAPON_SMOKE:
-			Red_Smoke(fTimeDelta);
+		case DIR_STATE::DIR_END:
+			m_pTransformCom->Go_PosDir(fTimeDelta, m_tBulletData.vLook);
+			//m_pTransformCom->Go_Straight(fTimeDelta);
 			break;
-		case WEAPON_TYPE::WEAPON_LIGHT:
-			break;
-		case WEAPON_TYPE::WEAPON_ICESPIKE1:
-		case WEAPON_TYPE::WEAPON_ICESPIKE2:
-		case WEAPON_TYPE::WEAPON_ICESPIKE3:
-		case WEAPON_TYPE::WEAPON_ICESPIKE4:
-			IceSpikes(fTimeDelta);
-			break;
-		case WEAPON_TYPE::WEAPON_MINE:
-			IceMine(fTimeDelta);
-			break;
-		case WEAPON_TYPE::WEAPON_MINES:
-			IceMines(fTimeDelta);
-			break;
-		case WEAPON_TYPE::WEAPON_ICESMOKE:
-			Ice_Smoke(fTimeDelta);
-			break;
-		case WEAPON_TYPE::WEAPON_ROCK:
-			Rock(fTimeDelta);
-			break;
-		case WEAPON_TYPE::CARNIVAL_ARROW:
-			if (!m_bShoot)
-				Carnival_Arrow(fTimeDelta);
-			else
-				Shoot_Carnival_Arrow(fTimeDelta);
+		default:
 			break;
 		}
+		break;
+	case WEAPON_TYPE::WEAPON_DART:
+		switch (m_tBulletData.eDirState)
+		{
+		case DIR_STATE::DIR_UP:
+			m_pTransformCom->Go_Straight(fTimeDelta);
+			break;
+		case DIR_STATE::DIR_DOWN:
+			m_pTransformCom->Go_Backward(fTimeDelta);
+			break;
+		case DIR_STATE::DIR_RIGHT:
+			m_pTransformCom->Go_Right(fTimeDelta);
+			break;
+		case DIR_STATE::DIR_LEFT:
+			m_pTransformCom->Go_Right(fTimeDelta);
+			break;
+		case DIR_STATE::DIR_END:
+			m_pTransformCom->Go_PosDir(fTimeDelta, m_tBulletData.vLook);
+			break;
+		default:
+			break;
+		}
+		break;
+	case WEAPON_TYPE::WEAPON_BOMB:
+		Bomb();
+		break;
+	case WEAPON_TYPE::WEAPON_SMOKE:
+		Red_Smoke(fTimeDelta);
+		break;
+	case WEAPON_TYPE::WEAPON_LIGHTNING:
+		break;
+	case WEAPON_TYPE::WEAPON_ICESPIKE1:
+	case WEAPON_TYPE::WEAPON_ICESPIKE2:
+	case WEAPON_TYPE::WEAPON_ICESPIKE3:
+	case WEAPON_TYPE::WEAPON_ICESPIKE4:
+		IceSpikes(fTimeDelta);
+		break;
+	case WEAPON_TYPE::WEAPON_MINE:
+		IceMine(fTimeDelta);
+		break;
+	case WEAPON_TYPE::WEAPON_MINES:
+		IceMines(fTimeDelta);
+		break;
+	case WEAPON_TYPE::WEAPON_ICESMOKE:
+		Ice_Smoke(fTimeDelta);
+		break;
+	case WEAPON_TYPE::WEAPON_ROCK:
+		Rock(fTimeDelta);
+		break;
+	case WEAPON_TYPE::CARNIVAL_ARROW:
+		if (!m_bShoot)
+			Carnival_Arrow(fTimeDelta);
+		else
+			Shoot_Carnival_Arrow(fTimeDelta);
+		break;
+	case WEAPON_TYPE::BOARRIOR_FIRE:
+		Boarrior_Fire(fTimeDelta);
+		break;
 	}
 }
 
@@ -410,6 +401,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 
 		case WEAPON_TYPE::BEARGER_SPECIAL:
 		case WEAPON_TYPE::BOARRIOR_SPECIAL:
+		case WEAPON_TYPE::BOARRIOR_FIRE:
 			m_bDead = OBJ_DEAD;
 			goto AttackMulti;
 			break;
@@ -497,7 +489,7 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 			m_bDead = OBJ_DEAD;
 		}
 		break;
-	case WEAPON_TYPE::WEAPON_LIGHT:
+	case WEAPON_TYPE::WEAPON_LIGHTNING:
 	case WEAPON_TYPE::WEAPON_ICESPIKE1:
 	case WEAPON_TYPE::WEAPON_ICESPIKE2:
 	case WEAPON_TYPE::WEAPON_ICESPIKE3:
@@ -528,6 +520,7 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 
 	case WEAPON_TYPE::BEARGER_SPECIAL:
 	case WEAPON_TYPE::BOARRIOR_SPECIAL:
+	case WEAPON_TYPE::BOARRIOR_FIRE:
 	case WEAPON_TYPE::WEAPON_ICESMOKE:
 		if ((m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1))
 			m_bDead = true;
@@ -1081,6 +1074,21 @@ void CBullet::Shoot_Carnival_Arrow(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
+void CBullet::Boarrior_Fire(_float _fTimeDelta)
+{
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_BOSS, TEXT("Layer_Monster"));
+	CBoarrior* pBoarrior = dynamic_cast<CBoarrior*>(pGameObject);
+	if (!pBoarrior)
+		return;
+
+	_float3 vBulletPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float3 vBulletDir = vBulletPosition - pBoarrior->Get_Position();
+	D3DXVec3Normalize(&vBulletDir, &vBulletDir);
+
+	vBulletPosition += vBulletDir * _fTimeDelta * 4;
+	vBulletPosition = _float3(vBulletPosition.x, m_pTransformCom->Get_State(CTransform::STATE_POSITION).y, vBulletPosition.z); // Ignore the Y
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vBulletPosition);
+}
 
 HRESULT CBullet::Render_TextureState()
 {
@@ -1305,7 +1313,7 @@ HRESULT CBullet::Texture_Clone(void)
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_LaserHit"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Laser_Hit1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
-	case WEAPON_TYPE::WEAPON_LIGHT:
+	case WEAPON_TYPE::WEAPON_LIGHTNING:
 		TextureDesc.m_iStartTex = 0;
 		TextureDesc.m_iEndTex = 9;
 		TextureDesc.m_fSpeed = 60;
@@ -1397,6 +1405,16 @@ HRESULT CBullet::Texture_Clone(void)
 
 		break;
 
+	case WEAPON_TYPE::BOARRIOR_FIRE:
+		TextureDesc.m_iStartTex = 0;
+		TextureDesc.m_iEndTex = 46;
+		TextureDesc.m_fSpeed = 30;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Boarrior_Fire"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Fire"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+
+		break;
+
 	case WEAPON_TYPE::WEAPON_PUFF:
 		TextureDesc.m_iStartTex = 0;
 		TextureDesc.m_iEndTex = 16;
@@ -1457,7 +1475,7 @@ HRESULT CBullet::Init_Data(void)
 		m_pTransformCom->Set_Scale(0.7f, 0.7f, 1.f);
 		m_fDamage = 0.f;
 		break;
-	case WEAPON_TYPE::WEAPON_LIGHT:
+	case WEAPON_TYPE::WEAPON_LIGHTNING:
 		m_pTransformCom->Set_Scale(1.f, 7.f, 1.f);
 		m_fDamage = 0.f;
 		break;
@@ -1501,8 +1519,12 @@ HRESULT CBullet::Init_Data(void)
 		Compare_Terrain();
 		break;
 	case WEAPON_TYPE::BOARRIOR_SPECIAL:
-		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 		break;
+	case WEAPON_TYPE::BOARRIOR_FIRE:
+		m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.f);
+		break;
+
 	case WEAPON_TYPE::CARNIVAL_ARROW:
 	{
 		_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);

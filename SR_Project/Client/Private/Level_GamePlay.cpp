@@ -82,8 +82,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
-	//pGameInstance->PlayBGM(TEXT("Filed.mp3"), 0.1f);
-	
+
 	if (m_bNextLevel)
 	{
 		
@@ -168,6 +167,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	}
 
 	CloseHandle(hFile);
+
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrorbeak"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 0.f, 20.f));
 
 	Safe_Release(pGameInstance);
 
