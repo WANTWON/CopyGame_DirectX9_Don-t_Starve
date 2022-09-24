@@ -45,6 +45,8 @@ private:
 	STATE m_ePreState = STATE::MAX;
 	_float3 m_vecOutPos; // For Picking
 
+	_float m_bFirstFrame = true;
+
 private:
 	virtual void AI_Behaviour(_float fTimeDelta) override;
 	void Patrol(_float fTimeDelta);

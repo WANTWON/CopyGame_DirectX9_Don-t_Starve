@@ -30,7 +30,7 @@ HRESULT CTerrorbeak::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_tInfo.iMaxHp = 40;
+	m_tInfo.iMaxHp = 200;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_tInfo.fDamage = 10.f;
 
@@ -410,7 +410,7 @@ void CTerrorbeak::AI_Behaviour(_float fTimeDelta)
 		// If in AttackRadius: Attack
 		if (m_fDistanceToTarget < m_fAttackRadius)
 		{
-			if (GetTickCount() > m_dwAttackTime + 2000)
+			if (GetTickCount() > m_dwAttackTime + 3000)
 			{
 				m_eState = STATE::ATTACK;
 				m_bIsAttacking = true;
@@ -535,6 +535,21 @@ void CTerrorbeak::Attack(_float fTimeDelta)
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 0)
+		{
+			if (m_bFirstFrame)
+			{
+				// Play Attack Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("terrorbeak_attack_%03d.wav"), rand() % 6);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .4f);
+
+				m_bFirstFrame = false;
+			}
+		}
+		else
+			m_bFirstFrame = true;
+
 		// Normal Attack
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 4 && !m_bDidDamage)
 		{
@@ -574,7 +589,21 @@ _float CTerrorbeak::Take_Damage(float fDamage, void * DamageType, CGameObject * 
 			return OBJ_NOEVENT;
 
 		if (!m_bDead)
+		{
 			m_bHit = true;
+
+			// Play Hit Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("terrorbeak_hit_%03d.wav"), rand() % 6);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .4f);
+		}
+		else
+		{
+			// Play Death Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("terrorbeak_die_%03d.wav"), rand() % 11);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .4f);
+		}
 
 		m_bIsAttacking = false;
 		m_dwAttackTime = GetTickCount();

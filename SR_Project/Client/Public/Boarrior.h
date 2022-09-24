@@ -84,6 +84,9 @@ private:
 	_float3 m_vecOutPos; 
 
 	_bool m_bFirstFrame = false;
+
+	_bool m_bUseHitShader = false;
+	_float m_fHitTime = 0.f;
 	
 private:
 	void Check_CameraShake();

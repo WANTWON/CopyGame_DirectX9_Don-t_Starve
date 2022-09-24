@@ -97,6 +97,22 @@ void CBoarrior::Late_Tick(_float fTimeDelta)
 	Change_Motion();
 	Change_Frame(fTimeDelta);
 
+	// Use/Reset Shader Hit
+	if (m_bUseHitShader)
+	{
+		if (m_fHitTime > .25f)
+		{
+			m_eShaderID = SHADER_IDLE;
+			m_fHitTime = 0.f;
+			m_bUseHitShader = false;
+		}
+		else
+		{
+			m_eShaderID = SHADER_HIT;
+			m_fHitTime += fTimeDelta;
+		}
+	}
+
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 	if (!m_bPicking)
@@ -359,7 +375,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 			// Play Sound
 			_tchar szFileName[MAX_PATH] = TEXT("");
 			wsprintf(szFileName, TEXT("bannercall_boarrior_%02d.wav"), 1);
-			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, .7f);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
 
 			m_bFirstFrame = false;
 		}
@@ -610,7 +626,7 @@ void CBoarrior::Check_CameraShake()
 				// Play Walk Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("boarrior_step_%03d.wav"), rand() % 15 + 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, .5f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .5f);
 
 				// Camera Shake
 				if (pCamera)
@@ -629,7 +645,7 @@ void CBoarrior::Check_CameraShake()
 				// Play Walk Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("boarrior_step_%03d.wav"), rand() % 15 + 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, .5f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .5f);
 
 				// Camera Shake
 				if (pCamera)
@@ -649,7 +665,7 @@ void CBoarrior::Check_CameraShake()
 				// Play Walk Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("boarrior_step_%03d.wav"), rand() % 15 + 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, .5f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .5f);
 
 				// Camera Shake
 				if (pCamera)
@@ -1283,7 +1299,7 @@ void CBoarrior::Spawn_Adds(_float fTimeDelta)
 		TotemDesc.eType = CTotem::TOTEM_TYPE::HEAL;
 		_tchar szFileName[MAX_PATH] = TEXT("");
 		wsprintf(szFileName, TEXT("banner_craft_heal_0%d.wav"), 1);
-		pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_WORLD, 1.f);
+		pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, 1.f);
 
 		goto SpawnTotem;
 	}
@@ -1294,7 +1310,7 @@ void CBoarrior::Spawn_Adds(_float fTimeDelta)
 		TotemDesc.eType = CTotem::TOTEM_TYPE::DEFENSE;
 		_tchar szFileName[MAX_PATH] = TEXT("");
 		wsprintf(szFileName, TEXT("banner_craft_shield_0%d.wav"), 1);
-		pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_WORLD, 1.f);
+		pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, 1.f);
 
 		goto SpawnTotem;
 	}
@@ -1331,8 +1347,6 @@ _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * Da
 	if (m_bHasDefenseBoost)
 	{
 		fDamage = fDamage / 100 * 20;
-
-		m_eShaderID = SHADER_HIT;
 
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
@@ -1382,6 +1396,8 @@ ApplyDamage:
 
 	if (fDmg > 0)
 	{
+		m_bUseHitShader = true;
+
 		foreffect		effectdesc;
 		ZeroMemory(&effectdesc, sizeof(foreffect));
 		effectdesc.dmg = fDmg;
@@ -1411,7 +1427,7 @@ ApplyDamage:
 				// Play Hit Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("hit_boarrior_%02d.wav"), rand() % 14 + 1);
-				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, .7f);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
 			}
 			else
 				m_fStaggerDamage += fDamage;

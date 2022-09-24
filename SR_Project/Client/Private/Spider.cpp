@@ -46,9 +46,6 @@ int CSpider::Tick(_float fTimeDelta)
 		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
 		CInventory_Manager::Get_Instance()->Get_Quest_list()->front()->plus_spidercount();
 		return OBJ_DEAD;
-
-		
-
 	}
 		
 	// A.I.
@@ -233,6 +230,9 @@ void CSpider::Change_Frame(_float fTimeDelta)
 		else
 			m_pTransformCom->Set_Scale(1.2f, 1.f, 1.f);
 
+		if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+			StepSound();
+		
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::ATTACK:
@@ -400,6 +400,25 @@ void CSpider::PickingTrue()
 	Safe_Release(pInvenManager);
 }
 
+void CSpider::StepSound()
+{
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 0
+		|| m_pTextureCom->Get_Frame().m_iCurrentTex == 9)
+	{
+		if (m_bFirstFrame)
+		{
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("Spider_step_%d.wav"), rand() % 5 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .1f);
+
+			m_bFirstFrame = false;
+		}
+	}
+	else
+		m_bFirstFrame = true;
+}
+
 void CSpider::AI_Behaviour(_float fTimeDelta)
 {
 	if (m_bDead)
@@ -424,7 +443,7 @@ void CSpider::AI_Behaviour(_float fTimeDelta)
 
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("Spider_attack_%d.wav"), rand() % 15 + 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, 1.f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
 			}
 			else if (!m_bIsAttacking)
 				m_eState = STATE::IDLE;
@@ -510,7 +529,7 @@ void CSpider::Patrol(_float fTimeDelta)
 	// Switch between Idle and Walk (based on time)
 	if (m_eState == STATE::IDLE)
 	{
-		if (GetTickCount() > m_dwIdleTime + 3000)
+		if (GetTickCount() > m_dwIdleTime + 3000 + (rand() % 3000) * (rand() % 2 + 1))
 		{
 			m_eState = STATE::MOVE;
 			m_dwWalkTime = GetTickCount();
@@ -526,7 +545,7 @@ void CSpider::Patrol(_float fTimeDelta)
 	}
 	else if (m_eState == STATE::MOVE)
 	{
-		if (GetTickCount() > m_dwWalkTime + 1500)
+		if (GetTickCount() > m_dwWalkTime + 1500 + (rand() % 3000) * (rand() % 2 + 1))
 		{
 			m_eState = STATE::IDLE;
 			m_dwIdleTime = GetTickCount();
@@ -584,9 +603,10 @@ _float CSpider::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 			m_bHit = true;
 		else
 		{
+			// Play Sound
 			_tchar szFileName[MAX_PATH] = TEXT("");
 			wsprintf(szFileName, TEXT("Spider_death_%d.wav"), rand() % 3 + 1);
-			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER, 1.f);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
 		}
 	}
 
