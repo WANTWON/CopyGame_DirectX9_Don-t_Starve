@@ -49,7 +49,7 @@ HRESULT CPawn::Render()
 	return S_OK;
 }
 
-void CPawn::Set_ShaderID()
+void CPawn::Set_ShaderID(_bool bIsAlphaBlend)
 {
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
@@ -60,6 +60,8 @@ void CPawn::Set_ShaderID()
 		m_eShaderID = SHADER_PICKING;
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
+	else if (bIsAlphaBlend)
+		m_eShaderID = SHADER_IDLE_ALPHABLEND;
 	else
 		m_eShaderID = SHADER_DAYCYClE;
 }
