@@ -40,14 +40,14 @@ struct VS_OUT
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT			Out = (VS_OUT)0;
-		
+
 	matrix			matWV, matWVP;
 
 	matWV = mul(g_WorldMatrix, g_ViewMatrix);
 	matWVP = mul(matWV, g_ProjMatrix);
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-	Out.vTexUV = In.vTexUV;	 
+	Out.vTexUV = In.vTexUV;
 	Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix).xyz;
 
 	return Out;
@@ -85,7 +85,7 @@ PS_OUT PS_HIT(PS_IN In)
 	Out.vColor = tex2D(TextureSampler, In.vTexUV);
 	Out.vColor.r += 0.2f;
 	Out.vColor.gb -= 0.1f;
-	
+
 	return Out;
 }
 
@@ -195,11 +195,12 @@ PS_OUT PS_DAYCYCLE(PS_IN In)
 
 technique		DefaultTechnique
 {
-	pass DefaultPass_with_AlphaTest
-	{	
-		AlphaTestEnable = true;
-		AlphaFunc = greater;
-		AlphaRef = 50;
+	pass DefaultPass_with_AlphaBlend
+	{
+		ALPHABLENDENABLE = true;
+		SRCBLEND = SRCALPHA;
+		DESTBLEND = INVSRCALPHA;
+		BlendOp = Add;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_MAIN();
@@ -207,9 +208,10 @@ technique		DefaultTechnique
 
 	pass Hit
 	{
-		AlphaTestEnable = true;
-		AlphaFunc = greater;
-		AlphaRef = 50;
+		ALPHABLENDENABLE = true;
+		SRCBLEND = SRCALPHA;
+		DESTBLEND = INVSRCALPHA;
+		BlendOp = Add;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_HIT();
@@ -217,9 +219,10 @@ technique		DefaultTechnique
 
 	pass Picking
 	{
-		AlphaTestEnable = true;
-		AlphaFunc = greater;
-		AlphaRef = 50;
+		ALPHABLENDENABLE = true;
+		SRCBLEND = SRCALPHA;
+		DESTBLEND = INVSRCALPHA;
+		BlendOp = Add;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_PICKING();
@@ -227,9 +230,10 @@ technique		DefaultTechnique
 
 	pass Dead
 	{
-		AlphaTestEnable = true;
-		AlphaFunc = greater;
-		AlphaRef = 50;
+		ALPHABLENDENABLE = true;
+		SRCBLEND = SRCALPHA;
+		DESTBLEND = INVSRCALPHA;
+		BlendOp = Add;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_DEAD();
@@ -237,9 +241,10 @@ technique		DefaultTechnique
 
 	pass Fire
 	{
-		AlphaTestEnable = true;
-		AlphaFunc = greater;
-		AlphaRef = 50;
+		ALPHABLENDENABLE = true;
+		SRCBLEND = SRCALPHA;
+		DESTBLEND = INVSRCALPHA;
+		BlendOp = Add;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_FIRE();
@@ -247,9 +252,10 @@ technique		DefaultTechnique
 
 	pass Dark
 	{
-		AlphaTestEnable = true;
-		AlphaFunc = greater;
-		AlphaRef = 50;
+		ALPHABLENDENABLE = true;
+		SRCBLEND = SRCALPHA;
+		DESTBLEND = INVSRCALPHA;
+		BlendOp = Add;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_DARK();
@@ -257,9 +263,10 @@ technique		DefaultTechnique
 
 	pass DarkwithLight
 	{
-		AlphaTestEnable = TRUE;
-		AlphaFunc = greater;
-		AlphaRef = 50;
+		ALPHABLENDENABLE = true;
+		SRCBLEND = SRCALPHA;
+		DESTBLEND = INVSRCALPHA;
+		BlendOp = Add;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_DARKWITHLIGHT();
@@ -267,9 +274,10 @@ technique		DefaultTechnique
 
 	pass DayCycle
 	{
-		AlphaTestEnable = true;
-		AlphaFunc = greater;
-		AlphaRef = 50;
+		ALPHABLENDENABLE = true;
+		SRCBLEND = SRCALPHA;
+		DESTBLEND = INVSRCALPHA;
+		BlendOp = Add;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_DAYCYCLE();

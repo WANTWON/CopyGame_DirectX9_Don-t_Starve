@@ -44,7 +44,7 @@ private:
 
 private:
 	CAMERAMODE		m_eCamMode = CAM_IDLE;
-	_long			m_lMouseWheel = 0;
+	_double			m_lMouseWheel = 0;
 	_float3			m_vDistance;
 	_float3			m_vInitDistance;
 	

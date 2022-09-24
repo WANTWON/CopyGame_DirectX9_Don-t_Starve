@@ -262,6 +262,8 @@ HRESULT CTrap::Texture_Clone()
 	}
 	break;
 	}
+
+	return S_OK;
 }
 
 HRESULT CTrap::Change_Texture(const _tchar * LayerTag)
@@ -371,7 +373,7 @@ void CTrap::Set_ShaderID()
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_IDLE;
 }
 
 CTrap* CTrap::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

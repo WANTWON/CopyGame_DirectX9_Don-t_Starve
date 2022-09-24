@@ -153,7 +153,7 @@ HRESULT CTerrorbeak::SetUp_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	SetUp_DebugComponents(pArg);
@@ -360,7 +360,7 @@ _bool CTerrorbeak::Picking(_float3 * PickingPoint)
 		i->set_monstername(MONSTER_END);
 		i->set_check(false);
 
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_IDLE;
 		for (auto j : *k)
 			j->set_check(false);
 		return false;

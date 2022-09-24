@@ -69,6 +69,8 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	}
 
 	Set_ShaderID();
+	if (m_bPickingTrue)
+		m_eShaderID = SHADER_PICKING;
 }
 
 HRESULT CMonster::Render()

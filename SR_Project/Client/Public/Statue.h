@@ -55,7 +55,7 @@ private:
 	const _tchar* m_TimerTag = TEXT("");
 	OBJINFO m_tInfo;
 	_bool m_bIsDestroyed = false;
-	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
+	SHADER_STATE m_eShaderID = SHADER_IDLE;
 
 private: /* For.Components */
 	CTexture* m_pTextureCom = nullptr;

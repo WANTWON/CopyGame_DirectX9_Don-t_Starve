@@ -2,6 +2,7 @@
 #include "..\Public\DecoObject.h"
 #include "GameInstance.h"
 #include "FloorGrateEruption.h"
+#include "Player.h"
 
 CDecoObject::CDecoObject(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -43,13 +44,11 @@ HRESULT CDecoObject::Initialize(void* pArg)
 		break;
 	case DECOTYPE::FLOOR_EFFECT:
 		m_pTransformCom->Set_Scale(1.f, 1.5f, 1.f);
-		m_eShaderID = SHADER_IDLE_ALPHABLEND;
 		break;
 	case DECOTYPE::TORCH:
 		m_pTransformCom->Set_Scale(0.8f, 2.8f, 1.f);
 		m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 		m_fRadius = m_pTransformCom->Get_Scale().y *0.5f;
-		m_eShaderID = SHADER_IDLE_ALPHABLEND;
 		break;
 	case DECOTYPE::FLIES:
 		m_pTransformCom->Set_Scale(1.5f, 2.f, 1.f);
@@ -129,13 +128,13 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 	{
 		if (m_DecoDesc.m_eState == DECOTYPE::FLOOR_EFFECT || m_DecoDesc.m_eState == DECOTYPE::SPARKLE)
 		{
-			m_eShaderID = SHADER_IDLE_ALPHABLEND;
+			m_eShaderID = SHADER_IDLE;
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 			Compute_CamDistance(Get_Position());
 		}
 		else
 		{
-			m_eShaderID = SHADER_IDLE_ALPHATEST;
+			m_eShaderID = SHADER_IDLE;
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		}
 
@@ -160,17 +159,20 @@ void CDecoObject::Set_ShaderID()
 
 	if (pGameObject->Get_Dead())
 		m_eShaderID = SHADER_DEAD;
+	else if (dynamic_cast<CPlayer*>(pGameObject)->Get_WeaponType() == WEAPON_LIGHT)
+		m_eShaderID = SHADER_DARKWITHLIGHT;
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
+	else if (iLevel == LEVEL_BOSS)
+		m_eShaderID = SHADER_FIRE;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_DAYCYClE;
 
 }
 
 HRESULT CDecoObject::Render()
 {
 	
-
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -246,9 +248,18 @@ void CDecoObject::MoveFrame()
 HRESULT CDecoObject::SetUp_Components(void* pArg)
 {
 
-	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
-		return E_FAIL;
+	if (m_DecoDesc.m_eState == DECOTYPE::FLOOR_EFFECT || m_DecoDesc.m_eState == DECOTYPE::SPARKLE)
+	{
+		/* For.Com_Shader */
+		if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), (CComponent**)&m_pShaderCom)))
+			return E_FAIL;
+	}
+	else
+	{
+		/* For.Com_Shader */
+		if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+			return E_FAIL;
+	}
 
 	/* For.Com_Texture */
 	CTexture::TEXTUREDESC TextureDesc;

@@ -82,7 +82,6 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
-	
 
 	if (m_bNextLevel)
 	{

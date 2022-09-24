@@ -254,7 +254,7 @@ void CBoaron::Change_Frame(_float fTimeDelta)
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
 		{
-			m_eShaderID = SHADER_IDLE_ALPHATEST;
+			m_eShaderID = SHADER_IDLE;
 			m_bHit = false;
 		}		
 		break;
@@ -368,7 +368,7 @@ _bool CBoaron::Picking(_float3 * PickingPoint)
 		i->set_monstername(MONSTER_END);
 		i->set_check(false);
 
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_IDLE;
 		for (auto j : *k)
 			j->set_check(false);
 		return false;
