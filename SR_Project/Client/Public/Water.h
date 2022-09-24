@@ -56,9 +56,6 @@ private:
 private:
 	HRESULT SetUp_Components(void* pArg);
 	HRESULT SetUp_Components(const _tchar* VIBufferTag, void* pArg = nullptr);
-	HRESULT SetUp_RenderState();
-	HRESULT SetUp_SamplerState();
-	HRESULT Release_RenderState();
 
 public:
 	static CWater* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

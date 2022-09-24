@@ -346,6 +346,9 @@
     <Filter Include="02.GameObject\00. Pawn\01.Monster\Terrorbeak">
       <UniqueIdentifier>{c06fbb5e-bf02-40a9-a919-78db20b98288}</UniqueIdentifier>
     </Filter>
+    <Filter Include="94.DayCycleObserver">
+      <UniqueIdentifier>{0627af43-4c02-46cc-b405-1301015a13e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -804,6 +807,9 @@
     <ClInclude Include="..\public\Terrorbeak.h">
       <Filter>02.GameObject\00. Pawn\01.Monster\Terrorbeak</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\DayCycle.h">
+      <Filter>94.DayCycleObserver</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1250,6 +1256,9 @@
     <ClCompile Include="..\private\Terrorbeak.cpp">
       <Filter>02.GameObject\00. Pawn\01.Monster\Terrorbeak</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\DayCycle.cpp">
+      <Filter>94.DayCycleObserver</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1277,6 +1286,9 @@
       <Filter>95.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_DefaultBlend.hlsl">
+      <Filter>95.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Cube.hlsl">
       <Filter>95.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

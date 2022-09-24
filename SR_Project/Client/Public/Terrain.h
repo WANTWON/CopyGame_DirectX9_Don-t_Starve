@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "Observer.h"
 
 BEGIN(Engine)
 class CTexture;
@@ -13,7 +14,7 @@ END
 
 BEGIN(Client)
 
-class CTerrain final : public CGameObject
+class CTerrain final : public CGameObject , public CObserver
 {
 public:
 	typedef struct TerrainDesc
@@ -44,6 +45,7 @@ public:
 
 public:
 	TERRAINDESC Get_TerrainDesc() { return m_TerrainDesc; }
+	virtual void Update(_uint eDayState) override { m_eDayState = (DAY_STATE)eDayState; };
 
 private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
@@ -53,30 +55,28 @@ private: /* For.Components */
 	CShader*				m_pShaderCom = nullptr;
 	TERRAINDESC				m_TerrainDesc;
 	SHADER_STATE m_eShaderID = SHADER_IDLE;
+
 private:
 	HRESULT SetUp_Components(void* pArg);
 	HRESULT SetUp_Components(const _tchar* VIBufferTag, LEVEL TerrainLevelIndex, void* pArg = nullptr);
-	HRESULT SetUp_RenderState();
-	HRESULT SetUp_SamplerState();
-	HRESULT Release_RenderState();
-
+	
 public:
 	virtual _bool Picking(_float3* PickingPoint);
 	virtual void PickingTrue();
 	void Check_ShaderColor();
+
 
 private:
 	_float3 m_vecOutPos;
 	_bool m_bPicking;
 
 	/* for test Shader Color*/
-	_float g_fDinnerMaxRange = 15.f;
-	_float g_fDinnerMinRange = 10.f;
-	_float g_fDinnerDelta = 0.f;
-	_float g_fNightDelta = 0.f;
-	_float g_fNightAlpha = 0.f;
-	DAY_STATE g_eDayState = DAY_MORNING;
-	DWORD g_dwDayNightTimer;
+	_float m_fDinnerMaxRange = 15.f;
+	_float m_fDinnerMinRange = 10.f;
+	_float m_fDinnerDelta = 0.f;
+	_float m_fNightDelta = 0.f;
+	_float m_fNightAlpha = 0.f;
+	DAY_STATE m_eDayState = DAY_MORNING;
 public:
 	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

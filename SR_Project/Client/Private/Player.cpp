@@ -487,7 +487,7 @@ HRESULT CPlayer::SetUp_Components()
 
 	TransformDesc.fSpeedPerSec = 3.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
-	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);
+	TransformDesc.InitPos = _float3(40.f, 0.5f, 25.f);
 
 	/*MINIMAP		minidesc;
 	ZeroMemory(&minidesc, sizeof(MINIMAP));
