@@ -94,6 +94,9 @@ void CItem::Interact(_uint Damage)
 	
 	//this->Get_Position();
 
+	CGameInstance* pInstance = CGameInstance::Get_Instance();
+	pInstance->PlaySound(TEXT("getitem.wav"), SOUND_UI, 0.5f);
+
 	
 		if ((*equipmentlist)->get_texnum() == ITEMNAME_BAG) // 가방을 장착하고있을때
 		{

@@ -70,6 +70,7 @@ namespace Client
 
 	enum DAY_STATE { DAY_MORNING , DAY_NIGHT , DAY_END };
 
+	enum SOUND_ID { SOUND_UI , SOUND_END};
 	
 
 	typedef struct tagBulletData {
