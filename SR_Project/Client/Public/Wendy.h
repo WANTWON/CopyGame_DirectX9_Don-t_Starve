@@ -39,6 +39,7 @@ public:
 	virtual void Interact(_uint Damage = 0) override;
 	virtual HRESULT Drop_Items() override;
 	virtual	void	Make_Interrupt(CPawn* pCauser, _uint _InterruptNum);
+	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 private:/*Func for BT*/
 	CBT_NPC* BehaviorTree = nullptr;
 public:/*for Actions*/
@@ -54,6 +55,7 @@ public:/*for Actions*/
 	virtual void	Select_Target(_float _fTimeDelta) override;
 	virtual void	Set_RandPos(_float _fTimeDelta) override;
 	virtual _bool	Get_Target_Moved(_float _fTimeDelta, _uint _iTarget) override;
+	virtual _bool	Detect_Enemy() override;
 private:
 	void	Revive_Berry(_float _fTimeDelta);
 	void	Talk_Player(_float _fTimeDelta);

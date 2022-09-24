@@ -6,6 +6,7 @@
 CNPC::CNPC(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CInteractive_Object(pGraphic_Device)
 {
+	ZeroMemory(&m_tInfo, sizeof(OBJINFO));
 }
 
 CNPC::CNPC(const CNPC & rhs)
@@ -91,32 +92,6 @@ _bool CNPC::Get_TargetDead(void)
 
 }
 
-_bool CNPC::Get_CloseToOwner(void)
-{
-	if (!m_bOwner)
-		return false;
-
-	_float Compare_Range = (m_pOwner->Get_Position().x - Get_Pos().x)*(m_pOwner->Get_Position().x - Get_Pos().x)
-		+ (m_pOwner->Get_Position().y - Get_Pos().y)*(m_pOwner->Get_Position().y - Get_Pos().y)
-		+ (m_pOwner->Get_Position().z - Get_Pos().z)*(m_pOwner->Get_Position().z - Get_Pos().z);
-
-	if (m_fOwnerRadius > Compare_Range)
-	{
-		Clear_Activated();
-		return true;
-	}
-	else
-	{
-		Reset_Target();
-		m_pTarget = m_pOwner;
-		Safe_AddRef(m_pTarget);
-		Clear_Activated();
-		return false;
-	}
-
-	return _bool();
-}
-
 
 void CNPC::Free()
 {
@@ -169,6 +144,35 @@ _bool CNPC::Set_TargetPos()
 	
 	
 	return true;
+}
+
+_bool CNPC::Detect_Enemy()
+{
+	return _bool();
+}
+
+_bool CNPC::Wait(_float _fTimeDelta, _float fWaitTime)
+{
+	if (!m_bFinishInteract)
+	{
+		m_bFinishInteract = true;
+		m_fInteractTIme = 0.f;
+		return false;
+	}
+	else
+	{
+		m_fInteractTIme += _fTimeDelta;
+
+		if (m_fInteractTIme >= fWaitTime)
+		{
+			m_bFinishInteract = false;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 
 

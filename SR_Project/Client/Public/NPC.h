@@ -60,9 +60,9 @@ public: /*Get & Set*/
 	_bool	Get_CanAttack(void) { return m_bCanAttack; }
 	_bool	Get_FightMode(void) { return m_bFightMode; }
 	_bool	Get_TargetDead(void);
-	_bool	Get_CloseToOwner(void);
 	_bool	Get_CanSkill(void) { return m_bCanSkill; }
 	_bool	Get_CanTalk(void) { return m_bCanTalk; }
+	_bool	Get_SelectAct(void) { return m_bSelectAct; }
 	//Set
 	void	Reset_Target(void) { Safe_Release(m_pTarget); m_pTarget = nullptr; }
 	void	Set_IsArrive(_bool _bArrive) { m_bArrive = _bArrive; }
@@ -75,6 +75,7 @@ public: /*Get & Set*/
 	void	Set_Position(_float3 _vPos) { m_pTransformCom->Set_State(CTransform::STATE_POSITION, _vPos); }
 	void	Set_MoveNum(_uint _iNum) { m_MoveNum = _iNum; }
 	void	Set_Target(CGameObject* pTarget) { Reset_Target(); m_pTarget = pTarget; Safe_AddRef(pTarget); }
+	void	Set_SelectAct(_bool _bCanAct) { m_bSelectAct = _bCanAct; }
 public:/*for Actions*/
 	virtual void Interact(_uint Damage = 0) = 0;
 	virtual HRESULT Drop_Items() = 0;
@@ -93,6 +94,8 @@ public:/*for Actions*/
 	virtual	void	Make_Interrupt(CPawn* pCauser, _uint _InterruptNum);
 	virtual _bool	Get_Target_Moved(_float _fTimeDeltam, _uint _iTarget);
 	virtual _bool	Set_TargetPos();
+	virtual _bool	Detect_Enemy();
+	virtual _bool	Wait(_float _fTimeDelta, _float fWaitTime);
 public: //mange map
 	NPC_STATE	Find_Activated(void);
 	void		Init_Map(void);
@@ -105,12 +108,12 @@ protected:
 	CGameObject*	m_pTarget = nullptr;
 	CGameObject*	m_pOwner = nullptr;
 	//for TargetPos
-	_float	m_fOwnerRadius = 3.f;
+	_float	m_fOwnerRadius = 10.f;
 	_float	m_fAtkRange = 3.f;
 	_uint	m_MoveNum = 0;
 	_float	m_fSkillRange = 5.f;
 	_float	m_fMinRange = 5.f;
-	_float  m_fDetectRange = 10.f;
+	_float  m_fDetectRange = 15.f;
 	//For RandPos
 	_float m_fPatrolRadius = 3.f;
 	_float m_fPatrolPosX = 0.f;
@@ -128,6 +131,7 @@ protected:
 	_bool					m_bNextAct = false;
 	_bool					m_bActivate = false;
 	map<NPC_STATE, _bool>	m_NPCStates;
+	_bool					m_bSelectAct = true;
 	//Level
 	LEVEL					m_iCurrentLevelndex;
 	LEVEL					m_iPreLevelIndex;
@@ -162,8 +166,8 @@ protected:
 	_float		m_fSkill_Max_CoolTime = 0.f;
 	_bool		m_bCanSkill = true;
 
-	//time
-	//_float					m_fInteractTime = 0.f;
+
+	
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) =0;
 	virtual void Free() override;

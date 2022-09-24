@@ -324,7 +324,7 @@ void CCatapult::Attack(_float _fTimeDelta)
 
 	if (!Check_Distance(m_pTarget))
 	{
-		m_pTarget == nullptr;
+		m_pTarget = nullptr;
 		m_eState = CCatapult::IDLE;
 	}
 
