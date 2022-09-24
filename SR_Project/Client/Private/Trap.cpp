@@ -262,6 +262,8 @@ HRESULT CTrap::Texture_Clone()
 	}
 	break;
 	}
+
+	return S_OK;
 }
 
 HRESULT CTrap::Change_Texture(const _tchar * LayerTag)

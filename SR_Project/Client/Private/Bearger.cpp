@@ -1090,7 +1090,7 @@ void CBearger::PickingTrue()
 	for (auto j : *k)
 	{
 		j->set_check(true);
-		j->set_hp(m_tInfo.iCurrentHp);
+		j->set_hp((_uint)m_tInfo.iCurrentHp);
 	}
 
 	Safe_Release(pGameInstance);
