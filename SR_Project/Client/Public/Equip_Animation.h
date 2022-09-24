@@ -72,7 +72,7 @@ protected: /*STATE*/
 	DIR_STATE				m_eDirState = DIR_STATE::DIR_DOWN;
 	DIR_STATE				m_ePreDirState = DIR_STATE::DIR_DOWN;
 	WEAPON_TYPE				m_eWeaponType = WEAPON_TYPE::WEAPON_SWORD;
-	SHADER_STATE			m_eShaderID = SHADER_IDLE_ALPHATEST;
+	SHADER_STATE			m_eShaderID = SHADER_IDLE;
 protected:/*others*/
 	const _tchar*	m_TimerTag = TEXT("");
 	_float3			m_MovePos;

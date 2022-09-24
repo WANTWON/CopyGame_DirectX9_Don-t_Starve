@@ -46,7 +46,7 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 	CTransform*	m_pTransformCom = nullptr;
 	CShader*	m_pShaderCom = nullptr;
-	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHABLEND;
+	SHADER_STATE m_eShaderID = SHADER_IDLE;
 	vector<CTexture*> m_vecTexture;
 
 

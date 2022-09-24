@@ -58,7 +58,7 @@ private:/*For Components*/
 	CTransform*				m_pTransformCom = nullptr;
 	CShader*				m_pShaderCom = nullptr;
 
-	SHADER_STATE			m_eShaderID = SHADER_IDLE_ALPHATEST;
+	SHADER_STATE			m_eShaderID = SHADER_IDLE;
 
 private: //values	
 	_bool					m_bIsPicker = false;

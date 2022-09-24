@@ -74,8 +74,12 @@ void CTerrain::Late_Tick(_float fTimeDelta)
 
 	if (pGameObject->Get_Dead())
 		m_eShaderID = SHADER_DEAD;
+	else if (dynamic_cast<CPlayer*>(pGameObject)->Get_WeaponType() == WEAPON_LIGHT)
+		m_eShaderID = SHADER_DARKWITHLIGHT;
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
+	else if (iLevel == LEVEL_BOSS)
+		m_eShaderID = SHADER_FIRE;
 	else
 		m_eShaderID = SHADER_DAYCYClE;
 	
@@ -382,38 +386,15 @@ void CTerrain::Check_ShaderColor()
 
 	}
 
-	if (g_eDayState == DAY_DINNER)
+	if (g_eDayState == DAY_MORNING)
 	{
-		if (g_fDinnerDelta >= 0.1f)
-			g_fDinnerDelta = 0.1f;
-		else
-			g_fDinnerDelta += 0.001f;
-	}
-	else if (g_eDayState == DAY_NIGHT)
-	{
-		if (g_fDinnerDelta <= 0.0f)
-			g_fDinnerDelta = 0.0f;
-		else
-			g_fDinnerDelta -= 0.001f;
 
-		
-		g_fNightAlpha += 0.01f;
+		g_fDinnerMinRange += 0.01f;
+		if (g_fDinnerMinRange >= 10.f)
+			g_fDinnerMinRange = 10.f;
 
-		if (g_fNightAlpha >= 1.f)
-			g_fNightAlpha = 1.f;
+		g_fDinnerMaxRange = g_fDinnerMinRange + 10.f;
 
-		if (g_fNightAlpha == 1.f)
-		{
-			if (g_fNightDelta >= 0.2f)
-				g_fNightDelta = 0.2f;
-			else
-				g_fNightDelta += 0.002f;
-
-		}
-			
-	}
-	else if (g_eDayState == DAY_MORNING)
-	{
 		if (g_fNightAlpha <= 0.0f)
 			g_fNightAlpha = 0.0f;
 		else
@@ -427,13 +408,59 @@ void CTerrain::Check_ShaderColor()
 				g_fNightDelta -= 0.002f;
 		}
 	}
-		
+	else if (g_eDayState == DAY_DINNER)
+	{
 
+		g_fDinnerMinRange -= 0.01f;
+		if (g_fDinnerMinRange <= 6.f)
+			g_fDinnerMinRange = 6.f;
+
+		g_fDinnerMaxRange = g_fDinnerMinRange + 10.f;
+
+		if (g_fDinnerDelta >= 0.1f)
+			g_fDinnerDelta = 0.1f;
+		else
+			g_fDinnerDelta += 0.001f;
+
+		g_fNightAlpha += 0.01f;
+
+		if (g_fNightAlpha >= 0.2f)
+			g_fNightAlpha = 0.2f;
+	}
+	else if (g_eDayState == DAY_NIGHT)
+	{
+		g_fDinnerMinRange -= 0.01f;
+		if (g_fDinnerMinRange <= 2.f)
+			g_fDinnerMinRange = 2.f;
+
+		g_fDinnerMaxRange = g_fDinnerMinRange + 10.f;
+
+		if (g_fDinnerDelta <= 0.0f)
+			g_fDinnerDelta = 0.0f;
+		else
+			g_fDinnerDelta -= 0.001f;
+
+		
+		g_fNightAlpha += 0.01f;
+
+		if (g_fNightAlpha >= 1.f)
+			g_fNightAlpha = 1.f;
+
+		if (g_fNightAlpha == 1.f)
+		{
+			if (g_fNightDelta >= 0.1f)
+				g_fNightDelta = 0.1f;
+			else
+				g_fNightDelta += 0.002f;
+		}
+	}
+	
+		
+	m_pShaderCom->Set_RawValue("g_fDinnerMinRange", &g_fDinnerMinRange, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fDinnerMaxRange", &g_fDinnerMaxRange, sizeof(_float));
 	m_pShaderCom->Set_RawValue("g_fDinnerDelta", &g_fDinnerDelta, sizeof(_float));
 	m_pShaderCom->Set_RawValue("g_fNightDelta", &g_fNightDelta, sizeof(_float));
 	m_pShaderCom->Set_RawValue("g_fNightDarkAlpha", &g_fNightAlpha, sizeof(_float));
-
-	
 }
 
 

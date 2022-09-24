@@ -55,7 +55,7 @@ protected:
 	const _tchar* m_TimerTag = TEXT("");
 	OBJINFO m_tInfo;
 	_uint m_iDamage = 0;
-	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
+	SHADER_STATE m_eShaderID = SHADER_IDLE;
 public:
 	virtual void Free() override;
 };

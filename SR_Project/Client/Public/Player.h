@@ -107,7 +107,7 @@ public: /*Get&Set*/
 	_float3 Get_Look();
 	_float3 Get_Right();
 	PLAYERSTAT Get_Player_Stat() { return m_tStat; }
-
+	WEAPON_TYPE Get_WeaponType() { return m_eWeaponType; }
 	_bool	Get_IsBuild(void) { return m_bIsBuild; }
 	_float3 Get_PickingPoint(void) { return m_vPickingPoint; }
 	_bool	Get_SkillShow(void);

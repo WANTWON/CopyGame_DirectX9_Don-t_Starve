@@ -253,6 +253,7 @@ HRESULT CPig::Texture_Clone()
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 14;
+	TextureDesc.m_fSpeed = 55;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
@@ -334,7 +335,7 @@ void CPig::Change_Frame(_float fTimeDelta)
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
 		{
-			m_eShaderID = SHADER_IDLE_ALPHATEST;
+			m_eShaderID = SHADER_IDLE;
 			m_bHit = false;
 		}
 		break;
@@ -459,7 +460,7 @@ _bool CPig::Picking(_float3 * PickingPoint)
 	}
 	else
 	{
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_IDLE;
 		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 
 		auto i = pInvenManager->Get_Monsterinfo_list()->front();

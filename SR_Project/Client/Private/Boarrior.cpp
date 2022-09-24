@@ -399,7 +399,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
 		{
-			m_eShaderID = SHADER_IDLE_ALPHATEST;
+			m_eShaderID = SHADER_IDLE;
 			m_bHit = false;
 		}
 		break;
@@ -549,7 +549,7 @@ _bool CBoarrior::Picking(_float3 * PickingPoint)
 	{
 		m_bPickingTrue = false;
 		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_IDLE;
 		auto i = pInvenManager->Get_Monsterinfo_list()->front();
 		auto k = pInvenManager->Get_Monsterhp_list();
 

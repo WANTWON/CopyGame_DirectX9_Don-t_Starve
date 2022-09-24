@@ -47,7 +47,6 @@ HRESULT CBullet::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
-	m_eShaderID = SHADER_IDLE_ALPHABLEND;
 	return S_OK;
 }
 
@@ -90,6 +89,7 @@ void CBullet::Late_Tick(_float fTimeDelta)
 
 	Compute_CamDistance(Get_Position());
 	Set_ShaderID();
+
 }
 
 HRESULT CBullet::Render()
@@ -190,7 +190,7 @@ HRESULT CBullet::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	Init_Data();
@@ -305,7 +305,7 @@ void CBullet::Excute(_float fTimeDelta)
 		case WEAPON_TYPE::WEAPON_SMOKE:
 			Red_Smoke(fTimeDelta);
 			break;
-		case WEAPON_TYPE::WEAPON_LIGHTNING:
+		case WEAPON_TYPE::WEAPON_LIGHT:
 			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE1:
 		case WEAPON_TYPE::WEAPON_ICESPIKE2:
@@ -497,7 +497,7 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 			m_bDead = OBJ_DEAD;
 		}
 		break;
-	case WEAPON_TYPE::WEAPON_LIGHTNING:
+	case WEAPON_TYPE::WEAPON_LIGHT:
 	case WEAPON_TYPE::WEAPON_ICESPIKE1:
 	case WEAPON_TYPE::WEAPON_ICESPIKE2:
 	case WEAPON_TYPE::WEAPON_ICESPIKE3:
@@ -1305,7 +1305,7 @@ HRESULT CBullet::Texture_Clone(void)
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_LaserHit"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Laser_Hit1"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
-	case WEAPON_TYPE::WEAPON_LIGHTNING:
+	case WEAPON_TYPE::WEAPON_LIGHT:
 		TextureDesc.m_iStartTex = 0;
 		TextureDesc.m_iEndTex = 9;
 		TextureDesc.m_fSpeed = 60;
@@ -1457,7 +1457,7 @@ HRESULT CBullet::Init_Data(void)
 		m_pTransformCom->Set_Scale(0.7f, 0.7f, 1.f);
 		m_fDamage = 0.f;
 		break;
-	case WEAPON_TYPE::WEAPON_LIGHTNING:
+	case WEAPON_TYPE::WEAPON_LIGHT:
 		m_pTransformCom->Set_Scale(1.f, 7.f, 1.f);
 		m_fDamage = 0.f;
 		break;
