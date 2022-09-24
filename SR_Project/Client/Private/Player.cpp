@@ -66,6 +66,21 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
+	m_fMentalitytime += fTimeDelta;
+	m_fHungertime += fTimeDelta;
+	if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT && m_fMentalitytime > 1.f)
+	{
+		--m_tStat.fCurrentMental;
+		m_fMentalitytime = 0.f;
+	}
+
+	if (m_fHungertime > 5.f)
+	{
+		--m_tStat.fCurrentHungry;
+		m_fHungertime = 0.f;
+	}
+
+
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
@@ -170,7 +185,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	Setup_Collider();
 
-	
+	Set_ShaderID();
 
 
 	Create_Bullet();
@@ -296,8 +311,9 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
+		_bool forboss = false;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"))))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"),&forboss)))
 			return OBJ_NOEVENT;
 
 		m_ActStack.push(ACTION_STATE::DAMAGED);
@@ -471,7 +487,7 @@ HRESULT CPlayer::SetUp_Components()
 
 	TransformDesc.fSpeedPerSec = 3.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
-	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);
+	TransformDesc.InitPos = _float3(40.f, 0.5f, 25.f);
 
 	/*MINIMAP		minidesc;
 	ZeroMemory(&minidesc, sizeof(MINIMAP));
@@ -2267,7 +2283,10 @@ void CPlayer::RangeCheck(_float _fTimeDelta)
 		+ (m_vTargetPicking.z - Get_Pos().z)*(m_vTargetPicking.z - Get_Pos().z);
 
 	m_pPicker->Set_Pos(m_vTargetPicking);
-	m_pRange->Set_Pos(Get_Pos());
+
+	_float3 vPosition = Get_Pos();
+	vPosition.y -= 0.4f;
+	m_pRange->Set_Pos(vPosition);
 
 	if (m_fAtkRange > Compare_Range)
 	{

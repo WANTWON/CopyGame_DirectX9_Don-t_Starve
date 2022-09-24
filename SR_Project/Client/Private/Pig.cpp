@@ -53,6 +53,23 @@ int CPig::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	}
 
+	// Randomly Play Grunt Sound
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+	{
+		if (m_fGruntTime > m_fGruntRandomLimit)
+		{
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("pig_grunts_%d.wav"), rand() % 6 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+
+			m_fGruntTime = 0.f;
+			m_fGruntRandomLimit = rand() % 5 + 1;
+		}
+		else
+			m_fGruntTime += fTimeDelta;
+	}
+
 	// A.I.
 	AI_Behaviour(fTimeDelta);
 
@@ -253,6 +270,7 @@ HRESULT CPig::Texture_Clone()
 	m_vecTexture.push_back(m_pTextureCom);
 
 	TextureDesc.m_iEndTex = 14;
+	TextureDesc.m_fSpeed = 55;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_HIT"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Pig_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
@@ -311,6 +329,11 @@ void CPig::Change_Frame(_float fTimeDelta)
 		}
 		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
 		{
+			// Play
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("Pig_oink_%d.wav"), rand() % 3 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+
 			BULLETDATA BulletData;
 			ZeroMemory(&BulletData, sizeof(BulletData));
 
@@ -334,7 +357,7 @@ void CPig::Change_Frame(_float fTimeDelta)
 
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false) == true))
 		{
-			m_eShaderID = SHADER_IDLE_ALPHATEST;
+			m_eShaderID = SHADER_IDLE;
 			m_bHit = false;
 		}
 		break;
@@ -459,7 +482,7 @@ _bool CPig::Picking(_float3 * PickingPoint)
 	}
 	else
 	{
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_IDLE;
 		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
 
 		auto i = pInvenManager->Get_Monsterinfo_list()->front();
@@ -633,7 +656,7 @@ void CPig::Patrol(_float fTimeDelta)
 	// Switch between Idle and Walk (based on time)
 	if (m_eState == STATE::IDLE)
 	{
-		if (GetTickCount() > m_dwIdleTime + (rand() % 3000)*(rand()%2+1) + 3000)
+		if (GetTickCount() > m_dwIdleTime + (rand() % 3000) * (rand() % 2 + 1) + 3000)
 		{
 			m_eState = STATE::WALK;
 			m_dwWalkTime = GetTickCount();
@@ -649,7 +672,7 @@ void CPig::Patrol(_float fTimeDelta)
 	}
 	else if (m_eState == STATE::WALK)
 	{
-		if (GetTickCount() > m_dwWalkTime + (rand() % 3000)*(rand() % 2 + 1) + 1500)
+		if (GetTickCount() > m_dwWalkTime + (rand() % 3000) * (rand() % 2 + 1) + 1500)
 		{
 			m_eState = STATE::IDLE;
 			m_dwIdleTime = GetTickCount();
@@ -769,7 +792,7 @@ _float CPig::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageC
 
 	if (fDmg > 0)
 	{
-		foreffect		effectdesc;
+		foreffect effectdesc;
 		ZeroMemory(&effectdesc, sizeof(foreffect));
 		effectdesc.dmg = fDmg;
 		effectdesc.pos = Get_Position();
@@ -779,11 +802,22 @@ _float CPig::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageC
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dmg_pont"), LEVEL_GAMEPLAY, TEXT("Layer_dmgp"), &effectdesc)))
 			return OBJ_NOEVENT;
 
-		
-		
-
 		if (!m_bDead)
+		{
 			m_bHit = true;
+
+			// Play Hit Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("Pig_oink_%d.wav"), rand() % 3 + 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+		}
+		else
+		{
+			// Play Death Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("Pig_death_%d.wav"), rand() % 2 + 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .4f);
+		}
 		
 		m_bAggro = true;
 		m_bIsAttacking = false;
@@ -859,9 +893,6 @@ CGameObject* CPig::Clone(void* pArg)
 		ERR_MSG(TEXT("Failed to Cloned : CPig"));
 		Safe_Release(pInstance);
 	}
-	
-		
-
 
 	return pInstance;
 }

@@ -179,6 +179,7 @@
     <ClInclude Include="..\Public\Behavior_Tree.h" />
     <ClInclude Include="..\public\Boaron.h" />
     <ClInclude Include="..\public\Boarrior.h" />
+    <ClInclude Include="..\Public\BossName.h" />
     <ClInclude Include="..\Public\BT_NPC.h" />
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\public\BerryBush.h" />
@@ -186,6 +187,8 @@
     <ClInclude Include="..\Public\CameraFPS.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\CameraTarget.h" />
+    <ClInclude Include="..\Public\CardEffect.h" />
+    <ClInclude Include="..\Public\Cardgame.h" />
     <ClInclude Include="..\public\CarnivalCard.h" />
     <ClInclude Include="..\public\CarnivalMemory.h" />
     <ClInclude Include="..\Public\Carnival_Egg.h" />
@@ -200,6 +203,7 @@
     <ClInclude Include="..\public\CookPot.h" />
     <ClInclude Include="..\Public\Daycount.h" />
     <ClInclude Include="..\Public\Daycountpont.h" />
+    <ClInclude Include="..\Public\DayCycle.h" />
     <ClInclude Include="..\Public\Daypont.h" />
     <ClInclude Include="..\Public\Deadcountpont.h" />
     <ClInclude Include="..\Public\Deadmain.h" />
@@ -236,6 +240,8 @@
     <ClInclude Include="..\Public\NPC.h" />
     <ClInclude Include="..\Public\Particle.h" />
     <ClInclude Include="..\Public\ParticleSystem.h" />
+    <ClInclude Include="..\Public\Party.h" />
+    <ClInclude Include="..\Public\Partyhp.h" />
     <ClInclude Include="..\Public\Pawn.h" />
     <ClInclude Include="..\Public\PickingMgr.h" />
     <ClInclude Include="..\public\Pig.h" />
@@ -285,6 +291,7 @@
     <ClInclude Include="..\Public\Talk.h" />
     <ClInclude Include="..\public\Tent.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\public\Terrorbeak.h" />
     <ClInclude Include="..\Public\ToolboxConstruct.h" />
     <ClInclude Include="..\Public\ToolboxConstruct_back.h" />
     <ClInclude Include="..\Public\ToolboxConstruct_front.h" />
@@ -325,6 +332,7 @@
     <ClCompile Include="..\Private\Behavior_Tree.cpp" />
     <ClCompile Include="..\private\Boaron.cpp" />
     <ClCompile Include="..\private\Boarrior.cpp" />
+    <ClCompile Include="..\Private\BossName.cpp" />
     <ClCompile Include="..\Private\BT_NPC.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\private\BerryBush.cpp" />
@@ -332,6 +340,8 @@
     <ClCompile Include="..\Private\CameraFPS.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\CameraTarget.cpp" />
+    <ClCompile Include="..\Private\CardEffect.cpp" />
+    <ClCompile Include="..\Private\Cardgame.cpp" />
     <ClCompile Include="..\private\CarnivalCard.cpp" />
     <ClCompile Include="..\private\CarnivalMemory.cpp" />
     <ClCompile Include="..\Private\Carnival_Egg.cpp" />
@@ -346,6 +356,7 @@
     <ClCompile Include="..\private\CookPot.cpp" />
     <ClCompile Include="..\Private\Daycount.cpp" />
     <ClCompile Include="..\Private\Daycountpont.cpp" />
+    <ClCompile Include="..\Private\DayCycle.cpp" />
     <ClCompile Include="..\Private\Daypont.cpp" />
     <ClCompile Include="..\Private\Deadcountpont.cpp" />
     <ClCompile Include="..\Private\Deadmain.cpp" />
@@ -382,6 +393,8 @@
     <ClCompile Include="..\Private\NPC.cpp" />
     <ClCompile Include="..\Private\Particle.cpp" />
     <ClCompile Include="..\Private\ParticleSystem.cpp" />
+    <ClCompile Include="..\Private\Party.cpp" />
+    <ClCompile Include="..\Private\Partyhp.cpp" />
     <ClCompile Include="..\Private\Pawn.cpp" />
     <ClCompile Include="..\Private\PickingMgr.cpp" />
     <ClCompile Include="..\private\Pig.cpp" />
@@ -430,6 +443,7 @@
     <ClCompile Include="..\Private\Talk.cpp" />
     <ClCompile Include="..\private\Tent.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\private\Terrorbeak.cpp" />
     <ClCompile Include="..\Private\ToolboxConstruct.cpp" />
     <ClCompile Include="..\Private\ToolboxConstruct_back.cpp" />
     <ClCompile Include="..\Private\ToolboxConstruct_front.cpp" />
@@ -472,8 +486,9 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Cube.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Default.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Terrain.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_DefaultBlend.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -229,6 +229,7 @@ HRESULT CCarnivalCard::Texture_Clone()
 	}
 	else if (m_tDesc.eType == TYPE::BIRD)
 	{
+		TextureDesc.m_fSpeed = 25;
 		TextureDesc.m_iEndTex = 45;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Fed"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Fed"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
@@ -237,6 +238,7 @@ HRESULT CCarnivalCard::Texture_Clone()
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hungry"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Hungry"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_fSpeed = 40;
 		TextureDesc.m_iEndTex = 12;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hungry_Post"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Hungry_Post"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;

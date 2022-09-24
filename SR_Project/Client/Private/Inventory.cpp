@@ -109,6 +109,43 @@ void CInventory_Manager::Tick(_float fTimeDelta)
 		}
 	}
 
+
+	
+	auto iterparty = m_Partylist.begin();
+	auto iterpartyhp = m_Partyhplist.begin();
+	bool bcheck1 = true;
+
+	while (bcheck1 && !m_MainInventorylist.empty() && !m_Pontlist.empty())
+	{
+
+
+
+
+
+		if ((*iterparty)->Get_check() == false)  //�κ��丮�� ��Ʈ�� false��
+		{
+			(*iterpartyhp)->Set_check(false);//��Ʈâ�� �ȶ߰��ұ���
+		}
+		else if ((*iterparty)->Get_check() == true)
+		{
+			(*iterpartyhp)->Set_check(true);
+		}
+
+		
+		
+		++iterpartyhp;
+		++iterparty;
+			
+	
+
+
+
+		if (iterparty == m_Partylist.end() || iterpartyhp == m_Partyhplist.end())
+		{
+			bcheck1 = false;
+		}
+	}
+
 }
 
 void CInventory_Manager::Late_Tick(_float fTimeDelta)
@@ -249,6 +286,19 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 
 	//	if (m_Questpont.front() != nullptr && m_Questpont.front()->get_check() == true)
 	update_questpont();
+
+	if (m_bcardgameon == true)
+		Cardgame();
+
+	
+	if (icardgamecount == 8)
+	{
+		for (auto& k : m_Cardgamelist)
+			k->set_check(false);
+
+
+		m_bcardgameon = false;
+	}
 
 
 	
@@ -496,6 +546,121 @@ void CInventory_Manager::materialtool_off()
 		k->gobackfirstX();
 	}
 
+}
+
+void CInventory_Manager::Cardgame()
+{
+	_uint checktex = 10;
+	_uint checktex2 = 10;
+	_uint count = 0;
+	_uint count2 = 0;
+	_bool onetime = false;
+		
+	for (auto& k : m_Cardgamelist)
+	{
+		if (k->Get_frontcard() == true)
+			++count;
+	}
+
+	if (count == 2)
+	{
+		for (auto& k : m_Cardgamelist)
+		{
+			if (k->Get_frontcard() == true)
+			{
+				if (onetime == true)
+				{
+					onetime = false;  //해야하나?
+					checktex2 = k->Get_texnum1();
+					break;
+
+				}
+				else
+				{
+					checktex = k->Get_texnum1();
+					onetime = true;
+				}
+				
+
+
+			}
+		}
+	}
+	else
+		return;
+
+
+		
+			for (auto& k : m_Cardgamelist)
+			{
+				if (checktex == checktex2)
+				{
+					if (k->Get_frontcard() == true)
+					{
+						k->Set_frontcard(false);
+						k->set_lastdance(true);
+						++count2;
+						if (count2 == 2)
+						{
+							//++icardgamecount;//함수로뺴
+							break;
+						}
+							
+					}
+						
+				}
+				else
+				{
+					if (k->Get_frontcard() == true)
+					{
+						k->Set_frontcard(false);
+						k->set_wrong(true);
+
+
+						foreffect		effectdesc;
+						CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+						ZeroMemory(&effectdesc, sizeof(foreffect));
+						
+						effectdesc.pos = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Position());
+						effectdesc.pos.y += 0.5f;
+						effectdesc.whateffect = 0;
+					
+						pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CardEffect"), LEVEL_GAMEPLAY, TEXT("Layer_Cardeffect_thunder"), &effectdesc);
+						++count2;
+							if (count2 == 2)
+								break;
+					}
+						
+				}
+
+			}
+				
+
+		
+		
+           
+
+
+	
+
+	
+	
+
+
+
+}
+
+void CInventory_Manager::Start_Cardgame()
+{
+	m_bcardgameon = true;
+
+
+	for (auto& k : m_Cardgamelist)
+	{
+		k->set_check(true);
+		k->set_goback(true);
+	}
+		
 }
 
 void CInventory_Manager::Dead_on()

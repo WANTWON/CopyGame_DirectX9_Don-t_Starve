@@ -63,11 +63,9 @@ public:
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
-
+	void Set_ShaderID();
 public:
 	HRESULT SetUp_Components(void* pArg = nullptr);
-	HRESULT SetUp_RenderState();
-	HRESULT Release_RenderState();
 	HRESULT Ready_ParticleSystem();
 	HRESULT Ready_VIBuffer();
 	HRESULT Update_Particles(_float fTimeDelta);
@@ -93,7 +91,7 @@ private:
 	CTexture*			m_pTextureCom = nullptr;
 	CRenderer*			m_pRendererCom = nullptr;
 	CShader*			m_pShaderCom = nullptr;
-	SHADER_STATE		m_eShaderID = SHADER_IDLE_ALPHABLEND;
+	SHADER_STATE		m_eShaderID = SHADER_IDLE;
 	STATEDESC		m_StateDesc;
 	PARTICLE_TYPE	m_eType = PARTICLE_END;
 

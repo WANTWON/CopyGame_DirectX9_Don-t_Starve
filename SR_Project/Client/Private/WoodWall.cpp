@@ -51,7 +51,7 @@ HRESULT CWoodWall::Initialize(void* pArg)
 	if (m_eWallDesc.etype == WALL_BOSS || m_eWallDesc.etype == WALL_PUZZLE)
 	{
 		m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.f);
-		m_fRadius = 0.5f;
+		m_fRadius = 0.75f;
 	}
 	if (m_eWallDesc.etype == WALL_END)
 	{
@@ -120,9 +120,11 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
 	{
+		if (CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_HUNT)
+		{
 			if (nullptr != m_pRendererCom)
 				m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
+		}
 			m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 	}
 		
@@ -506,7 +508,7 @@ void CWoodWall::Set_ShaderID()
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_IDLE;
 }
 
 void CWoodWall::Check_GrowShrink()

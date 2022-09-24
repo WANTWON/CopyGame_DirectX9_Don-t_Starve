@@ -14,6 +14,8 @@
 #include <time.h>
 
 #include "NPC.h"
+#include "DayCycle.h"
+
 
 _bool g_bUIMadefirst = false;
 
@@ -79,10 +81,11 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	CDayCycle::Get_Instance()->DayCycleTick();
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
-	pGameInstance->PlayBGM(TEXT("Filed.mp3"), 0.1f);
 
 	if (m_bNextLevel)
 	{
@@ -149,6 +152,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, TEXT("Layer_Bear"), _float3(10.f, 0.f, 40.f))))
+		return E_FAIL;
 
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Pig_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
@@ -168,6 +173,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	}
 
 	CloseHandle(hFile);
+
+	/*pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrorbeak"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 0.f, 20.f));*/
 
 	Safe_Release(pGameInstance);
 
@@ -367,10 +374,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
 		return E_FAIL;
-
+	CameraDesc.CameraDesc.fFovy = D3DXToRadian(60.0f);
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
 		return E_FAIL;
-
+	CameraDesc.CameraDesc.fFovy = D3DXToRadian(30.0f);
 	CameraDesc.CameraDesc.vEye = _float3(0.f, 6.f, -7.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Target"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
@@ -487,7 +494,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainInventory(const _tchar * pLayerTag)
 	}
 
 
-	for (int i = 0; i < 20; ++i)
+	for (int i = 0; i < 36; ++i)
 	{
 		int number = i;
 
@@ -589,6 +596,73 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Button"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
+
+
+	
+
+	
+	
+	
+	/*_bool bearger = true; //for bossnametest
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BossName"), LEVEL_STATIC, pLayerTag, (bool*)&bearger)))
+		return E_FAIL;*/
+
+	for (int i = 0; i < 3; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Party"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	for (int i = 0; i < 3; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Partyhp"), LEVEL_GAMEPLAY, pLayerTag, (int*)&i)))
+			return E_FAIL;
+
+	}
+
+	
+	
+	
+
+
+
+	//vector<_uint> randombox;  //CardGame random shufflle
+
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	randombox.push_back(i);
+	//	randombox.push_back(i);
+	//}
+
+	//randombox.push_back(4);
+
+	//random_shuffle(randombox.begin(), randombox.end());
+
+	//for (auto& iter = randombox.begin(); iter != randombox.end();)
+	//{
+	//	
+	//	for (int i = 0; i < 9; ++i)
+	//	{
+	//		int number = *iter;
+
+	//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_GAMEPLAY, pLayerTag, (int*)&number)))
+	//			return E_FAIL;
+
+	//		++iter;
+
+	//	}
+	//}
+
+	
+	
+
+	
 
 	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_player"), LEVEL_STATIC, pLayerTag)))
 	//	return E_FAIL;

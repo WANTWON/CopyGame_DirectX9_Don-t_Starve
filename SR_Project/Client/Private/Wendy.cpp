@@ -785,6 +785,18 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 					m_bOwner = true;
 					m_pOwner = static_cast<CPawn*>(m_pTarget);
 					static_cast<CPlayer*>(m_pTarget)->Add_Party(TEXT("Wendy"), this);
+
+					CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+					auto k = pinv->Get_Party_list();
+					for (auto iter : *k)
+					{
+						if (iter->Get_check() == false)
+						{
+							iter->Set_check(true);
+							iter->Set_texnum(0);
+							break;
+						}
+					}
 				}
 				else
 				{
@@ -829,6 +841,18 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 					Reset_Target();
 					m_bOwner = false;
 					m_pOwner = nullptr;
+
+					CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+					auto k = pinv->Get_Party_list();
+					for (auto iter : *k)
+					{
+						if (iter->Get_check() == true && iter->Get_texnum() == 0)
+						{
+							iter->Set_check(false);
+							iter->Set_texnum(3);
+							break;
+						}
+					}
 				}
 				m_iTalkCnt = 0;
 				m_bInteract = false;

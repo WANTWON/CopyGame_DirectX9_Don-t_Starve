@@ -288,7 +288,7 @@ bool CGameInstance::Key_Down(int _Key)
 	return m_pKey_Manager->Key_Down(_Key);
 }
 
-void CGameInstance::PlaySound(TCHAR * pSoundKey, const _uint & eID, const float & fVolume)
+void CGameInstance::PlaySounds(TCHAR * pSoundKey, const _uint & eID, const float & fVolume)
 {
 	if (nullptr == m_pSound_Manager)
 		return;

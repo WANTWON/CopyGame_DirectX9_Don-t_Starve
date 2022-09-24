@@ -30,7 +30,7 @@ HRESULT CStatue::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-	m_tInfo.iMaxHp = 60;
+	m_tInfo.iMaxHp = 500;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_pTransformCom->Set_Scale(1.f, 2.f, 1.f);
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -50,9 +50,9 @@ int CStatue::Tick(_float fTimeDelta)
 	// If Hp <= 0 : Drop Items
 	if (!m_bIsDestroyed)
 	{
-		if (m_tInfo.iCurrentHp > 40)
+		if (m_tInfo.iCurrentHp > 500)
 			m_eState = HEALTHY;
-		else if (m_tInfo.iCurrentHp <= 40 && m_tInfo.iCurrentHp > 0)
+		else if (m_tInfo.iCurrentHp <= 250 && m_tInfo.iCurrentHp > 0)
 			m_eState = DAMAGED;
 		else if (m_tInfo.iCurrentHp <= 0)
 		{
@@ -224,7 +224,9 @@ void CStatue::SetUp_BillBoard()
 
 		_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
 		_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
+		m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 		m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+		m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 	}
 
 	
@@ -267,7 +269,7 @@ void CStatue::Set_ShaderID()
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_IDLE;
 }
 
 void CStatue::Change_Frame()

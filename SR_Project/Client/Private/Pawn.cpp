@@ -2,6 +2,7 @@
 #include "..\Public\Pawn.h"
 #include "Level_Manager.h"
 #include "GameInstance.h"
+#include "Player.h"
 
 CPawn::CPawn(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CGameObject(pGraphic_Device)
@@ -49,19 +50,21 @@ HRESULT CPawn::Render()
 	return S_OK;
 }
 
-void CPawn::Set_ShaderID()
+void CPawn::Set_ShaderID(_bool bIsAlphaBlend)
 {
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
 	if (pGameObject->Get_Dead())
 		m_eShaderID = SHADER_DEAD;
-	else if (m_bPickingTrue)
-		m_eShaderID = SHADER_PICKING;
+	else if (dynamic_cast<CPlayer*>(pGameObject)->Get_WeaponType() == WEAPON_LIGHT)
+		m_eShaderID = SHADER_DARKWITHLIGHT;
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
+	else if (iLevel == LEVEL_BOSS)
+		m_eShaderID = SHADER_FIRE;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_DAYCYClE;
 }
 
 void CPawn::Free()

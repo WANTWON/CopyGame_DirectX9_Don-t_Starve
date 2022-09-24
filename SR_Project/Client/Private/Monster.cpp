@@ -69,6 +69,8 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	}
 
 	Set_ShaderID();
+	if (m_bPickingTrue)
+		m_eShaderID = SHADER_PICKING;
 }
 
 HRESULT CMonster::Render()
@@ -157,9 +159,10 @@ void CMonster::SetUp_BillBoard()
 
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
+	_float3 vLook = *(_float3*)&ViewMatrix.m[2][0];
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *D3DXVec3Normalize(&vLook, &vLook) * m_pTransformCom->Get_Scale().z);
 }
 
 void CMonster::WalkingTerrain()

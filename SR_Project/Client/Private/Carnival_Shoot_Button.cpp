@@ -5,6 +5,7 @@
 #include "CameraManager.h"
 #include "Carnival_Shooter.h"
 #include "Shooting_Target.h"
+#include "Level_Maze.h"
 
 CCarnival_Shoot_Button::CCarnival_Shoot_Button(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -35,7 +36,7 @@ HRESULT CCarnival_Shoot_Button::Initialize(void* pArg)
 
 	m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
-	m_eShaderID = SHADER_IDLE_ALPHABLEND;
+	m_eShaderID = SHADER_IDLE;
 
 	return S_OK;
 }
@@ -94,7 +95,7 @@ void CCarnival_Shoot_Button::Interact(_uint Damage)
 HRESULT CCarnival_Shoot_Button::SetUp_Components(void* pArg)
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -127,9 +128,14 @@ void CCarnival_Shoot_Button::Change_Camera()
 	if (m_bFinished)
 		return;
 
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == false)
+		return;
+	
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	if (Check_EveryTarget_Complete() == true)
 	{
+		CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+		dynamic_cast<CLevel_Maze*>(pLevel)->Set_PuzzleSolved(true);
 		m_bFinished = true;
 		if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
 		{

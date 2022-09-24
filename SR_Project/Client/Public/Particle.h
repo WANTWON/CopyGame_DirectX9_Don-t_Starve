@@ -44,13 +44,14 @@ public:
 	HRESULT SetUp_RenderState();
 	HRESULT Release_RenderState();
 	void SetUp_BillBoard();
+	void Set_ShaderID();
 private:
 	CTransform*			m_pTransformCom = nullptr;
 	CVIBuffer_Rect*		m_pVIBufferCom = nullptr;
 	CTexture*			m_pTextureCom = nullptr;
 	CRenderer*			m_pRendererCom = nullptr;
 	CShader*			m_pShaderCom = nullptr;
-	SHADER_STATE		m_eShaderID = SHADER_IDLE_ALPHATEST;
+	SHADER_STATE		m_eShaderID = SHADER_IDLE;
 
 private:
 	STATEDESC			m_StateDesc;

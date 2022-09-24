@@ -10,6 +10,7 @@
 #include "DecoObject.h"
 #include "Carnival_Egg.h"
 #include "CameraManager.h"
+#include "Level_Maze.h"
 
 CCarnivalMemory::CCarnivalMemory(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteractive_Object(pGraphic_Device)
@@ -51,9 +52,6 @@ HRESULT CCarnivalMemory::Initialize(void* pArg)
 		m_eState = PLACE;
 		m_dwEggSpawnTime = GetTickCount();
 	}
-		
-
-	m_eShaderID = SHADER_IDLE_ALPHABLEND;
 
 	return S_OK;
 }
@@ -105,6 +103,7 @@ void CCarnivalMemory::Late_Tick(_float fTimeDelta)
 
 	Change_Motion();
 	Change_Frame(fTimeDelta);
+	Set_ShaderID();
 }
 
 HRESULT CCarnivalMemory::Render()
@@ -277,6 +276,9 @@ void CCarnivalMemory::Check_Guesses()
 		// Win Game
 		if (m_iTurnCount == 0)
 		{
+			CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			dynamic_cast<CLevel_Maze*>(pLevel)->Set_PuzzleSolved(true);
+
 			m_eState = STATESTATION::WIN;
 			m_bCanPlay = false;
 			m_bIsWin = true;
@@ -393,6 +395,9 @@ void CCarnivalMemory::Play_Bird(_float fTimeDelta)
 		// Game Won
 		if (m_bCanPlay)
 		{
+			CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			dynamic_cast<CLevel_Maze*>(pLevel)->Set_PuzzleSolved(true);
+
 			// Spawn Confetti Effect
 			CDecoObject::DECODECS DecoDesc;
 			DecoDesc.m_eState = CDecoObject::PARTY;
@@ -422,10 +427,26 @@ void CCarnivalMemory::Play_Bird(_float fTimeDelta)
 
 void CCarnivalMemory::Start_Egg()
 {
-	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Egg"), LEVEL_MAZE, TEXT("Layer_Egg"), _float3(11.f, 0.5f, 41.f));
-	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Egg"), LEVEL_MAZE, TEXT("Layer_Egg"), _float3(12.f, 0.5f, 41.f));
-
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Egg_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return;
+
+	_ulong dwByte = 0;
+	_float3 vPosition(0, 0, 0);
+	_uint iNum = 0;
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(vPosition), sizeof(_float3), &dwByte, nullptr);
+		vPosition.z += 1.f;
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Egg"), LEVEL_MAZE, TEXT("Layer_Egg"), &vPosition);
+	}
+
+	CloseHandle(hFile);
+
+	
 	list<CGameObject*>* lObjects = pGameInstance->Get_ObjectList(LEVEL_MAZE, TEXT("Layer_Egg"));
 	if (!lObjects)
 		return;
@@ -468,6 +489,9 @@ _bool CCarnivalMemory::Check_Clear()
 		{
 			CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 			dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(false);
+
+			CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			dynamic_cast<CLevel_Maze*>(pLevel)->Set_PuzzleSolved(true);
 		}
 		m_bIsWin = true;
 		return true;
@@ -519,7 +543,7 @@ HRESULT CCarnivalMemory::Drop_Items()
 HRESULT CCarnivalMemory::SetUp_Components(void* pArg)
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */

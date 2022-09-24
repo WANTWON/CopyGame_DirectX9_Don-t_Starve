@@ -64,6 +64,7 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	m_fTimeAcc += fTimeDelta;
 
+	// ¶ËÀïÀÌ
 
 }
 
@@ -141,9 +142,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), CShader::Create(m_pGraphic_Device, TEXT("../Bin/Shaderfiles/Shader_UI.hlsl")))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Terrain"), CShader::Create(m_pGraphic_Device, TEXT("../Bin/Shaderfiles/Shader_Terrain.hlsl")))))
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), CShader::Create(m_pGraphic_Device, TEXT("../Bin/Shaderfiles/Shader_DefaultBlend.hlsl")))))
 		return E_FAIL;
 	
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Cube"), CShader::Create(m_pGraphic_Device, TEXT("../Bin/Shaderfiles/Shader_Cube.hlsl")))))
+		return E_FAIL;
 	return S_OK;
 }
 

@@ -100,12 +100,12 @@ void CCameraDynamic::Player_Camera(_float fTimeDelta)
 	{
 		if (m_vDistance.y > 15 || m_vDistance.y < 3)
 		{
-			m_vDistance.y += (fTimeDelta*m_lMouseWheel*0.05f);
-			m_vDistance.z -= (fTimeDelta*m_lMouseWheel*0.05f);
+			m_vDistance.y += _float(fTimeDelta*m_lMouseWheel*0.05f);
+			m_vDistance.z -= _float(fTimeDelta*m_lMouseWheel*0.05f);
 		}
 
-		m_vDistance.y -= (fTimeDelta*m_lMouseWheel*0.01f);
-		m_vDistance.z += (fTimeDelta*m_lMouseWheel*0.01f);
+		m_vDistance.y -= _float(fTimeDelta*m_lMouseWheel*0.01f);
+		m_vDistance.z += _float(fTimeDelta*m_lMouseWheel*0.01f);
 	}
 
 	if (pGameInstance->Key_Pressing(VK_DOWN))
@@ -224,8 +224,8 @@ void CCameraDynamic::Revive_Camera(_float fTimeDelta)
 	_float3 m_TargetPos = pTarget->Get_Pos();
 	//m_lMouseWheel += 0.001;
 
-	m_vDistance.y -= 0.03;
-	m_vDistance.z += 0.03;
+	m_vDistance.y -= 0.03f;
+	m_vDistance.z += 0.03f;
 	m_pTransform->LookAt(m_TargetPos);
 
 	switch (m_iTurnCount % 4)

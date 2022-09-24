@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Water.h"
 #include "GameInstance.h"
+#include "Player.h"
 
 CWater::CWater(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -59,10 +60,14 @@ void CWater::Late_Tick(_float fTimeDelta)
 
 	if (pGameObject->Get_Dead())
 		m_eShaderID = SHADER_DEAD;
+	else if (dynamic_cast<CPlayer*>(pGameObject)->Get_WeaponType() == WEAPON_LIGHT)
+		m_eShaderID = SHADER_DARKWITHLIGHT;
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
+	else if (iLevel == LEVEL_BOSS)
+		m_eShaderID = SHADER_FIRE;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_DAYCYClE;
 }
 
 HRESULT CWater::Render()
@@ -172,39 +177,6 @@ HRESULT CWater::SetUp_Components(const _tchar * VIBufferTag, void * pArg)
 	return S_OK;
 }
 
-HRESULT CWater::SetUp_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-
-	return S_OK;
-}
-
-HRESULT CWater::SetUp_SamplerState()
-{
-
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
-
-	return S_OK;
-}
-
-HRESULT CWater::Release_RenderState()
-{
-	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-
-	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_NONE);
-	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_NONE);
-	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-
-	return S_OK;
-}
 
 
 CWater * CWater::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

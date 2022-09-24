@@ -60,7 +60,7 @@ int CMiniMap_Icon::Tick(_float fTimeDelta)
 
 		
 
-
+		
 
 		__super::Tick(fTimeDelta);
 
@@ -242,6 +242,10 @@ CGameObject * CMiniMap_Icon::Clone(void* pArg)
 	}
 
 	CInventory_Manager::Get_Instance()->Get_Minimapicon_list()->push_back(pInstance);
+
+
+	
+	
 
 	return pInstance;
 }

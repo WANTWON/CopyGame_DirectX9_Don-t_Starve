@@ -2,6 +2,7 @@
 #include "..\Public\Trap.h"
 #include "GameInstance.h"
 #include "ShockEffect.h"
+#include "CameraManager.h"
 
 CTrap::CTrap(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -35,10 +36,10 @@ HRESULT CTrap::Initialize(void* pArg)
 	switch (m_tTrapDesc.eType)
 	{
 	case TRAPTYPE::TRAP_STAR:
-		m_fRadius = .4f;
+		m_fRadius = 0.4f;
 		break;
 	case TRAPTYPE::TRAP_PLANT:
-		m_fRadius = .5f; 
+		m_fRadius = 0.5f; 
 		break;
 	}
 
@@ -56,14 +57,16 @@ int CTrap::Tick(_float fTimeDelta)
 
 	WalkingTerrain();
 
-	if (m_pColliderCom)
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
 	{
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_GROUP::COLLISION_OBJECT, this);
-	}
-	
-	Check_Collision();
+		if (m_pColliderCom)
+		{
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_GROUP::COLLISION_OBJECT, this);
+		}
 
+		Check_Collision();
+	}
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	return OBJ_NOEVENT;
@@ -73,16 +76,20 @@ void CTrap::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	
 
 	SetUp_BillBoard();
 
-	if (m_pColliderCom)
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true || (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_FPS) )
 	{
-		memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
-		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		if (m_pColliderCom)
+		{
+			memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+			m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+		}
+
 	}
-	
 	Change_Motion();
 	Change_Frame(fTimeDelta);
 
@@ -197,7 +204,10 @@ void CTrap::WalkingTerrain()
 		return;
 
 	_float3	vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_fRadius);
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_FPS)
+		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_fRadius - 0.2f);
+	else
+		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_fRadius);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
@@ -252,6 +262,8 @@ HRESULT CTrap::Texture_Clone()
 	}
 	break;
 	}
+
+	return S_OK;
 }
 
 HRESULT CTrap::Change_Texture(const _tchar * LayerTag)
@@ -361,7 +373,7 @@ void CTrap::Set_ShaderID()
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_IDLE;
 }
 
 CTrap* CTrap::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

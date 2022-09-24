@@ -1,31 +1,17 @@
 
-
-
-
-//VS_MAIN(float3 vPosition : POSITION, float2 vTexUV : TEXCOORD0)
-//{
-//	
-//}
-
-//float, float2, float3, float4, vector
-//
-//float3		vTmp;
-//
-//vTmp.xyz;
-//vTmp.rgb;
-
-//
-//float2		vTmep2 = vTmp.xy;
-
-// float4x4, float3x3, float1x3, matrix
-
 float3			g_PlayerPosition;
 float4x4		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture			g_Texture;
-bool			g_isColl;
+
+float			g_fDinnerMinRange = 2.f;
+float			g_fDinnerMaxRange = 10.f;
+
+float			g_fDinnerDelta = 0.f;
+float			g_fNightDelta = 0.f;
+float			g_fNightDarkAlpha = 0.f;
 
 float			g_fMinRange = 3.f;
-float			g_fMaxRange = 15.f;
+float			g_fMaxRange = 25.f;
 
 
 sampler TextureSampler = sampler_state {
@@ -127,18 +113,19 @@ PS_OUT PS_DEAD(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_LIGHT(PS_IN In)
+PS_OUT PS_FIRE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vColor = tex2D(TextureSampler, In.vTexUV);
 
-	float4		vFogColor = vector(2.f, 2.f, 1.f, 0.f);
+	Out.vColor.r += 0.1f;
+
+	float4		vFogColor = vector(0.2f, 0.5f, 0.5f, 0.f);
 	float		fDistance = length(g_PlayerPosition - In.vWorldPos);
 
-	float		fFogPower = max(g_fMinRange - fDistance, 0.f) / (g_fMaxRange - g_fMinRange);
+	float		fFogPower = max(fDistance - g_fMinRange, 0.f) / (g_fMaxRange - g_fMinRange);
 
-
-	Out.vColor += vFogColor * fFogPower;
+	Out.vColor -= vFogColor * fFogPower;
 
 	return Out;
 }
@@ -164,13 +151,16 @@ PS_OUT PS_DARKWITHLIGHT(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 	Out.vColor = tex2D(TextureSampler, In.vTexUV);
 
-	float4		vFogColor = vector(1.f, 1.f, 1.f, 0.f);
+	Out.vColor.r += g_fDinnerDelta;
+	Out.vColor.b += g_fNightDelta;
+
+	float4		vFogColor = vector(g_fNightDarkAlpha, g_fNightDarkAlpha, g_fNightDarkAlpha, 0.f);
 	float		fDistance = length(g_PlayerPosition - In.vWorldPos);
 
-	float		fFogPower = max(fDistance - g_fMinRange, 0.f) / (g_fMaxRange - g_fMinRange);
+	float		fFogPower = max(fDistance - g_fDinnerMinRange, 0.f) / (g_fDinnerMaxRange - g_fDinnerMinRange);
 
+	Out.vColor.rgb -= g_fNightDarkAlpha*0.2f;
 	Out.vColor -= vFogColor * fFogPower;
-
 
 
 	float4		vLightColor = vector(2.f, 2.f, 1.f, 0.f);
@@ -182,13 +172,32 @@ PS_OUT PS_DARKWITHLIGHT(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_DAYCYCLE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor = tex2D(TextureSampler, In.vTexUV);
+
+	Out.vColor.r += g_fDinnerDelta;
+	Out.vColor.b += g_fNightDelta;
+
+	float4		vFogColor = vector(g_fNightDarkAlpha, g_fNightDarkAlpha, g_fNightDarkAlpha, 0.f);
+	float		fDistance = length(g_PlayerPosition - In.vWorldPos);
+
+	float		fFogPower = max(fDistance - g_fDinnerMinRange, 0.f) / (g_fDinnerMaxRange - g_fDinnerMinRange);
+
+	Out.vColor.rgb -= g_fNightDarkAlpha*0.2f;
+	Out.vColor -= vFogColor * fFogPower;
+
+	return Out;
+}
+
 
 
 technique		DefaultTechnique
 {
 	pass DefaultPass_with_AlphaTest
 	{	
-		AlphaTestEnable = TRUE;
+		AlphaTestEnable = true;
 		AlphaFunc = greater;
 		AlphaRef = 50;
 		CULLMODE = NONE;
@@ -196,20 +205,9 @@ technique		DefaultTechnique
 		PixelShader = compile ps_3_0 PS_MAIN();
 	}
 
-	pass DefaultPass_with_AlphaBlend
-	{
-		AlphablendEnable = true;
-		SrcBlend = SrcAlpha;
-		DestBlend = InvSrcAlpha;
-		BlendOp = Add;
-		CULLMODE = NONE;
-		VertexShader = compile vs_3_0 VS_MAIN();
-		PixelShader = compile ps_3_0 PS_MAIN();
-	}
-
 	pass Hit
 	{
-		AlphaTestEnable = TRUE;
+		AlphaTestEnable = true;
 		AlphaFunc = greater;
 		AlphaRef = 50;
 		CULLMODE = NONE;
@@ -219,7 +217,7 @@ technique		DefaultTechnique
 
 	pass Picking
 	{
-		AlphaTestEnable = TRUE;
+		AlphaTestEnable = true;
 		AlphaFunc = greater;
 		AlphaRef = 50;
 		CULLMODE = NONE;
@@ -229,7 +227,7 @@ technique		DefaultTechnique
 
 	pass Dead
 	{
-		AlphaTestEnable = TRUE;
+		AlphaTestEnable = true;
 		AlphaFunc = greater;
 		AlphaRef = 50;
 		CULLMODE = NONE;
@@ -237,19 +235,19 @@ technique		DefaultTechnique
 		PixelShader = compile ps_3_0 PS_DEAD();
 	}
 
-	pass Light
+	pass Fire
 	{
-		AlphaTestEnable = TRUE;
+		AlphaTestEnable = true;
 		AlphaFunc = greater;
 		AlphaRef = 50;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
-		PixelShader = compile ps_3_0 PS_LIGHT();
+		PixelShader = compile ps_3_0 PS_FIRE();
 	}
 
 	pass Dark
 	{
-		AlphaTestEnable = TRUE;
+		AlphaTestEnable = true;
 		AlphaFunc = greater;
 		AlphaRef = 50;
 		CULLMODE = NONE;
@@ -265,6 +263,16 @@ technique		DefaultTechnique
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_DARKWITHLIGHT();
+	}
+
+	pass DayCycle
+	{
+		AlphaTestEnable = true;
+		AlphaFunc = greater;
+		AlphaRef = 50;
+		CULLMODE = NONE;
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_DAYCYCLE();
 	}
 }
 

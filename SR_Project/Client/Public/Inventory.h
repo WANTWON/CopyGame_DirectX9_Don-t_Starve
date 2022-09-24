@@ -58,6 +58,9 @@
 #include "Skill_Icon.h"
 #include "MiniMap_Icon.h" 
 #include "MiniMap.h"
+#include "Cardgame.h"
+#include "Party.h"
+#include "Partyhp.h"
 /*  생성 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -136,6 +139,11 @@ public:
 	list<CMiniMap*>* Get_Minimap_list(void) { return &m_Minimaplist; }
 	list<CMiniMap_Icon*>* Get_Minimapicon_list(void) { return &m_Minimapiconlist; }
 
+	list<CCardgame*>* Get_Cardgame_list(void) { return &m_Cardgamelist; }
+
+	list<CParty*>* Get_Party_list(void) { return &m_Partylist; }
+	list<CPartyhp*>* Get_Partyhp_list(void) { return &m_Partyhplist; }
+
 	
 
 	void sethp(_uint hp) { m_ihp = hp; }
@@ -160,6 +168,8 @@ public:
 	void materialtool_on();
 	void materialtool_off();
 
+	void Cardgame();
+	void Start_Cardgame();
 	
 
 	void Dead_on();
@@ -176,6 +186,11 @@ public:
 	_bool Get_PickingPot() { return m_PickingPot; }
 
 	void Iconreset(void) { m_Minimapiconlist.clear(); }
+
+	_uint Get_Cardgamecount() { return icardgamecount; }
+
+	void plus_cardgamecount() {++icardgamecount;}
+
 
 public:
 	class CGameObject* Find_Objects(_uint iLevelIndex, const _tchar* pLayerTag);
@@ -246,6 +261,11 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	list<CMiniMap*>m_Minimaplist;
 	list<CMiniMap_Icon*>m_Minimapiconlist;
 
+	list<CCardgame*> m_Cardgamelist;
+
+	list<CParty*> m_Partylist;
+	list<CPartyhp*> m_Partyhplist;
+
 
 	
 
@@ -255,8 +275,13 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	_uint m_ihp = 7;
 	_uint m_ihunger = 7;
 	_uint m_mentality = 7;
+
+	_uint icardgamecount = 0;
 	
 	_bool m_PickingPot = false;
+
+	_bool m_bcardgameon = true;
+
 
 	//private:
 	//class CGameObject* Find_Prototype(const _tchar* pPrototypeTag);

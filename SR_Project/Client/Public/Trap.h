@@ -64,7 +64,7 @@ public:
 	void Set_ShaderID();
 private:
 	const _tchar* m_TimerTag = TEXT("Trap");
-	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
+	SHADER_STATE m_eShaderID = SHADER_IDLE;
 	
 	TRAPDESC m_tTrapDesc;
 	TRAPSTATE m_eState = STATE_IDLE_READY;

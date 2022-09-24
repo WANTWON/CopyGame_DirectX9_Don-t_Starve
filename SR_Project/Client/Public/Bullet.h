@@ -42,7 +42,8 @@ private://Passive
 	void AttackCheck(_float _fTimeDelta);
 	void DeadCheck(_float _fTimeDelta);
 
-private:/*Act Player`s Bullets*/
+private:
+	/*Act Player`s Bullets*/
 	void Red_Smoke(_float _fTimeDelta);
 	void Bomb(void);
 	void IceSpikes(_float _fTimeDelta);
@@ -54,6 +55,9 @@ private:/*Act Player`s Bullets*/
 	void Rock(_float _fTimeDelta);
 	void Carnival_Arrow(_float fTimeDelta);
 	void Shoot_Carnival_Arrow(_float fTimeDelta);
+
+	/*Act Monster`s Bullets*/
+	void Boarrior_Fire(_float _fTimeDelta);
 
 private://ApplyDamage
 	//virtual void	Apply_Damage(_float Damage, CGameObject* DamagedObj, void* AttackType = nullptr);

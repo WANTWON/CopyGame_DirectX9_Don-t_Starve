@@ -9,6 +9,7 @@
 #include "Inventory.h"
 #include "Line.h"
 #include "WoodWall.h"
+#include "DayCycle.h"
 
 CTerrain::CTerrain(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -38,7 +39,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_bPicking = false;
-
+	CDayCycle::Get_Instance()->RegisterObserver(this);
 	return S_OK;
 }
 
@@ -48,7 +49,7 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, LEVEL TerrainLevel
 		return E_FAIL;
 
 	m_bPicking = false;
-
+	CDayCycle::Get_Instance()->RegisterObserver(this);
 	return S_OK;
 }
 
@@ -70,12 +71,19 @@ void CTerrain::Late_Tick(_float fTimeDelta)
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
+	Check_ShaderColor();
+
 	if (pGameObject->Get_Dead())
 		m_eShaderID = SHADER_DEAD;
+	else if (dynamic_cast<CPlayer*>(pGameObject)->Get_WeaponType() == WEAPON_LIGHT)
+		m_eShaderID = SHADER_DARKWITHLIGHT;
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
+	else if (iLevel == LEVEL_BOSS)
+		m_eShaderID = SHADER_FIRE;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_DAYCYClE;
+	
 }
 
 HRESULT CTerrain::Render()
@@ -191,43 +199,6 @@ HRESULT CTerrain::SetUp_Components(const _tchar * VIBufferTag, LEVEL TerrainLeve
 	return S_OK;
 }
 
-HRESULT CTerrain::SetUp_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, true);
-
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
-
-	return S_OK;
-}
-
-HRESULT CTerrain::SetUp_SamplerState()
-{
-
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-		return S_OK;
-}
-
-HRESULT CTerrain::Release_RenderState()
-{
-	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
-	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_NONE);
-	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_NONE);
-	m_pGraphic_Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-
-	return S_OK;
-}
 
 
 _bool CTerrain::Picking(_float3* PickingPoint)
@@ -235,6 +206,17 @@ _bool CTerrain::Picking(_float3* PickingPoint)
 	if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
 	{
 		m_vecOutPos = *PickingPoint;
+
+		CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+		CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+		Safe_Release(pGameInstance);
+		//for Character Skill
+		if (pPlayer->Get_SkillShow())
+		{
+			m_vecOutPos.y += 0.02f;
+			pPlayer->Set_PickingTarget(m_vecOutPos);
+		}
 		return true;
 	}
 	else
@@ -256,11 +238,6 @@ void CTerrain::PickingTrue()
 	Safe_Release(pinv);
 	int iNum = pMouse->Get_Item_count();
 	
-	//for Character Skill
-	if (pPlayer->Get_SkillShow())
-	{
-		pPlayer->Set_PickingTarget(m_vecOutPos);
-	}
 	//pPlayer->Set_PickingPoint(_float3(m_vecOutPos.x, m_vecOutPos.y + 0.5, m_vecOutPos.z));
 	//TestCode
 	if (pGameInstance->Key_Up('P'))
@@ -350,6 +327,86 @@ void CTerrain::PickingTrue()
 	//cout << "Collision Terrain : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
 
 	Safe_Release(pGameInstance);
+}
+
+void CTerrain::Check_ShaderColor()
+{
+
+	if (m_eDayState == DAY_MORNING)
+	{
+
+		m_fDinnerMinRange += 0.01f;
+		if (m_fDinnerMinRange >= 10.f)
+			m_fDinnerMinRange = 10.f;
+
+		m_fDinnerMaxRange = m_fDinnerMinRange + 10.f;
+
+		if (m_fNightAlpha <= 0.0f)
+			m_fNightAlpha = 0.0f;
+		else
+			m_fNightAlpha -= 0.01f;
+
+		if (m_fNightAlpha == 0.0f)
+		{
+			if (m_fNightDelta <= 0.0f)
+				m_fNightDelta = 0.0f;
+			else
+				m_fNightDelta -= 0.002f;
+		}
+	}
+	else if (m_eDayState == DAY_DINNER)
+	{
+
+		m_fDinnerMinRange -= 0.01f;
+		if (m_fDinnerMinRange <= 6.f)
+			m_fDinnerMinRange = 6.f;
+
+		m_fDinnerMaxRange = m_fDinnerMinRange + 10.f;
+
+		if (m_fDinnerDelta >= 0.1f)
+			m_fDinnerDelta = 0.1f;
+		else
+			m_fDinnerDelta += 0.001f;
+
+		m_fNightAlpha += 0.01f;
+
+		if (m_fNightAlpha >= 0.2f)
+			m_fNightAlpha = 0.2f;
+	}
+	else if (m_eDayState == DAY_NIGHT)
+	{
+		m_fDinnerMinRange -= 0.01f;
+		if (m_fDinnerMinRange <= 2.f)
+			m_fDinnerMinRange = 2.f;
+
+		m_fDinnerMaxRange = m_fDinnerMinRange + 10.f;
+
+		if (m_fDinnerDelta <= 0.0f)
+			m_fDinnerDelta = 0.0f;
+		else
+			m_fDinnerDelta -= 0.001f;
+
+		
+		m_fNightAlpha += 0.01f;
+
+		if (m_fNightAlpha >= 1.f)
+			m_fNightAlpha = 1.f;
+
+		if (m_fNightAlpha == 1.f)
+		{
+			if (m_fNightDelta >= 0.1f)
+				m_fNightDelta = 0.1f;
+			else
+				m_fNightDelta += 0.002f;
+		}
+	}
+	
+		
+	m_pShaderCom->Set_RawValue("g_fDinnerMinRange", &m_fDinnerMinRange, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fDinnerMaxRange", &m_fDinnerMaxRange, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fDinnerDelta", &m_fDinnerDelta, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fNightDelta", &m_fNightDelta, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fNightDarkAlpha", &m_fNightAlpha, sizeof(_float));
 }
 
 

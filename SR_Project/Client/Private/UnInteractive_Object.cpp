@@ -2,6 +2,7 @@
 #include "..\Public\UnInteractive_Object.h"
 #include "GameInstance.h"
 #include "Pawn.h"
+#include "Player.h"
 
 CUnInteractive_Object::CUnInteractive_Object(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CGameObject(pGraphic_Device)
@@ -52,13 +53,15 @@ void CUnInteractive_Object::Late_Tick(_float fTimeDelta)
 	{
 		if (nullptr != m_pRendererCom)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
+		if (m_pColliderCom)
+		{
+			memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+			m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+		}
 	}
 
-	if (m_pColliderCom)
-	{
-		memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
-		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
-	}
+	Set_ShaderID();
 		
 }
 
@@ -113,10 +116,14 @@ void CUnInteractive_Object::Set_ShaderID()
 
 	if (pGameObject->Get_Dead())
 		m_eShaderID = SHADER_DEAD;
+	else if (dynamic_cast<CPlayer*>(pGameObject)->Get_WeaponType() == WEAPON_LIGHT)
+		m_eShaderID = SHADER_DARKWITHLIGHT;
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
+	else if (iLevel == LEVEL_BOSS)
+		m_eShaderID = SHADER_FIRE;
 	else
-		m_eShaderID = SHADER_IDLE_ALPHATEST;
+		m_eShaderID = SHADER_DAYCYClE;
 }
 
 HRESULT CUnInteractive_Object::Change_Texture(const _tchar * LayerTag)

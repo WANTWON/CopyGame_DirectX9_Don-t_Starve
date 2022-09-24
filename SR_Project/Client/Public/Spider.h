@@ -46,7 +46,10 @@ private:
 	STATE m_ePreState = STATE::MAX;
 	_float3 m_vecOutPos; // For Picking
 
+	_bool m_bFirstFrame = true;
+
 private:
+	void StepSound();
 	virtual void AI_Behaviour(_float fTimeDelta) override;
 	virtual void Find_Target() override;
 	virtual void Follow_Target(_float fTimeDelta) override;

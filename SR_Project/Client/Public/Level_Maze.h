@@ -25,6 +25,7 @@ public: //test
 	void Start_Camera_Motion();
 	void Update_Camera_Motion();
 	void Update_Floor_Motion();
+	void Update_Fence_Motion();
 	void Set_NextLevel(_bool _dd) { m_bNextLevel = _dd; }
 	void Set_PastLevel(_bool _dd) { m_bPastLevel = _dd; }
 	void Set_Flowerpicked(_bool type) { m_bFlowerPicked = type; m_dwTime = GetTickCount(); }

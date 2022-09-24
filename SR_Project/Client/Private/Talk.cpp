@@ -159,6 +159,19 @@ HRESULT CTalk::Render()
 			if (FAILED(Release_RenderState()))
 				return E_FAIL;
 		}
+		else if (m_bforWoody)
+		{
+			if (FAILED(m_pTextureCom3->Bind_OnGraphicDev(texnum1)))
+				return E_FAIL;
+
+			if (FAILED(SetUp_RenderState()))
+				return E_FAIL;
+
+			m_pVIBufferCom->Render();
+
+			if (FAILED(Release_RenderState()))
+				return E_FAIL;
+		}
 		else
 		{
 			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
@@ -413,12 +426,20 @@ HRESULT CTalk::Excute(void)
 				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, TEXT("Layer_Bear"), _float3(10.f, 0.f, 40.f))))
 					return E_FAIL;
 
+				// Play Sound
+				pGameInstance->PlaySounds(TEXT("bearger_distant_1.wav"), SOUND_ID::SOUND_MONSTER_VOICE, .8f);
+
 				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
 				CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(true);
 				CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Bear"));
 				pCamera->Set_Target(pGameObject);
 				m_SetTargetBearger = true;
+
+				_bool bearger = true;
+
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BossName"), LEVEL_STATIC, TEXT("Layer_BossName"), (bool*)&bearger)))
+					return E_FAIL;
 
 			}
 			else if (m_SetTargetBearger)
@@ -509,6 +530,10 @@ HRESULT CTalk::SetUp_Components()
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_talkwinona"), (CComponent**)&m_pTextureCom2)))
 		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture3"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_talkwoody"), (CComponent**)&m_pTextureCom3)))
+		return E_FAIL;
 	
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
@@ -592,4 +617,5 @@ void CTalk::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pTextureCom1);
 	Safe_Release(m_pTextureCom2);
+	Safe_Release(m_pTextureCom3);
 }

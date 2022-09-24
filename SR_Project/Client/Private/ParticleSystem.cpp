@@ -95,6 +95,8 @@ void CParticleSystem::Late_Tick(_float fTimeDelta)
 	SetUp_BillBoard();
 	if (FAILED(m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this)))
 		return;
+
+	Set_ShaderID();
 }
 
 HRESULT CParticleSystem::Render()
@@ -118,11 +120,22 @@ HRESULT CParticleSystem::Render()
 
 	m_pShaderCom->Begin(m_eShaderID);
 
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
 	m_pShaderCom->End();
 
 	return S_OK;
+}
+
+void CParticleSystem::Set_ShaderID()
+{
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	if (pGameObject->Get_Dead())
+		m_eShaderID = SHADER_DEAD;
+	else if (iLevel == LEVEL_MAZE)
+		m_eShaderID = SHADER_DARK;
+	else
+		m_eShaderID = SHADER_DAYCYClE;
 }
 
 HRESULT CParticleSystem::Render_VIBuffer()
@@ -444,20 +457,6 @@ HRESULT CParticleSystem::Update_VIBuffer()
 	return S_OK;
 }
 
-HRESULT CParticleSystem::SetUp_RenderState()
-{
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
-	return S_OK;
-}
-
-HRESULT CParticleSystem::Release_RenderState()
-{
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
-	return S_OK;
-}
 
 HRESULT CParticleSystem::Kill_DeadParticles()
 {

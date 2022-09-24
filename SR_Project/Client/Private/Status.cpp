@@ -93,7 +93,7 @@ HRESULT CStatus::Render()
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
-
+	
 
 	return S_OK;
 }

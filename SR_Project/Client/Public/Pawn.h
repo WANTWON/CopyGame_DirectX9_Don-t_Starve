@@ -26,10 +26,10 @@ public:
 	virtual int Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	void Set_ShaderID();
+	void Set_ShaderID(_bool bIsAlphaBlend = false);
 public:
 	OBJID	Get_ObjID(void) { return m_eObjID; }
-	SHADER_STATE m_eShaderID = SHADER_IDLE_ALPHATEST;
+	SHADER_STATE m_eShaderID = SHADER_IDLE;
 protected:
 	OBJID m_eObjID;
 	_bool m_bPickingTrue = false;

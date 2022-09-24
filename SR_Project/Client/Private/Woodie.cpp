@@ -784,7 +784,7 @@ void CWoodie::Revive_Berry(_float _fTimeDelta)
 
 void CWoodie::Talk_Player(_float _fTimeDelta)
 {
-	CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(true);
+	CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WoodyTalk(true);
 
 	CInventory_Manager* pinven = CInventory_Manager::Get_Instance();
 	pinven->Get_Talk_list()->front()->setcheck(true);
@@ -849,6 +849,17 @@ void CWoodie::Talk_Player(_float _fTimeDelta)
 					m_bOwner = true;
 					m_pOwner = static_cast<CPawn*>(m_pTarget);
 					static_cast<CPlayer*>(m_pTarget)->Add_Party(TEXT("Woodie"), this);
+					CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+					auto k = pinv->Get_Party_list();
+					for (auto iter : *k)
+					{
+						if (iter->Get_check() == false)
+						{
+							iter->Set_check(true);
+							iter->Set_texnum(2);
+							break;
+						}
+					}
 				}
 				else
 				{
@@ -856,7 +867,7 @@ void CWoodie::Talk_Player(_float _fTimeDelta)
 					m_pTarget = nullptr;
 				}
 				pinven->Get_Talk_list()->front()->setcheck(false);
-				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
+				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WoodyTalk(false);
 				break;
 			}
 		}
@@ -894,12 +905,24 @@ void CWoodie::Talk_Player(_float _fTimeDelta)
 					Reset_Target();
 					m_bOwner = false;
 					m_pOwner = nullptr;
+
+					CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+					auto k = pinv->Get_Party_list();
+					for (auto iter : *k)
+					{
+						if (iter->Get_check() == true && iter->Get_texnum() == 2)
+						{
+							iter->Set_check(false);
+							iter->Set_texnum(3);
+							break;
+						}
+					}
 				}
 				m_iTalkCnt = 0;
 				m_bInteract = false;
 				m_bFirstCall = false;
 				pinven->Get_Talk_list()->front()->setcheck(false);
-				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
+				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WoodyTalk(false);
 				break;
 			}
 		}
