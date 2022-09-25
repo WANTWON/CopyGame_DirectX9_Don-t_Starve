@@ -14,6 +14,8 @@
 #include <time.h>
 
 #include "NPC.h"
+#include "DayCycle.h"
+
 
 _bool g_bUIMadefirst = false;
 
@@ -78,6 +80,8 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	CDayCycle::Get_Instance()->DayCycleTick();
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -148,6 +152,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, TEXT("Layer_Bear"), _float3(10.f, 0.f, 40.f))))
+		return E_FAIL;
 
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Pig_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
@@ -168,7 +174,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrorbeak"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 0.f, 20.f));
+	/*pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrorbeak"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 0.f, 20.f));*/
 
 	Safe_Release(pGameInstance);
 
@@ -368,10 +374,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
 		return E_FAIL;
-
+	CameraDesc.CameraDesc.fFovy = D3DXToRadian(60.0f);
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_FPS"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
 		return E_FAIL;
-
+	CameraDesc.CameraDesc.fFovy = D3DXToRadian(30.0f);
 	CameraDesc.CameraDesc.vEye = _float3(0.f, 6.f, -7.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Target"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))

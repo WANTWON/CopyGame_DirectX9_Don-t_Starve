@@ -58,7 +58,8 @@ private:
 	STATE m_ePreState = STATE::MAX;
 	_float fHappyTimer = 0.f;
 	_float3 m_vecOutPos; // For Picking
-
+	_float m_fGruntTime = 0.f;
+	_float m_fGruntRandomLimit = rand() % 5 + 1;
 	_bool	m_bMove = true;
 public:
 	void Give_Food() { m_eState = STATE::HAPPY; }

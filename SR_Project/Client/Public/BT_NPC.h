@@ -37,11 +37,14 @@ class CBTTask_IsFightMode;
 class CBTTask_Fail;
 class CBTTask_TargetIsDead;
 class CBTTask_Target_Hited;
-class CBTTask_Owner_Close;
 class CBTTask_TargetAtkRange;
 class CBTTask_TargetSkillRange;
 class CBTTask_GetCanSkill;
 class CBTTask_Skill;
+class CBTTask_Clear;
+class CBTTask_GetSelectAct;
+class CBTTask_DetectEnemy;
+class CBTTask_Wait;
 //class CBTTask_FollowTarget;
 class CBT_NPC : public CBase
 {
@@ -62,34 +65,37 @@ public:
 	//CNPC::NPC_STATE Find_Running();
 	//void Clear_Status(void);
 public:/*for Behavior Tree*/
-	CSequenceNode* Root = nullptr;
+	CSelectorNode* Root = nullptr;
 public:/*Selector Nodes*/
-	CSelectorNode* Selector_OnTarget = nullptr;
-	CSelectorNode* Selector_Main = nullptr;
 	CSelectorNode* Selector_OnOwner = nullptr;
+	CSelectorNode* Selector_NonOwner = nullptr;
 	CSelectorNode* Selector_NonFight = nullptr;
-	CSelectorNode* Selector_Attack = nullptr;
-	CSelectorNode* Selector_Skill = nullptr;
+	CSelectorNode* Selector_Fight = nullptr;
+	CSelectorNode* Selector_OnTarget = nullptr;
+	CSelectorNode* Selector_NonTarget = nullptr;
 public:/*Sequence Nodes*/
-	CSequenceNode* Sequence_NonTarget = nullptr;
+
 	CSequenceNode* Sequence_Interact_Actor = nullptr;
-	CSequenceNode* Sequence_OnTarget = nullptr;
-	CSequenceNode* Sequence_Attack = nullptr; 
-	CSequenceNode* Sequence_MoveToTarget = nullptr;
+	CSequenceNode* Sequence_MoveToOwner = nullptr;
+	CSequenceNode* Sequence_MoveToPos = nullptr;
 	CSequenceNode* Sequence_Fight = nullptr;
-	CSequenceNode*Sequence_Skill = nullptr;
+	CSequenceNode* Sequence_Skill = nullptr;
+	CSequenceNode* Sequence_Attack = nullptr;
+	CSequenceNode* Sequence_Idle = nullptr;
+	CSequenceNode* Sequence_SelectAct = nullptr;
+	CSequenceNode* Sequence_DeadCheck = nullptr;
+	CSequenceNode* Sequence_HitCheck = nullptr;
+
 	//CSequenceNode* Sequence_OnTarget = nullptr;
 public:/*If_Nodes*/
 	CBTTask_HasTarget* BTTask_HasTarget = nullptr;
-	CBTTask_HasTarget* BTTask_HasEnemy = nullptr;
 	CBTTask_IsActor* BTTask_IsActor = nullptr;
 	CBTTask_HasOwner* BTTask_HasOwner = nullptr;
-	CBTTask_TargetMoved* BTTask_IsTargetMove = nullptr;
+
 	CBTTask_TargetSkillRange* BTTask_IsSkillRange = nullptr;
 	CBTTask_TargetAtkRange* BTTask_IsAtkRange = nullptr;
 	CBTTask_IsFirstCall* BTTask_IsFirstCall = nullptr;
 	CBTTask_IsFightMode* BTTask_IsFightMode = nullptr;
-	CBTTask_TargetMoved* BTTask_IsOwner_Closed = nullptr; //CBTTask_Owner_Close class 삭제할것
 public:/*Leaf Nodes*/
 	CBTTask_SetRandPos* BTTask_SetRandPos = nullptr;
 	CBTTask_Idle* BTTask_Idle = nullptr;
@@ -100,7 +106,6 @@ public:/*Leaf Nodes*/
 	CBTTask_Talk* BTTask_Talk = nullptr;
 	CBTTask_IsArrive* BTTask_Arrive = nullptr;
 	CBTTask_Interrupt* BTTask_Interrupt = nullptr;
-	
 	CBTTask_SetGoalPos* BTTask_SetGoalPos = nullptr;
 	CBTTask_Attack* BTTask_Attack = nullptr;
 	CBTTask_GetCanAttack* BTTask_GetCanAttack = nullptr;
@@ -108,6 +113,13 @@ public:/*Leaf Nodes*/
 	CBTTask_Target_Hited* BTTask_TargetHited = nullptr;
 	CBTTask_GetCanSkill* BTTask_GetCanSkill = nullptr;
 	CBTTask_Skill* BTTask_Skill = nullptr;
+	CBTTask_GetSelectAct* BTTask_CanSelectAct = nullptr;
+	CBTTask_Clear* BTTask_Reset = nullptr;
+	CBTTask_DetectEnemy* BTTask_DetectEnemy = nullptr;
+	CBTTask_Wait* BTTask_Wait = nullptr;
+
+	CBTTask_TargetMoved* BTTask_IsMove_Owner = nullptr;
+	CBTTask_TargetMoved* BTTask_IsMove_Pos = nullptr;
 	//Default
 	CBTTask_Fail* BTTask_Fail = nullptr;
 private:
@@ -137,26 +149,16 @@ class CBTTask_Idle : public CNode
 public:
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
-		_float fRemainTime = 2.f;
-		if (fRemainTime < dynamic_cast<CNPC*>(_Obj)->Get_InteractiveTime()
-			&& dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::IDLE) == true)
+		if (dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::IDLE) == true)
 		{
-			//cout << "Idle End" << endl;
 			dynamic_cast<CNPC*>(_Obj)->Set_Activate(CNPC::IDLE, false);
-			dynamic_cast<CNPC*>(_Obj)->Reset_InteractTime();
 			return STATUS::SUCCESS;
 		}
 		else if (dynamic_cast<CNPC*>(_Obj)->Find_Activated() == CNPC::STATE_END)
 		{
 			dynamic_cast<CNPC*>(_Obj)->Set_Activate(CNPC::IDLE, true);
-			//cout << "Idle Start" << endl;
 			dynamic_cast<CNPC*>(_Obj)->Idle(_fTimeDelta);
-			return STATUS::RUNNING;
-		}
-		else if (dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::IDLE) == true)
-		{
-			dynamic_cast<CNPC*>(_Obj)->Idle(_fTimeDelta);
-			return STATUS::RUNNING;
+			return STATUS::SUCCESS;
 		}
 		else
 		{
@@ -170,10 +172,8 @@ class CBTTask_Move : public CNode
 public:
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
-		if (dynamic_cast<CNPC*>(_Obj)->Get_IsArrive()
-			&& dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::MOVE) == true)
+		if (dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::MOVE) == true)
 		{
-			//cout << "Move End" << endl;
 			dynamic_cast<CNPC*>(_Obj)->Set_Activate(CNPC::MOVE, false);
 			return STATUS::SUCCESS;
 		}
@@ -185,7 +185,7 @@ public:
 			return STATUS::RUNNING;
 		}
 		else if (dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::MOVE) == true
-			&& dynamic_cast<CNPC*>(_Obj)->Get_IsArrive() == false)
+			/*&& dynamic_cast<CNPC*>(_Obj)->Get_IsArrive() == false*/)
 		{
 			dynamic_cast<CNPC*>(_Obj)->Move(_fTimeDelta);
 			return STATUS::RUNNING;
@@ -211,7 +211,6 @@ public:
 			return STATUS::SUCCESS;
 		}
 		else if (dynamic_cast<CNPC*>(_Obj)->Get_CanInteract()
-			&& dynamic_cast<CNPC*>(_Obj)->Get_IsArrive()
 			&& dynamic_cast<CNPC*>(_Obj)->Find_Activated() == CNPC::STATE_END
 			|| dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::INTERACT) == true)
 		{
@@ -230,18 +229,19 @@ public:
 		if (!dynamic_cast<CNPC*>(_Obj)->Get_CanInteract()
 			&& dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::TALK) == true)
 		{
-			dynamic_cast<CNPC*>(_Obj)->Set_Activate(CNPC::TALK, false);
-
-			if (dynamic_cast<CNPC*>(_Obj)->Get_NextAct())
+			static_cast<CNPC*>(_Obj)->Set_Activate(CNPC::TALK, false);
+			static_cast<CNPC*>(_Obj)->Set_SelectAct(true);
+			return STATUS::SUCCESS;
+		/*	if (dynamic_cast<CNPC*>(_Obj)->Get_NextAct())
 			{
 				dynamic_cast<CNPC*>(_Obj)->Set_Interact(true);
-				return STATUS::SUCCESS;
+
 			}
 			else 
 			{
 				dynamic_cast<CNPC*>(_Obj)->Reset_Target();
 				return STATUS::FAIL;
-			}
+			}*/
 		}
 		else if (dynamic_cast<CNPC*>(_Obj)->Get_CanInteract()
 			&& dynamic_cast<CNPC*>(_Obj)->Find_Activated() == CNPC::STATE_END
@@ -309,14 +309,9 @@ class CBTTask_SelectTarget : public CNode
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
 		dynamic_cast<CNPC*>(_Obj)->Select_Target(_fTimeDelta);
-		if (dynamic_cast<CNPC*>(_Obj)->Get_HasTarget())
-		{
-			return STATUS::SUCCESS;
-		}
-		else
-		{
-			return STATUS::FAIL;
-		}
+
+		return STATUS::SUCCESS;
+
 	}
 };
 
@@ -445,8 +440,6 @@ class CBTTask_TargetIsDead : public CNode
 		if (static_cast<CNPC*>(_Obj)->Get_Target()->Get_Dead() == true
 			|| static_cast<CNPC*>(_Obj)->Get_Target() == nullptr)
 		{
-			static_cast<CNPC*>(_Obj)->Clear_Activated();
-			static_cast<CNPC*>(_Obj)->Reset_Target();
 			return STATUS::SUCCESS;
 		}
 		else
@@ -460,17 +453,12 @@ class CBTTask_Target_Hited : public CNode
 {
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
-		OBJID eID = static_cast<CPawn*>(dynamic_cast<CNPC*>(_Obj)->Get_Target())->Get_ObjID();
+		if (static_cast<CPawn*>(_Obj)->Get_ObjID() != OBJID::OBJ_MONSTER)
+			return STATUS::FAIL;
 
-		if (eID == OBJ_MONSTER)
+		if (static_cast<CMonster*>(dynamic_cast<CNPC*>(_Obj)->Get_Target())->Get_Hited())
 		{
-			if (static_cast<CMonster*>(dynamic_cast<CNPC*>(_Obj)->Get_Target())->Get_Hited())
-			{
-				static_cast<CNPC*>(_Obj)->Clear_Activated();
-				static_cast<CNPC*>(_Obj)->Reset_Target();
-				return STATUS::SUCCESS;
-			}
-
+			return STATUS::SUCCESS;
 		}
 		else
 		{
@@ -480,7 +468,63 @@ class CBTTask_Target_Hited : public CNode
 
 };
 
+class CBTTask_GetSelectAct : public CNode
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		if (static_cast<CNPC*>(_Obj)->Get_SelectAct())
+		{
+			static_cast<CNPC*>(_Obj)->Set_Interact(true);
+			return STATUS::SUCCESS;
+		}
+		else
+		{
+			return STATUS::FAIL;
+		}
+	}
+};
 
+class CBTTask_Clear :public CNode
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		static_cast<CNPC*>(_Obj)->Clear_Activated();
+		static_cast<CNPC*>(_Obj)->Reset_Target();
+		static_cast<CNPC*>(_Obj)->Set_SelectAct(true);
+		static_cast<CNPC*>(_Obj)->Set_Interact(true);
+		return STATUS::SUCCESS;
+	}
+};
+
+class CBTTask_DetectEnemy : public CNode
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		if (static_cast<CNPC*>(_Obj)->Detect_Enemy())
+		{
+			return STATUS::SUCCESS;
+		}
+		else
+		{
+			return STATUS::FAIL;
+		}
+	}
+};
+
+class CBTTask_Wait : public CNode
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		if (static_cast<CNPC*>(_Obj)->Wait(_fTimeDelta, 2.f))
+		{
+			return STATUS::SUCCESS;
+		}
+		else
+		{
+			return STATUS::FAIL;
+		}
+	}
+};
 
 //Decorator
 class CBTTask_HasTarget : public CDecorator_If
@@ -530,17 +574,22 @@ class CBTTask_TargetSkillRange : public CDecorator_If
 	}
 };
 
-class CBTTask_TargetMoved : public CDecorator_If
+class CBTTask_TargetMoved : public CNode
 {
+private:
+	int iType = 0;
+
+public:
+	CBTTask_TargetMoved(int _iType) { iType = _iType; }
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
-		if (dynamic_cast<CNPC*>(_Obj)->Get_Target_Moved(_fTimeDelta, 0))
+		if (dynamic_cast<CNPC*>(_Obj)->Get_Target_Moved(_fTimeDelta, iType))
 		{
-			return TrueNode->Excute(_Obj, _fTimeDelta);
+			return STATUS::SUCCESS;
 		}
 		else
 		{
-			return FalseNode->Excute(_Obj, _fTimeDelta);
+			return STATUS::FAIL;
 		}
 	}
 };
@@ -563,7 +612,7 @@ public:
 			_bool bAggro = dynamic_cast<CMonster*>(dynamic_cast<CNPC*>(_Obj)->Get_Target())->Get_Aggro();
 			if (bAggro)
 			{
-				return Get_VecNodes()[0]->Excute(_Obj, _fTimeDelta); //Attack
+				return Get_VecNodes()[0]->Excute(_Obj, _fTimeDelta);
 			}
 			else
 			{
@@ -624,22 +673,6 @@ public:
 		}
 	}
 
-};
-
-class CBTTask_Owner_Close : public CDecorator_If
-{
-
-	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
-	{
-		if (dynamic_cast<CNPC*>(_Obj)->Get_CloseToOwner())
-		{//Sequence
-			return TrueNode->Excute(_Obj, _fTimeDelta);
-		}
-		else
-		{
-			return  FalseNode->Excute(_Obj, _fTimeDelta);
-		}
-	}
 };
 
 class CBTTask_Fail : public CNode

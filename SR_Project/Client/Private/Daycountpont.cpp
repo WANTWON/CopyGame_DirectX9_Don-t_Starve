@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "Inventory.h"
+#include "DayCycle.h"
 
 CDaycountpont::CDaycountpont(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -39,7 +40,7 @@ HRESULT CDaycountpont::Initialize(void* pArg)
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-
+	CDayCycle::Get_Instance()->RegisterObserver(this);
 	return S_OK;
 }
 
@@ -53,26 +54,7 @@ int CDaycountpont::Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 	Safe_AddRef(pinv);
 */
-	if (GetTickCount() > m_dwdaynight + 30000)
-	{
-		if (nightandday == DAY_MORNING)
-			nightandday = DAY_NIGHT;
-
-		else if (nightandday == DAY_NIGHT)
-			nightandday = DAY_MORNING;
-
-		m_dwdaynight = GetTickCount();
-		
-	}
-
-
-
-
-	if (GetTickCount() > m_dwdaytime + 90000)
-	{
-		++texnum;
-		m_dwdaytime = GetTickCount();
-	}
+	
 	//pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
 
 	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
@@ -107,7 +89,7 @@ HRESULT CDaycountpont::Render()
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_iTexNum)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))
@@ -121,6 +103,14 @@ HRESULT CDaycountpont::Render()
 
 
 	return S_OK;
+}
+
+void CDaycountpont::Update(_uint eDayState)
+{
+	m_eDayState = (DAY_STATE)eDayState;
+
+	//if(eDayState == DAY_MORNING)
+		//++m_iTexNum;
 }
 
 HRESULT CDaycountpont::SetUp_Components()

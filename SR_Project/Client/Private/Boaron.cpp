@@ -422,6 +422,10 @@ void CBoaron::AI_Behaviour(_float fTimeDelta)
 			{
 				m_eState = STATE::ATTACK;
 				m_bIsAttacking = true;
+
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("attack1_Boaron_0%d.wav"), rand() % 15 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 			}
 			else
 				m_eState = STATE::IDLE;
@@ -439,7 +443,7 @@ void CBoaron::Patrol(_float fTimeDelta)
 	// Switch between Idle and Walk (based on time)
 	if (m_eState == STATE::IDLE)
 	{
-		if (GetTickCount() > m_dwIdleTime + 3000 + (rand() % 3000)*(rand() % 2 + 1))
+		if (GetTickCount() > m_dwIdleTime + 3000 + (rand() % 3000) * (rand() % 2 + 1))
 		{
 			m_eState = STATE::RUN;
 			m_dwWalkTime = GetTickCount();
@@ -455,7 +459,7 @@ void CBoaron::Patrol(_float fTimeDelta)
 	}
 	else if (m_eState == STATE::RUN)
 	{
-		if (GetTickCount() > m_dwWalkTime + 1500 + (rand() % 3000)*(rand() % 2 + 1))
+		if (GetTickCount() > m_dwWalkTime + 1500 + (rand() % 3000) * (rand() % 2 + 1))
 		{
 			m_eState = STATE::IDLE;
 			m_dwIdleTime = GetTickCount();
@@ -579,8 +583,23 @@ _float CBoaron::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dmg_pont"), LEVEL_GAMEPLAY, TEXT("Layer_dmgp"), &effectdesc)))
 			return OBJ_NOEVENT;
+		
 		if (!m_bDead)
+		{
 			m_bHit = true;
+
+			// Play Hit Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("hit_Boaron_0%d.wav"), rand() % 4 + 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .4f);
+		}
+		else
+		{
+			// Play Death Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("death_Boaron_0%d.wav"), rand() % 2 + 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .4f);
+		}
 
 		m_bIsAttacking = false;
 		m_dwAttackTime = GetTickCount();

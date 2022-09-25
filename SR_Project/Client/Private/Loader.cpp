@@ -28,6 +28,7 @@
 #include "Catapult.h"
 #include "Statue.h"
 #include "Trap.h"
+#include "Portable_Pot.h"
 
 #include "CarnivalMemory.h"
 #include "CarnivalCard.h"

@@ -53,8 +53,11 @@ public:
 class CSequenceNode : public CCompositeNode
 {
 protected:
+	wstring Sequence_Name;
 	virtual ~CSequenceNode() = default;
 public:
+	CSequenceNode(wstring _wsName) { Sequence_Name = _wsName; }
+
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
 		for (CNode* iter : Get_VecNodes())
@@ -83,8 +86,12 @@ public:
 class CSelectorNode : public CCompositeNode
 {
 protected:
+	wstring Selector_Name;
+
 	virtual ~CSelectorNode() = default;
 public:
+	CSelectorNode(wstring _wsName) { Selector_Name = _wsName; }
+
 	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
 	{
 		for (CNode* iter : Get_VecNodes())

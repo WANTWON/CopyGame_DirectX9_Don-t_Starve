@@ -97,6 +97,22 @@ void CBoarrior::Late_Tick(_float fTimeDelta)
 	Change_Motion();
 	Change_Frame(fTimeDelta);
 
+	// Use/Reset Shader Hit
+	if (m_bUseHitShader)
+	{
+		if (m_fHitTime > .25f)
+		{
+			m_eShaderID = SHADER_IDLE;
+			m_fHitTime = 0.f;
+			m_bUseHitShader = false;
+		}
+		else
+		{
+			m_eShaderID = SHADER_HIT;
+			m_fHitTime += fTimeDelta;
+		}
+	}
+
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 	if (!m_bPicking)
@@ -315,6 +331,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		else
 			m_pTransformCom->Set_Scale(6.f, 6.f, 1.f);
 
+		Check_CameraShake();
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::DASH:
@@ -346,30 +363,36 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		Attack(fTimeDelta, m_eState);
 		break;
 	case STATE::SPAWN:
-	{m_pTextureCom->MoveFrame(m_TimerTag);
-	
-	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
-		m_bfirst = true;
-
-	if (m_bfirst == true)
 	{
-		_bool forboss = true;
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_BOSS, TEXT("Layer_Screeneffect"), (bool*)&forboss);
-		m_bfirst = false;
-	}
-	
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1 && m_bFirstFrame)
+		{
+			// Screen Effect
+			_bool forboss = true;
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_BOSS, TEXT("Layer_Screeneffect"), (bool*)&forboss);
+			m_bfirst = false;
 
-	m_fSpawnTime += fTimeDelta;
-	if (m_fSpawnTime > 2.f)
-	{
-		m_fSpawnTime = 0.f;
-		m_eState = STATE::IDLE;
-		m_bfirst = true;
-		Spawn_Adds(fTimeDelta);
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("bannercall_boarrior_%02d.wav"), 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+
+			m_bFirstFrame = false;
+		}
+		else
+			m_bFirstFrame = true;
+
+		m_fSpawnTime += fTimeDelta;
+		if (m_fSpawnTime > 2.f)
+		{
+			m_fSpawnTime = 0.f;
+			m_eState = STATE::IDLE;
+			m_bfirst = true;
+			Spawn_Adds(fTimeDelta);
+		}
+
+		m_pTextureCom->MoveFrame(m_TimerTag);
 	}
-	}
-	
 		break;
 	case STATE::STUN:
 		m_pTextureCom->MoveFrame(m_TimerTag);
@@ -588,6 +611,73 @@ void CBoarrior::PickingTrue()
 
 	Safe_Release(pGameInstance);
 	Safe_Release(pInvenManager);
+}
+
+void CBoarrior::Check_CameraShake()
+{
+	CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+
+	switch (m_eDir)
+	{
+		case DIR_STATE::DIR_DOWN:
+		{
+			if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 0 || m_pTextureCom->Get_Frame().m_iCurrentTex == 18) && m_bFirstFrame)
+			{
+				// Play Walk Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("boarrior_step_%03d.wav"), rand() % 15 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .5f);
+
+				// Camera Shake
+				if (pCamera)
+					pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+
+				m_bFirstFrame = false;
+			}
+			else
+				m_bFirstFrame = true;
+		}
+		break;
+		case DIR_STATE::DIR_UP:
+		{
+			if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 23) && m_bFirstFrame)
+			{
+				// Play Walk Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("boarrior_step_%03d.wav"), rand() % 15 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .5f);
+
+				// Camera Shake
+				if (pCamera)
+					pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+
+				m_bFirstFrame = false;
+			}
+			else
+				m_bFirstFrame = true;
+		}
+		break;
+		case DIR_STATE::DIR_RIGHT:
+		case DIR_STATE::DIR_LEFT:
+		{
+			if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 0 || m_pTextureCom->Get_Frame().m_iCurrentTex == 18) && m_bFirstFrame)
+			{
+				// Play Walk Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("boarrior_step_%03d.wav"), rand() % 15 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .5f);
+
+				// Camera Shake
+				if (pCamera)
+					pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+
+				m_bFirstFrame = false;
+			}
+			else
+				m_bFirstFrame = true;
+		}
+		break;
+	}
 }
 
 void CBoarrior::Check_Totem_Effect(_float fTimeDelta)
@@ -949,6 +1039,9 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 			// Normal Attack
 			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 5 && !m_bDidDamage)
 			{
+				// Play Sound
+				// ..
+
 				// Create Standard Bullet
 				BULLETDATA BulletData;
 				ZeroMemory(&BulletData, sizeof(BulletData));
@@ -996,6 +1089,9 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 			case 12:
 				if (iAnimFrameSyncCounter == 0)
 				{
+					// Play Sound
+					// ..
+
 					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 						return;
 
@@ -1038,6 +1134,9 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 			case 19:
 				if (iAnimFrameSyncCounter == 4)
 				{
+					// Play Sound
+					// ..
+
 					BulletData.vPosition.x = vCenterPosition.x + cosf(D3DXToRadian(90.f)) * fDistance - sin(D3DXToRadian(90.f)) * fDistance;
 					BulletData.vPosition.z = vCenterPosition.z + sin(D3DXToRadian(90.f)) * fDistance + cos(D3DXToRadian(90.f)) * fDistance;
 					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
@@ -1099,6 +1198,9 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 38 && !m_bShouldSpawnBullet)
 			{
 				m_bShouldSpawnBullet = true;
+				
+				// Play Sound
+				// ..
 
 				CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 				if (pCamera)
@@ -1113,7 +1215,7 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 
 void CBoarrior::Spawn_Bullet(_float fTimeDelta)
 {
-	if (m_fBulletAliveTime < .05f)
+	if (m_fBulletAliveTime < .15f)
 		m_fBulletAliveTime += fTimeDelta;
 	else
 	{
@@ -1195,6 +1297,10 @@ void CBoarrior::Spawn_Adds(_float fTimeDelta)
 	if (m_bIsBelow20Percent)
 	{
 		TotemDesc.eType = CTotem::TOTEM_TYPE::HEAL;
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("banner_craft_heal_0%d.wav"), 1);
+		pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, 1.f);
+
 		goto SpawnTotem;
 	}
 	else if (m_bIsBelow40Percent)
@@ -1202,6 +1308,10 @@ void CBoarrior::Spawn_Adds(_float fTimeDelta)
 	else if (m_bIsBelow60Percent)
 	{
 		TotemDesc.eType = CTotem::TOTEM_TYPE::DEFENSE;
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("banner_craft_shield_0%d.wav"), 1);
+		pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, 1.f);
+
 		goto SpawnTotem;
 	}
 	else if (m_bIsBelow80Percent)
@@ -1237,8 +1347,6 @@ _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * Da
 	if (m_bHasDefenseBoost)
 	{
 		fDamage = fDamage / 100 * 20;
-
-	m_eShaderID = SHADER_HIT;
 
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
@@ -1288,6 +1396,8 @@ ApplyDamage:
 
 	if (fDmg > 0)
 	{
+		m_bUseHitShader = true;
+
 		foreffect		effectdesc;
 		ZeroMemory(&effectdesc, sizeof(foreffect));
 		effectdesc.dmg = fDmg;
@@ -1313,6 +1423,11 @@ ApplyDamage:
 				m_fSpawnTime = 0.f;
 				m_fFollowTime = 0.f;
 				iAnimFrameSyncCounter = 0;
+
+				// Play Hit Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("hit_boarrior_%02d.wav"), rand() % 14 + 1);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
 			}
 			else
 				m_fStaggerDamage += fDamage;

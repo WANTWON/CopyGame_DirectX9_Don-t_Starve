@@ -36,6 +36,7 @@ private: /*For TextureCom */
 	virtual void Change_Frame(_float fTimeDelta) override;
 	virtual void Change_Motion() override;
 
+	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
 public:
 	virtual void Interact(_uint Damage = 0) override;
 	virtual HRESULT Drop_Items() override;
@@ -55,6 +56,7 @@ public:/*for Actions*/
 	virtual void	Select_Target(_float _fTimeDelta) override;
 	virtual void	Set_RandPos(_float _fTimeDelta) override;
 	virtual _bool	Get_Target_Moved(_float _fTimeDelta, _uint _iTarget) override;
+	virtual _bool	Detect_Enemy() override;
 private:
 	void	Revive_Berry(_float _fTimeDelta);
 	void	Talk_Player(_float _fTimeDelta);

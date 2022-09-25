@@ -53,16 +53,25 @@ int CBearger::Tick(_float fTimeDelta)
 {
 	if (__super::Tick(fTimeDelta) && m_bDeadAnimExpired)
 	{
-	auto line = CInventory_Manager::Get_Instance()->Get_Line_list();
+		auto line = CInventory_Manager::Get_Instance()->Get_Line_list();
 
-	for (auto k : *line)
-		k->set_quest3(true);
-	CPickingMgr::Get_Instance()->Out_PickingGroup(this);
+		for (auto k : *line)
+			k->set_quest3(true);
+		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
 		return OBJ_DEAD;
-
-		
 	}
-		
+
+	if (m_eState == STATE::CHARGE && m_fChargeTime > 1.5f)
+	{
+		// Play Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("bearger_grrrr_%d.wav"), rand() % 7 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .6f);
+
+		m_fChargeTime = 0.f;
+	}
+	else
+		m_fChargeTime += fTimeDelta;
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);
@@ -75,7 +84,6 @@ int CBearger::Tick(_float fTimeDelta)
 void CBearger::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
-
 
 	Change_Motion();
 	Change_Frame(fTimeDelta);
@@ -91,6 +99,22 @@ void CBearger::Late_Tick(_float fTimeDelta)
 		}
 	}
 
+	// Use/Reset Shader Hit
+	if (m_bUseHitShader)
+	{
+		if (m_fHitTime > .25f)
+		{
+			m_eShaderID = SHADER_IDLE;
+			m_fHitTime = 0.f;
+			m_bUseHitShader = false;
+		}
+		else
+		{
+			m_eShaderID = SHADER_HIT;
+			m_fHitTime += fTimeDelta;
+		}
+	}
+	
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 	if (!m_bPicking)
 	{
@@ -379,6 +403,25 @@ void CBearger::Change_Frame(_float fTimeDelta)
 		break;
 	case STATE::EAT:
 		m_pTextureCom->MoveFrame(m_TimerTag);
+
+		if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+		{
+			if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 0
+				|| m_pTextureCom->Get_Frame().m_iCurrentTex == 10
+				|| m_pTextureCom->Get_Frame().m_iCurrentTex == 20
+				|| m_pTextureCom->Get_Frame().m_iCurrentTex == 30) && m_bFirstFrame)
+			{
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("bearger_chew_%d.wav"), rand() % 11 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .5f);
+
+				m_bFirstFrame = false;
+			}
+			else
+				m_bFirstFrame = true;
+		}
+
 		break;
 	case STATE::ATTACK:
 		if (m_eDir == DIR_STATE::DIR_LEFT)
@@ -410,7 +453,6 @@ void CBearger::Change_Frame(_float fTimeDelta)
 			Attack(true);
 		break;
 	case STATE::HIT:
-		m_eShaderID = SHADER_HIT;
 		if (m_eDir == DIR_STATE::DIR_LEFT)
 			m_pTransformCom->Set_Scale(-4.f, 4.f, 1.f);
 		else
@@ -424,10 +466,41 @@ void CBearger::Change_Frame(_float fTimeDelta)
 			
 		break;
 	case STATE::DIE:
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 49)
-			Drop_Items();
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 58)
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8)
+		{
+			if (m_bFirstFrame)
+			{
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("bearger_death_%d.wav"), 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, 1.f);
+
+				m_bFirstFrame = false;
+			}
+		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 49)
+		{
+			if (m_bFirstFrame)
+			{
+				Drop_Items();
+
+				// Camera Shake
+				CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+				if (pCamera)
+					pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.5f, 0.1f, 0.01f);
+
+				// Play Step Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("bearger_step_%d.wav"), rand() % 8 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+
+				m_bFirstFrame = false;
+			}
+		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 58)
 			m_bDeadAnimExpired = true;
+		else
+			m_bFirstFrame = true;
 
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
 		break;
@@ -805,9 +878,18 @@ void CBearger::Attack(_bool bIsSpecial)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-
+	
 	// Normal Attack
-	if (!bIsSpecial && m_pTextureCom->Get_Frame().m_iCurrentTex == 33)
+	if (!bIsSpecial && m_pTextureCom->Get_Frame().m_iCurrentTex == 10 && m_bFirstFrame)
+	{
+		// Play Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("bearger_attack_%d.wav"), rand() % 2 + 1);
+		pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .8f);
+
+		m_bFirstFrame = false;
+	}
+	else if (!bIsSpecial && m_pTextureCom->Get_Frame().m_iCurrentTex == 33 && m_bFirstFrame)
 	{
 		// Create Standard Bullet
 		BULLETDATA BulletData;
@@ -822,6 +904,8 @@ void CBearger::Attack(_bool bIsSpecial)
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 			return;
+
+		m_bFirstFrame = false;
 	}
 	// Special Attack
 	else if (bIsSpecial)
@@ -849,8 +933,13 @@ void CBearger::Attack(_bool bIsSpecial)
 		vSpawnPos.y = pVIBuffer_Terrain->Compute_Height(vSpawnPos, pTransform_Terrain->Get_WorldMatrix());
 
 		// Create Ring and First Wave of Rocks
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21 && m_bFirstFrame)
 		{
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("bearger_groundpound_%d.wav"), 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+
 			CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			if (pCamera)
 				pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.7f, 0.2f, 0.01f);
@@ -872,9 +961,11 @@ void CBearger::Attack(_bool bIsSpecial)
 			BulletData.vPosition = vSpawnPos - BulletData.vRight;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
+
+			m_bFirstFrame = false;
 		}
 		// Create Second Wave of Rocks
-		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 33)
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 33 && m_bFirstFrame)
 		{
 			// Rocks
 			BulletData.vPosition = vSpawnPos + BulletData.vLook * 2;
@@ -889,8 +980,14 @@ void CBearger::Attack(_bool bIsSpecial)
 			BulletData.vPosition = vSpawnPos - BulletData.vRight * 2;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
+
+			m_bFirstFrame = false;
 		}
+		else
+			m_bFirstFrame = true;
 	}
+	else 
+		m_bFirstFrame = true;
 }
 
 void CBearger::Check_CameraShake(STATE eState)
@@ -911,17 +1008,62 @@ void CBearger::Check_CameraShake(STATE eState)
 					switch (m_eDir)
 					{
 					case DIR_STATE::DIR_DOWN:
-						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 37)
-							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 37) && m_bFirstFrame)
+						{
+							if (m_bFirstFrame)
+							{
+								pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+
+								// Play Step Sound
+								_tchar szFileName[MAX_PATH] = TEXT("");
+								wsprintf(szFileName, TEXT("bearger_step_%d.wav"), rand() % 8 + 1);
+								CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+
+								m_bFirstFrame = false;
+							}
+						}
+						else
+							m_bFirstFrame = true;
+
 						break;
 					case DIR_STATE::DIR_UP:
-						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 7 || m_pTextureCom->Get_Frame().m_iCurrentTex == 44)
-							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 7 || m_pTextureCom->Get_Frame().m_iCurrentTex == 44) && m_bFirstFrame)
+						{
+							if (m_bFirstFrame)
+							{
+								pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+
+								// Play Step Sound
+								_tchar szFileName[MAX_PATH] = TEXT("");
+								wsprintf(szFileName, TEXT("bearger_step_%d.wav"), rand() % 8 + 1);
+								CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+
+								m_bFirstFrame = false;
+							}
+						}
+						else
+							m_bFirstFrame = true;
+
 						break;
 					case DIR_STATE::DIR_LEFT:
 					case DIR_STATE::DIR_RIGHT:
-						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 29)
-							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 29) && m_bFirstFrame)
+						{
+							if (m_bFirstFrame)
+							{
+								pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+
+								// Play Step Sound
+								_tchar szFileName[MAX_PATH] = TEXT("");
+								wsprintf(szFileName, TEXT("bearger_step_%d.wav"), rand() % 8 + 1);
+								CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+
+								m_bFirstFrame = false;
+							}
+						}
+						else
+							m_bFirstFrame = true;
+
 						break;
 					}
 					break;
@@ -929,17 +1071,62 @@ void CBearger::Check_CameraShake(STATE eState)
 					switch (m_eDir)
 					{
 					case DIR_STATE::DIR_DOWN:
-						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 2|| m_pTextureCom->Get_Frame().m_iCurrentTex == 16)
-							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 2|| m_pTextureCom->Get_Frame().m_iCurrentTex == 16) && m_bFirstFrame)
+						{
+							if (m_bFirstFrame)
+							{
+								pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+
+								// Play Step Sound
+								_tchar szFileName[MAX_PATH] = TEXT("");
+								wsprintf(szFileName, TEXT("bearger_step_%d.wav"), rand() % 8 + 1);
+								CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+
+								m_bFirstFrame = false;
+							}
+						}
+						else
+							m_bFirstFrame = true;
+
 						break;
 					case DIR_STATE::DIR_UP:
-						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 22)
-							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 8 || m_pTextureCom->Get_Frame().m_iCurrentTex == 22) && m_bFirstFrame)
+						{
+							if (m_bFirstFrame)
+							{
+								pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+
+								// Play Step Sound
+								_tchar szFileName[MAX_PATH] = TEXT("");
+								wsprintf(szFileName, TEXT("bearger_step_%d.wav"), rand() % 8 + 1);
+								CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+
+								m_bFirstFrame = false;
+							}
+						}
+						else
+							m_bFirstFrame = true;
+
 						break;
 					case DIR_STATE::DIR_LEFT:
 					case DIR_STATE::DIR_RIGHT:
-						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1 || m_pTextureCom->Get_Frame().m_iCurrentTex == 15)
-							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 1 || m_pTextureCom->Get_Frame().m_iCurrentTex == 15) && m_bFirstFrame)
+						{
+							if (m_bFirstFrame)
+							{
+								pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+
+								// Play Step Sound
+								_tchar szFileName[MAX_PATH] = TEXT("");
+								wsprintf(szFileName, TEXT("bearger_step_%d.wav"), rand() % 8 + 1);
+								CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+								
+								m_bFirstFrame = false;
+							}
+						}
+						else
+							m_bFirstFrame = true;
+
 						break;
 					}
 					break;
@@ -947,17 +1134,62 @@ void CBearger::Check_CameraShake(STATE eState)
 					switch (m_eDir)
 					{
 					case DIR_STATE::DIR_DOWN:
-						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 2 || m_pTextureCom->Get_Frame().m_iCurrentTex == 10)
-							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 2 || m_pTextureCom->Get_Frame().m_iCurrentTex == 10) && m_bFirstFrame)
+						{
+							if (m_bFirstFrame)
+							{
+								pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+
+								// Play Step Sound
+								_tchar szFileName[MAX_PATH] = TEXT("");
+								wsprintf(szFileName, TEXT("bearger_step_%d.wav"), rand() % 8 + 1);
+								CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+
+								m_bFirstFrame = false;
+							}
+						}
+						else
+							m_bFirstFrame = true;
+
 						break;
 					case DIR_STATE::DIR_UP:
-						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 4 || m_pTextureCom->Get_Frame().m_iCurrentTex == 11)
-							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 4 || m_pTextureCom->Get_Frame().m_iCurrentTex == 11) && m_bFirstFrame)
+						{
+							if (m_bFirstFrame)
+							{
+								pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+
+								// Play Step Sound
+								_tchar szFileName[MAX_PATH] = TEXT("");
+								wsprintf(szFileName, TEXT("bearger_step_%d.wav"), rand() % 8 + 1);
+								CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+
+								m_bFirstFrame = false;
+							}
+						}
+						else
+							m_bFirstFrame = true;
+
 						break;
 					case DIR_STATE::DIR_LEFT:
 					case DIR_STATE::DIR_RIGHT:
-						if (m_pTextureCom->Get_Frame().m_iCurrentTex == 2 || m_pTextureCom->Get_Frame().m_iCurrentTex == 10)
-							pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+						if ((m_pTextureCom->Get_Frame().m_iCurrentTex == 2 || m_pTextureCom->Get_Frame().m_iCurrentTex == 10) && m_bFirstFrame)
+						{
+							if (m_bFirstFrame)
+							{
+								pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.1f, 0.1f, 0.01f);
+
+								// Play Step Sound
+								_tchar szFileName[MAX_PATH] = TEXT("");
+								wsprintf(szFileName, TEXT("bearger_step_%d.wav"), rand() % 8 + 1);
+								CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+
+								m_bFirstFrame = false;
+							}
+						}
+						else
+							m_bFirstFrame = true;
+
 						break;
 					}
 					break;
@@ -973,7 +1205,10 @@ _float CBearger::Take_Damage(float fDamage, void * DamageType, CGameObject * Dam
 
 	if (fDmg > 0)
 	{
-		foreffect		effectdesc;
+		m_bUseHitShader = true;
+		m_fHitTime = 0.f;
+
+		foreffect effectdesc;
 		ZeroMemory(&effectdesc, sizeof(foreffect));
 		effectdesc.dmg = fDmg;
 		effectdesc.pos = Get_Position();
@@ -982,12 +1217,28 @@ _float CBearger::Take_Damage(float fDamage, void * DamageType, CGameObject * Dam
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dmg_pont"), LEVEL_GAMEPLAY, TEXT("Layer_dmgp"), &effectdesc)))
 			return OBJ_NOEVENT;
-		if (!m_bDead)
-			m_bHit = true;
 
-		m_bAggro = true;
-		m_bIsAttacking = false;
-		m_dwAttackTime = GetTickCount();
+		if (m_fStaggerDamage > m_fStaggerDamageLimit)
+		{
+			if (!m_bDead)
+			{
+				m_bHit = true;
+
+				// Play Sound
+				pGameInstance->PlaySounds(TEXT("bearger_hurt_1.wav"), SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+			}
+			
+			m_bAggro = true;
+			m_bIsAttacking = false;
+			m_dwAttackTime = GetTickCount();
+
+			m_fStaggerDamage = 0.f;
+		}
+		else
+		{
+			m_fStaggerDamage += fDamage;
+			m_bAggro = true;
+		}
 	}
 
 	return fDmg;

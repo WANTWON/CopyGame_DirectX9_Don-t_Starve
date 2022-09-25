@@ -426,6 +426,9 @@ HRESULT CTalk::Excute(void)
 				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, TEXT("Layer_Bear"), _float3(10.f, 0.f, 40.f))))
 					return E_FAIL;
 
+				// Play Sound
+				pGameInstance->PlaySounds(TEXT("bearger_distant_1.wav"), SOUND_ID::SOUND_MONSTER_VOICE, .8f);
+
 				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
 				CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(true);

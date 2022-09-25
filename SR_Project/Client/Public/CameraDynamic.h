@@ -54,7 +54,7 @@ private:
 private:
 
 	_float3			m_vDistance;
-	_double			m_lMouseWheel = 0;
+	_long			m_lMouseWheel = 0;
 	CAMERAMODE		m_eCamMode = CAM_PLAYER;
 	_int			m_iTurnCount = 0;
 	class CGameObject*	m_pTarget = nullptr;

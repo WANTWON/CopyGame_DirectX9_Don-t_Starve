@@ -53,7 +53,16 @@ private:
 	_bool m_bIsEating = false;
 	_float3 vPatrolPosition;
 	_float fEatTimer = 0.f;
+	_bool m_bFirstFrame = true;
 	_float3 m_vecOutPos; // For Picking
+
+	// Stagger Variables
+	_float m_fStaggerDamageLimit = 80.f;
+	_float m_fStaggerDamage = 0.f;
+
+	_float m_fChargeTime = 0.f;
+	_bool m_bUseHitShader = false;
+	_float m_fHitTime = 0.f;
 
 private:
 	virtual void AI_Behaviour(_float fTimeDelta) override;

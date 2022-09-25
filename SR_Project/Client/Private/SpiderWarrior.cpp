@@ -234,6 +234,9 @@ void CSpiderWarrior::Change_Frame(_float fTimeDelta)
 		else
 			m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 
+		if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+			StepSound();
+
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case STATE::ATTACK:
@@ -386,6 +389,25 @@ void CSpiderWarrior::PickingTrue()
 	Safe_Release(pInvenManager);
 }
 
+void CSpiderWarrior::StepSound()
+{
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 0
+		|| m_pTextureCom->Get_Frame().m_iCurrentTex == 9)
+	{
+		if (m_bFirstFrame)
+		{
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("Spider_step_%d.wav"), rand() % 5 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .1f);
+
+			m_bFirstFrame = false;
+		}
+	}
+	else
+		m_bFirstFrame = true;
+}
+
 void CSpiderWarrior::AI_Behaviour(_float fTimeDelta)
 {
 	if (m_bDead)
@@ -407,6 +429,10 @@ void CSpiderWarrior::AI_Behaviour(_float fTimeDelta)
 			{
 				m_eState = STATE::ATTACK;
 				m_bIsAttacking = true;
+
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("Spider_attack_%d.wav"), rand() % 15 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, 1.f);
 			}
 			else if (!m_bIsAttacking)
 				m_eState = STATE::IDLE;
@@ -574,6 +600,12 @@ _float CSpiderWarrior::Take_Damage(float fDamage, void * DamageType, CGameObject
 			return OBJ_NOEVENT;
 		if (!m_bDead)
 			m_bHit = true;
+		else
+		{
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("Spider_death_%d.wav"), rand() % 3 + 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, 1.f);
+		}
 
 		m_bIsAttacking = false;
 		m_dwAttackTime = GetTickCount();
