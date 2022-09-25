@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Particle.h"
 #include "GameInstance.h"
+#include "Player.h"
 
 CParticle::CParticle(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -176,10 +177,93 @@ void CParticle::Set_ShaderID()
 
 	if (pGameObject->Get_Dead())
 		m_eShaderID = SHADER_DEAD;
+	else if (dynamic_cast<CPlayer*>(pGameObject)->Get_WeaponType() == WEAPON_LIGHT)
+		m_eShaderID = SHADER_DARKWITHLIGHT;
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
+	else if (iLevel == LEVEL_BOSS)
+		m_eShaderID = SHADER_FIRE;
 	else
 		m_eShaderID = SHADER_DAYCYClE;
+}
+
+void CParticle::Set_ShaderColor()
+{
+	if(m_eDayState == DAY_MORNING)
+	{
+
+		m_fDinnerMinRange += 0.01f;
+		if (m_fDinnerMinRange >= 10.f)
+			m_fDinnerMinRange = 10.f;
+
+		m_fDinnerMaxRange = m_fDinnerMinRange + 10.f;
+
+		if (m_fNightAlpha <= 0.0f)
+			m_fNightAlpha = 0.0f;
+		else
+			m_fNightAlpha -= 0.01f;
+
+		if (m_fNightAlpha == 0.0f)
+		{
+			if (m_fNightDelta <= 0.0f)
+				m_fNightDelta = 0.0f;
+			else
+				m_fNightDelta -= 0.002f;
+		}
+	}
+	else if (m_eDayState == DAY_DINNER)
+	{
+
+		m_fDinnerMinRange -= 0.01f;
+		if (m_fDinnerMinRange <= 6.f)
+			m_fDinnerMinRange = 6.f;
+
+		m_fDinnerMaxRange = m_fDinnerMinRange + 10.f;
+
+		if (m_fDinnerDelta >= 0.1f)
+			m_fDinnerDelta = 0.1f;
+		else
+			m_fDinnerDelta += 0.001f;
+
+		m_fNightAlpha += 0.01f;
+
+		if (m_fNightAlpha >= 0.2f)
+			m_fNightAlpha = 0.2f;
+	}
+	else if (m_eDayState == DAY_NIGHT)
+	{
+		m_fDinnerMinRange -= 0.01f;
+		if (m_fDinnerMinRange <= 2.f)
+			m_fDinnerMinRange = 2.f;
+
+		m_fDinnerMaxRange = m_fDinnerMinRange + 10.f;
+
+		if (m_fDinnerDelta <= 0.0f)
+			m_fDinnerDelta = 0.0f;
+		else
+			m_fDinnerDelta -= 0.001f;
+
+
+		m_fNightAlpha += 0.01f;
+
+		if (m_fNightAlpha >= 1.f)
+			m_fNightAlpha = 1.f;
+
+		if (m_fNightAlpha == 1.f)
+		{
+			if (m_fNightDelta >= 0.1f)
+				m_fNightDelta = 0.1f;
+			else
+				m_fNightDelta += 0.002f;
+		}
+	}
+
+
+	m_pShaderCom->Set_RawValue("g_fDinnerMinRange", &m_fDinnerMinRange, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fDinnerMaxRange", &m_fDinnerMaxRange, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fDinnerDelta", &m_fDinnerDelta, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fNightDelta", &m_fNightDelta, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fNightDarkAlpha", &m_fNightAlpha, sizeof(_float));
 }
 
 CParticle * CParticle::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

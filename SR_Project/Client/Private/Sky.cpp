@@ -247,8 +247,11 @@ void CSky::Free()
 {
 	__super::Free();
 
+	CDayCycle::Get_Instance()->RemoveObserver(this);
+
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pShaderCom);
 }

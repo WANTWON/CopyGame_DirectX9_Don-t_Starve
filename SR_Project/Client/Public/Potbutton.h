@@ -84,7 +84,7 @@ private:
 	bool m_bpontcheck = true;
 	bool m_bcheck_bag = false;
 	MAKEWHAT m_makewhat = MAKE_END;
-
+	_bool	m_bCookStart = false;
 	_uint texnum = 0;
 
 	TOOLTYPE  m_tooltype = TOOL_END;

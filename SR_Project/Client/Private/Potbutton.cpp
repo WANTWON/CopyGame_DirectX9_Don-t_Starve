@@ -123,6 +123,11 @@ int CPotbutton::Tick(_float fTimeDelta)
 				Safe_Release(pinv);*/
 				_uint random = rand()%2 + 1;
 				m_pCookPot->Start_Cooking();
+				if (!m_bCookStart)
+				{
+					m_dwTime = GetTickCount();
+					m_bCookStart = true;
+				}
 
 				CGameInstance* pInstance = CGameInstance::Get_Instance();
 				if(random == 1)
@@ -130,34 +135,11 @@ int CPotbutton::Tick(_float fTimeDelta)
 				else
 				pInstance->PlaySounds(TEXT("cook2.wav"), SOUND_UI, 0.9f);
 
-			//	if (GetTickCount() > m_dwTime + 1500)
-			//	{
-					//m_dwTime = GetTickCount();
-
-					//m_pCookPot->End_Cooking();
-					foreffect		effectdesc;
-					ZeroMemory(&effectdesc, sizeof(foreffect));
-
-					effectdesc.pos = m_pCookPot->Get_Position();
-					effectdesc.pos.y += 1.25f;
-					effectdesc.itemname = craft();
-
-
-					CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Poteffect"), LEVEL_GAMEPLAY, TEXT("Layer_Poteffect"), &effectdesc)))
-						return OBJ_NOEVENT;
-
-
-					pinv->Off_pot();
-			//	}
-				
 				// Timer 2/3 seconds OVER 
 				
-			//	m_Pot.front()->set_closepot();
+				pinv->Off_pot();
 
 			}
-
 		}
 		else
 		{
@@ -166,18 +148,30 @@ int CPotbutton::Tick(_float fTimeDelta)
 
 			m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+		}	
+
+		if (GetTickCount() > m_dwTime + 4000 && m_bCookStart)
+		{
+			m_dwTime = GetTickCount();
+			m_pCookPot->End_Cooking();
+			foreffect		effectdesc;
+			ZeroMemory(&effectdesc, sizeof(foreffect));
+			m_bCookStart = false;
+			effectdesc.pos = m_pCookPot->Get_Position();
+			effectdesc.pos.y += 1.25f;
+			effectdesc.itemname = craft();
+
+
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Poteffect"), LEVEL_GAMEPLAY, TEXT("Layer_Poteffect"), &effectdesc)))
+				return OBJ_NOEVENT;
+			//pinv->Off_pot();
 		}
-			
-
-
-
-
-		//if()
-
 	}
 
-
-
+	
+	
 	
 	return OBJ_NOEVENT;
 }

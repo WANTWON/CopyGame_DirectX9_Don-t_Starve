@@ -137,6 +137,9 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 
 	Set_ShaderID();
 
+	if (m_bConstruct)
+		m_eShaderID = SHADER_CONSTRUCT;
+
 }
 
 HRESULT CWoodWall::Render()

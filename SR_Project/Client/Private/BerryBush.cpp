@@ -59,17 +59,22 @@ HRESULT CBerryBush::Render()
 
 void CBerryBush::Interact(_uint Damage)
 {
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
 	if (m_eState < PICKED)
 	{
 		m_bInteract = false;
 		m_eState = PICK;
+		pGameInstance->PlaySounds(TEXT("DS_Snake_bush_01.wav"), SOUND_OBJECT, 0.5f);
 		Drop_Items();
 	}
 	else if (m_bInteract == false)
 	{
+		pGameInstance->PlaySounds(TEXT("DST_Bush_grow.wav"), SOUND_OBJECT, 0.5f);
 		m_bInteract = true;
 		m_eState = IDLE;
 	}
+	Safe_Release(pGameInstance);
 }
 
 HRESULT CBerryBush::Drop_Items()

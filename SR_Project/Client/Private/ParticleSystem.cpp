@@ -103,10 +103,27 @@ HRESULT CParticleSystem::Render()
 {
 	if (nullptr == m_pVBuffer)
 		return E_FAIL;
-	if (FAILED(__super::Render()))
+
+	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 		return E_FAIL;
 
-	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
+		return E_FAIL;
+
+	//m_pTextureCom->MoveFrame(TEXT(""), false);
+
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	if (FAILED(Render_VIBuffer()))
+		return E_FAIL;
+
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+
+	return S_OK;
+
+	/*_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
 
 	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
@@ -120,7 +137,7 @@ HRESULT CParticleSystem::Render()
 
 	m_pShaderCom->Begin(m_eShaderID);
 
-	m_pShaderCom->End();
+	m_pShaderCom->End();*/
 
 	return S_OK;
 }

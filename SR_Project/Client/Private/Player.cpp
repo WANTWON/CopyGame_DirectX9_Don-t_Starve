@@ -1330,18 +1330,18 @@ void CPlayer::Mining(_float _fTimeDelta)
 		ParticleDesc.eType = CParticleSystem::PARTICLE_ROCK;
 		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
 		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Rock");
-		ParticleDesc.dDuration = 0.2; //  ƼŬ  ð 
-		ParticleDesc.dParticleLifeTime = 0.2; //    
+		ParticleDesc.dDuration = 0.4; //  ƼŬ  ð 
+		ParticleDesc.dParticleLifeTime = 0.4; //    
 		ParticleDesc.dSpawnTime = 1; //     Ÿ  
 		ParticleDesc.fParticlePerSecond = 75;
 		ParticleDesc.fVelocityDeviation = 1.f;
-		ParticleDesc.iMaxParticleCount = 5;
+		ParticleDesc.iMaxParticleCount = 7;
 		ParticleDesc.vParticleScale = _float2(0.5, 0.5);
 		ParticleDesc.vParticleDeviation = _float3(1 * 0.6f, 0.f, 1 * 0.6f);
 		ParticleDesc.iTextureNum = 1;
 		ParticleDesc.vVelocity = _float3((rand() % 10)*0.1f, (rand() % 10) * 0.1f, rand() % 10 * 0.1f);
 		ParticleDesc.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		ParticleDesc.vPosition.z += (_float)0.001;
+		ParticleDesc.vPosition.z += (_float)0.1;
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_ParticleSystem"), ParticleDesc.eTextureScene, TEXT("Layer_Particle"), &ParticleDesc)))
 			return;

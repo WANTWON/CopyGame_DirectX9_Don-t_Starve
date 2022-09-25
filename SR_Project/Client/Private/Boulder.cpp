@@ -57,7 +57,10 @@ int CBoulder::Tick(_float fTimeDelta)
 			{
 				m_bInteract = false;
 				m_eState = BROKEN;
-
+				if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Mine_IceBoulder_smash.wav"), SOUND_OBJECT, 0.5f);
+				}
 				Drop_Items();
 			}
 		}
@@ -92,13 +95,27 @@ HRESULT CBoulder::Render()
 
 void CBoulder::Interact(_uint Damage)
 {
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
 	if (m_tInfo.iCurrentHp == 0)
 		return;
 
 	if (Damage > m_tInfo.iCurrentHp) 
 		m_tInfo.iCurrentHp = 0;
-	else 
+	else
+	{
 		m_tInfo.iCurrentHp -= Damage;
+
+		if (pGameInstance->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+		{
+			_tchar	szFullPath[MAX_PATH] = TEXT("Mine_IceBoulder_%d.wav");
+			_uint i = rand() % 5 + 1;
+			wsprintf(szFullPath, szFullPath, i);
+			pGameInstance->PlaySounds(szFullPath, SOUND_OBJECT, 0.5f);
+		}
+		
+	}
+	Safe_Release(pGameInstance);
 }
 
 HRESULT CBoulder::Drop_Items()

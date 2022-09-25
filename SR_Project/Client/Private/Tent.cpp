@@ -35,6 +35,7 @@ HRESULT CTent::Initialize(void* pArg)
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::TENT;
 
 	m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+	m_fRadius = 1.5f;
 
 	return S_OK;
 }
@@ -48,6 +49,7 @@ int CTent::Tick(_float fTimeDelta)
 		_float3 vPickingPos = CPickingMgr::Get_Instance()->Get_PickingPos();
 		vPickingPos.y += m_fRadius;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPickingPos);
+		
 	}
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -61,6 +63,9 @@ void CTent::Late_Tick(_float fTimeDelta)
 
 	Change_Motion();
 	Change_Frame(fTimeDelta);
+
+	if(m_bConstruct)
+		m_eShaderID = SHADER_CONSTRUCT;
 }
 
 HRESULT CTent::Render()
