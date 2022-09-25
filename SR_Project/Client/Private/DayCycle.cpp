@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\DayCycle.h"
+#include "GameInstance.h"
 
 
 IMPLEMENT_SINGLETON(CDayCycle);
@@ -21,9 +22,20 @@ void CDayCycle::DayCycleTick()
 			NotifyObserver();
 			break;
 		case Client::DAY_DINNER:
+		{
+			_uint random = rand() % 2 + 1;
+
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			if (random == 1)
+				pInstance->PlaySounds(TEXT("changetonight.wav"), SOUND_UI, 0.9f);
+			else
+				pInstance->PlaySounds(TEXT("changetonight2.wav"), SOUND_UI, 0.9f);
 			m_eDayState = DAY_NIGHT;
 			NotifyObserver();
 			break;
+		}
+			
+			
 		case Client::DAY_NIGHT:
 			m_eDayState = DAY_MORNING;
 			NotifyObserver();

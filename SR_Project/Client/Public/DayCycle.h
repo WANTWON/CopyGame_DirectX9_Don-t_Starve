@@ -24,6 +24,8 @@ public:
 	virtual void RemoveObserver(CObserver *observer) override;
 	virtual void NotifyObserver() override;
 
+	DAY_STATE Get_DayState() { return m_eDayState; }
+
 private:
 	//void NotifyObserver();
 

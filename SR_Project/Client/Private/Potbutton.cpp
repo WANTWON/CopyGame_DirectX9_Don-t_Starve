@@ -121,7 +121,14 @@ int CPotbutton::Tick(_float fTimeDelta)
 				/*craft(m_makewhat);
 				pinv->update_craftpont();
 				Safe_Release(pinv);*/
+				_uint random = rand()%2 + 1;
 				m_pCookPot->Start_Cooking();
+
+				CGameInstance* pInstance = CGameInstance::Get_Instance();
+				if(random == 1)
+				pInstance->PlaySounds(TEXT("cook1.wav"), SOUND_UI, 0.9f);
+				else
+				pInstance->PlaySounds(TEXT("cook2.wav"), SOUND_UI, 0.9f);
 
 			//	if (GetTickCount() > m_dwTime + 1500)
 			//	{
