@@ -185,10 +185,12 @@ HRESULT CTerrorbeak::Texture_Clone()
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_UP"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Attack_Up"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
+	TextureDesc.m_fSpeed = 20;
 	TextureDesc.m_iEndTex = 13;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_DISAPPEAR"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Disappear"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
+	TextureDesc.m_fSpeed = 30;
 	TextureDesc.m_iEndTex = 42;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_IDLE_DOWN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Idle_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
@@ -543,7 +545,7 @@ void CTerrorbeak::Attack(_float fTimeDelta)
 				// Play Attack Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("terrorbeak_attack_%03d.wav"), rand() % 6);
-				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .3f);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .2f);
 
 				m_bFirstFrame = false;
 			}
@@ -591,10 +593,10 @@ _float CTerrorbeak::Take_Damage(float fDamage, void * DamageType, CGameObject * 
 		{
 			m_bHit = true;
 
-			// Play Hit Sound
-			_tchar szFileName[MAX_PATH] = TEXT("");
-			wsprintf(szFileName, TEXT("terrorbeak_hit_%03d.wav"), rand() % 6);
-			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .3f);
+			//// Play Hit Sound
+			//_tchar szFileName[MAX_PATH] = TEXT("");
+			//wsprintf(szFileName, TEXT("terrorbeak_hit_%03d.wav"), rand() % 6);
+			//pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .2f);
 		}
 		else
 		{
