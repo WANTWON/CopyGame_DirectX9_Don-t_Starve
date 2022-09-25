@@ -735,11 +735,13 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMFPSMODE]))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("getitem.wav"), SOUND_UI, 0.9f);
 		Set_FPSMode(true);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_FPS);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMTPSMODE]))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("getitem.wav"), SOUND_UI, 0.9f);
 		Set_FPSMode(false);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
 	}
@@ -749,7 +751,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
 		else
 		{
-
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("getitem.wav"), SOUND_UI, 0.9f);
 			CCameraManager::Get_Instance()->PlayerCamera_TurnLeft(m_iCurrentLevelndex);
 			Turn_OriginMat(false);
 			SetUp_BillBoard();
@@ -768,6 +770,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
 		else
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("getitem.wav"), SOUND_UI, 0.9f);
 			CCameraManager::Get_Instance()->PlayerCamera_TurnRight(m_iCurrentLevelndex);
 			Turn_OriginMat(true);
 			SetUp_BillBoard();

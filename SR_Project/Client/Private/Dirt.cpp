@@ -77,6 +77,7 @@ void CDirt::Interact(_uint Damage)
 	Drop_Items();
 
 	m_eState = STATE::EMPTY;
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("getitem.wav"), SOUND_OBJECT, 0.9f);
 }
 
 HRESULT CDirt::Drop_Items()
