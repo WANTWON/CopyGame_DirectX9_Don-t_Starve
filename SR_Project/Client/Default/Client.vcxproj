@@ -211,6 +211,7 @@
     <ClInclude Include="..\public\Dirt.h" />
     <ClInclude Include="..\Public\Dmgpont.h" />
     <ClInclude Include="..\Public\Eatitem.h" />
+    <ClInclude Include="..\Public\Endingscene.h" />
     <ClInclude Include="..\Public\Equipment_back.h" />
     <ClInclude Include="..\Public\Equipment_front.h" />
     <ClInclude Include="..\Public\Equip_Animation.h" />
@@ -364,6 +365,7 @@
     <ClCompile Include="..\private\Dirt.cpp" />
     <ClCompile Include="..\Private\Dmgpont.cpp" />
     <ClCompile Include="..\Private\Eatitem.cpp" />
+    <ClCompile Include="..\Private\Endingscene.cpp" />
     <ClCompile Include="..\Private\Equipment_back.cpp" />
     <ClCompile Include="..\Private\Equipment_front.cpp" />
     <ClCompile Include="..\Private\Equip_Animation.cpp" />

@@ -42,7 +42,7 @@ private:
 	_bool m_bFlowerPicked = false;
 	_bool m_bPlayerCam = false;
 	_bool m_bPuzzleSolved = false;
-	_bool m_bPuzzleStart[6] = { false };
+	_bool m_bPuzzleStart[7] = { false };
 public:
 	static CLevel_Maze* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;

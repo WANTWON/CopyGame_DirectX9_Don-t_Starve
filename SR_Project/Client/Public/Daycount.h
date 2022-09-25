@@ -28,6 +28,7 @@ public:
 
 private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
+	
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;

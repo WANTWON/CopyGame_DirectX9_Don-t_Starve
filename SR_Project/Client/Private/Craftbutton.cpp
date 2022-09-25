@@ -111,7 +111,7 @@ int CCraftbutton::Tick(_float fTimeDelta)
 		if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
 			CGameInstance* pInstance = CGameInstance::Get_Instance();
-			pInstance->PlaySounds(TEXT("makeitem.wav"), SOUND_UI, 0.9f);
+			pInstance->PlaySounds(TEXT("makeitem.wav"), SOUND_UI, 0.6f);
 			craft(m_makewhat);
 			pinv->update_craftpont();
 			//	Safe_Release(pinv);

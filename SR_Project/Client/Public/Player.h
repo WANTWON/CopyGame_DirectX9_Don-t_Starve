@@ -317,6 +317,7 @@ private: // Test
 
 	_float m_fHungertime = 0.f;
 	_float m_fMentalitytime = 0.f;
+	_float m_fMentalitytime2 = 0.f;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

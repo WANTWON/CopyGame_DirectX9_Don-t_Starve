@@ -349,6 +349,9 @@
     <Filter Include="94.DayCycleObserver">
       <UniqueIdentifier>{0627af43-4c02-46cc-b405-1301015a13e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\21.Endingscene">
+      <UniqueIdentifier>{2ea33c09-5c6b-4a4d-b1cd-b3c60b9ba0c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -810,6 +813,9 @@
     <ClInclude Include="..\Public\DayCycle.h">
       <Filter>94.DayCycleObserver</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Endingscene.h">
+      <Filter>02.GameObject\98.UI\21.Endingscene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1258,6 +1264,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\DayCycle.cpp">
       <Filter>94.DayCycleObserver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Endingscene.cpp">
+      <Filter>02.GameObject\98.UI\21.Endingscene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

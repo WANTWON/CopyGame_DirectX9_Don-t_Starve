@@ -14,6 +14,7 @@
 #include "Dirt.h"
 #include "CarnivalMemory.h"
 #include "Cardgame.h"
+#include "Inventory.h"
 
 CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -301,7 +302,7 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 		for (int j = 0; j < 3; ++j)
 		{
 			CardDesc.iNumber = i*3 + j;
-			CardDesc.pos = _float3(22.f + 3.f*i, 0.1f, 22.f + 3.f*j);
+			CardDesc.pos = _float3(22.f + 3.f*i, 0.5f, 22.f + 3.f*j);
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_MAZE, TEXT("Layer_Card"), &CardDesc)))
 				return E_FAIL;
 		}
@@ -496,6 +497,23 @@ void CLevel_Maze::Update_Floor_Motion()
 		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_BIRD;
 		StationDesc.vInitPosition = _float3(9.5f, 0.f, 24.f);
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+	}
+
+	else if ((pGameObject->Get_Position().x < 20) && (pGameObject->Get_Position().z < 26) && (pGameObject->Get_Position().z > 25) && !m_bPuzzleStart[6])
+	{
+		// cardgame
+		CDecoObject::DECODECS  DecoDesc;
+		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
+		DecoDesc.vInitPosition = _float3(25.f, 0.f, 25.f);
+		DecoDesc.fRotate = 1.f;
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		m_bPuzzleStart[6] = true;
+
+		CInventory_Manager::Get_Instance()->Start_Cardgame();
+		
+
+
+
 	}
 }
 

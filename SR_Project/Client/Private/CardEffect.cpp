@@ -82,7 +82,7 @@ int CCardEffect::Tick(_float fTimeDelta)
 
 	}
 
-	if (m_bdead == true)
+	if (!thunder == m_bdead == true )
 	{
 		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 		pinv->plus_cardgamecount();

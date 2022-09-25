@@ -111,6 +111,8 @@ void CDeadcountpont::Late_Tick(_float fTimeDelta)
 		if (GetTickCount() > m_dwdeadcount + 1000)
 		{
 			--count;
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			pInstance->PlaySounds(TEXT("deadcountsound.wav"), SOUND_UI, 0.7f);
 			m_dwdeadcount = GetTickCount();
 		}
 

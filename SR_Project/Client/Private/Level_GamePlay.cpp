@@ -66,6 +66,8 @@ HRESULT CLevel_GamePlay::Initialize()
 		if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_UI"))))
 			return E_FAIL;
 
+		CGameInstance::Get_Instance()->StopAll();
+
 		g_bUIMadefirst = true;
 	}
 
@@ -674,7 +676,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 	
 	
 	
-	
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Endingscene"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
 
 	
 	

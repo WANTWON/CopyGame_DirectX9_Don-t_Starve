@@ -18,6 +18,8 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+	CGameInstance::Get_Instance()->PlayBGM(L"Logosong.wav", 0.5f);
+
 	//if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 	//	return E_FAIL;
 
