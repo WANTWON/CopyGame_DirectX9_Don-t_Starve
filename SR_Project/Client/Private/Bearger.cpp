@@ -889,6 +889,15 @@ void CBearger::Attack(_bool bIsSpecial)
 
 		m_bFirstFrame = false;
 	}
+	else if (!bIsSpecial && m_pTextureCom->Get_Frame().m_iCurrentTex == 30 && m_bFirstFrame)
+	{
+		// Play Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("bearger_swhoosh_%d.wav"), rand() % 4 + 1);
+		pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+		
+		m_bFirstFrame = false;
+	}
 	else if (!bIsSpecial && m_pTextureCom->Get_Frame().m_iCurrentTex == 33 && m_bFirstFrame)
 	{
 		// Create Standard Bullet
