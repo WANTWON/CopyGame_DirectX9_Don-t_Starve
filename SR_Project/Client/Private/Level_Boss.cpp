@@ -20,6 +20,7 @@ CLevel_Boss::CLevel_Boss(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 HRESULT CLevel_Boss::Initialize()
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 

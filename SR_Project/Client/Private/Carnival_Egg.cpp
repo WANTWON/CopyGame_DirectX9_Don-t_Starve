@@ -44,6 +44,7 @@ int CCarnival_Egg::Tick(_float fTimeDelta)
 
 	if (__super::Tick(fTimeDelta))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Turn_Off_Carnival_Eggrides_DST_01.wav"), SOUND_MONSTER_VOICE, 0.5f);
 		
 		return OBJ_DEAD;
 	}
@@ -238,11 +239,20 @@ void CCarnival_Egg::Change_Frame(_float fTimeDelta)
 
 void CCarnival_Egg::Change_Motion()
 {
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
 	if (m_eState != m_ePreState || m_eDir != m_ePreDir)
 	{
 		switch (m_eState)
 		{
 		case STATE::IDLE:
+		{
+			pGameInstance->StopSound(SOUND_MONSTER_EFFECT);
+			_tchar szFullPath[MAX_PATH] = TEXT("LP_Carnival_Eggrides_DST_%02d.wav");
+			_uint i = rand() % 3 + 1;
+			wsprintf(szFullPath, szFullPath, i);
+			pGameInstance->PlaySounds(szFullPath, SOUND_MONSTER_EFFECT, 0.5f);
+
 			switch (m_eDir)
 			{
 			case DIR_STATE::DIR_UP:
@@ -260,7 +270,11 @@ void CCarnival_Egg::Change_Motion()
 			if (m_eDir != m_ePreDir)
 				m_ePreDir = m_eDir;
 			break;
+		}
 		case STATE::WALK:
+		{
+			pGameInstance->PlaySounds(TEXT("Place3_Carnival_Eggrides_DST_04.wav"), SOUND_MONSTER_EFFECT, 0.3f);
+			
 			switch (m_eDir)
 			{
 			case DIR_STATE::DIR_UP:
@@ -277,6 +291,7 @@ void CCarnival_Egg::Change_Motion()
 			if (m_eDir != m_ePreDir)
 				m_ePreDir = m_eDir;
 			break;
+		}
 		case STATE::COMPLETE:
 			m_pMemory->Set_EggCount();
 			Change_Texture(TEXT("Com_Texture_COMPLETE"));
@@ -326,6 +341,8 @@ void CCarnival_Egg::Patrol(_float fTimeDelta)
 		{
 			m_eState = STATE::WALK;
 			m_dwWalkTime = GetTickCount();
+
+
 
 			// Find Random Patroling Position
 			_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;

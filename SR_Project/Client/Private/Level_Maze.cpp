@@ -23,6 +23,7 @@ CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 HRESULT CLevel_Maze::Initialize()
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
@@ -417,7 +418,11 @@ void CLevel_Maze::Update_Camera_Motion()
 
 void CLevel_Maze::Update_Floor_Motion()
 {
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+
 
 	if ((pGameObject->Get_Position().x > 35 && !m_bPuzzleStart[0]))
 	{
@@ -426,7 +431,7 @@ void CLevel_Maze::Update_Floor_Motion()
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 9.f);
 		DecoDesc.fRotate = 0.f;
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[0] = true;
 	}
 	else if ((pGameObject->Get_Position().x > 35) && (pGameObject->Get_Position().z > 20) && !m_bPuzzleStart[1])
@@ -446,11 +451,11 @@ void CLevel_Maze::Update_Floor_Motion()
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.fRotate = 5.f;
 		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 42.f);
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 
 		DecoDesc.fRotate = 2.f;
 		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 38.f);
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[2] = true;
 	}
 	else if ((pGameObject->Get_Position().x < 28) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[3])
@@ -460,13 +465,13 @@ void CLevel_Maze::Update_Floor_Motion()
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.vInitPosition = _float3(25.f, 0.f, 40.f);
 		DecoDesc.fRotate = 3.f;
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[3] = true;
 
 		CCarnivalMemory::STATIONDESC StationDesc;
 		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_MEMORY;
 		StationDesc.vInitPosition = _float3(25.00f, 0.f, 41.8f);
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
 	}
 	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[4])
 	{
@@ -474,14 +479,16 @@ void CLevel_Maze::Update_Floor_Motion()
 		CCarnivalMemory::STATIONDESC StationDesc;
 		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_EGG;
 		StationDesc.vInitPosition = _float3(9.5f, 0.f, 40.f);
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+		
 
 		CDecoObject::DECODECS  DecoDesc;
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.vInitPosition = _float3(9.5f, 0.f, 40.f);
 		DecoDesc.fRotate = 4.f;
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[4] = true;
+		pGameInstance->PlaySounds(TEXT("Place_Carnivalgame_Herding_Station_DST_01.wav"), SOUND_OBJECT, 0.5f);
 	}
 	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z < 27) && (pGameObject->Get_Position().z > 20) && !m_bPuzzleStart[5])
 	{
@@ -490,31 +497,22 @@ void CLevel_Maze::Update_Floor_Motion()
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.vInitPosition = _float3(9.5f, 0.f, 24.f);
 		DecoDesc.fRotate = 1.f;
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[5] = true;
 
 		CCarnivalMemory::STATIONDESC StationDesc;
 		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_BIRD;
 		StationDesc.vInitPosition = _float3(9.5f, 0.f, 24.f);
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
 	}
 
 	else if ((pGameObject->Get_Position().x < 20) && (pGameObject->Get_Position().z < 26) && (pGameObject->Get_Position().z > 25) && !m_bPuzzleStart[6])
 	{
 		// cardgame
-		CDecoObject::DECODECS  DecoDesc;
-		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
-		DecoDesc.vInitPosition = _float3(25.f, 0.f, 25.f);
-		DecoDesc.fRotate = 1.f;
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
-		m_bPuzzleStart[6] = true;
-
 		CInventory_Manager::Get_Instance()->Start_Cardgame();
-		
-
-
-
 	}
+
+	Safe_Release(pGameInstance);
 }
 
 void CLevel_Maze::Update_Fence_Motion()
