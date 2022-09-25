@@ -60,8 +60,10 @@ HRESULT CPortal::Initialize(void* pArg)
 		m_fOpenRadius = 3.f;
 
 		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
-	}
 
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("boss_portal_loop.wav"), SOUND_ID::SOUND_OBJECT, .6f);
+	}
+	
 	return S_OK;
 }
 
@@ -340,9 +342,15 @@ void CPortal::AI_Behaviour()
 		else
 		{
 			if (Check_Target() && m_eState != STATE::IDLE_OPEN && m_eState != STATE::OPENING)
+			{
 				m_eState = STATE::OPENING;
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("teleportworm_open.wav"), SOUND_ID::SOUND_OBJECT, .8f);
+			}
 			else if (!Check_Target() && (m_eState == STATE::IDLE_OPEN || m_eState == STATE::OPENING))
+			{
 				m_eState = STATE::CLOSING;
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("teleportworm_close.wav"), SOUND_ID::SOUND_OBJECT, .8f);
+			}
 		}
 	}
 }
@@ -374,6 +382,8 @@ void CPortal::Interact(_uint Damage)
 {
 	m_bInteract = false;
 	m_bShouldClosePortal = true;
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("teleportworm_swallow.wav"), SOUND_ID::SOUND_OBJECT, .8f);
 }
 
 HRESULT CPortal::Drop_Items()

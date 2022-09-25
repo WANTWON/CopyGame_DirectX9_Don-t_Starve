@@ -248,9 +248,6 @@ void CTent::Change_Motion()
 			break;
 		case STATE::PLACE:
 			Change_Texture(TEXT("Com_Texture_PLACE"));
-			
-			// Play Sound
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("tent_place.wav"), SOUND_ID::SOUND_OBJECT, .8f);
 			break;
 		case STATE::ENTER:
 			Change_Texture(TEXT("Com_Texture_ENTER"));

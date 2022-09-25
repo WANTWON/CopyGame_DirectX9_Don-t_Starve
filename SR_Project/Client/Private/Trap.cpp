@@ -359,6 +359,11 @@ void CTrap::Check_Collision()
 
 			CGameInstance::Apply_Damage_Multi(m_iDamage, vCollided, this, nullptr);
 			m_bDidDamage = true;
+
+			// Play Trap Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("trap_close_%d.wav"), rand() % 3 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .7f);
 		}
 	}
 }
