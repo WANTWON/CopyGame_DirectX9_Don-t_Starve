@@ -40,6 +40,9 @@ public:
 	virtual HRESULT Drop_Items() override;
 	virtual	void	Make_Interrupt(CPawn* pCauser, _uint _InterruptNum);
 	virtual _float Take_Damage(float fDamage, void* DamageType, CGameObject* DamageCauser) override;
+
+	virtual _bool	Get_CanSkill(void) override;
+	virtual _bool	Get_CanAttack(void) override;
 private:/*Func for BT*/
 	CBT_NPC* BehaviorTree = nullptr;
 public:/*for Actions*/
@@ -51,6 +54,8 @@ public:/*for Actions*/
 	virtual void	Attack(_float _fTimeDelta) override;
 	virtual void	Interrupted(_float _fTimeDelta) override;
 	virtual void	Skill(_float _fTimeDelta) override;
+	virtual _bool	Hit(_float _fTimeDelta) override;
+	virtual _bool	Dead(_float _fTimeDelta) override;
 
 	virtual void	Select_Target(_float _fTimeDelta) override;
 	virtual void	Set_RandPos(_float _fTimeDelta) override;
@@ -64,6 +69,8 @@ private:
 	void	Create_Heal(_float _fTimeDelta);
 	void	MoveWithOwner(_float _fTimeDelta);
 	void	MoveWithoutOwner(_float _fTimeDelta);
+	void	Select_HealTarget(_float _fTimeDelta);
+	void	Select_ReviveTarget(void);
 public:
 	DIR_STATE Check_Direction(void);
 private://FindPriority
@@ -74,7 +81,7 @@ private://FindPriority
 	void		Find_Player();
 
 private:
-
+	CGameObject*	m_pHeal_Target = nullptr;
 
 public:
 	static CWendy* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

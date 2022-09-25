@@ -99,11 +99,6 @@ int CWoodie::Tick(_float fTimeDelta)
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 	}
 
-	if (m_bDead)
-	{
-		return OBJ_NOEVENT;
-	}
-
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PLAYER, this);
 
@@ -125,13 +120,14 @@ void CWoodie::Late_Tick(_float fTimeDelta)
 	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
 		return;
 
+
+	__super::Late_Tick(fTimeDelta);
+
+	Change_Frame(fTimeDelta);
 	if (m_bDead)
 	{
 		return;
 	}
-
-	__super::Late_Tick(fTimeDelta);
-	m_pTextureCom->MoveFrame(m_TimerTag);
 
 	if (m_eCur_Dir == DIR_STATE::DIR_LEFT)
 	{
@@ -202,7 +198,7 @@ HRESULT CWoodie::SetUp_Components(void * pArg)
 
 	TransformDesc.fSpeedPerSec = 3.f / 1.13f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(0.f);
-	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);;
+	TransformDesc.InitPos = _float3(45.f, 2.f, 30.f);;
 
 
 
@@ -321,11 +317,35 @@ HRESULT CWoodie::Texture_Clone()
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Attack_Side"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Attack_Side"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
+
+	/*Dead*/
+	TextureDesc.m_iEndTex = 55;
+	TextureDesc.m_fSpeed = 30;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Dead"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Dead"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	/*Hit*/
+	TextureDesc.m_iEndTex = 22;
+	TextureDesc.m_fSpeed = 30;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hit"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
 	return S_OK;
 }
 
 void CWoodie::Change_Frame(_float fTimeDelta)
 {
+	if (m_eState == NPC_STATE::DEAD)
+	{
+		m_pTextureCom->MoveFrame(m_TimerTag, false);
+	}
+	else
+	{
+		m_pTextureCom->MoveFrame(m_TimerTag);
+	}
+
 }
 
 void CWoodie::Change_Motion()
@@ -381,14 +401,15 @@ void CWoodie::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 
 _float CWoodie::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
-	if (m_tInfo.iCurrentHp <= (_int)fDamage)
+	if (!m_bDead && m_tInfo.iCurrentHp <= (_int)fDamage)
 	{
 		m_bDead = true;
 	}
-	else
+	else if(!m_bDead &&!m_bHited)
 	{
 		m_tInfo.iCurrentHp -= (_int)fDamage;
 		cout << "WoodieHP: " << m_tInfo.iCurrentHp << endl;
+		m_bHited = true;
 	}
 	return fDamage;
 }
@@ -545,7 +566,6 @@ void CWoodie::Interrupted(_float _fTimeDelta)
 		case 0://TalkMode
 			Clear_Activated();
 			m_bFirstCall = true;
-			m_bArrive = true;
 			m_bInteract = true;
 			m_bInterrupted = false;
 			m_bSelectAct = false;
@@ -613,14 +633,51 @@ void CWoodie::Skill(_float _fTimeDelta)
 	}
 }
 
+_bool CWoodie::Hit(_float _fTimeDelta)
+{
+	m_fInteractTIme += _fTimeDelta;
+
+	m_eState = CNPC::HIT;
+
+	if (m_ePreState != m_eState)
+	{
+		m_bInteract = true;
+		Change_Texture(TEXT("Com_Texture_Hit"));
+		m_ePreState = m_eState;
+	}
+	
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex -1)
+	{
+		Clear_Activated();
+		m_bHited = false;
+	}
+	return true;
+}
+
+_bool CWoodie::Dead(_float _fTimeDelta)
+{
+	m_eState = CNPC::DEAD;
+
+	if (m_ePreState != m_eState)
+	{
+		//m_bInteract = true;
+		Change_Texture(TEXT("Com_Texture_Dead"));
+		m_ePreState = m_eState;
+	}
+
+	//if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	//{
+	//	m_bHited = false;
+	//}
+	return true;
+}
+
 void CWoodie::Select_Target(_float _fTimeDelta)
 {
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return;
 
 	Find_Priority();
-
-	m_bArrive = false;
 	m_bInteract = true;
 }
 
@@ -634,7 +691,6 @@ void CWoodie::Set_RandPos(_float _fTimeDelta)
 	m_fPatrolPosZ = bSignZ ? (m_pTransformCom->Get_TransformDesc().InitPos.z + fOffsetZ) : (m_pTransformCom->Get_TransformDesc().InitPos.z - fOffsetZ);
 
 	m_vTargetPos = _float3(m_fPatrolPosX, 0.5f, m_fPatrolPosZ);
-	m_bArrive = false;
 	m_bSelectAct = false;
 }
 
@@ -643,20 +699,23 @@ _bool CWoodie::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 	if (m_bSkillUsing)
 		return false;
 
-	_float fRange = 5.f;
+	_float fMinRange = 0.f;
+	_float fMiddleRange = 0.f;
 	_float Compare_Range = 0.f;
 	switch (_iTarget)
 	{
 	case 0: //Target == Owner
+		fMinRange = m_fMinRange;
+		fMiddleRange = m_fOwnerRadius;
 		m_vTargetPos = static_cast<CPlayer*>(m_pOwner)->Set_PartyPostion(this);
 		break;
 	case 1:// Basic AttackRange
+		fMiddleRange = fMinRange = m_fAtkRange;
 		m_vTargetPos = m_pTarget->Get_Position();
 		break;
 	case 2://SkillRange
-		Reset_Target();
-		m_pTarget = m_pOwner;
-		Safe_AddRef(m_pTarget);
+		fMiddleRange = fMinRange = m_fSkillRange;
+
 		m_vTargetPos = m_pTarget->Get_Position();
 		break;
 	default:
@@ -664,7 +723,7 @@ _bool CWoodie::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		{
 			m_vTargetPos = m_pTarget->Get_Position();
 		}
-		fRange = 0.2f;
+		fMiddleRange = fMinRange = 0.2f;
 		break;
 	}
 
@@ -672,64 +731,30 @@ _bool CWoodie::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 	Compare_Range = (m_vTargetPos.x - Get_Pos().x)*(m_vTargetPos.x - Get_Pos().x)
 		+ (m_vTargetPos.z - Get_Pos().z)*(m_vTargetPos.z - Get_Pos().z);
 
-
-	if (m_bFightMode)
-	{
-		if (m_fOwnerRadius < Compare_Range)
-		{
-			Clear_Activated();
-			return true;
-		}
-		else if(m_fMinRange > Compare_Range)
-		{
-			m_bArrive = true;
-			Clear_Activated();
-			return false;
-		}
-	}
-	else
-	{
-		if (m_fMinRange < Compare_Range)
-		{
-			Clear_Activated();
-			return true;
-		}
-		else
-		{
-			m_bArrive = true;
-			Clear_Activated();
-			return false;
-		}
-	}
-
-
-	if (fRange < Compare_Range)
-	{
-		Clear_Activated();
-		return true;
-	}
-	else if (m_fMinRange < Compare_Range && Compare_Range <= fRange)
-	{
-		if (m_bFightMode)
-		{
-			Clear_Activated();
-			return true;
-		}
-		else
-		{
-			m_bArrive = true;
-			Clear_Activated();
-			return false;
-		}
-	}
-	else if(Compare_Range <= m_fMinRange)
+	if (fMinRange > Compare_Range)
 	{
 		m_bArrive = true;
 		Clear_Activated();
 		return false;
 	}
 
-
+	if (m_bFightMode)
+	{
+		if (fMiddleRange < Compare_Range)
+		{
+			m_bArrive = false;
+			Clear_Activated();
+		}
+	}
+	else
+	{	
+		if (fMinRange < Compare_Range)
+		{
+			m_bArrive = false;
+			Clear_Activated();
+		}
+	}
+	return true;
 }
 
 _bool CWoodie::Detect_Enemy()
@@ -793,7 +818,6 @@ void CWoodie::Talk_Player(_float _fTimeDelta)
 	{
 		m_bNextAct = false;
 		m_bInteract = false;
-		m_bArrive = false;
 		return;
 	}
 
@@ -1052,7 +1076,6 @@ void CWoodie::MoveWithOwner(_float _fTimeDelta)
 		if ((abs(vMyPos.x - m_vTargetPos.x) < 0.3 &&
 			abs(vMyPos.z - m_vTargetPos.z) < 0.3))
 		{
-			m_bArrive = true;
 			m_bDirChanged = false;
 		}
 	}
@@ -1062,7 +1085,6 @@ void CWoodie::MoveWithOwner(_float _fTimeDelta)
 		if ((abs(vMyPos.x - m_fPatrolPosX) < 0.3 &&
 			abs(vMyPos.z - m_fPatrolPosZ) < 0.3))
 		{
-			m_bArrive = true;
 			m_bDirChanged = false;
 		}
 	}
@@ -1078,7 +1100,6 @@ void CWoodie::MoveWithoutOwner(_float _fTimeDelta)
 		if ((abs(vMyPos.x - m_vTargetPos.x) < 0.1f &&
 			abs(vMyPos.z - m_vTargetPos.z) < 0.1f))
 		{
-			m_bArrive = true;
 			m_bDirChanged = false;
 		}
 	}
@@ -1088,7 +1109,6 @@ void CWoodie::MoveWithoutOwner(_float _fTimeDelta)
 		if ((abs(vMyPos.x - m_fPatrolPosX) < 0.3 &&
 			abs(vMyPos.z - m_fPatrolPosZ) < 0.3))
 		{
-			m_bArrive = true;
 			m_bDirChanged = false;
 		}
 	}
@@ -1276,20 +1296,8 @@ void CWoodie::Find_Enemy()
 				+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
 
 			_float fOwnerDistance = 0.f;
-			if (m_pOwner)
-			{
-				fOwnerDistance = (m_pOwner->Get_Position().x - (*iter_Obj)->Get_Position().x)*(m_pOwner->Get_Position().x - (*iter_Obj)->Get_Position().x)
-					+ (m_pOwner->Get_Position().z - (*iter_Obj)->Get_Position().z)*(m_pOwner->Get_Position().z - (*iter_Obj)->Get_Position().z);
 
-				if (fOwnerDistance > m_fOwnerRadius*2.f)
-				{
-					++iIndex;
-					iter_Obj++;
-					continue;
-				}
-			}
-
-			if (fCmpDir > m_fDetectRange)
+			if (fCmpDir > m_fOwnerRadius)
 			{
 				++iIndex;
 				iter_Obj++;

@@ -107,6 +107,16 @@ void CNPC::Skill(_float _fTimeDelta)
 {
 }
 
+_bool CNPC::Hit(_float _fTimeDelta)
+{
+	return true;
+}
+
+_bool CNPC::Dead(_float _fTimeDelta)
+{
+	return true;
+}
+
 void CNPC::Interrupted(_float _fTimeDelta)
 {
 }
@@ -175,9 +185,14 @@ _bool CNPC::Wait(_float _fTimeDelta, _float fWaitTime)
 	}
 }
 
-
-
-
+void CNPC::Revive(void)
+{
+	if (m_bDead)
+	{
+		m_bDead = false;
+		m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	}
+}
 
 CNPC::NPC_STATE CNPC::Find_Activated(void)
 {

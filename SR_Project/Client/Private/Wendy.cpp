@@ -40,12 +40,14 @@ HRESULT CWendy::Initialize(void * pArg)
 	m_fSkill_Max_CoolTime = 5.f;
 	m_fSkill_Cur_CoolTime = m_fSkill_Max_CoolTime;
 
-	m_fSkillRange = 20.f;
-	m_fAtkRange = 20.f;
-	m_fOwnerRadius = 5.f;
+	m_fSkillRange = 10.f;
+	m_fAtkRange = 10.f;
+	m_fOwnerRadius = 10.f;
+	m_fMinRange = 5.f;
+	m_fDetectRange = 15.f;
 
 
-	m_tInfo.iMaxHp = 100;
+	m_tInfo.iMaxHp = 900;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_tInfo.fDamage = 20.f;
 
@@ -99,17 +101,12 @@ int CWendy::Tick(_float fTimeDelta)
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 	}
 
-	if (m_bDead)
-	{
-		return OBJ_NOEVENT;
-	}
-
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PLAYER, this);
 
 	__super::Tick(fTimeDelta);
 
-	
+
 	BehaviorTree->Tick(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -125,12 +122,17 @@ void CWendy::Late_Tick(_float fTimeDelta)
 	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
 		return;
 
+
+
+
+	__super::Late_Tick(fTimeDelta);
+
+	Change_Frame(fTimeDelta);
+
 	if (m_bDead)
 	{
 		return;
 	}
-	__super::Late_Tick(fTimeDelta);
-	m_pTextureCom->MoveFrame(m_TimerTag);
 
 	if (m_eCur_Dir == DIR_STATE::DIR_LEFT)
 	{
@@ -326,11 +328,33 @@ HRESULT CWendy::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
+	/*Dead*/
+	TextureDesc.m_iEndTex = 55;
+	TextureDesc.m_fSpeed = 30;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Dead"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Dead"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	/*Hit*/
+	TextureDesc.m_iEndTex = 22;
+	TextureDesc.m_fSpeed = 30;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hit"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
 	return S_OK;
 }
 
 void CWendy::Change_Frame(_float fTimeDelta)
 {
+	if (m_eState == NPC_STATE::DEAD)
+	{
+		m_pTextureCom->MoveFrame(m_TimerTag, false);
+	}
+	else
+	{
+		m_pTextureCom->MoveFrame(m_TimerTag);
+	}
 }
 
 void CWendy::Change_Motion()
@@ -386,16 +410,46 @@ void CWendy::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 
 _float CWendy::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
-	if (m_tInfo.iCurrentHp <= (_int)fDamage)
+	if (!m_bDead && m_tInfo.iCurrentHp <= (_int)fDamage)
 	{
 		m_bDead = true;
 	}
-	else
+	else if (!m_bDead && !m_bHited)
 	{
 		m_tInfo.iCurrentHp -= (_int)fDamage;
 		cout << "WendyHP: " << m_tInfo.iCurrentHp << endl;
+		m_bHited = true;
 	}
 	return fDamage;
+}
+
+_bool CWendy::Get_CanSkill(void)
+{
+	Select_HealTarget(0.f);
+	if (m_pHeal_Target && m_bCanSkill)
+	{
+		return true;
+	}
+	else if (m_pHeal_Target == nullptr || !m_bCanSkill)
+	{
+		return false;
+	}
+
+	//return m_bCanSkill;
+
+}
+
+_bool CWendy::Get_CanAttack(void)
+{
+	Select_ReviveTarget();
+	if (m_pHeal_Target && m_bCanAttack)
+	{
+		return true;
+	}
+	else if (m_pHeal_Target == nullptr || !m_bCanAttack)
+	{
+		return false;
+	}
 }
 
 void CWendy::Move(_float _fTimeDelta)
@@ -513,7 +567,6 @@ void CWendy::Attack(_float _fTimeDelta)
 	if (m_ePreState != m_eState)
 	{
 		m_bInteract = true;
-		cout << "Attack" << endl;
 		Change_Texture(TEXT("Com_Texture_Recall"));
 		m_ePreState = m_eState;
 
@@ -567,19 +620,50 @@ void CWendy::Skill(_float _fTimeDelta)
 	if (m_ePreState != m_eState)
 	{
 		m_bInteract = true;
-		cout << "Skill" << endl;
 		Change_Texture(TEXT("Com_Texture_Channel"));
 		m_ePreState = m_eState;
 
-		//cout << "Create_Bullet" << endl;
-
 	}
-	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 2)
+	if (m_bCanSkill &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 2)
 	{
 		Create_Heal(_fTimeDelta);
 		m_bInteract = false;
 		m_bCanSkill = false;
 	}
+}
+
+_bool CWendy::Hit(_float _fTimeDelta)
+{
+	m_fInteractTIme += _fTimeDelta;
+
+	m_eState = CNPC::HIT;
+
+	if (m_ePreState != m_eState)
+	{
+		m_bInteract = true;
+		Change_Texture(TEXT("Com_Texture_Hit"));
+		m_ePreState = m_eState;
+	}
+
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	{
+		Clear_Activated();
+		m_bHited = false;
+	}
+	return true;
+}
+
+_bool CWendy::Dead(_float _fTimeDelta)
+{
+	m_eState = CNPC::DEAD;
+
+	if (m_ePreState != m_eState)
+	{
+		m_bInteract = true;
+		Change_Texture(TEXT("Com_Texture_Dead"));
+		m_ePreState = m_eState;
+	}
+	return true;
 }
 
 void CWendy::Select_Target(_float _fTimeDelta)
@@ -609,60 +693,63 @@ void CWendy::Set_RandPos(_float _fTimeDelta)
 
 _bool CWendy::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 {
-
-	_float fRange = 5.f;
+	_float fMinRange = 0.f;
+	_float fMiddleRange = 0.f;
 	_float Compare_Range = 0.f;
 	switch (_iTarget)
 	{
 	case 0: //Target == Owner
-		if (!m_bFightMode)
-		{
-			fRange = m_fOwnerRadius;
-		}
-		else
-		{
-			fRange = 10.f;
-		}
+		fMinRange = m_fMinRange;
+		fMiddleRange = m_fOwnerRadius;
 		m_vTargetPos = static_cast<CPlayer*>(m_pOwner)->Set_PartyPostion(this);
-
 		break;
 	case 1:// Basic AttackRange
-		fRange = m_fAtkRange;
-		m_vTargetPos = m_pTarget->Get_Position();
-		//fRange = 1.f;
+		fMiddleRange = fMinRange = m_fAtkRange;
+		m_vTargetPos = m_pHeal_Target->Get_Position();
 		break;
-
 	case 2://SkillRange
-		Reset_Target();
-		m_pTarget = m_pOwner;
-		Safe_AddRef(m_pTarget);
-		fRange = m_fSkillRange;
-		m_vTargetPos = m_pTarget->Get_Position();
+		fMiddleRange = fMinRange = m_fSkillRange;
+
+		m_vTargetPos = m_pHeal_Target->Get_Position();
 		break;
 	default:
 		if (m_pTarget)
 		{
 			m_vTargetPos = m_pTarget->Get_Position();
 		}
-		fRange = 0.2f;
+		fMiddleRange = fMinRange = 0.2f;
 		break;
 	}
+
 
 	Compare_Range = (m_vTargetPos.x - Get_Pos().x)*(m_vTargetPos.x - Get_Pos().x)
 		+ (m_vTargetPos.z - Get_Pos().z)*(m_vTargetPos.z - Get_Pos().z);
 
-
-	if (fRange < Compare_Range)
+	if (fMinRange > Compare_Range)
 	{
-		Clear_Activated();
-		return true;
-	}
-	else
-	{//arrive
+		m_bArrive = true;
 		Clear_Activated();
 		return false;
 	}
 
+	if (m_bFightMode)
+	{
+		if (fMiddleRange < Compare_Range)
+		{
+			m_bArrive = false;
+			Clear_Activated();
+		}
+
+	}
+	else
+	{
+		if (fMinRange < Compare_Range)
+		{
+			m_bArrive = false;
+			Clear_Activated();
+		}
+	}
+	return true;
 }
 
 _bool CWendy::Detect_Enemy()
@@ -913,15 +1000,16 @@ void CWendy::Create_Bullet(_float _fTimeDelta)
 	CSkill::SKILL_DESC SkillDesc;
 
 	SkillDesc.eDirState = DIR_END;
-	SkillDesc.eSkill = CSkill::SKILL_TYPE::ICE_BLAST;
-	SkillDesc.vTargetPos = m_pTarget->Get_Position();
-	SkillDesc.vPosition = m_pTarget->Get_Position();
-	SkillDesc.vScale = static_cast<CMonster*>(m_pTarget)->Get_Scale();
-	SkillDesc.pTarget = this;
+	SkillDesc.eSkill = CSkill::SKILL_TYPE::REVIVE;
+	SkillDesc.vTargetPos = m_pHeal_Target->Get_Position();
+	SkillDesc.vPosition = m_pHeal_Target->Get_Position();
+	SkillDesc.vScale = static_cast<CMonster*>(m_pHeal_Target)->Get_Scale();
+	SkillDesc.pTarget = m_pHeal_Target;
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skill"), m_iCurrentLevelndex, TEXT("Skill"), &SkillDesc)))
 		return;
-
-
+	SkillDesc.eSkill = CSkill::SKILL_TYPE::ICE_BLAST;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skill"), m_iCurrentLevelndex, TEXT("Skill"), &SkillDesc)))
+		return;
 }
 
 void CWendy::Create_Heal(_float _fTimeDelta)
@@ -929,13 +1017,15 @@ void CWendy::Create_Heal(_float _fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	CSkill::SKILL_DESC SkillDesc;
+	
+	//Select_HealTarget(0.f);
 
 	SkillDesc.eDirState = DIR_END;
 	SkillDesc.eSkill = CSkill::SKILL_TYPE::HEAL;
-	SkillDesc.vTargetPos = m_pOwner->Get_Position();
-	SkillDesc.vPosition = m_pOwner->Get_Position();
+	SkillDesc.vTargetPos =  m_pHeal_Target->Get_Position();
+	SkillDesc.vPosition = m_pHeal_Target->Get_Position();
 	SkillDesc.vScale = _float3(3.f, 3.f, 1.f);
-	SkillDesc.pTarget = m_pOwner;
+	SkillDesc.pTarget = m_pHeal_Target;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Skill"), m_iCurrentLevelndex, TEXT("Skill"), &SkillDesc)))
 		return;
@@ -991,6 +1081,107 @@ void CWendy::MoveWithoutOwner(_float _fTimeDelta)
 			m_bDirChanged = false;
 		}
 	}
+}
+
+void CWendy::Select_HealTarget(_float _fTimeDelta)
+{//for Heal
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	list<CGameObject*> list_Obj = *(pGameInstance->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_NPC")));
+	list_Obj.push_back(m_pOwner);
+
+	_uint iIndex = 0;
+
+	_uint MinHP = 0;
+	m_pHeal_Target = nullptr;
+	for (auto& iter_Obj = list_Obj.begin(); iter_Obj != list_Obj.end();)
+	{//NPC
+		if (static_cast<CPawn*>(*iter_Obj)->Get_ObjID() == OBJID::OBJ_NPC)
+		{
+			if ((*iter_Obj)->Get_Dead()
+				|| static_cast<CNPC*>(*iter_Obj)->Get_Info().iCurrentHp >= static_cast<CNPC*>(*iter_Obj)->Get_Info().iMaxHp
+				|| !(static_cast<CNPC*>(*iter_Obj)->Get_HasOwner()))
+			{
+				iter_Obj++;
+				continue;
+			}
+
+			if (m_pHeal_Target == nullptr)
+			{
+				MinHP = static_cast<CNPC*>(*iter_Obj)->Get_Info().iCurrentHp / static_cast<CNPC*>(*iter_Obj)->Get_Info().iMaxHp;
+				m_pHeal_Target = (*iter_Obj);
+			}
+			else
+			{
+				if (MinHP > static_cast<CNPC*>(*iter_Obj)->Get_Info().iCurrentHp)
+				{
+					m_pHeal_Target = (*iter_Obj);
+					MinHP = static_cast<CNPC*>(*iter_Obj)->Get_Info().iCurrentHp / static_cast<CNPC*>(*iter_Obj)->Get_Info().iMaxHp;
+				}
+			}
+			iter_Obj++;
+			continue;
+		}
+		else
+		{//Player
+			if ((*iter_Obj)->Get_Dead() || static_cast<CPlayer*>(*iter_Obj)->Get_Player_Stat().fCurrentHealth >= static_cast<CPlayer*>(*iter_Obj)->Get_Player_Stat().fMaxHealth)
+			{
+				iter_Obj++;
+				continue;
+			}
+
+			if (m_pHeal_Target == nullptr)
+			{
+				MinHP = (_uint)static_cast<CPlayer*>(*iter_Obj)->Get_Player_Stat().fCurrentHealth / (_uint)static_cast<CPlayer*>(*iter_Obj)->Get_Player_Stat().fMaxHealth;
+				m_pHeal_Target = (*iter_Obj);
+			}
+			else if (MinHP > (_uint)static_cast<CPlayer*>(*iter_Obj)->Get_Player_Stat().fCurrentHealth)
+			{
+				m_pHeal_Target = (*iter_Obj);
+				MinHP = (_uint)static_cast<CPlayer*>(*iter_Obj)->Get_Player_Stat().fCurrentHealth / (_uint)static_cast<CPlayer*>(*iter_Obj)->Get_Player_Stat().fMaxHealth;
+
+			}
+			iter_Obj++;
+			continue;
+		}
+	}
+
+	Safe_Release(pGameInstance);
+}
+
+void CWendy::Select_ReviveTarget(void)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	list<CGameObject*> list_Obj = *(pGameInstance->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_NPC")));
+	//list_Obj.push_back(m_pOwner);
+
+	_uint iIndex = 0;
+
+	m_pHeal_Target = nullptr;
+	for (auto& iter_Obj = list_Obj.begin(); iter_Obj != list_Obj.end();)
+	{//NPC
+		if (static_cast<CPawn*>(*iter_Obj)->Get_ObjID() == OBJID::OBJ_NPC)
+		{
+			if ((*iter_Obj)->Get_Dead() == false)
+			{
+				iter_Obj++;
+				continue;
+			}
+
+			if (m_pHeal_Target == nullptr)
+			{
+				m_pHeal_Target = (*iter_Obj);
+				break;
+			}
+		}
+		iter_Obj++;
+		continue;
+	}
+
+	Safe_Release(pGameInstance);
 }
 
 DIR_STATE CWendy::Check_Direction(void)
@@ -1171,10 +1362,9 @@ void CWendy::Find_Enemy()
 		if ((*iter_Obj) != nullptr && dynamic_cast<CMonster*>(*iter_Obj)->Get_Aggro())
 		{
 			_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
-				+ (Get_Pos().y - (*iter_Obj)->Get_Position().y)*(Get_Pos().y - (*iter_Obj)->Get_Position().y)
 				+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
 
-			if (fCmpDir > m_fAtkRange)
+			if (fCmpDir > m_fDetectRange)
 			{
 				++iIndex;
 				iter_Obj++;
@@ -1188,7 +1378,6 @@ void CWendy::Find_Enemy()
 			}
 
 			_float fTargetDir = (Get_Pos().x - (m_pTarget)->Get_Position().x)*(Get_Pos().x - (m_pTarget)->Get_Position().x)
-				+ (Get_Pos().y - (m_pTarget)->Get_Position().y)*(Get_Pos().y - (m_pTarget)->Get_Position().y)
 				+ (Get_Pos().z - (m_pTarget)->Get_Position().z)*(Get_Pos().z - (m_pTarget)->Get_Position().z);
 
 			if (fCmpDir < fTargetDir)

@@ -292,6 +292,10 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 	if (m_bInincibleMode)
 		return 0.f;
 
+	_float fResultDmg = fDamage - m_tStat.fArmor;
+	if (fResultDmg < 0.f)
+		fResultDmg = 0.f;
+
 	if ((m_eState != ACTION_STATE::DAMAGED || !m_bGhost) && !m_bHited)
 	{
 		m_tStat.fCurrentHealth -= fDamage;

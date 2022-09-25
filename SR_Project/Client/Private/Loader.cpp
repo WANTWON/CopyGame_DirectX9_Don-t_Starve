@@ -659,6 +659,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/NPC_Heal/Heal_%03d.png"), 39))))
 		return E_FAIL;
 
+	/*Skill_Revive*/
+	/*NPC_Heal*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_NPC_Revive"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Effect/Revive/Revive_%03d.png"), 87))))
+		return E_FAIL;
 	/*Skill_End*/
 	/*AttackRange & Picker*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Picker"),
@@ -1198,6 +1203,16 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Channel"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Channel/Wendy_Channel_%03d.png"), 53))))
 		return E_FAIL;
+
+	//Wendy Dead
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Dead"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Dead/Wendy_Dead_%03d.png"), 56))))
+		return E_FAIL;
+
+	//Wendy Hit
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Wendy_Hit"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Wendy/Hit/Wendy_Hit_%03d.png"), 23))))
+		return E_FAIL;
 #pragma endregion Add_Texture_Wendy
 
 /*For. Prototype_Component_Texture_Winona*/
@@ -1250,6 +1265,16 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	//Winona Talk
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Talk"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Winona/Talk/Winona_Talk_%03d.png"), 52))))
+		return E_FAIL;
+
+	//Winona Dead
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Dead"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Winona/Dead/Winona_Dead_%03d.png"), 56))))
+		return E_FAIL;
+
+	//Winona Hit
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Hit"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Winona/Hit/Winona_Hit_%03d.png"), 23))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Winona
 
@@ -1323,7 +1348,18 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Give_Side"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Give/Woodie_Give_Side_%03d.png"), 18))))
 		return E_FAIL;
+
+	//Woodie Dead
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Dead"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Dead/Woodie_Dead_%03d.png"), 56))))
+		return E_FAIL;
+
+	//Woodie Hit
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Woodie_Hit"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/NPC/Woodie/Hit/Woodie_Hit_%03d.png"), 23))))
+		return E_FAIL;
 #pragma endregion Add_Texture_Woodie
+
 	/*For.Prototype_Component_SpiderHouse Texture */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spider_House"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Construct/SpiderHouse.png"), 1))))
