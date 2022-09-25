@@ -441,9 +441,12 @@ void CSpider::AI_Behaviour(_float fTimeDelta)
 				m_eState = STATE::ATTACK;
 				m_bIsAttacking = true;
 
-				_tchar szFileName[MAX_PATH] = TEXT("");
-				wsprintf(szFileName, TEXT("Spider_attack_%d.wav"), rand() % 15 + 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+				if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+				{
+					_tchar szFileName[MAX_PATH] = TEXT("");
+					wsprintf(szFileName, TEXT("Spider_attack_%d.wav"), rand() % 15 + 1);
+					CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+				}
 			}
 			else if (!m_bIsAttacking)
 				m_eState = STATE::IDLE;
@@ -603,10 +606,13 @@ _float CSpider::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 			m_bHit = true;
 		else
 		{
-			// Play Sound
-			_tchar szFileName[MAX_PATH] = TEXT("");
-			wsprintf(szFileName, TEXT("Spider_death_%d.wav"), rand() % 3 + 1);
-			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+			if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+			{			
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("Spider_death_%d.wav"), rand() % 3 + 1);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+			}
 		}
 	}
 
