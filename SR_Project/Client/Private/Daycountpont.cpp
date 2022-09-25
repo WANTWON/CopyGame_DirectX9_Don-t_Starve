@@ -68,7 +68,7 @@ int CDaycountpont::Tick(_float fTimeDelta)
 
 
 
-	if (GetTickCount() > m_dwdaytime + 60000)
+	if (GetTickCount() > m_dwdaytime + 90000)
 	{
 		++texnum;
 		m_dwdaytime = GetTickCount();
