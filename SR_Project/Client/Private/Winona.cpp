@@ -43,11 +43,13 @@ HRESULT CWinona::Initialize(void * pArg)
 	m_fSkill_Max_CoolTime = 9.f;
 	m_fSkill_Cur_CoolTime = m_fSkill_Max_CoolTime;
 
-	m_fSkillRange = 20.f;
-	m_fAtkRange = 20.f;
-	m_fOwnerRadius = 5.f;
+	m_fSkillRange = 7.f;
+	m_fAtkRange = 10.f;
+	m_fOwnerRadius = 10.f;
+	m_fMinRange = 5.f;
+	m_fDetectRange = 15.f;
 
-	m_tInfo.iMaxHp = 100;
+	m_tInfo.iMaxHp = 300;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_tInfo.fDamage = 20.f;
 
@@ -65,15 +67,13 @@ int CWinona::Tick(_float fTimeDelta)
 	if (!Setup_LevelChange(fTimeDelta))
 		return OBJ_NOEVENT;
 
-	if (m_bDead)
-	{
-		return OBJ_NOEVENT;
-	}
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PLAYER, this);
 
 	__super::Tick(fTimeDelta);
+	
+	//cout << "x:" << Get_Position().x << "y: " << Get_Position().y << "z : " << Get_Position().z << endl;
 
 	CatapultCheck();
 
@@ -92,14 +92,14 @@ void CWinona::Late_Tick(_float fTimeDelta)
 	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
 		return;
 
+	__super::Late_Tick(fTimeDelta);
+
+	Change_Frame(fTimeDelta);
+
 	if (m_bDead)
 	{
 		return;
 	}
-
-	__super::Late_Tick(fTimeDelta);
-
-	m_pTextureCom->MoveFrame(m_TimerTag);
 
 	if (m_eCur_Dir == DIR_STATE::DIR_LEFT)
 	{
@@ -188,7 +188,7 @@ HRESULT CWinona::SetUp_Components(void * pArg)
 
 	TransformDesc.fSpeedPerSec = 3.f / 1.13f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(0.f);
-	TransformDesc.InitPos = _float3(40.f, 2.f, 25.f);;
+	TransformDesc.InitPos = _float3(35.f, 2.f, 25.f);;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
@@ -275,11 +275,33 @@ HRESULT CWinona::Texture_Clone()
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
 
+	/*Dead*/
+	TextureDesc.m_iEndTex = 55;
+	TextureDesc.m_fSpeed = 30;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Dead"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Dead"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
+	/*Hit*/
+	TextureDesc.m_iEndTex = 22;
+	TextureDesc.m_fSpeed = 30;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hit"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Winona_Hit"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+		return E_FAIL;
+	m_vecTexture.push_back(m_pTextureCom);
+
 	return S_OK;
 }
 
 void CWinona::Change_Frame(_float fTimeDelta)
 {
+	if (m_eState == NPC_STATE::DEAD)
+	{
+		m_pTextureCom->MoveFrame(m_TimerTag, false);
+	}
+	else
+	{
+		m_pTextureCom->MoveFrame(m_TimerTag);
+	}
 }
 
 void CWinona::Change_Motion()
@@ -288,14 +310,15 @@ void CWinona::Change_Motion()
 
 _float CWinona::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
-	if (m_tInfo.iCurrentHp <= (_int)fDamage)
+	if (!m_bDead && m_tInfo.iCurrentHp <= (_int)fDamage)
 	{
 		m_bDead = true;
 	}
-	else
+	else if (!m_bDead && !m_bHited)
 	{
 		m_tInfo.iCurrentHp -= (_int)fDamage;
 		cout << "WinonaHP: " << m_tInfo.iCurrentHp << endl;
+		m_bHited = true;
 	}
 	return fDamage;
 }
@@ -544,6 +567,40 @@ void CWinona::Skill(_float _fTimeDelta)
 	}
 }
 
+_bool CWinona::Hit(_float _fTimeDelta)
+{
+	m_fInteractTIme += _fTimeDelta;
+
+	m_eState = CNPC::HIT;
+
+	if (m_ePreState != m_eState)
+	{
+		m_bInteract = true;
+		Change_Texture(TEXT("Com_Texture_Hit"));
+		m_ePreState = m_eState;
+	}
+
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	{
+		Clear_Activated();
+		m_bHited = false;
+	}
+	return true;
+}
+
+_bool CWinona::Dead(_float _fTimeDelta)
+{
+	m_eState = CNPC::DEAD;
+
+	if (m_ePreState != m_eState)
+	{
+		m_bInteract = true;
+		Change_Texture(TEXT("Com_Texture_Dead"));
+		m_ePreState = m_eState;
+	}
+	return true;
+}
+
 void CWinona::Select_Target(_float _fTimeDelta)
 {
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
@@ -572,36 +629,23 @@ void CWinona::Set_RandPos(_float _fTimeDelta)
 
 _bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 {
-	/*if (m_pTarget == nullptr)
-		return false;*/
-
-	_float fRange = 5.f;
+	_float fMinRange = 0.f;
+	_float fMiddleRange = 0.f;
 	_float Compare_Range = 0.f;
 	switch (_iTarget)
 	{
 	case 0: //Target == Owner
-		if (!m_bFightMode)
-		{
-			fRange = m_fOwnerRadius;
-		}
-		else
-		{
-			fRange = 10.f;
-		}
+		fMinRange = m_fMinRange;
+		fMiddleRange = m_fOwnerRadius;
 		m_vTargetPos = static_cast<CPlayer*>(m_pOwner)->Set_PartyPostion(this);
-
 		break;
 	case 1:// Basic AttackRange
-		fRange = m_fAtkRange;
+		fMiddleRange = fMinRange = m_fAtkRange;
 		m_vTargetPos = m_pTarget->Get_Position();
-		//fRange = 1.f;
 		break;
-
 	case 2://SkillRange
-		Reset_Target();
-		m_pTarget = m_pOwner;
-		Safe_AddRef(m_pTarget);
-		fRange = m_fSkillRange;
+		fMiddleRange = fMinRange = m_fSkillRange;
+
 		m_vTargetPos = m_pTarget->Get_Position();
 		break;
 	default:
@@ -609,24 +653,39 @@ _bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		{
 			m_vTargetPos = m_pTarget->Get_Position();
 		}
-		fRange = 0.2f;
+		fMiddleRange = fMinRange = 0.2f;
 		break;
 	}
+
 
 	Compare_Range = (m_vTargetPos.x - Get_Pos().x)*(m_vTargetPos.x - Get_Pos().x)
 		+ (m_vTargetPos.z - Get_Pos().z)*(m_vTargetPos.z - Get_Pos().z);
 
-
-	if (fRange < Compare_Range)
+	if (fMinRange > Compare_Range)
 	{
-		Clear_Activated();
-		return true;
-	}
-	else
-	{//arrive
+		m_bArrive = true;
 		Clear_Activated();
 		return false;
 	}
+
+	if (m_bFightMode)
+	{
+		if (fMiddleRange < Compare_Range)
+		{
+			m_bArrive = false;
+			Clear_Activated();
+		}
+
+	}
+	else
+	{
+		if (fMinRange < Compare_Range)
+		{
+			m_bArrive = false;
+			Clear_Activated();
+		}
+	}
+	return true;
 }
 
 _bool CWinona::Detect_Enemy()
@@ -1233,10 +1292,9 @@ void CWinona::Find_Enemy()
 		if ((*iter_Obj) != nullptr && dynamic_cast<CMonster*>(*iter_Obj)->Get_Aggro())
 		{
 			_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
-				+ (Get_Pos().y - (*iter_Obj)->Get_Position().y)*(Get_Pos().y - (*iter_Obj)->Get_Position().y)
 				+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
 
-			if (fCmpDir > m_fAtkRange)
+			if (fCmpDir > m_fDetectRange)
 			{
 				++iIndex;
 				iter_Obj++;
@@ -1249,10 +1307,7 @@ void CWinona::Find_Enemy()
 				m_bSelectAct = false;
 			}
 
-
-
 			_float fTargetDir = (Get_Pos().x - (m_pTarget)->Get_Position().x)*(Get_Pos().x - (m_pTarget)->Get_Position().x)
-				+ (Get_Pos().y - (m_pTarget)->Get_Position().y)*(Get_Pos().y - (m_pTarget)->Get_Position().y)
 				+ (Get_Pos().z - (m_pTarget)->Get_Position().z)*(Get_Pos().z - (m_pTarget)->Get_Position().z);
 
 			if (fCmpDir < fTargetDir)

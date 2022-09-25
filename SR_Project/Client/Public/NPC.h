@@ -17,7 +17,7 @@ BEGIN(Client)
 class CNPC abstract : public CInteractive_Object
 {
 public:
-	enum NPC_STATE { IDLE, MOVE, INTERACT, TALK, DANCE, ATTACK, SKILL, STATE_END };
+	enum NPC_STATE { IDLE, MOVE, INTERACT, TALK, DANCE, ATTACK, SKILL, HIT, DEAD, STATE_END };
 public:
 	CNPC(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CNPC(const CNPC& rhs);
@@ -51,18 +51,15 @@ public: /*Get & Set*/
 	_bool	Get_NextAct(void) { return m_bNextAct; }
 	_bool	Get_Interrupted(void) { return m_bInterrupted; }
 	_uint	Get_TalkCnt(void) { return m_iTalkCnt; }
-	_bool	Get_HasOwner(void) { if (m_bOwner && !m_bFightMode) {
-		Reset_Target();
-		m_pTarget = m_pOwner;
-		Safe_AddRef(m_pTarget);}
-	return m_bOwner; }
+	_bool	Get_HasOwner(void) { return m_bOwner; }
 	_bool	Get_FirstCall(void) { return m_bFirstCall; }
-	_bool	Get_CanAttack(void) { return m_bCanAttack; }
+	virtual _bool	Get_CanAttack(void) { return m_bCanAttack; }
 	_bool	Get_FightMode(void) { return m_bFightMode; }
 	_bool	Get_TargetDead(void);
-	_bool	Get_CanSkill(void) { return m_bCanSkill; }
+	virtual _bool	Get_CanSkill(void) { return m_bCanSkill; }
 	_bool	Get_CanTalk(void) { return m_bCanTalk; }
 	_bool	Get_SelectAct(void) { return m_bSelectAct; }
+	_bool	Get_Hited(void) { return m_bHited; }
 	//Set
 	void	Reset_Target(void) { Safe_Release(m_pTarget); m_pTarget = nullptr; }
 	void	Set_IsArrive(_bool _bArrive) { m_bArrive = _bArrive; }
@@ -76,6 +73,8 @@ public: /*Get & Set*/
 	void	Set_MoveNum(_uint _iNum) { m_MoveNum = _iNum; }
 	void	Set_Target(CGameObject* pTarget) { Reset_Target(); m_pTarget = pTarget; Safe_AddRef(pTarget); }
 	void	Set_SelectAct(_bool _bCanAct) { m_bSelectAct = _bCanAct; }
+
+	void	Set_HP(_uint _iHp) { m_tInfo.iCurrentHp += _iHp; if (m_tInfo.iCurrentHp >= m_tInfo.iMaxHp){m_tInfo.iCurrentHp = m_tInfo.iMaxHp;} }
 public:/*for Actions*/
 	virtual void Interact(_uint Damage = 0) = 0;
 	virtual HRESULT Drop_Items() = 0;
@@ -89,13 +88,17 @@ public:/*for Actions*/
 	virtual void	Set_RandPos(_float _fTimeDelta) = 0;
 	virtual void	Attack(_float _fTimeDelta);
 	virtual void	Skill(_float _fTimeDelta);
-
+	virtual _bool	Hit(_float _fTimeDelta);
+	virtual _bool	Dead(_float _fTimeDelta);
+	
 	virtual void	Interrupted(_float _fTimeDelta);
 	virtual	void	Make_Interrupt(CPawn* pCauser, _uint _InterruptNum);
 	virtual _bool	Get_Target_Moved(_float _fTimeDeltam, _uint _iTarget);
 	virtual _bool	Set_TargetPos();
 	virtual _bool	Detect_Enemy();
 	virtual _bool	Wait(_float _fTimeDelta, _float fWaitTime);
+	void	Revive(void);
+
 public: //mange map
 	NPC_STATE	Find_Activated(void);
 	void		Init_Map(void);
@@ -166,7 +169,7 @@ protected:
 	_float		m_fSkill_Max_CoolTime = 0.f;
 	_bool		m_bCanSkill = true;
 
-
+	_bool		m_bHited = false;
 	
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) =0;

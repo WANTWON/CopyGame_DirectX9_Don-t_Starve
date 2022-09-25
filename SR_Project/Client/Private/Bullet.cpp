@@ -96,11 +96,23 @@ void CBullet::Late_Tick(_float fTimeDelta)
 HRESULT CBullet::Render()
 {
 
-
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
+
+	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix, PlayerMatrix;
+
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"), 0);
+	if (nullptr == pTransform_Terrain)
+		return E_FAIL;
+
+	PlayerMatrix = *D3DXMatrixTranspose(&WorldMatrix, &pTransform_Terrain->Get_WorldMatrix());
+
+	_float3  fPlayerPosition = pTarget->Get_Position();
+	m_pShaderCom->Set_RawValue("g_PlayerPosition", &fPlayerPosition, sizeof(_float3));
+	m_pShaderCom->Set_RawValue("g_PlayerWorldMatrix", &PlayerMatrix, sizeof(_float4x4));
 
 	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);

@@ -24,7 +24,7 @@ void CBT_NPC::Init_Nodes()
 	Selector_NonOwner = new CSelectorNode(TEXT("NonOwner"));
 	Selector_NonFight = new CSelectorNode(TEXT("NonFight"));
 	Selector_Fight = new CSelectorNode(TEXT("Fight"));
-
+	Selector_NonTarget = new CSelectorNode(TEXT("Nontarget"));
 	//Init Sequence
 	Sequence_Interact_Actor = new CSequenceNode(TEXT("Interact_Actor"));
 	Sequence_Fight = new CSequenceNode(TEXT("Fight"));
@@ -36,7 +36,9 @@ void CBT_NPC::Init_Nodes()
 	Sequence_SelectAct = new CSequenceNode(TEXT("SelectAct"));
 	Sequence_DeadCheck = new CSequenceNode(TEXT("DeadCheck"));
 	Sequence_HitCheck = new CSequenceNode(TEXT("HitCheck"));
-	Selector_NonTarget = new CSelectorNode(TEXT("Nontarget"));
+	Sequence_Dead = new CSequenceNode(TEXT("Dead"));
+	Sequence_Hit = new CSequenceNode(TEXT("Hit"));
+
 	//Init Decorator
 	BTTask_HasTarget = new CBTTask_HasTarget;
 	BTTask_IsActor = new CBTTask_IsActor;
@@ -71,9 +73,22 @@ void CBT_NPC::Init_Nodes()
 	BTTask_IsMove_Pos = new CBTTask_TargetMoved(4);
 	BTTask_CanSelectAct = new CBTTask_GetSelectAct;
 	BTTask_Reset = new CBTTask_Clear;
+	BTTask_Hit = new CBTTask_Hit;
+	BTTask_IsHit = new CBTTask_IsHit;
+	BTTask_IsDead = new CBTTask_IsDead;
+	BTTask_Dead = new CBTTask_Dead;
 	//Add in Root
 	Root->Add_Node(BTTask_Interrupt);
+	Root->Add_Node(Sequence_Dead);
+	Root->Add_Node(Sequence_Hit);
 	Root->Add_Node(BTTask_HasOwner);
+
+	//Sequence_Dead
+	Sequence_Dead->Add_Node(BTTask_IsDead);
+	Sequence_Dead->Add_Node(BTTask_Dead);
+	//Sequence_Hit
+	Sequence_Hit->Add_Node(BTTask_IsHit);
+	Sequence_Hit->Add_Node(BTTask_Hit);
 	// HasOwner
 	BTTask_HasOwner->Set_DecoratorNodes(Selector_OnOwner, Selector_NonOwner);
 

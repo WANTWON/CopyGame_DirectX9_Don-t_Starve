@@ -45,6 +45,10 @@ class CBTTask_Clear;
 class CBTTask_GetSelectAct;
 class CBTTask_DetectEnemy;
 class CBTTask_Wait;
+class CBTTask_Hit;
+class CBTTask_IsHit;
+class CBTTask_IsDead;
+class CBTTask_Dead;
 //class CBTTask_FollowTarget;
 class CBT_NPC : public CBase
 {
@@ -85,7 +89,8 @@ public:/*Sequence Nodes*/
 	CSequenceNode* Sequence_SelectAct = nullptr;
 	CSequenceNode* Sequence_DeadCheck = nullptr;
 	CSequenceNode* Sequence_HitCheck = nullptr;
-
+	CSequenceNode* Sequence_Dead = nullptr;
+	CSequenceNode* Sequence_Hit = nullptr;
 	//CSequenceNode* Sequence_OnTarget = nullptr;
 public:/*If_Nodes*/
 	CBTTask_HasTarget* BTTask_HasTarget = nullptr;
@@ -117,6 +122,11 @@ public:/*Leaf Nodes*/
 	CBTTask_Clear* BTTask_Reset = nullptr;
 	CBTTask_DetectEnemy* BTTask_DetectEnemy = nullptr;
 	CBTTask_Wait* BTTask_Wait = nullptr;
+	CBTTask_Hit* BTTask_Hit = nullptr;
+	CBTTask_IsHit* BTTask_IsHit = nullptr;
+	CBTTask_IsDead* BTTask_IsDead = nullptr;
+	CBTTask_Dead* BTTask_Dead = nullptr;
+
 
 	CBTTask_TargetMoved* BTTask_IsMove_Owner = nullptr;
 	CBTTask_TargetMoved* BTTask_IsMove_Pos = nullptr;
@@ -525,6 +535,52 @@ class CBTTask_Wait : public CNode
 		}
 	}
 };
+
+class CBTTask_Hit : public CNode
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		static_cast<CNPC*>(_Obj)->Hit(_fTimeDelta);
+		return STATUS::SUCCESS;
+	}
+};
+class CBTTask_IsHit :public CNode
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		if (static_cast<CNPC*>(_Obj)->Get_Hited())
+		{
+			return STATUS::SUCCESS;
+		}
+		else
+		{
+			return STATUS::FAIL;
+		}
+	}
+};
+class CBTTask_IsDead : public CNode
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		if (static_cast<CNPC*>(_Obj)->Get_Dead())
+		{
+			return STATUS::SUCCESS;
+		}
+		else
+		{
+			return STATUS::FAIL;
+		}
+	}
+};
+class CBTTask_Dead : public CNode
+{
+	virtual STATUS Excute(CGameObject* _Obj, _float _fTimeDelta) override
+	{
+		static_cast<CNPC*>(_Obj)->Dead(_fTimeDelta);
+		return STATUS::SUCCESS;
+	}
+};
+
 
 //Decorator
 class CBTTask_HasTarget : public CDecorator_If

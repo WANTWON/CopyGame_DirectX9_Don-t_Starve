@@ -5,7 +5,7 @@
 #include "Level_Manager.h"
 #include "Interactive_Object.h"
 #include "Player.h"
-
+#include "NPC.h"
 
 CSkill::CSkill(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CPawn(pGraphic_Device)
@@ -277,6 +277,10 @@ HRESULT CSkill::Init_Data(void)
 		m_pTransformCom->Set_Scale(3.f, 5.f, 1.f);
 		m_fDamage = 50.f;
 		break;
+	case SKILL_TYPE::REVIVE:
+		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+		m_fDamage = 0.f;
+		break;
 	}
 
 
@@ -295,21 +299,21 @@ HRESULT CSkill::Texture_Clone(void)
 	case SKILL_TYPE::ELEC:
 	case SKILL_TYPE::HEAL:
 		TextureDesc.m_iEndTex = 38;
-		TextureDesc.m_fSpeed = 60;
+		TextureDesc.m_fSpeed = 40;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Heal"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_NPC_Heal"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
 	case SKILL_TYPE::ICE_BLAST:
 		TextureDesc.m_iEndTex = 19;
-		TextureDesc.m_fSpeed = 40;
+		TextureDesc.m_fSpeed = 30;
 
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceBlast_Pre"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Ice_Blast_Pre"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 
 		TextureDesc.m_iEndTex = 19;
-		TextureDesc.m_fSpeed = 60;
+		TextureDesc.m_fSpeed = 30;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_IceBlast"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Ice_Blast"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
@@ -342,6 +346,14 @@ HRESULT CSkill::Texture_Clone(void)
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
 		break;
+	case SKILL_TYPE::REVIVE:
+		TextureDesc.m_iEndTex = 86;
+		TextureDesc.m_fSpeed = 30;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Revive"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_NPC_Revive"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		m_vecTexture.push_back(m_pTextureCom);
+		break;
+
 	}
 
 	return S_OK;
@@ -387,7 +399,15 @@ void CSkill::Heal(_float _fTimeDelta)
 
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
-		static_cast<CPlayer*>(m_tSkillDesc.pTarget)->Set_HP(30.f);
+		if (static_cast<CPawn*>(m_tSkillDesc.pTarget)->Get_ObjID() == OBJID::OBJ_PLAYER)
+		{
+			static_cast<CPlayer*>(m_tSkillDesc.pTarget)->Set_HP(30.f);
+		}
+		else
+		{
+			static_cast<CNPC*>(m_tSkillDesc.pTarget)->Set_HP(30.f);
+		}
+
 		m_bDead = true;
 	}
 }
@@ -447,6 +467,23 @@ void CSkill::Crackle_Hit(_float _fTimeDelta)
 
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
+		m_bDead = true;
+	}
+}
+
+void CSkill::Revive(_float _fTimeDelta)
+{
+	_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	_float3 CurPos = m_tSkillDesc.pTarget->Get_Position();
+
+	D3DXVec3Normalize(&vLook, &vLook);
+	CurPos -= vLook * 0.1f;
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, CurPos);
+
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
+	{
+		static_cast<CNPC*>(m_tSkillDesc.pTarget)->Revive();
 		m_bDead = true;
 	}
 }
@@ -519,6 +556,9 @@ void CSkill::Excute(_float _fTimeDelta)
 		break;
 	case SKILL_TYPE::CRACKLE_HIT:
 		Crackle_Hit(_fTimeDelta);
+		break;
+	case SKILL_TYPE::REVIVE:
+		Revive(_fTimeDelta);
 		break;
 	}
 }

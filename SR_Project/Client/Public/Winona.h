@@ -52,6 +52,8 @@ public:/*for Actions*/
 	virtual void	Attack(_float _fTimeDelta) override;
 	virtual void	Interrupted(_float _fTimeDelta) override;
 	virtual void	Skill(_float _fTimeDelta) override;
+	virtual _bool	Hit(_float _fTimeDelta) override;
+	virtual _bool	Dead(_float _fTimeDelta) override;
 
 	virtual void	Select_Target(_float _fTimeDelta) override;
 	virtual void	Set_RandPos(_float _fTimeDelta) override;
