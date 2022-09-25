@@ -45,6 +45,8 @@ HRESULT CLevel_Maze::Initialize()
 
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_MAZE);
 	m_dwTime = GetTickCount();
+
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_cave_rain_light.wav"), 0.5f);
 	return S_OK;
 }
 

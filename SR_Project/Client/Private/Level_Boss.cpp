@@ -44,6 +44,7 @@ HRESULT CLevel_Boss::Initialize()
 
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_BOSS);
 	m_dwTime = GetTickCount();
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("DSTER - Boss 1 Orchestration V2.wav"), 0.5f);
 	return S_OK;
 }
 
