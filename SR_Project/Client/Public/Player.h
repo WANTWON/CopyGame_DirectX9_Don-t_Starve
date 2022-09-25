@@ -52,7 +52,7 @@ public:
 	typedef struct tagPlayerStat
 	{
 		_float fSpeed = 0.f;
-		_float fMaxHealth = 999.f;
+		_float fMaxHealth = 50.f;
 		_float fCurrentHealth = fMaxHealth;
 		_float fMaxMental = 999.f;
 		_float fCurrentMental = fMaxMental;
@@ -317,6 +317,7 @@ private: // Test
 
 	_float m_fHungertime = 0.f;
 	_float m_fMentalitytime = 0.f;
+	_float m_fMentalitytime2 = 0.f;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

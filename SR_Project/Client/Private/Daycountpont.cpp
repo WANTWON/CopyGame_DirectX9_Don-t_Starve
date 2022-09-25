@@ -33,7 +33,7 @@ HRESULT CDaycountpont::Initialize(void* pArg)
 	m_fSizeX = 60.f;
 	m_fSizeY = 60.f;
 	m_fX = 1230.f;
-	m_fY = 54.f;
+	m_fY = 40.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
@@ -80,6 +80,14 @@ HRESULT CDaycountpont::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
+	m_fSizeX = 60.f;
+	m_fSizeY = 60.f;
+	m_fX = 1230.f;
+	m_fY = 40.f;
+
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+
 	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 		return E_FAIL;
 
@@ -97,6 +105,24 @@ HRESULT CDaycountpont::Render()
 
 	m_pVIBufferCom->Render();
 
+	m_fSizeX = 45.f;
+	m_fSizeY = 45.f;
+	m_fX = 1230.f;
+	m_fY = 64.5f;
+
+	
+
+	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
+
+	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+		return E_FAIL;
+
+	if (FAILED(m_pTextureCom1->Bind_OnGraphicDev(m_iTexNum1)))
+		return E_FAIL;
+
+	m_pVIBufferCom->Render();
+
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
 
@@ -108,6 +134,13 @@ HRESULT CDaycountpont::Render()
 void CDaycountpont::Update(_uint eDayState)
 {
 	m_eDayState = (DAY_STATE)eDayState;
+
+	if (m_eDayState == DAY_MORNING)
+		m_iTexNum1 = 1;
+	else if (m_eDayState == DAY_DINNER)
+		m_iTexNum1 = 2;
+	else
+		m_iTexNum1 = 0;
 
 	//if(eDayState == DAY_MORNING)
 		//++m_iTexNum;
@@ -121,6 +154,10 @@ HRESULT CDaycountpont::SetUp_Components()
 
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Daycountpont"), (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_daystat"), (CComponent**)&m_pTextureCom1)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -201,4 +238,5 @@ void CDaycountpont::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pTextureCom1);
 }

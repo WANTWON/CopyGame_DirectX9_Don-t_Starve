@@ -301,7 +301,7 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 		for (int j = 0; j < 3; ++j)
 		{
 			CardDesc.iNumber = i*3 + j;
-			CardDesc.pos = _float3(22.f + 3.f*i, 0.1f, 22.f + 3.f*j);
+			CardDesc.pos = _float3(22.f + 3.f*i, 0.5f, 22.f + 3.f*j);
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_MAZE, TEXT("Layer_Card"), &CardDesc)))
 				return E_FAIL;
 		}

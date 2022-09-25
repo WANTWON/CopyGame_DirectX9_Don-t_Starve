@@ -64,6 +64,8 @@ HRESULT CLevel_GamePlay::Initialize()
 		if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_UI"))))
 			return E_FAIL;
 
+		CGameInstance::Get_Instance()->StopAll();
+
 		g_bUIMadefirst = true;
 	}
 

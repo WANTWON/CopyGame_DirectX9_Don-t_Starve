@@ -970,6 +970,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Carnival_Shooting/Complete_Particle/Particle_%03d.png"), 15))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_daystat"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/Day/daystat%d.png"), 3))))
+		return E_FAIL;
+
 #pragma endregion Add_Texture UI
 
 
