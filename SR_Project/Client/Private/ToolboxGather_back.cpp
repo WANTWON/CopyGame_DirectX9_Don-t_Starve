@@ -84,6 +84,9 @@ int CToolboxGather_back::Tick(_float fTimeDelta)
 
 	if (iNum == 0 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
+		CGameInstance* pInstance = CGameInstance::Get_Instance();
+		pInstance->PlaySounds(TEXT("clickitem.wav"), SOUND_UIOPEN, 0.9f);
+
 		bool bok = false;
 		CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 		//Safe_AddRef(pInventory_Manager);
@@ -94,6 +97,9 @@ int CToolboxGather_back::Tick(_float fTimeDelta)
 	}
 	else if (iNum == 1 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
+		CGameInstance* pInstance = CGameInstance::Get_Instance();
+		pInstance->PlaySounds(TEXT("clickitem.wav"), SOUND_UIOPEN, 0.9f);
+
 		bool bok = false;
 		CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
 	//	Safe_AddRef(pInventory_Manager);

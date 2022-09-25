@@ -101,7 +101,7 @@ private:
 
 	int iNum = 0;
 	bool m_bcheck_bag = true;
-	bool m_bcheck = true;
+	bool m_bcheck = false;
 	bool m_Lclick = true;
 	bool one = false;
 	bool turn = false;

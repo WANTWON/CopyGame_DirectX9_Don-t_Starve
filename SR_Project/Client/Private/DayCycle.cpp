@@ -15,9 +15,12 @@ void CDayCycle::DayCycleTick()
 	_float Tickcount = GetTickCount();
 	if (m_dwTime + 30000 < Tickcount)
 	{
+		CGameInstance* pInstance = CGameInstance::Get_Instance();
 		switch (m_eDayState)
 		{
 		case Client::DAY_MORNING:
+			
+			pInstance->PlaySounds(TEXT("changetodinner.wav"), SOUND_UI, 0.8f);
 			m_eDayState = DAY_DINNER;
 			NotifyObserver();
 			break;
@@ -25,11 +28,11 @@ void CDayCycle::DayCycleTick()
 		{
 			_uint random = rand() % 2 + 1;
 
-			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			
 			if (random == 1)
-				pInstance->PlaySounds(TEXT("changetonight.wav"), SOUND_UI, 0.9f);
+				pInstance->PlaySounds(TEXT("changetonight.wav"), SOUND_UI, 0.8f);
 			else
-				pInstance->PlaySounds(TEXT("changetonight2.wav"), SOUND_UI, 0.9f);
+				pInstance->PlaySounds(TEXT("changetonight2.wav"), SOUND_UI, 0.8f);
 			m_eDayState = DAY_NIGHT;
 			NotifyObserver();
 			break;
@@ -37,6 +40,8 @@ void CDayCycle::DayCycleTick()
 			
 			
 		case Client::DAY_NIGHT:
+			
+			pInstance->PlaySounds(TEXT("changetomorning.wav"), SOUND_UI, 0.8f);
 			m_eDayState = DAY_MORNING;
 			NotifyObserver();
 			break;

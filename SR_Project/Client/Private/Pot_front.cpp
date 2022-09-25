@@ -155,6 +155,9 @@ void CPot_front::Late_Tick(_float fTimeDelta)
 
 		if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			pInstance->PlaySounds(TEXT("clickitem.wav"), SOUND_UI, 0.9f);
+
 			if (true == pMouse->Get_picked())
 			{
 				ITEMNAME iname;

@@ -87,6 +87,8 @@ int CToolboxConstruct_back::Tick(_float fTimeDelta)
 	//pInventory_Manager->craft_on(MAKE_AXE);
 	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
+		CGameInstance* pInstance = CGameInstance::Get_Instance();
+		pInstance->PlaySounds(TEXT("clickitem.wav"), SOUND_UIOPEN, 0.9f);
 
 		if (iNum == 0)
 		{

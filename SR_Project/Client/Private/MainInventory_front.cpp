@@ -408,6 +408,9 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 	if (PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_RBUTTON)) //付快胶 快努腐贸府
 	{
+		CGameInstance* pInstance = CGameInstance::Get_Instance();
+		pInstance->PlaySounds(TEXT("clickitem.wav"), SOUND_UIOPEN, 0.9f);
+
 		if (m_itemtype == ITEM_ARMOR || m_itemtype == ITEM_HAND || m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT)
 		{
 			pMouse->Set_Item_type(m_itemtype);

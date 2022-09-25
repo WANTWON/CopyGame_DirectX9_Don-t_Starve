@@ -500,6 +500,9 @@ HRESULT CTalk::Excute(void)
 			}
 			else {
 				++texnum;
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+				pGameInstance->PlaySounds(TEXT("talkclick.wav"), SOUND_UI, 0.7f);
 			}
 			//m_bActivated = false;
 			//m_bTalkEnd = false;

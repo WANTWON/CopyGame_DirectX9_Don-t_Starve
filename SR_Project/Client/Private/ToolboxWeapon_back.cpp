@@ -88,13 +88,16 @@ int CToolboxWeapon_back::Tick(_float fTimeDelta)
 		if (iNum == 0 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
 			
-			
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			pInstance->PlaySounds(TEXT("clickitem.wav"), SOUND_UIOPEN, 0.9f);
 
 			pInventory_Manager->craft_on(MAKE_HAMBAT);
 
 		}
 		else if (iNum == 1 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			pInstance->PlaySounds(TEXT("clickitem.wav"), SOUND_UIOPEN, 0.9f);
 			
 			pInventory_Manager->craft_on(MAKE_SHOTTER);
 
@@ -102,6 +105,8 @@ int CToolboxWeapon_back::Tick(_float fTimeDelta)
 		}
 		else if (iNum == 2 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			pInstance->PlaySounds(TEXT("clickitem.wav"), SOUND_UIOPEN, 0.9f);
 
 			pInventory_Manager->craft_on(MAKE_STAFF);
 
@@ -109,6 +114,8 @@ int CToolboxWeapon_back::Tick(_float fTimeDelta)
 		}
 		else if (iNum == 3 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			pInstance->PlaySounds(TEXT("clickitem.wav"), SOUND_UIOPEN, 0.9f);
 
 			pInventory_Manager->craft_on(MAKE_ARMOR);
 
@@ -116,6 +123,8 @@ int CToolboxWeapon_back::Tick(_float fTimeDelta)
 		}
 		else if (iNum == 4 && PtInRect(&rcRect, ptMouse) && CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			pInstance->PlaySounds(TEXT("clickitem.wav"), SOUND_UIOPEN, 0.9f);
 
 			pInventory_Manager->craft_on(MAKE_HELMET);
 

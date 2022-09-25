@@ -114,6 +114,9 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 
 	if (PtInRect(&rcRect, ptMouse)&& CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 	{
+		CGameInstance* pInstance = CGameInstance::Get_Instance();
+		pInstance->PlaySounds(TEXT("clickitem.wav"), SOUND_UIOPEN, 0.9f);
+
 		if (iNum == 0)
 		{
 			if (m_bfirstclick_G == true)
