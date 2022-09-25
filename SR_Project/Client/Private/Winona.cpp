@@ -12,11 +12,11 @@
 #include "Battery_Tower.h"
 CWinona::CWinona(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CNPC(pGraphic_Device)
-{
+{	
 }
 
 CWinona::CWinona(const CWinona & rhs)
-	:CNPC(rhs)
+	: CNPC(rhs)
 {
 }
 
@@ -47,6 +47,10 @@ HRESULT CWinona::Initialize(void * pArg)
 	m_fAtkRange = 20.f;
 	m_fOwnerRadius = 5.f;
 
+	m_tInfo.iMaxHp = 100;
+	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.fDamage = 20.f;
+
 	//Init BehavirvTree
 	BehaviorTree = new CBT_NPC(this);
 
@@ -60,6 +64,14 @@ int CWinona::Tick(_float fTimeDelta)
 {
 	if (!Setup_LevelChange(fTimeDelta))
 		return OBJ_NOEVENT;
+
+	if (m_bDead)
+	{
+		return OBJ_NOEVENT;
+	}
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PLAYER, this);
 
 	__super::Tick(fTimeDelta);
 
@@ -79,6 +91,11 @@ void CWinona::Late_Tick(_float fTimeDelta)
 
 	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
 		return;
+
+	if (m_bDead)
+	{
+		return;
+	}
 
 	__super::Late_Tick(fTimeDelta);
 
@@ -146,9 +163,20 @@ HRESULT CWinona::SetUp_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	/* For.Com_Collider*/
-	/*if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
+	CCollider_Cube::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
+	CollRectDesc.fRadiusY = 0.4f;
+	CollRectDesc.fRadiusX = 0.3f;
+	CollRectDesc.fRadiusZ = 0.3f;
+	CollRectDesc.fOffSetX = 0.f;
+	CollRectDesc.fOffSetY = -0.25f;
+	CollRectDesc.fOffsetZ = 0.f;
+
+	/* For.Com_Collider_Rect*/
+	/*if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 	return E_FAIL;*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+		return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
@@ -258,6 +286,20 @@ void CWinona::Change_Motion()
 {
 }
 
+_float CWinona::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
+{
+	if (m_tInfo.iCurrentHp <= (_int)fDamage)
+	{
+		m_bDead = true;
+	}
+	else
+	{
+		m_tInfo.iCurrentHp -= (_int)fDamage;
+		cout << "WinonaHP: " << m_tInfo.iCurrentHp << endl;
+	}
+	return fDamage;
+}
+
 void CWinona::Interact(_uint Damage)
 {
 	if (m_iTalkCnt == 2 && Damage == 1)
@@ -305,10 +347,7 @@ void CWinona::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 void CWinona::Move(_float _fTimeDelta)
 {
 	_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
-
 	m_eCur_Dir = Check_Direction();
-
 
 	m_eState = CNPC::MOVE;
 
@@ -338,20 +377,17 @@ void CWinona::Move(_float _fTimeDelta)
 		m_ePre_Dir = m_eCur_Dir;
 	}
 
-	MoveWithoutOwner(_fTimeDelta);
+	m_pTransformCom->Go_PosTarget(_fTimeDelta, m_vTargetPos, _float3{ 0.f, 0.f, 0.f });
 
 	SetUp_BillBoard();
 }
 
 void CWinona::Idle(_float _fTimeDelta)
 {
-	m_fInteractTIme += _fTimeDelta;
-
 	m_eState = CNPC::IDLE;
 
 	if (m_ePreState != m_eState)
 	{
-		cout << "Idle" << endl;
 		switch (m_eCur_Dir)
 		{
 		case DIR_UP:
@@ -369,10 +405,6 @@ void CWinona::Idle(_float _fTimeDelta)
 
 		}
 		m_ePreState = m_eState;
-
-		//Test
-		//m_bFightMode = false;
-		m_bInteract = true;
 	}
 }
 
@@ -406,13 +438,11 @@ void CWinona::Dance(_float _fTimeDelta)
 	if (m_ePreState != m_eState)
 	{
 		m_bInteract = true;
-		cout << "Dance" << endl;
 		Change_Texture(TEXT("Com_Texture_Dance"));
 		m_ePreState = m_eState;
 	}
 	if (2.f < m_fInteractTIme)
 	{
-		cout << "DanceEnd" << endl;
 		m_fInteractTIme = 0.f;
 		m_bInteract = false;
 	}
@@ -426,7 +456,7 @@ void CWinona::Attack(_float _fTimeDelta)
 	if (m_ePreState != m_eState)
 	{
 		m_bInteract = true;
-		
+
 		switch (m_eCur_Dir)
 		{
 		case DIR_UP:
@@ -443,9 +473,6 @@ void CWinona::Attack(_float _fTimeDelta)
 			break;
 		}
 		m_ePreState = m_eState;
-
-		//cout << "Create_Bullet" << endl;
-
 	}
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 2)
 	{
@@ -463,17 +490,21 @@ void CWinona::Interrupted(_float _fTimeDelta)
 		switch (m_iInterruptNum)
 		{
 		case 0://TalkMode
-			Clear_Activated();
+ 			Clear_Activated();
 			m_bFirstCall = true;
 			m_bArrive = true;
 			m_bInteract = true;
 			m_bInterrupted = false;
+			m_bSelectAct = false; 
+			m_bFinishInteract = false;
 			break;
 		case 1: // attackMode
 			Clear_Activated();
 			m_bFightMode = true;
 			m_bInteract = true;
 			m_bInterrupted = false;
+			m_bSelectAct = false;
+			m_bFinishInteract = false;
 			break;
 		}
 
@@ -504,8 +535,6 @@ void CWinona::Skill(_float _fTimeDelta)
 		}
 		m_ePreState = m_eState;
 
-		//cout << "Create_Bullet" << endl;
-
 	}
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 2)
 	{
@@ -522,44 +551,35 @@ void CWinona::Select_Target(_float _fTimeDelta)
 
 	Find_Priority();
 
-	if (m_pTarget == nullptr)
-		return;
-	m_vTargetPos = m_pTarget->Get_Position();
-	m_bInteract = true;
 	m_bArrive = false;
-
+	m_bInteract = true;
 	//m_eCur_Dir = Check_Direction();
 }
 
 void CWinona::Set_RandPos(_float _fTimeDelta)
 {
-	if (m_bArrive)
-	{
-		_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
-		_int bSignX = rand() % 2;
-		_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
-		_int bSignZ = rand() % 2;
-		m_fPatrolPosX = bSignX ? (m_pTransformCom->Get_TransformDesc().InitPos.x + fOffsetX) : (m_pTransformCom->Get_TransformDesc().InitPos.x - fOffsetX);
-		m_fPatrolPosZ = bSignZ ? (m_pTransformCom->Get_TransformDesc().InitPos.z + fOffsetZ) : (m_pTransformCom->Get_TransformDesc().InitPos.z - fOffsetZ);
+	_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
+	_int bSignX = rand() % 2;
+	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
+	_int bSignZ = rand() % 2;
+	m_fPatrolPosX = bSignX ? (m_pTransformCom->Get_TransformDesc().InitPos.x + fOffsetX) : (m_pTransformCom->Get_TransformDesc().InitPos.x - fOffsetX);
+	m_fPatrolPosZ = bSignZ ? (m_pTransformCom->Get_TransformDesc().InitPos.z + fOffsetZ) : (m_pTransformCom->Get_TransformDesc().InitPos.z - fOffsetZ);
 
-		m_vTargetPos = _float3(m_fPatrolPosX, 0.5f, m_fPatrolPosZ);
-		m_bArrive = false;
-	}
+	m_vTargetPos = _float3(m_fPatrolPosX, 0.5f, m_fPatrolPosZ);
+	m_bArrive = false;
+	m_bSelectAct = false;
 }
 
 _bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 {
-	if (m_pTarget == nullptr)
-		return false;
+	/*if (m_pTarget == nullptr)
+		return false;*/
 
 	_float fRange = 5.f;
-
+	_float Compare_Range = 0.f;
 	switch (_iTarget)
 	{
 	case 0: //Target == Owner
-		Reset_Target();
-		m_pTarget = m_pOwner;
-		Safe_AddRef(m_pTarget);
 		if (!m_bFightMode)
 		{
 			fRange = m_fOwnerRadius;
@@ -568,9 +588,12 @@ _bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		{
 			fRange = 10.f;
 		}
+		m_vTargetPos = static_cast<CPlayer*>(m_pOwner)->Set_PartyPostion(this);
+
 		break;
 	case 1:// Basic AttackRange
 		fRange = m_fAtkRange;
+		m_vTargetPos = m_pTarget->Get_Position();
 		//fRange = 1.f;
 		break;
 
@@ -579,15 +602,20 @@ _bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		m_pTarget = m_pOwner;
 		Safe_AddRef(m_pTarget);
 		fRange = m_fSkillRange;
+		m_vTargetPos = m_pTarget->Get_Position();
 		break;
 	default:
+		if (m_pTarget)
+		{
+			m_vTargetPos = m_pTarget->Get_Position();
+		}
+		fRange = 0.2f;
 		break;
 	}
 
-	_float Compare_Range = 0.f;
-	Compare_Range = (m_pTarget->Get_Position().x - Get_Pos().x)*(m_pTarget->Get_Position().x - Get_Pos().x)
-			+ (m_pTarget->Get_Position().y - Get_Pos().y)*(m_pTarget->Get_Position().y - Get_Pos().y)
-			+ (m_pTarget->Get_Position().z - Get_Pos().z)*(m_pTarget->Get_Position().z - Get_Pos().z);	
+	Compare_Range = (m_vTargetPos.x - Get_Pos().x)*(m_vTargetPos.x - Get_Pos().x)
+		+ (m_vTargetPos.z - Get_Pos().z)*(m_vTargetPos.z - Get_Pos().z);
+
 
 	if (fRange < Compare_Range)
 	{
@@ -595,11 +623,21 @@ _bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		return true;
 	}
 	else
-	{
-		m_bArrive = true;
+	{//arrive
 		Clear_Activated();
 		return false;
 	}
+}
+
+_bool CWinona::Detect_Enemy()
+{
+	Find_Enemy();
+
+	if (m_pTarget == nullptr)
+		return false;
+
+	m_bInteract = true;
+	return true;
 }
 
 void CWinona::Revive_Berry(_float _fTimeDelta)
@@ -608,7 +646,6 @@ void CWinona::Revive_Berry(_float _fTimeDelta)
 
 	if (m_ePreState != m_eState)
 	{
-		cout << "Interact" << endl;
 		switch (m_eCur_Dir)
 		{
 		case DIR_UP:
@@ -636,6 +673,8 @@ void CWinona::Revive_Berry(_float _fTimeDelta)
 		m_fInteractTIme = 0.f;
 
 		m_bInteract = false;
+		m_bSelectAct = true;
+		Reset_Target();
 	}
 }
 
@@ -662,7 +701,6 @@ void CWinona::Talk_Player(_float _fTimeDelta)
 	{
 		m_fInteractTIme = 0.f;
 		m_bInteract = true;
-		cout << "Talk Start" << endl;
 		Change_Texture(TEXT("Com_Texture_Talk"));
 		m_ePreState = m_eState;
 
@@ -693,11 +731,12 @@ void CWinona::Talk_Player(_float _fTimeDelta)
 				}
 				break;
 			case 4:
+				m_bSelectAct = true;
 				Clear_Activated();
 				static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
 				static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
 				m_iTalkCnt = 0;
-				m_bInteract = false;
+				//m_bInteract = false;
 				m_bFirstCall = false;
 				if (m_bNextAct)
 				{
@@ -749,6 +788,7 @@ void CWinona::Talk_Player(_float _fTimeDelta)
 				}
 				break;
 			case 4:
+				m_bSelectAct = true;
 				Clear_Activated();
 				static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
 				static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
@@ -772,13 +812,13 @@ void CWinona::Talk_Player(_float _fTimeDelta)
 					}
 				}
 				m_iTalkCnt = 0;
-				m_bInteract = false;
+				m_bInteract = false; //Test
 				m_bFirstCall = false;
 				pinven->Get_Talk_list()->front()->setcheck(false);
 				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WinonaTalk(false);
 				break;
 			}
-		}		
+		}
 		m_iPreTalkCnt = m_iTalkCnt;
 	}
 }
@@ -822,7 +862,7 @@ void CWinona::Create_Bullet(_float _fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	_float3 vInitPos = Get_Position();
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Battery_Tower"), m_iCurrentLevelndex, TEXT("Skill"), &vInitPos)))
-		return; 
+		return;
 
 }
 
@@ -896,7 +936,7 @@ void CWinona::MoveWithoutOwner(_float _fTimeDelta)
 				m_bDirChanged = false;
 			}
 		}
-	
+
 	}
 	else
 	{
@@ -921,11 +961,11 @@ void CWinona::SetPosForSkill(_float _fTimeDelta)
 		_uint bSignX = rand() % 2;
 		_float fOffsetZ = _float(rand() % 2) *1.f + _float(rand() % 10) *0.1f;
 		_uint bSignZ = rand() % 2;
-		
+
 		fOffsetX = bSignX ? fOffsetX * -1.f : fOffsetX;
 		fOffsetZ = bSignZ ? fOffsetZ * -1.f : fOffsetZ;
 		m_vTargetPos = _float3(vMyPos.x + fOffsetX, vMyPos.y, vMyPos.z + fOffsetZ);
-	
+
 		for (_uint i = 0; i < m_vecCatapults.size(); i++)
 		{
 			_float3 fPos = m_vecCatapults[i]->Get_Position();
@@ -954,7 +994,7 @@ void CWinona::SetPosForSkill(_float _fTimeDelta)
 			bLoof = false;
 		}
 	}
-	
+
 
 
 
@@ -971,7 +1011,7 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 		return false;
 	}
-		
+
 
 	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
 	{
@@ -1105,33 +1145,22 @@ DIR_STATE CWinona::Check_Direction(void)
 }
 
 void CWinona::Find_Priority()
- {
-	if (m_bOwner && !m_bFightMode)
+{
+
+	int i = rand() % 5;
+	switch (i)
 	{
-		Reset_Target();
-		m_pTarget = m_pOwner;
-		Safe_AddRef(m_pTarget);
-	}
-	else if (m_bFightMode)
-	{
-		Find_Enemy();
-	}
-	else
-	{
-		int i = rand() % 4;
-		switch (i)
-		{
-		case 1:
-			Find_Friend();
-			break;
-		case 2:
-			Find_Berry();
-			break;
-		case 3:
-		case 4:
-			Reset_Target();
-			break;
-		}
+	case 1:
+		Find_Friend();
+		break;
+	case 2:
+		Find_Berry();
+		break;
+	case 0:
+	case 3:
+	case 4:
+		Set_RandPos(0.f);
+		break;
 	}
 }
 
@@ -1153,10 +1182,10 @@ void CWinona::Find_Friend()
 		if ((*iter_Obj) != nullptr && !dynamic_cast<CMonster*>(*iter_Obj)->Get_Aggro()
 			&& dynamic_cast<CMonster*>(*iter_Obj)->Get_MonsterID() == CMonster::MONSTER_ID::PIG)
 		{
-
 			if (m_pTarget == nullptr)
 			{
 				m_pTarget = *iter_Obj;
+				m_bSelectAct = false;
 			}
 
 			_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
@@ -1203,9 +1232,6 @@ void CWinona::Find_Enemy()
 	{
 		if ((*iter_Obj) != nullptr && dynamic_cast<CMonster*>(*iter_Obj)->Get_Aggro())
 		{
-
-
-
 			_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
 				+ (Get_Pos().y - (*iter_Obj)->Get_Position().y)*(Get_Pos().y - (*iter_Obj)->Get_Position().y)
 				+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
@@ -1220,7 +1246,10 @@ void CWinona::Find_Enemy()
 			if (m_pTarget == nullptr)
 			{
 				m_pTarget = *iter_Obj;
+				m_bSelectAct = false;
 			}
+
+
 
 			_float fTargetDir = (Get_Pos().x - (m_pTarget)->Get_Position().x)*(Get_Pos().x - (m_pTarget)->Get_Position().x)
 				+ (Get_Pos().y - (m_pTarget)->Get_Position().y)*(Get_Pos().y - (m_pTarget)->Get_Position().y)
@@ -1271,6 +1300,7 @@ void CWinona::Find_Berry()
 			if (m_pTarget == nullptr)
 			{
 				m_pTarget = *iter_Obj;
+				m_bSelectAct = false;
 			}
 
 			_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)

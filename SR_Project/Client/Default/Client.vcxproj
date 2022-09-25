@@ -203,6 +203,7 @@
     <ClInclude Include="..\public\CookPot.h" />
     <ClInclude Include="..\Public\Daycount.h" />
     <ClInclude Include="..\Public\Daycountpont.h" />
+    <ClInclude Include="..\Public\DayCycle.h" />
     <ClInclude Include="..\Public\Daypont.h" />
     <ClInclude Include="..\Public\Deadcountpont.h" />
     <ClInclude Include="..\Public\Deadmain.h" />
@@ -355,6 +356,7 @@
     <ClCompile Include="..\private\CookPot.cpp" />
     <ClCompile Include="..\Private\Daycount.cpp" />
     <ClCompile Include="..\Private\Daycountpont.cpp" />
+    <ClCompile Include="..\Private\DayCycle.cpp" />
     <ClCompile Include="..\Private\Daypont.cpp" />
     <ClCompile Include="..\Private\Deadcountpont.cpp" />
     <ClCompile Include="..\Private\Deadmain.cpp" />
@@ -484,6 +486,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Cube.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Default.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_DefaultBlend.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl" />

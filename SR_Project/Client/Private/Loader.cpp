@@ -28,6 +28,7 @@
 #include "Catapult.h"
 #include "Statue.h"
 #include "Trap.h"
+#include "Portable_Pot.h"
 
 #include "CarnivalMemory.h"
 #include "CarnivalCard.h"
@@ -932,7 +933,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_DeadUI */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniMap_Icon"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/minimap/minimapicon%d.png"), 22))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/minimap/minimapicon%d.png"), 23))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_DeadUI */

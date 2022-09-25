@@ -42,12 +42,17 @@ HRESULT CWoodie::Initialize(void * pArg)
 
 	m_fSkillRange = 2.f;
 	m_fAtkRange = 2.f;
-	m_fOwnerRadius = 5.f;
-
+	m_fOwnerRadius = 10.f;
+	m_fMinRange = 5.f;
+	m_fDetectRange = 15.f;
 	//Init BehavirvTree
 	BehaviorTree = new CBT_NPC(this);
 
 	BehaviorTree->Initialize();
+
+	m_tInfo.iMaxHp = 100;
+	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.fDamage = 20.f;
 
 	Change_Texture(TEXT("Com_Texture_Idle_Down"));
 	return S_OK;
@@ -93,6 +98,15 @@ int CWoodie::Tick(_float fTimeDelta)
 
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 	}
+
+	if (m_bDead)
+	{
+		return OBJ_NOEVENT;
+	}
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PLAYER, this);
+
 	__super::Tick(fTimeDelta);
 
 
@@ -110,6 +124,11 @@ void CWoodie::Late_Tick(_float fTimeDelta)
 
 	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
 		return;
+
+	if (m_bDead)
+	{
+		return;
+	}
 
 	__super::Late_Tick(fTimeDelta);
 	m_pTextureCom->MoveFrame(m_TimerTag);
@@ -158,9 +177,20 @@ HRESULT CWoodie::SetUp_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	/* For.Com_Collider*/
-	/*if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
+	CCollider_Cube::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
+	CollRectDesc.fRadiusY = 0.4f;
+	CollRectDesc.fRadiusX = 0.3f;
+	CollRectDesc.fRadiusZ = 0.3f;
+	CollRectDesc.fOffSetX = 0.f;
+	CollRectDesc.fOffSetY = -0.25f;
+	CollRectDesc.fOffsetZ = 0.f;
+
+	/* For.Com_Collider_Rect*/
+	/*if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 	return E_FAIL;*/
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
+		return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
@@ -349,13 +379,24 @@ void CWoodie::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 
 }
 
+_float CWoodie::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
+{
+	if (m_tInfo.iCurrentHp <= (_int)fDamage)
+	{
+		m_bDead = true;
+	}
+	else
+	{
+		m_tInfo.iCurrentHp -= (_int)fDamage;
+		cout << "WoodieHP: " << m_tInfo.iCurrentHp << endl;
+	}
+	return fDamage;
+}
+
 void CWoodie::Move(_float _fTimeDelta)
 {
 	_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
-
 	m_eCur_Dir = Check_Direction();
-
 
 	m_eState = CNPC::MOVE;
 
@@ -363,7 +404,6 @@ void CWoodie::Move(_float _fTimeDelta)
 		|| m_ePre_Dir != m_eCur_Dir)
 	{
 		m_eCur_Dir = Check_Direction();
-
 		switch (m_eCur_Dir)
 		{
 		case DIR_UP:
@@ -386,30 +426,17 @@ void CWoodie::Move(_float _fTimeDelta)
 		m_ePre_Dir = m_eCur_Dir;
 	}
 
-	//if (m_bOwner)
-	//{
-	//	MoveWithOwner(_fTimeDelta);
-	//}
-	//else
-	//{
-	//	
-	//}
-
-	MoveWithoutOwner(_fTimeDelta);
+	m_pTransformCom->Go_PosTarget(_fTimeDelta, m_vTargetPos, _float3{ 0.f, 0.f, 0.f });
 
 	SetUp_BillBoard();
-
 }
 
 void CWoodie::Idle(_float _fTimeDelta)
 {
-	m_fInteractTIme += _fTimeDelta;
-
 	m_eState = CNPC::IDLE;
 
 	if (m_ePreState != m_eState)
 	{
-		cout << "Idle" << endl;
 		switch (m_eCur_Dir)
 		{
 		case DIR_UP:
@@ -427,10 +454,6 @@ void CWoodie::Idle(_float _fTimeDelta)
 
 		}
 		m_ePreState = m_eState;
-
-		//Test
-		//m_bFightMode = false;
-		m_bInteract = true;
 	}
 }
 
@@ -525,12 +548,16 @@ void CWoodie::Interrupted(_float _fTimeDelta)
 			m_bArrive = true;
 			m_bInteract = true;
 			m_bInterrupted = false;
+			m_bSelectAct = false;
+			m_bFinishInteract = false;
 			break;
 		case 1: // attackMode
 			Clear_Activated();
 			m_bFightMode = true;
 			m_bInteract = true;
 			m_bInterrupted = false;
+			m_bSelectAct = false;
+			m_bFinishInteract = false;
 			break;
 		}
 
@@ -593,77 +620,88 @@ void CWoodie::Select_Target(_float _fTimeDelta)
 
 	Find_Priority();
 
-	if (m_pTarget == nullptr)
-		return;
-
-	m_vTargetPos = m_pTarget->Get_Position();
-	m_bInteract = true;
 	m_bArrive = false;
-
-	//m_eCur_Dir = Check_Direction();
+	m_bInteract = true;
 }
 
 void CWoodie::Set_RandPos(_float _fTimeDelta)
 {// Find Random Patroling Position
-	if (m_bArrive)
-	{
-		_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
-		_int bSignX = rand() % 2;
-		_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
-		_int bSignZ = rand() % 2;
-		m_fPatrolPosX = bSignX ? (m_pTransformCom->Get_TransformDesc().InitPos.x + fOffsetX) : (m_pTransformCom->Get_TransformDesc().InitPos.x - fOffsetX);
-		m_fPatrolPosZ = bSignZ ? (m_pTransformCom->Get_TransformDesc().InitPos.z + fOffsetZ) : (m_pTransformCom->Get_TransformDesc().InitPos.z - fOffsetZ);
+	_float fOffsetX = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
+	_int bSignX = rand() % 2;
+	_float fOffsetZ = ((_float)rand() / (float)(RAND_MAX)) * m_fPatrolRadius;
+	_int bSignZ = rand() % 2;
+	m_fPatrolPosX = bSignX ? (m_pTransformCom->Get_TransformDesc().InitPos.x + fOffsetX) : (m_pTransformCom->Get_TransformDesc().InitPos.x - fOffsetX);
+	m_fPatrolPosZ = bSignZ ? (m_pTransformCom->Get_TransformDesc().InitPos.z + fOffsetZ) : (m_pTransformCom->Get_TransformDesc().InitPos.z - fOffsetZ);
 
-		m_vTargetPos = _float3(m_fPatrolPosX, 0.5f, m_fPatrolPosZ);
-		m_bArrive = false;
-	}
-	//m_eCur_Dir = Check_Direction();
+	m_vTargetPos = _float3(m_fPatrolPosX, 0.5f, m_fPatrolPosZ);
+	m_bArrive = false;
+	m_bSelectAct = false;
 }
 
 _bool CWoodie::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 {
-	if (m_pTarget == nullptr)
-		return false;
 	if (m_bSkillUsing)
 		return false;
 
 	_float fRange = 5.f;
+	_float Compare_Range = 0.f;
 	switch (_iTarget)
 	{
 	case 0: //Target == Owner
-		Reset_Target();
-		m_pTarget = m_pOwner;
-		Safe_AddRef(m_pTarget);
-		if (!m_bFightMode)
-		{
-			fRange = m_fOwnerRadius;
-			m_fMinRange = m_fOwnerRadius;
-		}
-		else
-		{
-			fRange = m_fOwnerRadius*2.f;
-			m_fMinRange = m_fOwnerRadius;
-		}
+		m_vTargetPos = static_cast<CPlayer*>(m_pOwner)->Set_PartyPostion(this);
 		break;
 	case 1:// Basic AttackRange
-		fRange = m_fAtkRange;
-		m_fMinRange = m_fAtkRange;
+		m_vTargetPos = m_pTarget->Get_Position();
 		break;
-
 	case 2://SkillRange
 		Reset_Target();
 		m_pTarget = m_pOwner;
 		Safe_AddRef(m_pTarget);
-		fRange = m_fSkillRange;
-		m_fMinRange = m_fSkillRange;
+		m_vTargetPos = m_pTarget->Get_Position();
 		break;
 	default:
+		if (m_pTarget)
+		{
+			m_vTargetPos = m_pTarget->Get_Position();
+		}
+		fRange = 0.2f;
 		break;
 	}
 
-	_float Compare_Range = (m_pTarget->Get_Position().x - Get_Pos().x)*(m_pTarget->Get_Position().x - Get_Pos().x)
-		/*+ (m_pTarget->Get_Position().y - Get_Pos().y)*(m_pTarget->Get_Position().y - Get_Pos().y)*/
-		+ (m_pTarget->Get_Position().z - Get_Pos().z)*(m_pTarget->Get_Position().z - Get_Pos().z);
+
+	Compare_Range = (m_vTargetPos.x - Get_Pos().x)*(m_vTargetPos.x - Get_Pos().x)
+		+ (m_vTargetPos.z - Get_Pos().z)*(m_vTargetPos.z - Get_Pos().z);
+
+
+	if (m_bFightMode)
+	{
+		if (m_fOwnerRadius < Compare_Range)
+		{
+			Clear_Activated();
+			return true;
+		}
+		else if(m_fMinRange > Compare_Range)
+		{
+			m_bArrive = true;
+			Clear_Activated();
+			return false;
+		}
+	}
+	else
+	{
+		if (m_fMinRange < Compare_Range)
+		{
+			Clear_Activated();
+			return true;
+		}
+		else
+		{
+			m_bArrive = true;
+			Clear_Activated();
+			return false;
+		}
+	}
+
 
 	if (fRange < Compare_Range)
 	{
@@ -692,6 +730,17 @@ _bool CWoodie::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 	}
 
 
+}
+
+_bool CWoodie::Detect_Enemy()
+{
+	Find_Enemy();
+
+	if (m_pTarget == nullptr)
+		return false;
+
+	m_bInteract = true;
+	return true;
 }
 
 void CWoodie::Revive_Berry(_float _fTimeDelta)
@@ -723,10 +772,11 @@ void CWoodie::Revive_Berry(_float _fTimeDelta)
 
 	if (2.f < m_fInteractTIme)
 	{
-		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(0);
 		m_fInteractTIme = 0.f;
 
 		m_bInteract = false;
+		m_bSelectAct = true;
+		Reset_Target();
 	}
 
 
@@ -755,7 +805,6 @@ void CWoodie::Talk_Player(_float _fTimeDelta)
 	{
 		m_fInteractTIme = 0.f;
 		m_bInteract = true;
-		cout << "Talk Start" << endl;
 		Change_Texture(TEXT("Com_Texture_Talk"));
 		m_ePreState = m_eState;
 
@@ -788,6 +837,7 @@ void CWoodie::Talk_Player(_float _fTimeDelta)
 				}
 				break;
 			case 4:
+				m_bSelectAct = true;
 				Clear_Activated();
 				static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
 				static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
@@ -844,6 +894,7 @@ void CWoodie::Talk_Player(_float _fTimeDelta)
 				}
 				break;
 			case 4:
+				m_bSelectAct = true;
 				Clear_Activated();
 				static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
 				static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
@@ -1133,36 +1184,21 @@ DIR_STATE CWoodie::Check_Direction(void)
 
 void CWoodie::Find_Priority()
 {
-	if (m_bOwner && !m_bFightMode)
+	int i = rand() % 5;
+	switch (i)
 	{
-		Reset_Target();
-		m_pTarget = m_pOwner;
-		Safe_AddRef(m_pTarget);
+	case 1:
+		Find_Friend();
+		break;
+	case 2:
+		Find_Berry();
+		break;
+	case 0:
+	case 3:
+	case 4:
+		Set_RandPos(0.f);
+		break;
 	}
-	else if (m_bFightMode)
-	{
-		Find_Enemy();
-	}
-	else
-	{
-		int i = rand() % 4;
-		switch (i)
-		{
-		case 1:
-			Find_Friend();
-			break;
-		case 2:
-			Find_Berry();
-			break;
-		case 3:
-		case 4:
-			Reset_Target();
-			m_pTarget = nullptr;
-			break;
-		}
-	}
-	//Find_Enemy();
-	//Find_Player();
 }
 
 void CWoodie::Find_Friend()
@@ -1187,6 +1223,7 @@ void CWoodie::Find_Friend()
 			if (m_pTarget == nullptr)
 			{
 				m_pTarget = *iter_Obj;
+				m_bSelectAct = false;
 			}
 
 			_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
@@ -1262,6 +1299,7 @@ void CWoodie::Find_Enemy()
 			if (m_pTarget == nullptr)
 			{
 				m_pTarget = *iter_Obj;
+				m_bSelectAct = false;
 			}
 
 			_float fTargetDir = (Get_Pos().x - (m_pTarget)->Get_Position().x)*(Get_Pos().x - (m_pTarget)->Get_Position().x)
@@ -1308,41 +1346,7 @@ void CWoodie::Find_Berry()
 	_uint iIndex = 0;
 	Reset_Target();
 	m_pTarget = nullptr;
-	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
-	{
-		if ((*iter_Obj) != nullptr && !dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_CanInteract()
-			&& dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::BERRYBUSH)
-		{
-
-			if (m_pTarget == nullptr)
-			{
-				m_pTarget = *iter_Obj;
-			}
-
-			_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
-				/*+ (Get_Pos().y - (*iter_Obj)->Get_Position().y)*(Get_Pos().y - (*iter_Obj)->Get_Position().y)*/
-				+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
-
-			_float fTargetDir = (Get_Pos().x - (m_pTarget)->Get_Position().x)*(Get_Pos().x - (m_pTarget)->Get_Position().x)
-				/*+ (Get_Pos().y - (m_pTarget)->Get_Position().y)*(Get_Pos().y - (m_pTarget)->Get_Position().y)*/
-				+ (Get_Pos().z - (m_pTarget)->Get_Position().z)*(Get_Pos().z - (m_pTarget)->Get_Position().z);
-
-			if (fCmpDir < fTargetDir)
-			{
-				m_pTarget = *iter_Obj;
-			}
-
-			++iIndex;
-			iter_Obj++;
-		}
-		else
-		{
-			++iIndex;
-			iter_Obj++;
-			continue;
-		}
-	}
-
+	
 	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
 

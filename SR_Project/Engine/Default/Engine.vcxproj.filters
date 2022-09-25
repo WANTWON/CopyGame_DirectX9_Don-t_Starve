@@ -100,6 +100,9 @@
     <Filter Include="01.Utility\03.Components\Shader">
       <UniqueIdentifier>{a8150990-5f75-40d8-968b-65d95413c106}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\05.ObserverPattern">
+      <UniqueIdentifier>{cbd2ea99-cbda-4e2f-9a86-30f11ca07cd3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -188,6 +191,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Shader.cpp">
       <Filter>01.Utility\03.Components\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ObserverTarget.cpp">
+      <Filter>01.Utility\05.ObserverPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Observer.cpp">
+      <Filter>01.Utility\05.ObserverPattern</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +301,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Shader.h">
       <Filter>01.Utility\03.Components\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Observer.h">
+      <Filter>01.Utility\05.ObserverPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ObserverTarget.h">
+      <Filter>01.Utility\05.ObserverPattern</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

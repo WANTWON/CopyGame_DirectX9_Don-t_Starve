@@ -45,6 +45,8 @@ void CSound_Manager::PlaySound(TCHAR * pSoundKey, const _uint& eID, const float&
 
 	m_pSystem->playSound(iter->second, 0, false, &m_pChannelArr[eID]);
 
+
+
 	//if (FMOD_Channel_IsPlaying(m_pChannelArr[eID], &bPlay))
 	//{
 	//	FMOD_System_PlaySound(m_pSystem, FMOD_CHANNEL_FREE, iter->second, FALSE, &m_pChannelArr[eID]);

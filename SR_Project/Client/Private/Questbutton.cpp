@@ -66,6 +66,9 @@ int CQuestbutton::Tick(_float fTimeDelta)
 		if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
 			CInventory_Manager*         pInv = CInventory_Manager::Get_Instance();
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			pInstance->PlaySounds(TEXT("questbutton.wav"), SOUND_UI, 0.7f);
+			
 		//	Safe_AddRef(pInv);
 			if (pInv->Get_Quest_list()->front()->get_onoff() == true)
 			{

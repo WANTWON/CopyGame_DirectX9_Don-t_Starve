@@ -83,6 +83,10 @@ int CMiniMap_button::Tick(_float fTimeDelta)
 			//Safe_AddRef(pInv);
 			if (pInv->Get_Minimap_list()->front()->get_check() == true)
 			{
+				
+				CGameInstance* pInstance = CGameInstance::Get_Instance();
+				pInstance->PlaySounds(TEXT("Map_close1.wav"), SOUND_UICLOSE, 0.9f);
+
 				pInv->Get_Minimap_list()->front()->set_check(false);
 				auto p = pInv->Get_Minimapicon_list();
 				for (auto k : *p)
@@ -95,6 +99,9 @@ int CMiniMap_button::Tick(_float fTimeDelta)
 			}
 			else if (pInv->Get_Minimap_list()->front()->get_check() == false)
 			{
+				CGameInstance* pInstance = CGameInstance::Get_Instance();
+				pInstance->PlaySounds(TEXT("Map_open.wav"), SOUND_UIOPEN, 0.9f);
+
 				pInv->Get_Minimap_list()->front()->set_check(true);
 				auto p = pInv->Get_Minimapicon_list();
 				for (auto k : *p)

@@ -145,6 +145,8 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), CShader::Create(m_pGraphic_Device, TEXT("../Bin/Shaderfiles/Shader_DefaultBlend.hlsl")))))
 		return E_FAIL;
 	
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Cube"), CShader::Create(m_pGraphic_Device, TEXT("../Bin/Shaderfiles/Shader_Cube.hlsl")))))
+		return E_FAIL;
 	return S_OK;
 }
 

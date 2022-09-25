@@ -257,7 +257,12 @@ void CLevel_Boss::Start_Camera_Motion()
 {
 	if (!m_bTargetCam && m_dwTime + 1000 < GetTickCount())
 	{
+		
+		
+			
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		
+		pGameInstance->PlaySounds(TEXT("bosstalk2.wav"), SOUND_UI, 0.6f);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
 		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_BOSS, TEXT("Layer_Monster"));
