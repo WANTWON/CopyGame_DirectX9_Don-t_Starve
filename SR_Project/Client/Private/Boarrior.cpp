@@ -428,10 +428,36 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		}
 		break;
 	case STATE::DIE:
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 74)
-			Drop_Items();
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 92)
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 55)
+		{
+			if (m_bFirstFrame)
+			{
+				// Camera Shake
+				CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+				if (pCamera)
+					pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.5f, 0.1f, 0.01f);
+
+				// Play Step Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("bearger_step_%d.wav"), rand() % 8 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+
+				m_bFirstFrame = false;
+			}
+		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 74)
+		{
+			if (m_bFirstFrame)
+			{
+				Drop_Items();
+
+				m_bFirstFrame = false;
+			}
+		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 92)
 			m_bDeadAnimExpired = true;
+		else
+			m_bFirstFrame = true;
 
 		m_pTextureCom->MoveFrame(m_TimerTag, false);
 		break;
@@ -1040,7 +1066,9 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 5 && !m_bDidDamage)
 			{
 				// Play Sound
-				// ..
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("boarrior_attack_%d.wav"), rand() % 4 + 1);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .5f);
 
 				// Create Standard Bullet
 				BULLETDATA BulletData;
@@ -1090,7 +1118,12 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 				if (iAnimFrameSyncCounter == 0)
 				{
 					// Play Sound
-					// ..
+					_tchar szFileName[MAX_PATH] = TEXT("");
+					wsprintf(szFileName, TEXT("bearger_swhoosh_%d.wav"), rand() % 4 + 1);
+					pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+
+					// Play Fire Sound
+					pGameInstance->PlaySounds(TEXT("boarrior_fire.wav"), SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 
 					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 						return;
@@ -1135,7 +1168,12 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 				if (iAnimFrameSyncCounter == 4)
 				{
 					// Play Sound
-					// ..
+					_tchar szFileName[MAX_PATH] = TEXT("");
+					wsprintf(szFileName, TEXT("bearger_swhoosh_%d.wav"), rand() % 4 + 1);
+					pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+
+					// Play Fire Sound
+					pGameInstance->PlaySounds(TEXT("boarrior_fire.wav"), SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 
 					BulletData.vPosition.x = vCenterPosition.x + cosf(D3DXToRadian(90.f)) * fDistance - sin(D3DXToRadian(90.f)) * fDistance;
 					BulletData.vPosition.z = vCenterPosition.z + sin(D3DXToRadian(90.f)) * fDistance + cos(D3DXToRadian(90.f)) * fDistance;
@@ -1195,17 +1233,27 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 		break;
 		case STATE::ATTACK_3:
 		{
-			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 38 && !m_bShouldSpawnBullet)
+			if (m_pTextureCom->Get_Frame().m_iCurrentTex == 14)
+			{
+				if (m_bFirstFrame)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("hit_ground.wav"), SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+					m_bFirstFrame = false;
+				}
+			}
+			else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 38 && !m_bShouldSpawnBullet)
 			{
 				m_bShouldSpawnBullet = true;
-				
+
 				// Play Sound
-				// ..
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("firehound_explo.wav"), SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 
 				CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 				if (pCamera)
 					pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.7f, 0.2f, 0.01f);
 			}
+			else
+				m_bFirstFrame = true;
 
 			break;
 		}
@@ -1215,7 +1263,7 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 
 void CBoarrior::Spawn_Bullet(_float fTimeDelta)
 {
-	if (m_fBulletAliveTime < .15f)
+	if (m_fBulletAliveTime < .05f)
 		m_fBulletAliveTime += fTimeDelta;
 	else
 	{
@@ -1431,6 +1479,9 @@ ApplyDamage:
 			}
 			else
 				m_fStaggerDamage += fDamage;
+
+			// Play Hit Sound
+			// ..
 		}
 	}
 
