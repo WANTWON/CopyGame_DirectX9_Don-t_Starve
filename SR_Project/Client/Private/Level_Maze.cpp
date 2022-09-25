@@ -467,6 +467,14 @@ void CLevel_Maze::Update_Floor_Motion()
 		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_MEMORY;
 		StationDesc.vInitPosition = _float3(25.00f, 0.f, 41.8f);
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+
+		// Play Floor Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("carnivalgame_floor_%d.wav"), rand() % 3 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
+
+		// Play Station Place Sound
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Place_Carnivalgame_Memory.wav"), SOUND_ID::SOUND_OBJECT, .8f);
 	}
 	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[4])
 	{
@@ -497,6 +505,14 @@ void CLevel_Maze::Update_Floor_Motion()
 		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_BIRD;
 		StationDesc.vInitPosition = _float3(9.5f, 0.f, 24.f);
 		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+
+		// Play Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("carnivalgame_floor_%d.wav"), rand() % 3 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
+
+		// Play Station Place Sound
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("carnival_feedbirds_station_place.wav"), SOUND_ID::SOUND_OBJECT, .8f);
 	}
 
 	else if ((pGameObject->Get_Position().x < 20) && (pGameObject->Get_Position().z < 26) && (pGameObject->Get_Position().z > 25) && !m_bPuzzleStart[6])

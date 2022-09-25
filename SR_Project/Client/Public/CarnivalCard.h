@@ -85,6 +85,14 @@ public:
 	{
 		m_bIsGood = isGood;
 		isGood ? m_eState = STATE::HINT_GOOD : m_eState = STATE::HINT_BAD;
+
+		// Play Good Hint Sound
+		if (isGood)
+		{	
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("hint_good_carnivalgame_memory_card_%d.wav"), rand() % 3 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
+		}
 	}
 	_bool Check_Hungry(_float fTimeDelta);
 	virtual void Interact(_uint Damage = 0) override;

@@ -145,6 +145,10 @@ void CCarnivalMemory::Interact(_uint Damage)
 		m_vCamSettingPosOffset = _float3(0.f, 0.f, 2.f);
 		m_fCameraSettingDistance = 5.f;
 		m_eState = STATESTATION::HIT;
+
+		// Play Sound
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Turn_On_Carnivalgame_Memory.wav"), SOUND_ID::SOUND_OBJECT, .8f);
+
 		Start_Memory();
 	}
 	else if (m_tStationDesc.eType == STATIONTYPE::STATION_BIRD)
@@ -153,6 +157,10 @@ void CCarnivalMemory::Interact(_uint Damage)
 		m_vCamSettingPosOffset = _float3(0.f, 0.f, 1.f);
 		m_vCamSettingDistanceOffset = _float3(0.f, 7.f, -6.f);
 		m_eState = STATESTATION::TURN_ON;
+
+		// Play Sound
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("carnival_feedbirds_station_turnon.wav"), SOUND_ID::SOUND_OBJECT, .8f);
+
 		Start_Bird();
 	}
 	else if (m_tStationDesc.eType == STATIONTYPE::STATION_EGG)
@@ -268,6 +276,11 @@ void CCarnivalMemory::Start_Round(_float fTimeDelta)
 			m_vecCards[i]->Set_Interact(true);
 		}
 	}
+
+	// Play Sound
+	_tchar szFileName[MAX_PATH] = TEXT("");
+	wsprintf(szFileName, TEXT("Begin_Round_Carnivalgame_Memory_%02d.wav"), rand() % 3 + 1);
+	CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
 
 	m_bIsRoundActive = true;
 }
