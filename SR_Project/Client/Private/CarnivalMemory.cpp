@@ -212,6 +212,9 @@ void CCarnivalMemory::CameraChange()
 
 void CCarnivalMemory::Start_Memory()
 {
+	// Start Bird BGM
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("Carnival_Track_1.wav"), .7f);
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
 
@@ -309,9 +312,14 @@ void CCarnivalMemory::Check_Guesses()
 		m_vecGuesses.clear();
 		m_iTurnCount--;
 
+		// Play Sound
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Turn_On_Carnivalgame_Memory.wav"), SOUND_ID::SOUND_OBJECT, .8f);
+
 		// Win Game
 		if (m_iTurnCount == 0)
 		{
+			CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
+
 			CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
 			dynamic_cast<CLevel_Maze*>(pLevel)->Set_PuzzleSolved(true);
 
@@ -324,12 +332,16 @@ void CCarnivalMemory::Check_Guesses()
 				CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 				dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(false);
 			}
+
 			// Spawn Confetti Effect
 			CDecoObject::DECODECS DecoDesc;
 			DecoDesc.m_eState = CDecoObject::PARTY;
 			DecoDesc.vInitPosition = Get_Position();
 			DecoDesc.vInitPosition.y += 1.5f;
 			CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+
+			// Play Win Sound
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("win_Carnivalgame_Memory.wav"), SOUND_ID::SOUND_OBJECT, .8f);
 		}
 	}
 }
@@ -371,6 +383,9 @@ _uint CCarnivalMemory::Get_Hungry_Max()
 
 void CCarnivalMemory::Start_Bird()
 {
+	// Start Bird BGM
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("Carnival_Track_2.wav"), .7f);
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
 
@@ -431,6 +446,8 @@ void CCarnivalMemory::Play_Bird(_float fTimeDelta)
 		// Game Won
 		if (m_bCanPlay)
 		{
+			CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
+
 			CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
 			dynamic_cast<CLevel_Maze*>(pLevel)->Set_PuzzleSolved(true);
 
@@ -440,6 +457,9 @@ void CCarnivalMemory::Play_Bird(_float fTimeDelta)
 			DecoDesc.vInitPosition = Get_Position();
 			DecoDesc.vInitPosition.y += 1.f;
 			CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+
+			// Play Win Sound
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("carnival_feedbirds_station_win.wav"), SOUND_ID::SOUND_OBJECT, .8f);
 
 			for (auto& pBird : m_vecCards)
 			{
@@ -529,7 +549,7 @@ _bool CCarnivalMemory::Check_Clear()
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	if (m_iEggCount <= 0)
 	{
-		if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
+		if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET && !m_bIsWin)
 		{
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 			pGameInstance->StopSound(SOUND_BGM);

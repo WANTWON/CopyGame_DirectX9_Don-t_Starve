@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CarnivalCard.h"
-#include "GameInstance.h"
 #include "Player.h"
 #include "Item.h"
 #include "PickingMgr.h"
@@ -112,6 +111,22 @@ void CCarnivalCard::Interact(_uint Damage)
 	{
 		m_eState = m_bIsGood ? STATE::REVEAL_GOOD_PRE : STATE::REVEAL_BAD_PRE;
 		m_pMemory->Make_Guess(m_bIsGood ? true : false);
+
+		// Play Guess Sound
+		if (m_bIsGood)
+		{
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("reveal_good_carnivalgame_memory_card_%d.wav"), rand() % 3 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
+		}
+		else
+		{
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("reveal_bad_carnivalgame_memory_card_%d.wav"), rand() % 3 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
+		}
 	}
 	else if (m_tDesc.eType == TYPE::BIRD)
 	{
@@ -125,6 +140,11 @@ void CCarnivalCard::Interact(_uint Damage)
 			DecoDesc.m_eState = CDecoObject::DECOTYPE::SPARKLE;
 			DecoDesc.vInitPosition = Get_Position();
 			CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
+
+			// Play Fed Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("carnivalgame_feedchicks_bird_hungry_fed_%d.wav"), rand() % 3 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, 1.f);
 		}
 		else
 			m_pMemory->Set_FedGoal(false);
@@ -229,11 +249,11 @@ HRESULT CCarnivalCard::Texture_Clone()
 	}
 	else if (m_tDesc.eType == TYPE::BIRD)
 	{
-		TextureDesc.m_fSpeed = 25;
 		TextureDesc.m_iEndTex = 45;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Fed"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Fed"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		m_vecTexture.push_back(m_pTextureCom);
+		TextureDesc.m_fSpeed = 25;
 		TextureDesc.m_iEndTex = 48;
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Hungry"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_CarnivalGame_Bird_Hungry"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
@@ -347,6 +367,11 @@ void CCarnivalCard::Change_Frame(_float fTimeDelta)
 		{
 			m_eState = STATE::HUNGRY;
 			m_bInteract = true;
+	
+			// Play Sound Hungry
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("carnivalgame_feedchicks_bird_hungry_loop_%d.wav"), rand() % 3 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
 		}
 		break;
 	case IDLE:
@@ -461,6 +486,26 @@ void CCarnivalCard::PickingTrue()
 	cout << "Collision Carnival Card : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
 
 	Safe_Release(pGameInstance);
+}
+
+void CCarnivalCard::Hungry_On()
+{
+	m_eState = STATE::HUNGRY_PRE;
+	m_bIsHungry = true;
+}
+
+void CCarnivalCard::Give_Hint(_bool isGood)
+{
+	m_bIsGood = isGood;
+	isGood ? m_eState = STATE::HINT_GOOD : m_eState = STATE::HINT_BAD;
+
+	// Play Good Hint Sound
+	if (isGood)
+	{
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("hint_good_carnivalgame_memory_card_%d.wav"), rand() % 3 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
+	}
 }
 
 CCarnivalCard* CCarnivalCard::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
