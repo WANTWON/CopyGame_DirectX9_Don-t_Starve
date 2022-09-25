@@ -67,6 +67,9 @@ void CCookPot::Late_Tick(_float fTimeDelta)
 
 	Change_Motion();
 	Change_Frame(fTimeDelta);
+
+	if (m_bConstruct)
+		m_eShaderID = SHADER_CONSTRUCT;
 }
 
 HRESULT CCookPot::Render()

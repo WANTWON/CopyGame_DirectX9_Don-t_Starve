@@ -42,6 +42,9 @@ HRESULT CFloorGrateEruption::Initialize(void* pArg)
 		break;
 	case ERUPTION_STATE::ERUPTION:
 		m_pTransformCom->Set_Scale(1.7f, 1.7f, 1.f);
+		
+		if (CGameInstance::Get_Instance()->Is_In_Frustum(m_tEruptionDesc.vInitPosition, m_fRadius) == true)
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("boarrior_fire.wav"), SOUND_ID::SOUND_OBJECT, .05f);
 		break;
 	}
 

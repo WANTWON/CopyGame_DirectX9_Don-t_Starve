@@ -45,19 +45,28 @@ public:
 	HRESULT Release_RenderState();
 	void SetUp_BillBoard();
 	void Set_ShaderID();
+	void Set_ShaderColor();
 private:
 	CTransform*			m_pTransformCom = nullptr;
 	CVIBuffer_Rect*		m_pVIBufferCom = nullptr;
 	CTexture*			m_pTextureCom = nullptr;
 	CRenderer*			m_pRendererCom = nullptr;
 	CShader*			m_pShaderCom = nullptr;
-	SHADER_STATE		m_eShaderID = SHADER_IDLE;
+	
+
+	/* for test Shader Color*/
+	_float m_fDinnerMaxRange = 15.f;
+	_float m_fDinnerMinRange = 10.f;
+	_float m_fDinnerDelta = 0.f;
+	_float m_fNightDelta = 0.f;
+	_float m_fNightAlpha = 0.f;
+	DAY_STATE m_eDayState = DAY_MORNING;
+	SHADER_STATE m_eShaderID = SHADER_IDLE;
 
 private:
 	STATEDESC			m_StateDesc;
 	_uint				m_iCurrentFrameIndex = 0;
 	_float				m_fAlpha = 0;
-
 public:
 	static CParticle* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg) override;

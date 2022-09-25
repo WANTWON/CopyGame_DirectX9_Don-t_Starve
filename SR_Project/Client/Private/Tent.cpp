@@ -35,6 +35,7 @@ HRESULT CTent::Initialize(void* pArg)
 	m_eInteract_OBJ_ID = INTERACTOBJ_ID::TENT;
 
 	m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
+	m_fRadius = 1.5f;
 
 	return S_OK;
 }
@@ -48,6 +49,7 @@ int CTent::Tick(_float fTimeDelta)
 		_float3 vPickingPos = CPickingMgr::Get_Instance()->Get_PickingPos();
 		vPickingPos.y += m_fRadius;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPickingPos);
+		
 	}
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -61,6 +63,9 @@ void CTent::Late_Tick(_float fTimeDelta)
 
 	Change_Motion();
 	Change_Frame(fTimeDelta);
+
+	if(m_bConstruct)
+		m_eShaderID = SHADER_CONSTRUCT;
 }
 
 HRESULT CTent::Render()
@@ -78,11 +83,16 @@ void CTent::Interact(_uint Damage)
 		m_bInteract = false;
 		m_bIsInsideTent = m_eState == STATE::IDLE ? true : false;
 
+		if (m_eState == STATE::IDLE)
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("tent_open.wav"), SOUND_ID::SOUND_OBJECT, .8f);
+		else if (m_eState == STATE::SLEEP)
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("tent_close.wav"), SOUND_ID::SOUND_OBJECT, .8f);
+
 		m_eState = ENTER;
 
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-		pPlayer->Set_Sleeping(m_bIsInsideTent ? true : false);
+		pPlayer->Set_Sleeping(m_bIsInsideTent ? true : false);	
 	}
 }
 
@@ -204,6 +214,23 @@ void CTent::Change_Frame(_float fTimeDelta)
 			
 		break;
 	case SLEEP:
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 35 
+			|| m_pTextureCom->Get_Frame().m_iCurrentTex == 41
+			|| m_pTextureCom->Get_Frame().m_iCurrentTex == 49)
+		{
+			if (m_bFirstFrame)
+			{
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("tent_sleep_%d.wav"), rand() % 11 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .4f);
+
+				m_bFirstFrame = false;
+			}
+		}
+		else
+			m_bFirstFrame = true;
+
 		m_pTextureCom->MoveFrame(m_TimerTag);
 		break;
 	case HIT:

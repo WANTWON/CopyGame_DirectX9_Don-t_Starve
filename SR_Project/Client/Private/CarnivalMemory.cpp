@@ -103,11 +103,34 @@ void CCarnivalMemory::Late_Tick(_float fTimeDelta)
 
 	Change_Motion();
 	Change_Frame(fTimeDelta);
-	Set_ShaderID();
+	
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+
+	if (pGameObject->Get_Dead())
+		m_eShaderID = SHADER_DEAD;
+	else 
+		m_eShaderID = SHADER_DARK;
 }
 
 HRESULT CCarnivalMemory::Render()
 {
+
+	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix, PlayerMatrix;
+
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	CTransform*		pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"), 0);
+	if (nullptr == pTransform_Terrain)
+		return E_FAIL;
+
+	PlayerMatrix = *D3DXMatrixTranspose(&WorldMatrix, &pTransform_Terrain->Get_WorldMatrix());
+
+	_float3  fPlayerPosition = pTarget->Get_Position();
+	m_pShaderCom->Set_RawValue("g_PlayerPosition", &fPlayerPosition, sizeof(_float3));
+	m_pShaderCom->Set_RawValue("g_PlayerWorldMatrix", &PlayerMatrix, sizeof(_float4x4));
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -427,11 +450,15 @@ void CCarnivalMemory::Play_Bird(_float fTimeDelta)
 
 void CCarnivalMemory::Start_Egg()
 {
+
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->PlayBGM(TEXT("DST_Carnival_EggRide3_V2.wav"),0.3f);
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Egg_Stage3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return;
-
+	
+	
 	_ulong dwByte = 0;
 	_float3 vPosition(0, 0, 0);
 	_uint iNum = 0;
@@ -446,7 +473,11 @@ void CCarnivalMemory::Start_Egg()
 
 	CloseHandle(hFile);
 
-	
+	_tchar	szFullPath[MAX_PATH] = TEXT("Place%d_Carnival_Eggrides_DST_01.wav");
+	_uint i = rand() % 3 + 1;
+	wsprintf(szFullPath, szFullPath, i);
+	pGameInstance->PlaySounds(szFullPath, SOUND_OBJECT, 0.5f);
+
 	list<CGameObject*>* lObjects = pGameInstance->Get_ObjectList(LEVEL_MAZE, TEXT("Layer_Egg"));
 	if (!lObjects)
 		return;
@@ -487,6 +518,14 @@ _bool CCarnivalMemory::Check_Clear()
 	{
 		if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
 		{
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			pGameInstance->StopSound(SOUND_BGM);
+
+			_tchar	szFullPath[MAX_PATH] = TEXT("Bell_Win_Carnivalgame_Herding_Station_DST_%02d.wav");
+			_uint i = rand() % 7 + 1;
+			wsprintf(szFullPath, szFullPath, i);
+			pGameInstance->PlaySounds(szFullPath, SOUND_OBJECT, 0.5f);
+			
 			CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 			dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(false);
 
@@ -503,6 +542,8 @@ _bool CCarnivalMemory::Check_Clear()
 
 void CCarnivalMemory::Add_NewEgg()
 {
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
 	_float3 vPosition = Get_Position();
 	_bool isXMinus = rand() % 2 == 0 ? true : false;
 	_bool isZMinus = rand() % 2 == 0 ? true : false;
@@ -517,9 +558,13 @@ void CCarnivalMemory::Add_NewEgg()
 	else
 		vPosition.z -= (((rand() % 1000)*0.001f) / float(m_fMaxDistance - m_fMinDistance)) + m_fMinDistance;
 
-	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Egg"), LEVEL_MAZE, TEXT("Layer_Egg"), vPosition);
+	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CCarnival_Egg"), LEVEL_MAZE, TEXT("Layer_Egg"), vPosition);
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	_tchar	szFullPath[MAX_PATH] = TEXT("Place%d_Carnival_Eggrides_DST_01.wav");
+	_uint i = rand() % 3 + 1;
+	wsprintf(szFullPath, szFullPath, i);
+	pGameInstance->PlaySounds(szFullPath, SOUND_OBJECT, 0.5f);
+	
 	list<CGameObject*>* lObjects = pGameInstance->Get_ObjectList(LEVEL_MAZE, TEXT("Layer_Egg"));
 	if (!lObjects)
 		return;
@@ -758,8 +803,14 @@ void CCarnivalMemory::Change_Motion()
 			Change_Texture(TEXT("Com_Texture_Win"));
 			break;
 		case COMPLETE:
+		{
+			_tchar szFullPath[MAX_PATH] = TEXT("Turn_On_Carnivalgame_Herding_Station_DST_%02d.wav");
+			_uint i = rand() % 4 + 1;
+			wsprintf(szFullPath, szFullPath, i);
+			CGameInstance::Get_Instance()->PlaySounds(szFullPath, SOUND_OBJECT, 0.5f);
 			Change_Texture(TEXT("Com_Texture_Win"));
 			break;
+		}		
 		}
 
 		m_ePreState = m_eState;

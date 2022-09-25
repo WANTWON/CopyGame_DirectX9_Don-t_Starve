@@ -191,6 +191,20 @@ PS_OUT PS_DAYCYCLE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_CONSTRUCT(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor = tex2D(TextureSampler, In.vTexUV);
+
+	Out.vColor.r += g_fDinnerDelta;
+	Out.vColor.b += g_fNightDelta;
+
+	Out.vColor.rgb += 0.2f;
+	Out.vColor.a -= 0.3f;
+
+	return Out;
+}
+
 
 
 technique		DefaultTechnique
@@ -273,6 +287,17 @@ technique		DefaultTechnique
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_DAYCYCLE();
+	}
+
+	pass OnlyConstruct
+	{
+		ALPHABLENDENABLE = true;
+		SRCBLEND = SRCALPHA;
+		DESTBLEND = INVSRCALPHA;
+		BlendOp = Add;
+		CULLMODE = NONE;
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_CONSTRUCT();
 	}
 }
 

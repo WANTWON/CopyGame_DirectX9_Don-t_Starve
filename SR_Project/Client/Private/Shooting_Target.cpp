@@ -247,6 +247,7 @@ void CShooting_Target::Change_Motion()
 		{
 			if (m_ShootingTargetDesc.eType == TARGET_GOOD)
 			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("carnivalgame_shooter_hitbird.wav"), SOUND_MONSTER_EFFECT, 0.5f);
 				Change_Texture(TEXT("Com_Texture_HIT_GOOD"));
 				CDecoObject::DECODECS DecoDesc;
 				DecoDesc.m_eState = CDecoObject::PARTY;
@@ -255,7 +256,13 @@ void CShooting_Target::Change_Motion()
 				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 			}
 			else
+			{
+				_tchar szFullPath[MAX_PATH] = TEXT("carnivalgame_puckgame_hit_rubberband_-%03d.wav");
+				_uint i = rand() % 3 + 1;
+				wsprintf(szFullPath, szFullPath, i);
+				CGameInstance::Get_Instance()->PlaySounds(szFullPath, SOUND_MONSTER_VOICE, 0.5f);
 				Change_Texture(TEXT("Com_Texture_HIT_BAD"));
+			}	
 			break;
 		}
 

@@ -65,6 +65,8 @@ int CTree::Tick(_float fTimeDelta)
 		m_eState = eFall;
 
 		Drop_Items();
+
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("tree_fall.wav"), SOUND_ID::SOUND_OBJECT, .8f);
 	}
 	
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));

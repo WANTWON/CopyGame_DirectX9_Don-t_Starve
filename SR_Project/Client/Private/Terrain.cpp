@@ -293,11 +293,15 @@ void CTerrain::PickingTrue()
 					break;
 				}
 				case ITEMNAME_POT:
+					pGameInstance->PlaySounds(TEXT("place_portable_cookpot.wav"), SOUND_OBJECT, 0.5f);
 					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cook_Pot"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPlayer->Get_PickingPoint());
 					for (auto k : *line)
 						k->plus_quest2count();
 					break;
 				case ITEMNAME_TENT:
+					// Play Sound
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("tent_place.wav"), SOUND_ID::SOUND_OBJECT, .8f);
+
 					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tent"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPlayer->Get_PickingPoint());
 					for (auto k : *line)
 						k->plus_quest2count();
@@ -452,6 +456,8 @@ CGameObject * CTerrain::Clone_Load(const _tchar * VIBufferTag, _uint LevelIndex,
 void CTerrain::Free()
 {
 	__super::Free();
+
+	CDayCycle::Get_Instance()->RemoveObserver(this);
 
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);

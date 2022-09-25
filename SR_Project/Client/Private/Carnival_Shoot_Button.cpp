@@ -139,6 +139,11 @@ void CCarnival_Shoot_Button::Change_Camera()
 		m_bFinished = true;
 		if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
 		{
+			_tchar	szFullPath[MAX_PATH] = TEXT("Bell_Win_Carnivalgame_Herding_Station_DST_%02d.wav");
+			_uint i = rand() % 7 + 1;
+			wsprintf(szFullPath, szFullPath, i);
+			CGameInstance::Get_Instance()->PlaySounds(szFullPath, SOUND_OBJECT, 0.5f);
+
 			CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 			dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(false);
 		}
@@ -237,6 +242,7 @@ void CCarnival_Shoot_Button::Change_Motion()
 		switch (m_eState)
 		{
 		case PRESS:
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("carnivalgame_shooter_place.wav"), SOUND_OBJECT, 0.4f);
 			Change_Texture(TEXT("Com_Texture_Press"));
 			break;
 		case IDLE:

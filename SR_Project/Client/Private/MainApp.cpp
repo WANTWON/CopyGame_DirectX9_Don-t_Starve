@@ -8,7 +8,7 @@
 #include <time.h>
 #include "CameraManager.h"
 #include "Mouse.h"
-
+#include "DayCycle.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
@@ -189,6 +189,7 @@ void CMainApp::Free()
 	
 	CPickingMgr::Get_Instance()->Destroy_Instance();
 	
+	CDayCycle::Get_Instance()->Destroy_Instance();
 	CCameraManager::Get_Instance()->Destroy_Instance();
 	CMouse::Get_Instance()->Destroy_Instance();
 }

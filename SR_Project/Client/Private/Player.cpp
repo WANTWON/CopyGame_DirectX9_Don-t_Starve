@@ -68,11 +68,41 @@ int CPlayer::Tick(_float fTimeDelta)
 {
 	m_fMentalitytime += fTimeDelta;
 	m_fHungertime += fTimeDelta;
-	if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT && m_fMentalitytime > 1.f)
+	
+
+	
+
+	if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
 	{
 		--m_tStat.fCurrentMental;
 		m_fMentalitytime = 0.f;
 	}
+	else if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT)
+	{
+		if (m_eWeaponType != WEAPON_LIGHT)
+			m_fMentalitytime2 += fTimeDelta;
+		else
+			m_fMentalitytime2 = 0.f;
+
+		if (m_fMentalitytime > 1.f)
+		{
+			--m_tStat.fCurrentMental;
+			m_fMentalitytime = 0.f;
+		}
+
+		if (m_fMentalitytime2 > 5.f)
+		{
+			m_tStat.fCurrentMental -= 5.f;
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			_bool forboss = false;
+
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"), &forboss)))
+				return OBJ_NOEVENT;
+			m_fMentalitytime2 = 0.f;
+		}
+		
+	}
+
 
 	if (m_fHungertime > 5.f)
 	{
@@ -709,11 +739,13 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMFPSMODE]))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("getitem.wav"), SOUND_UI, 0.9f);
 		Set_FPSMode(true);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_FPS);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_CAMTPSMODE]))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("getitem.wav"), SOUND_UI, 0.9f);
 		Set_FPSMode(false);
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
 	}
@@ -723,7 +755,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
 		else
 		{
-
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("getitem.wav"), SOUND_UI, 0.9f);
 			CCameraManager::Get_Instance()->PlayerCamera_TurnLeft(m_iCurrentLevelndex);
 			Turn_OriginMat(false);
 			SetUp_BillBoard();
@@ -742,6 +774,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
 		else
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("getitem.wav"), SOUND_UI, 0.9f);
 			CCameraManager::Get_Instance()->PlayerCamera_TurnRight(m_iCurrentLevelndex);
 			Turn_OriginMat(true);
 			SetUp_BillBoard();
@@ -1334,18 +1367,18 @@ void CPlayer::Mining(_float _fTimeDelta)
 		ParticleDesc.eType = CParticleSystem::PARTICLE_ROCK;
 		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
 		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Rock");
-		ParticleDesc.dDuration = 0.2; //  ƼŬ  ð 
-		ParticleDesc.dParticleLifeTime = 0.2; //    
+		ParticleDesc.dDuration = 0.4; //  ƼŬ  ð 
+		ParticleDesc.dParticleLifeTime = 0.4; //    
 		ParticleDesc.dSpawnTime = 1; //     Ÿ  
 		ParticleDesc.fParticlePerSecond = 75;
 		ParticleDesc.fVelocityDeviation = 1.f;
-		ParticleDesc.iMaxParticleCount = 5;
+		ParticleDesc.iMaxParticleCount = 7;
 		ParticleDesc.vParticleScale = _float2(0.5, 0.5);
 		ParticleDesc.vParticleDeviation = _float3(1 * 0.6f, 0.f, 1 * 0.6f);
 		ParticleDesc.iTextureNum = 1;
 		ParticleDesc.vVelocity = _float3((rand() % 10)*0.1f, (rand() % 10) * 0.1f, rand() % 10 * 0.1f);
 		ParticleDesc.vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		ParticleDesc.vPosition.z += (_float)0.001;
+		ParticleDesc.vPosition.z += (_float)0.1;
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_ParticleSystem"), ParticleDesc.eTextureScene, TEXT("Layer_Particle"), &ParticleDesc)))
 			return;
@@ -1376,6 +1409,11 @@ void CPlayer::Chop(_float _fTimeDelta)
 
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 28)
 	{
+		// Play Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("chop_tree_%d.wav"), rand() % 3 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .7f);
+
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(20);
 
 		CParticleSystem::STATEDESC ParticleDesc;

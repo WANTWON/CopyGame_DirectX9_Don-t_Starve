@@ -344,6 +344,11 @@ _float CTotem::Take_Damage(float fDamage, void * DamageType, CGameObject * Damag
 	m_tInfo.iCurrentHp -= fDamage;
 	m_bIsHit = true;
 
+	// Play Sound
+	_tchar szFileName[MAX_PATH] = TEXT("");
+	wsprintf(szFileName, TEXT("totem_hit_%d.wav"), rand() % 3 + 1);
+	CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
+
 	if (m_tInfo.iCurrentHp <= 0)
 	{
 		m_tInfo.iCurrentHp = 0.f;

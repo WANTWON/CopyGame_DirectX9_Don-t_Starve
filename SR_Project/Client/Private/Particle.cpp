@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\Particle.h"
 #include "GameInstance.h"
+#include "Player.h"
+#include "DayCycle.h"
 
 CParticle::CParticle(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -40,7 +42,7 @@ HRESULT CParticle::Initialize(void * pArg)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(positionX, positionY, positionZ));
 
 	m_pTransformCom->Set_Scale(0.2f, 0.2f, 1);
-
+	m_eDayState = (DAY_STATE)CDayCycle::Get_Instance()->Get_DayState();
 	return S_OK;
 }
 
@@ -67,6 +69,7 @@ void CParticle::Late_Tick(_float fTimeDelta)
 
 	SetUp_BillBoard();
 	Compute_CamDistance(Get_Position());
+	Set_ShaderColor();
 	Set_ShaderID();
 }
 
@@ -176,10 +179,45 @@ void CParticle::Set_ShaderID()
 
 	if (pGameObject->Get_Dead())
 		m_eShaderID = SHADER_DEAD;
+	else if (dynamic_cast<CPlayer*>(pGameObject)->Get_WeaponType() == WEAPON_LIGHT)
+		m_eShaderID = SHADER_DARKWITHLIGHT;
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
+	else if (iLevel == LEVEL_BOSS)
+		m_eShaderID = SHADER_FIRE;
 	else
 		m_eShaderID = SHADER_DAYCYClE;
+}
+
+void CParticle::Set_ShaderColor()
+{
+	if(m_eDayState == DAY_MORNING)
+	{
+		m_fDinnerMinRange = 10.f;
+		m_fDinnerMaxRange = m_fDinnerMinRange + 10.f;
+		m_fNightAlpha = 0.0f;
+		m_fNightDelta = 0.0f;
+	}
+	else if (m_eDayState == DAY_DINNER)
+	{
+		m_fDinnerMinRange = 6.f;
+		m_fDinnerMaxRange = m_fDinnerMinRange + 10.f;
+		m_fDinnerDelta = 0.1f;
+	}
+	else if (m_eDayState == DAY_NIGHT)
+	{
+		m_fDinnerMinRange = 2.f;
+
+		m_fDinnerMaxRange = m_fDinnerMinRange + 10.f;
+		m_fDinnerDelta = 0.0f;
+		m_fNightAlpha = 1.f;
+		m_fNightDelta = 0.1f;
+	}
+	m_pShaderCom->Set_RawValue("g_fDinnerMinRange", &m_fDinnerMinRange, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fDinnerMaxRange", &m_fDinnerMaxRange, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fDinnerDelta", &m_fDinnerDelta, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fNightDelta", &m_fNightDelta, sizeof(_float));
+	m_pShaderCom->Set_RawValue("g_fNightDarkAlpha", &m_fNightAlpha, sizeof(_float));
 }
 
 CParticle * CParticle::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

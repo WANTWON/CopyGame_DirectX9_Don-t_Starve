@@ -26,9 +26,11 @@ CLevel_GamePlay::CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 HRESULT CLevel_GamePlay::Initialize()
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
+	CDayCycle::Get_Instance()->AllRemoveObserver();
+
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -64,6 +66,8 @@ HRESULT CLevel_GamePlay::Initialize()
 		if (FAILED(Ready_Layer_MainToolbox(TEXT("Layer_UI"))))
 			return E_FAIL;
 
+		CGameInstance::Get_Instance()->StopAll();
+
 		g_bUIMadefirst = true;
 	}
 
@@ -71,9 +75,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	srand(unsigned int(time(NULL)));
 	CPickingMgr::Get_Instance()->Clear_PickingMgr();
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_GAMEPLAY);
-
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_GAMEPLAY);
-
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("waterlogged_amb_spring_day_LP_DST.wav"), 0.5f);
 	return S_OK;
 }
 
@@ -85,6 +88,9 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
+
+	
+
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
 
 	if (m_bNextLevel)
@@ -670,7 +676,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 	
 	
 	
-	
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Endingscene"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
 
 	
 	
