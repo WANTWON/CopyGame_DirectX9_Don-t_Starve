@@ -2,7 +2,6 @@
 #include "GameObject.h"
 #include "Client_Defines.h"
 #include "Particle.h"
-#include "Observer.h"
 
 BEGIN(Engine)
 class CRenderer;
@@ -16,7 +15,7 @@ END
 
 BEGIN(Client)
 
-class CParticle : public CGameObject, public CObserver
+class CParticle : public CGameObject
 {
 public:
 	typedef struct tagStateDesc
@@ -47,7 +46,6 @@ public:
 	void SetUp_BillBoard();
 	void Set_ShaderID();
 	void Set_ShaderColor();
-	virtual void Update(_uint eDayState) override { m_eDayState = (DAY_STATE)eDayState; };
 private:
 	CTransform*			m_pTransformCom = nullptr;
 	CVIBuffer_Rect*		m_pVIBufferCom = nullptr;

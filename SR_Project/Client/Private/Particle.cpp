@@ -2,6 +2,7 @@
 #include "..\Public\Particle.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "DayCycle.h"
 
 CParticle::CParticle(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -41,7 +42,7 @@ HRESULT CParticle::Initialize(void * pArg)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(positionX, positionY, positionZ));
 
 	m_pTransformCom->Set_Scale(0.2f, 0.2f, 1);
-
+	m_eDayState = (DAY_STATE)CDayCycle::Get_Instance()->Get_DayState();
 	return S_OK;
 }
 
@@ -68,6 +69,7 @@ void CParticle::Late_Tick(_float fTimeDelta)
 
 	SetUp_BillBoard();
 	Compute_CamDistance(Get_Position());
+	Set_ShaderColor();
 	Set_ShaderID();
 }
 
@@ -191,74 +193,26 @@ void CParticle::Set_ShaderColor()
 {
 	if(m_eDayState == DAY_MORNING)
 	{
-
-		m_fDinnerMinRange += 0.01f;
-		if (m_fDinnerMinRange >= 10.f)
-			m_fDinnerMinRange = 10.f;
-
+		m_fDinnerMinRange = 10.f;
 		m_fDinnerMaxRange = m_fDinnerMinRange + 10.f;
-
-		if (m_fNightAlpha <= 0.0f)
-			m_fNightAlpha = 0.0f;
-		else
-			m_fNightAlpha -= 0.01f;
-
-		if (m_fNightAlpha == 0.0f)
-		{
-			if (m_fNightDelta <= 0.0f)
-				m_fNightDelta = 0.0f;
-			else
-				m_fNightDelta -= 0.002f;
-		}
+		m_fNightAlpha = 0.0f;
+		m_fNightDelta = 0.0f;
 	}
 	else if (m_eDayState == DAY_DINNER)
 	{
-
-		m_fDinnerMinRange -= 0.01f;
-		if (m_fDinnerMinRange <= 6.f)
-			m_fDinnerMinRange = 6.f;
-
+		m_fDinnerMinRange = 6.f;
 		m_fDinnerMaxRange = m_fDinnerMinRange + 10.f;
-
-		if (m_fDinnerDelta >= 0.1f)
-			m_fDinnerDelta = 0.1f;
-		else
-			m_fDinnerDelta += 0.001f;
-
-		m_fNightAlpha += 0.01f;
-
-		if (m_fNightAlpha >= 0.2f)
-			m_fNightAlpha = 0.2f;
+		m_fDinnerDelta = 0.1f;
 	}
 	else if (m_eDayState == DAY_NIGHT)
 	{
-		m_fDinnerMinRange -= 0.01f;
-		if (m_fDinnerMinRange <= 2.f)
-			m_fDinnerMinRange = 2.f;
+		m_fDinnerMinRange = 2.f;
 
 		m_fDinnerMaxRange = m_fDinnerMinRange + 10.f;
-
-		if (m_fDinnerDelta <= 0.0f)
-			m_fDinnerDelta = 0.0f;
-		else
-			m_fDinnerDelta -= 0.001f;
-
-
-		m_fNightAlpha += 0.01f;
-
-		if (m_fNightAlpha >= 1.f)
-			m_fNightAlpha = 1.f;
-
-		if (m_fNightAlpha == 1.f)
-		{
-			if (m_fNightDelta >= 0.1f)
-				m_fNightDelta = 0.1f;
-			else
-				m_fNightDelta += 0.002f;
-		}
+		m_fDinnerDelta = 0.0f;
+		m_fNightAlpha = 1.f;
+		m_fNightDelta = 0.1f;
 	}
-
-
 	m_pShaderCom->Set_RawValue("g_fDinnerMinRange", &m_fDinnerMinRange, sizeof(_float));
 	m_pShaderCom->Set_RawValue("g_fDinnerMaxRange", &m_fDinnerMaxRange, sizeof(_float));
 	m_pShaderCom->Set_RawValue("g_fDinnerDelta", &m_fDinnerDelta, sizeof(_float));
