@@ -1402,6 +1402,11 @@ void CPlayer::Chop(_float _fTimeDelta)
 
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 28)
 	{
+		// Play Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("chop_tree_%d.wav"), rand() % 3 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .7f);
+
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(20);
 
 		CParticleSystem::STATEDESC ParticleDesc;

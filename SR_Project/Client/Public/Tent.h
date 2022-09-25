@@ -56,6 +56,8 @@ private:
 	STATE m_ePreState = MAX;
 	_bool m_bIsInsideTent = false;
 
+	_bool m_bFirstFrame = true;
+
 public:
 	virtual void Interact(_uint Damage = 0) override;
 	virtual HRESULT Drop_Items() override;

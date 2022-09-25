@@ -67,6 +67,11 @@ void CGrass::Interact(_uint Damage)
 		m_bInteract = false;
 		m_eState = PICK;
 		Drop_Items();
+
+		// Play Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("grass_pick_%d.wav"), rand() % 5 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
 	}
 }
 

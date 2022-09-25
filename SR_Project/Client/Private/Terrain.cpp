@@ -299,6 +299,9 @@ void CTerrain::PickingTrue()
 						k->plus_quest2count();
 					break;
 				case ITEMNAME_TENT:
+					// Play Sound
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("tent_place.wav"), SOUND_ID::SOUND_OBJECT, .8f);
+
 					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tent"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPlayer->Get_PickingPoint());
 					for (auto k : *line)
 						k->plus_quest2count();
