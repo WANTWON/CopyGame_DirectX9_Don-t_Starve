@@ -52,7 +52,7 @@ public:
 	typedef struct tagPlayerStat
 	{
 		_float fSpeed = 0.f;
-		_float fMaxHealth = 999.f;
+		_float fMaxHealth = 100.f;
 		_float fCurrentHealth = fMaxHealth;
 		_float fMaxMental = 999.f;
 		_float fCurrentMental = fMaxMental;
@@ -198,6 +198,7 @@ private: /**Actions*/
 
 	void	Invincible_Update(_float _fTimeDelta);
 	void	Cooltime_Update(_float _fTimeDelta);
+	void	Play_Sound(_float _fTimeDelta);
 	//ActStack
 	void	Tick_ActStack(_float fTimeDelta);
 	void	Clear_ActStack();
@@ -309,6 +310,8 @@ private: /*for Auto*/
 	_bool					m_bActivated = false;
 	//for InParty
 	vector<pair<const _tchar*, class CNPC*>>			m_vecParty;
+
+	_bool					m_bSoundEnd = false;
 private: // Test
 	_float3					m_vTargetPicking;
 	LEVEL					m_iCurrentLevelndex; //현재 레벨에 따라 불렛 생성 레벨이 다르기 때문에

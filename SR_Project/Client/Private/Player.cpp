@@ -152,11 +152,6 @@ int CPlayer::Tick(_float fTimeDelta)
 	//SkillCoolTime
 	Cooltime_Update(fTimeDelta);
 	Invincible_Update(fTimeDelta);
-	//Collider Add
-	//if (nullptr != m_pColliderCom)
-	//	m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_PLAYER, this);
-
-	//Sleep_Restore(fTimeDelta);
 
 	//Act Auto
 	Tick_ActStack(fTimeDelta);
@@ -164,13 +159,11 @@ int CPlayer::Tick(_float fTimeDelta)
 	//KeyInput
 	GetKeyDown(fTimeDelta);
 
-
-
-
-
 	//Move
 	Move_to_PickingPoint(fTimeDelta);
 	WalkingTerrain();
+
+	Play_Sound(fTimeDelta);
 
 	m_Equipment->Set_TargetPos(Get_Pos());
 	//TEst
@@ -377,8 +370,6 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 
 		Safe_Release(pGameInstance);
 	}
-
-
 	return fDamage;
 }
 
@@ -1098,7 +1089,9 @@ bool CPlayer::ResetAction(_float _fTimeDelta)
 	switch (m_eState)
 	{
 	case Client::CPlayer::ACTION_STATE::IDLE:
-		break;
+	case Client::CPlayer::ACTION_STATE::SLEEP:
+	case Client::CPlayer::ACTION_STATE::COOK:
+	case Client::CPlayer::ACTION_STATE::TALK:
 	case Client::CPlayer::ACTION_STATE::MOVE:
 		break;
 	case Client::CPlayer::ACTION_STATE::ATTACK:
@@ -1113,6 +1106,7 @@ bool CPlayer::ResetAction(_float _fTimeDelta)
 	case Client::CPlayer::ACTION_STATE::REVIVE:
 	case Client::CPlayer::ACTION_STATE::BUILD:
 	case Client::CPlayer::ACTION_STATE::ANGRY:
+
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 1)
 		{
 			return true;
@@ -1510,6 +1504,7 @@ void CPlayer::Eatting(_float _fTimeDelta)
 
 	if (m_ePreState != m_eState)
 	{
+		m_bSoundEnd = false;
 		m_bMove = false;
 		switch (m_eDirState)
 		{
@@ -1577,7 +1572,7 @@ void CPlayer::Damaged(_float _fTimeDelta)
 			break;
 		}
 		m_ePreState = m_eState;
-
+		m_bSoundEnd = false;
 	}
 
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 2)
@@ -1593,6 +1588,7 @@ void CPlayer::Jump(_float _fTimeDelta)
 	//m_bMove = false;
 	if (m_ePreState != m_eState)
 	{
+		m_bSoundEnd = false;
 		m_bAutoMode = true;
 		m_bMove = false;
 		switch (m_eDirState)
@@ -1635,6 +1631,7 @@ void CPlayer::Dead(_float _fTimeDelta)
 
 	if (m_ePreState != m_eState)
 	{
+		m_bSoundEnd = false;
 		m_bMove = false;
 		switch (m_eDirState)
 		{
@@ -1676,6 +1673,7 @@ void CPlayer::Revive(_float _fTimeDelta)
 		CInventory_Manager* inv = CInventory_Manager::Get_Instance();
 		inv->Dead_off();
 
+		m_bSoundEnd = false;
 		m_bAutoMode = true;
 		m_bMove = false;
 		switch (m_eDirState)
@@ -2333,6 +2331,127 @@ void CPlayer::Cooltime_Update(_float _fTimeDelta)
 		}
 
 	}
+}
+
+void CPlayer::Play_Sound(_float _fTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	_tchar	szFullPath[MAX_PATH];// = TEXT("footstep_grass_%d.wav");
+	_uint iNum = 0; 
+	
+	_float fVolume = 0.5f;
+	switch (m_eState)
+	{
+	case Client::CPlayer::ACTION_STATE::IDLE://x
+	case Client::CPlayer::ACTION_STATE::MINING://x
+	case Client::CPlayer::ACTION_STATE::CHOP://x
+	case Client::CPlayer::ACTION_STATE::COOK://x
+	case Client::CPlayer::ACTION_STATE::PICKUP:
+		break;
+	case Client::CPlayer::ACTION_STATE::SLEEP: //do
+		break;
+	case Client::CPlayer::ACTION_STATE::TALK://do
+		break;
+	case Client::CPlayer::ACTION_STATE::MOVE:
+
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20
+			|| m_pTextureCom->Get_Frame().m_iCurrentTex == 4)
+		{
+			iNum = rand() % 4;
+			if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY)
+			{
+				wcscpy_s(szFullPath, TEXT("footstep_grass_%d.wav"));
+			}
+			else
+			{
+				wcscpy_s(szFullPath, TEXT("DSS_woodlegs_footstep_wood_%d.wav"));
+			}
+			wsprintf(szFullPath, szFullPath, iNum);
+		}	
+		break;
+	case Client::CPlayer::ACTION_STATE::ATTACK:
+		if (!m_bSoundEnd &&m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
+		{
+			iNum = rand() % 4;
+			switch (m_eWeaponType)
+			{
+			case WEAPON_SWORD:
+				wcscpy_s(szFullPath, TEXT("Weapon_Swing.mp3"));
+				break;
+			case WEAPON_STAFF:
+				wcscpy_s(szFullPath, TEXT("firestaff_swing_%d.mp3"));
+				wsprintf(szFullPath, szFullPath, iNum);
+				break;
+			case WEAPON_HAND:
+				wcscpy_s(szFullPath, TEXT("wet_punches_mutated_hound_DST-%d.mp3"));
+				wsprintf(szFullPath, szFullPath, iNum);
+				break;
+			}
+			fVolume = 0.7f;
+
+			m_bSoundEnd = true;
+		}
+		break;
+	case Client::CPlayer::ACTION_STATE::EAT: // do
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
+		{
+			
+			wcscpy_s(szFullPath, TEXT("eat_%d.wav"));
+			wsprintf(szFullPath, szFullPath, iNum);
+		}
+		break;
+	case Client::CPlayer::ACTION_STATE::DAMAGED:
+		if (!m_bSoundEnd &&m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
+		{		
+			iNum = rand() % 3;
+			wcscpy_s(szFullPath, TEXT("WilsonVoice_hurt_%d.wav"));
+			wsprintf(szFullPath, szFullPath, iNum);
+			m_bSoundEnd = true;
+		}
+		break;
+	case Client::CPlayer::ACTION_STATE::PORTAL:
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
+		{
+			iNum = 0;
+			wcscpy_s(szFullPath, TEXT("jump_%d.wav"));
+			wsprintf(szFullPath, szFullPath, iNum);
+		}	
+		break;
+	case Client::CPlayer::ACTION_STATE::DEAD:
+		if (!m_bSoundEnd &&m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
+		{
+			fVolume = 0.7f;
+			wcscpy_s(szFullPath, TEXT("WilsonVoice_dead.mp3"));
+			m_bSoundEnd = true;
+		}
+		break;
+	case Client::CPlayer::ACTION_STATE::REVIVE://do
+		if (!m_bSoundEnd &&m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
+		{
+			wcscpy_s(szFullPath, TEXT("Revive_DST.wav"));
+			m_bSoundEnd = true;
+		}
+		break;
+	case Client::CPlayer::ACTION_STATE::WEEDING:
+	case Client::CPlayer::ACTION_STATE::BUILD:
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
+		{
+			wcscpy_s(szFullPath, TEXT("Shake_hand.wav"));
+			fVolume = 0.3f;	
+		}
+		break;
+	case Client::CPlayer::ACTION_STATE::ANGRY:
+		break;
+	}
+
+
+
+
+	pGameInstance->PlaySounds(szFullPath, SOUND_PLAYER, fVolume);
+
+	Safe_Release(pGameInstance);
 }
 
 void CPlayer::Test_Func(_int _iNum)
