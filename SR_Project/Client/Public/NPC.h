@@ -174,6 +174,8 @@ protected:
 
 	_bool		m_bHited = false;
 	_bool		m_bSoundEnd = false;
+
+	_float		m_fReviveTime = 5.f;
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) =0;
 	virtual void Free() override;

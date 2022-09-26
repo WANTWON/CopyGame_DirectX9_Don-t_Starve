@@ -249,6 +249,11 @@ void CNPC::Update_Cooltime(_float _fTimeDelta)
 		}
 		m_fSkill_Cur_CoolTime -= _fTimeDelta;
 	}
+
+	if (m_bDead)
+	{
+		m_fReviveTime += _fTimeDelta;
+	}
 }
 
 void CNPC::Update_FightMode(_float _fTimeDelta)

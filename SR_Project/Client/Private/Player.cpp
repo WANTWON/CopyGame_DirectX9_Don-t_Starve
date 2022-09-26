@@ -82,10 +82,9 @@ int CPlayer::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	//Origin Look Test
-	/*if (iCnt == 0)
-	{
-		m_pOriginMatrix = m_pTransformCom->Get_WorldMatrix();
-	}*/
+
+	m_pOriginMatrix = m_pTransformCom->Get_WorldMatrix();
+
 	//SkillCoolTime
 	Cooltime_Update(fTimeDelta);
 	Invincible_Update(fTimeDelta);
@@ -1594,6 +1593,10 @@ void CPlayer::Dead(_float _fTimeDelta)
 
 		CInventory_Manager* inv = CInventory_Manager::Get_Instance();
 
+		m_tStat.fCurrentHealth = 1.f;
+		m_tStat.fCurrentHungry = 1.f;
+		m_tStat.fCurrentMental = 1.f;
+
 		inv->Dead_on();
 		m_bMove = true;
 	}
@@ -1638,6 +1641,10 @@ void CPlayer::Revive(_float _fTimeDelta)
 		//m_bAutoMode = false;
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact(10);
 		m_fReviveTime = 0.f;
+
+		m_tStat.fCurrentHealth = m_tStat.fMaxHealth;
+		m_tStat.fCurrentHungry = m_tStat.fMaxHungry;
+		m_tStat.fCurrentMental = m_tStat.fMaxMental;
 	}
 	else if (m_fReviveTime < 1.5f && m_pTextureCom->Get_Frame().m_iCurrentTex == 15)
 	{
@@ -1930,12 +1937,19 @@ void CPlayer::Teleport(_float _fTimeDelta)
 
 _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 {
+	if (m_bDead)
+		return true;
+
+
 	m_fMentalitytime += _fTimeDelta;
 	m_fHungertime += _fTimeDelta;
 
+	
 	if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
 	{
 		--m_tStat.fCurrentMental;
+		if (m_tStat.fCurrentMental <= 0.f)
+			goto GoDead;
 		m_fMentalitytime = 0.f;
 	}
 	else if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT)
@@ -1948,11 +1962,20 @@ _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 		if (m_fMentalitytime > 1.f)
 		{
 			--m_tStat.fCurrentMental;
+
+			if (m_tStat.fCurrentMental <= 0.f)
+				goto GoDead;
+
 			m_fMentalitytime = 0.f;
 		}
 
 		if (m_fMentalitytime2 > 5.f)
 		{
+			if (m_tStat.fCurrentMental <= 5.f)
+			{
+				m_tStat.fCurrentMental = 0.f;
+				goto GoDead;
+			}
 			m_tStat.fCurrentMental -= 5.f;
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 			_bool forboss = false;
@@ -1967,9 +1990,24 @@ _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 	if (m_fHungertime > 5.f)
 	{
 		--m_tStat.fCurrentHungry;
+		if (m_tStat.fCurrentHungry <= 0.f)
+			goto GoDead;
 		m_fHungertime = 0.f;
 	}
 
+	return true;
+
+	GoDead:
+	if (!m_bGhost)
+	{
+		m_bDead = true;
+		m_bGhost = true;
+		Clear_ActStack();
+
+		m_ActStack.push(ACTION_STATE::DEAD);
+		m_bAutoMode = true;
+		m_bMove = false;
+	}
 	return true;
 }
 
@@ -2116,6 +2154,9 @@ void CPlayer::Find_Priority()
 
 _bool CPlayer::Find_NPC()
 {//Test
+	if (m_bGhost || (LEVEL)m_iCurrentLevelndex != LEVEL_GAMEPLAY)
+		return false;
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	_uint iIndex = 0;
 	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_NPC"));
@@ -2385,6 +2426,7 @@ void CPlayer::Play_Sound(_float _fTimeDelta)
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20
 			|| m_pTextureCom->Get_Frame().m_iCurrentTex == 4)
 		{
+			fVolume = 0.3f;
 			iNum = rand() % 4;
 			if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY)
 			{

@@ -67,7 +67,7 @@ private:
 	void	Excute(_float _fTimeDelta);
 	void	Activate_Check(_float _fTimeDelta);
 	void	Dead_Check(_float _fTimeDelta);
-
+	void	Play_Sound(_float _fTimeDelta);
 private:/*Act Skills*/
 	void Ice_Blast(_float _fTimeDelta);
 	void Heal(_float _fTimeDelta);

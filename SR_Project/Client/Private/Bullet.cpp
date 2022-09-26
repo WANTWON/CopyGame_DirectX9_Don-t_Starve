@@ -370,21 +370,37 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 			}
 			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE1:
-			m_fDamage = 1.f;
-			goto AttackMulti;
+			if (m_bActivated3)
+			{
+				m_fDamage = 2.f;
+				m_bActivated3 = false;
+				goto AttackMulti;
+			}
 			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE2:
-			m_fDamage = 1.f;
-			goto AttackMulti;
+			if (m_bActivated3)
+			{
+				m_fDamage = 1.5f;
+				m_bActivated3 = false;
+				goto AttackMulti;
+			}
 			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE3:
-			m_bIsAttacked = false;
-			m_fDamage = 1.f;
+			if (m_bActivated3)
+			{
+				m_fDamage = 1.f;
+				m_bActivated3 = false;
+				goto AttackMulti;
+			}
 			goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE4:
-			m_bIsAttacked = false;
-			m_fDamage = 1.f;
+			if (m_bActivated3)
+			{
+				m_fDamage = 1.f;
+				m_bActivated3 = false;
+				goto AttackMulti;
+			}
 			goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_MINE:
@@ -589,6 +605,13 @@ void CBullet::IceSpikes(_float _fTimeDelta)
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
+
+	m_fDamageTimger += _fTimeDelta;
+	if (m_fDamageTimger > 0.25f)
+	{
+		m_bActivated3 = true;
+		m_fDamageTimger = 0.f;
+	}
 
 	switch (m_tBulletData.eDirState)
 	{
@@ -996,6 +1019,15 @@ void CBullet::Rock(_float _fTimeDelta)
 		m_bActivated = true;
 		
 		m_pTextureCom->Get_Frame().m_iCurrentTex = 0;
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+		_int iNum = rand() % 4;
+		_tchar	szFullPath[MAX_PATH];
+		_float fVolume = 0.5f;
+		wcscpy_s(szFullPath, TEXT("catapult_rock_hit_DST_%d.wav"));
+		wsprintf(szFullPath, szFullPath, iNum);
+		pGameInstance->PlaySounds(szFullPath, SOUND_OBJECT, fVolume);
+		Safe_Release(pGameInstance);
 	}
 	else if(!m_bActivated&&!Compare_Terrain())
 	{

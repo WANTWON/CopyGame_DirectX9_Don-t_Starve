@@ -632,3 +632,38 @@ void CSkill::Dead_Check(_float _fTimeDelta)
 
 	}
 }
+
+void CSkill::Play_Sound(_float _fTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	_int iNum = rand() % 4;
+	_tchar	szFullPath[MAX_PATH];
+	_float fVolume = 0.5f;
+
+	switch (m_tSkillDesc.eSkill)
+	{
+	case SKILL_TYPE::HEAL:
+		wcscpy_s(szFullPath, TEXT("Heal_Sound_Effect.wav"));
+		break;
+	case SKILL_TYPE::REVIVE:
+		wcscpy_s(szFullPath, TEXT("Revive_DST.wav"));
+		break;
+	case SKILL_TYPE::SPARK:
+		fVolume = 0.5f;
+		wcscpy_s(szFullPath, TEXT("electric_explode_B_%d.wav"));
+		wsprintf(szFullPath, szFullPath, iNum);
+		break;
+	case SKILL_TYPE::CRACKLE:
+		break;
+	case SKILL_TYPE::CRACKLE_HIT:
+		wcscpy_s(szFullPath, TEXT("explode_miniflare_DST.wav"));
+		break;
+	case SKILL_TYPE::BURST:
+		break;
+	}
+
+	pGameInstance->PlaySounds(szFullPath, SOUND_SKILL, fVolume);
+
+	Safe_Release(pGameInstance);
+}

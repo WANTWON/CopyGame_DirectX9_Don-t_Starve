@@ -59,6 +59,8 @@ int CPartyhp::Tick(_float fTimeDelta)
 		{
 			CGameObject* pointer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_VecParty(TEXT("Wendy"));
 
+			if (pointer == nullptr)
+				return 0;
 			m_ihp = (_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iCurrentHp;
 
 			texnum = m_ihp / 18;
@@ -66,8 +68,10 @@ int CPartyhp::Tick(_float fTimeDelta)
 		}
 		else if (whatnpc == 1) //위노나
 		{
-
 			CGameObject* pointer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_VecParty(TEXT("Winona"));
+
+			if (pointer == nullptr)
+				return 0;
 
 			m_ihp = (_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iCurrentHp;
 
@@ -78,6 +82,9 @@ int CPartyhp::Tick(_float fTimeDelta)
 		else                   //우디
 		{
 			CGameObject* pointer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_VecParty(TEXT("Woodie"));
+
+			if (pointer == nullptr)
+				return 0;
 
 			m_ihp = (_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iCurrentHp;
 

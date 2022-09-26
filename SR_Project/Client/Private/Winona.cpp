@@ -49,7 +49,7 @@ HRESULT CWinona::Initialize(void * pArg)
 	m_fMinRange = 5.f;
 	m_fDetectRange = 15.f;
 
-	m_tInfo.iMaxHp = 300;
+	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_tInfo.fDamage = 20.f;
 
@@ -312,7 +312,9 @@ _float CWinona::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 {
 	if (!m_bDead && m_tInfo.iCurrentHp <= (_int)fDamage)
 	{
+		m_fReviveTime = 0.f;
 		m_bDead = true;
+		m_bCanTalk = false;
 	}
 	else if (!m_bDead && !m_bHited)
 	{
@@ -717,12 +719,15 @@ _bool CWinona::Detect_Enemy()
 
 void CWinona::Play_Sound(_float _fTimeDelta)
 {
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == false)
+		return;
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
 	_int iNum = rand() % 4;
 	_tchar	szFullPath[MAX_PATH];
-	_float fVolume = 0.5f;
+	_float fVolume = 0.8f;
 	switch (m_eState)
 	{
 	case CNPC::IDLE:
@@ -733,6 +738,7 @@ void CWinona::Play_Sound(_float _fTimeDelta)
 		fVolume = 0.4f;
 		break;
 	case CNPC::MOVE:
+		fVolume = 0.3f;
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 14
 			|| m_pTextureCom->Get_Frame().m_iCurrentTex == 2)
 		{
@@ -757,6 +763,7 @@ void CWinona::Play_Sound(_float _fTimeDelta)
 		wcscpy_s(szFullPath, TEXT("winona_death6.wav"));
 		break;
 	case CNPC::TALK:
+		fVolume = 0.4f;
 		wcscpy_s(szFullPath, TEXT("winona_vo6_%d.wav"));
 		wsprintf(szFullPath, szFullPath, iNum);
 		break;
@@ -1141,12 +1148,19 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 		return false;
 	}
 
-
 	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
 	{
 		m_bCanTalk = false;
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 		return false;
+	}
+
+	if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY && m_bDead && m_fReviveTime > 5.f)
+	{
+		m_bCanTalk = true;
+		m_bDead = false;
+		Clear_Activated();
+		Reset_Target();
 	}
 
 	if (m_iCurrentLevelndex != m_iPreLevelIndex)
@@ -1157,6 +1171,14 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 			Owner_Pos.x -= 2.f;
 			Owner_Pos.z += 2.f;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
+		
+			if (m_bDead && (LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY)
+			{
+				m_bDead = false;
+				Clear_Activated();
+				Reset_Target();
+			}
+
 			for (auto& iter = m_vecCatapults.begin(); iter != m_vecCatapults.end();)
 			{
 				Safe_Release(*iter);

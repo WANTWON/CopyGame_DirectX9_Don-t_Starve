@@ -57,6 +57,7 @@ private:
 
 	void Create_Spark(_float _fTimeDelta);
 	void Give_Burst(_float _fTimeDelta);
+	void Play_Sound(_float _fTimeDelta);
 private:
 	_bool	Find_Enemy(_float _fTimeDelta);
 	_bool	Check_Distance(CGameObject* _pObj);

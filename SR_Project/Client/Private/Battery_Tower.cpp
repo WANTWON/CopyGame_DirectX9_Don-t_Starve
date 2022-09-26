@@ -299,6 +299,10 @@ void CBattery_Tower::Attack(_float _fTimeDelta)
 
 	Give_Burst(_fTimeDelta);
 
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
+	{
+		Play_Sound(_fTimeDelta);
+	}
 	if (m_bCanAttack)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -325,6 +329,7 @@ void CBattery_Tower::Destroy(_float _fTimeDelta)
 {
 	if (m_ePreState != m_eState)
 	{
+		Play_Sound(_fTimeDelta);
 		Change_Texture(TEXT("Com_Texture_Place"));
 		m_ePreState = m_eState;
 		m_iReversTex = m_pTextureCom->Get_Frame().m_iEndTex - 1;
@@ -348,6 +353,7 @@ void CBattery_Tower::Place(_float _fTimeDelta)
 {
 	if (m_ePreState != m_eState)
 	{
+		Play_Sound(_fTimeDelta);
 		Change_Texture(TEXT("Com_Texture_Place"));
 		m_ePreState = m_eState;
 	}
@@ -464,6 +470,31 @@ void CBattery_Tower::Give_Burst(_float _fTimeDelta)
 		iter_Obj++;
 	}
 	
+	Safe_Release(pGameInstance);
+}
+
+void CBattery_Tower::Play_Sound(_float _fTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	_int iNum = rand() % 4;
+	_tchar	szFullPath[MAX_PATH];
+	_float fVolume = 0.5f;
+	switch (m_eState)
+	{
+	case PLACE:
+		wcscpy_s(szFullPath, TEXT("place_battery_DST.wav"));
+		break;
+	case ATTACK:
+		fVolume = 0.2f;
+		wcscpy_s(szFullPath, TEXT("on_battery_DST.wav"));
+		break;
+	case DESTROY:
+		wcscpy_s(szFullPath, TEXT("place_battery_DST.wav"));
+		break;
+	}
+	pGameInstance->PlaySounds(szFullPath, SOUND_BATTERY, fVolume);
+
 	Safe_Release(pGameInstance);
 }
 

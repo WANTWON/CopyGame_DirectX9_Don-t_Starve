@@ -327,8 +327,10 @@ void CCatapult::Attack(_float _fTimeDelta)
 		m_pTarget = nullptr;
 		m_eState = CCatapult::IDLE;
 	}
-
-	
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 3)
+	{
+		Play_Sound(_fTimeDelta);
+	}
 
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex == 32)
 	{
@@ -375,6 +377,7 @@ void CCatapult::Destroy(_float _fTimeDelta)
 {
 	if (m_ePreState != m_eState)
 	{
+		Play_Sound(_fTimeDelta);
 		Change_Texture(TEXT("Com_Texture_Destroy"));
 		m_ePreState = m_eState;
 		static_cast<CWinona*>(m_tDesc.pOwner)->Decreas_Catapult(this);
@@ -392,6 +395,7 @@ void CCatapult::Place(_float _fTimeDelta)
 	{
 		Change_Texture(TEXT("Com_Texture_Place"));
 		m_ePreState = m_eState;
+		Play_Sound(_fTimeDelta);
 	}
 
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
@@ -423,6 +427,35 @@ void CCatapult::BurstMode(_float _fTimeDelta)
 
 		m_fCreate_Effect_Time = 0.f;
 	}
+
+
+}
+
+void CCatapult::Play_Sound(_float _fTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	_int iNum = rand() % 4;
+	_tchar	szFullPath[MAX_PATH];
+	_float fVolume = 0.5f;
+	switch (m_eState)
+	{
+	case PLACE:
+		wcscpy_s(szFullPath, TEXT("place_catapult_winona_DST.wav"));
+		break;
+	case IDLE:
+		break;
+	case ATTACK:
+		wcscpy_s(szFullPath, TEXT("launch_catapult_winona_DST_%d.wav"));
+		wsprintf(szFullPath, szFullPath, iNum);
+		break;
+	case DESTROY:
+		wcscpy_s(szFullPath, TEXT("death_catapult_winona_DST.wav"));
+		break;
+	}
+	pGameInstance->PlaySounds(szFullPath, SOUND_CATAPULT, fVolume);
+
+	Safe_Release(pGameInstance);
 }
 
 _bool CCatapult::Find_Enemy(_float _fTimeDelta)

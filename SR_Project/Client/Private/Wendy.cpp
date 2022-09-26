@@ -74,6 +74,13 @@ int CWendy::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 	}
 
+	if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY && m_bDead && m_fReviveTime > 5.f)
+	{
+		m_bCanTalk = true;
+		m_bDead = false;
+		Clear_Activated();
+		Reset_Target();
+	}
 
 	if (m_iCurrentLevelndex != m_iPreLevelIndex)
 	{
@@ -83,6 +90,7 @@ int CWendy::Tick(_float fTimeDelta)
 			_float3 Owner_Pos = static_cast<CPlayer*>(m_pOwner)->Get_Pos();
 			Owner_Pos.x -= 3.f;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
+		
 		}
 		else
 		{
@@ -414,7 +422,9 @@ _float CWendy::Take_Damage(float fDamage, void * DamageType, CGameObject * Damag
 {
 	if (!m_bDead && m_tInfo.iCurrentHp <= (_int)fDamage)
 	{
+		m_fReviveTime = 0.f;
 		m_bDead = true;
+		m_bCanTalk = false;
 	}
 	else if (!m_bDead && !m_bHited)
 	{
@@ -487,6 +497,8 @@ void CWendy::Move(_float _fTimeDelta)
 		m_ePre_Dir = m_eCur_Dir;
 	}
 	m_pTransformCom->Go_PosTarget(_fTimeDelta, m_vTargetPos, _float3{ 0.f, 0.f, 0.f });
+
+	Play_Sound(_fTimeDelta);
 
 	SetUp_BillBoard();
 }
@@ -571,9 +583,7 @@ void CWendy::Attack(_float _fTimeDelta)
 		m_bInteract = true;
 		Change_Texture(TEXT("Com_Texture_Recall"));
 		m_ePreState = m_eState;
-
-		//cout << "Create_Bullet" << endl;
-
+		Play_Sound(_fTimeDelta);
 	}
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 2)
 	{
@@ -624,7 +634,7 @@ void CWendy::Skill(_float _fTimeDelta)
 		m_bInteract = true;
 		Change_Texture(TEXT("Com_Texture_Channel"));
 		m_ePreState = m_eState;
-
+		Play_Sound(_fTimeDelta);
 	}
 	if (m_bCanSkill &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 2)
 	{
@@ -645,6 +655,7 @@ _bool CWendy::Hit(_float _fTimeDelta)
 		m_bInteract = true;
 		Change_Texture(TEXT("Com_Texture_Hit"));
 		m_ePreState = m_eState;
+		Play_Sound(_fTimeDelta);
 	}
 
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
@@ -664,6 +675,7 @@ _bool CWendy::Dead(_float _fTimeDelta)
 		m_bInteract = true;
 		Change_Texture(TEXT("Com_Texture_Dead"));
 		m_ePreState = m_eState;
+		Play_Sound(_fTimeDelta);
 	}
 	return true;
 }
@@ -767,6 +779,9 @@ _bool CWendy::Detect_Enemy()
 
 void CWendy::Play_Sound(_float _fTimeDelta)
 {
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == false)
+		return;
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
@@ -777,12 +792,8 @@ void CWendy::Play_Sound(_float _fTimeDelta)
 	{
 	case CNPC::IDLE:
 		break;
-	case CNPC::ATTACK:
-	case CNPC::SKILL:
-		wcscpy_s(szFullPath, TEXT("Shake_hand.wav"));
-		fVolume = 0.4f;
-		break;
 	case CNPC::MOVE:
+		fVolume = 0.3f;
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 14
 			|| m_pTextureCom->Get_Frame().m_iCurrentTex == 2)
 		{
@@ -800,19 +811,23 @@ void CWendy::Play_Sound(_float _fTimeDelta)
 		break;
 	case CNPC::HIT:
 		//Player Hit
-		wcscpy_s(szFullPath, TEXT("winona_hit6_%d.wav"));
+		wcscpy_s(szFullPath, TEXT("Wendy_hurt_%d.wav"));
 		wsprintf(szFullPath, szFullPath, iNum);
 		break;
 	case CNPC::DEAD:
-		wcscpy_s(szFullPath, TEXT("winona_death6.wav"));
+		wcscpy_s(szFullPath, TEXT("Wendy_death.wav"));
+		break;
+	case CNPC::ATTACK:
+	case CNPC::SKILL:
 		break;
 	case CNPC::TALK:
-		wcscpy_s(szFullPath, TEXT("winona_vo6_%d.wav"));
+		fVolume = 0.4f;
+		wcscpy_s(szFullPath, TEXT("Wendy_generic_%d.wav"));
 		wsprintf(szFullPath, szFullPath, iNum);
 		break;
 	}
 
-	pGameInstance->PlaySounds(szFullPath, SOUND_WINONA, fVolume);
+	pGameInstance->PlaySounds(szFullPath, SOUND_WENDY, fVolume);
 
 	Safe_Release(pGameInstance);
 }
@@ -889,6 +904,7 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 
 	if (m_iPreTalkCnt != m_iTalkCnt)
 	{
+		Play_Sound(_fTimeDelta);
 		if (!m_bOwner)
 		{//IsPartyed
 			switch (m_iTalkCnt)
@@ -1020,9 +1036,9 @@ void CWendy::Talk_Friend(_float _fTimeDelta)
 	{
 		m_fInteractTIme = 0.f;
 		m_bInteract = true;
-		Change_Texture(TEXT("Com_Texture_Talk"));
 		m_ePreState = m_eState;
 		static_cast<CPig*>(m_pTarget)->Interact(_fTimeDelta, 0);
+		Play_Sound(_fTimeDelta);
 	}
 
 	if (2.f < m_fInteractTIme)

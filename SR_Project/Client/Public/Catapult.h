@@ -59,6 +59,7 @@ private:
 	void Destroy(_float _fTimeDelta);
 	void Place(_float _fTimeDelta);
 	void BurstMode(_float _fTimeDelta);
+	void Play_Sound(_float _fTimeDelta);
 private:
 	_bool	Find_Enemy(_float _fTimeDelta);
 	_bool	Check_Distance(CGameObject* _pObj);

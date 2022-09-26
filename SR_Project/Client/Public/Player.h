@@ -52,7 +52,7 @@ public:
 	typedef struct tagPlayerStat
 	{
 		_float fSpeed = 0.f;
-		_float fMaxHealth = 100.f;
+		_float fMaxHealth = 300.f;
 		_float fCurrentHealth = fMaxHealth;
 		_float fMaxMental = 999.f;
 		_float fCurrentMental = fMaxMental;

@@ -50,7 +50,7 @@ HRESULT CWoodie::Initialize(void * pArg)
 
 	BehaviorTree->Initialize();
 
-	m_tInfo.iMaxHp = 100;
+	m_tInfo.iMaxHp = 300;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_tInfo.fDamage = 20.f;
 
@@ -72,6 +72,14 @@ int CWoodie::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 	}
 
+	if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY && m_bDead && m_fReviveTime > 5.f)
+	{
+		m_bCanTalk = true;
+		m_bDead = false;
+		Clear_Activated();
+		Reset_Target();
+	}
+
 
 	if (m_iCurrentLevelndex != m_iPreLevelIndex)
 	{
@@ -81,6 +89,7 @@ int CWoodie::Tick(_float fTimeDelta)
 			_float3 Owner_Pos = static_cast<CPlayer*>(m_pOwner)->Get_Pos();
 			Owner_Pos.x -= 3.f;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
+
 		}
 		else
 		{
@@ -403,7 +412,9 @@ _float CWoodie::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 {
 	if (!m_bDead && m_tInfo.iCurrentHp <= (_int)fDamage)
 	{
+		m_fReviveTime = 0.f;
 		m_bDead = true;
+		m_bCanTalk = false;
 	}
 	else if(!m_bDead &&!m_bHited)
 	{
@@ -446,7 +457,7 @@ void CWoodie::Move(_float _fTimeDelta)
 		m_ePreState = m_eState;
 		m_ePre_Dir = m_eCur_Dir;
 	}
-
+	Play_Sound(_fTimeDelta);
 	m_pTransformCom->Go_PosTarget(_fTimeDelta, m_vTargetPos, _float3{ 0.f, 0.f, 0.f });
 
 	SetUp_BillBoard();
@@ -527,6 +538,7 @@ void CWoodie::Attack(_float _fTimeDelta)
 
 	if (m_ePreState != m_eState)
 	{
+		Play_Sound(_fTimeDelta);
 		m_bInteract = true;
 		switch (m_eCur_Dir)
 		{
@@ -591,6 +603,7 @@ void CWoodie::Skill(_float _fTimeDelta)
 
 	if (m_ePreState != m_eState)
 	{
+		Play_Sound(_fTimeDelta);
 		m_bInteract = true;
 		switch (m_eCur_Dir)
 		{
@@ -641,6 +654,7 @@ _bool CWoodie::Hit(_float _fTimeDelta)
 
 	if (m_ePreState != m_eState)
 	{
+		Play_Sound(_fTimeDelta);
 		m_bInteract = true;
 		Change_Texture(TEXT("Com_Texture_Hit"));
 		m_ePreState = m_eState;
@@ -660,15 +674,12 @@ _bool CWoodie::Dead(_float _fTimeDelta)
 
 	if (m_ePreState != m_eState)
 	{
+		Play_Sound(_fTimeDelta);
 		//m_bInteract = true;
 		Change_Texture(TEXT("Com_Texture_Dead"));
 		m_ePreState = m_eState;
 	}
 
-	//if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
-	//{
-	//	m_bHited = false;
-	//}
 	return true;
 }
 
@@ -770,6 +781,9 @@ _bool CWoodie::Detect_Enemy()
 
 void CWoodie::Play_Sound(_float _fTimeDelta)
 {
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == false)
+		return;
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
@@ -782,10 +796,11 @@ void CWoodie::Play_Sound(_float _fTimeDelta)
 		break;
 	case CNPC::ATTACK:
 	case CNPC::SKILL:
-		wcscpy_s(szFullPath, TEXT("Shake_hand.wav"));
-		fVolume = 0.4f;
+		wcscpy_s(szFullPath, TEXT("Weapon_Swing.wav"));
+		fVolume = 1.f;
 		break;
 	case CNPC::MOVE:
+		fVolume = 0.3f;
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 14
 			|| m_pTextureCom->Get_Frame().m_iCurrentTex == 2)
 		{
@@ -803,19 +818,22 @@ void CWoodie::Play_Sound(_float _fTimeDelta)
 		break;
 	case CNPC::HIT:
 		//Player Hit
-		wcscpy_s(szFullPath, TEXT("winona_hit6_%d.wav"));
+		fVolume = 0.8f;
+		wcscpy_s(szFullPath, TEXT("Woodie_hurt_%d.wav"));
 		wsprintf(szFullPath, szFullPath, iNum);
 		break;
 	case CNPC::DEAD:
-		wcscpy_s(szFullPath, TEXT("winona_death6.wav"));
+		fVolume = 0.9f;
+		wcscpy_s(szFullPath, TEXT("Woodie_death.wav"));
 		break;
 	case CNPC::TALK:
-		wcscpy_s(szFullPath, TEXT("winona_vo6_%d.wav"));
+		fVolume = 0.8f;
+		wcscpy_s(szFullPath, TEXT("Woodie_generic_%d.wav"));
 		wsprintf(szFullPath, szFullPath, iNum);
 		break;
 	}
 
-	pGameInstance->PlaySounds(szFullPath, SOUND_WINONA, fVolume);
+	pGameInstance->PlaySounds(szFullPath, SOUND_WOODIE, fVolume);
 
 	Safe_Release(pGameInstance);
 }
@@ -889,6 +907,7 @@ void CWoodie::Talk_Player(_float _fTimeDelta)
 
 	if (m_iPreTalkCnt != m_iTalkCnt)
 	{
+		Play_Sound(_fTimeDelta);
 		if (!m_bOwner)
 		{//IsPartyed
 			switch (m_iTalkCnt)
