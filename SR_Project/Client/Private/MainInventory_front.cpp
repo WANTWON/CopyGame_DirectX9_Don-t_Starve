@@ -415,7 +415,18 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 		{
 			pMouse->Set_Item_type(m_itemtype);
 			pMouse->Set_Equipment_name(texnum);
-			set_texnum(ITEMNAME_END);
+			if (m_itemtype == ITEM_HAND)
+			{
+				CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+				auto i = pinv->Get_Equipment_list()->front();
+
+				
+				if (i->get_iNum() == 0)
+				texnum = i->get_texnum();
+
+			}
+			else
+		   set_texnum(ITEMNAME_END);
 
 
 			if (m_itemtype == ITEM_BAG)

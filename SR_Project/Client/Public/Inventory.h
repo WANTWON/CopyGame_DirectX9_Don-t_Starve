@@ -154,7 +154,7 @@ public:
 	void Off_bag();
 
 	void Use_pot(CCookPot* pCookPot);
-	void Off_pot();
+	void Off_pot(CCookPot* pCookPot);
 
 	void weapontool_on();
 	void weapontool_off();
@@ -281,6 +281,7 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 	_bool m_PickingPot = false;
 
 	_bool m_bcardgameon = true;
+	_bool m_first = true;
 
 
 	//private:

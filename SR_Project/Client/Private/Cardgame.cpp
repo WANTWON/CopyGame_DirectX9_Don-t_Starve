@@ -38,13 +38,13 @@ HRESULT CCardgame::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	iNum = m_CaedDesc.iNumber;
+	iNum = m_CaedDesc.iNumber;   
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_CaedDesc.pos);
 
 	//pos = { 40.f + (iNum*0.6f) , 0.5f, 25.f };
 
-	
-	if (iNum == 0 || iNum == 8)
+	texnum1 = iNum;
+	/*if (iNum == 0 || iNum == 8)
 		texnum1 = 0;
 
 	else if (iNum == 1 || iNum == 7)
@@ -56,9 +56,9 @@ HRESULT CCardgame::Initialize(void* pArg)
 	else if (iNum == 3 || iNum == 5)
 		texnum1 = 3;
 	else
-		texnum1 = 4;
+		texnum1 = 4;*/
 
-
+	
 
 
 	/*if(iNum >= 3 )
@@ -80,6 +80,12 @@ HRESULT CCardgame::Initialize(void* pArg)
 
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, effectdesc.pos);d
 
+
+	m_WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+
+	//m_pTransformCom->Set_State(m_WorldMatrix)
+
+	//m_pTransformCom->set_world
 
 	/*_float3 vRight;
 
@@ -151,7 +157,7 @@ int CCardgame::Tick(_float fTimeDelta)
 		{
 
 			if (texnum == 5)
-				texnum = texnum1;
+				texnum = texnum1;   //90도 회전..
 
 			else if (texnum == texnum1)
 				texnum = 5;
@@ -171,9 +177,13 @@ int CCardgame::Tick(_float fTimeDelta)
 			//texnum = 1;
 			ftime = 0.f;
 			turn = false;
+			
 
-			//float fTemp = ftime - fTimeDelta*5.f;
-			//m_pTransformCom->Turn(_float3(0.f, 0.f, 1.f), -fTemp);
+			m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&m_WorldMatrix.m[0][0]);
+			m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&m_WorldMatrix.m[1][0]);
+			m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&m_WorldMatrix.m[2][0]);
+			if(texnum != 5)
+				m_pTransformCom->Turn(_float3(0.f, 0.f, 1.f), 1.f);
 		}
 
 
@@ -234,7 +244,7 @@ void CCardgame::Late_Tick(_float fTimeDelta)
 			{
 				m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), 0.3f);
 			}
-			if (ftime2 > 2.f)
+			if (ftime2 > 2.f && !lastcard)
 			{
 				m_bcheck = false;
 
@@ -245,8 +255,31 @@ void CCardgame::Late_Tick(_float fTimeDelta)
 				effectdesc.pos.y += 0.5f;
 				effectdesc.whateffect = 1;
 				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CardEffect"), LEVEL_GAMEPLAY, TEXT("Layer_Cardeffect_bomb"), &effectdesc);
+				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CardEffect"), LEVEL_MAZE, TEXT("Layer_Cardeffect_bomb"), &effectdesc);
 					
+			}
+
+			if (ftime2 > 2.f && lastcard)
+			{
+				m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), 0.3f);
+				texnum = 6;
+				j += 0.02f;
+				m_pTransformCom->Set_Scale(j, j, 1.f);
+			}
+
+			if (ftime2 > 5.f && lastcard)
+			{
+				m_bcheck = false;
+
+				foreffect		effectdesc;
+				ZeroMemory(&effectdesc, sizeof(foreffect));
+				Update_Position(m_CaedDesc.pos);
+				effectdesc.pos = Get_Position();
+				effectdesc.pos.y += 0.5f;
+				effectdesc.whateffect = 1;
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CardEffect"), LEVEL_MAZE, TEXT("Layer_Cardeffect_bomb"), &effectdesc);
+
 			}
 
 		}
@@ -350,6 +383,12 @@ void CCardgame::PickingTrue()
 		turn = true;
 
 		frontcard = true;
+
+		if (CInventory_Manager::Get_Instance()->Get_Cardgamecount() == 8)
+		{
+			lastcard = true;
+			m_blastdance = true;
+		}
 		
 	}
 

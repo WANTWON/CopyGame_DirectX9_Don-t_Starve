@@ -127,11 +127,11 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	CPortal::PORTALDESC PortalDesc;
 
 
-	PortalDesc.m_eType = CPortal::PORTAL_BOSS;
+	/*PortalDesc.m_eType = CPortal::PORTAL_BOSS;
 	PortalDesc.vPosition = _float3(25.f, 2.f, 25.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, pLayerTag, &PortalDesc)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
 	PortalDesc.vPosition = _float3(9.0f, 2.f, 8.f);
@@ -299,18 +299,36 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 
 
 	CCardgame::CARDDESC CardDesc;
+	vector<_uint> randombox;  //cardgame random shufflle
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 4; i++)
 	{
-		for (int j = 0; j < 3; ++j)
-		{
-			CardDesc.iNumber = i*3 + j;
-			CardDesc.pos = _float3(22.f + 3.f*i, 0.5f, 22.f + 3.f*j);
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_MAZE, TEXT("Layer_Card"), &CardDesc)))
-				return E_FAIL;
-		}
+		randombox.push_back(i);
+		randombox.push_back(i);
 	}
 
+	randombox.push_back(4);
+
+	random_shuffle(randombox.begin(), randombox.end());
+
+	for (auto& iter = randombox.begin(); iter != randombox.end();)
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			for (int j = 0; j < 3; ++j)
+			{
+				CardDesc.iNumber = *iter;//i * 3 + j;
+				CardDesc.pos = _float3(22.f + 3.f*i, 0.5f, 22.f + 3.f*j);
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_MAZE, TEXT("Layer_Card"), &CardDesc)))
+					return E_FAIL;
+				++iter;
+			}
+		}
+
+		
+	}
+
+	
 
 	Safe_Release(pGameInstance);
 	return S_OK;
@@ -537,6 +555,9 @@ void CLevel_Maze::Update_Floor_Motion()
 	{
 		// Card Game
 		CInventory_Manager::Get_Instance()->Start_Cardgame();
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("cardgamestart.mp3"), SOUND_UI, 0.6f);
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("cardgamebgm.wav") , 0.6f);
+		m_bPuzzleStart[6] = true;
 	}
 
 	Safe_Release(pGameInstance);

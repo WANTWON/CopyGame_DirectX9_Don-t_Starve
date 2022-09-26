@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "Inventory.h"
+#include "NPC.h"
 
 CPlayerhp::CPlayerhp(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -57,6 +58,14 @@ int CPlayerhp::Tick(_float fTimeDelta)
 
 	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
 	texnum = (_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth) / 20;
+
+	 
+	//list<CGameObject*>* list_Obj;
+
+	//list_Obj = pGameInstance->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_NPC"));
+	////dynamic_cast<CNPC*>( pGameInstance->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_NPC")));
+
+	//list_Obj->front()->
 
 	Safe_Release(pGameInstance);
 	//Safe_Release(pinv);
