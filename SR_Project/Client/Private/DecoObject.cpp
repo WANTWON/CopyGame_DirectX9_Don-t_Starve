@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "FloorGrateEruption.h"
 #include "Player.h"
+#include "Level_GamePlay.h"
 
 CDecoObject::CDecoObject(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -82,9 +83,10 @@ HRESULT CDecoObject::Initialize(void* pArg)
 	case DECOTYPE::SPARKLE:
 		m_pTransformCom->Set_Scale(.5f, .5f, 1.f);
 		break;
+	case DECOTYPE::FIREFLIES:
+		m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+		break;
 	}
-
-	
 
 	return S_OK;
 }
@@ -101,7 +103,6 @@ int CDecoObject::Tick(_float fTimeDelta)
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PUSH, this);
 	}
-
 
 	WalkingTerrain();
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -126,7 +127,7 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 	{
-		if (m_DecoDesc.m_eState == DECOTYPE::FLOOR_EFFECT || m_DecoDesc.m_eState == DECOTYPE::SPARKLE)
+		if (m_DecoDesc.m_eState == DECOTYPE::FLOOR_EFFECT || m_DecoDesc.m_eState == DECOTYPE::SPARKLE || m_DecoDesc.m_eState == DECOTYPE::FIREFLIES)
 		{
 			m_eShaderID = SHADER_IDLE;
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
@@ -138,7 +139,7 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		}
 
-		if (m_DecoDesc.m_eState != DECOTYPE::FLOOR_EFFECT && m_DecoDesc.m_eState != DECOTYPE::SPARKLE)
+		if (m_DecoDesc.m_eState != DECOTYPE::FLOOR_EFFECT && m_DecoDesc.m_eState != DECOTYPE::SPARKLE && m_DecoDesc.m_eState != DECOTYPE::FIREFLIES)
 			Set_ShaderID();
 	}
 	
@@ -147,7 +148,30 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 
-	MoveFrame();
+	// Change Motion only if FIREFLIES
+	if (m_DecoDesc.m_eState == DECOTYPE::FIREFLIES)
+	{
+		if (m_eState != m_ePreState)
+		{
+			switch (m_eState)
+			{
+			case DECOSTATE::LOOP:
+				Change_Texture(TEXT("Com_Texture_Loop"));
+				break;
+			case DECOSTATE::PRE:
+				Change_Texture(TEXT("Com_Texture_Pre"));
+				break;
+			case DECOSTATE::POST:
+				Change_Texture(TEXT("Com_Texture_Post"));
+				break;
+			}
+
+			if (m_eState != m_ePreState)
+				m_ePreState = m_eState;
+		}
+	}
+
+	MoveFrame(fTimeDelta);
 	
 }
 
@@ -218,7 +242,7 @@ void CDecoObject::FloorUpdate()
 	m_bCreate = true;
 }
 
-void CDecoObject::MoveFrame()
+void CDecoObject::MoveFrame(_float fTimeDelta)
 {
 	switch (m_DecoDesc.m_eState)
 	{
@@ -242,13 +266,53 @@ void CDecoObject::MoveFrame()
 		if (m_pTextureCom->MoveFrame(m_TimerTag, false) == true)
 			m_bDead = true;
 		break;
+	case FIREFLIES:
+		switch (m_eState)
+		{
+		case DECOSTATE::LOOP:
+			if (m_fFirefliesTimer > 5.f)
+				m_eState = DECOSTATE::POST;
+			else
+				m_fFirefliesTimer += fTimeDelta;
+
+			m_pTextureCom->MoveFrame(m_TimerTag);
+			break;
+		case DECOSTATE::PRE:
+			if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+				m_eState = DECOSTATE::LOOP;
+			break;
+		case DECOSTATE::POST:
+			if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
+			{
+				m_bDead = true;
+
+				// Decrease FirefliesCounter in GameplayLevel
+				CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+				CLevel_GamePlay* pGameplayLevel = dynamic_cast<CLevel_GamePlay*>(pLevelManager->Get_CurrentLevel());
+				if (!pGameplayLevel)
+					return;
+				pGameplayLevel->Decrease_Fireflies();
+			}
+			break;
+		}
+		break;
 	}	
+}
+
+HRESULT CDecoObject::Change_Texture(const _tchar * LayerTag)
+{
+	if (FAILED(__super::Change_Component(LayerTag, (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
+	m_pTextureCom->Set_ZeroFrame();
+
+	return S_OK;
 }
 
 HRESULT CDecoObject::SetUp_Components(void* pArg)
 {
 
-	if (m_DecoDesc.m_eState == DECOTYPE::FLOOR_EFFECT || m_DecoDesc.m_eState == DECOTYPE::SPARKLE)
+	if (m_DecoDesc.m_eState == DECOTYPE::FLOOR_EFFECT || m_DecoDesc.m_eState == DECOTYPE::SPARKLE || m_DecoDesc.m_eState == DECOTYPE::FIREFLIES)
 	{
 		/* For.Com_Shader */
 		if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), (CComponent**)&m_pShaderCom)))
@@ -314,6 +378,17 @@ HRESULT CDecoObject::SetUp_Components(void* pArg)
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sparkle_Effect"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 			return E_FAIL;
 		break;
+	case DECOTYPE::FIREFLIES:
+		TextureDesc.m_iEndTex = 100;
+		TextureDesc.m_fSpeed = 20.f;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Loop"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fireflies_Loop"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		TextureDesc.m_iEndTex = 51;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Pre"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fireflies_Pre"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
+		TextureDesc.m_iEndTex = 50;
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture_Post"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fireflies_Post"), (CComponent**)&m_pTextureCom, &TextureDesc)))
+			return E_FAIL;
 	}
 
 	/* For.Com_Renderer */

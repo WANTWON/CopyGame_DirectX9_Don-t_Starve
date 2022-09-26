@@ -15,6 +15,7 @@
 
 #include "NPC.h"
 #include "DayCycle.h"
+#include "DecoObject.h"
 
 
 _bool g_bUIMadefirst = false;
@@ -121,9 +122,35 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 		m_fTimeAcc = 0.f;
 	}
 
+	// Spawn Fireflies (only at Night)
+	if ((DAY_STATE)CDayCycle::Get_Instance()->Get_DayState() == DAY_STATE::DAY_NIGHT)
+	{
+		// Only 50 at the same time
+		if (m_iFirefliesCounter < m_iFirefliesMax)
+		{
+			if (m_fFirefliesTimer > .2f)
+			{
+				CDecoObject::DECODECS tDecoDesc;
+				tDecoDesc.m_eState = CDecoObject::DECOTYPE::FIREFLIES;
+				tDecoDesc.vInitPosition = _float3(rand() % 80, 1.f, rand() % 50);
+
+				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_GAMEPLAY, TEXT("Layer_Fireflies"), &tDecoDesc)))
+					return;
+
+				m_iFirefliesCounter++;
+				m_fFirefliesTimer = 0.f;
+			}
+			else
+				m_fFirefliesTimer += fTimeDelta;
+		}
+	}
+	else
+	{
+		m_iFirefliesCounter = 0;
+		m_fFirefliesTimer = 0.f;
+	}
+
 	Safe_Release(pGameInstance);
-
-
 }
 
 void CLevel_GamePlay::Late_Tick(_float fTimeDelta)
@@ -277,7 +304,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig_King"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 30.f))))
 		return E_FAIL;
-
 
 	CPortal::PORTALDESC PortalDesc;
 	PortalDesc.m_eType = CPortal::PORTAL_HUNT;
