@@ -59,6 +59,8 @@ public:
 
 	_uint Get_texnum() { return texnum; }
 	void Set_texnum(_uint num) { texnum = num; }
+	_uint Get_iNum() { return iNum; }
+	
 
 
 public:

@@ -45,12 +45,14 @@ private:
 	_uint texnum = 50;
 	_uint m_ihp;
 	_uint iNum = 0;
+	_uint whatnpc = 0;
 
 	_bool m_bcheck = false;
 
 public:
 	_bool Get_check() { return m_bcheck;}
 	void Set_check(_bool tof) { m_bcheck = tof; }
+	void Set_whatnpc(_uint num) { whatnpc = num; }
 
 
 public:

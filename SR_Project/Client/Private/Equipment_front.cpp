@@ -82,6 +82,14 @@ int CEquipment_front::Tick(_float fTimeDelta)
 	{
 		CInventory_Manager*			pInventory_Manager = CInventory_Manager::Get_Instance();
 		Safe_AddRef(pInventory_Manager);
+		if (texnum == ITEMNAME_ARMOR || texnum == ITEMNAME_HELMET)
+		{
+			CGameInstance* pInstance = CGameInstance::Get_Instance();
+			(dynamic_cast<CPlayer*>(pInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Armor(-5));
+		}
+			
+
+
 		if (texnum == ITEMNAME_BAG)
 		{
 			CGameInstance* pInstance = CGameInstance::Get_Instance();
@@ -172,6 +180,9 @@ void CEquipment_front::Late_Tick(_float fTimeDelta)
 
 	if(iNum == 0)
 	(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_WeaponType(weapontype));
+
+	
+
 	Safe_Release(pGameInstance);
 }
 

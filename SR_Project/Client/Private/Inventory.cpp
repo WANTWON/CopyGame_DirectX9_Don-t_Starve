@@ -130,6 +130,7 @@ void CInventory_Manager::Tick(_float fTimeDelta)
 		else if ((*iterparty)->Get_check() == true)
 		{
 			(*iterpartyhp)->Set_check(true);
+			(*iterpartyhp)->Set_whatnpc((*iterparty)->Get_texnum());
 		}
 
 		

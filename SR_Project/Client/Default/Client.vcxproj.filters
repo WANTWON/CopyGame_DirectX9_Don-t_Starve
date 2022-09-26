@@ -352,6 +352,9 @@
     <Filter Include="02.GameObject\98.UI\21.Endingscene">
       <UniqueIdentifier>{2ea33c09-5c6b-4a4d-b1cd-b3c60b9ba0c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.UI\22.Hpbar">
+      <UniqueIdentifier>{0fb85bd1-dc17-4652-916e-919256c53f52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -816,6 +819,9 @@
     <ClInclude Include="..\Public\Endingscene.h">
       <Filter>02.GameObject\98.UI\21.Endingscene</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Hpbar.h">
+      <Filter>02.GameObject\98.UI\22.Hpbar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -1267,6 +1273,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Endingscene.cpp">
       <Filter>02.GameObject\98.UI\21.Endingscene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hpbar.cpp">
+      <Filter>02.GameObject\98.UI\22.Hpbar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

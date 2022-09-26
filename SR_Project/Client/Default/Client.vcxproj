@@ -218,6 +218,7 @@
     <ClInclude Include="..\public\FloorGrateEruption.h" />
     <ClInclude Include="..\public\Grass.h" />
     <ClInclude Include="..\Public\House.h" />
+    <ClInclude Include="..\Public\Hpbar.h" />
     <ClInclude Include="..\Public\Interactive_Object.h" />
     <ClInclude Include="..\Public\Inventory.h" />
     <ClInclude Include="..\Public\Item.h" />
@@ -372,6 +373,7 @@
     <ClCompile Include="..\private\FloorGrateEruption.cpp" />
     <ClCompile Include="..\private\Grass.cpp" />
     <ClCompile Include="..\Private\House.cpp" />
+    <ClCompile Include="..\Private\Hpbar.cpp" />
     <ClCompile Include="..\Private\Interactive_Object.cpp" />
     <ClCompile Include="..\Private\Inventory.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
