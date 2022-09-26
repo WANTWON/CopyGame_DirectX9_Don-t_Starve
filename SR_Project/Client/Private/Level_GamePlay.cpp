@@ -192,8 +192,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	/*pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrorbeak"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 0.f, 20.f));*/
-
 	Safe_Release(pGameInstance);
 
 	return S_OK;
