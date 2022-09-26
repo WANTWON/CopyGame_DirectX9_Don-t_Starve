@@ -42,6 +42,8 @@ public:
 	 HRESULT SetUp_Components(void* pArg = nullptr);
 	 void WalkingTerrain();
 	 void SetUp_BillBoard();
+
+	 _float Get_hp() { return m_tInfo.iCurrentHp; }
 	 
 private: /*For TextureCom */
 	 void Change_Frame();
@@ -55,6 +57,7 @@ private:
 	const _tchar* m_TimerTag = TEXT("");
 	OBJINFO m_tInfo;
 	_bool m_bIsDestroyed = false;
+	_bool m_bfirst = false;
 	SHADER_STATE m_eShaderID = SHADER_IDLE;
 
 private: /* For.Components */

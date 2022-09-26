@@ -12,6 +12,7 @@
 #include "Totem.h"
 #include "Portal.h"
 #include "Particle.h"
+#include "DayCycle.h"
 
 CLevel_Boss::CLevel_Boss(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -20,7 +21,8 @@ CLevel_Boss::CLevel_Boss(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 HRESULT CLevel_Boss::Initialize()
 {
-	CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
+	CGameInstance::Get_Instance()->StopAll();
+	CDayCycle::Get_Instance()->AllRemoveObserver();
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
@@ -51,7 +53,7 @@ HRESULT CLevel_Boss::Initialize()
 void CLevel_Boss::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
+	CDayCycle::Get_Instance()->DayCycleTick();
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 

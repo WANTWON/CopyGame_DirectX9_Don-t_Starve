@@ -58,6 +58,8 @@ int CPlayerMentality::Tick(_float fTimeDelta)
 	
 	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
 	texnum = (_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentMental) / 20;
+	if (texnum >= 51)
+		texnum = 50;
 
 	//Safe_Release(pGameInstance);
 	//Safe_Release(pinv);

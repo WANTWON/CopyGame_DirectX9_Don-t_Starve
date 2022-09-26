@@ -367,9 +367,9 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1 && m_bFirstFrame)
 		{
 			// Screen Effect
-			_bool forboss = true;
+			//_bool forboss = true;
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_BOSS, TEXT("Layer_Screeneffect"), (bool*)&forboss);
+			//pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_BOSS, TEXT("Layer_Screeneffect"), (bool*)&forboss);
 			m_bfirst = false;
 
 			// Play Sound

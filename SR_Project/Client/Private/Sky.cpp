@@ -31,7 +31,7 @@ HRESULT CSky::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-	CDayCycle::Get_Instance()->RegisterObserver(this);
+	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_NONSTATIC);
 	return S_OK;
 }
 
@@ -246,8 +246,6 @@ CGameObject * CSky::Clone(void* pArg)
 void CSky::Free()
 {
 	__super::Free();
-
-	CDayCycle::Get_Instance()->RemoveObserver(this);
 
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
