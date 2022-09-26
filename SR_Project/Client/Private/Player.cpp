@@ -71,42 +71,23 @@ int CPlayer::Tick(_float fTimeDelta)
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return OBJ_NOEVENT;
 
-	Update_State(fTimeDelta);
 	Check_SanitySpawn(fTimeDelta);
 
-	if (m_iPreLevelIndex != m_iCurrentLevelndex)
-	{
-		Clear_ActStack();
-		m_iPreLevelIndex = m_iCurrentLevelndex;
-		Change_Texture(TEXT("Com_Texture_Idle_Side"));
-		m_bInPortal = false;
-		m_bMove = true;
+	Setup_LevelChange();
 
-
-		MINIMAP		minidesc;
-		ZeroMemory(&minidesc, sizeof(MINIMAP));
-		minidesc.name = MIN_PLAYER;
-		minidesc.pointer = this;
-
-		LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
-	}
-	m_iCameraMode = CCameraManager::Get_Instance()->Get_CamState();
-
-
+	if (!Decrease_Stat(fTimeDelta))
+		return OBJ_NOEVENT;
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PLAYER, this);
 
-
 	__super::Tick(fTimeDelta);
 
 	//Origin Look Test
-	if (iCnt == 0)
+	/*if (iCnt == 0)
 	{
 		m_pOriginMatrix = m_pTransformCom->Get_WorldMatrix();
-	}
+	}*/
 	//SkillCoolTime
 	Cooltime_Update(fTimeDelta);
 	Invincible_Update(fTimeDelta);
@@ -128,9 +109,6 @@ int CPlayer::Tick(_float fTimeDelta)
 	RangeCheck(fTimeDelta);
 
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
-	//cout << "Player HP : " << m_tStat.fCurrentHealth << endl;
-
 
 	return OBJ_NOEVENT;
 }
@@ -298,6 +276,7 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 	if ((m_eState != ACTION_STATE::DAMAGED || !m_bGhost) && !m_bHited)
 	{
 		m_tStat.fCurrentHealth -= fDamage;
+
 	}
 
 	if (Check_Dead() && !m_bGhost)
@@ -1256,6 +1235,7 @@ void CPlayer::Attack(_float _fTimeDelta)
 
 	if (m_eState != m_ePreState)
 	{
+		m_bSoundEnd = false;
 		m_Equipment->Set_ActionState((_uint)ACTION_STATE::ATTACK);
 		m_Equipment->Set_WeaponType(m_eWeaponType);
 		switch (m_eDirState)
@@ -1950,6 +1930,51 @@ void CPlayer::Teleport(_float _fTimeDelta)
 	}
 }
 
+_bool CPlayer::Decrease_Stat(_float _fTimeDelta)
+{
+	m_fMentalitytime += _fTimeDelta;
+	m_fHungertime += _fTimeDelta;
+
+	if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
+	{
+		--m_tStat.fCurrentMental;
+		m_fMentalitytime = 0.f;
+	}
+	else if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT)
+	{
+		if (m_eWeaponType != WEAPON_LIGHT)
+			m_fMentalitytime2 += _fTimeDelta;
+		else
+			m_fMentalitytime2 = 0.f;
+
+		if (m_fMentalitytime > 1.f)
+		{
+			--m_tStat.fCurrentMental;
+			m_fMentalitytime = 0.f;
+		}
+
+		if (m_fMentalitytime2 > 5.f)
+		{
+			m_tStat.fCurrentMental -= 5.f;
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			_bool forboss = false;
+
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"), &forboss)))
+				return false;
+			m_fMentalitytime2 = 0.f;
+		}
+
+	}
+
+	if (m_fHungertime > 5.f)
+	{
+		--m_tStat.fCurrentHungry;
+		m_fHungertime = 0.f;
+	}
+
+	return true;
+}
+
 void CPlayer::Create_Bullet()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -2192,54 +2217,27 @@ void CPlayer::Notify_NPC(_uint _iNum)
 
 }
 
-void CPlayer::Update_State(_float fTimeDelta)
+void CPlayer::Setup_LevelChange(void)
 {
-
-	if (CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BOSS || CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_MAZE)
-		return;
-
-	m_fMentalitytime += fTimeDelta;
-	m_fHungertime += fTimeDelta;
- 
-	
-		if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
-		{
-			--m_tStat.fCurrentMental;
-			m_fMentalitytime = 0.f;
-		}
-		else if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT)
-		{
-			if (m_eWeaponType != WEAPON_LIGHT)
-				m_fMentalitytime2 += fTimeDelta;
-			else
-				m_fMentalitytime2 = 0.f;
-
-			if (m_fMentalitytime > 1.f)
-			{
-				--m_tStat.fCurrentMental;
-				m_fMentalitytime = 0.f;
-			}
-
-			if (m_fMentalitytime2 > 5.f)
-			{
-				m_tStat.fCurrentMental -= 5.f;
-				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-				_bool forboss = false;
-
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"), &forboss)))
-					return;
-				m_fMentalitytime2 = 0.f;
-			}
-
-		}
+	if (m_iPreLevelIndex != m_iCurrentLevelndex)
+	{
+		Clear_ActStack();
+		m_iPreLevelIndex = m_iCurrentLevelndex;
+		Change_Texture(TEXT("Com_Texture_Idle_Side"));
+		m_bInPortal = false;
+		m_bMove = true;
 
 
-		if (m_fHungertime > 5.f)
-		{
-			--m_tStat.fCurrentHungry;
-			m_fHungertime = 0.f;
-		}
+		MINIMAP		minidesc;
+		ZeroMemory(&minidesc, sizeof(MINIMAP));
+		minidesc.name = MIN_PLAYER;
+		minidesc.pointer = this;
 
+		LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+	}
+	m_iCameraMode = CCameraManager::Get_Instance()->Get_CamState();
 }
 
 void CPlayer::Check_SanitySpawn(_float fTimeDelta)
@@ -2261,6 +2259,8 @@ void CPlayer::Check_SanitySpawn(_float fTimeDelta)
 
 void CPlayer::Sleep_Restore(_float _fTimeDelta)
 {
+	m_eState = CPlayer::ACTION_STATE::SLEEP;
+
 	if (m_bSleeping)
 	{
 		m_fSleepTime += _fTimeDelta;
@@ -2276,6 +2276,12 @@ void CPlayer::Sleep_Restore(_float _fTimeDelta)
 				m_tStat.fCurrentHungry -= 1;
 
 			m_fSleepTime = 0.f;
+			++iCnt;
+			if (iCnt > 3)
+			{
+				iCnt = 0;
+				m_bSoundEnd = false;
+			}
 		}
 	}
 
@@ -2289,9 +2295,11 @@ void CPlayer::Sleep_Restore(_float _fTimeDelta)
 
 void CPlayer::Talk_NPC(_float _fTimeDelta)
 {
+	m_eState = CPlayer::ACTION_STATE::TALK;
 	//움직임 봉쇄 코드 넣기.
 	if (m_bActivated)
 	{
+		m_bSoundEnd = false;
 		//m_bTalkMode = true;
 		if (dynamic_cast<CNPC*>(m_pTarget)->Get_TalkCnt() == 2)
 		{
@@ -2376,11 +2384,22 @@ void CPlayer::Play_Sound(_float _fTimeDelta)
 	case Client::CPlayer::ACTION_STATE::PICKUP:
 		break;
 	case Client::CPlayer::ACTION_STATE::SLEEP: //do
+		if (!m_bSoundEnd)
+		{
+			wcscpy_s(szFullPath, TEXT("wilson_yawn.wav"));
+			m_bSoundEnd = true;
+		}
 		break;
 	case Client::CPlayer::ACTION_STATE::TALK://do
+		if (!m_bSoundEnd && (static_cast<CNPC*>(m_pTarget)->Get_NPCID() !=NPC_PIGKING) )
+		{
+			iNum = rand() % 4;
+			wcscpy_s(szFullPath, TEXT("WilsonVoice_generic_%d.wav"));
+			wsprintf(szFullPath, szFullPath, iNum);
+			m_bSoundEnd = true;
+		}
 		break;
 	case Client::CPlayer::ACTION_STATE::MOVE:
-
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 20
 			|| m_pTextureCom->Get_Frame().m_iCurrentTex == 4)
 		{
@@ -2400,22 +2419,27 @@ void CPlayer::Play_Sound(_float _fTimeDelta)
 		if (!m_bSoundEnd &&m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
 		{
 			iNum = rand() % 4;
+			fVolume = 0.7f;
 			switch (m_eWeaponType)
 			{
 			case WEAPON_SWORD:
-				wcscpy_s(szFullPath, TEXT("Weapon_Swing.mp3"));
+				wcscpy_s(szFullPath, TEXT("Weapon_Swing.wav"));
+				fVolume = 1.f;
 				break;
 			case WEAPON_STAFF:
-				wcscpy_s(szFullPath, TEXT("firestaff_swing_%d.mp3"));
+				wcscpy_s(szFullPath, TEXT("firestaff_swing_%d.wav"));
 				wsprintf(szFullPath, szFullPath, iNum);
 				break;
 			case WEAPON_HAND:
-				wcscpy_s(szFullPath, TEXT("wet_punches_mutated_hound_DST-%d.mp3"));
+				wcscpy_s(szFullPath, TEXT("wet_punches_mutated_hound_DST-%d.wav"));
+				wsprintf(szFullPath, szFullPath, iNum);
+				break;
+			case WEAPON_DART:
+				iNum = rand() % 3;
+				wcscpy_s(szFullPath, TEXT("blowdart_blow_%d.wav"));
 				wsprintf(szFullPath, szFullPath, iNum);
 				break;
 			}
-			fVolume = 0.7f;
-
 			m_bSoundEnd = true;
 		}
 		break;
@@ -2431,8 +2455,12 @@ void CPlayer::Play_Sound(_float _fTimeDelta)
 		if (!m_bSoundEnd &&m_pTextureCom->Get_Frame().m_iCurrentTex == 1)
 		{		
 			iNum = rand() % 3;
-			wcscpy_s(szFullPath, TEXT("WilsonVoice_hurt_%d.wav"));
+			wcscpy_s(szFullPath, TEXT("wet_punches_mutated_hound_DST-%d.wav"));
 			wsprintf(szFullPath, szFullPath, iNum);
+			pGameInstance->PlaySounds(szFullPath, SOUND_OBJECT, fVolume);
+			//Player Hit
+			wcscpy_s(szFullPath, TEXT("WilsonVoice_hurt_%d.wav"));
+			wsprintf(szFullPath, szFullPath, iNum);	
 			m_bSoundEnd = true;
 		}
 		break;
@@ -2470,9 +2498,6 @@ void CPlayer::Play_Sound(_float _fTimeDelta)
 	case Client::CPlayer::ACTION_STATE::ANGRY:
 		break;
 	}
-
-
-
 
 	pGameInstance->PlaySounds(szFullPath, SOUND_PLAYER, fVolume);
 

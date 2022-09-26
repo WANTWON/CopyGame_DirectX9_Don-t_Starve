@@ -60,6 +60,7 @@ public: /*Get & Set*/
 	_bool	Get_CanTalk(void) { return m_bCanTalk; }
 	_bool	Get_SelectAct(void) { return m_bSelectAct; }
 	_bool	Get_Hited(void) { return m_bHited; }
+	NPCID	Get_NPCID(void) { return m_eNPCID; }
 	//Set
 	void	Reset_Target(void) { Safe_Release(m_pTarget); m_pTarget = nullptr; }
 	void	Set_IsArrive(_bool _bArrive) { m_bArrive = _bArrive; }
@@ -100,7 +101,7 @@ public:/*for Actions*/
 	virtual _bool	Detect_Enemy();
 	virtual _bool	Wait(_float _fTimeDelta, _float fWaitTime);
 	void	Revive(void);
-
+	virtual	void	Play_Sound(_float _fTimeDelta);
 public: //mange map
 	NPC_STATE	Find_Activated(void);
 	void		Init_Map(void);
@@ -172,7 +173,7 @@ protected:
 	_bool		m_bCanSkill = true;
 
 	_bool		m_bHited = false;
-	
+	_bool		m_bSoundEnd = false;
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) =0;
 	virtual void Free() override;

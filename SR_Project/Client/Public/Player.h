@@ -186,7 +186,8 @@ private: /**Actions*/
 	void Sand_Mines(_float _fTimeDelta);
 	void Teleport(_float _fTimeDelta);
 	 //Passive
-	void	Decrease_Stat(void); //
+
+	_bool	Decrease_Stat(_float _fTimeDelta);
 	void	Create_Bullet(void);
 	void	Detect_Enemy(void);
 	_bool	Check_Interact_End(void);
@@ -197,6 +198,7 @@ private: /**Actions*/
 	void	Notify_NPC(_uint _iNum);
 	void	Update_State(_float fTimeDelta);
 	void	Check_SanitySpawn(_float fTimeDelta);
+	void	Setup_LevelChange(void);
 
 	void	Invincible_Update(_float _fTimeDelta);
 	void	Cooltime_Update(_float _fTimeDelta);

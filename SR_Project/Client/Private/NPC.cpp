@@ -194,6 +194,11 @@ void CNPC::Revive(void)
 	}
 }
 
+void CNPC::Play_Sound(_float _fTimeDelta)
+{
+
+}
+
 CNPC::NPC_STATE CNPC::Find_Activated(void)
 {
 	for (auto& iter : m_NPCStates)

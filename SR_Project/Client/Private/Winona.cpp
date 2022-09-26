@@ -12,7 +12,7 @@
 #include "Battery_Tower.h"
 CWinona::CWinona(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CNPC(pGraphic_Device)
-{	
+{
 }
 
 CWinona::CWinona(const CWinona & rhs)
@@ -72,7 +72,7 @@ int CWinona::Tick(_float fTimeDelta)
 	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PLAYER, this);
 
 	__super::Tick(fTimeDelta);
-	
+
 	//cout << "x:" << Get_Position().x << "y: " << Get_Position().y << "z : " << Get_Position().z << endl;
 
 	CatapultCheck();
@@ -400,6 +400,17 @@ void CWinona::Move(_float _fTimeDelta)
 		m_ePre_Dir = m_eCur_Dir;
 	}
 
+	if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY)
+	{
+		_tchar	szFullPath[MAX_PATH] = TEXT("footstep_grass_%d.wav");
+	}
+	else
+	{
+		_tchar	szFullPath[MAX_PATH] = TEXT("DSS_woodlegs_footstep_wood_%d.wav");
+	}
+
+	Play_Sound(_fTimeDelta);
+
 	m_pTransformCom->Go_PosTarget(_fTimeDelta, m_vTargetPos, _float3{ 0.f, 0.f, 0.f });
 
 	SetUp_BillBoard();
@@ -479,7 +490,7 @@ void CWinona::Attack(_float _fTimeDelta)
 	if (m_ePreState != m_eState)
 	{
 		m_bInteract = true;
-
+		Play_Sound(_fTimeDelta);
 		switch (m_eCur_Dir)
 		{
 		case DIR_UP:
@@ -513,13 +524,14 @@ void CWinona::Interrupted(_float _fTimeDelta)
 		switch (m_iInterruptNum)
 		{
 		case 0://TalkMode
- 			Clear_Activated();
+			Clear_Activated();
 			m_bFirstCall = true;
 			m_bArrive = true;
 			m_bInteract = true;
 			m_bInterrupted = false;
-			m_bSelectAct = false; 
+			m_bSelectAct = false;
 			m_bFinishInteract = false;
+			m_bSoundEnd = false;
 			break;
 		case 1: // attackMode
 			Clear_Activated();
@@ -528,6 +540,7 @@ void CWinona::Interrupted(_float _fTimeDelta)
 			m_bInterrupted = false;
 			m_bSelectAct = false;
 			m_bFinishInteract = false;
+			m_bSoundEnd = false;
 			break;
 		}
 
@@ -540,6 +553,7 @@ void CWinona::Skill(_float _fTimeDelta)
 
 	if (m_ePreState != m_eState)
 	{
+		Play_Sound(_fTimeDelta);
 		m_bInteract = true;
 		switch (m_eCur_Dir)
 		{
@@ -578,6 +592,7 @@ _bool CWinona::Hit(_float _fTimeDelta)
 		m_bInteract = true;
 		Change_Texture(TEXT("Com_Texture_Hit"));
 		m_ePreState = m_eState;
+		Play_Sound(_fTimeDelta);
 	}
 
 	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
@@ -596,6 +611,7 @@ _bool CWinona::Dead(_float _fTimeDelta)
 	{
 		m_bInteract = true;
 		Change_Texture(TEXT("Com_Texture_Dead"));
+		Play_Sound(_fTimeDelta);
 		m_ePreState = m_eState;
 	}
 	return true;
@@ -699,6 +715,58 @@ _bool CWinona::Detect_Enemy()
 	return true;
 }
 
+void CWinona::Play_Sound(_float _fTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	_int iNum = rand() % 4;
+	_tchar	szFullPath[MAX_PATH];
+	_float fVolume = 0.5f;
+	switch (m_eState)
+	{
+	case CNPC::IDLE:
+		break;
+	case CNPC::ATTACK:
+	case CNPC::SKILL:
+		wcscpy_s(szFullPath, TEXT("Shake_hand.wav"));
+		fVolume = 0.4f;
+		break;
+	case CNPC::MOVE:
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 14
+			|| m_pTextureCom->Get_Frame().m_iCurrentTex == 2)
+		{
+			iNum = rand() % 4;
+			if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY)
+			{
+				wcscpy_s(szFullPath, TEXT("footstep_grass_%d.wav"));
+			}
+			else
+			{
+				wcscpy_s(szFullPath, TEXT("DSS_woodlegs_footstep_wood_%d.wav"));
+			}
+			wsprintf(szFullPath, szFullPath, iNum);
+		}
+		break;
+	case CNPC::HIT:
+		//Player Hit
+		wcscpy_s(szFullPath, TEXT("winona_hit6_%d.wav"));
+		wsprintf(szFullPath, szFullPath, iNum);
+		break;
+	case CNPC::DEAD:
+		wcscpy_s(szFullPath, TEXT("winona_death6.wav"));
+		break;
+	case CNPC::TALK:
+		wcscpy_s(szFullPath, TEXT("winona_vo6_%d.wav"));
+		wsprintf(szFullPath, szFullPath, iNum);
+		break;
+	}
+
+	pGameInstance->PlaySounds(szFullPath, SOUND_WINONA, fVolume);
+
+	Safe_Release(pGameInstance);
+}
+
 void CWinona::Revive_Berry(_float _fTimeDelta)
 {
 	m_eState = CNPC::INTERACT;
@@ -766,6 +834,7 @@ void CWinona::Talk_Player(_float _fTimeDelta)
 	}
 	if (m_iPreTalkCnt != m_iTalkCnt)
 	{
+		Play_Sound(_fTimeDelta);
 		if (!m_bOwner)
 		{//IsPartyed
 			switch (m_iTalkCnt)
@@ -895,6 +964,7 @@ void CWinona::Talk_Friend(_float _fTimeDelta)
 		Change_Texture(TEXT("Com_Texture_Talk"));
 		m_ePreState = m_eState;
 		static_cast<CPig*>(m_pTarget)->Interact(_fTimeDelta, 0);
+		Play_Sound(_fTimeDelta);
 	}
 
 	if (2.f < m_fInteractTIme)
