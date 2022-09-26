@@ -22,7 +22,12 @@ class CBearger final : public CMonster
 		DIE,
 		MAX
 	};
-
+public:
+	typedef struct BeargerDesc
+	{
+		CGameObject* ppObj;
+		_float3		fInitPos;
+	}BEARDESC;
 private:
 	CBearger(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CBearger(const CBearger& rhs);

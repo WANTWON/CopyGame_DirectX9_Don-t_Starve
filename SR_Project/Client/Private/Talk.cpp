@@ -4,7 +4,7 @@
 #include "Player.h"
 #include "Inventory.h"
 #include "CameraManager.h"
-
+#include "Bearger.h"
 CTalk::CTalk(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -60,7 +60,7 @@ int CTalk::Tick(_float fTimeDelta)
 
 		////////////////////////////// Bearger 등장 카메라 테스트 //////////////////////////
 
-		if (CGameInstance::Get_Instance()->Key_Up(VK_F3))
+		/*if (CGameInstance::Get_Instance()->Key_Up(VK_F3))
 		{
 			if (!m_SetTargetBearger)
 			{
@@ -78,7 +78,7 @@ int CTalk::Tick(_float fTimeDelta)
 				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
 				m_SetTargetBearger = false;
 			}
-		}
+		}*/
 		///////////////////////////////////////////////////////////////////////////////////////////
 		Check_Quest();
 
@@ -415,15 +415,9 @@ HRESULT CTalk::Excute(void)
 		}
 		else if (texnum == 16)
 		{
-			/*pinv->Get_Quest_list()->front()->set_onoff(true);
-			pinv->Get_Quest_list()->front()->set_texnum(3);
-			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-			pCamera->Set_TalkingMode(false);
-			m_bcheck = false;*/
-
 			if (!m_SetTargetBearger)
 			{
-				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, TEXT("Layer_Bear"), _float3(10.f, 0.f, 40.f))))
+				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, TEXT("Layer_Monster"), _float3(10.f, 0.f, 40.f))))
 					return E_FAIL;
 
 				// Play Sound
@@ -432,7 +426,9 @@ HRESULT CTalk::Excute(void)
 				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
 				CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(true);
-				CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Bear"));
+				CGameObject* pGameObject = Find_Boss();
+
+				//CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Monster"));
 				pCamera->Set_Target(pGameObject);
 				m_SetTargetBearger = true;
 
@@ -578,6 +574,33 @@ HRESULT CTalk::Release_RenderState()
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	return S_OK;
+}
+
+CGameObject * CTalk::Find_Boss(void)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	list<CGameObject*> list_Obj = *(pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Monster")));
+	CGameObject* m_pTarget = nullptr;
+
+	for (auto& iter = list_Obj.begin(); iter != list_Obj.end();)
+	{
+		if (static_cast<CMonster*>(*iter)->Get_MonsterID() == MONSTERID::MONSTER_BEARGER)
+		{
+			Safe_Release(pGameInstance);
+			return *iter;
+		}
+		else
+		{
+			iter++;
+		}
+	}
+
+
+
+	Safe_Release(pGameInstance);
+	return nullptr;
 }
 
 CTalk * CTalk::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

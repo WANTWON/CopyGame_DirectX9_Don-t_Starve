@@ -80,6 +80,9 @@ public:
 	void Set_WinonaTalk(_bool _Activated) { m_bforWinona = _Activated; }
 
 	void Set_WoodyTalk(_bool _Activated) { m_bforWoody = _Activated; }
+
+private:
+	CGameObject* Find_Boss(void);
 public:
 	static CTalk* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

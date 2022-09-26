@@ -112,7 +112,7 @@ public: /*Get&Set*/
 	_float3 Get_PickingPoint(void) { return m_vPickingPoint; }
 	_bool	Get_SkillShow(void);
 	DIR_STATE Get_DirState(void) { return m_eDirState; }
-
+	vector<pair<const _tchar*, class CNPC*>> Get_VecParty(const _tchar* _NpcName) { return m_vecParty; }
 	//Sets
 	void	Set_HP(_float _fHP) { m_tStat.fCurrentHealth += _fHP; }
 	void	Set_Atk(_float _fAtk) { m_tStat.fAtk += _fAtk; }
@@ -133,6 +133,7 @@ public: /*Get&Set*/
 	void	Set_Select(_bool _bSelect) { m_bSelect = _bSelect; }
 	void	Add_Party(const _tchar* _Name, class CNPC* _NPC) { m_vecParty.push_back(make_pair(_Name, _NPC)); }
 	void	Release_Party(const _tchar* _Name);
+
 	_float3	Set_PartyPostion(class CNPC* _NPC);
 public:
 	void	Set_PickingTarget(_float3 TargetPicking) { m_vTargetPicking = TargetPicking; }

@@ -242,6 +242,7 @@ _bool CPlayer::Get_SkillShow(void)
 	return m_pPicker->Get_IsShow();
 }
 
+
 void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 {
 	if (m_eState == ACTION_STATE::DEAD)
@@ -414,7 +415,7 @@ void CPlayer::Release_Party(const _tchar * _Name)
 	{
 		iter = m_vecParty.erase(iter);
 	}
-
+	
 }
 
 _float3 CPlayer::Set_PartyPostion(CNPC * _NPC)
