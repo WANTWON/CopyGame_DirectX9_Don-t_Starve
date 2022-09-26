@@ -15,6 +15,7 @@
 #include "CarnivalMemory.h"
 #include "Cardgame.h"
 #include "Inventory.h"
+#include "DayCycle.h"
 
 CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -23,6 +24,7 @@ CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 HRESULT CLevel_Maze::Initialize()
 {
+	CDayCycle::Get_Instance()->AllRemoveObserver();
 	CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -55,7 +57,7 @@ void CLevel_Maze::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	__super::Tick(fTimeDelta);
-
+	CDayCycle::Get_Instance()->DayCycleTick();
 
 	if (m_bNextLevel)
 	{

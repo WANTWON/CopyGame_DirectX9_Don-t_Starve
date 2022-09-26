@@ -39,7 +39,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_bPicking = false;
-	CDayCycle::Get_Instance()->RegisterObserver(this);
+	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_NONSTATIC);
 	return S_OK;
 }
 
@@ -49,7 +49,7 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, LEVEL TerrainLevel
 		return E_FAIL;
 
 	m_bPicking = false;
-	CDayCycle::Get_Instance()->RegisterObserver(this);
+	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_NONSTATIC);
 	return S_OK;
 }
 
@@ -456,8 +456,6 @@ CGameObject * CTerrain::Clone_Load(const _tchar * VIBufferTag, _uint LevelIndex,
 void CTerrain::Free()
 {
 	__super::Free();
-
-	CDayCycle::Get_Instance()->RemoveObserver(this);
 
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);

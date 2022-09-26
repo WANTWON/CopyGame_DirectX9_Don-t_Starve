@@ -9,6 +9,7 @@
 #include "Portal.h"
 #include "WoodWall.h"
 #include "DecoObject.h"
+#include "DayCycle.h"
 
 CLevel_Hunt::CLevel_Hunt(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -17,6 +18,7 @@ CLevel_Hunt::CLevel_Hunt(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 HRESULT CLevel_Hunt::Initialize()
 {
+	CDayCycle::Get_Instance()->AllRemoveObserver();
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
@@ -46,7 +48,7 @@ HRESULT CLevel_Hunt::Initialize()
 void CLevel_Hunt::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
+	CDayCycle::Get_Instance()->DayCycleTick();
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 

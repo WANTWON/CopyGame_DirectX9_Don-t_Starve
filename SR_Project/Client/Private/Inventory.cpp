@@ -309,7 +309,7 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, TEXT("Layer_Object"), &PortalDesc);
 
 			CGameInstance::Get_Instance()->StopSound( SOUND_BGM);
-			CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_cave_rain_light.wav"), 0.5f);
+			/*CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_cave_rain_light.wav"), 0.5f);*/
 
 
 		}
