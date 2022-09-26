@@ -1938,6 +1938,10 @@ void CPlayer::Teleport(_float _fTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
 
 		SetUp_BillBoard();
+
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("flash_%d.wav"), rand() % 10 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
 	}
 }
 
