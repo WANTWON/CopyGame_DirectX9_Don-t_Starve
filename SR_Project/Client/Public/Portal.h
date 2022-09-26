@@ -64,6 +64,7 @@ private:
 	_bool m_bIsSoundPlaying = false;
 
 public:
+	PORTALDESC Get_PortalDesc() { return m_ePortalDesc;	}
 	void AI_Behaviour();
 	_bool Check_Target();
 	virtual void Interact(_uint Damage = 0) override;

@@ -15,6 +15,7 @@
 #include "Skeleton.h"
 #include "NPC.h"
 #include "DayCycle.h"
+#include "Portal.h"
 
 _bool	   g_ColliderRender = false;
 
@@ -1561,6 +1562,16 @@ void CPlayer::Jump(_float _fTimeDelta)
 		m_bMove = false;
 	}
 
+	CPortal* pBossPortal = dynamic_cast<CPortal*>(m_pTarget);
+	if (pBossPortal && pBossPortal->Get_PortalDesc().m_eType == CPortal::PORTALTYPE::PORTAL_BOSS)
+	{
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex < 20)
+		{
+			_float3 vPos = Get_Pos();
+			vPos.y += 2.f * _fTimeDelta;
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		}
+	}
 }
 
 void CPlayer::Dead(_float _fTimeDelta)
