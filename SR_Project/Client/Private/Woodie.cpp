@@ -768,6 +768,27 @@ _bool CWoodie::Detect_Enemy()
 	return true;
 }
 
+void CWoodie::Play_Sound(_float _fTimeDelta)
+{
+	switch (m_eState)
+	{
+	case CNPC::IDLE:
+		break;
+	case CNPC::ATTACK:
+		break;
+	case CNPC::SKILL:
+		break;
+	case CNPC::MOVE:
+		break;
+	case CNPC::HIT:
+		break;
+	case CNPC::DEAD:
+		break;
+	case CNPC::TALK:
+		break;
+	}
+}
+
 void CWoodie::Revive_Berry(_float _fTimeDelta)
 {
 	m_eState = CNPC::INTERACT;

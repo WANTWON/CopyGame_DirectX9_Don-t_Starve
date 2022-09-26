@@ -56,6 +56,7 @@ public:/*for Actions*/
 	virtual void	Set_RandPos(_float _fTimeDelta) override;
 	virtual _bool	Get_Target_Moved(_float _fTimeDelta, _uint _iTarget) override;
 	virtual _bool	Detect_Enemy() override;
+	virtual	void	Play_Sound(_float _fTimeDelta) override;
 private:
 	void	Revive_Berry(_float _fTimeDelta);
 	void	Talk_Player(_float _fTimeDelta);
