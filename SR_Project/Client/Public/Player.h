@@ -196,6 +196,7 @@ private: /**Actions*/
 	_bool	Check_Dead();
 	void	Setup_Collider(void);
 	void	Notify_NPC(_uint _iNum);
+	void	Update_State(_float fTimeDelta);
 
 	void	Invincible_Update(_float _fTimeDelta);
 	void	Cooltime_Update(_float _fTimeDelta);

@@ -55,6 +55,7 @@ private:
 	const _tchar* m_TimerTag = TEXT("");
 	OBJINFO m_tInfo;
 	_bool m_bIsDestroyed = false;
+	_bool m_bfirst = false;
 	SHADER_STATE m_eShaderID = SHADER_IDLE;
 
 private: /* For.Components */

@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "GameInstance.h"
 #include "Portal.h"
-
+#include "CameraManager.h"
 
 IMPLEMENT_SINGLETON(CInventory_Manager)
 CInventory_Manager::CInventory_Manager()
@@ -311,6 +311,18 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, TEXT("Layer_Object"), &PortalDesc);
 
 			CGameInstance::Get_Instance()->StopSound( SOUND_BGM);
+			CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+
+			if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
+			{
+				_tchar	szFullPath[MAX_PATH] = TEXT("Bell_Win_Carnivalgame_Herding_Station_DST_%02d.wav");
+				_uint i = rand() % 7 + 1;
+				wsprintf(szFullPath, szFullPath, i);
+				CGameInstance::Get_Instance()->PlaySounds(szFullPath, SOUND_OBJECT, 0.5f);
+
+				CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+				dynamic_cast<CCameraTarget*>(pCamera)->Set_TalkingMode(false);
+			}
 
 		}
 
@@ -691,10 +703,29 @@ void CInventory_Manager::Cardgame()
 
 void CInventory_Manager::Start_Cardgame()
 {
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("cardgamestart.mp3"), SOUND_UI, 0.6f);
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("cardgamebgm.wav"), 0.6f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("cardgamestart.mp3"), SOUND_UI, 0.5f);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("cardgamebgm.wav"), 0.5f);
 
 	m_bcardgameon = true;
+
+
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	//pCameraManager->Set_CamState(CCameraManager::CAM_TARGET);
+	//CGameObject* pShooter = CGameInstance::Get_Instance()->Get_Object(LEVEL_MAZE, TEXT("Layer_Shooter"));
+	//_float3 vShooterPos = pShooter->Get_Position();
+	//vShooterPos.z += 2.f;
+	//CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+	//dynamic_cast<CCameraTarget*>(pCamera)->Set_OffSetDistance(_float3(0.f, 7.f, -6.f));
+	//dynamic_cast<CCameraTarget*>(pCamera)->Set_Position(vShooterPos);
+	//dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(true);
+
+
+	pCameraManager->Set_CamState(CCameraManager::CAM_TARGET);
+	_float3 vCameraLookPosition = _float3(26.f, 0.f, 25.f);
+	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+	dynamic_cast<CCameraTarget*>(pCamera)->Set_OffSetDistance(_float3(0.f, 20.f, -5.f));
+	dynamic_cast<CCameraTarget*>(pCamera)->Set_Position(vCameraLookPosition);
+	dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(true);
 
 
 	for (auto& k : m_Cardgamelist)

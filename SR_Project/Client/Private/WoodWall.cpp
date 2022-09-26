@@ -486,9 +486,17 @@ void CWoodWall::Change_Motion()
 				break;
 			case FENCESTATE::GROW:
 				Change_Texture(TEXT("Com_Texture_GROW"));
+				if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("DST_spore_grow_6.wav"), SOUND_OBJECT, 0.2f);
+				}
 				break;
 			case FENCESTATE::SHRINK:
 				Change_Texture(TEXT("Com_Texture_SHRINK"));
+				if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("DST_spore_grow_6.wav"), SOUND_OBJECT, 0.2f);
+				}
 				break;
 			}
 

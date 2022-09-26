@@ -260,7 +260,7 @@ void CCameraTarget::Position_Target(_float fTimeDelta, _float3 pPosition)
 	{
 		m_pTransform->LookAt(m_TargetPos);
 		m_vDistance = m_vOffSetDistance;
-		m_eCamMode = CAM_FOLLOW;
+		//m_eCamMode = CAM_FOLLOW;
 	}
 	else
 	{

@@ -287,6 +287,7 @@ void CTerrain::PickingTrue()
 					CWoodWall::WALLDESC  WallDesc;
 					WallDesc.etype = CWoodWall::WALL_WOOD;
 					WallDesc.vecPosition = pPlayer->Get_PickingPoint();
+					pGameInstance->PlaySounds(TEXT("Generic_place.wav"), SOUND_ID::SOUND_OBJECT, .8f);
 					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_GAMEPLAY, TEXT("Layer_UnInteractObject"), &WallDesc);
 					for (auto k : *line)
 						k->plus_quest2count();
@@ -300,15 +301,14 @@ void CTerrain::PickingTrue()
 					break;
 				case ITEMNAME_TENT:
 					// Play Sound
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("tent_place.wav"), SOUND_ID::SOUND_OBJECT, .8f);
-
+					pGameInstance->PlaySounds(TEXT("tent_place.wav"), SOUND_ID::SOUND_OBJECT, .8f);
 					pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Tent"), LEVEL_GAMEPLAY, TEXT("Layer_Object"), pPlayer->Get_PickingPoint());
 					for (auto k : *line)
 						k->plus_quest2count();
 					break;
 				}
 
-
+				
 				if (iNum == 0)
 				{
 					pPicking->Release_PickingObject();

@@ -18,6 +18,7 @@ CLevel_Hunt::CLevel_Hunt(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 HRESULT CLevel_Hunt::Initialize()
 {
+	CGameInstance::Get_Instance()->StopAll();
 	CDayCycle::Get_Instance()->AllRemoveObserver();
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
