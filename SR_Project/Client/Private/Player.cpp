@@ -2172,7 +2172,7 @@ void CPlayer::Find_Priority()
 
 _bool CPlayer::Find_NPC()
 {//Test
-	if (m_bGhost || (LEVEL)m_iCurrentLevelndex != LEVEL_GAMEPLAY)
+	if (m_bGhost || (LEVEL)m_iCurrentLevelndex != LEVEL_GAMEPLAY || m_eState == ACTION_STATE::SLEEP)
 		return false;
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -2194,7 +2194,7 @@ _bool CPlayer::Find_NPC()
 
 
 		_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
-			+ (Get_Pos().y - (*iter_Obj)->Get_Position().y)*(Get_Pos().y - (*iter_Obj)->Get_Position().y)
+			
 			+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
 
 		if (fCmpDir >= 2.f)

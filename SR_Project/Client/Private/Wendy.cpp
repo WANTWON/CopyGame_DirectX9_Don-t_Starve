@@ -65,16 +65,8 @@ int CWendy::Tick(_float fTimeDelta)
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
 
-	if (m_iCurrentLevelndex == LEVEL_LOADING)
-		return OBJ_NOEVENT;
-
-	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
-	{
-		m_bCanTalk = false;
-		return OBJ_NOEVENT;
-	}
-
-	if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY && m_bDead && m_fReviveTime > 5.f)
+	
+	if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY && m_bDead && m_fReviveTime > 10.f)
 	{
 		m_bCanTalk = true;
 		m_bDead = false;
@@ -107,6 +99,15 @@ int CWendy::Tick(_float fTimeDelta)
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
 
 		m_iPreLevelIndex = m_iCurrentLevelndex;
+	}
+
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+		return OBJ_NOEVENT;
+
+	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
+	{
+		m_bCanTalk = false;
+		return OBJ_NOEVENT;
 	}
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -810,9 +811,9 @@ void CWendy::Play_Sound(_float _fTimeDelta)
 		}
 		break;
 	case CNPC::HIT:
-		//Player Hit
-		wcscpy_s(szFullPath, TEXT("Wendy_hurt_%d.wav"));
-		wsprintf(szFullPath, szFullPath, iNum);
+		////Player Hit
+		//wcscpy_s(szFullPath, TEXT("Wendy_hurt_%d.wav"));
+		//wsprintf(szFullPath, szFullPath, iNum);
 		break;
 	case CNPC::DEAD:
 		wcscpy_s(szFullPath, TEXT("Wendy_death.wav"));
@@ -821,9 +822,9 @@ void CWendy::Play_Sound(_float _fTimeDelta)
 	case CNPC::SKILL:
 		break;
 	case CNPC::TALK:
-		fVolume = 0.4f;
+		/*fVolume = 0.4f;
 		wcscpy_s(szFullPath, TEXT("Wendy_generic_%d.wav"));
-		wsprintf(szFullPath, szFullPath, iNum);
+		wsprintf(szFullPath, szFullPath, iNum);*/
 		break;
 	}
 

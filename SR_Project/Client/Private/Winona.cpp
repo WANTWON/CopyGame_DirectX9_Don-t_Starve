@@ -763,9 +763,9 @@ void CWinona::Play_Sound(_float _fTimeDelta)
 		wcscpy_s(szFullPath, TEXT("winona_death6.wav"));
 		break;
 	case CNPC::TALK:
-		fVolume = 0.4f;
+		/*fVolume = 0.4f;
 		wcscpy_s(szFullPath, TEXT("winona_vo6_%d.wav"));
-		wsprintf(szFullPath, szFullPath, iNum);
+		wsprintf(szFullPath, szFullPath, iNum);*/
 		break;
 	}
 
@@ -1142,20 +1142,9 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
 
-	if (m_iCurrentLevelndex == LEVEL_LOADING)
-	{
-		m_iPreLevelIndex = m_iCurrentLevelndex;
-		return false;
-	}
+	
 
-	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
-	{
-		m_bCanTalk = false;
-		m_iPreLevelIndex = m_iCurrentLevelndex;
-		return false;
-	}
-
-	if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY && m_bDead && m_fReviveTime > 5.f)
+	if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY && m_bDead && m_fReviveTime > 10.f)
 	{
 		m_bCanTalk = true;
 		m_bDead = false;
@@ -1203,9 +1192,23 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
 
+		m_iPreLevelIndex = m_iCurrentLevelndex;
 	}
 
-	m_iPreLevelIndex = m_iCurrentLevelndex;
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+	{
+		m_iPreLevelIndex = m_iCurrentLevelndex;
+		return false;
+	}
+
+	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
+	{
+		m_bCanTalk = false;
+		m_iPreLevelIndex = m_iCurrentLevelndex;
+		return false;
+	}
+
+
 	return true;
 }
 
@@ -1421,6 +1424,8 @@ void CWinona::Find_Enemy()
 	if (m_pTarget == nullptr)
 	{
 		m_bFightMode = false;
+		Safe_Release(pGameInstance);
+		return;
 	}
 	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
@@ -1473,6 +1478,12 @@ void CWinona::Find_Berry()
 			continue;
 		}
 	}
+	if (m_pTarget == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return;
+	}
+
 	Safe_AddRef(m_pTarget);
 	Safe_Release(pGameInstance);
 }

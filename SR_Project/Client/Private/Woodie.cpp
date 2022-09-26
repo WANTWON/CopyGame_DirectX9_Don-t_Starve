@@ -62,24 +62,14 @@ int CWoodie::Tick(_float fTimeDelta)
 {
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
-
-	if (m_iCurrentLevelndex == LEVEL_LOADING)
-		return OBJ_NOEVENT;
-
-	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
-	{
-		m_bCanTalk = false;
-		return OBJ_NOEVENT;
-	}
-
-	if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY && m_bDead && m_fReviveTime > 5.f)
+	
+	if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY && m_bDead && m_fReviveTime > 10.f)
 	{
 		m_bCanTalk = true;
 		m_bDead = false;
 		Clear_Activated();
 		Reset_Target();
 	}
-
 
 	if (m_iCurrentLevelndex != m_iPreLevelIndex)
 	{
@@ -107,6 +97,16 @@ int CWoodie::Tick(_float fTimeDelta)
 
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 	}
+
+	if (m_iCurrentLevelndex == LEVEL_LOADING)
+		return OBJ_NOEVENT;
+
+	if (m_iCurrentLevelndex != LEVEL_GAMEPLAY && !m_bOwner)
+	{
+		m_bCanTalk = false;
+		return OBJ_NOEVENT;
+	}
+
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_PLAYER, this);
@@ -827,9 +827,9 @@ void CWoodie::Play_Sound(_float _fTimeDelta)
 		wcscpy_s(szFullPath, TEXT("Woodie_death.wav"));
 		break;
 	case CNPC::TALK:
-		fVolume = 0.8f;
+		/*fVolume = 0.8f;
 		wcscpy_s(szFullPath, TEXT("Woodie_generic_%d.wav"));
-		wsprintf(szFullPath, szFullPath, iNum);
+		wsprintf(szFullPath, szFullPath, iNum);*/
 		break;
 	}
 
