@@ -34,6 +34,8 @@ HRESULT CBearger::Initialize(void* pArg)
 
 	m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
 
+	m_eMonsterID = MONSTER_ID::BEARGER;
+
 	m_tInfo.iMaxHp = 1000.f;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 
@@ -45,6 +47,7 @@ HRESULT CBearger::Initialize(void* pArg)
 	vPatrolPosition = _float3(40.f, 1.f, 27.f); // Set this as final patrol position
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+	
 	
 	return S_OK;
 }
@@ -162,7 +165,6 @@ HRESULT CBearger::SetUp_Components(void* pArg)
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.InitPos = *(_float3*)pArg;
-
 	MINIMAP		minidesc;
 	ZeroMemory(&minidesc, sizeof(MINIMAP));
 	minidesc.name = MIN_BEARGER;

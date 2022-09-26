@@ -242,6 +242,24 @@ _bool CPlayer::Get_SkillShow(void)
 	return m_pPicker->Get_IsShow();
 }
 
+CGameObject * CPlayer::Get_VecParty(const _tchar * _NpcName)
+{
+	auto iter = find_if(m_vecParty.begin(), m_vecParty.end(), [&](auto& MyPair)->bool {
+
+		if (MyPair.first == _NpcName)
+			return true;
+
+		return false;
+	});
+	if(iter == m_vecParty.end())
+	{
+		return nullptr;
+	}
+	
+	return iter->second;
+}
+
+
 void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 {
 	if (m_eState == ACTION_STATE::DEAD)
@@ -414,7 +432,7 @@ void CPlayer::Release_Party(const _tchar * _Name)
 	{
 		iter = m_vecParty.erase(iter);
 	}
-
+	
 }
 
 _float3 CPlayer::Set_PartyPostion(CNPC * _NPC)

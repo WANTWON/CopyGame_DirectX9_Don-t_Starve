@@ -294,12 +294,14 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 	
 	if (icardgamecount == 9)
 	{
-		for (auto& k : m_Cardgamelist)
-			k->set_check(false);
-        m_bcardgameon = false;
+		
 
 		if (m_first)
 		{
+			for (auto& k : m_Cardgamelist)
+				k->set_check(false);
+			m_bcardgameon = false;
+
 			CPortal::PORTALDESC PortalDesc;
 
 
@@ -309,7 +311,9 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, TEXT("Layer_Object"), &PortalDesc);
 
 			CGameInstance::Get_Instance()->StopSound( SOUND_BGM);
-			CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_cave_rain_light.wav"), 0.5f);
+			
+
+
 
 
 		}
@@ -691,6 +695,9 @@ void CInventory_Manager::Cardgame()
 
 void CInventory_Manager::Start_Cardgame()
 {
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("cardgamestart.mp3"), SOUND_UI, 0.6f);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("cardgamebgm.wav"), 0.6f);
+
 	m_bcardgameon = true;
 
 
