@@ -327,7 +327,7 @@ void CSkill_Icon::useteleport(_float time)
 {
 	timer += time;
 
-	if (timer >= 0.375)
+	if (timer >= 0.04166f)
 	{
 		++texnum3;
 

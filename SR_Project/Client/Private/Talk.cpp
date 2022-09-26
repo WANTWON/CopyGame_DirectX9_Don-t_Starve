@@ -364,7 +364,7 @@ HRESULT CTalk::Excute(void)
 
 				(*iter)->set_check(true);
 
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("endsong.mp3"), SOUND_UI, 0.7f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("endsong.mp3"), SOUND_UI, 1.f);
 				break;
 
 				
