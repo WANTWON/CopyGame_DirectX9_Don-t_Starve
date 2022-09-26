@@ -795,7 +795,7 @@ void CWinona::Talk_Player(_float _fTimeDelta)
 				static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
 				static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
 				m_iTalkCnt = 0;
-				//m_bInteract = false;
+				m_bInteract = false;
 				m_bFirstCall = false;
 				if (m_bNextAct)
 				{

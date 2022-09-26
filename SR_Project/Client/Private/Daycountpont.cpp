@@ -40,7 +40,7 @@ HRESULT CDaycountpont::Initialize(void* pArg)
 
 	m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
-	CDayCycle::Get_Instance()->RegisterObserver(this);
+	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_STATIC);
 	return S_OK;
 }
 

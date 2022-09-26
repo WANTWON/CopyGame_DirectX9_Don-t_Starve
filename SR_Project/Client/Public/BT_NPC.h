@@ -161,12 +161,14 @@ public:
 	{
 		if (dynamic_cast<CNPC*>(_Obj)->Get_Activated(CNPC::IDLE) == true)
 		{
+			static_cast<CNPC*>(_Obj)->Set_Interact(true);
 			dynamic_cast<CNPC*>(_Obj)->Set_Activate(CNPC::IDLE, false);
 			return STATUS::SUCCESS;
 		}
 		else if (dynamic_cast<CNPC*>(_Obj)->Find_Activated() == CNPC::STATE_END)
 		{
 			dynamic_cast<CNPC*>(_Obj)->Set_Activate(CNPC::IDLE, true);
+			static_cast<CNPC*>(_Obj)->Set_Interact(true);
 			dynamic_cast<CNPC*>(_Obj)->Idle(_fTimeDelta);
 			return STATUS::SUCCESS;
 		}

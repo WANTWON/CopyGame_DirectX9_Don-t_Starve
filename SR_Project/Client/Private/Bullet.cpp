@@ -459,15 +459,18 @@ void CBullet::DeadCheck(_float _fTimeDelta)
 	{
 	case WEAPON_TYPE::WEAPON_HAND:
 	case WEAPON_TYPE::WEAPON_SWORD:
-		m_fAccDeadTimer += _fTimeDelta;
+		//m_fAccDeadTimer += _fTimeDelta;
 		if (m_fAccDeadTimer > 1.f)
 		{
 			m_bDead = OBJ_DEAD;
 		}
 		break;
 	case WEAPON_TYPE::WEAPON_STAFF:
-		break;
 	case WEAPON_TYPE::WEAPON_DART:
+		if (m_fAccDeadTimer > 4.f)
+		{
+			m_bDead = OBJ_DEAD;
+		}
 		break;
 	case WEAPON_TYPE::WEAPON_BOMB:
 		if (Compare_Terrain())
