@@ -60,6 +60,7 @@ int CPlayerhunger::Tick(_float fTimeDelta)
 	if (texnum >= 51)
 		texnum = 50;
 
+
 	Safe_Release(pGameInstance);
 	//Safe_Release(pinv);
 

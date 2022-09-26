@@ -14,7 +14,7 @@ CDayCycle::CDayCycle()
 void CDayCycle::DayCycleTick()
 {
 	_float Tickcount = GetTickCount();
-	if (m_dwTime + 30000 < Tickcount)
+	if (m_dwTime + 60000 < Tickcount)
 	{
 		CGameInstance* pInstance = CGameInstance::Get_Instance();
 		switch (m_eDayState)
