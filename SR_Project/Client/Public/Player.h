@@ -112,7 +112,7 @@ public: /*Get&Set*/
 	_float3 Get_PickingPoint(void) { return m_vPickingPoint; }
 	_bool	Get_SkillShow(void);
 	DIR_STATE Get_DirState(void) { return m_eDirState; }
-	vector<pair<const _tchar*, class CNPC*>> Get_VecParty(const _tchar* _NpcName) { return m_vecParty; }
+	CGameObject* Get_VecParty(const _tchar* _NpcName);
 	//Sets
 	void	Set_HP(_float _fHP) { m_tStat.fCurrentHealth += _fHP; }
 	void	Set_Atk(_float _fAtk) { m_tStat.fAtk += _fAtk; }
