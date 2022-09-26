@@ -161,6 +161,7 @@ PS_OUT PS_DARKWITHLIGHT(PS_IN In)
 
 	Out.vColor.rgb -= g_fNightDarkAlpha*0.2f;
 	Out.vColor -= vFogColor * fFogPower;
+	
 
 
 	float4		vLightColor = vector(2.f, 2.f, 1.f, 0.f);

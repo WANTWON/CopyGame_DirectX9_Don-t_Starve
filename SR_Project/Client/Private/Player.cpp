@@ -1971,6 +1971,7 @@ _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 		--m_tStat.fCurrentHungry;
 		m_fHungertime = 0.f;
 	}
+	
 
 	return true;
 }

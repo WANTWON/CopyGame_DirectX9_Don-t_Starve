@@ -972,7 +972,7 @@ void CLevel_GamePlay::Add_FireFlies(_float fTimeDelta)
 			{
 				CDecoObject::DECODECS tDecoDesc;
 				tDecoDesc.m_eState = CDecoObject::DECOTYPE::FIREFLIES;
-				tDecoDesc.vInitPosition = _float3(rand() % 80, 1.f, rand() % 50);
+				tDecoDesc.vInitPosition = _float3(rand() % 55 + 15, 1.f, rand() % 40 + 10);
 
 				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_GAMEPLAY, TEXT("Layer_Fireflies"), &tDecoDesc)))
 					return;
