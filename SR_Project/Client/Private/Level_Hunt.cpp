@@ -22,7 +22,7 @@ HRESULT CLevel_Hunt::Initialize()
 	CDayCycle::Get_Instance()->AllRemoveObserver();
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-
+	
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -43,12 +43,19 @@ HRESULT CLevel_Hunt::Initialize()
 
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_HUNT);
 	m_dwTime = GetTickCount();
+
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("waterlogged_amb_spring_day_LP_DST.wav"), 0.5f);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("Chaplinesque2_vinyl_mastered.wav"), 0.3f);
+	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_NONSTATIC);
+	m_eDayState = CDayCycle::Get_Instance()->Get_DayState();
+	m_fMusicTime = GetTickCount();
 	return S_OK;
 }
 
 void CLevel_Hunt::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+	Play_Music();
 	CDayCycle::Get_Instance()->DayCycleTick();
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -148,20 +155,6 @@ HRESULT CLevel_Hunt::Ready_Layer_Object(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_HUNT, pLayerTag, &PortalDesc)))
 		return E_FAIL;
-
-	/*CWoodWall::WALLDESC WallDesc;
-	ZeroMemory(&WallDesc, sizeof(CWoodWall::WALLDESC));
-	WallDesc.etype = CWoodWall::WALL_BOSS;
-	WallDesc.eDir = CWoodWall::FRONT;
-	WallDesc.vecPosition = _float3(53.5f, 2.f, 20.f);
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_HUNT, TEXT("Layer_QuestWall"), &WallDesc)))
-		return E_FAIL;
-
-	WallDesc.vecPosition = _float3(53.5f, 2.f, 18.f);
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_WoodWall"), LEVEL_HUNT, TEXT("Layer_QuestWall"), &WallDesc)))
-		return E_FAIL;*/
 
 	/* Load Tree */
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Tree_Stage2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -359,33 +352,41 @@ void CLevel_Hunt::Start_Camera_Motion()
 	}
 }
 
-void CLevel_Hunt::Test_QuestComplete_Camera_Motion()
+
+void CLevel_Hunt::Play_Music()
 {
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	if (pGameInstance->Key_Up('8'))
-	{
-		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_TARGET);
-		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_HUNT, TEXT("Layer_QuestWall"));
-		pCamera->Set_Target(pGameObject);
-		pCamera->Set_GoingMode(true);
-		m_btest = true;
-		m_dwTime = GetTickCount();
-	}
-	if (m_dwTime + 5000 < GetTickCount() && m_btest)
-	{
-		pGameInstance->Clear_Layer(LEVEL_HUNT, TEXT("Layer_QuestWall"));
-		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-		pCamera->Set_Target(nullptr);
-		m_btest = false;
-		m_btest2 = true;
-	}
-	if (m_dwTime + 8000 < GetTickCount() && m_btest2)
-	{
-		CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
-		pCamera->Set_GoingMode(false);
-		m_btest2 = false;
-	}
+	
+		if (m_fMusicTime + 9000 < GetTickCount())
+		{
+			if (!m_bMusicStart)
+			{
+				
+					switch (m_eDayState)
+					{
+					case Client::DAY_MORNING:
+						CGameInstance::Get_Instance()->PlayBGM(TEXT("Chaplinesque2_vinyl_mastered.wav"), 0.3f);
+						break;
+					case Client::DAY_DINNER:
+						CGameInstance::Get_Instance()->PlayBGM(TEXT("Chaplinesque2_vinyl_mastered.wav"), 0.3f);
+						break;
+					case Client::DAY_NIGHT:
+						CGameInstance::Get_Instance()->PlayBGM(TEXT("DSS_marsh_mild_NIGHT_LP.wav"), 0.2f);
+						break;
+					}
+
+
+				m_bMusicStart = true;
+			}
+			m_fMusicTime = GetTickCount();
+		}
+}
+
+void CLevel_Hunt::Update(_uint eDayState)
+{
+	m_eDayState = DAY_STATE(eDayState);
+	m_fMusicTime = GetTickCount();
+	CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
+	m_bMusicStart = false;
 }
 
 

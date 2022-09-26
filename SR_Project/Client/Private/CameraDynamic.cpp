@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Transform.h"
 #include "CameraManager.h"
+#include "Level_GamePlay.h"
 
 CCameraDynamic::CCameraDynamic(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CCamera(pGraphic_Device)
@@ -62,6 +63,10 @@ int CCameraDynamic::Tick(_float fTimeDelta)
 	else if (m_eCamMode == CAM_TURNMODE)
 	{
 		Turn_Camera(fTimeDelta);
+	}
+	else if (m_eCamMode == CAM_ENDING)
+	{
+		Ending_Camera(fTimeDelta);
 	}
 
 	Update_Position(m_pTransform->Get_State(CTransform::STATE_POSITION));
@@ -378,6 +383,54 @@ void CCameraDynamic::Shaking_Camera(_float fTimeDelta, _float fPower)
 		break;
 	}
 
+
+	Safe_Release(pGameInstance);
+}
+
+void CCameraDynamic::Ending_Camera(_float fTimeDelta)
+{
+	if (m_vDistance.y >= 20.f)
+	{
+		CLevel* pLevel =  CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+		dynamic_cast<CLevel_GamePlay*>(pLevel)->Set_Ending(true);
+		return;
+	}
+
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	m_vDistance.y += _float(fTimeDelta);
+	m_vDistance.z -= _float(fTimeDelta);
+
+
+
+	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	Safe_AddRef(pTarget);
+
+	_float3 m_TargetPos = pTarget->Get_Pos();
+
+	Safe_Release(pTarget);
+
+	m_pTransform->LookAt(m_TargetPos);
+
+	switch (m_iTurnCount % 4)
+	{
+	case 0:
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
+		break;
+	case 1:
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		break;
+	case 2:
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, -m_vDistance.z));
+		break;
+	case 3:
+		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(-m_vDistance.z, m_vDistance.y, m_vDistance.x));
+		break;
+	}
+
+	
 
 	Safe_Release(pGameInstance);
 }

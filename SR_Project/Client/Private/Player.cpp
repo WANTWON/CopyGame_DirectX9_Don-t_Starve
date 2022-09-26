@@ -2275,6 +2275,20 @@ void CPlayer::Check_SanitySpawn(_float fTimeDelta)
 			_uint iSpawns = 4; // Number of Sanity Monster to spawn.
 			for (int i = 0; i < iSpawns; ++i)
 			{
+				--m_tStat.fCurrentMental;
+				m_fMentalitytime = 0.f;
+			}
+
+			if (m_fMentalitytime2 > 5.f)
+			{
+				m_tStat.fCurrentMental -= 5.f;
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				_bool forboss = false;
+				pGameInstance->PlaySounds(TEXT("HUD_sanity_down.wav"), SOUND_UI, 0.7f);
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"), &forboss)))
+					return;
+				m_fMentalitytime2 = 0.f;
+ 
 				_float fSpawnRadius = 4.f;
 
 				// Calculate Random Position

@@ -72,13 +72,14 @@ HRESULT CLevel_GamePlay::Initialize()
 	}
 
 	
-	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_NONSTATIC);
+	
 	srand(unsigned int(time(NULL)));
 	CPickingMgr::Get_Instance()->Clear_PickingMgr();
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_GAMEPLAY);
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_GAMEPLAY);
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("waterlogged_amb_spring_day_LP_DST.wav"), 0.5f);
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("CreepyForest_vinyl_mastered.wav"), 0.3f);
+	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_NONSTATIC);
 	m_fMusicTime = GetTickCount();
 	return S_OK;
 }
@@ -87,42 +88,13 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 	
-	if (m_fMusicTime + 9000 < GetTickCount())
-	{
-		if (!m_bMusicStart)
-		{
-			if (m_bBeargerAdd)
-			{
-				CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_BossFightNo3_V1.wav"), 0.3f);
-			}
-			else
-			{
-				switch (m_eDayState)
-				{
-				case Client::DAY_MORNING:
-					CGameInstance::Get_Instance()->PlayBGM(TEXT("CreepyForest_vinyl_mastered.wav"), 0.3f);
-					break;
-				case Client::DAY_DINNER:
-					CGameInstance::Get_Instance()->PlayBGM(TEXT("CreepyForest_vinyl_mastered.wav"), 0.3f);
-					break;
-				case Client::DAY_NIGHT:
-					CGameInstance::Get_Instance()->PlayBGM(TEXT("DSS_marsh_mild_NIGHT_LP.wav"), 0.2f);
-					break;
-				}
-			}
-			
-			m_bMusicStart = true;
-		}
-		m_fMusicTime = GetTickCount();
-	}
+	Play_Music();
 
 	CDayCycle::Get_Instance()->DayCycleTick();
-
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
 	
-
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
 
 	if (m_bNextLevel)
@@ -153,33 +125,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 		m_fTimeAcc = 0.f;
 	}
 
-	// Spawn Fireflies (only at Night)
-	if ((DAY_STATE)CDayCycle::Get_Instance()->Get_DayState() == DAY_STATE::DAY_NIGHT)
-	{
-		// Only 50 at the same time
-		if (m_iFirefliesCounter < m_iFirefliesMax)
-		{
-			if (m_fFirefliesTimer > .2f)
-			{
-				CDecoObject::DECODECS tDecoDesc;
-				tDecoDesc.m_eState = CDecoObject::DECOTYPE::FIREFLIES;
-				tDecoDesc.vInitPosition = _float3(rand() % 60 + 10, 1.f, rand() % 30 + 10);
-
-				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_GAMEPLAY, TEXT("Layer_Fireflies"), &tDecoDesc)))
-					return;
-
-				m_iFirefliesCounter++;
-				m_fFirefliesTimer = 0.f;
-			}
-			else
-				m_fFirefliesTimer += fTimeDelta;
-		}
-	}
-	else
-	{
-		m_iFirefliesCounter = 0;
-		m_fFirefliesTimer = 0.f;
-	}
+	Add_FireFlies(fTimeDelta);
 
 	Safe_Release(pGameInstance);
 }
@@ -694,58 +640,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 			return E_FAIL;
 
 	}
-
-	
-	
-	
-
-
-
-	//vector<_uint> randombox;  //cardgame random shufflle
-
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	randombox.push_back(i);
-	//	randombox.push_back(i);
-	//}
-
-	//randombox.push_back(4);
-
-	//random_shuffle(randombox.begin(), randombox.end());
-
-	//for (auto& iter = randombox.begin(); iter != randombox.end();)
-	//{
-	//	
-	//	for (int i = 0; i < 9; ++i)
-	//	{
-	//		int number = *iter;
-
-	//		if (failed(pgameinstance->add_gameobject(text("prototype_gameobject_cardgame"), level_gameplay, playertag, (int*)&number)))
-	//			return e_fail;
-
-	//		++iter;
-
-	//	}
-	//}
-
-	
-	
-
-	
-
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_player"), LEVEL_STATIC, pLayerTag)))
-	//	return E_FAIL;
-
-	
-	
 	
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Endingscene"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
 	
-	
-	
-
 
 	Safe_Release(pGameInstance);
 
@@ -1023,4 +922,71 @@ void CLevel_GamePlay::Free()
 	__super::Free();
 
 
+}
+
+void CLevel_GamePlay::Play_Music()
+{
+	if (m_bEnding)
+		return;
+
+	if (m_fMusicTime + 9000 < GetTickCount())
+	{
+		if (!m_bMusicStart)
+		{
+			if (m_bBeargerAdd)
+			{
+				CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_BossFightNo3_V1.wav"), 0.3f);
+			}
+			else
+			{
+				switch (m_eDayState)
+				{
+				case Client::DAY_MORNING:
+					CGameInstance::Get_Instance()->PlayBGM(TEXT("CreepyForest_vinyl_mastered.wav"), 0.3f);
+					break;
+				case Client::DAY_DINNER:
+					CGameInstance::Get_Instance()->PlayBGM(TEXT("CreepyForest_vinyl_mastered.wav"), 0.3f);
+					break;
+				case Client::DAY_NIGHT:
+					CGameInstance::Get_Instance()->PlayBGM(TEXT("DSS_marsh_mild_NIGHT_LP.wav"), 0.2f);
+					break;
+				}
+			}
+
+			m_bMusicStart = true;
+		}
+		m_fMusicTime = GetTickCount();
+	}
+}
+
+void CLevel_GamePlay::Add_FireFlies(_float fTimeDelta)
+{
+
+	// Spawn Fireflies (only at Night)
+	if ((DAY_STATE)CDayCycle::Get_Instance()->Get_DayState() == DAY_STATE::DAY_NIGHT)
+	{
+		// Only 50 at the same time
+		if (m_iFirefliesCounter < m_iFirefliesMax)
+		{
+			if (m_fFirefliesTimer > .2f)
+			{
+				CDecoObject::DECODECS tDecoDesc;
+				tDecoDesc.m_eState = CDecoObject::DECOTYPE::FIREFLIES;
+				tDecoDesc.vInitPosition = _float3(rand() % 80, 1.f, rand() % 50);
+
+				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_GAMEPLAY, TEXT("Layer_Fireflies"), &tDecoDesc)))
+					return;
+
+				m_iFirefliesCounter++;
+				m_fFirefliesTimer = 0.f;
+			}
+			else
+				m_fFirefliesTimer += fTimeDelta;
+		}
+	}
+	else
+	{
+		m_iFirefliesCounter = 0;
+		m_fFirefliesTimer = 0.f;
+	}
 }

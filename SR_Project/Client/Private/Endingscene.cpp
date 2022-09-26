@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "Inventory.h"
 #include "KeyMgr.h"
+#include "Level_GamePlay.h"
+#include "CameraManager.h"
 
 CEndingscene::CEndingscene(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -47,15 +49,25 @@ HRESULT CEndingscene::Initialize(void* pArg)
 int CEndingscene::Tick(_float fTimeDelta)
 {
 	
-
-
-	if (CKeyMgr::Get_Instance()->Key_Up('L'))
+	if (GetKeyState('L'))
 	{
-		if (m_bcheck == true)
-			m_bcheck = false;
-		else
-			m_bcheck = true;
+		CCamera* pCamera = CCameraManager::Get_Instance()->Get_CurrentCamera();
+		dynamic_cast<CCameraDynamic*>(pCamera)->Set_EndingMode();
+		if (CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_GAMEPLAY)
+		{
+			if (!m_bOnce)
+			{
+				CGameInstance::Get_Instance()->StopAll();
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("endsong.mp3"), SOUND_UI, 1.f);
+				m_bOnce = true;
+			}
+			
+			CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+			m_bcheck = dynamic_cast<CLevel_GamePlay*>(pLevel)->Get_Ending();
+		}
 	}
+
+	
 		
 
 	if (m_bcheck == true)

@@ -35,19 +35,25 @@ public:
 	static CLevel_GamePlay* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;
 
-
 public:
 	void Set_NextLevel(_bool type) { m_bNextLevel = type; }
 	void Set_BeargerAdd(_bool type) { m_bBeargerAdd = type; }
+	void Set_Ending(_bool type) { m_bEnding = type; }
+	_bool Get_Ending() { return m_bEnding;  }
+	void Decrease_Fireflies() { m_iFirefliesCounter--; }
+	void Play_Music();
+	void Add_FireFlies(_float fTimeDelta);
 
+
+private:
 	DAY_STATE m_eDayState = DAY_MORNING;
 	_float m_fMusicTime;
 	_bool  m_bMusicStart = true;
 	_bool m_bBeargerAdd = false;
 	_float m_fTimeAcc = 0.f;
 	_bool m_bNextLevel = false;
-
-	void Decrease_Fireflies() { m_iFirefliesCounter--; }
+	_bool m_bEnding = false;
+	
 
 	_float m_fFirefliesTimer = 0.f;
 	_uint m_iFirefliesMax = 50;
