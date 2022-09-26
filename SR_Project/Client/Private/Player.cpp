@@ -66,55 +66,13 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
-
-	m_fMentalitytime += fTimeDelta;
-	m_fHungertime += fTimeDelta;
-
-	if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
-	{
-		--m_tStat.fCurrentMental;
-		m_fMentalitytime = 0.f;
-	}
-	else if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT)
-	{
-		if (m_eWeaponType != WEAPON_LIGHT)
-			m_fMentalitytime2 += fTimeDelta;
-		else
-			m_fMentalitytime2 = 0.f;
-
-		if (m_fMentalitytime > 1.f)
-		{
-			--m_tStat.fCurrentMental;
-			m_fMentalitytime = 0.f;
-		}
-
-		if (m_fMentalitytime2 > 5.f)
-		{
-			m_tStat.fCurrentMental -= 5.f;
-			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			_bool forboss = false;
-
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"), &forboss)))
-				return OBJ_NOEVENT;
-			m_fMentalitytime2 = 0.f;
-		}
-
-	}
-
-
-	if (m_fHungertime > 5.f)
-	{
-		--m_tStat.fCurrentHungry;
-		m_fHungertime = 0.f;
-	}
-
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return OBJ_NOEVENT;
 
 	Update_State(fTimeDelta);
-
+	Check_SanitySpawn(fTimeDelta);
 
 	if (m_iPreLevelIndex != m_iCurrentLevelndex)
 	{
@@ -2282,6 +2240,23 @@ void CPlayer::Update_State(_float fTimeDelta)
 			m_fHungertime = 0.f;
 		}
 
+}
+
+void CPlayer::Check_SanitySpawn(_float fTimeDelta)
+{
+	_uint fPercent = 70; // Modify this to change the BadSanity percent limit.
+	_float fBadSanity = m_tStat.fMaxMental / 100 * fPercent;
+
+	if (m_tStat.fCurrentMental < fBadSanity)
+	{
+		// Spawn Sanity Monster every 10 seconds
+		if (m_fSanitySpawnTimer > 10.f)
+		{
+
+		}
+		else
+			m_fSanitySpawnTimer += fTimeDelta;
+	}
 }
 
 void CPlayer::Sleep_Restore(_float _fTimeDelta)
