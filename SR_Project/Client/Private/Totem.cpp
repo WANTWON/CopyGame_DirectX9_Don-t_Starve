@@ -347,7 +347,7 @@ _float CTotem::Take_Damage(float fDamage, void * DamageType, CGameObject * Damag
 	// Play Sound
 	_tchar szFileName[MAX_PATH] = TEXT("");
 	wsprintf(szFileName, TEXT("totem_hit_%d.wav"), rand() % 3 + 1);
-	CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
+	CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, 1.f);
 
 	if (m_tInfo.iCurrentHp <= 0)
 	{

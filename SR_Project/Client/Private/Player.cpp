@@ -2243,7 +2243,9 @@ void CPlayer::Setup_LevelChange(void)
 void CPlayer::Check_SanitySpawn(_float fTimeDelta)
 {
 	DAY_STATE eDayState = CDayCycle::Get_Instance()->Get_DayState();
-	if (eDayState != DAY_STATE::DAY_NIGHT)
+	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+
+	if (eDayState != DAY_STATE::DAY_NIGHT || pLevelManager->Get_CurrentLevelIndex() != LEVEL_GAMEPLAY)
 		return;
 
 	_uint fPercent = 70; // Modify this to change the BadSanity percent limit.
@@ -2262,8 +2264,6 @@ void CPlayer::Check_SanitySpawn(_float fTimeDelta)
 			_uint iSpawns = 4; // Number of Sanity Monster to spawn.
 			for (int i = 0; i < iSpawns; ++i)
 			{
-				CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
-				
 				_float fSpawnRadius = 4.f;
 
 				// Calculate Random Position

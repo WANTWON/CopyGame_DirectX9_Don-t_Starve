@@ -375,7 +375,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 			// Play Sound
 			_tchar szFileName[MAX_PATH] = TEXT("");
 			wsprintf(szFileName, TEXT("bannercall_boarrior_%02d.wav"), 1);
-			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 
 			m_bFirstFrame = false;
 		}
@@ -435,7 +435,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 				// Play Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("impact_mech_dull_%d.wav"), 2);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 
 				m_bFirstFrame = false;
 			}
@@ -447,7 +447,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 				// Play Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("impact_mech_dull_%d.wav"), 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 
 				m_bFirstFrame = false;
 			}
@@ -459,7 +459,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 				// Play Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("impact_flesh_dull_%d.wav"), 2);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 
 				m_bFirstFrame = false;
 			}
@@ -476,7 +476,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 				// Play Step Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("bearger_step_%d.wav"), rand() % 8 + 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 
 				m_bFirstFrame = false;
 			}
@@ -688,7 +688,7 @@ void CBoarrior::Check_CameraShake()
 				// Play Walk Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("boarrior_step_%03d.wav"), rand() % 15 + 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .6f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 
 				// Camera Shake
 				if (pCamera)
@@ -707,7 +707,7 @@ void CBoarrior::Check_CameraShake()
 				// Play Walk Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("boarrior_step_%03d.wav"), rand() % 15 + 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .6f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 
 				// Camera Shake
 				if (pCamera)
@@ -727,7 +727,7 @@ void CBoarrior::Check_CameraShake()
 				// Play Walk Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("boarrior_step_%03d.wav"), rand() % 15 + 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .6f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 
 				// Camera Shake
 				if (pCamera)
@@ -898,7 +898,7 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 			// Play Stun Sound
 			_tchar szFileName[MAX_PATH] = TEXT("");
 			wsprintf(szFileName, TEXT("boarrior_shock_%d.wav"), rand() % 3 + 1);
-			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 
 			// Spawn Shock Effect
 			CShockEffect::SHOCKDESC ShockDesc;
@@ -1124,7 +1124,7 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 				// Play Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("boarrior_attack_%d.wav"), rand() % 4 + 1);
-				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 
 				// Create Standard Bullet
 				BULLETDATA BulletData;
@@ -1176,10 +1176,10 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 					// Play Sound
 					_tchar szFileName[MAX_PATH] = TEXT("");
 					wsprintf(szFileName, TEXT("bearger_swhoosh_%d.wav"), rand() % 4 + 1);
-					pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+					pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 
 					// Play Fire Sound
-					pGameInstance->PlaySounds(TEXT("boarrior_fire.wav"), SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+					pGameInstance->PlaySounds(TEXT("boarrior_fire.wav"), SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 
 					if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 						return;
@@ -1226,10 +1226,10 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 					// Play Sound
 					_tchar szFileName[MAX_PATH] = TEXT("");
 					wsprintf(szFileName, TEXT("bearger_swhoosh_%d.wav"), rand() % 4 + 1);
-					pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+					pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 
 					// Play Fire Sound
-					pGameInstance->PlaySounds(TEXT("boarrior_fire.wav"), SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+					pGameInstance->PlaySounds(TEXT("boarrior_fire.wav"), SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 
 					BulletData.vPosition.x = vCenterPosition.x + cosf(D3DXToRadian(90.f)) * fDistance - sin(D3DXToRadian(90.f)) * fDistance;
 					BulletData.vPosition.z = vCenterPosition.z + sin(D3DXToRadian(90.f)) * fDistance + cos(D3DXToRadian(90.f)) * fDistance;
@@ -1469,7 +1469,7 @@ _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * Da
 		// Play Shield Sound
 		_tchar szFileName[MAX_PATH] = TEXT("");
 		wsprintf(szFileName, TEXT("boarrior_shield_hit_%02d.wav"), rand() % 4 + 1);
-		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 
 		// Spawn Shield Effect
 		CTotemEffect::TOTEMEFFECTDESC TotemEffectDesc;
@@ -1576,7 +1576,7 @@ ApplyDamage:
 			// Play Taunt Sound
 			_tchar szFileName[MAX_PATH] = TEXT("");
 			wsprintf(szFileName, TEXT("taunt_boarrior_%02d.wav"), rand() % 5 + 1);
-			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .9f);
 		}
 	}
 
