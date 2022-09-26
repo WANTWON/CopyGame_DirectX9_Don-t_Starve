@@ -651,6 +651,13 @@ CGameObject * CTalk::Find_Boss(void)
 
 	for (auto& iter = list_Obj.begin(); iter != list_Obj.end();)
 	{
+		if (*iter == nullptr)
+		{
+			iter++;
+			continue;
+		}
+			
+
 		if (static_cast<CMonster*>(*iter)->Get_MonsterID() == MONSTERID::MONSTER_BEARGER)
 		{
 			Safe_Release(pGameInstance);

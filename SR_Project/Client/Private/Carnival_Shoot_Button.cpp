@@ -159,7 +159,6 @@ void CCarnival_Shoot_Button::Change_Camera()
 	if (vDistance < 1.f)
 	{
 		pCameraManager->Set_CamState(CCameraManager::CAM_TARGET);
-		CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_PirateMonkeys_accordian_V2 (1).wav"), 0.4f);
 		CGameObject* pShooter = pGameInstace->Get_Object(LEVEL_MAZE, TEXT("Layer_Shooter"));
 		_float3 vShooterPos = pShooter->Get_Position();
 		vShooterPos.z += 2.f;

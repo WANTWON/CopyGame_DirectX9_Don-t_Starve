@@ -548,9 +548,9 @@ HRESULT CPlayer::SetUp_KeySettings()
 
 	m_KeySets[INTERACTKEY::KEY_CAMRIGHT] = 'E';
 
-	m_KeySets[INTERACTKEY::KEY_CAMFPSMODE] = VK_F1;
+	m_KeySets[INTERACTKEY::KEY_CAMFPSMODE] = 'I';
 
-	m_KeySets[INTERACTKEY::KEY_CAMTPSMODE] = VK_F2;
+	m_KeySets[INTERACTKEY::KEY_CAMTPSMODE] = 'O';
 	return S_OK;
 }
 
@@ -1964,7 +1964,7 @@ _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 	
 	if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
 	{
-		--m_tStat.fCurrentMental;
+		m_tStat.fCurrentMental -= 0.5f;
 		if (m_tStat.fCurrentMental <= 0.f)
 			goto GoDead;
 		m_fMentalitytime = 0.f;
@@ -1975,16 +1975,6 @@ _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 			m_fMentalitytime2 += _fTimeDelta;
 		else
 			m_fMentalitytime2 = 0.f;
-
-		if (m_fMentalitytime > 1.f)
-		{
-			--m_tStat.fCurrentMental;
-
-			if (m_tStat.fCurrentMental <= 0.f)
-				goto GoDead;
-
-			m_fMentalitytime = 0.f;
-		}
 
 		if (m_fMentalitytime2 > 5.f)
 		{

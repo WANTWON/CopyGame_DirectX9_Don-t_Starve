@@ -75,7 +75,7 @@ int CPartyhp::Tick(_float fTimeDelta)
 
 			m_ihp = (_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iCurrentHp;
 
-			texnum = m_ihp / 6;
+			texnum = m_ihp / 2;
 
 		}
 			
@@ -88,7 +88,7 @@ int CPartyhp::Tick(_float fTimeDelta)
 
 			m_ihp = (_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iCurrentHp;
 
-			texnum = m_ihp / 2;
+			texnum = m_ihp / 6;
 		}
 			
 			
