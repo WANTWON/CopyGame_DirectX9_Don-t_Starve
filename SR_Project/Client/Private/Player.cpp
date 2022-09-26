@@ -16,7 +16,7 @@
 #include "NPC.h"
 
 
-_bool	   g_ColliderRender = false ;
+_bool	   g_ColliderRender = false;
 
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -59,7 +59,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_iPreLevelIndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
-	
+
 
 	return S_OK;
 }
@@ -68,9 +68,9 @@ int CPlayer::Tick(_float fTimeDelta)
 {
 	m_fMentalitytime += fTimeDelta;
 	m_fHungertime += fTimeDelta;
-	
 
-	
+
+
 
 	if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
 	{
@@ -100,7 +100,7 @@ int CPlayer::Tick(_float fTimeDelta)
 				return OBJ_NOEVENT;
 			m_fMentalitytime2 = 0.f;
 		}
-		
+
 	}
 
 
@@ -112,7 +112,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-	
+
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return OBJ_NOEVENT;
 
@@ -124,7 +124,7 @@ int CPlayer::Tick(_float fTimeDelta)
 		m_bInPortal = false;
 		m_bMove = true;
 
-		
+
 		MINIMAP		minidesc;
 		ZeroMemory(&minidesc, sizeof(MINIMAP));
 		minidesc.name = MIN_PLAYER;
@@ -135,7 +135,7 @@ int CPlayer::Tick(_float fTimeDelta)
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
 	}
 	m_iCameraMode = CCameraManager::Get_Instance()->Get_CamState();
-	
+
 
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -164,9 +164,9 @@ int CPlayer::Tick(_float fTimeDelta)
 	//KeyInput
 	GetKeyDown(fTimeDelta);
 
-	
 
-	
+
+
 
 	//Move
 	Move_to_PickingPoint(fTimeDelta);
@@ -211,7 +211,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	{
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
 	}
-	
+
 
 	Setup_Collider();
 
@@ -251,11 +251,11 @@ CGameObject * CPlayer::Get_VecParty(const _tchar * _NpcName)
 
 		return false;
 	});
-	if(iter == m_vecParty.end())
+	if (iter == m_vecParty.end())
 	{
 		return nullptr;
 	}
-	
+
 	return iter->second;
 }
 
@@ -321,7 +321,7 @@ HRESULT CPlayer::Render()
 	}
 	m_pShaderCom->End();
 
-	
+
 
 #ifdef _DEBUG
 	if (g_ColliderRender && m_pColliderCom != nullptr)
@@ -359,13 +359,13 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 		m_bAutoMode = true;
 		m_bMove = false;
 	}
-	else if (!m_bGhost && !Check_Dead() &&!m_bHited)
+	else if (!m_bGhost && !Check_Dead() && !m_bHited)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 		_bool forboss = false;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"),&forboss)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"), &forboss)))
 			return OBJ_NOEVENT;
 
 		m_ActStack.push(ACTION_STATE::DAMAGED);
@@ -397,7 +397,7 @@ void CPlayer::Set_FPSMode(_bool type)
 	{
 		m_bIsFPS = true;
 
-		
+
 		switch (m_eDirState)
 		{
 		case Client::DIR_DOWN:
@@ -414,8 +414,8 @@ void CPlayer::Set_FPSMode(_bool type)
 			break;
 		}
 	}
-	else 
-		m_bIsFPS = false; 
+	else
+		m_bIsFPS = false;
 }
 
 void CPlayer::Release_Party(const _tchar * _Name)
@@ -424,7 +424,7 @@ void CPlayer::Release_Party(const _tchar * _Name)
 
 		if (MyPair.first == _Name)
 			return true;
-		
+
 		return false;
 	});
 
@@ -432,7 +432,7 @@ void CPlayer::Release_Party(const _tchar * _Name)
 	{
 		iter = m_vecParty.erase(iter);
 	}
-	
+
 }
 
 _float3 CPlayer::Set_PartyPostion(CNPC * _NPC)
@@ -549,7 +549,7 @@ HRESULT CPlayer::SetUp_Components()
 	LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
 	pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);*/
-	
+
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
@@ -698,7 +698,7 @@ void CPlayer::Init_Data()
 	SkillDesc.bSkillUsed = false;
 	SkillDesc.fAtkRange = 10.f;
 	SkillDesc.fAtkScale = 6.3f;
-	SkillDesc.fMaxCoolTime = 3.f;
+	SkillDesc.fMaxCoolTime = 1.f;
 	SkillDesc.fCurrent_CoolTime = 0.f;
 	SkillDesc.iCnt = 0;
 	m_vecSkillDesc.push_back(SkillDesc);
@@ -750,7 +750,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 #pragma region Debug&CamKey
 	if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_DEBUG]))
 	{
-		if(g_ColliderRender)
+		if (g_ColliderRender)
 			g_ColliderRender = false;
 		else
 			g_ColliderRender = true;
@@ -784,7 +784,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	{
 		if (m_bIsFPS)
 			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), -_fTimeDelta);
-		
+
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Up(m_KeySets[INTERACTKEY::KEY_CAMRIGHT]))
 	{
@@ -802,7 +802,7 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 	{
 		if (m_bIsFPS)
 			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), _fTimeDelta);
-		
+
 	}
 
 
@@ -816,50 +816,61 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		{
 			if (!m_pPicker->Get_IsShow())
 			{
+
+				m_pRange->Set_IsShow(true);
+				m_pPicker->Set_IsShow(true);
+
+				if (m_vecSkillDesc[0].iCnt == 0)
 				{
-					m_pRange->Set_IsShow(true);
-					m_pPicker->Set_IsShow(true);
-				}
-			}
-
-			if (m_vecSkillDesc[0].iCnt == 0)
-			{
-				for (auto& iter : m_vecSkillDesc)
-				{
-					iter.iCnt = 0;
-				}
-				m_vecSkillDesc[0].iCnt += 1;
-				m_fAtkRange = m_vecSkillDesc[0].fAtkRange;
-				m_fAtkScale = m_vecSkillDesc[0].fAtkScale;
-				m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
-
-			}
-			else if (m_vecSkillDesc[0].iCnt == 1
-				&& m_vecSkillDesc[0].bSkillUsed == false
-				&& m_pPicker->Get_IsCorrect())
-			{
-				Throw_Bomb(_fTimeDelta);
-				m_vecSkillDesc[0].bSkillUsed = true;
-
-
-				CInventory_Manager* inv = CInventory_Manager::Get_Instance();
-				auto i = inv->Get_Skill_list();
-
-				for (auto f : *i)
-				{
-					if(f->GetiNum() == 0)
-						f->setbombon();
-				}
-					
-			//여기
-
-				if (m_pPicker->Get_IsShow())
-				{
+					for (auto& iter : m_vecSkillDesc)
 					{
-						m_pRange->Set_IsShow(false);
-						m_pPicker->Set_IsShow(false);
+						iter.iCnt = 0;
+					}
+					m_vecSkillDesc[0].iCnt += 1;
+					m_fAtkRange = m_vecSkillDesc[0].fAtkRange;
+					m_fAtkScale = m_vecSkillDesc[0].fAtkScale;
+					m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
+				}
+			}
+			else
+			{
+				if (m_vecSkillDesc[0].iCnt == 0)
+				{
+					for (auto& iter : m_vecSkillDesc)
+					{
+						iter.iCnt = 0;
+					}
+					m_vecSkillDesc[0].iCnt += 1;
+					m_fAtkRange = m_vecSkillDesc[0].fAtkRange;
+					m_fAtkScale = m_vecSkillDesc[0].fAtkScale;
+					m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
+
+				}
+				else if (m_vecSkillDesc[0].iCnt == 1
+					&& m_vecSkillDesc[0].bSkillUsed == false
+					&& m_pPicker->Get_IsCorrect())
+				{
+					Throw_Bomb(_fTimeDelta);
+					m_vecSkillDesc[0].bSkillUsed = true;
+
+
+					CInventory_Manager* inv = CInventory_Manager::Get_Instance();
+					auto i = inv->Get_Skill_list();
+
+					for (auto f : *i)
+					{
+						if (f->GetiNum() == 0)
+							f->setbombon();
+					}
+					if (m_pPicker->Get_IsShow())
+					{
+						{
+							m_pRange->Set_IsShow(false);
+							m_pPicker->Set_IsShow(false);
+						}
 					}
 				}
+
 			}
 
 		}
@@ -867,73 +878,67 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		{
 			if (!m_pPicker->Get_IsShow())
 			{
-				{
-					m_pRange->Set_IsShow(true);
-					m_pPicker->Set_IsShow(true);
-				}
-			}
 
-			if (m_vecSkillDesc[1].iCnt == 0)
-			{
-				for (auto& iter : m_vecSkillDesc)
+				m_pRange->Set_IsShow(true);
+				m_pPicker->Set_IsShow(true);
+				if (m_vecSkillDesc[1].iCnt == 0)
 				{
-					iter.iCnt = 0;
-				}
-				m_vecSkillDesc[1].iCnt += 1;
-				m_fAtkRange = m_vecSkillDesc[1].fAtkRange;
-				m_fAtkScale = m_vecSkillDesc[1].fAtkScale;
-				m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
-			}
-			else if (m_vecSkillDesc[1].iCnt == 1
-				&& m_vecSkillDesc[1].bSkillUsed == false
-				&& m_pPicker->Get_IsCorrect())
-			{
-				Ice_Spike(_fTimeDelta);
-				m_vecSkillDesc[1].bSkillUsed = true;
-
-				CInventory_Manager* inv = CInventory_Manager::Get_Instance();
-				auto i = inv->Get_Skill_list();
-
-				for (auto f : *i)
-				{
-					if (f->GetiNum() == 1)
-						f->seticeon();
-				}
-
-				if (m_pPicker->Get_IsShow())
-				{
+					for (auto& iter : m_vecSkillDesc)
 					{
-						m_pRange->Set_IsShow(false);
-						m_pPicker->Set_IsShow(false);
+						iter.iCnt = 0;
+					}
+					m_vecSkillDesc[1].iCnt += 1;
+					m_fAtkRange = m_vecSkillDesc[1].fAtkRange;
+					m_fAtkScale = m_vecSkillDesc[1].fAtkScale;
+					m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
+				}
+			}
+			else
+			{
+				if (m_vecSkillDesc[1].iCnt == 0)
+				{
+					for (auto& iter : m_vecSkillDesc)
+					{
+						iter.iCnt = 0;
+					}
+					m_vecSkillDesc[1].iCnt += 1;
+					m_fAtkRange = m_vecSkillDesc[1].fAtkRange;
+					m_fAtkScale = m_vecSkillDesc[1].fAtkScale;
+					m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
+				}
+
+				if (m_vecSkillDesc[1].iCnt == 1
+					&& m_vecSkillDesc[1].bSkillUsed == false
+					&& m_pPicker->Get_IsCorrect())
+				{
+					Ice_Spike(_fTimeDelta);
+					m_vecSkillDesc[1].bSkillUsed = true;
+
+					CInventory_Manager* inv = CInventory_Manager::Get_Instance();
+					auto i = inv->Get_Skill_list();
+
+					for (auto f : *i)
+					{
+						if (f->GetiNum() == 1)
+							f->seticeon();
+					}
+
+					if (m_pPicker->Get_IsShow())
+					{
+						{
+							m_pRange->Set_IsShow(false);
+							m_pPicker->Set_IsShow(false);
+						}
 					}
 				}
 			}
 
+
 		}
 		else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN3]))
 		{//나중에 얘도 좀 수정필요할듯  낭만없음
-			if (!m_pPicker->Get_IsShow())
-			{
-				{
-					m_pRange->Set_IsShow(true);
-					m_pPicker->Set_IsShow(true);
-				}
-			}
-
-			if (m_vecSkillDesc[2].iCnt == 0)
-			{
-				for (auto& iter : m_vecSkillDesc)
-				{
-					iter.iCnt = 0;
-				}
-				m_vecSkillDesc[2].iCnt += 1;
-				m_fAtkRange = m_vecSkillDesc[2].fAtkRange;
-				m_fAtkScale = m_vecSkillDesc[2].fAtkScale;
-				m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
-
-			}
-			else if (m_vecSkillDesc[2].iCnt == 1
-				&& m_vecSkillDesc[2].bSkillUsed == false
+			if (/*m_vecSkillDesc[2].iCnt == 1
+				&&*/ m_vecSkillDesc[2].bSkillUsed == false
 				&& m_pPicker->Get_IsCorrect())
 			{
 				Sand_Mines(_fTimeDelta);
@@ -956,54 +961,65 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 				}
 			}
 
-			//Take_Damage(105.f, nullptr, this);
+
+
 		}
 		else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN4]))
 		{
 			if (!m_pPicker->Get_IsShow())
 			{
+				m_pRange->Set_IsShow(true);
+				m_pPicker->Set_IsShow(true);
+				if (m_vecSkillDesc[3].iCnt == 0)
 				{
-					m_pRange->Set_IsShow(true);
-					m_pPicker->Set_IsShow(true);
-				}
-			}
-
-			if (m_vecSkillDesc[3].iCnt == 0)
-			{
-				for (auto& iter : m_vecSkillDesc)
-				{
-					iter.iCnt = 0;
-				}
-				m_vecSkillDesc[3].iCnt += 1;
-				m_fAtkRange = m_vecSkillDesc[3].fAtkRange;
-				m_fAtkScale = m_vecSkillDesc[3].fAtkScale;
-				m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
-
-			}
-			else if (m_vecSkillDesc[3].iCnt == 1
-				&& m_vecSkillDesc[3].bSkillUsed == false
-				&& m_pPicker->Get_IsCorrect())
-			{
-				Teleport(_fTimeDelta);
-				m_vecSkillDesc[3].bSkillUsed = true;
-
-				CInventory_Manager* inv = CInventory_Manager::Get_Instance();
-				auto i = inv->Get_Skill_list();
-
-				for (auto f : *i)
-				{
-					if (f->GetiNum() == 3)
-						f->setteleporton();
-				}
-				if (m_pPicker->Get_IsShow())
-				{
+					for (auto& iter : m_vecSkillDesc)
 					{
-						m_pRange->Set_IsShow(false);
-						m_pPicker->Set_IsShow(false);
+						iter.iCnt = 0;
+					}
+					m_vecSkillDesc[3].iCnt += 1;
+					m_fAtkRange = m_vecSkillDesc[3].fAtkRange;
+					m_fAtkScale = m_vecSkillDesc[3].fAtkScale;
+					m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
+				}
+			}
+			else
+			{
+				if (m_vecSkillDesc[3].iCnt == 0)
+				{
+					for (auto& iter : m_vecSkillDesc)
+					{
+						iter.iCnt = 0;
+					}
+					m_vecSkillDesc[3].iCnt += 1;
+					m_fAtkRange = m_vecSkillDesc[3].fAtkRange;
+					m_fAtkScale = m_vecSkillDesc[3].fAtkScale;
+					m_pRange->Set_Scale(_float3(m_fAtkScale, m_fAtkScale, 1.f));
+				}
+
+				if (m_vecSkillDesc[3].iCnt == 1
+					&& m_vecSkillDesc[3].bSkillUsed == false
+					&& m_pPicker->Get_IsCorrect())
+				{
+					Teleport(_fTimeDelta);
+					m_vecSkillDesc[3].bSkillUsed = true;
+
+					CInventory_Manager* inv = CInventory_Manager::Get_Instance();
+					auto i = inv->Get_Skill_list();
+
+					for (auto f : *i)
+					{
+						if (f->GetiNum() == 3)
+							f->setteleporton();
+					}
+					if (m_pPicker->Get_IsShow())
+					{
+						{
+							m_pRange->Set_IsShow(false);
+							m_pPicker->Set_IsShow(false);
+						}
 					}
 				}
 			}
-
 		}
 		else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN5]))
 		{
@@ -1251,7 +1267,7 @@ void CPlayer::Move_Left(_float _fTimeDelta)
 			//m_pTransformCom->Go_PosTarget(_fTimeDelta * .1f, _float3(Get_Position().x-3.f, Get_Position().y, Get_Position().z), _float3{ 0.f, 0.f, 0.f });
 			m_pTransformCom->Go_Right(_fTimeDelta, m_fTerrain_Height);
 		}
-			
+
 	}
 	m_eState = ACTION_STATE::MOVE;
 	m_eDirState = DIR_STATE::DIR_LEFT;
@@ -1346,7 +1362,7 @@ void CPlayer::Attack(_float _fTimeDelta)
 			break;
 		}
 		m_ePreState = m_eState;
-		
+
 		Notify_NPC(1);
 	}
 
@@ -1674,13 +1690,13 @@ void CPlayer::Revive(_float _fTimeDelta)
 		m_ePreState = m_eState;
 
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
-		CCamera* pCamera =  CCameraManager::Get_Instance()->Get_CurrentCamera();
+		CCamera* pCamera = CCameraManager::Get_Instance()->Get_CurrentCamera();
 		dynamic_cast<CCameraDynamic*>(pCamera)->Set_CamMode(CCameraDynamic::CAM_REVIVE);
 	}
 
 	if (m_fReviveTime > 1.5f &&m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
-		
+
 		Change_Texture(TEXT("Com_Texture_Idle_Down"));
 		m_bDead = false;
 		m_bGhost = false;
@@ -1730,7 +1746,7 @@ void CPlayer::Building(_float _fTImeDelta)
 		m_bBuildTrigger = false;
 		m_fBuildTime = 0.f;
 	}
-	else if(m_fBuildTime < 1.f &&m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 2)
+	else if (m_fBuildTime < 1.f &&m_pTextureCom->Get_Frame().m_iCurrentTex == m_pTextureCom->Get_Frame().m_iEndTex - 2)
 	{
 
 		m_pTextureCom->Get_Frame().m_iCurrentTex = 0;
@@ -1747,7 +1763,7 @@ void CPlayer::Angry(_float _fTimeDelta)
 		m_bMove = false;
 		switch (m_eDirState)
 		{
-		case DIR_STATE::DIR_DOWN:		
+		case DIR_STATE::DIR_DOWN:
 		case DIR_STATE::DIR_UP:
 		case DIR_STATE::DIR_LEFT:
 		case DIR_STATE::DIR_RIGHT:
@@ -1834,7 +1850,7 @@ void CPlayer::Ice_Spike(_float _fTimeDelta)
 		ZeroMemory(&ParticleDesc, sizeof(CParticle::STATEDESC));
 		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
 		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Snow");
-		ParticleDesc.iTextureNum = rand()%4;
+		ParticleDesc.iTextureNum = rand() % 4;
 		ParticleDesc.vVelocity = _float3((rand() % 10)*0.1f, -0.1f, -rand() % 10 * 0.1f);
 
 		for (int i = 0; i < 200; ++i)
@@ -1966,7 +1982,7 @@ void CPlayer::Teleport(_float _fTimeDelta)
 		BulletData.vPosition = Get_Pos();
 
 		_float3 temp = { m_vTargetPicking.x - Get_Pos().x, 0.f, m_vTargetPicking.z - Get_Pos().z };
-		
+
 		BulletData.vTargetPos = temp;
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 			return;
@@ -2044,7 +2060,7 @@ void CPlayer::Detect_Enemy(void)
 void CPlayer::Find_Priority()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	
+
 
 	list<CGameObject*>* list_Obj = pGameInstance->Get_ObjectList(m_iCurrentLevelndex, TEXT("Layer_Object"));
 
@@ -2142,7 +2158,7 @@ _bool CPlayer::Find_NPC()
 		_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
 			+ (Get_Pos().y - (*iter_Obj)->Get_Position().y)*(Get_Pos().y - (*iter_Obj)->Get_Position().y)
 			+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
-		
+
 		if (fCmpDir >= 2.f)
 		{
 			++iIndex;
@@ -2229,10 +2245,10 @@ void CPlayer::Sleep_Restore(_float _fTimeDelta)
 		{
 			if (m_tStat.fCurrentHealth < m_tStat.fMaxHealth)
 				m_tStat.fCurrentHealth += 1;
-			
+
 			if (m_tStat.fCurrentMental < m_tStat.fMaxMental)
 				m_tStat.fCurrentMental += 1;
-			
+
 			if (m_tStat.fCurrentHungry > 0)
 				m_tStat.fCurrentHungry -= 1;
 
@@ -2240,7 +2256,7 @@ void CPlayer::Sleep_Restore(_float _fTimeDelta)
 		}
 	}
 
-	if(m_bActivated)
+	if (m_bActivated)
 	{
 		dynamic_cast<CInteractive_Object*>(m_pTarget)->Interact();
 		m_bActivated = false;
@@ -2837,7 +2853,7 @@ HRESULT CPlayer::Texture_Clone()
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Angry"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Player_Angry"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_mapTexture.insert(make_pair(TEXT("Com_Texture_Angry"), m_pTextureCom));
-	
+
 	return S_OK;
 }
 
@@ -2853,9 +2869,9 @@ HRESULT CPlayer::Change_Texture(const _tchar * LayerTag)
 
 void CPlayer::SetUp_BillBoard()
 {
-	 if(m_bIsFPS && m_eDirState != DIR_STATE::DIR_RIGHT &&
+	if (m_bIsFPS && m_eDirState != DIR_STATE::DIR_RIGHT &&
 		m_bIsFPS && m_eDirState != DIR_STATE::DIR_LEFT &&
-		 m_bIsFPS && m_eDirState != DIR_STATE::DIR_DOWN)
+		m_bIsFPS && m_eDirState != DIR_STATE::DIR_DOWN)
 		return;
 
 	_float4x4 ViewMatrix;

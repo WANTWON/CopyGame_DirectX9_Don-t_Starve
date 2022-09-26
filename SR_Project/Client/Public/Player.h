@@ -178,7 +178,6 @@ private: /**Actions*/
 	void	Sleep_Restore(_float _fTimeDelta);
 	void	Talk_NPC(_float _fTimeDelta);
 
-
 	void Multi_Action(_float _fTimeDelta); //
 
 	//Skill
