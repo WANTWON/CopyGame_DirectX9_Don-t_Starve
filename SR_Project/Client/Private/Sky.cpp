@@ -32,6 +32,8 @@ HRESULT CSky::Initialize(void* pArg)
 		return E_FAIL;
 
 	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_NONSTATIC);
+	m_eDayState = CDayCycle::Get_Instance()->Get_DayState();
+
 	return S_OK;
 }
 

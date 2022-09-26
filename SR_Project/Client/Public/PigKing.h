@@ -37,6 +37,7 @@ private: /*For TextureCom */
 private:
 	STATE m_eState = IDLE;
 	STATE m_ePreState = MAX;
+	_bool m_bFirstTalk = false;
 
 	//Test
 	_bool bTest = true;

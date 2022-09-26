@@ -255,8 +255,6 @@ void CTalk::Check_Quest(void)
 		}
 		else if (texnum == 18)
 		{
-
-
 			pinv->Get_Quest_list()->front()->set_onoff(true);
 			pinv->Get_Quest_list()->front()->set_texnum(3);
 
@@ -325,7 +323,8 @@ HRESULT CTalk::Excute(void)
 	}
 	else
 	{
-		if (texnum == 2)
+
+		if(texnum == 2)
 		{
 			pinv->Get_Quest_list()->front()->set_onoff(true);
 			pinv->Get_Quest_list()->front()->set_texnum(0);
@@ -417,6 +416,7 @@ HRESULT CTalk::Excute(void)
 		{
 			if (!m_SetTargetBearger)
 			{
+				CGameInstance::Get_Instance()->StopSound(SOUND_UI);
 				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, TEXT("Layer_Monster"), _float3(10.f, 0.f, 40.f))))
 					return E_FAIL;
 
@@ -450,6 +450,7 @@ HRESULT CTalk::Excute(void)
 
 			if (m_SetTargetBearger)
 			{
+				CGameInstance::Get_Instance()->StopSound(SOUND_GROUND);
 				CCameraTarget* pCamera = (CCameraTarget*)CCameraManager::Get_Instance()->Get_CurrentCamera();
 				pCamera->Set_TalkingMode(false);
 				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);

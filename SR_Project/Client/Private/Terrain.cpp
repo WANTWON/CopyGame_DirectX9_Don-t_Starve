@@ -50,6 +50,7 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, LEVEL TerrainLevel
 
 	m_bPicking = false;
 	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_NONSTATIC);
+	m_eDayState = CDayCycle::Get_Instance()->Get_DayState();
 	return S_OK;
 }
 

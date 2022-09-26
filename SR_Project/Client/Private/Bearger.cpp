@@ -7,6 +7,7 @@
 #include "Carrot.h"
 #include "CameraManager.h"
 #include "PickingMgr.h"
+#include "Level_GamePlay.h"
 
 CBearger::CBearger(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -48,19 +49,27 @@ HRESULT CBearger::Initialize(void* pArg)
 
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 	
-	
+	CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+	dynamic_cast<CLevel_GamePlay*>(pLevel)->Set_BeargerAdd(true);
+	CGameInstance::Get_Instance()->StopAll();
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_BossFightNo3_V1.wav"), 0.3f);
 	return S_OK;
 }
 
 int CBearger::Tick(_float fTimeDelta)
 {
+
 	if (__super::Tick(fTimeDelta) && m_bDeadAnimExpired)
 	{
 		auto line = CInventory_Manager::Get_Instance()->Get_Line_list();
-
+		
 		for (auto k : *line)
 			k->set_quest3(true);
 		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
+		
+		CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
+		dynamic_cast<CLevel_GamePlay*>(pLevel)->Set_BeargerAdd(false);
+
 		return OBJ_DEAD;
 	}
 
@@ -1213,7 +1222,7 @@ void CBearger::Check_CameraShake(STATE eState)
 _float CBearger::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
 	_float fDmg = __super::Take_Damage(fDamage, DamageType, DamageCauser);
-
+	
 	if (fDmg > 0)
 	{
 		m_bUseHitShader = true;

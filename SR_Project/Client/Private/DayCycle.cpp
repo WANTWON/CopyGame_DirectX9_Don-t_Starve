@@ -23,9 +23,12 @@ void CDayCycle::DayCycleTick()
 			
 			
 			m_eDayState = DAY_DINNER;
-			if(CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_GAMEPLAY ||
+			if (CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_GAMEPLAY ||
 				CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_HUNT)
-				pInstance->PlaySounds(TEXT("changetodinner.wav"), SOUND_UI, 0.5f);
+			{
+				pInstance->PlaySounds(TEXT("changetodinner.wav"), SOUND_UI, 0.3f);
+			}
+				
 			NotifyObserver();
 			break;
 		case Client::DAY_DINNER:
@@ -37,9 +40,9 @@ void CDayCycle::DayCycleTick()
 			{
 				_uint random = rand() % 2 + 1;
 				if (random == 1)
-					pInstance->PlaySounds(TEXT("changetonight.wav"), SOUND_UI, 0.5f);
+					pInstance->PlaySounds(TEXT("changetonight.wav"), SOUND_UI, 0.3f);
 				else
-					pInstance->PlaySounds(TEXT("changetonight2.wav"), SOUND_UI, 0.5f);
+					pInstance->PlaySounds(TEXT("changetonight2.wav"), SOUND_UI, 0.3f);
 			}
 				
 			
