@@ -1954,44 +1954,45 @@ void CPlayer::Teleport(_float _fTimeDelta)
 
 _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 {
-	if (m_bDead)
+	if (m_bDead )
 		return true;
 
 
 	m_fMentalitytime += _fTimeDelta;
 	m_fHungertime += _fTimeDelta;
 
-	
-	if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
+	if ((LEVEL)(m_iCurrentLevelndex) != LEVEL_BOSS || (LEVEL)(m_iCurrentLevelndex) != LEVEL_MAZE)
 	{
-		m_tStat.fCurrentMental -= 0.5f;
-		if (m_tStat.fCurrentMental <= 0.f)
-			goto GoDead;
-		m_fMentalitytime = 0.f;
-	}
-	else if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT)
-	{
-		if (m_eWeaponType != WEAPON_LIGHT)
-			m_fMentalitytime2 += _fTimeDelta;
-		else
-			m_fMentalitytime2 = 0.f;
-
-		if (m_fMentalitytime2 > 5.f)
+		if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
 		{
-			if (m_tStat.fCurrentMental <= 5.f)
-			{
-				m_tStat.fCurrentMental = 0.f;
+			m_tStat.fCurrentMental -= 0.5f;
+			if (m_tStat.fCurrentMental <= 0.f)
 				goto GoDead;
-			}
-			m_tStat.fCurrentMental -= 5.f;
-			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			_bool forboss = false;
-
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"), &forboss)))
-				return false;
-			m_fMentalitytime2 = 0.f;
+			m_fMentalitytime = 0.f;
 		}
+		else if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT)
+		{
+			if (m_eWeaponType != WEAPON_LIGHT)
+				m_fMentalitytime2 += _fTimeDelta;
+			else
+				m_fMentalitytime2 = 0.f;
 
+			if (m_fMentalitytime2 > 5.f)
+			{
+				if (m_tStat.fCurrentMental <= 5.f)
+				{
+					m_tStat.fCurrentMental = 0.f;
+					goto GoDead;
+				}
+				m_tStat.fCurrentMental -= 5.f;
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				_bool forboss = false;
+
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"), &forboss)))
+					return false;
+				m_fMentalitytime2 = 0.f;
+			}
+		}
 	}
 
 	if (m_fHungertime > 5.f)
@@ -2001,7 +2002,6 @@ _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 			goto GoDead;
 		m_fHungertime = 0.f;
 	}
-	
 
 	return true;
 
