@@ -2267,7 +2267,7 @@ void CPlayer::Update_State(_float fTimeDelta)
 				m_tStat.fCurrentMental -= 5.f;
 				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 				_bool forboss = false;
-
+				pGameInstance->PlaySounds(TEXT("HUD_sanity_down.wav"), SOUND_UI, 0.7f);
 				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"), &forboss)))
 					return;
 				m_fMentalitytime2 = 0.f;

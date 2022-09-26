@@ -91,6 +91,7 @@ void CCatapult::Late_Tick(_float fTimeDelta)
 
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	Set_ShaderID();
 }
 
 HRESULT CCatapult::Render()

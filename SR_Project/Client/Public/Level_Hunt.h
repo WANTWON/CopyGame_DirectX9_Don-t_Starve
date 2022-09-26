@@ -1,10 +1,11 @@
 #pragma once
 #include "Client_Defines.h"
 #include "Level.h"
+#include "Observer.h"
 
 BEGIN(Client)
 
-class CLevel_Hunt final : public CLevel
+class CLevel_Hunt final : public CLevel, public CObserver
 {
 private:
 	CLevel_Hunt(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -23,20 +24,18 @@ public:
 
 public: //test
 	void Start_Camera_Motion();
-	void Test_QuestComplete_Camera_Motion();
 	void Set_NextLevel(_bool _dd) { m_bNextLevel = _dd; }
-	void Set_PastLevel(_bool _dd) { m_bPastLevel = _dd; }
-
+	void Play_Music();
+	virtual void Update(_uint eDayState) override;
 	_bool m_bNextLevel = false;
-	_bool m_bPastLevel = false;
 
 private:
 	DWORD m_dwTime;
 	_bool m_bFirst = false;
-	_bool m_bTargetCam = false;
-	_bool m_btest = false;
-	_bool m_btest2 = false;
-
+	_bool m_bTargetCam = false;;
+	_float m_fMusicTime;
+	_bool  m_bMusicStart = true;
+	DAY_STATE m_eDayState = DAY_MORNING;
 public:
 	static CLevel_Hunt* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;
