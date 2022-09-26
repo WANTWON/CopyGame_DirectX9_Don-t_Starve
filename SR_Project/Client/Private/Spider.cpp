@@ -603,7 +603,14 @@ _float CSpider::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 		m_dwAttackTime = GetTickCount();
 
 		if (!m_bDead)
+		{
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("impact_flesh_dull_%d.wav"), rand() % 4 + 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .5f);
+			
 			m_bHit = true;
+		}
 		else
 		{
 			if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)

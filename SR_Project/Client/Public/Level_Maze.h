@@ -32,7 +32,7 @@ public: //test
 	
 public:
 	_bool Get_PuzzleSolved() { return m_bPuzzleSolved; }
-	void Set_PuzzleSolved(_bool type) { m_bPuzzleSolved = type; }
+	void Set_PuzzleSolved(_bool type);
 private:
 	_bool m_bNextLevel = false;
 	_bool m_bPastLevel = false;

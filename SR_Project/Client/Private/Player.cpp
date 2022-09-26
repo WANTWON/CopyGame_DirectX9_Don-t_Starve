@@ -66,11 +66,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
+
 	m_fMentalitytime += fTimeDelta;
 	m_fHungertime += fTimeDelta;
-
-
-
 
 	if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
 	{
@@ -110,11 +108,13 @@ int CPlayer::Tick(_float fTimeDelta)
 		m_fHungertime = 0.f;
 	}
 
-
 	m_iCurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return OBJ_NOEVENT;
+
+	Update_State(fTimeDelta);
+
 
 	if (m_iPreLevelIndex != m_iCurrentLevelndex)
 	{
@@ -1844,7 +1844,7 @@ void CPlayer::Ice_Spike(_float _fTimeDelta)
 
 		BulletData.vPosition = m_vTargetPicking;
 
-		CParticle::STATEDESC ParticleDesc;
+	/*	CParticle::STATEDESC ParticleDesc;
 		ZeroMemory(&ParticleDesc, sizeof(CParticle::STATEDESC));
 		ParticleDesc.eTextureScene = m_iCurrentLevelndex;
 		ParticleDesc.pTextureKey = TEXT("Prototype_Component_Texture_Snow");
@@ -1855,7 +1855,7 @@ void CPlayer::Ice_Spike(_float _fTimeDelta)
 		{
 			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("GameObject_Particle"), ParticleDesc.eTextureScene, TEXT("Layer_Particle"), &ParticleDesc)))
 				return;
-		}
+		}*/
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), m_iCurrentLevelndex, TEXT("Bullet"), &BulletData)))
 			return;
@@ -2231,6 +2231,56 @@ void CPlayer::Notify_NPC(_uint _iNum)
 	{
 		iter.second->Make_Interrupt(this, _iNum);
 	}
+
+}
+
+void CPlayer::Update_State(_float fTimeDelta)
+{
+
+	if (CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BOSS || CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_MAZE)
+		return;
+
+	m_fMentalitytime += fTimeDelta;
+	m_fHungertime += fTimeDelta;
+ 
+	
+		if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
+		{
+			--m_tStat.fCurrentMental;
+			m_fMentalitytime = 0.f;
+		}
+		else if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT)
+		{
+			if (m_eWeaponType != WEAPON_LIGHT)
+				m_fMentalitytime2 += fTimeDelta;
+			else
+				m_fMentalitytime2 = 0.f;
+
+			if (m_fMentalitytime > 1.f)
+			{
+				--m_tStat.fCurrentMental;
+				m_fMentalitytime = 0.f;
+			}
+
+			if (m_fMentalitytime2 > 5.f)
+			{
+				m_tStat.fCurrentMental -= 5.f;
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				_bool forboss = false;
+
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Screeneffect"), &forboss)))
+					return;
+				m_fMentalitytime2 = 0.f;
+			}
+
+		}
+
+
+		if (m_fHungertime > 5.f)
+		{
+			--m_tStat.fCurrentHungry;
+			m_fHungertime = 0.f;
+		}
 
 }
 

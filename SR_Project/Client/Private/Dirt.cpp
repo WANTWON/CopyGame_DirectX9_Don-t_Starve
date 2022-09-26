@@ -77,7 +77,7 @@ void CDirt::Interact(_uint Damage)
 	Drop_Items();
 
 	m_eState = STATE::EMPTY;
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("getitem.wav"), SOUND_OBJECT, 0.9f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("slurper_roll_dirt_LP.wav"), SOUND_OBJECT, 0.5f);
 }
 
 HRESULT CDirt::Drop_Items()
@@ -96,6 +96,14 @@ HRESULT CDirt::Drop_Items()
 
 	if (m_tDirtDesc.bHasKey)
 	{
+
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+		_tchar	szFullPath[MAX_PATH] = TEXT("Bell_Win_Carnivalgame_Herding_Station_DST_%02d.wav");
+		_uint i = rand() % 7 + 1;
+		wsprintf(szFullPath, szFullPath, i);
+		pGameInstance->PlaySounds(szFullPath, SOUND_OBJECT, 0.5f);
+
 		// Next Room Key
 		CItem::ITEMDESC ItemDesc;
 		ZeroMemory(&ItemDesc, sizeof(CItem::ITEMDESC));
@@ -112,6 +120,8 @@ HRESULT CDirt::Drop_Items()
 	}
 	else
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("recipie_UI_Failed_01.wav"), SOUND_OBJECT, 0.9f);
+		
 		_uint iLootType = rand() % 2 + 1;
 		switch (iLootType)
 		{

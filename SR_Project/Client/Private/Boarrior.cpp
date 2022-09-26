@@ -375,7 +375,7 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 			// Play Sound
 			_tchar szFileName[MAX_PATH] = TEXT("");
 			wsprintf(szFileName, TEXT("bannercall_boarrior_%02d.wav"), 1);
-			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .7f);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 
 			m_bFirstFrame = false;
 		}
@@ -428,7 +428,43 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		}
 		break;
 	case STATE::DIE:
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 55)
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 29)
+		{
+			if (m_bFirstFrame)
+			{
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("impact_mech_dull_%d.wav"), 2);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+
+				m_bFirstFrame = false;
+			}
+		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 51)
+		{
+			if (m_bFirstFrame)
+			{
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("impact_mech_dull_%d.wav"), 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+
+				m_bFirstFrame = false;
+			}
+		}
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 70)
+		{
+			if (m_bFirstFrame)
+			{
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("impact_flesh_dull_%d.wav"), 2);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+
+				m_bFirstFrame = false;
+			}
+		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 55)
 		{
 			if (m_bFirstFrame)
 			{
@@ -652,7 +688,7 @@ void CBoarrior::Check_CameraShake()
 				// Play Walk Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("boarrior_step_%03d.wav"), rand() % 15 + 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .5f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .6f);
 
 				// Camera Shake
 				if (pCamera)
@@ -671,7 +707,7 @@ void CBoarrior::Check_CameraShake()
 				// Play Walk Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("boarrior_step_%03d.wav"), rand() % 15 + 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .5f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .6f);
 
 				// Camera Shake
 				if (pCamera)
@@ -691,7 +727,7 @@ void CBoarrior::Check_CameraShake()
 				// Play Walk Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("boarrior_step_%03d.wav"), rand() % 15 + 1);
-				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .5f);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .6f);
 
 				// Camera Shake
 				if (pCamera)
@@ -765,6 +801,9 @@ void CBoarrior::Totem_Heal(_float fTimeDelta)
 		TotemEffectDesc.vInitPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
 		TotemEffectDesc.vInitPosition.y = pVIBuffer_Terrain->Compute_Height(TotemEffectDesc.vInitPosition, pTransform_Terrain->Get_WorldMatrix(), .01f);
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Totem_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Totem"), &TotemEffectDesc);
+
+		// Play Heal Sound
+		pGameInstance->PlaySounds(TEXT("heal_effect.wav"), SOUND_MONSTER_EFFECT, 1.f);
 
 		// Spawn Heal Effect Particles
 		TotemEffectDesc.eType = CTotemEffect::TOTEM_EFFECT_TYPE::PARTICLES;
@@ -885,7 +924,17 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 	{
 		// Randomly choose a Pattern (if not already chosen)
 		if (!m_iPattern)
+		{
 			m_iPattern = m_bShouldSpawn ? 4 : rand() % 3 + 1;
+
+			if (m_iPattern == 3 || m_iPattern == 4)
+			{			
+				// Play Taunt Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("taunt_boarrior_%02d.wav"), rand() % 5 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+			}
+		}
 
 		// Set Attack Radius based on Pattern chosen before
 		_float fRadius;
@@ -1068,7 +1117,7 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 				// Play Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("boarrior_attack_%d.wav"), rand() % 4 + 1);
-				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .5f);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 
 				// Create Standard Bullet
 				BULLETDATA BulletData;
@@ -1237,7 +1286,7 @@ void CBoarrior::Attack(_float fTimeDelta, STATE eAttack)
 			{
 				if (m_bFirstFrame)
 				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("hit_ground.wav"), SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("hit_ground.wav"), SOUND_ID::SOUND_MONSTER_EFFECT, 1.f);
 					m_bFirstFrame = false;
 				}
 			}
@@ -1369,6 +1418,9 @@ SpawnAdds:
 	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
 	list<CGameObject*>* lObjects = pGameInstance->Get_ObjectList(pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_House"));
 
+	// Play Spawn Sound
+	pGameInstance->PlaySounds(TEXT("spawn_smoke.wav"), SOUND_MONSTER_EFFECT, 1.f);
+
 	if (!lObjects) return;
 	for (auto& iter = lObjects->begin(); iter != lObjects->end(); ++iter)
 	{
@@ -1400,6 +1452,11 @@ _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * Da
 		CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
 		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
 		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+
+		// Play Shield Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("boarrior_shield_hit_%02d.wav"), rand() % 4 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 
 		// Spawn Shield Effect
 		CTotemEffect::TOTEMEFFECTDESC TotemEffectDesc;
@@ -1461,7 +1518,7 @@ ApplyDamage:
 			if (m_fStaggerDamage > m_fStaggerDamageLimit)
 			{
 				m_bHit = true;
-				
+
 				m_bIsAttacking = false;
 				m_bAggro = true;
 				m_vAttackPos = _float3(0.f, 0.f, 0.f);
@@ -1479,9 +1536,13 @@ ApplyDamage:
 			}
 			else
 				m_fStaggerDamage += fDamage;
-
-			// Play Hit Sound
-			// ..
+		}
+		else if (m_bDead)
+		{
+			// Play Taunt Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("taunt_boarrior_%02d.wav"), rand() % 5 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
 		}
 	}
 

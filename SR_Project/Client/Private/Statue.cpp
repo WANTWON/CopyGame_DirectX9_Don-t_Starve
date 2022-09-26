@@ -205,31 +205,13 @@ void CStatue::SetUp_BillBoard()
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);  // Get View Matrix
 	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
-
+	m_bfirst = true;
 	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
 	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
+	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
-	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_FPS)
-	{
-		m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-		//m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
-		m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-	}
-	else
-	{
-		_float4x4 ViewMatrix;
-
-		m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);  // Get View Matrix
-		D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
-
-		_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
-		_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
-		m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
-		m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
-		m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-	}
-
-	
 }
 
 
@@ -287,9 +269,11 @@ void CStatue::Change_Motion()
 			Change_Texture(TEXT("Com_Texture_HEALTHY"));
 			break;
 		case CStatue::DAMAGED:
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Mine_IceBoulder_smash.wav"), SOUND_OBJECT, 0.5f);
 			Change_Texture(TEXT("Com_Texture_DAMAGED"));
 			break;
 		case CStatue::BROKEN:
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Mine_IceBoulder_smash.wav"), SOUND_OBJECT, 0.5f);
 			Change_Texture(TEXT("Com_Texture_BROKEN"));
 			break;
 		}

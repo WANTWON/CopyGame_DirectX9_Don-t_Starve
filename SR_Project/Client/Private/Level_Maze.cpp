@@ -15,6 +15,7 @@
 #include "CarnivalMemory.h"
 #include "Cardgame.h"
 #include "Inventory.h"
+#include "DayCycle.h"
 
 CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -23,7 +24,8 @@ CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 HRESULT CLevel_Maze::Initialize()
 {
-	CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
+	CDayCycle::Get_Instance()->AllRemoveObserver();
+	CGameInstance::Get_Instance()->StopAll();
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
@@ -33,9 +35,6 @@ HRESULT CLevel_Maze::Initialize()
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Terrain"))))
 		return E_FAIL;
-
-	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		//return E_FAIL;
 
 	if (FAILED(Ready_Layer_Object(TEXT("Layer_Object"))))
 		return E_FAIL;
@@ -55,7 +54,7 @@ void CLevel_Maze::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	__super::Tick(fTimeDelta);
-
+	CDayCycle::Get_Instance()->DayCycleTick();
 
 	if (m_bNextLevel)
 	{
@@ -455,11 +454,6 @@ void CLevel_Maze::Update_Floor_Motion()
 	else if ((pGameObject->Get_Position().x > 35) && (pGameObject->Get_Position().z > 20) && !m_bPuzzleStart[1])
 	{
 		// Find the Key
-		/*CDecoObject::DECODECS  DecoDesc;
-		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
-		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 24.f);
-		DecoDesc.fRotate = 1.f;
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);*/
 		m_bPuzzleStart[1] = true;
 	}
 	else if ((pGameObject->Get_Position().x > 35) && (pGameObject->Get_Position().z > 36) && !m_bPuzzleStart[2])
@@ -554,8 +548,7 @@ void CLevel_Maze::Update_Floor_Motion()
 	else if ((pGameObject->Get_Position().x > 22.45f) && (pGameObject->Get_Position().z < 29.f) && (pGameObject->Get_Position().z > 19.f) && !m_bPuzzleStart[6])
 	{
 		// Card Game
-		CInventory_Manager::Get_Instance()->Start_Cardgame();
-		
+		CInventory_Manager::Get_Instance()->Start_Cardgame();	
 		m_bPuzzleStart[6] = true;
 	}
 
@@ -596,6 +589,11 @@ void CLevel_Maze::Update_Fence_Motion()
 	{
 		Set_PuzzleSolved(false);
 	}
+}
+
+void CLevel_Maze::Set_PuzzleSolved(_bool type)
+{
+	 m_bPuzzleSolved = type; 
 }
 
 

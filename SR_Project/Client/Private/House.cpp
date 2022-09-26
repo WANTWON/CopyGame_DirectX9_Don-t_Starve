@@ -301,11 +301,19 @@ void CHouse::Spawn_RandomMonster(_float fTimeDelta)
 
 			_float3 vSpawnPosition = Get_Position();
 			// Spawn Effect
+			_tchar	szFullPath[MAX_PATH] = TEXT("DSS_jelly_fish_electric_land_%d.wav");
+			_uint i = rand() % 7 + 1;
+			wsprintf(szFullPath, szFullPath, i);
+			pGameInstance->PlaySounds(szFullPath, SOUND_OBJECT, 0.5f);
+
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Spawn_Effect"), LEVEL_MAZE, TEXT("Layer_Effect"), vSpawnPosition)))
 				return;
 			m_MonsterMaxCount--;
 			if (m_MonsterMaxCount == 0)
+			{
 				m_bClear = true;
+			}
+				
 			m_fSpawnTime = 0.f;
 		}
 	}
@@ -327,6 +335,11 @@ _bool CHouse::Check_AllClear()
 	CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
 	dynamic_cast<CLevel_Maze*>(pLevel)->Set_PuzzleSolved(true);
 	m_bFenceOpen = true;
+
+	_tchar	szFullPath[MAX_PATH] = TEXT("Bell_Win_Carnivalgame_Herding_Station_DST_%02d.wav");
+	_uint i = rand() % 7 + 1;
+	wsprintf(szFullPath, szFullPath, i);
+	pGameInstance->PlaySounds(szFullPath, SOUND_OBJECT, 0.5f);
 
 	return true;
 }

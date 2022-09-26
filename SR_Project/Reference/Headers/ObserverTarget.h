@@ -12,8 +12,8 @@ protected:
 	virtual ~CObserverTarget() = default;
 
 public:
-	virtual void RegisterObserver(CObserver *observer) = 0;
-	virtual void RemoveObserver(CObserver *observer) = 0;
+	virtual void RegisterObserver(CObserver *observer, _uint iLevelIndex) = 0;
+	virtual void RemoveObserver(CObserver *observer, _uint iLevelIndex) = 0;
 	virtual void NotifyObserver() = 0;
 
 public:

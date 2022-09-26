@@ -205,7 +205,7 @@ void CTrap::WalkingTerrain()
 
 	_float3	vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_FPS)
-		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_fRadius - 0.2f);
+		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_fRadius - 0.1f);
 	else
 		vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), m_fRadius);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
