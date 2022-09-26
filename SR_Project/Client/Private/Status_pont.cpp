@@ -57,8 +57,10 @@ HRESULT CStatus_pont::Initialize(void* pArg)
 
 int CStatus_pont::Tick(_float fTimeDelta)
 {
-	if (m_bcheck == true)
-	{
+	
+
+	
+	
 		__super::Tick(fTimeDelta);
 
 
@@ -66,20 +68,32 @@ int CStatus_pont::Tick(_float fTimeDelta)
 
 
 		//if()
-	}
+	
 
 	return OBJ_NOEVENT;
 }
 
 void CStatus_pont::Late_Tick(_float fTimeDelta)
 {
+	
+	
 
-	if (m_bcheck == true)
-	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		m_iattack =(_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fAtk);
 		m_iarmor = (_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fArmor);
 		__super::Late_Tick(fTimeDelta);
+
+		if (iNum == 0 && m_iattack < 10)
+			m_bcheck = false;
+
+		else if (iNum == 0 && m_iattack >= 10)
+			m_bcheck = true;
+
+		if (iNum == 2 && m_iarmor < 10)
+			m_bcheck = false;
+
+		else if (iNum == 2 && m_iarmor >= 10)
+			m_bcheck = true;
 
 		if (iNum == 0)
 		{
@@ -121,18 +135,25 @@ void CStatus_pont::Late_Tick(_float fTimeDelta)
 	//	else
 	//		m_bcheck = false;
 		
-		if (iNum == 0 || iNum == 2)
+
+
+		/*if (iNum == 0 || iNum == 2)
 		{
 			if (texnum == 0)
 				m_bcheck = false;
-		}
+
+			else
+				m_bcheck = true;
+		}*/
+		
+		
 
 		if (nullptr != m_pRendererCom&&m_bcheck)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 		//}
 
 		//set_check(false);
-	}
+	
 }
 
 HRESULT CStatus_pont::Render()

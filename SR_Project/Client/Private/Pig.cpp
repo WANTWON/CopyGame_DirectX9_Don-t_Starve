@@ -531,6 +531,11 @@ void CPig::PickingTrue()
 
 		if (pMouse->Get_Item_type() == ITEMID::ITEM_FOOD)
 		{
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("pig_grunts_%d.wav"), rand() % 6 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+
 			pMouse->minus_Item_count();
 			Give_Food();
 

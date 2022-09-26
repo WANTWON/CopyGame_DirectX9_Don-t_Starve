@@ -42,6 +42,8 @@ public:
 	 HRESULT SetUp_Components(void* pArg = nullptr);
 	 void WalkingTerrain();
 	 void SetUp_BillBoard();
+
+	 _float Get_hp() { return m_tInfo.iCurrentHp; }
 	 
 private: /*For TextureCom */
 	 void Change_Frame();

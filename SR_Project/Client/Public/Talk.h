@@ -57,6 +57,14 @@ private:
 	_bool	m_bforwendy = false;
 	_bool	m_bforWinona = false;
 	_bool   m_bforWoody = false;
+
+
+	_bool m_bquest1 = false;
+	_bool m_bquest2 = false;
+	_bool m_bquest3 = false;
+	_bool m_bquest4 = false;
+	_bool m_bquest5 = false;
+
 public:
 	bool getcheck() { return m_bcheck;  }
 	void setcheck(bool tof) { m_bcheck = tof; }

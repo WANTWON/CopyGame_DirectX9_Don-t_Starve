@@ -15,7 +15,7 @@
 
 #include "NPC.h"
 #include "DayCycle.h"
-
+#include "DecoObject.h"
 
 _bool g_bUIMadefirst = false;
 
@@ -72,17 +72,49 @@ HRESULT CLevel_GamePlay::Initialize()
 	}
 
 	
+	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_NONSTATIC);
 	srand(unsigned int(time(NULL)));
 	CPickingMgr::Get_Instance()->Clear_PickingMgr();
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_GAMEPLAY);
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_GAMEPLAY);
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("waterlogged_amb_spring_day_LP_DST.wav"), 0.5f);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("CreepyForest_vinyl_mastered.wav"), 0.3f);
+	m_fMusicTime = GetTickCount();
 	return S_OK;
 }
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+	
+	if (m_fMusicTime + 9000 < GetTickCount())
+	{
+		if (!m_bMusicStart)
+		{
+			if (m_bBeargerAdd)
+			{
+				CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_BossFightNo3_V1.wav"), 0.3f);
+			}
+			else
+			{
+				switch (m_eDayState)
+				{
+				case Client::DAY_MORNING:
+					CGameInstance::Get_Instance()->PlayBGM(TEXT("CreepyForest_vinyl_mastered.wav"), 0.3f);
+					break;
+				case Client::DAY_DINNER:
+					CGameInstance::Get_Instance()->PlayBGM(TEXT("CreepyForest_vinyl_mastered.wav"), 0.3f);
+					break;
+				case Client::DAY_NIGHT:
+					CGameInstance::Get_Instance()->PlayBGM(TEXT("DSS_marsh_mild_NIGHT_LP.wav"), 0.2f);
+					break;
+				}
+			}
+			
+			m_bMusicStart = true;
+		}
+		m_fMusicTime = GetTickCount();
+	}
 
 	CDayCycle::Get_Instance()->DayCycleTick();
 
@@ -121,15 +153,49 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 		m_fTimeAcc = 0.f;
 	}
 
+	// Spawn Fireflies (only at Night)
+	if ((DAY_STATE)CDayCycle::Get_Instance()->Get_DayState() == DAY_STATE::DAY_NIGHT)
+	{
+		// Only 50 at the same time
+		if (m_iFirefliesCounter < m_iFirefliesMax)
+		{
+			if (m_fFirefliesTimer > .2f)
+			{
+				CDecoObject::DECODECS tDecoDesc;
+				tDecoDesc.m_eState = CDecoObject::DECOTYPE::FIREFLIES;
+				tDecoDesc.vInitPosition = _float3(rand() % 80, 1.f, rand() % 50);
+
+				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_GAMEPLAY, TEXT("Layer_Fireflies"), &tDecoDesc)))
+					return;
+
+				m_iFirefliesCounter++;
+				m_fFirefliesTimer = 0.f;
+			}
+			else
+				m_fFirefliesTimer += fTimeDelta;
+		}
+	}
+	else
+	{
+		m_iFirefliesCounter = 0;
+		m_fFirefliesTimer = 0.f;
+	}
+
 	Safe_Release(pGameInstance);
-
-
 }
 
 void CLevel_GamePlay::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
+}
+
+void CLevel_GamePlay::Update(_uint eDayState)
+{
+	m_eDayState = DAY_STATE(eDayState);
+	m_fMusicTime = GetTickCount(); 
+	CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
+	m_bMusicStart = false;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
@@ -277,7 +343,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pig_King"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 1.f, 30.f))))
 		return E_FAIL;
-
 
 	CPortal::PORTALDESC PortalDesc;
 	PortalDesc.m_eType = CPortal::PORTAL_HUNT;

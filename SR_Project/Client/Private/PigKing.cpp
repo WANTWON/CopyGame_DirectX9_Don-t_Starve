@@ -201,6 +201,7 @@ void CPigKing::Interact(_uint Damage)
 	//_uint count1 = 0;
 	if (m_bInteract)
 	{
+	
 		CCameraManager::CAM_STATE eState = CCameraManager::Get_Instance()->Get_CamState();
 
 		if (eState == CCameraManager::CAM_PLAYER)
@@ -216,7 +217,6 @@ void CPigKing::Interact(_uint Damage)
 
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CPlayer* pPlayer = (CPlayer*)pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-
 		pPlayer->Set_bOnlyActionKey(true);
 		pPlayer->Set_TalkMode(true);
 		
@@ -249,7 +249,11 @@ void CPigKing::Interact(_uint Damage)
 			pinven->Get_Talk_list()->front()->Set_TalkEnd(true);
 			bTest = false;
 		}*/
-	
+		if (pinven->Get_Talk_list()->front()->gettexnum() == 0 && !m_bFirstTalk)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("DST_pose_speach_v2_wigfrid.wav"), SOUND_GROUND, 0.3f);
+			m_bFirstTalk = true;
+		}
 
 		if (count >= 3 && g_iQuestnum == 0
 			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
@@ -262,6 +266,7 @@ void CPigKing::Interact(_uint Damage)
 		else if (g_iQuestnum == 1 
 			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
 		{
+			
 			pinven->Get_Talk_list()->front()->settexnum(7);	
 			g_iQuestnum = 2;
 			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
@@ -270,7 +275,6 @@ void CPigKing::Interact(_uint Damage)
 		else if (success && g_iQuestnum == 2 
 			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
 		{
-			
 			pinven->Get_Talk_list()->front()->settexnum(9);
 			g_iQuestnum = 3;
 			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
@@ -279,7 +283,6 @@ void CPigKing::Interact(_uint Damage)
 		else if (count >=3 && g_iQuestnum == 3
 			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
 		{
-
 			pinven->Get_Talk_list()->front()->settexnum(13);
 			g_iQuestnum = 4;
 			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
@@ -287,7 +290,7 @@ void CPigKing::Interact(_uint Damage)
 		}
 		else if (g_iQuestnum == 4
 			&& pinven->Get_Talk_list()->front()->Get_TalkEnd())
-		{
+		{		
 			pinven->Get_Talk_list()->front()->settexnum(16);
 			g_iQuestnum = 5;
 			pinven->Get_Talk_list()->front()->Set_TalkEnd(false);
@@ -326,6 +329,11 @@ void CPigKing::Interact(_uint Damage)
 		Safe_Release(pinven);
 		
 		m_eState = rand() % 2 ? COINTOSS : UNIMPRESSED;
+		if(m_eState == UNIMPRESSED)
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PigKing_reject.wav"), SOUND_OBJECT, 0.5f);
+		else if (m_eState == COINTOSS)
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PigKing_happy.wav"), SOUND_OBJECT, 0.5f);
+			
 	}
 
 

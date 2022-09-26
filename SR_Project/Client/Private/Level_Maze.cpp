@@ -545,7 +545,7 @@ void CLevel_Maze::Update_Floor_Motion()
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("carnival_feedbirds_station_place.wav"), SOUND_ID::SOUND_OBJECT, .8f);
 	}
 
-	else if ((pGameObject->Get_Position().x > 22.45f) && (pGameObject->Get_Position().z < 29.f) && (pGameObject->Get_Position().z > 19.f) && !m_bPuzzleStart[6])
+	else if ((pGameObject->Get_Position().x > 22.45f) && (pGameObject->Get_Position().x < 23.45f)&& (pGameObject->Get_Position().z < 29.f) && (pGameObject->Get_Position().z > 19.f) && !m_bPuzzleStart[6])
 	{
 		// Card Game
 		CInventory_Manager::Get_Instance()->Start_Cardgame();	

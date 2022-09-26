@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "Inventory.h"
+#include "NPC.h"
+#include "Wendy.h"
 
 CPartyhp::CPartyhp(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -51,8 +53,44 @@ int CPartyhp::Tick(_float fTimeDelta)
 	if (m_bcheck == true)
 	{
 		__super::Tick(fTimeDelta);
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
+		if (whatnpc == 0) //웬디
+		{
+			CGameObject* pointer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_VecParty(TEXT("Wendy"));
 
+			m_ihp = (_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iCurrentHp;
+
+			texnum = m_ihp / 18;
+
+		}
+		else if (whatnpc == 1) //위노나
+		{
+
+			CGameObject* pointer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_VecParty(TEXT("Winona"));
+
+			m_ihp = (_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iCurrentHp;
+
+			texnum = m_ihp / 6;
+
+		}
+			
+		else                   //우디
+		{
+			CGameObject* pointer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_VecParty(TEXT("Woodie"));
+
+			m_ihp = (_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iCurrentHp;
+
+			texnum = m_ihp / 2;
+		}
+			
+			
+		
+			
+		
+
+		
+		
 		//	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		//	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
 		//	Safe_AddRef(pGameInstance);

@@ -413,6 +413,9 @@ void CMainInventory_front::Late_Tick(_float fTimeDelta)
 
 		if (m_itemtype == ITEM_ARMOR || m_itemtype == ITEM_HAND || m_itemtype == ITEM_BAG || m_itemtype == ITEM_HAT)
 		{
+			if(texnum == ITEMNAME_ARMOR || texnum == ITEMNAME_HELMET)
+		   (dynamic_cast<CPlayer*>(pInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Armor(5));
+
 			pMouse->Set_Item_type(m_itemtype);
 			pMouse->Set_Equipment_name(texnum);
 			if (m_itemtype == ITEM_HAND)
@@ -732,6 +735,14 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 
 
 		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(30));
+		minus_itemcount();
+		break;
+
+	case ITEMNAME_MEAT:
+
+
+
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(10));
 		minus_itemcount();
 		break;
 

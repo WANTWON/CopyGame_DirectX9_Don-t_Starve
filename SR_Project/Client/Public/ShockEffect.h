@@ -20,6 +20,7 @@ public:
 	{
 		SHOCKTYPE eShockType = SHOCK_MAX;
 		_float fShockTimeLimit = 0.f;
+		CGameObject* pEffectTarget = nullptr;
 		_float3 vInitPosition = _float3(0.f, 0.f, 0.f);
 	}SHOCKDESC;
 
@@ -56,6 +57,9 @@ private:
 	CTransform*	m_pTransformCom = nullptr;
 
 	vector<CTexture*> m_vecTexture;
+
+private:
+	void Stick_ToTarget();
 
 private:
 	SHOCKDESC m_tShockDesc;

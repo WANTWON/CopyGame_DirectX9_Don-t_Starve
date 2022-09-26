@@ -34,6 +34,17 @@ HRESULT CStatue::Initialize(void* pArg)
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_pTransformCom->Set_Scale(1.f, 2.f, 1.f);
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+
+
+	_float3 pos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	
+
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hpbar"), LEVEL_MAZE, TEXT("Layer_Hpbar"), &pos)))
+		return OBJ_NOEVENT;
+
 	return S_OK;
 }
 

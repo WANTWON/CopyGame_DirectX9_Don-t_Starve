@@ -367,9 +367,9 @@ void CBoarrior::Change_Frame(_float fTimeDelta)
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 1 && m_bFirstFrame)
 		{
 			// Screen Effect
-			_bool forboss = true;
+			//_bool forboss = true;
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_BOSS, TEXT("Layer_Screeneffect"), (bool*)&forboss);
+			//pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Screen_Effect"), LEVEL_BOSS, TEXT("Layer_Screeneffect"), (bool*)&forboss);
 			m_bfirst = false;
 
 			// Play Sound
@@ -890,22 +890,29 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 
 		if (m_eState != STATE::STUN)
 		{
+			m_eState = STATE::STUN;
+
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 			CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+
+			// Play Stun Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("boarrior_shock_%d.wav"), rand() % 3 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 
 			// Spawn Shock Effect
 			CShockEffect::SHOCKDESC ShockDesc;
 			ShockDesc.eShockType = CShockEffect::SHOCKTYPE::SHOCK;
+			ShockDesc.pEffectTarget = this;
 			ShockDesc.fShockTimeLimit = m_fStunTimeLimit;
 
 			_float3 vLook;
 			D3DXVec3Normalize(&vLook, &m_pTransformCom->Get_State(CTransform::STATE::STATE_LOOK));
 			ShockDesc.vInitPosition = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3] - vLook;
-			
+		
 			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Shock_Effect"), pLevelManager->Get_DestinationLevelIndex(), TEXT("Layer_Effect"), &ShockDesc);
 		}
 
-		m_eState = STATE::STUN;
 		return;
 	}
 		
@@ -1444,6 +1451,12 @@ SpawnTotem:
 
 _float CBoarrior::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
+	DAMAGETYPEDESC tDamageTypeDesc;
+	ZeroMemory(&tDamageTypeDesc, sizeof(DAMAGETYPEDESC));
+
+	if (DamageType)
+		memcpy(&tDamageTypeDesc, (DAMAGETYPEDESC*)DamageType, sizeof(DAMAGETYPEDESC));
+
 	if (m_bHasDefenseBoost)
 	{
 		fDamage = fDamage / 100 * 20;
@@ -1515,27 +1528,48 @@ ApplyDamage:
 
 		if (!m_bDead && m_eState != STATE::SPAWN && m_eState != STATE::STUN)
 		{
-			if (m_fStaggerDamage > m_fStaggerDamageLimit)
+			if (tDamageTypeDesc.eDamageType == DAMAGE_ATTRIBUTE::ATTR_STUN)
 			{
-				m_bHit = true;
+				if (m_fStunDamage > m_fStunDamageLimit)
+				{
+					m_bStun = true;
 
-				m_bIsAttacking = false;
-				m_bAggro = true;
-				m_vAttackPos = _float3(0.f, 0.f, 0.f);
-				m_dwAttackTime = GetTickCount();
-				m_iPattern = 0;
-				m_fStaggerDamage = 0.f;
-				m_fSpawnTime = 0.f;
-				m_fFollowTime = 0.f;
-				iAnimFrameSyncCounter = 0;
-
-				// Play Hit Sound
-				_tchar szFileName[MAX_PATH] = TEXT("");
-				wsprintf(szFileName, TEXT("hit_boarrior_%02d.wav"), rand() % 14 + 1);
-				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+					m_bIsAttacking = false;
+					m_bAggro = true;
+					m_vAttackPos = _float3(0.f, 0.f, 0.f);
+					m_dwAttackTime = GetTickCount();
+					m_iPattern = 0;
+					m_fStunDamage = 0.f;
+					m_fFollowTime = 0.f;
+					iAnimFrameSyncCounter = 0;
+				}
+				else
+					m_fStunDamage += fDamage;
 			}
 			else
-				m_fStaggerDamage += fDamage;
+			{
+				if (m_fStaggerDamage > m_fStaggerDamageLimit)
+				{
+					m_bHit = true;
+
+					m_bIsAttacking = false;
+					m_bAggro = true;
+					m_vAttackPos = _float3(0.f, 0.f, 0.f);
+					m_dwAttackTime = GetTickCount();
+					m_iPattern = 0;
+					m_fStaggerDamage = 0.f;
+					m_fSpawnTime = 0.f;
+					m_fFollowTime = 0.f;
+					iAnimFrameSyncCounter = 0;
+
+					// Play Hit Sound
+					_tchar szFileName[MAX_PATH] = TEXT("");
+					wsprintf(szFileName, TEXT("hit_boarrior_%02d.wav"), rand() % 14 + 1);
+					pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .7f);
+				}
+				else
+					m_fStaggerDamage += fDamage;
+			}
 		}
 		else if (m_bDead)
 		{
