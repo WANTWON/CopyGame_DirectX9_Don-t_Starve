@@ -601,8 +601,16 @@ _float CSpiderWarrior::Take_Damage(float fDamage, void * DamageType, CGameObject
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Dmg_pont"), LEVEL_GAMEPLAY, TEXT("Layer_dmgp"), &effectdesc)))
 			return OBJ_NOEVENT;
+
 		if (!m_bDead)
+		{
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("impact_flesh_dull_%d.wav"), rand() % 4 + 1);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .5f);
+
 			m_bHit = true;
+		}
 		else
 		{
 			if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
