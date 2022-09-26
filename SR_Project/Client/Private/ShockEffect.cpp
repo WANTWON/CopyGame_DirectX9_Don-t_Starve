@@ -48,6 +48,9 @@ int CShockEffect::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
+	// If Effect has Target
+	Stick_ToTarget();
+
 	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	return OBJ_NOEVENT;
@@ -57,8 +60,9 @@ void CShockEffect::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
+	Compute_CamDistance(Get_Position());
 	SetUp_BillBoard();
-
+	
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 
@@ -222,6 +226,32 @@ void CShockEffect::Change_Frame()
 	if (m_tShockDesc.eShockType == SHOCKTYPE::HIT)
 		if ((m_pTextureCom->MoveFrame(m_TimerTag, false)) == true)
 			m_bDead = true;
+}
+
+void CShockEffect::Stick_ToTarget()
+{
+	if (m_tShockDesc.pEffectTarget)
+	{
+		CComponent* pComponentColl = m_tShockDesc.pEffectTarget->Find_Component(TEXT("Com_Collider_Cube"));
+		if (!pComponentColl)
+			return;
+		CCollider_Cube* pColliderCube = dynamic_cast<CCollider_Cube*>(pComponentColl);
+		if (!pColliderCube)
+			return;
+		CComponent* pComponentTrans = m_tShockDesc.pEffectTarget->Find_Component(TEXT("Com_Transform"));
+		if (!pComponentTrans)
+			return;
+		CTransform* pTransform = dynamic_cast<CTransform*>(pComponentTrans);
+		if (!pTransform)
+			return;
+
+		_float3 vTargetPosition;
+		_float3 vLook;
+		D3DXVec3Normalize(&vLook, &pTransform->Get_State(CTransform::STATE::STATE_LOOK));
+		vTargetPosition = (_float3)pColliderCube->Get_CollRectDesc().StateMatrix.m[3] - vLook;
+
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, vTargetPosition);
+	}
 }
 
 CShockEffect* CShockEffect::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

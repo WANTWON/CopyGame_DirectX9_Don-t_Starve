@@ -392,7 +392,7 @@ void CGameInstance::Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vec
 {
 	for (auto& iter = vecDamagedObj.begin(); iter != vecDamagedObj.end();)
 	{
-		(*iter)->Take_Damage(fDamage, nullptr, DamageCauser);
+		(*iter)->Take_Damage(fDamage, AttackType, DamageCauser);
 		iter++;
 	}
 }
