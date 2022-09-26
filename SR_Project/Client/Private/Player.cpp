@@ -14,7 +14,7 @@
 #include "Level_Manager.h"
 #include "Skeleton.h"
 #include "NPC.h"
-
+#include "DayCycle.h"
 
 _bool	   g_ColliderRender = false;
 
@@ -2242,15 +2242,44 @@ void CPlayer::Setup_LevelChange(void)
 
 void CPlayer::Check_SanitySpawn(_float fTimeDelta)
 {
+	DAY_STATE eDayState = CDayCycle::Get_Instance()->Get_DayState();
+	if (eDayState != DAY_STATE::DAY_NIGHT)
+		return;
+
 	_uint fPercent = 70; // Modify this to change the BadSanity percent limit.
 	_float fBadSanity = m_tStat.fMaxMental / 100 * fPercent;
 
 	if (m_tStat.fCurrentMental < fBadSanity)
 	{
-		// Spawn Sanity Monster every 10 seconds
-		if (m_fSanitySpawnTimer > 10.f)
+		// Spawn Sanity Monster every 20 seconds.
+		if (m_fSanitySpawnTimer > 20.f)
 		{
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("terrorbeak_hit_%03d.wav"), rand() % 6);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .8f);
 
+			_uint iSpawns = 4; // Number of Sanity Monster to spawn.
+			for (int i = 0; i < iSpawns; ++i)
+			{
+				CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+				
+				_float fSpawnRadius = 4.f;
+
+				// Calculate Random Position
+				_float fOffsetX = ((_float)rand() / (_float)(RAND_MAX)) * fSpawnRadius;
+				_int bSignX = rand() % 2;
+				_float fOffsetZ = ((_float)rand() / (_float)(RAND_MAX)) * fSpawnRadius;
+				_int bSignZ = rand() % 2;
+				_float fSpawnPositionX = Get_Position().x + (bSignX ? fOffsetX : -fOffsetX);
+				_float fSpawnPositionZ = Get_Position().z + (bSignZ ? fOffsetZ : -fOffsetZ);
+
+				_float3 fSpawnPosition = _float3(fSpawnPositionX, 1.f, fSpawnPositionZ);
+
+				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Terrorbeak"), pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Monster"), fSpawnPosition);
+			}
+
+			m_fSanitySpawnTimer = 0.f;
 		}
 		else
 			m_fSanitySpawnTimer += fTimeDelta;

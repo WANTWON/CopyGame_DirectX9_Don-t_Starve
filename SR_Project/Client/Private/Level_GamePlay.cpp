@@ -163,7 +163,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 			{
 				CDecoObject::DECODECS tDecoDesc;
 				tDecoDesc.m_eState = CDecoObject::DECOTYPE::FIREFLIES;
-				tDecoDesc.vInitPosition = _float3(rand() % 80, 1.f, rand() % 50);
+				tDecoDesc.vInitPosition = _float3(rand() % 60 + 10, 1.f, rand() % 30 + 10);
 
 				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_GAMEPLAY, TEXT("Layer_Fireflies"), &tDecoDesc)))
 					return;
@@ -245,8 +245,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	}
 
 	CloseHandle(hFile);
-
-	/*pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrorbeak"), LEVEL_GAMEPLAY, pLayerTag, _float3(40.f, 0.f, 20.f));*/
 
 	Safe_Release(pGameInstance);
 

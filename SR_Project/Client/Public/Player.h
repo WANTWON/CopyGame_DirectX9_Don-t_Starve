@@ -55,7 +55,7 @@ public:
 		_float fMaxHealth = 100.f;
 		_float fCurrentHealth = fMaxHealth;
 		_float fMaxMental = 999.f;
-		_float fCurrentMental = fMaxMental;
+		_float fCurrentMental = fMaxMental / 2;
 		_float fMaxHungry = 999.f;
 		_float fCurrentHungry = fMaxHungry;
 		_float fAtk = 20.f;
@@ -196,7 +196,6 @@ private: /**Actions*/
 	_bool	Check_Dead();
 	void	Setup_Collider(void);
 	void	Notify_NPC(_uint _iNum);
-	void	Update_State(_float fTimeDelta);
 	void	Check_SanitySpawn(_float fTimeDelta);
 	void	Setup_LevelChange(void);
 
@@ -325,7 +324,7 @@ private: // Test
 	_float m_fHungertime = 0.f;
 	_float m_fMentalitytime = 0.f;
 	_float m_fMentalitytime2 = 0.f;
-	_float m_fSanitySpawnTimer = 0.f;
+	_float m_fSanitySpawnTimer = 999.f;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
