@@ -767,23 +767,54 @@ _bool CWendy::Detect_Enemy()
 
 void CWendy::Play_Sound(_float _fTimeDelta)
 {
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	_int iNum = rand() % 4;
+	_tchar	szFullPath[MAX_PATH];
+	_float fVolume = 0.5f;
 	switch (m_eState)
 	{
 	case CNPC::IDLE:
 		break;
 	case CNPC::ATTACK:
-		break;
 	case CNPC::SKILL:
+		wcscpy_s(szFullPath, TEXT("Shake_hand.wav"));
+		fVolume = 0.4f;
 		break;
 	case CNPC::MOVE:
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 14
+			|| m_pTextureCom->Get_Frame().m_iCurrentTex == 2)
+		{
+			iNum = rand() % 4;
+			if ((LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY)
+			{
+				wcscpy_s(szFullPath, TEXT("footstep_grass_%d.wav"));
+			}
+			else
+			{
+				wcscpy_s(szFullPath, TEXT("DSS_woodlegs_footstep_wood_%d.wav"));
+			}
+			wsprintf(szFullPath, szFullPath, iNum);
+		}
 		break;
 	case CNPC::HIT:
+		//Player Hit
+		wcscpy_s(szFullPath, TEXT("winona_hit6_%d.wav"));
+		wsprintf(szFullPath, szFullPath, iNum);
 		break;
 	case CNPC::DEAD:
+		wcscpy_s(szFullPath, TEXT("winona_death6.wav"));
 		break;
 	case CNPC::TALK:
+		wcscpy_s(szFullPath, TEXT("winona_vo6_%d.wav"));
+		wsprintf(szFullPath, szFullPath, iNum);
 		break;
 	}
+
+	pGameInstance->PlaySounds(szFullPath, SOUND_WINONA, fVolume);
+
+	Safe_Release(pGameInstance);
 }
 
 void CWendy::Revive_Berry(_float _fTimeDelta)
