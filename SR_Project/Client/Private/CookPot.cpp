@@ -239,7 +239,7 @@ void CCookPot::PickingTrue()
 		}
 		else
 		{
-			pInvenManager->Off_pot();
+			pInvenManager->Off_pot(this);
 			CGameInstance* pInstance = CGameInstance::Get_Instance();
 			pInstance->PlaySounds(TEXT("cookpot_close.wav"), SOUND_UICLOSE, 0.9f);
 			pInvenManager->Set_PickingPot(false);

@@ -74,6 +74,8 @@ public: /*Get & Set*/
 	void	Set_Target(CGameObject* pTarget) { Reset_Target(); m_pTarget = pTarget; Safe_AddRef(pTarget); }
 	void	Set_SelectAct(_bool _bCanAct) { m_bSelectAct = _bCanAct; }
 
+	
+
 	void	Set_HP(_uint _iHp) { m_tInfo.iCurrentHp += _iHp; if (m_tInfo.iCurrentHp >= m_tInfo.iMaxHp){m_tInfo.iCurrentHp = m_tInfo.iMaxHp;} }
 public:/*for Actions*/
 	virtual void Interact(_uint Damage = 0) = 0;

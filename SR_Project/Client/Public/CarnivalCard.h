@@ -4,8 +4,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "Interactive_Object.h"
-
-
+#include "GameInstance.h"
 
 BEGIN(Engine)
 class CTexture;
@@ -80,12 +79,8 @@ public:
 	void Set_GameWon() { m_bIsGameWon = true; }
 	void Turn_On() { m_eState = STATE::TURN_ON; }
 	void Turn_Off() { m_eState = STATE::TURN_OFF; }
-	void Hungry_On() { m_eState = STATE::HUNGRY_PRE; m_bIsHungry = true; }
-	void Give_Hint(_bool isGood) 
-	{
-		m_bIsGood = isGood;
-		isGood ? m_eState = STATE::HINT_GOOD : m_eState = STATE::HINT_BAD;
-	}
+	void Hungry_On();
+	void Give_Hint(_bool isGood);
 	_bool Check_Hungry(_float fTimeDelta);
 	virtual void Interact(_uint Damage = 0) override;
 	virtual HRESULT Drop_Items() override;

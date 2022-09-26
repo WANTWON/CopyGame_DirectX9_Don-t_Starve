@@ -81,7 +81,7 @@ void CLevel_Maze::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetWindowText(g_hWnd, TEXT("�̷η����Դϴ�."));
+	SetWindowText(g_hWnd, TEXT(" ̷η    Դϴ ."));
 }
 
 HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
@@ -127,11 +127,11 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 	CPortal::PORTALDESC PortalDesc;
 
 
-	PortalDesc.m_eType = CPortal::PORTAL_BOSS;
+	/*PortalDesc.m_eType = CPortal::PORTAL_BOSS;
 	PortalDesc.vPosition = _float3(25.f, 2.f, 25.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, pLayerTag, &PortalDesc)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	PortalDesc.m_eType = CPortal::PORTAL_GAMEPLAY;
 	PortalDesc.vPosition = _float3(9.0f, 2.f, 8.f);
@@ -299,18 +299,36 @@ HRESULT CLevel_Maze::Ready_Layer_Object(const _tchar * pLayerTag)
 
 
 	CCardgame::CARDDESC CardDesc;
+	vector<_uint> randombox;  //cardgame random shufflle
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 4; i++)
 	{
-		for (int j = 0; j < 3; ++j)
-		{
-			CardDesc.iNumber = i*3 + j;
-			CardDesc.pos = _float3(22.f + 3.f*i, 0.5f, 22.f + 3.f*j);
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_MAZE, TEXT("Layer_Card"), &CardDesc)))
-				return E_FAIL;
-		}
+		randombox.push_back(i);
+		randombox.push_back(i);
 	}
 
+	randombox.push_back(4);
+
+	random_shuffle(randombox.begin(), randombox.end());
+
+	for (auto& iter = randombox.begin(); iter != randombox.end();)
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			for (int j = 0; j < 3; ++j)
+			{
+				CardDesc.iNumber = *iter;//i * 3 + j;
+				CardDesc.pos = _float3(22.f + 3.f*i, 0.5f, 22.f + 3.f*j);
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Cardgame"), LEVEL_MAZE, TEXT("Layer_Card"), &CardDesc)))
+					return E_FAIL;
+				++iter;
+			}
+		}
+
+		
+	}
+
+	
 
 	Safe_Release(pGameInstance);
 	return S_OK;
@@ -424,8 +442,6 @@ void CLevel_Maze::Update_Floor_Motion()
 	Safe_AddRef(pGameInstance);
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
-
-
 	if ((pGameObject->Get_Position().x > 35 && !m_bPuzzleStart[0]))
 	{
 		// Defend the Tower
@@ -459,6 +475,11 @@ void CLevel_Maze::Update_Floor_Motion()
 		DecoDesc.vInitPosition = _float3(39.75f, 0.f, 38.f);
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[2] = true;
+
+		// Play Floor Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("carnivalgame_floor_%d.wav"), rand() % 3 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
 	}
 	else if ((pGameObject->Get_Position().x < 28) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[3])
 	{
@@ -474,22 +495,36 @@ void CLevel_Maze::Update_Floor_Motion()
 		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_MEMORY;
 		StationDesc.vInitPosition = _float3(25.00f, 0.f, 41.8f);
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+
+		// Play Floor Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("carnivalgame_floor_%d.wav"), rand() % 3 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
+
+		// Play Station Place Sound
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Place_Carnivalgame_Memory.wav"), SOUND_ID::SOUND_OBJECT, .8f);
 	}
 	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z > 35) && !m_bPuzzleStart[4])
 	{
 		// Egg
-		CCarnivalMemory::STATIONDESC StationDesc;
-		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_EGG;
-		StationDesc.vInitPosition = _float3(9.5f, 0.f, 40.f);
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
-		
-
 		CDecoObject::DECODECS  DecoDesc;
 		DecoDesc.m_eState = CDecoObject::DECOTYPE::FLOOR;
 		DecoDesc.vInitPosition = _float3(9.5f, 0.f, 40.f);
 		DecoDesc.fRotate = 4.f;
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_DecoObject"), LEVEL_MAZE, TEXT("Layer_Deco"), &DecoDesc);
 		m_bPuzzleStart[4] = true;
+
+		CCarnivalMemory::STATIONDESC StationDesc;
+		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_EGG;
+		StationDesc.vInitPosition = _float3(9.5f, 0.f, 40.f);
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+
+		// Play Floor Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("carnivalgame_floor_%d.wav"), rand() % 3 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
+
+		// Play Station Place Sound
 		pGameInstance->PlaySounds(TEXT("Place_Carnivalgame_Herding_Station_DST_01.wav"), SOUND_OBJECT, 0.5f);
 	}
 	else if ((pGameObject->Get_Position().x < 11) && (pGameObject->Get_Position().z < 27) && (pGameObject->Get_Position().z > 20) && !m_bPuzzleStart[5])
@@ -506,12 +541,23 @@ void CLevel_Maze::Update_Floor_Motion()
 		StationDesc.eType = CCarnivalMemory::STATIONTYPE::STATION_BIRD;
 		StationDesc.vInitPosition = _float3(9.5f, 0.f, 24.f);
 		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Carnival_Memory"), LEVEL_MAZE, TEXT("Layer_Object"), &StationDesc);
+
+		// Play Sound
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("carnivalgame_floor_%d.wav"), rand() % 3 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_OBJECT, .8f);
+
+		// Play Station Place Sound
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("carnival_feedbirds_station_place.wav"), SOUND_ID::SOUND_OBJECT, .8f);
 	}
 
 	else if ((pGameObject->Get_Position().x < 20) && (pGameObject->Get_Position().z < 26) && (pGameObject->Get_Position().z > 25) && !m_bPuzzleStart[6])
 	{
-		// cardgame
+		// Card Game
 		CInventory_Manager::Get_Instance()->Start_Cardgame();
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("cardgamestart.mp3"), SOUND_UI, 0.6f);
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("cardgamebgm.wav") , 0.6f);
+		m_bPuzzleStart[6] = true;
 	}
 
 	Safe_Release(pGameInstance);

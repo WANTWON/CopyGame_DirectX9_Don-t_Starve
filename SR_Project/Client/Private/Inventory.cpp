@@ -4,6 +4,7 @@
 #include "Mouse.h"
 #include "Player.h"
 #include "GameInstance.h"
+#include "Portal.h"
 
 
 IMPLEMENT_SINGLETON(CInventory_Manager)
@@ -291,13 +292,32 @@ void CInventory_Manager::Late_Tick(_float fTimeDelta)
 		Cardgame();
 
 	
-	if (icardgamecount == 8)
+	if (icardgamecount == 9)
 	{
 		for (auto& k : m_Cardgamelist)
 			k->set_check(false);
+        m_bcardgameon = false;
+
+		if (m_first)
+		{
+			CPortal::PORTALDESC PortalDesc;
 
 
-		m_bcardgameon = false;
+			PortalDesc.m_eType = CPortal::PORTAL_BOSS;
+			PortalDesc.vPosition = _float3(25.f, 2.f, 25.f);
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_MAZE, TEXT("Layer_Object"), &PortalDesc);
+
+			CGameInstance::Get_Instance()->StopSound( SOUND_BGM);
+			CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_cave_rain_light.wav"), 0.5f);
+
+
+		}
+
+
+		m_first = false;
+		
+			
 	}
 
 
@@ -388,7 +408,7 @@ void CInventory_Manager::Use_pot(CCookPot* pCookPot)
 
 }
 
-void CInventory_Manager::Off_pot()
+void CInventory_Manager::Off_pot(CCookPot* pCookPot)
 {
 	//m_Pot.front()->set_check_pot(false);
 
@@ -400,7 +420,7 @@ void CInventory_Manager::Off_pot()
 		k->set_texnum(ITEMNAME_END);
 	}
 
-	m_Potbutton.front()->set_check_pot(false);
+	m_Potbutton.front()->set_check_pot(false, pCookPot);
 	m_Pot.front()->set_closepot();
 }
 
@@ -601,7 +621,14 @@ void CInventory_Manager::Cardgame()
 						k->set_lastdance(true);
 						++count2;
 						if (count2 == 2)
-						{
+						{   
+							_uint random = rand() % 2 + 1;
+
+
+							if (random == 1)
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("cardcorrect.wav"), SOUND_UI, 0.8f);
+							else
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("cardcorrect2.wav"), SOUND_UI, 0.8f);
 							//++icardgamecount;//함수로뺴
 							break;
 						}
@@ -627,8 +654,20 @@ void CInventory_Manager::Cardgame()
 					
 						pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CardEffect"), LEVEL_GAMEPLAY, TEXT("Layer_Cardeffect_thunder"), &effectdesc);
 						++count2;
-							if (count2 == 2)
-								break;
+						if (count2 == 2)
+						{
+							_uint random = rand() % 2 + 1;
+
+
+							if (random == 1)
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("cardwrong.wav"), SOUND_UI, 0.8f);
+							else
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("cardwrong2.wav"), SOUND_UI, 0.8f);
+							break;
+							}
+								
+
+								
 					}
 						
 				}

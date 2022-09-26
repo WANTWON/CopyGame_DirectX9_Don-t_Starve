@@ -68,6 +68,8 @@ private:
 	_float i = 1;
 	_float3 vdir = _float3(0.f, 0.f, 0.f);
 
+	_float4x4 m_WorldMatrix;
+
 	
 
 private:
@@ -109,7 +111,9 @@ private:
 	bool m_blastdance = false;
 
 	_bool goback = true;
+	_bool lastcard = false;
 
+	_float j = 2.f;
 	
 	_float3 m_vecOutPos;
 
