@@ -14,7 +14,8 @@
 #include "Level_Manager.h"
 #include "Skeleton.h"
 #include "NPC.h"
-
+#include "DayCycle.h"
+#include "Portal.h"
 
 _bool	   g_ColliderRender = false;
 
@@ -70,6 +71,8 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	if (m_iCurrentLevelndex == LEVEL_LOADING)
 		return OBJ_NOEVENT;
+
+	Check_SanitySpawn(fTimeDelta);
 
 	Setup_LevelChange();
 
@@ -1558,6 +1561,16 @@ void CPlayer::Jump(_float _fTimeDelta)
 		m_bMove = false;
 	}
 
+	CPortal* pBossPortal = dynamic_cast<CPortal*>(m_pTarget);
+	if (pBossPortal && pBossPortal->Get_PortalDesc().m_eType == CPortal::PORTALTYPE::PORTAL_BOSS)
+	{
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex < 20)
+		{
+			_float3 vPos = Get_Pos();
+			vPos.y += 2.f * _fTimeDelta;
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		}
+	}
 }
 
 void CPlayer::Dead(_float _fTimeDelta)
@@ -1932,6 +1945,10 @@ void CPlayer::Teleport(_float _fTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
 
 		SetUp_BillBoard();
+
+		_tchar szFileName[MAX_PATH] = TEXT("");
+		wsprintf(szFileName, TEXT("flash_%d.wav"), rand() % 10 + 1);
+		CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
 	}
 }
 
@@ -1994,6 +2011,7 @@ _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 			goto GoDead;
 		m_fHungertime = 0.f;
 	}
+	
 
 	return true;
 
@@ -2279,6 +2297,51 @@ void CPlayer::Setup_LevelChange(void)
 	m_iCameraMode = CCameraManager::Get_Instance()->Get_CamState();
 }
 
+void CPlayer::Check_SanitySpawn(_float fTimeDelta)
+{
+	DAY_STATE eDayState = CDayCycle::Get_Instance()->Get_DayState();
+	CLevel_Manager* pLevelManager = CLevel_Manager::Get_Instance();
+
+	if (eDayState != DAY_STATE::DAY_NIGHT || pLevelManager->Get_CurrentLevelIndex() != LEVEL_GAMEPLAY)
+		return;
+
+	_uint fPercent = 70; // Modify this to change the BadSanity percent limit.
+	_float fBadSanity = m_tStat.fMaxMental / 100 * fPercent;
+
+	if (m_tStat.fCurrentMental < fBadSanity)
+	{
+		// Spawn Sanity Monster every 20 seconds.
+		if (m_fSanitySpawnTimer > 20.f)
+		{
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("terrorbeak_hit_%03d.wav"), rand() % 6);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .8f);
+
+			_uint iSpawns = 4; // Number of Sanity Monster to spawn.
+			for (int i = 0; i < iSpawns; ++i)
+			{
+				_float fSpawnRadius = 4.f;
+
+				// Calculate Random Position
+				_float fOffsetX = ((_float)rand() / (_float)(RAND_MAX)) * fSpawnRadius;
+				_int bSignX = rand() % 2;
+				_float fOffsetZ = ((_float)rand() / (_float)(RAND_MAX)) * fSpawnRadius;
+				_int bSignZ = rand() % 2;
+				_float fSpawnPositionX = Get_Position().x + (bSignX ? fOffsetX : -fOffsetX);
+				_float fSpawnPositionZ = Get_Position().z + (bSignZ ? fOffsetZ : -fOffsetZ);
+
+				_float3 fSpawnPosition = _float3(fSpawnPositionX, 1.f, fSpawnPositionZ);
+
+				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Terrorbeak"), pLevelManager->Get_CurrentLevelIndex(), TEXT("Layer_Monster"), fSpawnPosition);
+			}
+
+			m_fSanitySpawnTimer = 0.f;
+		}
+		else
+			m_fSanitySpawnTimer += fTimeDelta;
+	}
+}
 
 void CPlayer::Sleep_Restore(_float _fTimeDelta)
 {

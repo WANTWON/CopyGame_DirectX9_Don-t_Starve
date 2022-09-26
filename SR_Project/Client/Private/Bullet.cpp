@@ -86,8 +86,12 @@ void CBullet::Late_Tick(_float fTimeDelta)
 	AttackCheck(fTimeDelta);
 	DeadCheck(fTimeDelta);
 
-	if (Compare_Terrain()&& m_tBulletData.eWeaponType == WEAPON_BOMB)
+	if (Compare_Terrain() && m_tBulletData.eWeaponType == WEAPON_BOMB)
+	{
+		// Play Sound
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("bomb.wav"), SOUND_ID::SOUND_PLAYER, 1.f);
 		m_bDead = true;
+	}
 
 	Compute_CamDistance(Get_Position());
 	Set_ShaderID(true);
@@ -657,6 +661,11 @@ void CBullet::IceSpikes(_float _fTimeDelta)
 				BulletData.vPosition += vTempLook*m_fAttackRange;
 				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 					return;
+
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("ice_spike_%d.wav"), rand() % 3 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
 			}
 			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE3:
@@ -685,6 +694,11 @@ void CBullet::IceSpikes(_float _fTimeDelta)
 				BulletData.vPosition += vTempLook*m_fAttackRange;
 				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 					return;
+
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("ice_spike_%d.wav"), rand() % 3 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
 			}
 			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE4:
@@ -715,6 +729,11 @@ void CBullet::IceSpikes(_float _fTimeDelta)
 				BulletData.vPosition += vTempLook*m_fAttackRange;
 				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 					return;
+
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("ice_spike_%d.wav"), rand() % 3 + 1);
+				CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
 			}
 			break;
 		}
@@ -788,6 +807,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
+
 			m_bActivated = true;
 		}
 
@@ -801,6 +825,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
+
 			m_bActivated2 = true;
 		}
 		if (m_fTime > 0.5f && !m_bActivated3)
@@ -813,6 +842,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
+
 			m_bActivated3 = true;
 		}
 		break;
@@ -823,6 +857,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			BulletData.vPosition = vPos;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
+
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
 
 			m_bActivated = true;
 		}
@@ -837,6 +876,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
+
 			m_bActivated2 = true;
 		}
 		if (m_fTime > 0.5f && !m_bActivated3)
@@ -849,6 +893,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
+
 			m_bActivated3 = true;
 		}
 		break;
@@ -860,6 +909,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			BulletData.vPosition = vPos;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
+
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
 
 			m_bActivated = true;
 		}
@@ -874,6 +928,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
+
 			m_bActivated2 = true;
 		}
 		if (m_fTime > 0.5f && !m_bActivated3)
@@ -885,6 +944,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			BulletData.vPosition = vPos;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
+
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
 
 			m_bActivated3 = true;
 		}
@@ -899,6 +963,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
+
 			m_bActivated = true;
 		}
 
@@ -912,6 +981,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
+
 			m_bActivated2 = true;
 		}
 		if (m_fTime > 0.5f && !m_bActivated3)
@@ -924,6 +998,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
+
 			m_bActivated3 = true;
 		}
 		break;
@@ -934,6 +1013,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			BulletData.vPosition = vPos;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
+
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
 
 			m_bActivated = true;
 		}
@@ -948,6 +1032,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
 
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
+
 			m_bActivated2 = true;
 		}
 		if (m_fTime > 0.5f && !m_bActivated3)
@@ -959,6 +1048,11 @@ void CBullet::IceMines(_float _fTimeDelta)
 			BulletData.vPosition = vPos;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
 				return;
+
+			// Play Sound
+			_tchar szFileName[MAX_PATH] = TEXT("");
+			wsprintf(szFileName, TEXT("sand_spike_%d.wav"), rand() % 7 + 1);
+			CGameInstance::Get_Instance()->PlaySounds(szFileName, SOUND_ID::SOUND_PLAYER, 1.f);
 
 			m_bActivated3 = true;
 		}

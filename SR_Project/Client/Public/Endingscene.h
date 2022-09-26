@@ -25,6 +25,8 @@ public:
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
 
+public:
+
 private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
 	//CTexture*				m_pTextureCom1 = nullptr;
@@ -45,6 +47,7 @@ private:
 	_uint texnum = 0;
 	_uint m_ihp;
 	_bool m_bcheck = false;
+	_bool m_bOnce = false;
 
 	DWORD m_dwdaytime = GetTickCount();
 

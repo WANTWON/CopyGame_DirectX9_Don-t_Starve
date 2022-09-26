@@ -471,7 +471,6 @@ void CDecoObject::WalkingTerrain()
 	if (nullptr == pVIBuffer_Terrain)
 		return;
 	CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(iLevel, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
-
 	if (nullptr == pTransform_Terrain)
 		return;
 

@@ -139,11 +139,12 @@ void CCarnival_Shoot_Button::Change_Camera()
 		m_bFinished = true;
 		if (pCameraManager->Get_CamState() == CCameraManager::CAM_TARGET)
 		{
+			CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
 			_tchar	szFullPath[MAX_PATH] = TEXT("Bell_Win_Carnivalgame_Herding_Station_DST_%02d.wav");
 			_uint i = rand() % 7 + 1;
 			wsprintf(szFullPath, szFullPath, i);
 			CGameInstance::Get_Instance()->PlaySounds(szFullPath, SOUND_OBJECT, 0.5f);
-
+			
 			CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 			dynamic_cast<CCameraTarget*>(pCamera)->Set_PositionMode(false);
 		}
@@ -158,6 +159,7 @@ void CCarnival_Shoot_Button::Change_Camera()
 	if (vDistance < 1.f)
 	{
 		pCameraManager->Set_CamState(CCameraManager::CAM_TARGET);
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_PirateMonkeys_accordian_V2 (1).wav"), 0.4f);
 		CGameObject* pShooter = pGameInstace->Get_Object(LEVEL_MAZE, TEXT("Layer_Shooter"));
 		_float3 vShooterPos = pShooter->Get_Position();
 		vShooterPos.z += 2.f;

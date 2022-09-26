@@ -5,6 +5,7 @@
 #include "Inventory.h"
 #include "Item.h"
 #include "PickingMgr.h"
+#include "DayCycle.h"
 
 CTerrorbeak::CTerrorbeak(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CMonster(pGraphic_Device)
@@ -50,6 +51,9 @@ int CTerrorbeak::Tick(_float fTimeDelta)
 		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
 		return OBJ_DEAD;
 	}
+
+	if (CDayCycle::Get_Instance()->Get_DayState() != DAY_STATE::DAY_NIGHT)
+		m_bDead = true;
 
 	// A.I.
 	AI_Behaviour(fTimeDelta);
@@ -167,12 +171,13 @@ HRESULT CTerrorbeak::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 30;
 
+	TextureDesc.m_fSpeed = 20;
 	TextureDesc.m_iEndTex = 15;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_APPEAR"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Appear"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
 	m_vecTexture.push_back(m_pTextureCom);
+	TextureDesc.m_fSpeed = 30;
 	TextureDesc.m_iEndTex = 14;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_ATTACK_DOWN"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrorbeak_Attack_Down"), (CComponent**)&m_pTextureCom, &TextureDesc)))
 		return E_FAIL;
@@ -395,6 +400,9 @@ void CTerrorbeak::PickingTrue()
 
 void CTerrorbeak::AI_Behaviour(_float fTimeDelta)
 {
+	if (m_eState == STATE::APPEAR)
+		return; 
+
 	if (m_bDead || m_bHit || m_bIsAttacking)
 	{
 		if (m_bHit)
@@ -545,7 +553,7 @@ void CTerrorbeak::Attack(_float fTimeDelta)
 				// Play Attack Sound
 				_tchar szFileName[MAX_PATH] = TEXT("");
 				wsprintf(szFileName, TEXT("terrorbeak_attack_%03d.wav"), rand() % 6);
-				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .2f);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, 1.f);
 
 				m_bFirstFrame = false;
 			}
@@ -603,7 +611,7 @@ _float CTerrorbeak::Take_Damage(float fDamage, void * DamageType, CGameObject * 
 			// Play Death Sound
 			_tchar szFileName[MAX_PATH] = TEXT("");
 			wsprintf(szFileName, TEXT("terrorbeak_die_%03d.wav"), rand() % 11);
-			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .3f);
+			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .6f);
 		}
 
 		m_bIsAttacking = false;

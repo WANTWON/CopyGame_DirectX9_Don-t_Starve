@@ -7,7 +7,7 @@ BEGIN(Client)
 class CCameraDynamic final : public CCamera
 {
 public:
-	enum CAMERAMODE {CAM_PLAYER, CAM_TURNMODE, CAM_REVIVE, CAM_ZOOMIN, CAM_ZOOMOUT, CAM_SHAKING };
+	enum CAMERAMODE {CAM_PLAYER, CAM_TURNMODE, CAM_REVIVE, CAM_ZOOMIN, CAM_ZOOMOUT, CAM_SHAKING, CAM_ENDING };
 	//Default ÇÊ¿äx , 
 	typedef struct tagCameraDesc_Derived
 	{
@@ -40,7 +40,7 @@ public: //SetEnum
 	CAMERAMODE Get_CamMode() { return m_eCamMode; }
 	void Set_TalkingMode(_bool type) {if (type) m_eCamMode = CAM_ZOOMIN; else m_eCamMode = CAM_ZOOMOUT;}
 	void Set_Target(class CGameObject* pGameObject) { m_pTarget = pGameObject; }
-
+	void Set_EndingMode() { m_eCamMode = CAM_ENDING;  }
 
 private:
 	void Player_Camera(_float fTimeDelta);
@@ -50,6 +50,7 @@ private:
 	void ZoomIn_Camera(_float fTimeDelta, CGameObject* pGameObject);
 	void ZoomOut_Camera(_float fTimeDelta);
 	void Shaking_Camera(_float fTimeDelta, _float fPower);
+	void Ending_Camera(_float fTimeDelta);
 
 private:
 
