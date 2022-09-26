@@ -49,20 +49,20 @@ int CDaycountpont::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 
-	/*CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-	Safe_AddRef(pGameInstance);
-	Safe_AddRef(pinv);
-*/
-	
-	//pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
+	//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	//CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+	//Safe_AddRef(pGameInstance);
+	//Safe_AddRef(pinv);
 
-	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
+	//
+	////pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
+
+	////texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
 	//texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth) / 2;
 
-	/*Safe_Release(pGameInstance);
-	Safe_Release(pinv);
-*/
+	//Safe_Release(pGameInstance);
+	//Safe_Release(pinv);
+
 
 	return OBJ_NOEVENT;
 }
@@ -135,12 +135,24 @@ void CDaycountpont::Update(_uint eDayState)
 {
 	m_eDayState = (DAY_STATE)eDayState;
 
+
+
 	if (m_eDayState == DAY_MORNING)
+	{
 		m_iTexNum1 = 1;
+		if (!m_bfirst)
+			++m_iTexNum;
+	}
+		
 	else if (m_eDayState == DAY_DINNER)
 		m_iTexNum1 = 2;
 	else
+	{
 		m_iTexNum1 = 0;
+		m_bfirst = false;
+
+	}
+		
 
 	//if(eDayState == DAY_MORNING)
 		//++m_iTexNum;

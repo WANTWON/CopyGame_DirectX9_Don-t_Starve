@@ -55,7 +55,7 @@ private:
 	_float3 m_vAttackPos = _float3(0.f, 0.f, 0.f);
 	_bool m_bStun = false;
 	_float m_fStunTime = 0.f;
-	_float m_fStunTimeLimit = 3.f;
+	_float m_fStunTimeLimit = 1.5f;
 	_bool m_bfirst = true;
 	
 	// Bullet Variables
@@ -67,6 +67,8 @@ private:
 	// Stagger Variables
 	_float m_fStaggerDamageLimit = 80.f;
 	_float m_fStaggerDamage = 0.f;
+	_float m_fStunDamageLimit = 30.f;
+	_float m_fStunDamage = 0.f;
 
 	// Spawn Variables
 	_bool m_bIsBelow80Percent = false;

@@ -567,6 +567,7 @@ void CSkill::Activate_Check(_float _fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	vector<CGameObject*> vecDamagedActor;
+	DAMAGETYPEDESC tDamageType;
 
 	if (pGameInstance->Collision_Check_Group_Multi(CCollider_Manager::COLLISION_MONSTER, vecDamagedActor, this, CCollider_Manager::COLLSIION_BOX))
 	{
@@ -585,6 +586,7 @@ void CSkill::Activate_Check(_float _fTimeDelta)
 		case SKILL_TYPE::ELEC:
 			if (m_bActivated)
 			{
+				tDamageType.eDamageType = DAMAGE_ATTRIBUTE::ATTR_STUN;
 				m_fDamage = 10.f;
 				m_bDead = true;
 				goto Attack;
@@ -607,7 +609,7 @@ void CSkill::Activate_Check(_float _fTimeDelta)
 
 		//goto
 		Attack:
-		CGameInstance::Apply_Damage_Multi(m_fDamage, vecDamagedActor, this, nullptr);
+		CGameInstance::Apply_Damage_Multi(m_fDamage, vecDamagedActor, this, &tDamageType);
 
 	}
 	vecDamagedActor.clear();

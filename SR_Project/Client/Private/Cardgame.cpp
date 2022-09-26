@@ -119,11 +119,11 @@ int CCardgame::Tick(_float fTimeDelta)
 		WalkingTerrain();
 
 
-		if (CKeyMgr::Get_Instance()->Key_Up('6'))
+		/*if (CKeyMgr::Get_Instance()->Key_Up('6'))
 			m_pTransformCom->Turn(_float3(0.f, 0.f, 1.f), fTimeDelta);
 
 		if (CKeyMgr::Get_Instance()->Key_Up('7'))
-			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);*/
 
 
 		//if (CKeyMgr::Get_Instance()->Key_Up('8'))

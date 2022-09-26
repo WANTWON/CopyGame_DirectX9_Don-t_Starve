@@ -395,12 +395,14 @@ void CWendy::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 		Safe_AddRef(m_pTarget);
 		m_iInterruptNum = _InterruptNum;
 		m_bInterrupted = true;
+		m_bInteract = true;
 		break;
 	case 1://FightMode
 		if (!m_bFightMode && m_bOwner)
 		{
 			m_iInterruptNum = _InterruptNum;
 			m_bInterrupted = true;
+			m_bInteract = true;
 		}
 		break;
 	}
@@ -827,7 +829,6 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 	{
 		m_fInteractTIme = 0.f;
 		m_bInteract = true;
-		cout << "Talk Start" << endl;
 		Change_Texture(TEXT("Com_Texture_Talk"));
 		m_ePreState = m_eState;
 

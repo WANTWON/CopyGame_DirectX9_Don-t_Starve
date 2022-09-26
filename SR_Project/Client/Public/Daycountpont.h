@@ -45,6 +45,7 @@ private:
 	_uint m_iTexNum = 0;
 	_uint m_ihp;
 	_uint m_iTexNum1 = 1;
+	_bool m_bfirst = true;
 
 	DWORD m_dwdaytime = GetTickCount();
 	DWORD m_dwdaynight = GetTickCount();

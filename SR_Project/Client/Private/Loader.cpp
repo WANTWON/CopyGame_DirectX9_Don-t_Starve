@@ -140,6 +140,7 @@
 #include "Party.h"
 #include "Partyhp.h"
 #include "Endingscene.h"
+#include "Hpbar.h"
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -532,6 +533,18 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Monster/Terrorbeak/Walk_Up/Walk_Up_%03d.png"), 26))))
 		return E_FAIL;
 #pragma endregion Add_Texture_Terrorbeak
+
+#pragma region Add_Texture_Fireflies
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fireflies_Loop"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Fireflies/Loop/Loop_%03d.png"), 101))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fireflies_Pre"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Fireflies/Pre/Pre_%03d.png"), 52))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fireflies_Post"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Object/Fireflies/Post/Post_%03d.png"), 51))))
+		return E_FAIL;
+#pragma endregion Add_Texture_Fireflies
 
 #pragma  region Add_Texture_others
 	/*Skeleton*/
@@ -983,6 +996,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Endingscene"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/ending%d.png"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hpbar"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/hpbar/hpbar%d.png"), 20))))
 		return E_FAIL;
 
 #pragma endregion Add_Texture UI
@@ -2274,6 +2291,8 @@ HRESULT CLoader::Loading_Prototype_Object()
 		CCarnival_Egg::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+
+
 	lstrcpy(m_szLoadingText, TEXT("Loading_UI_Object"));
 
 #pragma region Add_Prototype UI Object
@@ -2572,6 +2591,10 @@ HRESULT CLoader::Loading_Prototype_Object()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Endingscene"),
 		CEndingscene::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Hpbar"),
+		CHpbar::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 

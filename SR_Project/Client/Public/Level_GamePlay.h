@@ -47,6 +47,12 @@ public:
 	_float m_fTimeAcc = 0.f;
 	_bool m_bNextLevel = false;
 
+	void Decrease_Fireflies() { m_iFirefliesCounter--; }
+
+	_float m_fFirefliesTimer = 0.f;
+	_uint m_iFirefliesMax = 50;
+	_uint m_iFirefliesCounter = 0;
+
 };
 
 END
