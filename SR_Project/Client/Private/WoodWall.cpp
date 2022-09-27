@@ -516,10 +516,14 @@ void CWoodWall::Set_ShaderID()
 
 	if (pGameObject->Get_Dead())
 		m_eShaderID = SHADER_DEAD;
+	else if (dynamic_cast<CPlayer*>(pGameObject)->Get_WeaponType() == WEAPON_LIGHT)
+		m_eShaderID = SHADER_DARKWITHLIGHT;
 	else if (iLevel == LEVEL_MAZE)
 		m_eShaderID = SHADER_DARK;
+	else if (iLevel == LEVEL_BOSS)
+		m_eShaderID = SHADER_FIRE;
 	else
-		m_eShaderID = SHADER_IDLE;
+		m_eShaderID = SHADER_DAYCYClE;
 }
 
 void CWoodWall::Check_GrowShrink()
