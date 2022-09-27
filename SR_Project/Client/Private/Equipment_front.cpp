@@ -138,6 +138,13 @@ int CEquipment_front::Tick(_float fTimeDelta)
 			weapontype = WEAPON_TYPE::WEAPON_LIGHT;
 			break;
 
+		case ITEMNAME_PICK:
+			weapontype = WEAPON_TYPE::WEAPON_PICKAXE;
+			break;
+		case ITEMNAME_AXE:
+			weapontype = WEAPON_TYPE::WEAPON_AXE;
+			break;
+
 		
 		default:
 
