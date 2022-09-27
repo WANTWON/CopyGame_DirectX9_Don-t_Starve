@@ -200,15 +200,15 @@ HRESULT CDmgpont::Render()
 
 		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 			return E_FAIL;
-
+		if (FAILED(SetUp_RenderState()))
+			return E_FAIL;
 		
 		if (one == false)
 		{
 			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
 				return E_FAIL;
 
-			if (FAILED(SetUp_RenderState()))
-				return E_FAIL;
+			
 
 			m_pVIBufferCom->Render();
 		}
