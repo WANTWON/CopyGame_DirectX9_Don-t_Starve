@@ -273,8 +273,8 @@ void CLevel_Boss::Start_Camera_Motion()
 		pCamera->Set_Target(pGameObject);
 
 		_bool bearger = false;
-
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BossName"), LEVEL_STATIC, TEXT("Layer_BossName"), (bool*)&bearger);
+		
+		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BossName"), LEVEL_STATIC, TEXT("Layer_UI"), (bool*)&bearger);
 			
 			
 		pCamera->Set_TalkingMode(true);
