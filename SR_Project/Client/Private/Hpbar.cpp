@@ -51,7 +51,7 @@ HRESULT CHpbar::Initialize(void* pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(3.f, 0.5f, 1.f);
+	m_pTransformCom->Set_Scale(2.5f, 0.3f, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, mypos);
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(mypos.x - g_iWinSizeX * 0.5f, -pos.y + g_iWinSizeY * 0.5f, 0.f));
 

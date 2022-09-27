@@ -82,6 +82,14 @@ int CWendy::Tick(_float fTimeDelta)
 			_float3 Owner_Pos = static_cast<CPlayer*>(m_pOwner)->Get_Pos();
 			Owner_Pos.x -= 3.f;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
+
+			MINIMAP		minidesc;
+			ZeroMemory(&minidesc, sizeof(MINIMAP));
+			minidesc.name = MIN_WENDY;
+			minidesc.pointer = this;
+			LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
 		
 		}
 		else
@@ -89,14 +97,19 @@ int CWendy::Tick(_float fTimeDelta)
 			m_bCanTalk = true;
 			Clear_Activated();
 			Reset_Target();
+
+			if (m_iCurrentLevelndex == LEVEL_GAMEPLAY)
+			{
+				MINIMAP		minidesc;
+				ZeroMemory(&minidesc, sizeof(MINIMAP));
+				minidesc.name = MIN_WENDY;
+				minidesc.pointer = this;
+				LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+			}
 		}
-		MINIMAP		minidesc;
-		ZeroMemory(&minidesc, sizeof(MINIMAP));
-		minidesc.name = MIN_WENDY;
-		minidesc.pointer = this;
-		LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+		
 
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 	}

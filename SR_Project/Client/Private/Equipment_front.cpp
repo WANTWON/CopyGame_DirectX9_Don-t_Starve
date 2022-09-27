@@ -137,6 +137,8 @@ int CEquipment_front::Tick(_float fTimeDelta)
 		case ITEMNAME_TORCH:
 			weapontype = WEAPON_TYPE::WEAPON_LIGHT;
 			break;
+
+		
 		default:
 
 			weapontype = WEAPON_TYPE::WEAPON_HAND;

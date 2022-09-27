@@ -29,8 +29,8 @@ HRESULT CBossName::Initialize(void* pArg)
 
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 0.8f);
 
-	m_fSizeX = 800.f;
-	m_fSizeY = 300.f;
+	m_fSizeX = 700.f;
+	m_fSizeY = 280.f;
 	m_fX = 640.f;
 	m_fY = 125.f;
 
