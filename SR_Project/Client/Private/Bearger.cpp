@@ -755,27 +755,14 @@ void CBearger::Patrol(_float fTimeDelta)
 		if (!pTransform_Terrain)
 			return;
 
+		_float3 vPatrolPosition = { m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ };
 		_float3 vScale = m_pTransformCom->Get_Scale();
+
 		vPatrolPosition.y = pVIBuffer_Terrain->Compute_Height(vPatrolPosition, pTransform_Terrain->Get_WorldMatrix(), (1 * vScale.y / 2));
 
-		// Change Direction
-		_float fX = vPatrolPosition.x - Get_Position().x;
-		_float fZ = vPatrolPosition.z - Get_Position().z;
+		Calculate_Direction(vPatrolPosition);
 
-		// Move Horizontally
-		if (abs(fX) > abs(fZ))
-			if (fX > 0)
-				m_eDir = Get_Processed_Dir(DIR_STATE::DIR_RIGHT);
-			else
-				m_eDir = Get_Processed_Dir(DIR_STATE::DIR_LEFT);
-		// Move Vertically
-		else
-			if (fZ > 0)
-				m_eDir = Get_Processed_Dir(DIR_STATE::DIR_UP);
-			else
-				m_eDir = Get_Processed_Dir(DIR_STATE::DIR_DOWN);
-
-		m_pTransformCom->Go_PosTarget(fTimeDelta * .25f, _float3(vPatrolPosition.x, vPatrolPosition.y, vPatrolPosition.z), _float3{ 0.f, 0.f, 0.f });
+		m_pTransformCom->Go_PosTarget(fTimeDelta * .25f, vPatrolPosition, _float3{ 0.f, 0.f, 0.f });
 	}
 }
 
@@ -862,24 +849,10 @@ void CBearger::Follow_Target(_float fTimeDelta, _bool bIsFood)
 
 	_float3 fTargetPos = m_pTarget->Get_Position();
 
-	// Set Direction
-	_float fX = fTargetPos.x - Get_Position().x;
-	_float fZ = fTargetPos.z - Get_Position().z;
-
-	// Move Horizontally
-	if (abs(fX) > abs(fZ))
-		if (fX > 0)
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_RIGHT);
-		else
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_LEFT);
-	// Move Vertically
-	else
-		if (fZ > 0)
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_UP);
-		else
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_DOWN);
+	Calculate_Direction(fTargetPos);
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta * .25f, fTargetPos, _float3(0, 0, 0));
+
 	m_bIsAttacking = false;
 }
 

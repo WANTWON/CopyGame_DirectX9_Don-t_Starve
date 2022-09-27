@@ -52,8 +52,6 @@ public://Get&&Set
 	void	Set_CanMove(_bool _bMove) { m_bMove = _bMove; }
 	_bool	Get_CanMove(void) { return m_bMove; }
 private:
-	DIR_STATE m_eDir = DIR_STATE::DIR_DOWN;
-	DIR_STATE m_ePreDir = DIR_STATE::DIR_END;
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
 	_float fHappyTimer = 0.f;

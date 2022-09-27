@@ -94,7 +94,7 @@ void CPig::Late_Tick(_float fTimeDelta)
 			m_eState = STATE::IDLE;
 			fHappyTimer = 0.f;
 			m_dwIdleTime = GetTickCount();
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_DOWN);
+			m_eDir = DIR_STATE::DIR_DOWN;
 		}
 	}
 
@@ -393,9 +393,6 @@ void CPig::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_IDLE_SIDE"));
 				break;
 			}
-
-			if (m_eDir != m_ePreDir)
-				m_ePreDir = m_eDir;
 			break;
 		case STATE::WALK:
 			switch (m_eDir)
@@ -411,9 +408,6 @@ void CPig::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_WALK_SIDE"));
 				break;
 			}
-
-			if (m_eDir != m_ePreDir)
-				m_ePreDir = m_eDir;
 			break;
 		case STATE::RUN:
 			switch (m_eDir)
@@ -429,9 +423,6 @@ void CPig::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_RUN_SIDE"));
 				break;
 			}
-
-			if (m_eDir != m_ePreDir)
-				m_ePreDir = m_eDir;
 			break;
 		case STATE::ATTACK:
 			switch (m_eDir)
@@ -447,9 +438,6 @@ void CPig::Change_Motion()
 				Change_Texture(TEXT("Com_Texture_ATTACK_SIDE"));
 				break;
 			}
-
-			if (m_eDir != m_ePreDir)
-				m_ePreDir = m_eDir;
 			break;
 		case STATE::HIT:
 			Change_Texture(TEXT("Com_Texture_HIT"));
@@ -464,6 +452,8 @@ void CPig::Change_Motion()
 
 		if (m_eState != m_ePreState)
 			m_ePreState = m_eState;
+		if (m_eDir != m_ePreDir)
+			m_ePreDir = m_eDir;
 	}
 }
 
@@ -706,24 +696,9 @@ void CPig::Patrol(_float fTimeDelta)
 
 		vPatrolPosition.y = pVIBuffer_Terrain->Compute_Height(vPatrolPosition, pTransform_Terrain->Get_WorldMatrix(), (1 * vScale.y / 2));
 
-		// Change Direction
-		_float fX = vPatrolPosition.x - Get_Position().x;
-		_float fZ = vPatrolPosition.z - Get_Position().z;
+		Calculate_Direction(vPatrolPosition);
 
-			// Move Horizontally
-		if (abs(fX) > abs(fZ))
-			if (fX > 0)
-				m_eDir = Get_Processed_Dir(DIR_STATE::DIR_RIGHT);
-			else
-				m_eDir = Get_Processed_Dir(DIR_STATE::DIR_LEFT);
-			// Move Vertically
-		else
-			if (fZ > 0)
-				m_eDir = Get_Processed_Dir(DIR_STATE::DIR_UP);
-			else
-				m_eDir = Get_Processed_Dir(DIR_STATE::DIR_DOWN);
-
-		m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, _float3(m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ), _float3{ 0.f, 0.f, 0.f });
+		m_pTransformCom->Go_PosTarget(fTimeDelta * .1f, vPatrolPosition, _float3{ 0.f, 0.f, 0.f });
 	}
 }
 
@@ -769,22 +744,7 @@ void CPig::Follow_Target(_float fTimeDelta)
 
 	_float3 fTargetPos = m_pTarget->Get_Position();
 
-	// Set Direction
-	_float fX = fTargetPos.x - Get_Position().x;
-	_float fZ = fTargetPos.z - Get_Position().z;
-
-	// Move Horizontally
-	if (abs(fX) > abs(fZ))
-		if (fX > 0)
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_RIGHT);
-		else
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_LEFT);
-	// Move Vertically
-	else
-		if (fZ > 0)
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_UP);
-		else
-			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_DOWN);
+	Calculate_Direction(fTargetPos);
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta * .2f, fTargetPos, _float3(0, 0, 0));
 
