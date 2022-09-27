@@ -203,19 +203,45 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 
 	_float3 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-	if (vPlayerPos.x < m_vPickingPoint.x)
+	m_eState = ACTION_STATE::MOVE;
+
+	if (m_ePreState != m_eState
+		|| m_ePreDirState != m_eDirState)
+	{
+		m_eDirState = Check_Direction();
+
+		switch (m_eDirState)
+		{
+		case DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Run_Up"));
+			break;
+		case DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Run_Down"));
+			break;
+		case DIR_LEFT:
+			Change_Texture(TEXT("Com_Texture_Run_Side"));
+			break;
+		case DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Run_Side"));
+			break;
+		}
+		m_ePreState = m_eState;
+		m_ePreDirState = m_eDirState;
+	}
+	
+
+	/*if (vPlayerPos.x < m_vPickingPoint.x)
 	{
 		Move_Right(fTimedelta);
 	}
 	else if (vPlayerPos.x > m_vPickingPoint.x)
 	{
 		Move_Left(fTimedelta);
-	}
+	}*/
 
-	if (abs(vPlayerPos.x - m_vPickingPoint.x) < 0.1 &&
-		abs(vPlayerPos.z - m_vPickingPoint.z) < 0.1)
+	if (abs(vPlayerPos.x - m_vPickingPoint.x) < 0.3f &&
+		abs(vPlayerPos.z - m_vPickingPoint.z) < 0.3f)
 	{
-
 		m_bPicked = false;
 		m_bArrive = true;
 		m_bInputKey = false;
@@ -266,7 +292,7 @@ HRESULT CPlayer::Render()
 
 _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
-	if (m_bInincibleMode)
+	if (m_bInincibleMode || m_eState == CPlayer::ACTION_STATE::TALK)
 		return 0.f;
 
 	_float fResultDmg = fDamage - m_tStat.fArmor;
@@ -1746,6 +1772,7 @@ void CPlayer::Multi_Action(_float _fTimeDelta)
 
 	if (m_pTarget != nullptr)
 	{
+		
 		_float3 vPickPos = m_pTarget->Get_Position();
 		_float3 vOffSet = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 		D3DXVec3Normalize(&vOffSet, &vOffSet);
@@ -1961,14 +1988,15 @@ void CPlayer::Teleport(_float _fTimeDelta)
 
 _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 {
-	if (m_bDead )
+	if (m_bDead)
 		return true;
 
 
 	m_fMentalitytime += _fTimeDelta;
 	m_fHungertime += _fTimeDelta;
 
-	if ((LEVEL)(m_iCurrentLevelndex) != LEVEL_BOSS || (LEVEL)(m_iCurrentLevelndex) != LEVEL_MAZE)
+	if ((LEVEL)(m_iCurrentLevelndex) != LEVEL_BOSS || (LEVEL)(m_iCurrentLevelndex) != LEVEL_MAZE
+		|| m_eState != ACTION_STATE::SLEEP)
 	{
 		if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
 		{
@@ -2099,12 +2127,14 @@ void CPlayer::Find_Priority()
 	if (list_Obj == nullptr)
 		return;
 
-	
-
 	_uint iIndex = 0;
 
 	if (Find_NPC())
+	{
+		//m_ActStack.push(ACTION_STATE::TALK);
 		return;
+	}
+	
 
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
@@ -2614,6 +2644,92 @@ void CPlayer::Play_Sound(_float _fTimeDelta)
 	pGameInstance->PlaySounds(szFullPath, SOUND_PLAYER, fVolume);
 
 	Safe_Release(pGameInstance);
+}
+
+DIR_STATE CPlayer::Check_Direction(void)
+{
+	//내 자신의 Look에서 3번 변환한 값
+	_float3 vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	_float4x4 OriginMat = m_pTransformCom->Get_WorldMatrix();
+	_float4x4 RotateMat = OriginMat;
+	_float3 vRot45 = *(_float3*)&OriginMat.m[2][0];
+	_float3 vRot135 = *(_float3*)&OriginMat.m[2][0];
+
+	//Turn
+	D3DXMatrixRotationAxis(&RotateMat, &_float3(0.f, 1.f, 0.f), D3DXToRadian(90.f));
+	D3DXVec3TransformNormal(&vRot45, &vRot45, &RotateMat);
+	//vRot45 = *(_float3*)&RotateMat.m[2][0];
+	D3DXMatrixRotationAxis(&RotateMat, &_float3(0.f, 1.f, 0.f), D3DXToRadian(135.f));
+	D3DXVec3TransformNormal(&vRot135, &vRot135, &RotateMat);
+	//vRot135 = *(_float3*)&RotateMat.m[2][0];;
+	///////
+	_float3 vTargetLook = m_vPickingPoint - Get_Pos();
+
+	D3DXVec3Normalize(&vRot45, &vRot45);
+	D3DXVec3Normalize(&vRot135, &vRot135);
+	D3DXVec3Normalize(&vMyLook, &vMyLook);
+	D3DXVec3Normalize(&vTargetLook, &vTargetLook);
+
+	//각 내적값들 구하기
+	_float fTargetDot = D3DXVec3Dot(&vMyLook, &vRot45);
+	fTargetDot = acos(fTargetDot);
+	_float fDegree45 = D3DXToDegree(fTargetDot);
+
+	fTargetDot = D3DXVec3Dot(&vMyLook, &vRot135);
+	fTargetDot = acos(fTargetDot);
+	_float fDegree135 = D3DXToDegree(fTargetDot);
+
+	fTargetDot = D3DXVec3Dot(&vMyLook, &vTargetLook);
+	fTargetDot = acos(fTargetDot);
+	_float fDegreeTarget = D3DXToDegree(fTargetDot);
+
+	//외적하기
+	_float3 vCrossOut;
+	//D3DXVec3Cross(&vCrossOut, &vMyLook, &vTargetLook);
+	D3DXVec3Cross(&vCrossOut, &vMyLook, &vTargetLook);
+
+	DIR_STATE eDir = DIR_END;
+	//Check Left Or Right
+	if (vCrossOut.y > 0.f)//Right
+	{
+		if (fDegreeTarget > 0.f && fDegreeTarget <= 60.f)
+		{
+			//cout << "y+, UP, Degree: " << fDegreeTarget << endl;
+			return DIR_UP;
+		}
+		else if (fDegreeTarget > 60.f && fDegreeTarget <= 135.f)
+		{
+			//cout << "y+, Right, Degree: " << fDegreeTarget << endl;
+			return DIR_RIGHT;
+		}
+		else if (fDegreeTarget > 135.f && fDegreeTarget <= 180.f)
+		{
+			//cout << "y+, Down, Degree: " << fDegreeTarget << endl;
+			return DIR_DOWN;
+		}
+	}
+	else//Left
+	{
+		if (fDegreeTarget > 0.f && fDegreeTarget <= 60.f)
+		{
+			//cout << "y-, UP, Degree: " << fDegreeTarget << endl;
+			return DIR_UP;
+		}
+		else if (fDegreeTarget > 60.f && fDegreeTarget <= 135.f)
+		{
+			//cout << "y-, Left, Degree: " << fDegreeTarget << endl;
+			return DIR_LEFT;
+		}
+		else if (fDegreeTarget > 135.f && fDegreeTarget <= 180.f)
+		{
+			//cout << "y-, Down, Degree: " << fDegreeTarget << endl;
+			return DIR_DOWN;
+		}
+	}
+
+	//cout << "Error " << fDegreeTarget << endl;
+	return DIR_DOWN;
+
 }
 
 void CPlayer::Test_Func(_int _iNum)

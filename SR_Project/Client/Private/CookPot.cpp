@@ -245,10 +245,8 @@ void CCookPot::PickingTrue()
 			pInvenManager->Set_PickingPot(false);
 		}
 			
-	}
-	
-	cout << "Collision CookPot : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
-
+	}	
+	//cout << "Collision CookPot : " << m_vecOutPos.x << " " << m_vecOutPos.y << " " << m_vecOutPos.z << endl;
 	Safe_Release(pGameInstance);
 }
 
