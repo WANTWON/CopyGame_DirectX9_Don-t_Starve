@@ -434,6 +434,9 @@ void CWendy::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 
 _float CWendy::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
+	if (m_bInvincibleMode)
+		return 0.f;
+
 	if (!m_bDead && m_tInfo.iCurrentHp <= (_int)fDamage)
 	{
 		m_fReviveTime = 0.f;
@@ -1051,6 +1054,7 @@ void CWendy::Talk_Friend(_float _fTimeDelta)
 		m_fInteractTIme = 0.f;
 		m_bInteract = true;
 		m_ePreState = m_eState;
+		Change_Texture(TEXT("Com_Texture_Talk"));
 		static_cast<CPig*>(m_pTarget)->Interact(_fTimeDelta, 0);
 		Play_Sound(_fTimeDelta);
 	}

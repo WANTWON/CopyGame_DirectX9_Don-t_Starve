@@ -277,6 +277,8 @@ private: /*for Auto*/
 	_bool					m_bHited = false;
 	_float					m_fInvincible_Time = 0.f;
 	_bool					m_bInincibleMode = false;
+
+	_float					m_fActRadius = 10.f;
 	//only use spacebar
 	_bool					m_bOnlyActionKey = false;
 	_float					m_fInteract_Range = 0.f;

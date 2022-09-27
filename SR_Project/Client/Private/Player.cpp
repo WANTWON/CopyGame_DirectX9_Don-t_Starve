@@ -959,6 +959,10 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		}
 		else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN9]))
 		{
+			for (auto& iter : m_vecParty)
+			{
+				iter.second->Set_InvincibleMode(!m_bInincibleMode);
+			}
 			m_bInincibleMode = !m_bInincibleMode;
 		}
 	}
@@ -1714,6 +1718,7 @@ void CPlayer::Angry(_float _fTimeDelta)
 
 	if (m_ePreState != m_eState)
 	{
+		m_bSoundEnd = false;
 		m_bMove = false;
 		switch (m_eDirState)
 		{
@@ -1728,7 +1733,7 @@ void CPlayer::Angry(_float _fTimeDelta)
 
 	}
 
-	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iCurrentTex - 1)
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
 		m_bMove = true;
 	}
@@ -1750,7 +1755,9 @@ void CPlayer::Multi_Action(_float _fTimeDelta)
 		m_ActStack.push(ACTION_STATE::MOVE);
 	}
 	else {
-		Clear_ActStack();
+		m_bAutoMode = true;
+		m_ActStack.push(ACTION_STATE::ANGRY);
+		//Clear_ActStack();
 	}
 
 
@@ -1961,7 +1968,7 @@ _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 	m_fMentalitytime += _fTimeDelta;
 	m_fHungertime += _fTimeDelta;
 
-	if ((LEVEL)(m_iCurrentLevelndex) != LEVEL_BOSS || (LEVEL)(m_iCurrentLevelndex) != LEVEL_MAZE)
+	if ((LEVEL)(m_iCurrentLevelndex) != LEVEL_BOSS && (LEVEL)(m_iCurrentLevelndex) != LEVEL_MAZE)
 	{
 		if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
 		{
@@ -2092,6 +2099,8 @@ void CPlayer::Find_Priority()
 	if (list_Obj == nullptr)
 		return;
 
+	
+
 	_uint iIndex = 0;
 
 	if (Find_NPC())
@@ -2110,9 +2119,7 @@ void CPlayer::Find_Priority()
 			}
 			else
 			{
-				++iIndex;
-				iter_Obj++;
-				continue;
+				goto GoNext;
 			}
 		}
 		else
@@ -2120,9 +2127,37 @@ void CPlayer::Find_Priority()
 			if ((*iter_Obj) == nullptr || !dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_CanInteract()
 				|| dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::SKELETON)
 			{
-				++iIndex;
-				iter_Obj++;
-				continue;
+				goto GoNext;
+			}
+
+			if (m_eWeaponType == WEAPON_AXE)
+			{
+				if (dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::BOULDER)
+				{
+					goto GoNext;
+				}
+			}
+			else if (m_eWeaponType == WEAPON_PICKAXE)
+			{
+				if (dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::TREE)
+				{
+					goto GoNext;
+				}
+			}
+			else {
+				if (dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::BOULDER
+					|| dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::TREE)
+				{
+					goto GoNext;
+				}
+			}
+
+			_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
+				+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
+
+			if (fCmpDir > m_fActRadius)
+			{
+				goto GoNext;
 			}
 
 			if (m_pTarget == nullptr)
@@ -2130,32 +2165,25 @@ void CPlayer::Find_Priority()
 				m_pTarget = *iter_Obj;
 			}
 
-
-			_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
-				+ (Get_Pos().y - (*iter_Obj)->Get_Position().y)*(Get_Pos().y - (*iter_Obj)->Get_Position().y)
-				+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
-
 			_float fTargetDir = (Get_Pos().x - (m_pTarget)->Get_Position().x)*(Get_Pos().x - (m_pTarget)->Get_Position().x)
 				+ (Get_Pos().y - (m_pTarget)->Get_Position().y)*(Get_Pos().y - (m_pTarget)->Get_Position().y)
 				+ (Get_Pos().z - (m_pTarget)->Get_Position().z)*(Get_Pos().z - (m_pTarget)->Get_Position().z);
 
 			if (dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::PORTAL
-				&& fCmpDir >= 5.f)
+				&& fCmpDir >= 3.f)
 			{
-				++iIndex;
-				iter_Obj++;
-				continue;
+				goto GoNext;
 			}
 
 			if (fCmpDir < fTargetDir)
 			{
 				m_pTarget = *iter_Obj;
 			}
-
-			++iIndex;
-			iter_Obj++;
 		}
-
+	GoNext:
+		++iIndex;
+		iter_Obj++;
+		continue;
 	}
 
 }
@@ -2466,6 +2494,15 @@ void CPlayer::Play_Sound(_float _fTimeDelta)
 			m_bSoundEnd = true;
 		}
 		break;
+	case Client::CPlayer::ACTION_STATE::ANGRY:
+		if (!m_bSoundEnd)
+		{
+			iNum = rand() % 4;
+			wcscpy_s(szFullPath, TEXT("WilsonVoice_generic_%d.wav"));
+			wsprintf(szFullPath, szFullPath, iNum);
+			m_bSoundEnd = true;
+		}
+		break;
 	case Client::CPlayer::ACTION_STATE::TALK://do
 		if (!m_bSoundEnd && (static_cast<CNPC*>(m_pTarget)->Get_NPCID() !=NPC_PIGKING) )
 		{
@@ -2571,8 +2608,6 @@ void CPlayer::Play_Sound(_float _fTimeDelta)
 			wcscpy_s(szFullPath, TEXT("Shake_hand.wav"));
 			fVolume = 0.3f;	
 		}
-		break;
-	case Client::CPlayer::ACTION_STATE::ANGRY:
 		break;
 	}
 
@@ -2786,13 +2821,10 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 			}
 			break;
 		case ACTION_STATE::ANGRY:
+			Angry(fTimeDelta);
 			if (m_bMove)
 			{
 				m_ActStack.pop();
-			}
-			else
-			{
-				Angry(fTimeDelta);
 			}
 			break;
 		case ACTION_STATE::SLEEP:

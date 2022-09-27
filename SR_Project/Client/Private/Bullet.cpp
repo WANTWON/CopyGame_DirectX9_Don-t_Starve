@@ -1602,7 +1602,7 @@ HRESULT CBullet::Init_Data(void)
 	switch (m_tBulletData.eWeaponType)
 	{
 	case WEAPON_TYPE::WEAPON_DART:
-		m_pTransformCom->Set_Scale(0.3f, 0.3f, 1.f);
+		m_pTransformCom->Set_Scale(0.3f, 0.5f, 1.f);
 		if (m_tBulletData.eDirState == DIR_STATE::DIR_LEFT)
 		{
 			m_pTransformCom->Set_Scale(-0.3f, 0.3f, 1.f);

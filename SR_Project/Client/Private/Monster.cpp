@@ -82,17 +82,17 @@ HRESULT CMonster::Render()
 
 
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	//CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 
-	m_pShaderCom->Set_RawValue("g_PlayerPosition", &pTarget->Get_Position(), sizeof(_float3));
+	//m_pShaderCom->Set_RawValue("g_PlayerPosition", &pTarget->Get_Position(), sizeof(_float3));
 
 	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+	//m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	//m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
 
 	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
-	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
-	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
+//	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+	//m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
 	m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
 
 	m_pShaderCom->Begin(m_eShaderID);
