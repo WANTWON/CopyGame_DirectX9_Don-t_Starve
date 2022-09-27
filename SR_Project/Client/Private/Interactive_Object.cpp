@@ -77,12 +77,12 @@ HRESULT CInteractive_Object::Render()
 	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
 
 	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+//	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	//m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
 
 	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
-	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
-	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
+	//m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+//	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
 
 	m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
 
