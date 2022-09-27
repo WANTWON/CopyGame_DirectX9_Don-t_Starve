@@ -229,33 +229,24 @@ void CCameraDynamic::Revive_Camera(_float fTimeDelta)
 	_float3 m_TargetPos = pTarget->Get_Pos();
 	//m_lMouseWheel += 0.001;
 
-	m_vDistance.y -= 0.03f;
-	m_vDistance.z += 0.03f;
+	if (!m_bRevive)
+	{
+		m_CameraDesc.fFovy -= 0.001f;
+	}
+	else
+	{
+		m_CameraDesc.fFovy += 0.001f;
+		if (m_CameraDesc.fFovy >= m_FOV)
+		{
+			m_CameraDesc.fFovy = m_FOV;
+			m_bRevive = false;
+			m_eCamMode = CAM_PLAYER;
+		}
+			
+	}
+
 	m_pTransform->LookAt(m_TargetPos);
 
-	switch (m_iTurnCount % 4)
-	{
-	case 0:
-		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, m_vDistance.z));
-		break;
-	case 1:
-		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.z, m_vDistance.y, m_vDistance.x));
-		break;
-	case 2:
-		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(m_vDistance.x, m_vDistance.y, -m_vDistance.z));
-		break;
-	case 3:
-		m_pTransform->Follow_Target(fTimeDelta, m_TargetPos, _float3(-m_vDistance.z, m_vDistance.y, m_vDistance.x));
-		break;
-	}
-
-	if (m_vDistance.y < 3)
-	{
-		m_eCamMode = CAM_ZOOMOUT;
-		m_vDistance = _float3(0, 6, -8);
-		Safe_Release(pGameInstance);
-		return;
-	}
 	Safe_Release(pGameInstance);
 }
 
