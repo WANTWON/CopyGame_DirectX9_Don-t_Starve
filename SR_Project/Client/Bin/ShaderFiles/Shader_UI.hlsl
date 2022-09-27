@@ -23,6 +23,7 @@ float4x4		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture			g_Texture;
 bool			g_isColl;
 float           g_alpha;
+float           g_alpha1;
 
 sampler TextureSampler = sampler_state {
 	texture = g_Texture;
@@ -104,6 +105,17 @@ PS_OUT PS_MiniMap(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_HP(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor = tex2D(TextureSampler, In.vTexUV);
+	//Out.vColor.a -= g_alpha1;
+
+
+	Out.vColor.rgb += g_alpha1;
+	return Out;
+}
+
 
 technique		DefaultTechnique
 {
@@ -137,5 +149,16 @@ technique		DefaultTechnique
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_MiniMap();
+	}
+
+	pass HP
+	{
+		AlphablendEnable = true;
+		SrcBlend = SrcAlpha;
+		DestBlend = InvSrcAlpha;
+		BlendOp = Add;
+		CULLMODE = NONE;
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_HP();
 	}
 }

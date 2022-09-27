@@ -266,48 +266,55 @@ void CEquip_Animation::Direction_Check()
 
 void CEquip_Animation::Set_Offset()
 {
+	_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	_float3 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+
+	D3DXVec3Normalize(&vLook, &vLook);
+	D3DXVec3Normalize(&vRight, &vRight);
+
 	switch (m_eState)
 	{
 	case ACTION_STATE::ATTACK:
 		if (m_eDirState == DIR_STATE::DIR_RIGHT)
 		{
-			m_MovePos.x += 0.18f;
+			//m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_MovePos + vRight*0.18f);
+
+			m_MovePos += vRight*0.18f;
 		}
 		else if (m_eDirState == DIR_STATE::DIR_LEFT)
 		{
-			m_MovePos.x -= 0.18f;
+			m_MovePos += vRight*0.18f;
 		}
 		else if (m_eDirState == DIR_STATE::DIR_DOWN)
 		{
-			m_MovePos.x += 0.24f;
+			m_MovePos += vRight*0.24f;
 		}
 		else if (m_eDirState == DIR_STATE::DIR_UP)
 		{
-			m_MovePos.x -= 0.22f;
+			m_MovePos -= vRight* 0.22f;
 		}
 		break;
 	case ACTION_STATE::BUILD:
 		if (m_eDirState == DIR_STATE::DIR_RIGHT)
 		{
-			m_MovePos.x += 0.18f;
-			m_MovePos.y -= 0.1f;
-			m_MovePos.z -= 0.15f;
+			m_MovePos += vRight* 0.18f;
+			m_MovePos -= vLook * 0.15f;
 		}
 		else if (m_eDirState == DIR_STATE::DIR_LEFT)
 		{
-			m_MovePos.x -= 0.18f;
-			m_MovePos.y -= 0.1f;
-			m_MovePos.z -= 0.15f;
+			m_MovePos -= vRight* 0.18f;
+			m_MovePos -= vLook * 0.15f;
 		}
 		else if (m_eDirState == DIR_STATE::DIR_DOWN)
 		{
-			m_MovePos.x += 0.24f;
-			m_MovePos.y -= 0.1f;
-			m_MovePos.z -= 0.1f;
+			//m_MovePos += vRight* 0.24f;
+			m_MovePos -= vLook * 0.1f;
 		}
 		else if (m_eDirState == DIR_STATE::DIR_UP)
 		{
-			m_MovePos.x -= 0.22f;
+			//m_MovePos -= vRight* 0.22f;
+			m_MovePos += vLook * 0.15f;
+
 		}
 		break;
 	default:
@@ -373,18 +380,21 @@ HRESULT CEquip_Animation::Change_Texture(const _tchar * LayerTag)
 
 void CEquip_Animation::SetUp_BillBoard()
 {
-	_float4x4		ViewMatrix;
+	_float4x4 ViewMatrix;
+
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix
+	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
+
+	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
+	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	if (m_eDirState == DIR_STATE::DIR_LEFT)
-		return;
-
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
-
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
-	//m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+	{
+		m_pTransformCom->Set_Scale(-1.f, 1.f, 1.f);
+	}
 }
 
 CEquip_Animation * CEquip_Animation::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

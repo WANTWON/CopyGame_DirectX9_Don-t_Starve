@@ -242,13 +242,6 @@ void CPigKing::Interact(_uint Damage)
 			}
 		}
 
-
-		/*if (bTest)
-		{
-			g_iQuestnum = 4;
-			pinven->Get_Talk_list()->front()->Set_TalkEnd(true);
-			bTest = false;
-		}*/
 		if (pinven->Get_Talk_list()->front()->gettexnum() == 0 && !m_bFirstTalk)
 		{
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("DST_pose_speach_v2_wigfrid.wav"), SOUND_GROUND, 0.3f);

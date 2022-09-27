@@ -202,6 +202,7 @@ private: /**Actions*/
 	void	Invincible_Update(_float _fTimeDelta);
 	void	Cooltime_Update(_float _fTimeDelta);
 	void	Play_Sound(_float _fTimeDelta);
+	DIR_STATE	Check_Direction(void);
 	//ActStack
 	void	Tick_ActStack(_float fTimeDelta);
 	void	Clear_ActStack();
