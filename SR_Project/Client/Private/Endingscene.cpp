@@ -64,7 +64,6 @@ int CEndingscene::Tick(_float fTimeDelta)
 			
 			CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
 			m_bcheck = dynamic_cast<CLevel_GamePlay*>(pLevel)->Get_Ending();
-			m_bforending = false;
 		}
 	}
 
@@ -74,31 +73,6 @@ int CEndingscene::Tick(_float fTimeDelta)
 	if (m_bcheck == true)
 	{
 		__super::Tick(fTimeDelta);
-
-		/*CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
-		Safe_AddRef(pGameInstance);
-		Safe_AddRef(pinv);
-		*/
-
-		//if (GetTickCount() > m_dwdaytime + 50)
-		//{
-		//	++texnum;
-		//	m_dwdaytime = GetTickCount();
-		//}
-
-		//if (texnum == 97)
-		//{
-		//	texnum = 30;
-		//}
-		//pinv->sethp((dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth));
-
-		//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
-		//texnum = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth) / 2;
-
-		/*Safe_Release(pGameInstance);
-		Safe_Release(pinv);
-		*/
 	}
 	
 

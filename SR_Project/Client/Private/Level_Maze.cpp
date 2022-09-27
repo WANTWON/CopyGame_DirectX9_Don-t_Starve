@@ -25,6 +25,7 @@ CLevel_Maze::CLevel_Maze(LPDIRECT3DDEVICE9 pGraphic_Device)
 HRESULT CLevel_Maze::Initialize()
 {
 	CDayCycle::Get_Instance()->AllRemoveObserver();
+	CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
 	CGameInstance::Get_Instance()->StopAll();
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;

@@ -41,6 +41,8 @@ public: //SetEnum
 	void Set_TalkingMode(_bool type) {if (type) m_eCamMode = CAM_ZOOMIN; else m_eCamMode = CAM_ZOOMOUT;}
 	void Set_Target(class CGameObject* pGameObject) { m_pTarget = pGameObject; }
 	void Set_EndingMode() { m_eCamMode = CAM_ENDING;  }
+	void Set_FOV(_float vDistance) { m_FOV = vDistance; }
+	void Set_Revive(_bool type) { m_bRevive = type; }
 
 private:
 	void Player_Camera(_float fTimeDelta);
@@ -65,7 +67,9 @@ private:
 	_float			m_fPower = 0.5f;
 	_float			m_fVelocity = 0.1f;
 	_float			m_fMinusVelocity = 0.01f;
+	_float			m_FOV;
 	_int			m_iShakingCount = 0;
+	_bool			m_bRevive = false;
 
 
 public:

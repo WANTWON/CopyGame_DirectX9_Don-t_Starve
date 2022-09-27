@@ -953,7 +953,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	/*For.Prototype_Component_Texture_DeadUI */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniMap_Icon"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/minimap/minimapicon%d.png"), 23))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/minimap/minimapicon%d.png"), 24))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_DeadUI */

@@ -58,7 +58,7 @@ _bool  CCollider_Manager::Collision_with_Group(COLLISION_GROUP eGroup, class CGa
 
 	for (auto& iter : m_GameObjects[eGroup])
 	{
-		if (nullptr != iter)
+		if (nullptr != iter && CGameInstance::Get_Instance()->Is_In_Frustum(iter->Get_Position(), iter->Get_Radius()) == true)
 		{
 			switch (eCollisionType)
 			{
@@ -95,7 +95,7 @@ _bool CCollider_Manager::Collision_Check_Group_Multi(COLLISION_GROUP eGroup, vec
 
 	for (auto& iter : m_GameObjects[eGroup])
 	{
-		if (nullptr != iter)
+		if (nullptr != iter && CGameInstance::Get_Instance()->Is_In_Frustum(iter->Get_Position(), iter->Get_Radius()) == true)
 		{
 			switch (eCollisionType)
 			{

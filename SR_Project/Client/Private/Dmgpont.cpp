@@ -87,6 +87,8 @@ HRESULT CDmgpont::Initialize(void* pArg)
 int CDmgpont::Tick(_float fTimeDelta)
 {
 
+	alpha += 0.03f;
+
 	if (GetTickCount() > m_dwDeadtime + 400)
 	{
 		m_dwDeadtime = GetTickCount();
@@ -98,7 +100,7 @@ int CDmgpont::Tick(_float fTimeDelta)
 	vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 	*D3DXVec3Normalize(&vRight, &vRight);
 
-
+	
 	
 	
 
@@ -112,7 +114,11 @@ int CDmgpont::Tick(_float fTimeDelta)
 
 		}
 		else
+		{
 			effectdesc.pos.y += 0.02f;
+			//alpha += 0.01f;
+		}
+			
 	}
 	else
 
@@ -125,7 +131,11 @@ int CDmgpont::Tick(_float fTimeDelta)
 
 		}
 		else
+		{
 			effectdesc.pos.y += 0.02f;
+			//alpha += 0.01f;
+		}
+			
 	}
 	
 	
@@ -185,7 +195,7 @@ void CDmgpont::Late_Tick(_float fTimeDelta)
 		}*/
 
 		if (nullptr != m_pRendererCom)
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 	}
 
 
@@ -198,25 +208,20 @@ HRESULT CDmgpont::Render()
 		if (FAILED(__super::Render()))
 			return E_FAIL;
 
-		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+		/*if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
 			return E_FAIL;
-
+		if (FAILED(SetUp_RenderState()))
+			return E_FAIL;
 		
 		if (one == false)
 		{
 			if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
 				return E_FAIL;
 
-			if (FAILED(SetUp_RenderState()))
-				return E_FAIL;
+			
 
 			m_pVIBufferCom->Render();
 		}
-		
-
-		//effectdesc.pos.x += 2.f;
-		//Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-		//m_pTransformCom->Set_State(CTransform::STATE_POSITION, effectdesc.pos);
 
 		if (FAILED(m_pTransformCom1->Bind_OnGraphicDev()))
 			return E_FAIL;
@@ -231,7 +236,40 @@ HRESULT CDmgpont::Render()
 
 
 		if (FAILED(Release_RenderState()))
-			return E_FAIL;
+			return E_FAIL;*/
+
+
+		_float4x4		WorldMatrix, ViewMatrix;
+		D3DXMatrixIdentity(&ViewMatrix);
+
+		m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+		m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+		WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
+
+		m_pShaderCom->Set_RawValue("g_alpha", &alpha, sizeof(_float));
+		m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+		m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+		m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&m_ProjMatrix, &m_ProjMatrix), sizeof(_float4x4));
+
+		if (one == false)
+		{
+			m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(texnum));
+
+			m_pShaderCom->Begin(m_eShaderID);
+
+			m_pVIBufferCom->Render();
+			m_pShaderCom->End();
+		}
+		
+
+		WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom1->Get_WorldMatrix());
+		m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(texnum1));
+
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+		m_pShaderCom->End();
 
 
 
@@ -248,6 +286,10 @@ HRESULT CDmgpont::Render()
 
 HRESULT CDmgpont::SetUp_Components()
 {
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
@@ -357,5 +399,6 @@ void CDmgpont::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pShaderCom);
 }
 

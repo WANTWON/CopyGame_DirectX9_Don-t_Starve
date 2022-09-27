@@ -139,7 +139,7 @@ void CDecoObject::Late_Tick(_float fTimeDelta)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		}
 
-		if (m_DecoDesc.m_eState != DECOTYPE::FLOOR_EFFECT && m_DecoDesc.m_eState != DECOTYPE::SPARKLE && m_DecoDesc.m_eState != DECOTYPE::FIREFLIES)
+		if (m_DecoDesc.m_eState != DECOTYPE::SPARKLE && m_DecoDesc.m_eState != DECOTYPE::FIREFLIES)
 			Set_ShaderID();
 	}
 	

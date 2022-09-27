@@ -69,16 +69,16 @@ void CSpider::Late_Tick(_float fTimeDelta)
 	_float3 vDistance = _float3(0, 0, 0);
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (pGameInstance->Collision_with_Group(CCollider_Manager::COLLISION_BLOCK, this, CCollider_Manager::COLLSIION_BOX, &vDistance))
-	{
-		_float3 vPosition = Get_Position();
+	//if (pGameInstance->Collision_with_Group(CCollider_Manager::COLLISION_BLOCK, this, CCollider_Manager::COLLSIION_BOX, &vDistance))
+	//{
+	//	_float3 vPosition = Get_Position();
 
-		if (fabsf(vDistance.x) < fabsf(vDistance.z))
-			vPosition.x -= vDistance.x;
-		else
-			vPosition.z -= vDistance.z;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
-	}
+	//	if (fabsf(vDistance.x) < fabsf(vDistance.z))
+	//		vPosition.x -= vDistance.x;
+	//	else
+	//		vPosition.z -= vDistance.z;
+	//	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+	//}
 
 	if (!m_bPicking)
 	{

@@ -1688,6 +1688,11 @@ void CPlayer::Revive(_float _fTimeDelta)
 		m_tStat.fCurrentHealth = m_tStat.fMaxHealth;
 		m_tStat.fCurrentHungry = m_tStat.fMaxHungry;
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
+
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+		CCamera* pCamera = CCameraManager::Get_Instance()->Get_CurrentCamera();
+		dynamic_cast<CCameraDynamic*>(pCamera)->Set_Revive(true);
+		dynamic_cast<CCameraDynamic*>(pCamera)->Set_FOV(D3DXToRadian(30.0f));
 	}
 	else if (m_fReviveTime < 1.5f && m_pTextureCom->Get_Frame().m_iCurrentTex == 15)
 	{
