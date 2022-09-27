@@ -7,6 +7,7 @@
 #include "Bullet.h"
 #include "Skill.h"
 #include "Inventory.h"
+#include "CameraManager.h"
 CWendy::CWendy(LPDIRECT3DDEVICE9 pGraphic_Device)
 	:CNPC(pGraphic_Device)
 {
@@ -82,6 +83,14 @@ int CWendy::Tick(_float fTimeDelta)
 			_float3 Owner_Pos = static_cast<CPlayer*>(m_pOwner)->Get_Pos();
 			Owner_Pos.x -= 3.f;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
+
+			MINIMAP		minidesc;
+			ZeroMemory(&minidesc, sizeof(MINIMAP));
+			minidesc.name = MIN_WENDY;
+			minidesc.pointer = this;
+			LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
 		
 		}
 		else
@@ -89,14 +98,19 @@ int CWendy::Tick(_float fTimeDelta)
 			m_bCanTalk = true;
 			Clear_Activated();
 			Reset_Target();
+
+			if (m_iCurrentLevelndex == LEVEL_GAMEPLAY)
+			{
+				MINIMAP		minidesc;
+				ZeroMemory(&minidesc, sizeof(MINIMAP));
+				minidesc.name = MIN_WENDY;
+				minidesc.pointer = this;
+				LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+			}
 		}
-		MINIMAP		minidesc;
-		ZeroMemory(&minidesc, sizeof(MINIMAP));
-		minidesc.name = MIN_WENDY;
-		minidesc.pointer = this;
-		LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+		
 
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 	}
@@ -421,6 +435,9 @@ void CWendy::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 
 _float CWendy::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
+	if (m_bInvincibleMode || m_bFirstCall)
+		return 0.f;
+
 	if (!m_bDead && m_tInfo.iCurrentHp <= (_int)fDamage)
 	{
 		m_fReviveTime = 0.f;
@@ -732,7 +749,7 @@ _bool CWendy::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		{
 			m_vTargetPos = m_pTarget->Get_Position();
 		}
-		fMiddleRange = fMinRange = 0.2f;
+		fMiddleRange = fMinRange = 0.4f;
 		break;
 	}
 
@@ -900,6 +917,14 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 		Change_Texture(TEXT("Com_Texture_Talk"));
 		m_ePreState = m_eState;
 
+	/*	CCameraManager::CAM_STATE eState = CCameraManager::Get_Instance()->Get_CamState();
+
+		if (eState == CCameraManager::CAM_PLAYER)
+		{
+			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+			pCamera->Set_TalkingMode(true);
+			pCamera->Set_Target(this);
+		}*/
 	}
 
 
@@ -934,6 +959,14 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 				Clear_Activated();
 				static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
 				static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
+
+				/*CCameraManager::CAM_STATE eState = CCameraManager::Get_Instance()->Get_CamState();
+				if (eState == CCameraManager::CAM_PLAYER)
+				{
+					CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+					pCamera->Set_TalkingMode(false);
+				}*/
+
 				m_iTalkCnt = 0;
 				m_bInteract = false;
 				m_bFirstCall = false;
@@ -959,6 +992,7 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 				{
 					Reset_Target();
 				}
+
 				pinven->Get_Talk_list()->front()->setcheck(false);
 				CInventory_Manager::Get_Instance()->Get_Talk_list()->front()->Set_WendyTalk(false);
 				break;
@@ -991,6 +1025,15 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 				Clear_Activated();
 				static_cast<CPlayer*>(m_pTarget)->Set_TalkMode(false);
 				static_cast<CPlayer*>(m_pTarget)->Set_bOnlyActionKey(false);
+
+				/*CCameraManager::CAM_STATE eState = CCameraManager::Get_Instance()->Get_CamState();
+
+				if (eState == CCameraManager::CAM_PLAYER)
+				{
+					CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+					pCamera->Set_TalkingMode(false);
+				}*/
+
 				if (!m_bNextAct)
 				{
 					static_cast<CPlayer*>(m_pTarget)->Release_Party(TEXT("Wendy"));
@@ -1011,6 +1054,7 @@ void CWendy::Talk_Player(_float _fTimeDelta)
 						}
 					}
 				}
+			
 				m_iTalkCnt = 0;
 				m_bInteract = false;
 				m_bFirstCall = false;
@@ -1038,6 +1082,7 @@ void CWendy::Talk_Friend(_float _fTimeDelta)
 		m_fInteractTIme = 0.f;
 		m_bInteract = true;
 		m_ePreState = m_eState;
+		Change_Texture(TEXT("Com_Texture_Talk"));
 		static_cast<CPig*>(m_pTarget)->Interact(_fTimeDelta, 0);
 		Play_Sound(_fTimeDelta);
 	}
@@ -1262,7 +1307,6 @@ DIR_STATE CWendy::Check_Direction(void)
 	_float4x4 RotateMat = OriginMat;
 	_float3 vRot45 = *(_float3*)&OriginMat.m[2][0];
 	_float3 vRot135 = *(_float3*)&OriginMat.m[2][0];
-
 
 	//Turn
 	D3DXMatrixRotationAxis(&RotateMat, &_float3(0.f, 1.f, 0.f), D3DXToRadian(90.f));

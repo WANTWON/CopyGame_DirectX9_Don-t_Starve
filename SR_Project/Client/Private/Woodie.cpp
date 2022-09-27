@@ -80,20 +80,33 @@ int CWoodie::Tick(_float fTimeDelta)
 			Owner_Pos.x -= 3.f;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
 
+			MINIMAP		minidesc;
+			ZeroMemory(&minidesc, sizeof(MINIMAP));
+			minidesc.name = MIN_WOODIE;
+			minidesc.pointer = this;
+			LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+
 		}
 		else
 		{
 			m_bCanTalk = true;
 			Clear_Activated();
 			Reset_Target();
+			if (m_iCurrentLevelndex == LEVEL_GAMEPLAY)
+			{
+				MINIMAP		minidesc;
+				ZeroMemory(&minidesc, sizeof(MINIMAP));
+				minidesc.name = MIN_WOODIE;
+				minidesc.pointer = this;
+				LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+			}
+			
 		}
-		/*MINIMAP		minidesc;
-		ZeroMemory(&minidesc, sizeof(MINIMAP));
-		minidesc.name = MIN_WENDY;
-		minidesc.pointer = this;
-		LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);*/
+		
 
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 	}
@@ -410,6 +423,9 @@ void CWoodie::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 
 _float CWoodie::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
+	if (m_bInvincibleMode || m_bFirstCall)
+		return 0.f;
+
 	if (!m_bDead && m_tInfo.iCurrentHp <= (_int)fDamage)
 	{
 		m_fReviveTime = 0.f;
@@ -707,9 +723,13 @@ void CWoodie::Set_RandPos(_float _fTimeDelta)
 
 _bool CWoodie::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 {
-	if (m_bSkillUsing)
+	if (m_bFightMode&&m_bSkillUsing)
 		return false;
-
+	else if (!m_bFightMode && m_bSkillUsing)
+	{
+		m_bSkillUsing = false;
+		Clear_Activated();
+	}
 	_float fMinRange = 0.f;
 	_float fMiddleRange = 0.f;
 	_float Compare_Range = 0.f;
@@ -734,7 +754,7 @@ _bool CWoodie::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		{
 			m_vTargetPos = m_pTarget->Get_Position();
 		}
-		fMiddleRange = fMinRange = 0.2f;
+		fMiddleRange = fMinRange = 0.4f;
 		break;
 	}
 
@@ -1039,7 +1059,6 @@ void CWoodie::Talk_Friend(_float _fTimeDelta)
 	{
 		m_fInteractTIme = 0.f;
 		m_bInteract = true;
-		cout << "Talk" << endl;
 		Change_Texture(TEXT("Com_Texture_Talk"));
 		m_ePreState = m_eState;
 		static_cast<CPig*>(m_pTarget)->Interact(_fTimeDelta, 0);
@@ -1047,7 +1066,6 @@ void CWoodie::Talk_Friend(_float _fTimeDelta)
 
 	if (2.f < m_fInteractTIme)
 	{
-		cout << "TalkEnd" << endl;
 		m_fInteractTIme = 0.f;
 		m_bInteract = false;
 

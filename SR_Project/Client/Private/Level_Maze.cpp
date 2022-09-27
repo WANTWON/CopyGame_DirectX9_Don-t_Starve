@@ -26,6 +26,7 @@ HRESULT CLevel_Maze::Initialize()
 {
 	CDayCycle::Get_Instance()->AllRemoveObserver();
 	CGameInstance::Get_Instance()->StopAll();
+	CGameInstance::Get_Instance()->StopAll();
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
@@ -45,7 +46,7 @@ HRESULT CLevel_Maze::Initialize()
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_MAZE);
 	m_dwTime = GetTickCount();
 
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_cave_rain_light.wav"), 0.5f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("DST_cave_rain_light.wav"), SOUND_GROUND, 0.5f);
 	return S_OK;
 }
 
@@ -80,7 +81,7 @@ void CLevel_Maze::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetWindowText(g_hWnd, TEXT(" ̷η    Դϴ ."));
+	SetWindowText(g_hWnd, TEXT("Maze Level"));
 }
 
 HRESULT CLevel_Maze::Ready_Layer_BackGround(const _tchar * pLayerTag)
@@ -613,6 +614,4 @@ CLevel_Maze * CLevel_Maze::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_Maze::Free()
 {
 	__super::Free();
-
-
 }

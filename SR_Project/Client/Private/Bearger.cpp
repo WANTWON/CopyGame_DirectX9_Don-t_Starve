@@ -51,8 +51,6 @@ HRESULT CBearger::Initialize(void* pArg)
 	
 	CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
 	dynamic_cast<CLevel_GamePlay*>(pLevel)->Set_BeargerAdd(true);
-	CGameInstance::Get_Instance()->StopAll();
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_BossFightNo3_V1.wav"), 0.3f);
 	return S_OK;
 }
 

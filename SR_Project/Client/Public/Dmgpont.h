@@ -7,6 +7,7 @@ class CTexture;
 class CRenderer;
 class CTransform;
 class CVIBuffer_Rect;
+class CShader;
 END
 
 BEGIN(Client)
@@ -48,6 +49,11 @@ private: /* For.Components */
 	CTransform*				m_pTransformCom = nullptr;
 	CTransform*				m_pTransformCom1 = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
+	CShader*				m_pShaderCom = nullptr;
+
+	UI_SHADER_STATE			m_eShaderID = UI_SHADER_SCREEN;
+
+	_float alpha = 0.f;
 
 private:
 	_float4x4				m_ProjMatrix;

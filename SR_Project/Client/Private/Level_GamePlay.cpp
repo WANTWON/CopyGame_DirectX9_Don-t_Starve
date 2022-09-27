@@ -71,14 +71,15 @@ HRESULT CLevel_GamePlay::Initialize()
 		g_bUIMadefirst = true;
 	}
 
-	
-	
+
+
 	srand(unsigned int(time(NULL)));
 	CPickingMgr::Get_Instance()->Clear_PickingMgr();
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_GAMEPLAY);
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_GAMEPLAY);
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("waterlogged_amb_spring_day_LP_DST.wav"), 0.5f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("waterlogged_amb_spring_day_LP_DST.wav"), SOUND_GROUND, 0.5f);
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("CreepyForest_vinyl_mastered.wav"), 0.3f);
+
 	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_NONSTATIC);
 	m_fMusicTime = GetTickCount();
 	return S_OK;
@@ -87,19 +88,19 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	
+
 	Play_Music();
 
 	CDayCycle::Get_Instance()->DayCycleTick();
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	
+
 	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_DestinationLevelIndex();
 
 	if (m_bNextLevel)
 	{
-		
+
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, iLevel))))
 			return;
 	}
@@ -139,7 +140,7 @@ void CLevel_GamePlay::Late_Tick(_float fTimeDelta)
 void CLevel_GamePlay::Update(_uint eDayState)
 {
 	m_eDayState = DAY_STATE(eDayState);
-	m_fMusicTime = GetTickCount(); 
+	m_fMusicTime = GetTickCount();
 	CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
 	m_bMusicStart = false;
 }
@@ -171,7 +172,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 	/*if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Bearger"), LEVEL_GAMEPLAY, TEXT("Layer_Bear"), _float3(10.f, 0.f, 40.f))))
-		return E_FAIL;*/
+	return E_FAIL;*/
 
 	HANDLE		hFile = CreateFile(TEXT("../Bin/Resources/Data/Pig_Stage1.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
@@ -181,7 +182,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	_float3 ObjectPos(0, 0, 0);
 	_uint iNum = 0;
 
-	
+
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -357,8 +358,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 			pPlayer->Set_Position(_float3(32.f, 0.5f, 17.f));
 			break;
 		}
-		
-		
+
+
 	}
 
 	Safe_Release(pGameInstance);
@@ -422,7 +423,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_PlayerStatUI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Daycountpont"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	
+
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_quest"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
@@ -443,7 +444,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_PlayerStatUI(const _tchar * pLayerTag)
 			return E_FAIL;
 
 	}
-	
+
 
 
 	for (int i = 0; i < 3; ++i)
@@ -613,15 +614,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 		return E_FAIL;
 
 
-	
 
-	
-	
-	
+
+
+
+
 	/*_bool bearger = true; //for bossnametest
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BossName"), LEVEL_STATIC, pLayerTag, (bool*)&bearger)))
-		return E_FAIL;*/
+	return E_FAIL;*/
 
 	for (int i = 0; i < 3; ++i)
 	{
@@ -640,11 +641,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_MainToolbox(const _tchar * pLayerTag)
 			return E_FAIL;
 
 	}
-	
+
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Endingscene"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	
+
 
 	Safe_Release(pGameInstance);
 
@@ -783,42 +784,42 @@ HRESULT CLevel_GamePlay::Ready_Layer_WeaponToolbox(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Potmain"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-		for (int i = 0; i < 4; ++i)
-		{
-			int number = i;
+	for (int i = 0; i < 4; ++i)
+	{
+		int number = i;
 
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pot_back"), LEVEL_STATIC, pLayerTag, (int*)&i)))
-				return E_FAIL;
-
-		}
-		for (int i = 0; i < 4; ++i)
-		{
-			int number = i;
-
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pot_front"), LEVEL_STATIC, pLayerTag, (int*)&i)))
-				return E_FAIL;
-
-		}
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Potbutton"), LEVEL_STATIC, pLayerTag)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pot_back"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Mouse_item"), LEVEL_STATIC, pLayerTag)))
-			return E_FAIL;
-		
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_questbutton"), LEVEL_STATIC, pLayerTag)))
+	}
+	for (int i = 0; i < 4; ++i)
+	{
+		int number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Pot_front"), LEVEL_STATIC, pLayerTag, (int*)&i)))
 			return E_FAIL;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Mouse_iteminfo"), LEVEL_STATIC, pLayerTag)))
-			return E_FAIL;
+	}
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Potbutton"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Eateffect"), LEVEL_STATIC, pLayerTag)))
-			return E_FAIL;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Mouse_item"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Mouse_Monster"), LEVEL_STATIC, pLayerTag)))
-			return E_FAIL;
-		
-		
-	
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_questbutton"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Mouse_iteminfo"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Eateffect"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Mouse_Monster"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+
+
 
 	Safe_Release(pGameInstance);
 
@@ -920,8 +921,17 @@ CLevel_GamePlay * CLevel_GamePlay::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_GamePlay::Free()
 {
 	__super::Free();
+}
 
+void CLevel_GamePlay::Set_BeargerAdd(_bool type)
+{
+	m_bBeargerAdd = type;
 
+	if (type)
+	{
+		CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_BossFightNo3_V1.wav"), 0.3f);
+	}
 }
 
 void CLevel_GamePlay::Play_Music()

@@ -310,6 +310,9 @@ void CWinona::Change_Motion()
 
 _float CWinona::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
+	if (m_bInvincibleMode || m_bFirstCall)
+		return 0.f;
+
 	if (!m_bDead && m_tInfo.iCurrentHp <= (_int)fDamage)
 	{
 		m_fReviveTime = 0.f;
@@ -671,7 +674,7 @@ _bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		{
 			m_vTargetPos = m_pTarget->Get_Position();
 		}
-		fMiddleRange = fMinRange = 0.2f;
+		fMiddleRange = fMinRange = 0.4f;
 		break;
 	}
 
@@ -1160,7 +1163,7 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 			Owner_Pos.x -= 2.f;
 			Owner_Pos.z += 2.f;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, Owner_Pos);
-		
+
 			if (m_bDead && (LEVEL)m_iCurrentLevelndex == LEVEL_GAMEPLAY)
 			{
 				m_bDead = false;
@@ -1175,6 +1178,14 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 			}
 			m_vecCatapults.clear();
 			m_bCanTalk = true;
+
+			MINIMAP		minidesc;
+			ZeroMemory(&minidesc, sizeof(MINIMAP));
+			minidesc.name = MIN_WINONA;
+			minidesc.pointer = this;
+			LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
 		}
 		else
 		{
@@ -1182,15 +1193,20 @@ _bool CWinona::Setup_LevelChange(_float _fTimeDelta)
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(40.f, 0.5f, 27.f));
 			Clear_Activated();
 			Reset_Target();
+			if (m_iCurrentLevelndex == LEVEL_GAMEPLAY)
+			{
+				MINIMAP		minidesc;
+				ZeroMemory(&minidesc, sizeof(MINIMAP));
+				minidesc.name = MIN_WINONA;
+				minidesc.pointer = this;
+				LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+			}
+			
 		}
 
-		MINIMAP		minidesc;
-		ZeroMemory(&minidesc, sizeof(MINIMAP));
-		minidesc.name = MIN_WINONA;
-		minidesc.pointer = this;
-		LEVEL CurrentLevelndex = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniMap_Icon"), CurrentLevelndex, TEXT("MiniMap_Icon"), &minidesc);
+		
 
 		m_iPreLevelIndex = m_iCurrentLevelndex;
 	}

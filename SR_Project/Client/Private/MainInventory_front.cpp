@@ -762,6 +762,13 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 		minus_itemcount();
 		break;
 
+	case ITEMNAME_SPIDERMEAT:
+
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(10));
+		minus_itemcount();
+
+		break;
+
 
 
 

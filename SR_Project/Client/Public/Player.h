@@ -202,6 +202,7 @@ private: /**Actions*/
 	void	Invincible_Update(_float _fTimeDelta);
 	void	Cooltime_Update(_float _fTimeDelta);
 	void	Play_Sound(_float _fTimeDelta);
+	DIR_STATE	Check_Direction(void);
 	//ActStack
 	void	Tick_ActStack(_float fTimeDelta);
 	void	Clear_ActStack();
@@ -277,6 +278,8 @@ private: /*for Auto*/
 	_bool					m_bHited = false;
 	_float					m_fInvincible_Time = 0.f;
 	_bool					m_bInincibleMode = false;
+
+	_float					m_fActRadius = 10.f;
 	//only use spacebar
 	_bool					m_bOnlyActionKey = false;
 	_float					m_fInteract_Range = 0.f;

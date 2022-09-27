@@ -2,6 +2,7 @@
 #include "FloorGrateEruption.h"
 #include "GameInstance.h"
 #include "PickingMgr.h"
+#include "Player.h"
 
 CFloorGrateEruption::CFloorGrateEruption(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -90,6 +91,20 @@ void CFloorGrateEruption::Late_Tick(_float fTimeDelta)
 
 	Change_Motion();
 	Change_Frame();
+
+	LEVEL iLevel = (LEVEL)CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	if (pGameObject->Get_Dead())
+		m_eShaderID = SHADER_DEAD;
+	else if (dynamic_cast<CPlayer*>(pGameObject)->Get_WeaponType() == WEAPON_LIGHT)
+		m_eShaderID = SHADER_DARKWITHLIGHT;
+	else if (iLevel == LEVEL_MAZE)
+		m_eShaderID = SHADER_DARK;
+	else if (iLevel == LEVEL_BOSS)
+		m_eShaderID = SHADER_FIRE;
+	else
+		m_eShaderID = SHADER_DAYCYClE;
 }
 
 HRESULT CFloorGrateEruption::Render()

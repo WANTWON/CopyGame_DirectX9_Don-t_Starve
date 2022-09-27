@@ -69,16 +69,16 @@ void CSpider::Late_Tick(_float fTimeDelta)
 	_float3 vDistance = _float3(0, 0, 0);
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (pGameInstance->Collision_with_Group(CCollider_Manager::COLLISION_BLOCK, this, CCollider_Manager::COLLSIION_BOX, &vDistance))
-	{
-		_float3 vPosition = Get_Position();
+	//if (pGameInstance->Collision_with_Group(CCollider_Manager::COLLISION_BLOCK, this, CCollider_Manager::COLLSIION_BOX, &vDistance))
+	//{
+	//	_float3 vPosition = Get_Position();
 
-		if (fabsf(vDistance.x) < fabsf(vDistance.z))
-			vPosition.x -= vDistance.x;
-		else
-			vPosition.z -= vDistance.z;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
-	}
+	//	if (fabsf(vDistance.x) < fabsf(vDistance.z))
+	//		vPosition.x -= vDistance.x;
+	//	else
+	//		vPosition.z -= vDistance.z;
+	//	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+	//}
 
 	if (!m_bPicking)
 	{
@@ -631,6 +631,8 @@ HRESULT CSpider::Drop_Items()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	_uint iCurrentLevelndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
+
 	CItem::ITEMDESC ItemDesc;
 	ZeroMemory(&ItemDesc, sizeof(CItem::ITEMDESC));
 
@@ -647,7 +649,7 @@ HRESULT CSpider::Drop_Items()
 	ItemDesc.pTexturePrototype = TEXT("Prototype_Component_Texture_Equipment_front");
 	ItemDesc.eItemName = ITEMNAME::ITEMNAME_SPIDERMEAT;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_HUNT, TEXT("Layer_Object"), &ItemDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), iCurrentLevelndex, TEXT("Layer_Object"), &ItemDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

@@ -51,7 +51,7 @@ public:
 	void set_pont_num(int num) { texnum = num; }
 	void timeron() { count = 30; }
 
-	void Open_DeadUI(_float time) { m_fY -= 135.f * time; }
+	void Open_DeadUI(_float time) { m_fY -= 123.f * time; }
 
 
 

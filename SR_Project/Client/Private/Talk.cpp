@@ -203,8 +203,7 @@ void CTalk::Check_Quest(void)
 			if (m_bquest1 == false)
 			{
 				m_bquest1 = true;
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("questcomplete.wav"), SOUND_UI, 0.8f);
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("questcomplete2.wav"), SOUND_UI, 0.8f);
+
 
 			}
 			auto pinven = pinv->Get_Inven_list();
@@ -253,8 +252,6 @@ void CTalk::Check_Quest(void)
 			if (m_bquest2 == false)
 			{
 				m_bquest2 = true;
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("questcomplete.wav"), SOUND_UI, 0.8f);
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("questcomplete2.wav"), SOUND_UI, 0.8f);
 
 			}
 		}
@@ -269,8 +266,6 @@ void CTalk::Check_Quest(void)
 			if (m_bquest3 == false)
 			{
 				m_bquest3 = true;
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("questcomplete.wav"), SOUND_UI, 0.8f);
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("questcomplete2.wav"), SOUND_UI, 0.8f);
 
 			}
 
@@ -294,8 +289,6 @@ void CTalk::Check_Quest(void)
 			if (m_bquest4 == false)
 			{
 				m_bquest4 = true;
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("questcomplete.wav"), SOUND_UI, 0.8f);
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("questcomplete2.wav"), SOUND_UI, 0.8f);
 
 			}
 			
@@ -314,8 +307,6 @@ void CTalk::Check_Quest(void)
 			if (m_bquest5 == false)
 			{
 				m_bquest5 = true;
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("questcomplete.wav"), SOUND_UI, 0.8f);
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("questcomplete2.wav"), SOUND_UI, 0.8f);
 
 			}
 		}
@@ -394,7 +385,6 @@ HRESULT CTalk::Excute(void)
 			pPlayer->Set_bOnlyActionKey(false);
 			m_bTalkEnd = true;
 			//Safe_Release(pinv);	
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("queststart.wav"), SOUND_UI, 1.f);
 		}
 		else if (texnum == 6)
 		{
@@ -410,7 +400,6 @@ HRESULT CTalk::Excute(void)
 			pPlayer->Set_bOnlyActionKey(false);
 			m_bTalkEnd = true;
 			//Safe_Release(pinv);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("queststart.wav"), SOUND_UI, 1.f);
 
 		}
 		else if (texnum == 8)
@@ -425,7 +414,6 @@ HRESULT CTalk::Excute(void)
 			pPlayer->Set_bOnlyActionKey(false);
 			m_bTalkEnd = true;
 			//	Safe_Release(pinv);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("queststart.wav"), SOUND_UI, 1.f);
 		}
 		else if (texnum == 12)
 		{
@@ -439,7 +427,6 @@ HRESULT CTalk::Excute(void)
 			pPlayer->Set_bOnlyActionKey(false);
 			m_bTalkEnd = true;
 			//Safe_Release(pinv);			
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("queststart.wav"), SOUND_UI, 1.f);
 		}
 		else if (texnum == 15)
 		{
@@ -528,7 +515,6 @@ HRESULT CTalk::Excute(void)
 			m_bTalkEnd = true;
 			pPlayer->Set_TalkMode(false);
 			pPlayer->Set_bOnlyActionKey(false);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("queststart.wav"), SOUND_UI, 1.f);
 
 		}
 		else if (texnum == 25)
@@ -541,7 +527,6 @@ HRESULT CTalk::Excute(void)
 			m_bTalkEnd = true;
 			pPlayer->Set_TalkMode(false);
 			pPlayer->Set_bOnlyActionKey(false);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("queststart.wav"), SOUND_UI, 1.f);
 		}
 
 		else if (texnum == 29)
@@ -554,7 +539,6 @@ HRESULT CTalk::Excute(void)
 			m_bTalkEnd = true;
 			pPlayer->Set_TalkMode(false);
 			pPlayer->Set_bOnlyActionKey(false);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("queststart.wav"), SOUND_UI, 1.f);
 		}
 		else
 		{

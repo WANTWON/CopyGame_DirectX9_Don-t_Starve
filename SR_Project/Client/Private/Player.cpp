@@ -203,19 +203,35 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 
 	_float3 vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-	if (vPlayerPos.x < m_vPickingPoint.x)
+	m_eState = ACTION_STATE::MOVE;
+
+	if (m_ePreState != m_eState
+		|| m_ePreDirState != m_eDirState)
 	{
-		Move_Right(fTimedelta);
-	}
-	else if (vPlayerPos.x > m_vPickingPoint.x)
-	{
-		Move_Left(fTimedelta);
+		m_eDirState = Check_Direction();
+
+		switch (m_eDirState)
+		{
+		case DIR_UP:
+			Change_Texture(TEXT("Com_Texture_Run_Up"));
+			break;
+		case DIR_DOWN:
+			Change_Texture(TEXT("Com_Texture_Run_Down"));
+			break;
+		case DIR_LEFT:
+			Change_Texture(TEXT("Com_Texture_Run_Side"));
+			break;
+		case DIR_RIGHT:
+			Change_Texture(TEXT("Com_Texture_Run_Side"));
+			break;
+		}
+		m_ePreState = m_eState;
+		m_ePreDirState = m_eDirState;
 	}
 
-	if (abs(vPlayerPos.x - m_vPickingPoint.x) < 0.1 &&
-		abs(vPlayerPos.z - m_vPickingPoint.z) < 0.1)
+	if (abs(vPlayerPos.x - m_vPickingPoint.x) < 0.3f &&
+		abs(vPlayerPos.z - m_vPickingPoint.z) < 0.3f)
 	{
-
 		m_bPicked = false;
 		m_bArrive = true;
 		m_bInputKey = false;
@@ -266,7 +282,7 @@ HRESULT CPlayer::Render()
 
 _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
-	if (m_bInincibleMode)
+	if (m_bInincibleMode || m_eState == CPlayer::ACTION_STATE::TALK)
 		return 0.f;
 
 	_float fResultDmg = fDamage - m_tStat.fArmor;
@@ -959,6 +975,10 @@ void CPlayer::GetKeyDown(_float _fTimeDelta)
 		}
 		else if (CKeyMgr::Get_Instance()->Key_Down(m_KeySets[INTERACTKEY::KEY_INVEN9]))
 		{
+			for (auto& iter : m_vecParty)
+			{
+				iter.second->Set_InvincibleMode(!m_bInincibleMode);
+			}
 			m_bInincibleMode = !m_bInincibleMode;
 		}
 	}
@@ -1658,6 +1678,11 @@ void CPlayer::Revive(_float _fTimeDelta)
 		m_tStat.fCurrentHealth = m_tStat.fMaxHealth;
 		m_tStat.fCurrentHungry = m_tStat.fMaxHungry;
 		m_tStat.fCurrentMental = m_tStat.fMaxMental;
+
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_PLAYER);
+		CCamera* pCamera = CCameraManager::Get_Instance()->Get_CurrentCamera();
+		dynamic_cast<CCameraDynamic*>(pCamera)->Set_Revive(true);
+		dynamic_cast<CCameraDynamic*>(pCamera)->Set_FOV(D3DXToRadian(30.0f));
 	}
 	else if (m_fReviveTime < 1.5f && m_pTextureCom->Get_Frame().m_iCurrentTex == 15)
 	{
@@ -1714,6 +1739,7 @@ void CPlayer::Angry(_float _fTimeDelta)
 
 	if (m_ePreState != m_eState)
 	{
+		m_bSoundEnd = false;
 		m_bMove = false;
 		switch (m_eDirState)
 		{
@@ -1728,7 +1754,7 @@ void CPlayer::Angry(_float _fTimeDelta)
 
 	}
 
-	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iCurrentTex - 1)
+	if (m_pTextureCom->Get_Frame().m_iCurrentTex >= m_pTextureCom->Get_Frame().m_iEndTex - 1)
 	{
 		m_bMove = true;
 	}
@@ -1741,6 +1767,7 @@ void CPlayer::Multi_Action(_float _fTimeDelta)
 
 	if (m_pTarget != nullptr)
 	{
+		
 		_float3 vPickPos = m_pTarget->Get_Position();
 		_float3 vOffSet = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 		D3DXVec3Normalize(&vOffSet, &vOffSet);
@@ -1750,7 +1777,9 @@ void CPlayer::Multi_Action(_float _fTimeDelta)
 		m_ActStack.push(ACTION_STATE::MOVE);
 	}
 	else {
-		Clear_ActStack();
+		m_bAutoMode = true;
+		m_ActStack.push(ACTION_STATE::ANGRY);
+		//Clear_ActStack();
 	}
 
 
@@ -1954,20 +1983,24 @@ void CPlayer::Teleport(_float _fTimeDelta)
 
 _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 {
-	if (m_bDead )
+	if (m_bDead)
 		return true;
 
 
 	m_fMentalitytime += _fTimeDelta;
 	m_fHungertime += _fTimeDelta;
 
-	if ((LEVEL)(m_iCurrentLevelndex) != LEVEL_BOSS || (LEVEL)(m_iCurrentLevelndex) != LEVEL_MAZE)
+	if ((LEVEL)(m_iCurrentLevelndex) != LEVEL_BOSS || (LEVEL)(m_iCurrentLevelndex) != LEVEL_MAZE
+		|| m_eState != ACTION_STATE::SLEEP)
 	{
 		if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
 		{
-			m_tStat.fCurrentMental -= 0.5f;
-			if (m_tStat.fCurrentMental <= 0.f)
-				goto GoDead;
+			if (m_eWeaponType != WEAPON_LIGHT)
+			{
+				m_tStat.fCurrentMental -= 0.5f;
+				if (m_tStat.fCurrentMental <= 0.f)
+					goto GoDead;
+			}
 			m_fMentalitytime = 0.f;
 		}
 		else if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT)
@@ -2095,7 +2128,11 @@ void CPlayer::Find_Priority()
 	_uint iIndex = 0;
 
 	if (Find_NPC())
+	{
+		//m_ActStack.push(ACTION_STATE::TALK);
 		return;
+	}
+	
 
 	m_pTarget = nullptr;
 	for (auto& iter_Obj = list_Obj->begin(); iter_Obj != list_Obj->end();)
@@ -2110,9 +2147,7 @@ void CPlayer::Find_Priority()
 			}
 			else
 			{
-				++iIndex;
-				iter_Obj++;
-				continue;
+				goto GoNext;
 			}
 		}
 		else
@@ -2120,9 +2155,37 @@ void CPlayer::Find_Priority()
 			if ((*iter_Obj) == nullptr || !dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_CanInteract()
 				|| dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::SKELETON)
 			{
-				++iIndex;
-				iter_Obj++;
-				continue;
+				goto GoNext;
+			}
+
+			if (m_eWeaponType == WEAPON_AXE)
+			{
+				if (dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::BOULDER)
+				{
+					goto GoNext;
+				}
+			}
+			else if (m_eWeaponType == WEAPON_PICKAXE)
+			{
+				if (dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::TREE)
+				{
+					goto GoNext;
+				}
+			}
+			else {
+				if (dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::BOULDER
+					|| dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::TREE)
+				{
+					goto GoNext;
+				}
+			}
+
+			_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
+				+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
+
+			if (fCmpDir > m_fActRadius)
+			{
+				goto GoNext;
 			}
 
 			if (m_pTarget == nullptr)
@@ -2130,32 +2193,25 @@ void CPlayer::Find_Priority()
 				m_pTarget = *iter_Obj;
 			}
 
-
-			_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
-				+ (Get_Pos().y - (*iter_Obj)->Get_Position().y)*(Get_Pos().y - (*iter_Obj)->Get_Position().y)
-				+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
-
 			_float fTargetDir = (Get_Pos().x - (m_pTarget)->Get_Position().x)*(Get_Pos().x - (m_pTarget)->Get_Position().x)
 				+ (Get_Pos().y - (m_pTarget)->Get_Position().y)*(Get_Pos().y - (m_pTarget)->Get_Position().y)
 				+ (Get_Pos().z - (m_pTarget)->Get_Position().z)*(Get_Pos().z - (m_pTarget)->Get_Position().z);
 
 			if (dynamic_cast<CInteractive_Object*>(*iter_Obj)->Get_InteractName() == INTERACTOBJ_ID::PORTAL
-				&& fCmpDir >= 5.f)
+				&& fCmpDir >= 3.f)
 			{
-				++iIndex;
-				iter_Obj++;
-				continue;
+				goto GoNext;
 			}
 
 			if (fCmpDir < fTargetDir)
 			{
 				m_pTarget = *iter_Obj;
 			}
-
-			++iIndex;
-			iter_Obj++;
 		}
-
+	GoNext:
+		++iIndex;
+		iter_Obj++;
+		continue;
 	}
 
 }
@@ -2466,6 +2522,15 @@ void CPlayer::Play_Sound(_float _fTimeDelta)
 			m_bSoundEnd = true;
 		}
 		break;
+	case Client::CPlayer::ACTION_STATE::ANGRY:
+		if (!m_bSoundEnd)
+		{
+			iNum = rand() % 4;
+			wcscpy_s(szFullPath, TEXT("WilsonVoice_generic_%d.wav"));
+			wsprintf(szFullPath, szFullPath, iNum);
+			m_bSoundEnd = true;
+		}
+		break;
 	case Client::CPlayer::ACTION_STATE::TALK://do
 		if (!m_bSoundEnd && (static_cast<CNPC*>(m_pTarget)->Get_NPCID() !=NPC_PIGKING) )
 		{
@@ -2572,13 +2637,97 @@ void CPlayer::Play_Sound(_float _fTimeDelta)
 			fVolume = 0.3f;	
 		}
 		break;
-	case Client::CPlayer::ACTION_STATE::ANGRY:
-		break;
 	}
 
 	pGameInstance->PlaySounds(szFullPath, SOUND_PLAYER, fVolume);
 
 	Safe_Release(pGameInstance);
+}
+
+DIR_STATE CPlayer::Check_Direction(void)
+{
+	//내 자신의 Look에서 3번 변환한 값
+	_float3 vMyLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	_float4x4 OriginMat = m_pTransformCom->Get_WorldMatrix();
+	_float4x4 RotateMat = OriginMat;
+	_float3 vRot45 = *(_float3*)&OriginMat.m[2][0];
+	_float3 vRot135 = *(_float3*)&OriginMat.m[2][0];
+
+	//Turn
+	D3DXMatrixRotationAxis(&RotateMat, &_float3(0.f, 1.f, 0.f), D3DXToRadian(90.f));
+	D3DXVec3TransformNormal(&vRot45, &vRot45, &RotateMat);
+	//vRot45 = *(_float3*)&RotateMat.m[2][0];
+	D3DXMatrixRotationAxis(&RotateMat, &_float3(0.f, 1.f, 0.f), D3DXToRadian(135.f));
+	D3DXVec3TransformNormal(&vRot135, &vRot135, &RotateMat);
+	//vRot135 = *(_float3*)&RotateMat.m[2][0];;
+	///////
+	_float3 vTargetLook = m_vPickingPoint - Get_Pos();
+
+	D3DXVec3Normalize(&vRot45, &vRot45);
+	D3DXVec3Normalize(&vRot135, &vRot135);
+	D3DXVec3Normalize(&vMyLook, &vMyLook);
+	D3DXVec3Normalize(&vTargetLook, &vTargetLook);
+
+	//각 내적값들 구하기
+	_float fTargetDot = D3DXVec3Dot(&vMyLook, &vRot45);
+	fTargetDot = acos(fTargetDot);
+	_float fDegree45 = D3DXToDegree(fTargetDot);
+
+	fTargetDot = D3DXVec3Dot(&vMyLook, &vRot135);
+	fTargetDot = acos(fTargetDot);
+	_float fDegree135 = D3DXToDegree(fTargetDot);
+
+	fTargetDot = D3DXVec3Dot(&vMyLook, &vTargetLook);
+	fTargetDot = acos(fTargetDot);
+	_float fDegreeTarget = D3DXToDegree(fTargetDot);
+
+	//외적하기
+	_float3 vCrossOut;
+	//D3DXVec3Cross(&vCrossOut, &vMyLook, &vTargetLook);
+	D3DXVec3Cross(&vCrossOut, &vMyLook, &vTargetLook);
+
+	DIR_STATE eDir = DIR_END;
+	//Check Left Or Right
+	if (vCrossOut.y > 0.f)//Right
+	{
+		if (fDegreeTarget > 0.f && fDegreeTarget <= 60.f)
+		{
+			//cout << "y+, UP, Degree: " << fDegreeTarget << endl;
+			return DIR_UP;
+		}
+		else if (fDegreeTarget > 60.f && fDegreeTarget <= 135.f)
+		{
+			//cout << "y+, Right, Degree: " << fDegreeTarget << endl;
+			return DIR_RIGHT;
+		}
+		else if (fDegreeTarget > 135.f && fDegreeTarget <= 180.f)
+		{
+			//cout << "y+, Down, Degree: " << fDegreeTarget << endl;
+			return DIR_DOWN;
+		}
+	}
+	else//Left
+	{
+		if (fDegreeTarget > 0.f && fDegreeTarget <= 60.f)
+		{
+			//cout << "y-, UP, Degree: " << fDegreeTarget << endl;
+			return DIR_UP;
+		}
+		else if (fDegreeTarget > 60.f && fDegreeTarget <= 135.f)
+		{
+			//cout << "y-, Left, Degree: " << fDegreeTarget << endl;
+			return DIR_LEFT;
+		}
+		else if (fDegreeTarget > 135.f && fDegreeTarget <= 180.f)
+		{
+			//cout << "y-, Down, Degree: " << fDegreeTarget << endl;
+			return DIR_DOWN;
+		}
+	}
+
+	//cout << "Error " << fDegreeTarget << endl;
+	return DIR_DOWN;
+
 }
 
 void CPlayer::Test_Func(_int _iNum)
@@ -2786,13 +2935,10 @@ void CPlayer::Tick_ActStack(_float fTimeDelta)
 			}
 			break;
 		case ACTION_STATE::ANGRY:
+			Angry(fTimeDelta);
 			if (m_bMove)
 			{
 				m_ActStack.pop();
-			}
-			else
-			{
-				Angry(fTimeDelta);
 			}
 			break;
 		case ACTION_STATE::SLEEP:

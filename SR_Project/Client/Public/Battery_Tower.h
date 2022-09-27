@@ -68,7 +68,6 @@ private:
 	CTransform*		m_pTransformCom = nullptr;
 	CCollider_Cube* m_pColliderCom = nullptr;
 	CShader*		m_pShaderCom = nullptr;
-	SHADER_STATE    m_eShaderID = SHADER_IDLE;
 	vector<CTexture*> m_vecTexture;
 
 private:
