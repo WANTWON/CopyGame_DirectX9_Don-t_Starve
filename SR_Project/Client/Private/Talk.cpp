@@ -5,6 +5,7 @@
 #include "Inventory.h"
 #include "CameraManager.h"
 #include "Bearger.h"
+#include "Level_GamePlay.h"
 CTalk::CTalk(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -375,6 +376,8 @@ HRESULT CTalk::Excute(void)
 		m_bTalkEnd = true;
 		pPlayer->Set_TalkMode(false);
 		pPlayer->Set_bOnlyActionKey(false);
+
+		CInventory_Manager::Get_Instance()->Get_Ending_list()->front()->set_ending(true);
 	}
 	else
 	{

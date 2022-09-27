@@ -63,7 +63,7 @@ int CPartyhp::Tick(_float fTimeDelta)
 				return 0;
 			m_ihp = (_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iCurrentHp;
 
-			texnum = m_ihp / 18;
+			texnum = m_ihp / ((_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iMaxHp / 50); ;
 
 		}
 		else if (whatnpc == 1) //À§³ë³ª
@@ -75,7 +75,7 @@ int CPartyhp::Tick(_float fTimeDelta)
 
 			m_ihp = (_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iCurrentHp;
 
-			texnum = m_ihp / 2;
+			texnum = m_ihp / ((_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iMaxHp / 50); ;
 
 		}
 			
@@ -86,9 +86,12 @@ int CPartyhp::Tick(_float fTimeDelta)
 			if (pointer == nullptr)
 				return 0;
 
+			/*texnum = (_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth)
+				/ ((_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fMaxHealth) / 50);*/
+
 			m_ihp = (_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iCurrentHp;
 
-			texnum = m_ihp / 6;
+			texnum = m_ihp / ((_uint)(dynamic_cast<CNPC*>(pointer)->Get_Info()).iMaxHp/50); ;
 		}
 			
 			
@@ -121,7 +124,18 @@ void CPartyhp::Late_Tick(_float fTimeDelta)
 {
 
 	if (m_bcheck == true)
+
+
+		
 	{
+
+		if (texnum >= 50)
+			texnum = 50;
+
+
+		if (texnum <= 0)
+			texnum = 0;
+
 		__super::Late_Tick(fTimeDelta);
 
 		if (nullptr != m_pRendererCom)

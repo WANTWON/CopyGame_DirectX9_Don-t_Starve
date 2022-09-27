@@ -39,6 +39,8 @@ private:
 	_float4x4				m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
 
+	class CEndingscene*				ending = nullptr;
+
 private:
 	HRESULT SetUp_Components();
 	HRESULT SetUp_RenderState();
@@ -48,13 +50,17 @@ private:
 	_uint m_ihp;
 	_bool m_bcheck = false;
 	_bool m_bOnce = false;
+	_bool m_bforending = false;
 
 	DWORD m_dwdaytime = GetTickCount();
+
 
 public:
 	static CEndingscene* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
+
+	void set_ending(bool tof) { m_bforending = tof; }
 };
 
 END

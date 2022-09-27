@@ -68,12 +68,14 @@ public:
 
 	void Open_Craft(_float time) { m_fY += 50 * time; }
 
+	ITEMNAME craftready();
+
 
 	void gobackfirstX() { m_fX = m_firstx; }
 	void gobackfirstY() { m_fX = m_firsty; }
 
 	//void set_makewhat(ITEMNAME item) { m_makewhat = item; }
-	ITEMNAME craft();
+	ITEMNAME craft(ITEMNAME what);
 private:
 	int* iNumber = nullptr;
 	int iNum = 0;
@@ -86,6 +88,8 @@ private:
 	MAKEWHAT m_makewhat = MAKE_END;
 	_bool	m_bCookStart = false;
 	_uint texnum = 0;
+
+	ITEMNAME makewhat = ITEMNAME_END;
 
 	TOOLTYPE  m_tooltype = TOOL_END;
 

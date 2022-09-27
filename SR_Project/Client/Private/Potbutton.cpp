@@ -135,6 +135,7 @@ int CPotbutton::Tick(_float fTimeDelta)
 				else
 					pInstance->PlaySounds(TEXT("cook2.wav"), SOUND_UI, 0.9f);
 
+				makewhat = craftready();
 				// Timer 2/3 seconds OVER 
 
 				pinv->Off_pot(m_pCookPot);
@@ -161,7 +162,7 @@ int CPotbutton::Tick(_float fTimeDelta)
 		m_bCookStart = false;
 		effectdesc.pos = m_pCookPot->Get_Position();
 		effectdesc.pos.y += 1.25f;
-		effectdesc.itemname = craft();
+		effectdesc.itemname = craft(makewhat);
 
 
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -333,45 +334,33 @@ CGameObject * CPotbutton::Clone(void* pArg)
 	return pInstance;
 
 }
-ITEMNAME CPotbutton::craft()
+ITEMNAME CPotbutton::craftready()
 {
-
 	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
-	//Safe_AddRef(pInventory_Manager);
+
 	auto potfront = pInventory_Manager->Get_Potfront_list();
 
 	auto pinven = pInventory_Manager->Get_Inven_list();
 
-//	Safe_Release(pInventory_Manager);
-	
+
+
 	bool stop1 = false;
 	bool stop2 = false;
 
-	//_uint wood = 0;
-	//_uint rock2 = 0;
+
 	_uint meat = 0;
-	//_uint grass = 0;
-	//_uint gold = 0;
-	//_uint rope = 0;
+
 	_uint pigtail = 0;
 	_uint berry = 0;
 	_uint carrot = 0;
 	_uint spidermeat = 0;
-	//for(auto k : (*pinven))
+
 	for (auto k = potfront->begin(); k != potfront->end(); ++k)
 	{
-		//if ((*k)->get_texnum() == ITEMNAME_WOOD)
-			//++wood;
-		//else if ((*k)->get_texnum() == ITEMNAME_ROCK2)
-			//++rock2;
+
 		if ((*k)->get_texnum() == ITEMNAME_MEAT)
 			++meat;
-		//else if ((*k)->get_texnum() == ITEMNAME_GRASS)
-			//++grass;
-		//else if ((*k)->get_texnum() == ITEMNAME_GOLD)
-			//++gold;
-		//else if ((*k)->get_texnum() == ITEMNAME_ROPE)
-			//++rope += (*k)->get_item_number();
+
 		else if ((*k)->get_texnum() == ITEMNAME_PIGTAIL)
 			++pigtail;
 		else if ((*k)->get_texnum() == ITEMNAME_BERRY)
@@ -382,29 +371,68 @@ ITEMNAME CPotbutton::craft()
 			++spidermeat;
 	}
 
+
 	if (pigtail == 2 && berry == 2)
+	return ITEMNAME_MEATBALL;
+
+	else if (meat == 2 && carrot == 2)
+		return ITEMNAME_NUGGET;
+		
+	else if (berry == 4)
+	return ITEMNAME_BERRYPIE;
+
+	else if (spidermeat == 4)
+	return ITEMNAME_LASAGNA;
+
+	else	
+    return ITEMNAME_TRASH1;
+		
+	
+
+	
+}
+
+ITEMNAME CPotbutton::craft(ITEMNAME what)
+{
+
+	CInventory_Manager*         pInventory_Manager = CInventory_Manager::Get_Instance();
+	
+	auto potfront = pInventory_Manager->Get_Potfront_list();
+
+	auto pinven = pInventory_Manager->Get_Inven_list();
+
+
+	
+	bool stop1 = false;
+	bool stop2 = false;
+
+	
+	_uint meat = 0;
+	
+	_uint pigtail = 0;
+	_uint berry = 0;
+	_uint carrot = 0;
+	_uint spidermeat = 0;
+	
+	for (auto k = potfront->begin(); k != potfront->end(); ++k)
 	{
-		//for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-		//{
-		//	if ((*iter)->get_texnum() == ITEMNAME_PIGTAIL && (*iter)->get_item_number() >= 2 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
-		//	{
-		//		(*iter)->minus_material(2);
-		//		stop1 = true;
+		
+		if ((*k)->get_texnum() == ITEMNAME_MEAT)
+			++meat;
+		
+		else if ((*k)->get_texnum() == ITEMNAME_PIGTAIL)
+			++pigtail;
+		else if ((*k)->get_texnum() == ITEMNAME_BERRY)
+			++berry;
+		else if ((*k)->get_texnum() == ITEMNAME_CARROT)
+			++carrot;
+		else if ((*k)->get_texnum() == ITEMNAME_SPIDERMEAT)
+			++spidermeat;
+	}
 
-		//	}
-
-		//	if ((*iter)->get_texnum() == ITEMNAME_ROCK2 && (*iter)->get_item_number() >= 2 && stop2 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
-		//	{
-		//		(*iter)->minus_material(2);
-		//		stop2 = true;
-
-		//	}
-
-		//	if (stop1 == true && stop2 == true)
-		//	{
-		//		break;
-		//	}
-		//}
+	if (what == ITEMNAME_MEATBALL)
+	{
+		
 		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 		{
 			if ((*iter)->get_texnum() == (ITEMNAME_MEATBALL) && (*iter)->get_check() == true)
@@ -430,29 +458,9 @@ ITEMNAME CPotbutton::craft()
 		}
 
 	}
-	else if (meat == 2 && carrot == 2)
+	else if (what == ITEMNAME_NUGGET)
 	{
-		//for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-		//{
-		//	if ((*iter)->get_texnum() == ITEMNAME_MEAT && (*iter)->get_item_number() >= 2 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
-		//	{
-		//		(*iter)->minus_material(2);
-		//		stop1 = true;
-
-		//	}
-
-		//	if ((*iter)->get_texnum() == ITEMNAME_CARROT && (*iter)->get_item_number() >= 2 && stop2 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
-		//	{
-		//		(*iter)->minus_material(2);
-		//		stop2 = true;
-
-		//	}
-
-		//	if (stop1 == true && stop2 == true)
-		//	{
-		//		break;
-		//	}
-		//}
+		
 		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 		{
 			if ((*iter)->get_texnum() == (ITEMNAME_NUGGET) && (*iter)->get_check() == true)
@@ -479,18 +487,9 @@ ITEMNAME CPotbutton::craft()
 
 	
 	}
-	else if (berry == 4)
+	else if (what == ITEMNAME_BERRYPIE)
 	{
-		//for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-		//{
-		//	if ((*iter)->get_texnum() == ITEMNAME_BERRY && (*iter)->get_item_number() >= 4 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
-		//	{
-		//		(*iter)->minus_material(4);
-		//		break;
-
-		//	}
-
-		//}
+		
 		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 		{
 			if ((*iter)->get_texnum() == (ITEMNAME_BERRYPIE) && (*iter)->get_check() == true)
@@ -517,18 +516,9 @@ ITEMNAME CPotbutton::craft()
 
 	
 	}
-	else if (spidermeat == 4)
+	else if (what == ITEMNAME_LASAGNA)
 	{
-		//for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
-		//{
-		//	if ((*iter)->get_texnum() == ITEMNAME_SPIDERMEAT && (*iter)->get_item_number() >= 4 && stop1 == false)  //재료가 있는지 검사 있다면 재료차감..(가방처리는난중에하까)
-		//	{
-		//		(*iter)->minus_material(4);
-		//		break;
-
-		//	}
-
-		//}
+	
 		for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 		{
 			if ((*iter)->get_texnum() == (ITEMNAME_LASAGNA) && (*iter)->get_check() == true)
@@ -561,8 +551,7 @@ ITEMNAME CPotbutton::craft()
 		{
 			if ((*iter)->get_texnum() == (ITEMNAME_TRASH1) && (*iter)->get_check() == true)
 			{
-				(*iter)->plus_itemcount();   //먹은 아이템이 인벤토리에 이미 존재할때 카운트 증가 증가시켰다면 리턴으로 탈출! 못찾았으면? 탐색해야지 새로
-											 //check = true;
+				(*iter)->plus_itemcount();  
 				return ITEMNAME_TRASH1;
 			}
 		}

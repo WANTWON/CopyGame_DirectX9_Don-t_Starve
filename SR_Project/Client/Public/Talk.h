@@ -65,6 +65,8 @@ private:
 	_bool m_bquest4 = false;
 	_bool m_bquest5 = false;
 
+	_bool m_bOnce = false;
+
 public:
 	bool getcheck() { return m_bcheck;  }
 	void setcheck(bool tof) { m_bcheck = tof; }

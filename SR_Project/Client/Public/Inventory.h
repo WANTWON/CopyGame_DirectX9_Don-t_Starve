@@ -12,6 +12,7 @@
 #include "PlayerMentality_pont.h"
 #include "BagInventory.h"
 #include "Mouse_item.h"
+#include "ToolboxMain_back.h"
 #include "ToolboxWeapon.h"
 #include "ToolboxWeapon_back.h"
 #include "ToolboxWeapon_front.h"
@@ -61,6 +62,7 @@
 #include "Cardgame.h"
 #include "Party.h"
 #include "Partyhp.h"
+#include "Endingscene.h"
 /*  생성 게임오브젝트들을 모아서 보관한다. : 사용자가 나누고 싶은 기준에 따라. */
 
 
@@ -143,6 +145,9 @@ public:
 
 	list<CParty*>* Get_Party_list(void) { return &m_Partylist; }
 	list<CPartyhp*>* Get_Partyhp_list(void) { return &m_Partyhplist; }
+	list<CEndingscene*>* Get_Ending_list(void) { return &m_Ending; }
+
+	list<CToolboxMain_back*>* Get_toolboxmainback_list(void) {return &m_toolboxmain_back;}
 
 	
 
@@ -265,6 +270,9 @@ private: /* 내가 구분하고 싶은 대로 그룹을 지어 레벨별로 객체를 추가한다. */
 
 	list<CParty*> m_Partylist;
 	list<CPartyhp*> m_Partyhplist;
+	list<CEndingscene*> m_Ending;
+
+	list<CToolboxMain_back*> m_toolboxmain_back;
 
 
 	

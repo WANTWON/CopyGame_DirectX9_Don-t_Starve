@@ -57,9 +57,9 @@ int CPlayerMentality::Tick(_float fTimeDelta)
 	pinv->setmentality((_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentMental));
 	
 	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
-	texnum = (_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentMental) / 20;
-	if (texnum >= 51)
-		texnum = 50;
+	texnum = texnum = (_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentMental)
+		/ ((_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fMaxMental) / 50);
+	
 
 	//Safe_Release(pGameInstance);
 	//Safe_Release(pinv);
@@ -71,6 +71,14 @@ int CPlayerMentality::Tick(_float fTimeDelta)
 void CPlayerMentality::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+
+	if (texnum > 50)
+		texnum = 50;
+
+
+	if (texnum < 0)
+		texnum = 0;
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);

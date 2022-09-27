@@ -48,6 +48,12 @@ public:
 	static CToolboxMain_back* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
+
+	void set_w(bool tof) { m_bfirstclick_W = tof; }
+	void set_g(bool tof) { m_bfirstclick_G= tof; }
+	void set_c(bool tof) { m_bfirstclick_C = tof; }
+	void set_m(bool tof) { m_bfirstclick_M = tof; }
+
 private:
 
 	int* iNumber = nullptr;

@@ -27,7 +27,7 @@ HRESULT CBossName::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
+	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 0.8f);
 
 	m_fSizeX = 800.f;
 	m_fSizeY = 300.f;
@@ -110,7 +110,7 @@ void CBossName::Late_Tick(_float fTimeDelta)
 
 
 	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 }
 
 HRESULT CBossName::Render()
@@ -183,6 +183,8 @@ HRESULT CBossName::SetUp_RenderState()
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZENABLE, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	return S_OK;
 }
@@ -191,6 +193,8 @@ HRESULT CBossName::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 	return S_OK;
 }

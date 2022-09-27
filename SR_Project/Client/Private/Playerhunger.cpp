@@ -56,9 +56,9 @@ int CPlayerhunger::Tick(_float fTimeDelta)
 	pinv->sethuger((_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHungry));
 	
 	//texnum = pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->get_
-	texnum = (_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHungry) / 20;
-	if (texnum >= 51)
-		texnum = 50;
+	texnum = (_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHungry)
+		/ ((_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fMaxHungry) / 50);
+	
 
 
 	Safe_Release(pGameInstance);
@@ -70,6 +70,14 @@ int CPlayerhunger::Tick(_float fTimeDelta)
 void CPlayerhunger::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+
+	if (texnum > 50)
+		texnum = 50;
+
+
+	if (texnum < 0)
+		texnum = 0;
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
@@ -144,6 +152,8 @@ HRESULT CPlayerhunger::SetUp_RenderState()
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZENABLE, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	return S_OK;
 }
@@ -152,6 +162,8 @@ HRESULT CPlayerhunger::Release_RenderState()
 {
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 	return S_OK;
 }

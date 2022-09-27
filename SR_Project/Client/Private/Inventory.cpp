@@ -657,15 +657,15 @@ void CInventory_Manager::Cardgame()
 						k->set_wrong(true);
 
 
-						foreffect		effectdesc;
+						//foreffect		effectdesc;
 						CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-						ZeroMemory(&effectdesc, sizeof(foreffect));
+						/*ZeroMemory(&effectdesc, sizeof(foreffect));
 						
 						effectdesc.pos = (dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Position());
 						effectdesc.pos.y += 0.5f;
 						effectdesc.whateffect = 0;
 					
-						pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CardEffect"), LEVEL_GAMEPLAY, TEXT("Layer_Cardeffect_thunder"), &effectdesc);
+						pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CardEffect"), LEVEL_GAMEPLAY, TEXT("Layer_Cardeffect_thunder"), &effectdesc);*/
 						++count2;
 						if (count2 == 2)
 						{

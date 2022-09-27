@@ -49,7 +49,7 @@ HRESULT CEndingscene::Initialize(void* pArg)
 int CEndingscene::Tick(_float fTimeDelta)
 {
 	
-	if (GetKeyState('L'))
+	if (m_bforending == true)
 	{
 		CCamera* pCamera = CCameraManager::Get_Instance()->Get_CurrentCamera();
 		dynamic_cast<CCameraDynamic*>(pCamera)->Set_EndingMode();
@@ -64,6 +64,7 @@ int CEndingscene::Tick(_float fTimeDelta)
 			
 			CLevel* pLevel = CLevel_Manager::Get_Instance()->Get_CurrentLevel();
 			m_bcheck = dynamic_cast<CLevel_GamePlay*>(pLevel)->Get_Ending();
+			m_bforending = false;
 		}
 	}
 
@@ -228,7 +229,7 @@ CGameObject * CEndingscene::Clone(void* pArg)
 		ERR_MSG(TEXT("Failed to Cloned : CEndingscene"));
 		Safe_Release(pInstance);
 	}
-
+	CInventory_Manager::Get_Instance()->Get_Ending_list()->push_back(pInstance);
 	return pInstance;
 }
 

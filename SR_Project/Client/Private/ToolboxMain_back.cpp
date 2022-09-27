@@ -116,6 +116,8 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 	{
 		CGameInstance* pInstance = CGameInstance::Get_Instance();
 		pInstance->PlaySounds(TEXT("clickitem.wav"), SOUND_UIOPEN, 0.9f);
+		
+				
 
 		if (iNum == 0)
 		{
@@ -123,10 +125,33 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 			{
 				CInventory_Manager::Get_Instance()->gathertool_on();
 				m_bfirstclick_G = false;
+
+				CInventory_Manager::Get_Instance()->weapontool_off();
+				
+				CInventory_Manager::Get_Instance()->constructtool_off();
+				CInventory_Manager::Get_Instance()->materialtool_off();
+				CInventory_Manager::Get_Instance()->craft_off();
+
+				/*m_bfirstclick_W = true;
+				m_bfirstclick_C = true;
+				m_bfirstclick_M = true;*/
+
+				CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+				auto k = pinv->CInventory_Manager::Get_Instance()->Get_toolboxmainback_list();
+				for (auto i : *k)
+				{
+					i->set_c(true);
+					i->set_w(true);
+					i->set_m(true);
+				}
+					
+					
+					
 			}
 			else
 			{
 				CInventory_Manager::Get_Instance()->gathertool_off();
+
 				CInventory_Manager::Get_Instance()->craft_off();
 				m_bfirstclick_G = true;
 			}
@@ -137,6 +162,23 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 			{
 				CInventory_Manager::Get_Instance()->weapontool_on();
 				m_bfirstclick_W = false;
+
+				CInventory_Manager::Get_Instance()->gathertool_off();
+
+				CInventory_Manager::Get_Instance()->constructtool_off();
+				CInventory_Manager::Get_Instance()->materialtool_off();
+				CInventory_Manager::Get_Instance()->craft_off();
+				/*m_bfirstclick_G = true;
+				m_bfirstclick_C = true;
+				m_bfirstclick_M = true;*/
+				CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+				auto k = pinv->CInventory_Manager::Get_Instance()->Get_toolboxmainback_list();
+				for (auto i : *k)
+				{
+					i->set_c(true);
+					i->set_g(true);
+					i->set_m(true);
+				}
 			}
 			else
 			{
@@ -151,6 +193,23 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 			{
 				CInventory_Manager::Get_Instance()->constructtool_on();
 				m_bfirstclick_C = false;
+
+				CInventory_Manager::Get_Instance()->gathertool_off();
+
+				CInventory_Manager::Get_Instance()->weapontool_off();
+				CInventory_Manager::Get_Instance()->materialtool_off();
+				CInventory_Manager::Get_Instance()->craft_off();
+				/*m_bfirstclick_G = true;
+				m_bfirstclick_W = true;
+				m_bfirstclick_M = true;*/
+				CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+				auto k = pinv->CInventory_Manager::Get_Instance()->Get_toolboxmainback_list();
+				for (auto i : *k)
+				{
+					i->set_g(true);
+					i->set_w(true);
+					i->set_m(true);
+				}
 			}
 			else
 			{
@@ -165,6 +224,23 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 			{
 				CInventory_Manager::Get_Instance()->materialtool_on();
 				m_bfirstclick_M = false;
+
+				CInventory_Manager::Get_Instance()->gathertool_off();
+
+				CInventory_Manager::Get_Instance()->weapontool_off();
+				CInventory_Manager::Get_Instance()->constructtool_off();
+				CInventory_Manager::Get_Instance()->craft_off();
+				/*m_bfirstclick_G = true;
+				m_bfirstclick_C = true;
+				m_bfirstclick_W = true;*/
+				CInventory_Manager* pinv = CInventory_Manager::Get_Instance();
+				auto k = pinv->CInventory_Manager::Get_Instance()->Get_toolboxmainback_list();
+				for (auto i : *k)
+				{
+					i->set_c(true);
+					i->set_w(true);
+					i->set_g(true);
+				}
 			}
 			else
 			{
@@ -183,39 +259,41 @@ void CToolboxMain_back::Late_Tick(_float fTimeDelta)
 
 	}*/
 
-	if (iNum == 0 && m_bfirstclick_G == true)
+	
+	if (iNum == 0 && CInventory_Manager::Get_Instance()->Get_Toolboxgather_list()->front()->get_onof() == false)
 	{
 		backtexnum = 0;
 	}
-	else if (iNum == 0 && m_bfirstclick_G == false)
-	{
-		backtexnum = 1;
-	}
-
-	if (iNum == 1 && m_bfirstclick_W == true)
-	{
-		backtexnum = 0;
-	}
-	else if (iNum == 1 && m_bfirstclick_W == false)
+	else if (iNum == 0 && CInventory_Manager::Get_Instance()->Get_Toolboxgather_list()->front()->get_onof() == true)
 	{
 		backtexnum = 1;
 	}
 
 
-	if (iNum == 2 && m_bfirstclick_C == true)
+	if (iNum == 1 && CInventory_Manager::Get_Instance()->Get_Toolboxweapon_list()->front()->get_onof() == false)
 	{
 		backtexnum = 0;
 	}
-	else if (iNum == 2 && m_bfirstclick_C == false)
+	else if (iNum == 1 && CInventory_Manager::Get_Instance()->Get_Toolboxweapon_list()->front()->get_onof() == true)
 	{
 		backtexnum = 1;
 	}
 
-	if (iNum == 3 && m_bfirstclick_M == true)
+
+	if (iNum == 2 && CInventory_Manager::Get_Instance()-> Get_ToolboxConstruct_list()->front()->get_onof() == false)
 	{
 		backtexnum = 0;
 	}
-	else if (iNum == 3 && m_bfirstclick_M == false)
+	else if (iNum == 2 && CInventory_Manager::Get_Instance()->Get_ToolboxConstruct_list()->front()->get_onof() == true)
+	{
+		backtexnum = 1;
+	}
+
+	if (iNum == 3 && CInventory_Manager::Get_Instance()->Get_ToolboxMaterial_list()->front()->get_onof() == false)
+	{
+		backtexnum = 0;
+	}
+	else if (iNum == 3 && CInventory_Manager::Get_Instance()->Get_ToolboxMaterial_list()->front()->get_onof() == true)
 	{
 		backtexnum = 1;
 	}
@@ -340,7 +418,7 @@ CGameObject * CToolboxMain_back::Clone(void* pArg)
 		Safe_Release(pInstance);
 	}
 
-	//CInventory_Manager::Get_Instance()->Get_back_Inven_list()->push_back(pInstance);
+	CInventory_Manager::Get_Instance()->Get_toolboxmainback_list()->push_back(pInstance);
 
 	return pInstance;
 }

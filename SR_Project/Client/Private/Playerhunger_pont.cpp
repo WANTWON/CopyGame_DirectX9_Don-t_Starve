@@ -173,6 +173,8 @@ HRESULT CPlayerhunger_pont::SetUp_RenderState()
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZENABLE, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	return S_OK;
 }
@@ -182,6 +184,8 @@ HRESULT CPlayerhunger_pont::Release_RenderState()
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 	return S_OK;
 }

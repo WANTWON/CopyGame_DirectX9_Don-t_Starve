@@ -45,6 +45,7 @@ private:
 
 	_uint texnum = 0;
 	_uint m_ihp ;
+	//_float m_idivide = 0;
 
 public:
 	static CPlayerhp* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
