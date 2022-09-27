@@ -310,6 +310,9 @@ void CWinona::Change_Motion()
 
 _float CWinona::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
+	if (m_bInvincibleMode)
+		return 0.f;
+
 	if (!m_bDead && m_tInfo.iCurrentHp <= (_int)fDamage)
 	{
 		m_fReviveTime = 0.f;
