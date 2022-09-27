@@ -228,16 +228,6 @@ void CPlayer::Move_to_PickingPoint(_float fTimedelta)
 		m_ePreState = m_eState;
 		m_ePreDirState = m_eDirState;
 	}
-	
-
-	/*if (vPlayerPos.x < m_vPickingPoint.x)
-	{
-		Move_Right(fTimedelta);
-	}
-	else if (vPlayerPos.x > m_vPickingPoint.x)
-	{
-		Move_Left(fTimedelta);
-	}*/
 
 	if (abs(vPlayerPos.x - m_vPickingPoint.x) < 0.3f &&
 		abs(vPlayerPos.z - m_vPickingPoint.z) < 0.3f)

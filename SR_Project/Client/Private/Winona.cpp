@@ -674,7 +674,7 @@ _bool CWinona::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 		{
 			m_vTargetPos = m_pTarget->Get_Position();
 		}
-		fMiddleRange = fMinRange = 0.2f;
+		fMiddleRange = fMinRange = 0.4f;
 		break;
 	}
 
