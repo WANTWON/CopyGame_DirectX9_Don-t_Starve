@@ -37,7 +37,7 @@ public:
 
 public:
 	void Set_NextLevel(_bool type) { m_bNextLevel = type; }
-	void Set_BeargerAdd(_bool type) { m_bBeargerAdd = type; }
+	void Set_BeargerAdd(_bool type);// { m_bBeargerAdd = type; }
 	void Set_Ending(_bool type) { m_bEnding = type; }
 	_bool Get_Ending() { return m_bEnding;  }
 	void Decrease_Fireflies() { m_iFirefliesCounter--; }

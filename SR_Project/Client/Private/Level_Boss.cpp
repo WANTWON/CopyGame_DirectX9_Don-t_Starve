@@ -22,6 +22,7 @@ CLevel_Boss::CLevel_Boss(LPDIRECT3DDEVICE9 pGraphic_Device)
 HRESULT CLevel_Boss::Initialize()
 {
 	CGameInstance::Get_Instance()->StopAll();
+	CGameInstance::Get_Instance()->StopAll();
 	CDayCycle::Get_Instance()->AllRemoveObserver();
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;

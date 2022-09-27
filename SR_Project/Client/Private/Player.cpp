@@ -1977,9 +1977,12 @@ _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 	{
 		if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
 		{
-			m_tStat.fCurrentMental -= 0.5f;
-			if (m_tStat.fCurrentMental <= 0.f)
-				goto GoDead;
+			if (m_eWeaponType != WEAPON_LIGHT)
+			{
+				m_tStat.fCurrentMental -= 0.5f;
+				if (m_tStat.fCurrentMental <= 0.f)
+					goto GoDead;
+			}
 			m_fMentalitytime = 0.f;
 		}
 		else if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_NIGHT)

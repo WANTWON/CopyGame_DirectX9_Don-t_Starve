@@ -292,6 +292,10 @@ technique		DefaultTechnique
 
 	pass OnlyConstruct
 	{
+		AlphaTestEnable = true;
+		AlphaFunc = greater;
+		AlphaRef = 50;
+
 		ALPHABLENDENABLE = true;
 		SRCBLEND = SRCALPHA;
 		DESTBLEND = INVSRCALPHA;
