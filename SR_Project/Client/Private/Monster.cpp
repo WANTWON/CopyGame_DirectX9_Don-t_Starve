@@ -211,6 +211,8 @@ DIR_STATE CMonster::Get_Processed_Dir(DIR_STATE eDir)
 
 void CMonster::Calculate_Direction(_float3 vTargetPos)
 {
+	// Old Logic
+	/*
 	// Set Direction
 	_float fX = vTargetPos.x - Get_Position().x;
 	_float fZ = vTargetPos.z - Get_Position().z;
@@ -227,6 +229,39 @@ void CMonster::Calculate_Direction(_float3 vTargetPos)
 			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_UP);
 		else
 			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_DOWN);
+	*/
+
+	// New Logic
+	_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	_float3 vTargetDir = vTargetPos - Get_Position();
+	D3DXVec3Normalize(&vLook, &vLook);
+	D3DXVec3Normalize(&vTargetDir, &vTargetDir);
+
+	_float fDot = D3DXVec3Dot(&vTargetDir, &vLook);
+	_float fAngleRadian = acos(fDot);
+	_float fAngleDegree = D3DXToDegree(fAngleRadian);
+
+	_float3 vCross;
+	D3DXVec3Cross(&vCross, &vTargetDir, &vLook);
+
+	if (vCross.y > 0.f)
+	{
+		if (fAngleDegree > 0.f && fAngleDegree <= 45.f)
+			m_eDir = DIR_UP;
+		else if (fAngleDegree > 45.f && fAngleDegree <= 135.f)
+			m_eDir = DIR_LEFT;
+		else if (fAngleDegree > 135.f && fAngleDegree <= 180.f)
+			m_eDir = DIR_DOWN;
+	}
+	else
+	{
+		if (fAngleDegree > 0.f && fAngleDegree <= 45.f)
+			m_eDir = DIR_UP;
+		else if (fAngleDegree > 45.f && fAngleDegree <= 135.f)
+			m_eDir = DIR_RIGHT;
+		else if (fAngleDegree > 135.f && fAngleDegree <= 180.f)
+			m_eDir = DIR_DOWN;
+	}
 }
 
 _float CMonster::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
