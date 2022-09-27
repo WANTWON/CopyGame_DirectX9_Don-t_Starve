@@ -410,6 +410,9 @@ void CWoodie::Make_Interrupt(CPawn * pCauser, _uint _InterruptNum)
 
 _float CWoodie::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
 {
+	if (m_bInvincibleMode)
+		return 0.f;
+
 	if (!m_bDead && m_tInfo.iCurrentHp <= (_int)fDamage)
 	{
 		m_fReviveTime = 0.f;
@@ -707,9 +710,13 @@ void CWoodie::Set_RandPos(_float _fTimeDelta)
 
 _bool CWoodie::Get_Target_Moved(_float _fTimeDelta, _uint _iTarget)
 {
-	if (m_bSkillUsing)
+	if (m_bFightMode&&m_bSkillUsing)
 		return false;
-
+	else if (!m_bFightMode && m_bSkillUsing)
+	{
+		m_bSkillUsing = false;
+		Clear_Activated();
+	}
 	_float fMinRange = 0.f;
 	_float fMiddleRange = 0.f;
 	_float Compare_Range = 0.f;
@@ -1039,7 +1046,6 @@ void CWoodie::Talk_Friend(_float _fTimeDelta)
 	{
 		m_fInteractTIme = 0.f;
 		m_bInteract = true;
-		cout << "Talk" << endl;
 		Change_Texture(TEXT("Com_Texture_Talk"));
 		m_ePreState = m_eState;
 		static_cast<CPig*>(m_pTarget)->Interact(_fTimeDelta, 0);
@@ -1047,7 +1053,6 @@ void CWoodie::Talk_Friend(_float _fTimeDelta)
 
 	if (2.f < m_fInteractTIme)
 	{
-		cout << "TalkEnd" << endl;
 		m_fInteractTIme = 0.f;
 		m_bInteract = false;
 

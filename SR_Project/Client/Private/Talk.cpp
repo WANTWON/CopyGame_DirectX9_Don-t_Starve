@@ -497,7 +497,7 @@ HRESULT CTalk::Excute(void)
 
 				_bool bearger = true;
 
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BossName"), LEVEL_STATIC, TEXT("Layer_BossName"), (bool*)&bearger)))
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BossName"), LEVEL_STATIC, TEXT("Layer_UI"), (bool*)&bearger)))
 					return E_FAIL;
 
 			}

@@ -74,7 +74,7 @@ public: /*Get & Set*/
 	void	Set_MoveNum(_uint _iNum) { m_MoveNum = _iNum; }
 	void	Set_Target(CGameObject* pTarget) { Reset_Target(); m_pTarget = pTarget; Safe_AddRef(pTarget); }
 	void	Set_SelectAct(_bool _bCanAct) { m_bSelectAct = _bCanAct; }
-
+	void	Set_InvincibleMode(_bool _bInvincible) { m_bInvincibleMode = _bInvincible; }
 	
 
 	void	Set_HP(_uint _iHp) { m_tInfo.iCurrentHp += _iHp; if (m_tInfo.iCurrentHp >= m_tInfo.iMaxHp){m_tInfo.iCurrentHp = m_tInfo.iMaxHp;} }
@@ -172,10 +172,13 @@ protected:
 	_float		m_fSkill_Max_CoolTime = 0.f;
 	_bool		m_bCanSkill = true;
 
+	_bool		m_bInvincibleMode = false;
 	_bool		m_bHited = false;
 	_bool		m_bSoundEnd = false;
 
 	_float		m_fReviveTime = 5.f;
+
+
 public:
 	virtual CGameObject* Clone(void* pArg = nullptr) =0;
 	virtual void Free() override;
