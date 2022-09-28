@@ -31,9 +31,9 @@ HRESULT CStartbutton::Initialize(void* pArg)
 	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
 	m_fSizeX = 200.f;
-	m_fSizeY = 50;
+	m_fSizeY = 65.f;
 	m_fX = 180.f;
-	m_fY = 360.f;
+	m_fY = 355.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
@@ -57,10 +57,12 @@ int CStartbutton::Tick(_float fTimeDelta)
 	if (PtInRect(&rcRect, ptMouse))
 	{
 
-		m_fSizeX = 220.f;
+		/*m_fSizeX = 220.f;
 		m_fSizeY = 70.f;
 
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);*/
+
+		texnum = 1;
 
 		if (CKeyMgr::Get_Instance()->Key_Up(VK_LBUTTON))
 		{
@@ -78,6 +80,14 @@ int CStartbutton::Tick(_float fTimeDelta)
 		}
 		
 	}
+	else
+	{
+		texnum = 0;
+		/*m_fSizeX = 200.f;
+		m_fSizeY = 50.f;
+
+		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);*/
+	}
 
 	return OBJ_NOEVENT;
 }
@@ -85,20 +95,7 @@ int CStartbutton::Tick(_float fTimeDelta)
 void CStartbutton::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
-	POINT		ptMouse;
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-	RECT		rcRect;
-	SetRect(&rcRect, (int)(m_fX - m_fSizeX * 0.5f), (int)(m_fY - m_fSizeY * 0.5f), (int)(m_fX + m_fSizeX * 0.5f), (int)(m_fY + m_fSizeY * 0.5f));
-
-	if (!PtInRect(&rcRect, ptMouse))
-	{
-
-		m_fSizeX = 200.f;
-		m_fSizeY = 50.f;
-
-		m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	}
+	
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
@@ -119,7 +116,7 @@ HRESULT CStartbutton::Render()
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(0)))
+	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
 		return E_FAIL;
 
 	if (FAILED(SetUp_RenderState()))

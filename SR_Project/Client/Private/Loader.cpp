@@ -764,7 +764,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 #pragma region Add_Texture UI
 	/*For.Prototype_Component_Texture_Startbutton */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_startbutton"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/startbutton/start%d.png"), 1))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/startbutton/start%d.png"), 2))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_MainInventory */
