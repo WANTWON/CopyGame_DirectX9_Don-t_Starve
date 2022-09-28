@@ -99,6 +99,10 @@ void CPlayerMentality::Late_Tick(_float fTimeDelta)
 
 	}
 
+
+	if (texnum == 50)
+		alpha1 = 0.f;
+
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 }

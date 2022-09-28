@@ -115,6 +115,9 @@ void CPlayerhp::Late_Tick(_float fTimeDelta)
 	if (texnum < 0)
 		texnum = 0;
 
+
+	if (texnum == 50)
+		alpha1 = 0.f;
 	
 
 	

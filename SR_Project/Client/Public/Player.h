@@ -56,7 +56,7 @@ public:
 		_float fCurrentHealth = fMaxHealth;
 		_float fMaxMental = 200.f;
 		_float fCurrentMental = fMaxMental;
-		_float fMaxHungry = 999.f;
+		_float fMaxHungry = 200.f;
 		_float fCurrentHungry = fMaxHungry;
 		_float fAtk = 20.f;
 		_float fArmor = 0.f;

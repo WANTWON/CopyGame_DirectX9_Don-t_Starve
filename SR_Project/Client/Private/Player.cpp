@@ -142,6 +142,15 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	}
 
 
+	if (m_bDead == true)
+	{
+		m_tStat.fCurrentHealth = 0.f;
+		m_tStat.fCurrentHungry = 0.f;
+		m_tStat.fCurrentMental = 0.f;
+	}
+	
+
+
 	Setup_Collider();
 
 	Set_ShaderID();
@@ -297,6 +306,8 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 
 	if (Check_Dead() && !m_bGhost)
 	{
+
+		
 		m_bDead = true;
 		m_bGhost = true;
 		Clear_ActStack();
@@ -1647,9 +1658,9 @@ void CPlayer::Dead(_float _fTimeDelta)
 
 		CInventory_Manager* inv = CInventory_Manager::Get_Instance();
 
-		m_tStat.fCurrentHealth = 1.f;
-		m_tStat.fCurrentHungry = 1.f;
-		m_tStat.fCurrentMental = 1.f;
+		m_tStat.fCurrentHealth = 0.f;
+		m_tStat.fCurrentHungry = 0.f;
+		m_tStat.fCurrentMental = 0.f;
 
 		inv->Dead_on();
 		m_bMove = true;

@@ -2,6 +2,7 @@
 #include "..\Public\PlayerMentality_pont.h"
 #include "GameInstance.h"
 #include "Inventory.h"
+#include "Player.h"
 
 
 
@@ -96,6 +97,23 @@ void CPlayerMentality_pont::Late_Tick(_float fTimeDelta)
 
 	//	//ERR_MSG(L"Ãæµ¹");
 	//}
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	_uint playermental = (_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentMental);
+
+	if (playermental< 100 && iNum < 1)
+	{
+		m_bcheck = false;
+	}
+	else if (playermental < 10 && iNum < 2)
+	{
+		m_bcheck = false;
+	}
+	else
+		m_bcheck = true;
+
+	
+
 	if (nullptr != m_pRendererCom)//&&m_bcheck)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
@@ -105,31 +123,35 @@ void CPlayerMentality_pont::Late_Tick(_float fTimeDelta)
 HRESULT CPlayerMentality_pont::Render()
 {
 	
+	if (m_bcheck == true)
+	{
+		if (FAILED(__super::Render()))
+			return E_FAIL;
+
+		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
+			return E_FAIL;
+
+		_float4x4		ViewMatrix;
+		D3DXMatrixIdentity(&ViewMatrix);
+
+		m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
+		m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+
+		if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
+			return E_FAIL;
+
+		if (FAILED(SetUp_RenderState()))
+			return E_FAIL;
+
+		m_pVIBufferCom->Render();
+
+		if (FAILED(Release_RenderState()))
+			return E_FAIL;
+
+
+	}
 	
-	if (FAILED(__super::Render()))
-		return E_FAIL;
-
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
-
-	_float4x4		ViewMatrix;
-	D3DXMatrixIdentity(&ViewMatrix);
-
-	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
-	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
-
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(texnum)))
-		return E_FAIL;
-
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
-
-	m_pVIBufferCom->Render();
-
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
 	
-
 
 
 

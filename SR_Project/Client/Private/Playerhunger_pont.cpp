@@ -2,6 +2,7 @@
 #include "..\Public\Playerhunger_pont.h"
 #include "GameInstance.h"
 #include "Inventory.h"
+#include "Player.h"
 
 CPlayerhunger_pont::CPlayerhunger_pont(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -94,6 +95,21 @@ void CPlayerhunger_pont::Late_Tick(_float fTimeDelta)
 
 	//	//ERR_MSG(L"Ãæµ¹");
 	//}
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	_uint playerhunger = (_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHungry);
+
+	if (playerhunger< 100 && iNum < 1)
+	{
+		m_bcheck = false;
+	}
+	else if (playerhunger < 10 && iNum < 2)
+	{
+		m_bcheck = false;
+	}
+	else
+		m_bcheck = true;
+
 	if (nullptr != m_pRendererCom)//&&m_bcheck)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
@@ -102,8 +118,8 @@ void CPlayerhunger_pont::Late_Tick(_float fTimeDelta)
 
 HRESULT CPlayerhunger_pont::Render()
 {
-	//if (m_bcheck)
-	//{
+	if (m_bcheck)
+	{
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -126,7 +142,7 @@ HRESULT CPlayerhunger_pont::Render()
 
 	if (FAILED(Release_RenderState()))
 		return E_FAIL;
-	//	}
+		}
 
 
 

@@ -103,11 +103,11 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 
 	if (iNum == 0)
 	{
-		texnum = ITEMNAME_WOOD;
-		item_number = 11;
+		texnum = ITEMNAME_BAG;
+		//item_number = 11;
 	}
 
-	else if (iNum == 1)
+	/*else if (iNum == 1)
 	{
 		texnum = ITEMNAME_ROCK2;
 		item_number = 2;
@@ -173,7 +173,7 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 	{
 		texnum = ITEMNAME_MEATBALL;
 		item_number = 2;
-	}
+	}*/
 
 	//CInventory_Manager::Get_Instance()->Get_Inven_list()->front.push_back(this);
 	//CInventory_Manager::Get_Instance()->Get_Inven_list().push_back(this);

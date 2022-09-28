@@ -2,6 +2,7 @@
 #include "..\Public\Playerhp_pont.h"
 #include "GameInstance.h"
 #include "Inventory.h"
+#include "Player.h"
 
 
 CPlayerhp_pont::CPlayerhp_pont(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -95,16 +96,32 @@ void CPlayerhp_pont::Late_Tick(_float fTimeDelta)
 
 	//	//ERR_MSG(L"Ãæµ¹");
 	//}
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	_uint playerhp = (_uint)(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_Player_Stat().fCurrentHealth);
+
+	if (playerhp< 100 && iNum < 1)
+	{
+		m_bcheck = false;
+	}
+	else if( playerhp < 10 && iNum < 2)
+	{
+		m_bcheck = false;
+	}
+	else
+		m_bcheck = true;
+	
+
 	if (nullptr != m_pRendererCom&&m_bcheck)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	//set_check(false);
 }
 
 HRESULT CPlayerhp_pont::Render()
 {
-	//if (m_bcheck)
-	//{
+	if (m_bcheck)
+	{
 		if (FAILED(__super::Render()))
 			return E_FAIL;
 
@@ -127,7 +144,7 @@ HRESULT CPlayerhp_pont::Render()
 
 		if(FAILED(Release_RenderState()))
 			return E_FAIL;
-//	}
+	}
 
 	return S_OK;
 }
