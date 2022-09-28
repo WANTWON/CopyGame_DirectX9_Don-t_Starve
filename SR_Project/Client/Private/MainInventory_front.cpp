@@ -107,18 +107,30 @@ HRESULT CMainInventory_front::Initialize(void* pArg)
 		//item_number = 11;
 	}
 
-	/*else if (iNum == 1)
+	else if (iNum == 1)
+	{
+		texnum = ITEMNAME_WOOD;
+		item_number = 2;
+
+	}
+
+	else if (iNum == 2)
 	{
 		texnum = ITEMNAME_ROCK2;
 		item_number = 2;
 	}
 
-	else if (iNum == 2)
+	else if (iNum == 3)
+	{
+		texnum = ITEMNAME_MEAT;
+		item_number = 10;
+	}
+	/*else if (iNum == 4)
 	{
 		texnum = ITEMNAME_BERRY;
-		item_number = 2;
-	}
-
+		item_number = ;
+	}*/
+	/*
 	else if (iNum == 3)
 	{
 		texnum = ITEMNAME_BAG;

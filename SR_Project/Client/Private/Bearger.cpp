@@ -755,14 +755,14 @@ void CBearger::Patrol(_float fTimeDelta)
 		if (!pTransform_Terrain)
 			return;
 
-		_float3 vPatrolPosition = { m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ };
+		//_float3 vPatrolPosition = { m_fPatrolPosX, Get_Position().y, m_fPatrolPosZ };
 		_float3 vScale = m_pTransformCom->Get_Scale();
 
 		vPatrolPosition.y = pVIBuffer_Terrain->Compute_Height(vPatrolPosition, pTransform_Terrain->Get_WorldMatrix(), (1 * vScale.y / 2));
 
 		Calculate_Direction(vPatrolPosition);
 
-		m_pTransformCom->Go_PosTarget(fTimeDelta * .25f, vPatrolPosition, _float3{ 0.f, 0.f, 0.f });
+		m_pTransformCom->Go_PosTarget(fTimeDelta * .25f, _float3(vPatrolPosition.x, vPatrolPosition.y, vPatrolPosition.z), _float3{ 0.f, 0.f, 0.f });
 	}
 }
 
