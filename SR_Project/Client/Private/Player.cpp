@@ -2263,7 +2263,12 @@ _bool CPlayer::Find_NPC()
 			continue;
 		}
 
-
+		if (static_cast<CNPC*>(*iter_Obj)->Get_FightMode())
+		{
+			++iIndex;
+			iter_Obj++;
+			continue;
+		}
 		_float fCmpDir = (Get_Pos().x - (*iter_Obj)->Get_Position().x)*(Get_Pos().x - (*iter_Obj)->Get_Position().x)
 			
 			+ (Get_Pos().z - (*iter_Obj)->Get_Position().z)*(Get_Pos().z - (*iter_Obj)->Get_Position().z);
