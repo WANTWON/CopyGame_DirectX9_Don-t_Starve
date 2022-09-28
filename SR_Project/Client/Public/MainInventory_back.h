@@ -36,7 +36,7 @@ private: /* For.Components */
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 	CShader*				m_pShaderCom = nullptr;
-	UI_SHADER_STATE			m_eShaderID = UI_SHADER_GREEN;
+	UI_SHADER_STATE			m_eShaderID = UI_SHADER_IDLE;
 private:
 	_float4x4				m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
@@ -55,6 +55,8 @@ private:
 	int* iNumber = nullptr;
 	int iNum = 0;
 	bool m_bcheck_bag = false;
+
+	ITEMID itemtype = ITEM_END;
 	//bool m_bcheck = true;
 };
 

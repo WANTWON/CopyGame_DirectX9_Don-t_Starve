@@ -124,6 +124,21 @@ int CMainInventory_back::Tick(_float fTimeDelta)
 		}*/
 	}
 
+	CInventory_Manager* pInv = CInventory_Manager::Get_Instance();
+	auto k = pInv->Get_Inven_list();
+
+	for (auto i : *k)
+	{
+		if (i->get_iNum() == iNum)
+			itemtype = i->get_itemtype();
+	}
+		
+
+	if (itemtype == ITEM_FOOD)
+		m_eShaderID = UI_SHADER_GREEN;
+	else
+		m_eShaderID = UI_SHADER_IDLE;
+
 	/*if (m_bItem)
 	{
 		m_fX = ptMouse.x;

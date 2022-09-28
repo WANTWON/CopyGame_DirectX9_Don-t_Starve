@@ -123,8 +123,9 @@ PS_OUT PS_GREEN(PS_IN In)
 	//Out.vColor.a -= g_alpha1;
 
 
-	Out.vColor.rb = 0;
-	Out.vColor.g = 0.6;
+	Out.vColor.r = 0.1;
+	Out.vColor.g += 0.4;
+	Out.vColor.b -= 0.2;
 	return Out;
 }
 

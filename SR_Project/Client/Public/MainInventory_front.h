@@ -63,6 +63,7 @@ public:
 	_uint get_item_number() { return item_number; }
 	void Use_item(ITEMNAME item);
 	int get_iNum() { return iNum; }
+	ITEMID get_itemtype() { return m_itemtype; }
 	_float3 get_pos() { return pos; }
 	bool get_big() { return big; }
 	void set_big(bool tof) { big = tof; }
