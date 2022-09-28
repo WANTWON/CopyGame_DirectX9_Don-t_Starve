@@ -329,6 +329,9 @@ private: // Test
 	_float m_fMentalitytime2 = 0.f;
 	_float m_fSanitySpawnTimer = 999.f;
 
+	_uint					m_iHitCnt = 0;
+	_bool					m_bChanged = false;
+
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -1534,7 +1534,7 @@ void CWinona::CatapultCheck(void)
 }
 
 CWinona * CWinona::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
-{
+{	
 	CWinona* pInstance = new CWinona(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))

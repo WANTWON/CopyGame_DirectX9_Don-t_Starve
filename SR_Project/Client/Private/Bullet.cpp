@@ -47,8 +47,7 @@ HRESULT CBullet::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
-	m_eShaderID = SHADER_IDLE;
+	
 	return S_OK;
 }
 
@@ -153,17 +152,18 @@ HRESULT CBullet::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Collider*/
-	CCollider_Rect::COLLRECTDESC CollRectDesc;
-	ZeroMemory(&CollRectDesc, sizeof(CCollider_Rect::COLLRECTDESC));
+	CCollider_Cube::COLLRECTDESC CollRectDesc;
+	ZeroMemory(&CollRectDesc, sizeof(CCollider_Cube::COLLRECTDESC));
 	CollRectDesc.fRadiusY = 0.5f;
 	CollRectDesc.fRadiusX = 0.5f;
+	CollRectDesc.fRadiusZ = 0.5f;
 	CollRectDesc.fOffSetX = 0.f;
 	CollRectDesc.fOffSetY = 0.f;
-
+	CollRectDesc.fOffsetZ = 0.f;
 	/* For.Com_Collider_Rect*/
 	/*if (FAILED(__super::Add_Components(TEXT("Com_Collider_Rect"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Collider_Cube"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), (CComponent**)&m_pColliderCom, &CollRectDesc)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -1390,7 +1390,7 @@ void CBullet::SetUp_BillBoard()
 	{
 		if (m_tBulletData.eWeaponType == WEAPON_DART)
 		{
-			m_pTransformCom->Set_Scale(-0.3f, 0.3f, 1.f);
+			m_pTransformCom->Set_Scale(-0.5f, 0.5f, 1.f);
 		}
 		else
 		{
@@ -1598,14 +1598,18 @@ HRESULT CBullet::Texture_Clone(void)
 
 HRESULT CBullet::Init_Data(void)
 {
+
+
 	//refactory Func soon
 	switch (m_tBulletData.eWeaponType)
 	{
 	case WEAPON_TYPE::WEAPON_DART:
 		m_pTransformCom->Set_Scale(0.3f, 0.5f, 1.f);
+		m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+		m_eShaderID = SHADER_IDLE;
 		if (m_tBulletData.eDirState == DIR_STATE::DIR_LEFT)
 		{
-			m_pTransformCom->Set_Scale(-0.3f, 0.3f, 1.f);
+			m_pTransformCom->Set_Scale(-0.3f, 0.5f, 1.f);
 		}
 		break;
 	case WEAPON_TYPE::WEAPON_SMOKE:
@@ -1672,7 +1676,6 @@ HRESULT CBullet::Init_Data(void)
 		_float fDot = D3DXVec3Dot(&vLook, &(_float3(0.f, 0.f, 0.1f)));
 		fDot = acos(fDot);
 
-
 		m_pTransformCom->Set_Scale(m_tBulletData.vScale.x, m_tBulletData.vScale.y, m_tBulletData.vScale.z);
 		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1.f - fDot);
 		break;
@@ -1689,6 +1692,13 @@ HRESULT CBullet::Init_Data(void)
 
 		//m_pTransformCom->Set_State(CTransform::STATE_LOOK, m_tBulletData.vLook);
 	}
+	if (m_tBulletData.eWeaponType != WEAPON_DART)
+	{
+		m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
+		m_eShaderID = SHADER_IDLE;
+	}
+
+
 
 	return S_OK;
 }
