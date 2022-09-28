@@ -145,7 +145,10 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	Setup_Collider();
 
 	Set_ShaderID();
-
+	if (m_bChanged && m_bHited)
+	{
+		m_eShaderID = SHADER_HIT;
+	}
 
 	Create_Bullet();
 }
@@ -320,6 +323,7 @@ _float CPlayer::Take_Damage(float fDamage, void * DamageType, CGameObject * Dama
 		m_bAutoMode = true;
 		m_bHited = true;
 		Notify_NPC(1);
+		m_iHitCnt = 0;
 
 		Safe_Release(pGameInstance);
 	}
@@ -2492,6 +2496,13 @@ void CPlayer::Invincible_Update(_float _fTimeDelta)
 	if (m_bHited)
 	{
 		m_fInvincible_Time += _fTimeDelta;
+
+		if (m_fInvincible_Time >= 0.2f * m_iHitCnt)
+		{
+			m_iHitCnt++;
+			m_bChanged = !m_bChanged;
+		}
+
 		if (m_fInvincible_Time >= 2.f)
 		{
 			m_bHited = false;
