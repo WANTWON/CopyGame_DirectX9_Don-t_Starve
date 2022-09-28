@@ -282,7 +282,7 @@ void CCardgame::Late_Tick(_float fTimeDelta)
 				}
 				
 					
-				j += 0.02f;
+				j += 0.018f;
 				m_pTransformCom->Set_Scale(j, j, 1.f);
 			}
 

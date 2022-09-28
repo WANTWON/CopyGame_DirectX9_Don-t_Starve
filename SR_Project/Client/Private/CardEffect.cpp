@@ -57,7 +57,7 @@ HRESULT CCardEffect::Initialize(void* pArg)
 		m_bcheck = false;
 	}
 	else
-	m_pTransformCom->Set_Scale(4.f, 4.f, 1.f);
+	m_pTransformCom->Set_Scale(3.5f, 3.5f, 1.f);
 
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, pos);
