@@ -35,8 +35,8 @@ HRESULT CQuestpont::Initialize(void* pArg)
 
 	m_fSizeX = 24.0f;
 	m_fSizeY = 24.0f;
-	m_fX = 1050.f;
-	m_fY = 380.f + (iNum * 47.0f);
+	m_fX = 1040.f;
+	m_fY = 360.f + (iNum * 47.0f);
 
 
 
@@ -93,14 +93,17 @@ int CQuestpont::Tick(_float fTimeDelta)
 		{
 			if (iNum == 0)
 			{
-				m_fX = 952.f;
-				m_fY = 427.f;
+				m_fX = 937.f;
+				m_fY = 407.f;
+
+				if (texnum == 0)
+					m_bcheck = false;
 			}
 
 			else if (iNum == 1)
 			{
-				m_fX = 976.f;
-				m_fY = 427.f;
+				m_fX = 961.f;
+				m_fY = 407.f;
 			}
 
 			else if (iNum == 2)

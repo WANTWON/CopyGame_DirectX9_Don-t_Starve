@@ -122,8 +122,11 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 	{
 		if (CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_HUNT)
 		{
-			if (nullptr != m_pRendererCom)
-				m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+			if (m_eWallDesc.etype == WALL_WOOD && nullptr != m_pRendererCom)
+					m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+			else
+					m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+			
 		}
 			m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
 	}
@@ -134,7 +137,7 @@ void CWoodWall::Late_Tick(_float fTimeDelta)
 		Change_Motion();
 		Change_Frame(fTimeDelta);
 	}
-
+	Compute_CamDistance(Get_Position());
 	Set_ShaderID();
 
 	if (m_bConstruct)
@@ -184,9 +187,19 @@ HRESULT CWoodWall::SetUp_Components(void* pArg)
 	/* For.Com_Texture */
 	Texture_Clone();
 
-	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
-		return E_FAIL;
+	if (m_eWallDesc.etype == WALL_WOOD)
+	{
+		/* For.Com_Shader */
+		if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), (CComponent**)&m_pShaderCom)))
+			return E_FAIL;
+	}
+	else
+	{
+		/* For.Com_Shader */
+		if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+			return E_FAIL;
+	}
+	
 
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))

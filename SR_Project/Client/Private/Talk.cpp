@@ -209,6 +209,9 @@ void CTalk::Check_Quest(void)
 			auto pinven = pinv->Get_Inven_list();
 			//Safe_Release(pinv);//üũ
 			//	Safe_AddRef(pinven);
+
+			//여기서끄자
+			pinv->Get_Quest_list()->front()->set_onoff(false);
 			for (auto iter = pinven->begin(); iter != pinven->end(); ++iter)
 			{
 

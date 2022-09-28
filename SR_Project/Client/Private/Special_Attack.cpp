@@ -30,7 +30,7 @@ HRESULT CSpecial_Attack::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(5.f, 5.f, 1.f);
+	m_pTransformCom->Set_Scale(7.f, 7.f, 1.f);
 	m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), 1);
 
 	return S_OK;
@@ -52,7 +52,7 @@ void CSpecial_Attack::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetUp_BillBoard(); // No need
+	SetUp_BillBoard(); 
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
@@ -209,7 +209,7 @@ HRESULT CSpecial_Attack::Texture_Clone()
 	ZeroMemory(&TextureDesc, sizeof(CTexture::TEXTUREDESC));
 
 	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_fSpeed = 30;
+	TextureDesc.m_fSpeed = 25;
 
 	TextureDesc.m_iEndTex = 17;
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture_Attack_Ring"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Attack_Ring"), (CComponent**)&m_pTextureCom, &TextureDesc)))

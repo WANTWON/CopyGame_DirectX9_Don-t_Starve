@@ -1586,12 +1586,33 @@ void CPlayer::Jump(_float _fTimeDelta)
 	}
 
 	CPortal* pBossPortal = dynamic_cast<CPortal*>(m_pTarget);
+	if (pBossPortal->Get_PortalDesc().m_eType == CPortal::PORTALTYPE::PORTAL_BOSS)
+	{
+		CCameraManager::CAM_STATE eState = CCameraManager::Get_Instance()->Get_CamState();
+
+		if (eState == CCameraManager::CAM_PLAYER)
+		{
+			CCameraDynamic* pCamera = (CCameraDynamic*)CCameraManager::Get_Instance()->Get_CurrentCamera();
+			pCamera->Set_TalkingMode(true);
+			pCamera->Set_Target(this);
+		}
+	}
+
 	if (pBossPortal && pBossPortal->Get_PortalDesc().m_eType == CPortal::PORTALTYPE::PORTAL_BOSS)
 	{
 		if (m_pTextureCom->Get_Frame().m_iCurrentTex < 20)
 		{
 			_float3 vPos = Get_Pos();
-			vPos.y += 2.f * _fTimeDelta;
+			vPos.y += 6.f * _fTimeDelta;
+
+			CComponent* pComponent = pBossPortal->Find_Component(TEXT("Com_Transform"));
+			CTransform* pTransform = dynamic_cast<CTransform*>(pComponent);
+			if (!pTransform)
+				return;
+
+			_float3 vLook = pTransform->Get_State(CTransform::STATE::STATE_LOOK);
+			D3DXVec3Normalize(&vLook, &vLook);
+			vPos -= vLook * _fTimeDelta * 2;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		}
 	}

@@ -961,7 +961,8 @@ void CBoarrior::AI_Behaviour(_float fTimeDelta)
 			fRadius = m_fAttackRadius;
 		}
 
-		Calculate_Direction(m_pTarget->Get_Position());
+		_float3 vTargetPosition = m_pTarget->Get_Position();
+		Calculate_Direction(vTargetPosition);
 
 		// If in AttackRadius: Attack
 		if (m_fDistanceToTarget < fRadius)

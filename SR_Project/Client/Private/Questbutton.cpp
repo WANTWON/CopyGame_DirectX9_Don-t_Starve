@@ -32,7 +32,7 @@ HRESULT CQuestbutton::Initialize(void* pArg)
 	m_fSizeX = 46.f;
 	m_fSizeY = 46.f;
 	m_fX = 1230.f;
-	m_fY = 300.f;
+	m_fY = 270.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;

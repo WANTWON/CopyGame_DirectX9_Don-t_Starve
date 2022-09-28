@@ -49,8 +49,6 @@ private: /*For TextureCom */
 	virtual void Change_Motion() override;
 
 private:
-	DIR_STATE m_eDir = DIR_STATE::DIR_DOWN;
-	DIR_STATE m_ePreDir = DIR_STATE::DIR_END;
 	STATE m_eState = STATE::IDLE;
 	STATE m_ePreState = STATE::MAX;
 	_float m_fEatRadius;

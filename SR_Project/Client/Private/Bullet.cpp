@@ -1346,7 +1346,7 @@ _bool CBullet::Compare_Terrain(void)
 	case WEAPON_TYPE::WEAPON_ICESPIKE3:
 	case WEAPON_TYPE::WEAPON_ICESPIKE4:
 	case WEAPON_TYPE::WEAPON_MINE:
-	case WEAPON_TYPE::BEARGER_SPECIAL:
+	//case WEAPON_TYPE::BEARGER_SPECIAL:
 	case WEAPON_TYPE::BOARRIOR_SPECIAL:
 	case WEAPON_TYPE::WEAPON_ICESMOKE:
 		_float3 vScale = m_pTransformCom->Get_Scale();
@@ -1662,6 +1662,9 @@ HRESULT CBullet::Init_Data(void)
 		//m_pTransformCom->Set_Scale(m_tBulletData.vScale.x, m_tBulletData.vScale.y, m_tBulletData.vScale.z);
 		m_fDamage = 10.f;
 		Compare_Terrain();
+		break;
+	case WEAPON_TYPE::BEARGER_SPECIAL:
+		m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.f);
 		break;
 	case WEAPON_TYPE::BOARRIOR_SPECIAL:
 		m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
