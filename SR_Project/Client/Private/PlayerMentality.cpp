@@ -79,6 +79,25 @@ void CPlayerMentality::Late_Tick(_float fTimeDelta)
 
 	if (texnum < 0)
 		texnum = 0;
+	if (texnum <= 15)
+	{
+
+		if (m_bfirst == true)
+			alpha1 += 0.01f;
+
+		if (alpha1 >= 0.2)
+		{
+			m_bfirst = false;
+		}
+
+		if (m_bfirst == false)
+			alpha1 -= 0.01f;
+
+
+		if (alpha1 <= 0)
+			m_bfirst = true;
+
+	}
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
@@ -97,7 +116,7 @@ HRESULT CPlayerMentality::Render()
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
 
-
+	m_pShaderCom->Set_RawValue("g_alpha1", &alpha1, sizeof(_float));
 	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
 	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
 	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&m_ProjMatrix, &m_ProjMatrix), sizeof(_float4x4));

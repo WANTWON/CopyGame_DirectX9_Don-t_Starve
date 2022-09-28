@@ -215,6 +215,10 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	{
 		if (PtInRect(&rcRect, ptMouse)) // for iteminfo
 		{
+			if (CKeyMgr::Get_Instance()->Key_Up(VK_F1))
+			{
+				++item_number;
+			}
 
 			m_fSizeX = 55.f;
 			m_fSizeY = 55.f;
@@ -751,6 +755,8 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 
 
 		//(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Take_Damage());
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(-5));
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_HP(-5));
 		minus_itemcount();
 		break;
 
@@ -759,12 +765,15 @@ void CMainInventory_front::Use_item(ITEMNAME item)
 
 
 		//		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(30));
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(-5));
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_HP(-5));
 		minus_itemcount();
 		break;
 
 	case ITEMNAME_SPIDERMEAT:
 
 		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_Hungry(10));
+		(dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Set_HP(30));
 		minus_itemcount();
 
 		break;

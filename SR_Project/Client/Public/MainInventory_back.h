@@ -55,6 +55,8 @@ private:
 	int* iNumber = nullptr;
 	int iNum = 0;
 	bool m_bcheck_bag = false;
+
+	ITEMID itemtype = ITEM_END;
 	//bool m_bcheck = true;
 };
 

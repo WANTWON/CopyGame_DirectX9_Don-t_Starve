@@ -71,7 +71,7 @@ int CPlayerhp::Tick(_float fTimeDelta)
 
 		if(m_bfirst == true)
 		alpha1 += 0.01f;
-
+		
 		if (alpha1 >= 0.2)
 		{
 			m_bfirst = false;

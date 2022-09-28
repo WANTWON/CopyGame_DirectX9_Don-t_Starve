@@ -116,6 +116,19 @@ PS_OUT PS_HP(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_GREEN(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor = tex2D(TextureSampler, In.vTexUV);
+	//Out.vColor.a -= g_alpha1;
+
+
+	Out.vColor.r = 0.1;
+	Out.vColor.g += 0.4;
+	Out.vColor.b -= 0.2;
+	return Out;
+}
+
 
 technique		DefaultTechnique
 {
@@ -160,5 +173,16 @@ technique		DefaultTechnique
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_HP();
+	}
+
+	pass GREEN
+	{
+		AlphablendEnable = true;
+		SrcBlend = SrcAlpha;
+		DestBlend = InvSrcAlpha;
+		BlendOp = Add;
+		CULLMODE = NONE;
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_GREEN();
 	}
 }

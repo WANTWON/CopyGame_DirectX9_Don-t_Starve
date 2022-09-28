@@ -295,11 +295,6 @@ technique		DefaultTechnique
 		AlphaTestEnable = true;
 		AlphaFunc = greater;
 		AlphaRef = 50;
-
-		ALPHABLENDENABLE = true;
-		SRCBLEND = SRCALPHA;
-		DESTBLEND = INVSRCALPHA;
-		BlendOp = Add;
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_CONSTRUCT();
