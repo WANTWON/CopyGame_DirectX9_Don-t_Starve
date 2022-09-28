@@ -48,7 +48,6 @@ int CTerrorbeak::Tick(_float fTimeDelta)
 {
 	if (__super::Tick(fTimeDelta) && m_bDeadAnimExpired)
 	{
-		CPickingMgr::Get_Instance()->Out_PickingGroup(this);
 		return OBJ_DEAD;
 	}
 
@@ -81,13 +80,6 @@ void CTerrorbeak::Late_Tick(_float fTimeDelta)
 	// Collider
 	memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
 	m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
-
-	// Picking
-	if (!m_bPicking)
-	{
-		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
-		m_bPicking = true;
-	}
 
 	Change_Motion();
 	Change_Frame(fTimeDelta);
@@ -344,59 +336,6 @@ void CTerrorbeak::Change_Motion()
 	}
 }
 
-_bool CTerrorbeak::Picking(_float3 * PickingPoint)
-{
-	if (CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
-		return false;
-
-	if (true == m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint))
-	{
-		m_vecOutPos = *PickingPoint;
-		return true;
-	}
-	else
-	{
-		m_bPickingTrue = false;
-		CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
-
-		auto i = pInvenManager->Get_Monsterinfo_list()->front();
-		auto k = pInvenManager->Get_Monsterhp_list();
-
-		Safe_Release(pInvenManager);
-
-		i->set_monstername(MONSTER_END);
-		i->set_check(false);
-
-		m_eShaderID = SHADER_IDLE;
-		for (auto j : *k)
-			j->set_check(false);
-		return false;
-	}
-
-	return true;
-}
-
-void CTerrorbeak::PickingTrue()
-{
-	m_bPickingTrue = true;
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance(); Safe_AddRef(pGameInstance);
-	CInventory_Manager* pInvenManager = CInventory_Manager::Get_Instance(); Safe_AddRef(pInvenManager);
-
-	auto i = pInvenManager->Get_Monsterinfo_list()->front();
-	auto k = pInvenManager->Get_Monsterhp_list();
-	m_eShaderID = SHADER_PICKING;
-	i->set_monstername(MONSTER_TERRORBEAK);
-	i->set_check(true);
-
-	for (auto j : *k)
-	{
-		j->set_check(true);
-		j->set_hp((_uint)m_tInfo.iCurrentHp);
-	}
-
-	Safe_Release(pGameInstance);
-	Safe_Release(pInvenManager);
-}
 
 void CTerrorbeak::AI_Behaviour(_float fTimeDelta)
 {
