@@ -29,7 +29,7 @@ public:
 	void Set_ShaderID(_bool bIsAlphaBlend = false);
 public:
 	OBJID	Get_ObjID(void) { return m_eObjID; }
-	SHADER_STATE m_eShaderID = SHADER_IDLE;
+	SHADER_STATE m_eShaderID = SHADER_DAYCYClE;
 protected:
 	OBJID m_eObjID;
 	_bool m_bPickingTrue = false;

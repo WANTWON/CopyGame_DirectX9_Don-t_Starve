@@ -862,123 +862,153 @@ void CBearger::Attack(_bool bIsSpecial)
 	_uint iLevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 	
 	// Normal Attack
-	if (!bIsSpecial && m_pTextureCom->Get_Frame().m_iCurrentTex == 10 && m_bFirstFrame)
+	if (!bIsSpecial)
 	{
-		// Play Sound
-		_tchar szFileName[MAX_PATH] = TEXT("");
-		wsprintf(szFileName, TEXT("bearger_attack_%d.wav"), rand() % 2 + 1);
-		pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .8f);
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 10)
+		{
+			if (m_bFirstFrame)
+			{
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("bearger_attack_%d.wav"), rand() % 2 + 1);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_VOICE, .8f);
 
-		m_bFirstFrame = false;
-	}
-	else if (!bIsSpecial && m_pTextureCom->Get_Frame().m_iCurrentTex == 30 && m_bFirstFrame)
-	{
-		// Play Sound
-		_tchar szFileName[MAX_PATH] = TEXT("");
-		wsprintf(szFileName, TEXT("bearger_swhoosh_%d.wav"), rand() % 4 + 1);
-		pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
-		
-		m_bFirstFrame = false;
-	}
-	else if (!bIsSpecial && m_pTextureCom->Get_Frame().m_iCurrentTex == 33 && m_bFirstFrame)
-	{
-		// Create Standard Bullet
-		BULLETDATA BulletData;
-		ZeroMemory(&BulletData, sizeof(BulletData));
+				m_bFirstFrame = false;
+			}
+		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 30)
+		{
+			if (m_bFirstFrame)
+			{
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("bearger_swhoosh_%d.wav"), rand() % 4 + 1);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 
-		BulletData.bIsPlayerBullet = false;
-		BulletData.vPosition = m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
-		BulletData.eDirState = Get_Unprocessed_Dir(m_eDir);
-		BulletData.fOffsetSide = 1.f;
-		BulletData.fOffsetUp = 1.f;
-		BulletData.fOffsetDown = 1.f;
+				m_bFirstFrame = false;
+			}
+		}
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 33)
+		{
+			if (m_bFirstFrame)
+			{
+				// Create Standard Bullet
+				BULLETDATA BulletData;
+				ZeroMemory(&BulletData, sizeof(BulletData));
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-			return;
+				BulletData.bIsPlayerBullet = false;
+				BulletData.vPosition = m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
+				BulletData.eDirState = Get_Unprocessed_Dir(m_eDir);
+				BulletData.fOffsetSide = 1.f;
+				BulletData.fOffsetUp = 1.f;
+				BulletData.fOffsetDown = 1.f;
 
-		m_bFirstFrame = false;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+
+				m_bFirstFrame = false;
+			}
+		}
+		else
+			m_bFirstFrame = true;
 	}
 	// Special Attack
-	else if (bIsSpecial)
+	else 
 	{
 		BULLETDATA BulletData;
 		ZeroMemory(&BulletData, sizeof(BulletData));
 
 		BulletData.bIsPlayerBullet = false;
 		BulletData.eWeaponType = WEAPON_TYPE::BEARGER_SPECIAL;
-		D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
-		D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
-
-		// Bullet Spawn Location
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		if (!pGameInstance)
-			return;
-		CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
-		if (!pVIBuffer_Terrain)
-			return;
-		CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
-		if (!pTransform_Terrain)
-			return;
-
-		_float3 vSpawnPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
-		vSpawnPos.y = pVIBuffer_Terrain->Compute_Height(vSpawnPos, pTransform_Terrain->Get_WorldMatrix());
+		
 
 		// Create Ring and First Wave of Rocks
-		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21 && m_bFirstFrame)
+		if (m_pTextureCom->Get_Frame().m_iCurrentTex == 21)
 		{
-			// Play Sound
-			_tchar szFileName[MAX_PATH] = TEXT("");
-			wsprintf(szFileName, TEXT("bearger_groundpound_%d.wav"), 1);
-			pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
+			if (m_bFirstFrame)
+			{
+				D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+				D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
+				BulletData.vLook.y = 0.f;
 
-			CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-			if (pCamera)
-				pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.7f, 0.2f, 0.01f);
+				// Bullet Spawn Location
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+				CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
 
-			// Ring
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Attack_Special"), LEVEL_STATIC, TEXT("Layer_Attack"), &vSpawnPos)))
-				return;
+				_float3 vSpawnPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
+				vSpawnPos.y = pVIBuffer_Terrain->Compute_Height(vSpawnPos, pTransform_Terrain->Get_WorldMatrix()) + .5f;
 
-			// Rocks
-			BulletData.vPosition = vSpawnPos + BulletData.vLook;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-			BulletData.vPosition = vSpawnPos + BulletData.vRight;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-			BulletData.vPosition = vSpawnPos - BulletData.vLook;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-			BulletData.vPosition = vSpawnPos - BulletData.vRight;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
+				// Play Sound
+				_tchar szFileName[MAX_PATH] = TEXT("");
+				wsprintf(szFileName, TEXT("bearger_groundpound_%d.wav"), 1);
+				pGameInstance->PlaySounds(szFileName, SOUND_ID::SOUND_MONSTER_EFFECT, .8f);
 
-			m_bFirstFrame = false;
+				CCameraDynamic* pCamera = dynamic_cast<CCameraDynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+				if (pCamera)
+					pCamera->Set_CamMode(CCameraDynamic::CAM_SHAKING, 0.7f, 0.2f, 0.01f);
+
+				// Ring
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Attack_Special"), LEVEL_STATIC, TEXT("Layer_Attack"), &vSpawnPos)))
+					return;
+
+				vSpawnPos.y += .5f;
+
+				// Rocks
+				BulletData.vPosition = vSpawnPos + BulletData.vLook;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+				BulletData.vPosition = vSpawnPos + BulletData.vRight;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+				BulletData.vPosition = vSpawnPos - BulletData.vLook;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+				BulletData.vPosition = vSpawnPos - BulletData.vRight;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+
+				m_bFirstFrame = false;
+			}
 		}
 		// Create Second Wave of Rocks
-		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 33 && m_bFirstFrame)
+		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 35)
 		{
-			// Rocks
-			BulletData.vPosition = vSpawnPos + BulletData.vLook * 2;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-			BulletData.vPosition = vSpawnPos + BulletData.vRight * 2;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-			BulletData.vPosition = vSpawnPos - BulletData.vLook * 2;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
-			BulletData.vPosition = vSpawnPos - BulletData.vRight * 2;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
-				return;
+			if (m_bFirstFrame)
+			{
+				D3DXVec3Normalize(&BulletData.vLook, &m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+				D3DXVec3Normalize(&BulletData.vRight, &m_pTransformCom->Get_State(CTransform::STATE_RIGHT));
+				BulletData.vLook.y = 0.f;
 
-			m_bFirstFrame = false;
+				// Bullet Spawn Location
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+				CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+
+				_float3 vSpawnPos = (_float3)m_pColliderCom->Get_CollRectDesc().StateMatrix.m[3];
+				vSpawnPos.y = pVIBuffer_Terrain->Compute_Height(vSpawnPos, pTransform_Terrain->Get_WorldMatrix()) + .5f;
+				vSpawnPos.y += .5f;
+
+				// Rocks
+				BulletData.vPosition = vSpawnPos + BulletData.vLook * 2.5;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+				BulletData.vPosition = vSpawnPos + BulletData.vRight * 2.5;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+				BulletData.vPosition = vSpawnPos - BulletData.vLook * 2.5;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+				BulletData.vPosition = vSpawnPos - BulletData.vRight * 2.5;
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Bullet"), iLevelIndex, TEXT("Bullet"), &BulletData)))
+					return;
+
+				m_bFirstFrame = false;
+			}
 		}
 		else
 			m_bFirstFrame = true;
 	}
-	else 
-		m_bFirstFrame = true;
 }
 
 void CBearger::Check_CameraShake(STATE eState)

@@ -162,10 +162,8 @@ PS_OUT PS_DARKWITHLIGHT(PS_IN In)
 	Out.vColor.rgb -= g_fNightDarkAlpha*0.2f;
 	Out.vColor -= vFogColor * fFogPower;
 
-
 	float4		vLightColor = vector(2.f, 2.f, 1.f, 0.f);
 	float		fLightPower = max(g_fMinRange - fDistance, 0.f) / (g_fMaxRange - g_fMinRange);
-
 
 	Out.vColor += vLightColor * fLightPower;
 
@@ -187,6 +185,20 @@ PS_OUT PS_DAYCYCLE(PS_IN In)
 
 	Out.vColor.rgb -= g_fNightDarkAlpha*0.2f;
 	Out.vColor -= vFogColor * fFogPower;
+
+	return Out;
+}
+
+PS_OUT PS_CONSTRUCT(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vColor = tex2D(TextureSampler, In.vTexUV);
+
+	Out.vColor.r += g_fDinnerDelta;
+	Out.vColor.b += g_fNightDelta;
+
+	Out.vColor.rgb += 0.2f;
+	Out.vColor.a -= 0.3f;
 
 	return Out;
 }
@@ -281,6 +293,17 @@ technique		DefaultTechnique
 		CULLMODE = NONE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_DAYCYCLE();
+	}
+
+	pass OnlyConstruct
+	{
+		ALPHABLENDENABLE = true;
+		SRCBLEND = SRCALPHA;
+		DESTBLEND = INVSRCALPHA;
+		BlendOp = Add;
+		CULLMODE = NONE;
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_CONSTRUCT();
 	}
 }
 

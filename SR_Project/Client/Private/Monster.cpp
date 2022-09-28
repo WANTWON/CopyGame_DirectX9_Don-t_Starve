@@ -233,6 +233,7 @@ void CMonster::Calculate_Direction(_float3 vTargetPos)
 
 	// New Logic
 	_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	vLook.y = 0.f;
 	_float3 vTargetDir = vTargetPos - Get_Position();
 	D3DXVec3Normalize(&vLook, &vLook);
 	D3DXVec3Normalize(&vTargetDir, &vTargetDir);
