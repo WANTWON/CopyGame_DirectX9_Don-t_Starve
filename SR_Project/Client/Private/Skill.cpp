@@ -253,7 +253,7 @@ HRESULT CSkill::Init_Data(void)
 	case SKILL_TYPE::ICE_BLAST:
 		Change_Texture(TEXT("Com_Texture_IceBlast_Pre"));
 		m_pTransformCom->Set_Scale(m_tSkillDesc.vScale.x, m_tSkillDesc.vScale.y, m_tSkillDesc.vScale.z);
-		m_fDamage = 30.f;
+		m_fDamage = 23.f;
 		break;
 	case SKILL_TYPE::ELEC:
 		m_pTransformCom->Set_Scale(3.f, 1.f, 3.f);
@@ -275,7 +275,7 @@ HRESULT CSkill::Init_Data(void)
 		break;
 	case SKILL_TYPE::CRACKLE_HIT:
 		m_pTransformCom->Set_Scale(3.f, 5.f, 1.f);
-		m_fDamage = 50.f;
+		m_fDamage = 55.f;
 		break;
 	case SKILL_TYPE::REVIVE:
 		m_pTransformCom->Set_Scale(3.f, 3.f, 1.f);
@@ -579,7 +579,7 @@ void CSkill::Activate_Check(_float _fTimeDelta)
 		case SKILL_TYPE::ICE_BLAST:
 			if (m_bActivated)
 			{
-				m_fDamage = 30.f;
+				m_fDamage = 33.f;
 				goto Attack;
 			}
 			break;
@@ -587,7 +587,7 @@ void CSkill::Activate_Check(_float _fTimeDelta)
 			if (m_bActivated)
 			{
 				tDamageType.eDamageType = DAMAGE_ATTRIBUTE::ATTR_STUN;
-				m_fDamage = 10.f;
+				m_fDamage = 11.f;
 				m_bDead = true;
 				goto Attack;
 
@@ -600,7 +600,7 @@ void CSkill::Activate_Check(_float _fTimeDelta)
 			if (m_bActivated)
 			{
 				m_bActivated = false;
-				m_fDamage = 10.f;
+				m_fDamage = 22.f;
 				goto Attack;
 			}
 		}

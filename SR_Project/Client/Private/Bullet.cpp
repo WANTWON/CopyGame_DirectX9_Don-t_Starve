@@ -369,14 +369,14 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 			if (m_bIsAttacked)
 			{
 				m_bIsAttacked = false;
-				m_fDamage = 30.f;
+				m_fDamage = 35.f;
 				goto AttackMulti;
 			}
 			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE1:
 			if (m_bActivated3)
 			{
-				m_fDamage = 2.f;
+				m_fDamage = 6.f;
 				m_bActivated3 = false;
 				goto AttackMulti;
 			}
@@ -384,7 +384,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 		case WEAPON_TYPE::WEAPON_ICESPIKE2:
 			if (m_bActivated3)
 			{
-				m_fDamage = 1.5f;
+				m_fDamage = 4.f;
 				m_bActivated3 = false;
 				goto AttackMulti;
 			}
@@ -392,11 +392,10 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 		case WEAPON_TYPE::WEAPON_ICESPIKE3:
 			if (m_bActivated3)
 			{
-				m_fDamage = 1.f;
+				m_fDamage = 2.f;
 				m_bActivated3 = false;
 				goto AttackMulti;
 			}
-			goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_ICESPIKE4:
 			if (m_bActivated3)
@@ -405,14 +404,13 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 				m_bActivated3 = false;
 				goto AttackMulti;
 			}
-			goto AttackMulti;
 			break;
 		case WEAPON_TYPE::WEAPON_MINE:
 			if (!m_bIsAttacked)
 			{
 				m_bIsAttacked = true; // �����ѹ�����
 				m_bActivated = true; // 
-				m_fDamage = 10.f;
+				m_fDamage = 16.f;
 				goto AttackMulti;
 			}
 			break;
@@ -426,7 +424,7 @@ void CBullet::AttackCheck(_float _fTimeDelta)
 		case WEAPON_TYPE::WEAPON_ROCK:
 			if (m_bIsAttacked)
 			{
-				m_fDamage = 30.f;
+				m_fDamage = 25.f;
 				goto AttackMulti;
 			}
 			break;
@@ -609,9 +607,9 @@ void CBullet::IceSpikes(_float _fTimeDelta)
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
-
+	
 	m_fDamageTimger += _fTimeDelta;
-	if (m_fDamageTimger > 0.25f)
+	if (!m_bActivated3 &&m_fDamageTimger > 0.3f)
 	{
 		m_bActivated3 = true;
 		m_fDamageTimger = 0.f;
