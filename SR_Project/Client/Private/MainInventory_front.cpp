@@ -215,7 +215,7 @@ int CMainInventory_front::Tick(_float fTimeDelta)
 	{
 		if (PtInRect(&rcRect, ptMouse)) // for iteminfo
 		{
-			if (CKeyMgr::Get_Instance()->Key_Up(VK_F1))
+			if (CKeyMgr::Get_Instance()->Key_Up('z'))
 			{
 				++item_number;
 			}

@@ -7,6 +7,7 @@ class CTexture;
 class CRenderer;
 class CTransform;
 class CVIBuffer_Rect;
+class CShader;
 END
 
 BEGIN(Client)
@@ -53,10 +54,16 @@ public:
 
 private: /* For.Components */
 	CTexture*				m_pTextureCom = nullptr;
+	CTexture*				m_pTextureCom1 = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	//CTransform*				m_pTransformCom1 = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
+	CShader*				m_pShaderCom = nullptr;
+
+	UI_SHADER_STATE			m_eShaderID = UI_SHADER_CARD;
+
+	_float alpha = 1.f;
 
 private:
 	CARDDESC					m_CaedDesc;
@@ -112,6 +119,8 @@ private:
 
 	_bool goback = true;
 	_bool lastcard = false;
+	_bool forlastcard = true;
+	_bool reversecard = true;
 
 	_float j = 2.f;
 	

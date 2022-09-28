@@ -32,7 +32,7 @@ private: /* For.Components */
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 	CShader*				m_pShaderCom = nullptr;
-	UI_SHADER_STATE			m_eShaderID = UI_SHADER_IDLE;
+	UI_SHADER_STATE			m_eShaderID = UI_SHADER_HP;
 private:
 	_float4x4				m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
@@ -48,6 +48,10 @@ private:
 	_uint whatnpc = 0;
 
 	_bool m_bcheck = false;
+
+	_bool m_bfirst = true;
+
+	_float alpha1 = 0.f;
 
 public:
 	_bool Get_check() { return m_bcheck;}

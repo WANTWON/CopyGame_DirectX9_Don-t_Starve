@@ -35,8 +35,8 @@ HRESULT CLine::Initialize(void* pArg)
 
 	m_fSizeX = 250.0f;
 	m_fSizeY = 2.0f;
-	m_fX = 1000.f;
-	m_fY = 380.f + (iNum * 48.f);
+	m_fX = 990.f;
+	m_fY = 360.f + (iNum * 48.f);
 	/*
 
 

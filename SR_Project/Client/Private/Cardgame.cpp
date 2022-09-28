@@ -119,32 +119,31 @@ int CCardgame::Tick(_float fTimeDelta)
 		WalkingTerrain();
 
 
-		/*if (CKeyMgr::Get_Instance()->Key_Up('6'))
-			m_pTransformCom->Turn(_float3(0.f, 0.f, 1.f), fTimeDelta);
-
-		if (CKeyMgr::Get_Instance()->Key_Up('7'))
-			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);*/
-
-
-		//if (CKeyMgr::Get_Instance()->Key_Up('8'))
-		//{
-		//	bfirst = false;
-		//	//ftime = fTimeDelta;
-		//	turn = true;
-		//}
 
 
 		if (goback == true)
 		{
 			ftime4 += fTimeDelta;
 
-			if (ftime4 >= 2.f)
+			
+			alpha -= 0.02f;
+
+			if (alpha <= 0.f)
+				alpha = 0.f;
+
+			if (ftime4 >= 2.5f)
 			{
 				texnum = 5;
 
 				ftime4 = 0;
 
 				goback = false;
+
+				alpha = 0.f;
+
+				reversecard = false;
+
+				//m_eShaderID = UI_SHADER_IDLE;
 			}
 
 			
@@ -243,6 +242,8 @@ void CCardgame::Late_Tick(_float fTimeDelta)
 			if (ftime2 > 1.f)
 			{
 				m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), 0.3f);
+
+				alpha += 0.013f;
 			}
 			if (ftime2 > 2.f && !lastcard)
 			{
@@ -263,7 +264,25 @@ void CCardgame::Late_Tick(_float fTimeDelta)
 			{
 				m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), 0.3f);
 				texnum = 6;
-				j += 0.02f;
+				if (forlastcard)
+				{
+					alpha = 1.f;
+					forlastcard = false;
+
+				}
+
+				if (alpha > 0.f)
+				{
+					alpha -= 0.02f;
+				}
+
+				if (alpha <= 0.f)
+				{
+					alpha = 0.f;
+				}
+				
+					
+				j += 0.018f;
 				m_pTransformCom->Set_Scale(j, j, 1.f);
 			}
 
@@ -401,7 +420,7 @@ HRESULT CCardgame::Render()
 {
 	if (m_bcheck == true)
 	{
-		if (FAILED(__super::Render()))
+		/*if (FAILED(__super::Render()))
 			return E_FAIL;
 
 		if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
@@ -419,10 +438,30 @@ HRESULT CCardgame::Render()
 
 
 		if (FAILED(Release_RenderState()))
-			return E_FAIL;
+			return E_FAIL;*/
 
 
-		
+		_float4x4		WorldMatrix, ViewMatrix;
+		D3DXMatrixIdentity(&ViewMatrix);
+
+		m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+		m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+		WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
+
+		m_pShaderCom->Set_RawValue("g_alpha", &alpha, sizeof(_float));
+		m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+		m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+		m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&m_ProjMatrix, &m_ProjMatrix), sizeof(_float4x4));
+
+		if(reversecard)
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom1->Get_Texture(texnum));
+		else
+		m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(texnum));
+
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+		m_pShaderCom->End();
 
 
 
@@ -436,6 +475,10 @@ HRESULT CCardgame::Render()
 
 HRESULT CCardgame::SetUp_Components()
 {
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
@@ -444,9 +487,15 @@ HRESULT CCardgame::SetUp_Components()
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Cardgame"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Cardgame1"), (CComponent**)&m_pTextureCom1)))
+		return E_FAIL;
+
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
+
+
 
 
 	/* For.Com_Transform */
@@ -546,9 +595,10 @@ void CCardgame::Free()
 	__super::Free();
 
 	Safe_Release(m_pTransformCom);
-	//Safe_Release(m_pTransformCom1);
+	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pTextureCom1);
 }
 

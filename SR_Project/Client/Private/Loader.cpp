@@ -966,6 +966,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/cardgame/rcardfront%d.png"), 7))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Cardgame1"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/cardgame/cardfront%d.png"), 6))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Texture_DeadUI */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_BlackThunder"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/UI/cardgame/attack2.info.hit_%d.png"), 7))))

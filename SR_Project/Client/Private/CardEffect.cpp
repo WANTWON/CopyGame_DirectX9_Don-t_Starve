@@ -57,7 +57,7 @@ HRESULT CCardEffect::Initialize(void* pArg)
 		m_bcheck = false;
 	}
 	else
-	m_pTransformCom->Set_Scale(5.f, 5.f, 1.f);
+	m_pTransformCom->Set_Scale(3.5f, 3.5f, 1.f);
 
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, pos);
@@ -100,6 +100,8 @@ int CCardEffect::Tick(_float fTimeDelta)
 
 
 		time += fTimeDelta;
+		if (time > 0.01f)
+			alpha += 0.01f;
 
 		if (time > 0.075f)
 		{
@@ -109,7 +111,7 @@ int CCardEffect::Tick(_float fTimeDelta)
 
 
 
-		
+		//time > 0.01
 	
 		
 
@@ -167,9 +169,8 @@ HRESULT CCardEffect::Render()
 {
 	if (m_bcheck == true)
 	{
-		if (m_bcheck == true)
-		{
-			if (FAILED(__super::Render()))
+		
+			/*if (FAILED(__super::Render()))
 				return E_FAIL;
 
 			if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
@@ -195,14 +196,32 @@ HRESULT CCardEffect::Render()
 
 
 			if (FAILED(Release_RenderState()))
-				return E_FAIL;
+				return E_FAIL;*/
+
+			_float4x4		WorldMatrix, ViewMatrix;
+			D3DXMatrixIdentity(&ViewMatrix);
+
+			m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+			m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+			WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
+
+			m_pShaderCom->Set_RawValue("g_alpha", &alpha, sizeof(_float));
+			m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+			m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+			m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&m_ProjMatrix, &m_ProjMatrix), sizeof(_float4x4));
+			m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom1->Get_Texture(texnum));
+
+			m_pShaderCom->Begin(m_eShaderID);
+
+			m_pVIBufferCom->Render();
+			m_pShaderCom->End();
 
 
 
 
 
 
-		}
+		
 	}
 
 	return E_FAIL;
