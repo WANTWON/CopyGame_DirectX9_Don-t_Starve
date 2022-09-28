@@ -31,7 +31,7 @@ HRESULT CMiniMap_button::Initialize(void* pArg)
 	m_fSizeX = 46.f;
 	m_fSizeY = 46.f;
 	m_fX = 1230.f;
-	m_fY = 370.f;
+	m_fY = 340.f;
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;

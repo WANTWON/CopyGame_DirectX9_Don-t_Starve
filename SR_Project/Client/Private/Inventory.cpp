@@ -1284,7 +1284,11 @@ void CInventory_Manager::update_questpont() //for questpont
 					if (k->get_pontnum() == 0)
 					{
 						k->set_pont_num((m_Quest.front()->get_spidercount() % 100) / 10);
+
+						//if(m_Quest.front()->get_spidercount() >= 10)
 						k->set_check(true);
+
+						
 					
 					}
 
