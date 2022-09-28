@@ -35,6 +35,7 @@ HRESULT CSpider::Initialize(void* pArg)
 
 	m_tInfo.iMaxHp = 75;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.fDamage = 10.f;
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();
 	return S_OK;
 }

@@ -34,6 +34,7 @@ HRESULT CPig::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 
 	m_tInfo.iMaxHp = 150;
+	m_tInfo.fDamage = 20.f;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 
 	m_fAttackRadius = .8f;

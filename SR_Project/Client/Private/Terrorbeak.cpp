@@ -245,7 +245,7 @@ void CTerrorbeak::Change_Frame(_float fTimeDelta)
 			else
 				m_bDeadAnimExpired = true;
 		}	
-		else if (m_pTextureCom->Get_Frame().m_iCurrentTex == 8 && m_bDead)
+		else if (m_bDead)
 		{
 			if (!m_bItemDropped)
 				Drop_Items();

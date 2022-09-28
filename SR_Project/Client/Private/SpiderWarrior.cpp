@@ -34,7 +34,7 @@ HRESULT CSpiderWarrior::Initialize(void* pArg)
 
 	m_tInfo.iMaxHp = 100;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
-	m_tInfo.fDamage = 10.f;
+	m_tInfo.fDamage = 15.f;
 
 	m_fAttackRadius = 2.f;
 	m_CollisionMatrix = m_pTransformCom->Get_WorldMatrix();

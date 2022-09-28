@@ -46,8 +46,8 @@ HRESULT CLevel_Hunt::Initialize()
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_HUNT);
 	m_dwTime = GetTickCount();
 
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("waterlogged_amb_spring_day_LP_DST.wav"), 0.5f);
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("Chaplinesque2_vinyl_mastered.wav"), 0.3f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("waterlogged_amb_spring_day_LP_DST.wav"), SOUND_GROUND ,0.5f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Chaplinesque2_vinyl_mastered.wav"),  SOUND_BGM , 0.3f);
 	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_NONSTATIC);
 	m_eDayState = CDayCycle::Get_Instance()->Get_DayState();
 	m_fMusicTime = GetTickCount();
@@ -366,13 +366,13 @@ void CLevel_Hunt::Play_Music()
 					switch (m_eDayState)
 					{
 					case Client::DAY_MORNING:
-						CGameInstance::Get_Instance()->PlayBGM(TEXT("Chaplinesque2_vinyl_mastered.wav"), 0.3f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Chaplinesque2_vinyl_mastered.wav"), SOUND_BGM,  0.3f);
 						break;
 					case Client::DAY_DINNER:
-						CGameInstance::Get_Instance()->PlayBGM(TEXT("Chaplinesque2_vinyl_mastered.wav"), 0.3f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Chaplinesque2_vinyl_mastered.wav"), SOUND_BGM, 0.3f);
 						break;
 					case Client::DAY_NIGHT:
-						CGameInstance::Get_Instance()->PlayBGM(TEXT("DSS_marsh_mild_NIGHT_LP.wav"), 0.2f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("DSS_marsh_mild_NIGHT_LP.wav"), SOUND_BGM,  0.2f);
 						break;
 					}
 

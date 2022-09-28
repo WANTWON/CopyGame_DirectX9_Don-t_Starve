@@ -42,7 +42,7 @@ HRESULT CBoarrior::Initialize(void* pArg)
 
 	m_tInfo.iMaxHp = 1500.f;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
-	m_tInfo.fDamage = 20.f;
+	m_tInfo.fDamage = 25.f;
 
 	m_fRadius = 6.f;
 	m_fAggroRadius = 7.f;

@@ -2026,8 +2026,7 @@ _bool CPlayer::Decrease_Stat(_float _fTimeDelta)
 	m_fMentalitytime += _fTimeDelta;
 	m_fHungertime += _fTimeDelta;
 
-	if ((LEVEL)(m_iCurrentLevelndex) != LEVEL_BOSS || (LEVEL)(m_iCurrentLevelndex) != LEVEL_MAZE
-		|| m_eState != ACTION_STATE::SLEEP)
+	if ((LEVEL)(m_iCurrentLevelndex) != LEVEL_BOSS && (LEVEL)(m_iCurrentLevelndex) != LEVEL_MAZE && m_eState != ACTION_STATE::SLEEP)
 	{
 		if (CInventory_Manager::Get_Instance()->Get_Daycountpont_list()->front()->Get_nightandday() == DAY_DINNER && m_fMentalitytime > 1.f)
 		{

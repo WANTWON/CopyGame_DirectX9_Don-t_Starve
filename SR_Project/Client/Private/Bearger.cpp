@@ -39,7 +39,7 @@ HRESULT CBearger::Initialize(void* pArg)
 
 	m_tInfo.iMaxHp = 1000.f;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
-
+	m_tInfo.fDamage = 20.f;
 	m_fAggroRadius = 4.f;
 	m_fAttackRadius = 2.f; 
 	m_fEatRadius = 2.f;

@@ -78,7 +78,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	CPickingMgr::Get_Instance()->Ready_PickingMgr(LEVEL::LEVEL_GAMEPLAY);
 	CCameraManager::Get_Instance()->Ready_Camera(LEVEL::LEVEL_GAMEPLAY);
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("waterlogged_amb_spring_day_LP_DST.wav"), SOUND_GROUND, 0.5f);
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("CreepyForest_vinyl_mastered.wav"), 0.3f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("CreepyForest_vinyl_mastered.wav"), SOUND_BGM, 0.3f);
 
 	CDayCycle::Get_Instance()->RegisterObserver(this, CDayCycle::CYCLE_NONSTATIC);
 	m_fMusicTime = GetTickCount();
@@ -927,7 +927,7 @@ void CLevel_GamePlay::Set_BeargerAdd(_bool type)
 	if (type)
 	{
 		CGameInstance::Get_Instance()->StopSound(SOUND_BGM);
-		CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_BossFightNo3_V1.wav"), 0.3f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("DST_BossFightNo3_V1.wav"), SOUND_BGM, 0.3f);
 	}
 }
 
@@ -942,20 +942,20 @@ void CLevel_GamePlay::Play_Music()
 		{
 			if (m_bBeargerAdd)
 			{
-				CGameInstance::Get_Instance()->PlayBGM(TEXT("DST_BossFightNo3_V1.wav"), 0.3f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("DST_BossFightNo3_V1.wav"), SOUND_BGM,0.3f);
 			}
 			else
 			{
 				switch (m_eDayState)
 				{
 				case Client::DAY_MORNING:
-					CGameInstance::Get_Instance()->PlayBGM(TEXT("CreepyForest_vinyl_mastered.wav"), 0.3f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("CreepyForest_vinyl_mastered.wav"), SOUND_BGM, 0.3f);
 					break;
 				case Client::DAY_DINNER:
-					CGameInstance::Get_Instance()->PlayBGM(TEXT("CreepyForest_vinyl_mastered.wav"), 0.3f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("CreepyForest_vinyl_mastered.wav"), SOUND_BGM,  0.3f);
 					break;
 				case Client::DAY_NIGHT:
-					CGameInstance::Get_Instance()->PlayBGM(TEXT("DSS_marsh_mild_NIGHT_LP.wav"), 0.2f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("DSS_marsh_mild_NIGHT_LP.wav"), SOUND_BGM,  0.2f);
 					break;
 				}
 			}
