@@ -59,17 +59,46 @@ int CTent::Tick(_float fTimeDelta)
 
 void CTent::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
+	//__super::Late_Tick(fTimeDelta);
 
+	SetUp_BillBoard();
+
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+	{
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+	}
+
+	if (m_pColliderCom)
+	{
+		memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	}
+
+	Set_ShaderID();
 	Change_Motion();
 	Change_Frame(fTimeDelta);
-
+	Compute_CamDistance(Get_Position());
 	if(m_bConstruct)
 		m_eShaderID = SHADER_CONSTRUCT;
 }
 
 HRESULT CTent::Render()
 {
+	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix, PlayerMatrix;
+
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	CTransform*		pTransform_Player = (CTransform*)pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"), 0);
+	if (nullptr == pTransform_Player)
+		return E_FAIL;
+
+	PlayerMatrix = *D3DXMatrixTranspose(&WorldMatrix, &pTransform_Player->Get_WorldMatrix());
+
+	_float3  fPlayerPosition = pTarget->Get_Position();
+	m_pShaderCom->Set_RawValue("g_PlayerPosition", &fPlayerPosition, sizeof(_float3));
+	m_pShaderCom->Set_RawValue("g_PlayerWorldMatrix", &PlayerMatrix, sizeof(_float4x4));
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -113,7 +142,7 @@ HRESULT CTent::SetUp_Components(void* pArg)
 
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */

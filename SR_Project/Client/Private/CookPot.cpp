@@ -56,7 +56,23 @@ int CCookPot::Tick(_float fTimeDelta)
 
 void CCookPot::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
+	//__super::Late_Tick(fTimeDelta);
+
+
+
+	SetUp_BillBoard();
+
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
+	{
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+	}
+
+	if (m_pColliderCom)
+	{
+		memcpy(*(_float3*)&m_CollisionMatrix.m[3][0], (m_pTransformCom->Get_State(CTransform::STATE_POSITION)), sizeof(_float3));
+		m_pColliderCom->Update_ColliderBox(m_CollisionMatrix);
+	}
 
 	if (!m_bPicking && !CPickingMgr::Get_Instance()->Get_Mouse_Has_Construct())
 	{
@@ -65,9 +81,10 @@ void CCookPot::Late_Tick(_float fTimeDelta)
 	}
 	
 
+	Set_ShaderID();
 	Change_Motion();
 	Change_Frame(fTimeDelta);
-
+	Compute_CamDistance(Get_Position());
 	if (m_bConstruct)
 		m_eShaderID = SHADER_CONSTRUCT;
 }
@@ -101,7 +118,7 @@ HRESULT CCookPot::SetUp_Components(void* pArg)
 
 	
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
