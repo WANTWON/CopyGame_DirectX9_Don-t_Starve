@@ -1,0 +1,28 @@
+SHORT
+1. Image 			OK
+2. Idle				OK
+3. Chop			OK
+4. Fall Left			OK
+5. Fall Right			OK
+6. Shake (Inspect)		OK
+7. Grow (to Normal)	OK
+8. Stump			OK
+
+NORMAL
+1. Image			OK
+2. Idle				OK
+3. Chop			OK
+4. Fall Left			OK
+5. Fall Right			OK
+6. Shake (Inspect)		OK
+7. Grow (to Tall)		OK
+8. Stump			OK
+
+TALL
+1. Image			OK
+2. Idle 			OK
+3. Chop 			OK
+4. Fall Left			OK
+5. Fall Right			OK
+6. Shake (Inspect)		OK
+7. Stump			OK

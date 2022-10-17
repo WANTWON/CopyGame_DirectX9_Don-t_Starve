@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="00. Window">
+      <UniqueIdentifier>{5dbf1ca9-7675-4c6f-bdd7-75e8d719b116}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Window\00. MainFrm">
+      <UniqueIdentifier>{749fe125-738e-46c3-9c66-6319f9044172}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Window\01. View">
+      <UniqueIdentifier>{1f3c44b4-7b08-44cd-9537-e5eca070971a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Window\01. View\ToolView">
+      <UniqueIdentifier>{f9bab57d-55a2-43be-a447-f4413e8f1795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Window\01. View\FormView">
+      <UniqueIdentifier>{9569b91e-92e7-4746-a8bd-917a69de9295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Default">
+      <UniqueIdentifier>{8fbca7cd-ba95-4f73-8256-8f2160d61870}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defines">
+      <UniqueIdentifier>{ca88ae64-cb82-4369-bd0f-777142e28f15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. MainApp">
+      <UniqueIdentifier>{83621f2a-6434-4ed9-8d54-1be0d41cdab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject">
+      <UniqueIdentifier>{60023e33-9fd6-4ae7-bcaa-8fb9306bd832}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00. Terrain">
+      <UniqueIdentifier>{59107511-86cf-4675-88cf-04ddc9408cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Camera">
+      <UniqueIdentifier>{52a53130-5f15-475d-84db-8fbc1cdc464f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Window\02. Tool">
+      <UniqueIdentifier>{0408eae5-e6c7-4a36-9fbe-e26ddda2227d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Grass">
+      <UniqueIdentifier>{b63050e9-b25f-42b1-91a1-9a2e1280c182}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Tree">
+      <UniqueIdentifier>{1b494e1f-c03d-4c61-a3a2-ff35fef45c0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Rock">
+      <UniqueIdentifier>{17e73743-0a0f-487f-85bf-01a5f003dc53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Berry">
+      <UniqueIdentifier>{93c2e754-b6a5-4ede-853e-90a6db6a379b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. House">
+      <UniqueIdentifier>{8a7c4ea2-447a-4cc4-ae6b-58b56956fad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Monster">
+      <UniqueIdentifier>{68bc4132-3b39-499c-be69-b65a146d2b01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Wall">
+      <UniqueIdentifier>{d0d9ca49-891d-41b3-8f7a-9956af19b535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Carrot">
+      <UniqueIdentifier>{3ee777d6-a0f5-46f7-9f23-f6f6426a1c7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. DecoObject">
+      <UniqueIdentifier>{40a7626e-9114-4b8d-8102-e777b1df0cde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Dirt">
+      <UniqueIdentifier>{7a1917e7-49ad-4882-86b0-948edd7d9970}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. Trap">
+      <UniqueIdentifier>{51a35054-d9b1-4c4b-a22b-31f64361fc8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\13. Carnival_Card">
+      <UniqueIdentifier>{d44715ca-bcfc-480b-9013-403bdaaf8d50}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainFrm.h">
+      <Filter>00. Window\00. MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolView.h">
+      <Filter>00. Window\01. View\ToolView</Filter>
+    </ClInclude>
+    <ClInclude Include="MyForm.h">
+      <Filter>00. Window\01. View\FormView</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolDoc.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="MainApp.h">
+      <Filter>01. MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool_Defines.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>02. GameObject\00. Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraDynamic.h">
+      <Filter>02. GameObject\01. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>02. GameObject\00. Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Grass.h">
+      <Filter>02. GameObject\02. Grass</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.h">
+      <Filter>02. GameObject\03. Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="Boulder.h">
+      <Filter>02. GameObject\04. Rock</Filter>
+    </ClInclude>
+    <ClInclude Include="BerryBush.h">
+      <Filter>02. GameObject\05. Berry</Filter>
+    </ClInclude>
+    <ClInclude Include="House.h">
+      <Filter>02. GameObject\06. House</Filter>
+    </ClInclude>
+    <ClInclude Include="Pig.h">
+      <Filter>02. GameObject\07. Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="Spider.h">
+      <Filter>02. GameObject\07. Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>02. GameObject\07. Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="WoodWall.h">
+      <Filter>02. GameObject\08. Wall</Filter>
+    </ClInclude>
+    <ClInclude Include="Carrot.h">
+      <Filter>02. GameObject\09. Carrot</Filter>
+    </ClInclude>
+    <ClInclude Include="DecoObject.h">
+      <Filter>02. GameObject\10. DecoObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Dirt.h">
+      <Filter>02. GameObject\11. Dirt</Filter>
+    </ClInclude>
+    <ClInclude Include="Trap.h">
+      <Filter>02. GameObject\12. Trap</Filter>
+    </ClInclude>
+    <ClInclude Include="CarnivalCard.h">
+      <Filter>02. GameObject\13. Carnival_Card</Filter>
+    </ClInclude>
+    <ClInclude Include="Interactive_Object.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Carnival_Egg.h">
+      <Filter>02. GameObject\07. Monster</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>00. Window\00. MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolView.cpp">
+      <Filter>00. Window\01. View\ToolView</Filter>
+    </ClCompile>
+    <ClCompile Include="MyForm.cpp">
+      <Filter>00. Window\01. View\FormView</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolDoc.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="MainApp.cpp">
+      <Filter>01. MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>02. GameObject\00. Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraDynamic.cpp">
+      <Filter>02. GameObject\01. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>02. GameObject\00. Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Grass.cpp">
+      <Filter>02. GameObject\02. Grass</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree.cpp">
+      <Filter>02. GameObject\03. Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="Boulder.cpp">
+      <Filter>02. GameObject\04. Rock</Filter>
+    </ClCompile>
+    <ClCompile Include="BerryBush.cpp">
+      <Filter>02. GameObject\05. Berry</Filter>
+    </ClCompile>
+    <ClCompile Include="House.cpp">
+      <Filter>02. GameObject\06. House</Filter>
+    </ClCompile>
+    <ClCompile Include="Pig.cpp">
+      <Filter>02. GameObject\07. Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="Spider.cpp">
+      <Filter>02. GameObject\07. Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>02. GameObject\07. Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="WoodWall.cpp">
+      <Filter>02. GameObject\08. Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="Carrot.cpp">
+      <Filter>02. GameObject\09. Carrot</Filter>
+    </ClCompile>
+    <ClCompile Include="DecoObject.cpp">
+      <Filter>02. GameObject\10. DecoObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Dirt.cpp">
+      <Filter>02. GameObject\11. Dirt</Filter>
+    </ClCompile>
+    <ClCompile Include="Trap.cpp">
+      <Filter>02. GameObject\12. Trap</Filter>
+    </ClCompile>
+    <ClCompile Include="CarnivalCard.cpp">
+      <Filter>02. GameObject\13. Carnival_Card</Filter>
+    </ClCompile>
+    <ClCompile Include="Interactive_Object.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Carnival_Egg.cpp">
+      <Filter>02. GameObject\07. Monster</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\Tool.ico">
+      <Filter>98. Default</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>98. Default</Filter>
+    </Image>
+    <Image Include="res\ToolDoc.ico">
+      <Filter>98. Default</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Tool.rc">
+      <Filter>98. Default</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Tool.rc2">
+      <Filter>98. Default</Filter>
+    </None>
+  </ItemGroup>
+</Project>
