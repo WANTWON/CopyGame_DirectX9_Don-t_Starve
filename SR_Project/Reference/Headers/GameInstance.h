@@ -7,6 +7,10 @@
 #include "Component_Manager.h"
 #include "Input_Device.h"
 #include "KeyMgr.h"
+#include "Picking.h"
+#include "Sound_Manager.h"
+#include "Collider_Manager.h"
+#include "CullingMgr.h"
 
 BEGIN(Engine)
 
@@ -46,7 +50,14 @@ public: /* For.Level_Manager */
 public: /* For.Object_Manager */
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
-	class CGameObject* Get_Object(_uint iLevelIndex, const _tchar * pLayerTag);
+	HRESULT Add_GameObjectLoad(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, const _tchar* VIBUfferTag, void* pArg = nullptr);
+
+	class CGameObject* Get_Object(_uint iLevelIndex, const _tchar * pLayerTag, _uint iIndex =0);
+	list<CGameObject*>* Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag);
+	class CComponent* Get_Component(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pComponentTag, _uint iIndex = 0);
+
+	void Clear_Layer(_uint iLevelIndex, const _tchar* LayerTag);
+
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);
@@ -56,6 +67,29 @@ public: /* For. Key Manager*/
 	bool		Key_Pressing(int _Key);
 	bool		Key_Up(int _Key);		// 누르고 있다가 뗐을 때
 	bool		Key_Down(int _Key);		// 눌렀을 때
+
+public: /* For. Sound Manager */
+	void PlaySounds(TCHAR* pSoundKey, const _uint& eID, const float& fVolume);
+	void PlayBGM(TCHAR * pSoundKey, const float& fVolume);
+	void StopSound(const _uint& eID);
+	void StopAll();
+	void SetChannelVolume(const _uint& eID, const float& fVolume);
+	int  VolumeUp(const _uint& eID, const _float& _vol);
+	int  VolumeDown(const _uint& eID, const _float& _vol);
+	int  Pause(const _uint& eID);
+
+public: /* For. Collider Manager */
+	HRESULT Add_CollisionGroup(CCollider_Manager::COLLISION_GROUP eCollisionGroup, class CGameObject* pGameObject);
+	void Out_CollisiomGroup(CCollider_Manager::COLLISION_GROUP eCollisionGroup, class CGameObject* pGameObject);
+	_bool Collision_with_Group(CCollider_Manager::COLLISION_GROUP eGroup, class CGameObject* pGameObject, CCollider_Manager::COLLISION_TYPE eType, _float3* pOutDistance = nullptr);
+	_bool Collision_Check_Group_Multi(CCollider_Manager::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, class CGameObject* pDamageCauser, CCollider_Manager::COLLISION_TYPE eType);
+
+	/* For. Damage*/
+	static void Apply_Damage(_float fDamage, CGameObject* DamagedObj, CGameObject * DamageCauser, void* AttackType = nullptr);
+	static void	Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, CGameObject * DamageCauser, void* AttackType = nullptr);
+
+public: /* For. Culling Manager */
+	_bool Is_In_Frustum(_float3 pGameObjectPos, _float fRadius);
 
 public:
 	static void Release_Engine();
@@ -68,6 +102,10 @@ private:
 	CTimer_Manager*					m_pTimer_Manager = nullptr;
 	CComponent_Manager*				m_pComponent_Manager = nullptr;
 	CKeyMgr*						m_pKey_Manager = nullptr;
+	CPicking*						m_pPicking = nullptr;
+	CSound_Manager*					m_pSound_Manager = nullptr;
+	CCollider_Manager*					m_pCollider_Manager = nullptr;
+	CCullingMgr*					m_pCulling_Manager = nullptr;
 
 public:
 	virtual void Free() override;

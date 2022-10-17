@@ -32,8 +32,7 @@ public:
 	void Set_Scale(_float x, _float y, _float z);
 	_float4x4 Get_WorldMatrix() const { return m_WorldMatrix;}
 	void Set_TransformDesc(TRANSFORMDESC TransformDesc) { m_TransformDesc = TransformDesc; }
-
-
+	TRANSFORMDESC Get_TransformDesc(void) { return m_TransformDesc; }
 public:
 	void Go_Straight(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
 	void Go_Backward(_float fTimeDelta, _float fHeight = NONE_HEIGHT);
@@ -45,11 +44,15 @@ public:
 	void Go_PosUp(_float fTimeDelta);
 	void Go_PosDown(_float fTimeDelta);
 	void Go_PosLeft(_float fTimeDelta);
+	void Go_PosLeft(_float fTimeDelta, _float fHeight);
 	void Go_PosRight(_float fTimeDelta);
+	void Go_PosRight(_float fTimeDelta, _float fHeight);
+	void Go_PosTarget(_float fTimeDelta, _float3 TargetPos, _float3 distance);
+	void Go_PosDir(_float fTimeDelta, _float3 vecDir);
 
 public:
 	void LookAt(_float3 TargetPos);
-	void Follow_Target(_float3 TargetPos, _float3 distance);
+	void Follow_Target(_float fTimeDelta, _float3 TargetPos, _float3 distance);
 	
 
 public:

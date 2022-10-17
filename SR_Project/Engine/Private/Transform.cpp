@@ -1,3 +1,4 @@
+
 #include "..\Public\Transform.h"
 
 
@@ -9,6 +10,7 @@ CTransform::CTransform(LPDIRECT3DDEVICE9 pGraphic_Device)
 CTransform::CTransform(const CTransform & rhs)
 	: CComponent(rhs.m_pGraphic_Device)
 	, m_WorldMatrix(rhs.m_WorldMatrix)
+	, m_TransformDesc(rhs.m_TransformDesc)
 {
 }
 
@@ -28,7 +30,7 @@ HRESULT CTransform::Initialize(void * pArg)
 	}
 		
 
-	return S_OK;
+	return S_OK; 
 }
 
 _float3 CTransform::Get_Scale()
@@ -133,10 +135,53 @@ void CTransform::Go_PosLeft(_float fTimeDelta)
 	Set_State(CTransform::STATE_POSITION, vPos);
 }
 
+void CTransform::Go_PosLeft(_float fTimeDelta, _float fHeight)
+{
+	_float3 vPos = Get_State(CTransform::STATE_POSITION);
+	vPos.x -= fTimeDelta*m_TransformDesc.fSpeedPerSec;
+	vPos.y = fHeight;
+
+	Set_State(CTransform::STATE_POSITION, vPos);
+}
+
 void CTransform::Go_PosRight(_float fTimeDelta)
 {
 	_float3 vPos = Get_State(CTransform::STATE_POSITION);
 	vPos.x += fTimeDelta*m_TransformDesc.fSpeedPerSec;
+
+	Set_State(CTransform::STATE_POSITION, vPos);
+}
+
+void CTransform::Go_PosRight(_float fTimeDelta, _float fHeight)
+{
+	_float3 vPos = Get_State(CTransform::STATE_POSITION);
+	vPos.x += fTimeDelta*m_TransformDesc.fSpeedPerSec;
+	vPos.y = fHeight;
+	Set_State(CTransform::STATE_POSITION, vPos);
+}
+
+void CTransform::Go_PosTarget(_float fTimeDelta, _float3 TargetPos, _float3 distance)
+{
+	_float3 vPos = Get_State(CTransform::STATE_POSITION);
+	_float3 vNewPos = { TargetPos.x + distance.x, TargetPos.y + distance.y, TargetPos.z + distance.z };
+	_float3 vDir = vNewPos - vPos;
+
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	vPos += vDir*fTimeDelta*m_TransformDesc.fSpeedPerSec;
+
+	Set_State(CTransform::STATE_POSITION, vPos);
+}
+
+void CTransform::Go_PosDir(_float fTimeDelta, _float3 vecDir)
+{
+	_float3 vPos = Get_State(CTransform::STATE_POSITION);
+	
+	_float3 vDir = vecDir;
+
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	vPos += vDir*fTimeDelta*m_TransformDesc.fSpeedPerSec;
 
 	Set_State(CTransform::STATE_POSITION, vPos);
 }
@@ -177,7 +222,7 @@ void CTransform::Turn(_float3 vAxis,_float fTimeDelta)
 }
 
 
-void CTransform::Follow_Target(_float3 TargetPos, _float3 distance)
+void CTransform::Follow_Target(_float fTimeDelta, _float3 TargetPos, _float3 distance)
 {
 	_float3 vPos = Get_State(CTransform::STATE_POSITION);
 	_float3 vNewPos = { TargetPos.x + distance.x, TargetPos.y+ distance.y, TargetPos.z + distance.z };
@@ -226,5 +271,5 @@ void CTransform::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pGraphic_Device);
+	//Safe_Release(m_pGraphic_Device);
 }

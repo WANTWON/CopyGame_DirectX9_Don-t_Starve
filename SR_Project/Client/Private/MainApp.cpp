@@ -3,6 +3,12 @@
 
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "Inventory.h"
+#include "PickingMgr.h"
+#include <time.h>
+#include "CameraManager.h"
+#include "Mouse.h"
+#include "DayCycle.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
@@ -12,12 +18,23 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Initialize()
 {
+	if (::AllocConsole() == TRUE)
+	{
+		FILE* nfp[3];
+		freopen_s(nfp + 0, "CONOUT$", "rb", stdin);
+		freopen_s(nfp + 1, "CONOUT$", "wb", stdout);
+		freopen_s(nfp + 2, "CONOUT$", "wb", stderr);
+		std::ios::sync_with_stdio();
+	}
+
 	GRAPHIC_DESC		Graphic_Desc;
 	ZeroMemory(&Graphic_Desc, sizeof(GRAPHIC_DESC));
 
+	srand(unsigned int(time(NULL)));
+
 	Graphic_Desc.hWnd = g_hWnd;
-	Graphic_Desc.iWinSizeX = g_iWinSizeX;
-	Graphic_Desc.iWinSizeY = g_iWinSizeY;
+	Graphic_Desc.iWinSizeX = (_uint)g_iWinSizeX;
+	Graphic_Desc.iWinSizeY =(_uint) g_iWinSizeY;
 	Graphic_Desc.eWinMode = GRAPHIC_DESC::MODE_WIN;
 
 	if (FAILED(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, Graphic_Desc, &m_pGraphic_Device)))
@@ -41,11 +58,13 @@ void CMainApp::Tick(_float fTimeDelta)
 		return;
 
 	m_pGameInstance->Tick_Engine(fTimeDelta);
-	m_pCollider->Update_ColliderGroup();
+	//m_pCollider->Update_ColliderGroup();
+	CInventory_Manager::Get_Instance()->Tick(fTimeDelta);
+	CInventory_Manager::Get_Instance()->Late_Tick(fTimeDelta);
 
-#ifdef _DEBUG
 	m_fTimeAcc += fTimeDelta;
-#endif // _DEBUG
+
+	// ¶ËÀïÀÌ
 
 }
 
@@ -104,10 +123,30 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 
 	/* For.Prototype_Component_Collider */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), m_pCollider= CCollider::Create(m_pGraphic_Device))))
-		return E_FAIL;
+	/*if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), m_pCollider= CCollider::Create(m_pGraphic_Device))))
+		return E_FAIL;*/
 	Safe_AddRef(m_pRenderer);
 
+	/* For.Prototype_Component_Collider_Rect */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Rect"), CCollider_Rect::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Collider_Rect */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Cube"), CCollider_Cube::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Shader_Rect */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static"), CShader::Create(m_pGraphic_Device, TEXT("../Bin/Shaderfiles/Shader_Default.hlsl")))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), CShader::Create(m_pGraphic_Device, TEXT("../Bin/Shaderfiles/Shader_UI.hlsl")))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Static_Blend"), CShader::Create(m_pGraphic_Device, TEXT("../Bin/Shaderfiles/Shader_DefaultBlend.hlsl")))))
+		return E_FAIL;
+	
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Cube"), CShader::Create(m_pGraphic_Device, TEXT("../Bin/Shaderfiles/Shader_Cube.hlsl")))))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -140,11 +179,18 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	Safe_Release(m_pRenderer);
-
+	CInventory_Manager::Get_Instance()->Free();
+	CInventory_Manager::Get_Instance()->Destroy_Instance();
+ 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pGameInstance);
+
+	CGameInstance::Release_Engine();	
 	
-	CGameInstance::Release_Engine();
+	CPickingMgr::Get_Instance()->Destroy_Instance();
+	
+	CDayCycle::Get_Instance()->Destroy_Instance();
+	CCameraManager::Get_Instance()->Destroy_Instance();
+	CMouse::Get_Instance()->Destroy_Instance();
 }
 

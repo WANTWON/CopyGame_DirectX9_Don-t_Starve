@@ -16,6 +16,8 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 
+	HRESULT Ready_Layer_Loadingscene(const _tchar* pLayerTag);
+
 private:
 	LEVEL				m_eNextLevel = LEVEL_END;
 	class CLoader*		m_pLoader = nullptr;

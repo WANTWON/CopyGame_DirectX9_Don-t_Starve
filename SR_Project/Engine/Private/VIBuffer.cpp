@@ -16,6 +16,7 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	, m_pIB(rhs.m_pIB)
 	, m_iIndicesByte(rhs.m_iIndicesByte)
 	, m_eIndexFormat(rhs.m_eIndexFormat)
+	, m_pVerticesPos(rhs.m_pVerticesPos)
 {
 	Safe_AddRef(m_pVB);
 	Safe_AddRef(m_pIB);
@@ -66,6 +67,7 @@ void CVIBuffer::Free()
 {
 	__super::Free();
 
+	
 	Safe_Release(m_pIB);
 	Safe_Release(m_pVB);
 

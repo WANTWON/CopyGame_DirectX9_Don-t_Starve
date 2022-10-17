@@ -10,6 +10,10 @@ CGameInstance::CGameInstance()
 	, m_pComponent_Manager(CComponent_Manager::Get_Instance())
 	, m_pInput_Device(CInput_Device::Get_Instance())
 	, m_pKey_Manager(CKeyMgr::Get_Instance())
+	, m_pPicking(CPicking::Get_Instance())
+	, m_pSound_Manager(CSound_Manager::Get_Instance())
+	, m_pCollider_Manager(CCollider_Manager::Get_Instance())
+	, m_pCulling_Manager(CCullingMgr::Get_Instance())
 {
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pTimer_Manager);
@@ -18,13 +22,20 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pInput_Device);
 	Safe_AddRef(m_pKey_Manager);
+	Safe_AddRef(m_pPicking);
+	Safe_AddRef(m_pSound_Manager);
+	Safe_AddRef(m_pCollider_Manager);
+	Safe_AddRef(m_pCulling_Manager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, LPDIRECT3DDEVICE9* ppOut)
 {
 	if (nullptr == m_pGraphic_Device || 
 		nullptr == m_pObject_Manager ||
-		nullptr == m_pInput_Device)
+		nullptr == m_pInput_Device	||
+		nullptr == m_pPicking		||
+		nullptr == m_pSound_Manager ||
+		nullptr == m_pCulling_Manager)
 		return E_FAIL;
 
 	/* 그래픽 디바이스를 초기화한다. */
@@ -34,14 +45,23 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 	/* 입력 디바이스를 초기화한다. */
 	if (FAILED(m_pInput_Device->Initialize(hInst, GraphicDesc.hWnd)))
 		return E_FAIL;
-	/* 사운드 디바이스를 초기화한다. */
 
+	/* 사운드 디바이스를 초기화한다. */
+	if (FAILED(m_pSound_Manager->Initialize()))
+		return E_FAIL;
+
+	/* 픽킹 초기화 */
+	if (FAILED(m_pPicking->Initialize(GraphicDesc.hWnd, GraphicDesc.iWinSizeX, GraphicDesc.iWinSizeY, *ppOut)))
+		return E_FAIL;
 
 	/* 컨테이너의 공간을 확보해둔다. */
 	if (FAILED(m_pObject_Manager->Reserve_Container(iNumLevels)))
 		return E_FAIL;
 
 	if (FAILED(m_pComponent_Manager->Reserve_Container(iNumLevels)))
+		return E_FAIL;
+
+	if (FAILED(m_pCulling_Manager->Ready_CullingMgr(*ppOut)))
 		return E_FAIL;
 
 
@@ -52,17 +72,25 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 {
 	if (nullptr == m_pLevel_Manager || 
 		nullptr == m_pObject_Manager ||
-		nullptr == m_pInput_Device )
+		nullptr == m_pInput_Device ||
+		nullptr == m_pCollider_Manager ||
+		nullptr == m_pCulling_Manager)
 		return;
 
 	m_pInput_Device->Update();
+	
 
 	m_pLevel_Manager->Tick(fTimeDelta);
 	m_pObject_Manager->Tick(fTimeDelta);
 
+	m_pPicking->Tick();
+	m_pCulling_Manager->Update_CullingMgr();
+
 
 	m_pLevel_Manager->Late_Tick(fTimeDelta);
 	m_pObject_Manager->Late_Tick(fTimeDelta);
+
+	m_pCollider_Manager->Reset_ColliderGroup(); // Need to be called last
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
@@ -179,13 +207,46 @@ HRESULT CGameInstance::Add_GameObject(const _tchar * pPrototypeTag, _uint iLevel
 	return m_pObject_Manager->Add_GameObject(pPrototypeTag, iLevelIndex, pLayerTag, pArg);
 }
 
-CGameObject * CGameInstance::Get_Object(_uint iLevelIndex, const _tchar * pLayerTag)
+HRESULT CGameInstance::Add_GameObjectLoad(const _tchar * pPrototypeTag, _uint iLevelIndex, const _tchar * pLayerTag, const _tchar * VIBUfferTag, void * pArg)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Add_GameObjectLoad(pPrototypeTag, iLevelIndex, pLayerTag, VIBUfferTag, pArg);
+}
+
+CGameObject * CGameInstance::Get_Object(_uint iLevelIndex, const _tchar * pLayerTag, _uint iIndex)
 {
 	if (nullptr == m_pObject_Manager)
 		return nullptr;
 
-	return m_pObject_Manager->Find_Objects(iLevelIndex, pLayerTag);
+	return m_pObject_Manager->Find_Objects(iLevelIndex, pLayerTag, iIndex);
 }
+
+list<CGameObject*>* CGameInstance::Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return nullptr;
+
+	return m_pObject_Manager->Get_ObjectList(iSceneID, pLayerTag);
+}
+
+CComponent * CGameInstance::Get_Component(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pComponentTag, _uint iIndex)
+{
+	if (nullptr == m_pObject_Manager)
+		return nullptr;
+
+	return m_pObject_Manager->Get_Component(iLevelIndex, pLayerTag, pComponentTag, iIndex);
+}
+
+void CGameInstance::Clear_Layer(_uint iLevelIndex, const _tchar * LayerTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return;
+
+	m_pObject_Manager->Clear_Layer(iLevelIndex, LayerTag);
+}
+
 
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag, CComponent * pPrototype)
 {
@@ -227,11 +288,134 @@ bool CGameInstance::Key_Down(int _Key)
 	return m_pKey_Manager->Key_Down(_Key);
 }
 
+void CGameInstance::PlaySounds(TCHAR * pSoundKey, const _uint & eID, const float & fVolume)
+{
+	if (nullptr == m_pSound_Manager)
+		return;
+
+	m_pSound_Manager->PlaySoundW(pSoundKey, eID, fVolume);
+}
+
+void CGameInstance::PlayBGM(TCHAR * pSoundKey, const float & fVolume)
+{
+	if (nullptr == m_pSound_Manager)
+		return;
+
+	m_pSound_Manager->PlayBGM(pSoundKey, fVolume);
+}
+
+void CGameInstance::StopSound(const _uint & eID)
+{
+	if (nullptr == m_pSound_Manager)
+		return;
+
+	m_pSound_Manager->StopSound(eID);
+}
+
+void CGameInstance::StopAll()
+{
+	if (nullptr == m_pSound_Manager)
+		return;
+
+	m_pSound_Manager->StopAll();
+}
+
+void CGameInstance::SetChannelVolume(const _uint & eID, const float & fVolume)
+{
+	if (nullptr == m_pSound_Manager)
+		return;
+
+	m_pSound_Manager->SetChannelVolume(eID, fVolume);
+}
+
+int CGameInstance::VolumeUp(const _uint & eID, const _float & _vol)
+{
+	if (nullptr == m_pSound_Manager)
+		return 0;
+
+	return m_pSound_Manager->VolumeUp(eID, _vol);
+}
+
+int CGameInstance::VolumeDown(const _uint & eID, const _float & _vol)
+{
+	if (nullptr == m_pSound_Manager)
+		return 0;
+
+	return m_pSound_Manager->VolumeDown(eID, _vol);
+}
+
+int CGameInstance::Pause(const _uint & eID)
+{
+	if (nullptr == m_pSound_Manager)
+		return 0;
+
+	return m_pSound_Manager->Pause(eID);
+}
+
+HRESULT CGameInstance::Add_CollisionGroup(CCollider_Manager::COLLISION_GROUP eCollisionGroup, CGameObject * pGameObject)
+{
+	if (!m_pCollider_Manager)
+		return E_FAIL; 
+
+	return m_pCollider_Manager->Add_CollisionGroup(eCollisionGroup, pGameObject);
+}
+
+void CGameInstance::Out_CollisiomGroup(CCollider_Manager::COLLISION_GROUP eCollisionGroup, CGameObject * pGameObject)
+{
+	if (!m_pCollider_Manager)
+		return;
+
+	m_pCollider_Manager->Out_CollisiomGroup(eCollisionGroup, pGameObject);
+}
+
+_bool CGameInstance::Collision_with_Group(CCollider_Manager::COLLISION_GROUP eGroup, CGameObject * pGameObject, CCollider_Manager::COLLISION_TYPE eType, _float3* pOutDistance)
+{
+	if (nullptr == m_pCollider_Manager)
+		return false;
+
+	return m_pCollider_Manager->Collision_with_Group(eGroup, pGameObject, eType, pOutDistance);
+}
+
+_bool CGameInstance::Collision_Check_Group_Multi(CCollider_Manager::COLLISION_GROUP eGroup, vector<class CGameObject*>& vecDamagedObj, CGameObject * pDamageCauser, CCollider_Manager::COLLISION_TYPE eType)
+{
+	if (nullptr == m_pCollider_Manager)
+		return false;
+	return m_pCollider_Manager->Collision_Check_Group_Multi(eGroup, vecDamagedObj, pDamageCauser, eType);
+}
+
+void CGameInstance::Apply_Damage(_float fDamage, CGameObject * DamagedObj, CGameObject * DamageCauser, void * AttackType)
+{
+	DamagedObj->Take_Damage(fDamage, nullptr, DamageCauser);
+}
+
+void CGameInstance::Apply_Damage_Multi(_float fDamage, vector<CGameObject*>& vecDamagedObj, CGameObject * DamageCauser, void * AttackType)
+{
+	for (auto& iter = vecDamagedObj.begin(); iter != vecDamagedObj.end();)
+	{
+		(*iter)->Take_Damage(fDamage, AttackType, DamageCauser);
+		iter++;
+	}
+}
+
+_bool CGameInstance::Is_In_Frustum(_float3 pGameObjectPos, _float fRadius)
+{
+	if (nullptr == m_pCulling_Manager)
+		return false;
+	return m_pCulling_Manager->Is_In_Frustum( pGameObjectPos,  fRadius);
+}
+
 void CGameInstance::Release_Engine()
 {
-	CKeyMgr::Get_Instance()->Destroy_Instance();
 
 	CGameInstance::Get_Instance()->Destroy_Instance();
+
+	CCullingMgr::Get_Instance()->Destroy_Instance();
+
+	CCollider_Manager::Get_Instance()->Destroy_Instance();
+
+	CSound_Manager::Get_Instance()->Destroy_Instance();
+
+	CPicking::Get_Instance()->Destroy_Instance();
 
 	CLevel_Manager::Get_Instance()->Destroy_Instance();
 
@@ -243,11 +427,19 @@ void CGameInstance::Release_Engine()
 
 	CInput_Device::Get_Instance()->Destroy_Instance();
 
+	CKeyMgr::Get_Instance()->Destroy_Instance();
+
 	CGraphic_Device::Get_Instance()->Destroy_Instance();
+
+
 }
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pCulling_Manager);
+	Safe_Release(m_pCollider_Manager);
+	Safe_Release(m_pSound_Manager);
+	Safe_Release(m_pPicking);
 	Safe_Release(m_pKey_Manager);
 	Safe_Release(m_pComponent_Manager);
 	Safe_Release(m_pTimer_Manager);
@@ -255,6 +447,4 @@ void CGameInstance::Free()
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pGraphic_Device);
-	
-
 }

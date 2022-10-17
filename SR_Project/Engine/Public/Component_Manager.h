@@ -7,7 +7,9 @@
 #include "Texture.h"
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_Cube.h"
-#include "Collider.h"
+#include "Collider_Rect.h"
+#include "Collider_Cube.h"
+#include "Shader.h"
 
 BEGIN(Engine)
 

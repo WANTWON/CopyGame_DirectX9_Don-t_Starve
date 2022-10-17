@@ -21,14 +21,13 @@ CTexture::CTexture(const CTexture & rhs)
 
 HRESULT CTexture::Initialize_Prototype(TYPE eType, const _tchar * pTextureFilePath, _uint iNumTexture)
 {
-
 	m_iNumTextures = iNumTexture;
 
-	_tchar			szFullPath[MAX_PATH] = TEXT("");
+	_tchar	szFullPath[MAX_PATH] = TEXT("");
 
 	for (_uint i = 0; i < m_iNumTextures; ++i)
 	{
-		IDirect3DBaseTexture9*			pTexture = nullptr;
+		IDirect3DBaseTexture9* pTexture = nullptr;
 
 		wsprintf(szFullPath, pTextureFilePath, i);
 
@@ -63,22 +62,49 @@ HRESULT CTexture::Bind_OnGraphicDev(_uint iIndex)
 	return m_pGraphic_Device->SetTexture(0, m_Textures[iIndex]);
 }
 
-void CTexture::MoveFrame(const _tchar* TimerTag)
+HRESULT CTexture::Bind_OnGraphicDev_Debug()
 {
-	CGameInstance::Get_Instance()->Update(TimerTag);
+	return m_pGraphic_Device->SetTexture(0, 0);
+}
 
-	m_fTimeAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TimerTag);
+bool CTexture::MoveFrame(const _tchar* TimerTag, _bool bLoop)
+{
+	//CGameInstance::Get_Instance()->Update(TimerTag);
+	//m_fTimeAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TimerTag);
 
-	if (m_fTimeAcc > 1.f / m_TextureDesc.m_fSpeed)
+	m_fTimeAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+
+	// Looping Animation
+	if (bLoop)
+	{ 
+		if (m_fTimeAcc > 1.f / m_TextureDesc.m_fSpeed)
+		{
+			m_TextureDesc.m_iCurrentTex++;
+
+			if (m_TextureDesc.m_iCurrentTex >= m_TextureDesc.m_iEndTex)
+				m_TextureDesc.m_iCurrentTex = m_TextureDesc.m_iStartTex;
+
+			//CGameInstance::Get_Instance()->Set_ZeroTimeDelta(TimerTag);
+			m_fTimeAcc = 0.f;
+
+			return false;
+		}
+	}
+	// One-Time Animation
+	else
 	{
-		m_TextureDesc.m_iCurrentTex++;
+		if (m_fTimeAcc > 1.f / m_TextureDesc.m_fSpeed)
+		{
+			if (m_TextureDesc.m_iCurrentTex < m_TextureDesc.m_iEndTex)
+				m_TextureDesc.m_iCurrentTex++;
+			else
+				return true;
 
-		if (m_TextureDesc.m_iCurrentTex >= m_TextureDesc.m_iEndTex)
-			m_TextureDesc.m_iCurrentTex = m_TextureDesc.m_iStartTex;
-		
-		CGameInstance::Get_Instance()->Set_ZeroTimeDelta(TimerTag);
+			//CGameInstance::Get_Instance()->Set_ZeroTimeDelta(TimerTag);
+			m_fTimeAcc = 0.f;
 
-		m_fTimeAcc = 0.f;
+			return false;
+		}
 	}
 }
 
@@ -86,7 +112,7 @@ void CTexture::Set_Frame(int iStartTex, int iEndTex, int iSpeed)
 {
 	m_TextureDesc.m_iStartTex = iStartTex;
 	m_TextureDesc.m_iEndTex = iEndTex;
-	m_TextureDesc.m_fSpeed = iSpeed;
+	m_TextureDesc.m_fSpeed = (_float)iSpeed;
 	m_TextureDesc.m_iCurrentTex = m_TextureDesc.m_iStartTex;
 }
 

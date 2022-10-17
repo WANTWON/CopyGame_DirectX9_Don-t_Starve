@@ -1,15 +1,18 @@
 #include "stdafx.h"
 #include "..\Public\Monster.h"
-#include "GameInstance.h"
 #include "Player.h"
-
+#include "Inventory.h"
+#include "Level_Manager.h"
+#include "GameInstance.h"
+#include "CameraManager.h"
+#include "NPC.h"
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CPawn(pGraphic_Device)
 {
 }
 
 CMonster::CMonster(const CMonster & rhs)
-	: CGameObject(rhs)
+	: CPawn(rhs)
 {
 }
 
@@ -29,21 +32,26 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(SetUp_Components(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(5.f, 1.f, 1.f);
+	m_eObjID = OBJID::OBJ_MONSTER;
+
 
 	return S_OK;
 }
 
 int CMonster::Tick(_float fTimeDelta)
 {
-	if (m_bDead)
-		return OBJ_DEAD;
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	pGameInstance->Add_CollisionGroup(CCollider_Manager::COLLISION_MONSTER, this);
+
+	m_iDirOffset = CCameraManager::Get_Instance()->Get_CamDir();
 
 	__super::Tick(fTimeDelta);
 
-	Follow_Player(fTimeDelta);
-
-	Update_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+	if (IsDead())
+		return OBJ_DEAD;
+	
+	// Match Terrain-Y
+	WalkingTerrain();
 
 	return OBJ_NOEVENT;
 }
@@ -54,20 +62,15 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	SetUp_BillBoard();
 
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Add_CollisionGroup(CCollider::COLLISION_MONSTER, this);
-
-	if (nullptr != m_pColliderCom)
+	if (CGameInstance::Get_Instance()->Is_In_Frustum(Get_Position(), m_fRadius) == true)
 	{
-		if (m_pColliderCom->Collision_with_Group(CCollider::COLLISION_PLAYER, this))
-		{
-			m_bDead = true;
-		}
-			
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
-		
+
+	Set_ShaderID();
+	if (m_bPickingTrue)
+		m_eShaderID = SHADER_PICKING;
 }
 
 HRESULT CMonster::Render()
@@ -75,71 +78,44 @@ HRESULT CMonster::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_OnGraphicDev()))
-		return E_FAIL;
-	
-	if (FAILED(m_pTextureCom->Bind_OnGraphicDev(m_pTextureCom->Get_Frame().m_iCurrentTex)))
-		return E_FAIL;
+	_float4x4		WorldMatrix, ViewMatrix, ProjMatrix;
 
-	m_pTextureCom->MoveFrame(m_TimerTag);
 
-	if (FAILED(SetUp_RenderState()))
-		return E_FAIL;
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	//CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	//m_pShaderCom->Set_RawValue("g_PlayerPosition", &pTarget->Get_Position(), sizeof(_float3));
+
+	WorldMatrix = *D3DXMatrixTranspose(&WorldMatrix, &m_pTransformCom->Get_WorldMatrix());
+	//m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	//m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+
+	m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
+//	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+	//m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
+	m_pShaderCom->Set_Texture("g_Texture", m_pTextureCom->Get_Texture(m_pTextureCom->Get_Frame().m_iCurrentTex));
+
+	m_pShaderCom->Begin(m_eShaderID);
 
 	m_pVIBufferCom->Render();
 
-	if (FAILED(Release_RenderState()))
-		return E_FAIL;
+	m_pShaderCom->End();
 
 	return S_OK;
 }
 
-HRESULT CMonster::SetUp_Components(void* pArg)
+_float3 CMonster::Get_Scale(void)
 {
+	return m_pTransformCom->Get_Scale();
+}
 
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Monster"))))
-		return E_FAIL;
-
-	m_TimerTag = TEXT("Timer_Monster");
-
-	Safe_Release(pGameInstance);
-
-	/* For.Com_Renderer */
-	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
-		return E_FAIL;
-
-	/* For.Com_Collider*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Collider"), LEVEL_STATIC, TEXT("Prototype_Component_Collider"), (CComponent**)&m_pColliderCom)))
-		return E_FAIL;
-
-	/* For Com_Texture */
-	CTexture::TEXTUREDESC		TextureDesc;
-	TextureDesc.m_iStartTex = 0;
-	TextureDesc.m_iEndTex = 32;
-	TextureDesc.m_fSpeed = 60;
-
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Pig_RUN_DOWN"), (CComponent**)&m_pTextureCom, &TextureDesc)))
-		return E_FAIL;
+HRESULT CMonster::SetUp_DebugComponents(void * pArg)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
-		return E_FAIL;
-
-	/* For.Transform*/
-	CTransform::TRANSFORMDESC		TransformDesc;
-	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
-
-	
-	TransformDesc.fRotationPerSec = D3DXToRadian(90.f);
-	TransformDesc.fSpeedPerSec = 5.f;
-	TransformDesc.InitPos = { 3,1,3 };
-
-	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
-		return E_FAIL;
-
+	//if (FAILED(__super::Add_Components(TEXT("Com_DebugBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIDebugBufferCom)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -147,11 +123,11 @@ HRESULT CMonster::SetUp_Components(void* pArg)
 HRESULT CMonster::SetUp_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
-		return E_FAIL; 
+		return E_FAIL;
 
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 0);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 40);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
 	return S_OK;
@@ -160,66 +136,151 @@ HRESULT CMonster::SetUp_RenderState()
 HRESULT CMonster::Release_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+	return S_OK;
+}
+
+HRESULT CMonster::Change_Texture(const _tchar * LayerTag)
+{
+	if (FAILED(__super::Change_Component(LayerTag, (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
+	m_pTextureCom->Set_ZeroFrame();
+
 	return S_OK;
 }
 
 void CMonster::SetUp_BillBoard()
 {
-	_float4x4		ViewMatrix;
+	_float4x4 ViewMatrix;
 
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);   // Get View Matrix
+	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);      // Get Inverse of View Matrix (World Matrix of Camera)
 
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
-
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
-	//m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+	_float3 vRight = *(_float3*)&ViewMatrix.m[0][0];
+	_float3 vUp = *(_float3*)&ViewMatrix.m[1][0];
+	_float3 vLook = *(_float3*)&ViewMatrix.m[2][0];
+	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * m_pTransformCom->Get_Scale().x);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * m_pTransformCom->Get_Scale().y);
+	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *D3DXVec3Normalize(&vLook, &vLook) * m_pTransformCom->Get_Scale().z);
 }
 
-void CMonster::Follow_Player(_float fTimeDelta)
+void CMonster::WalkingTerrain()
 {
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
+	_uint LevelIndex = CLevel_Manager::Get_Instance()->Get_CurrentLevelIndex();
 
-	CPlayer* pTarget = (CPlayer*)pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	if (!pGameInstance)
+		return;
+	CVIBuffer_Terrain* pVIBuffer_Terrain = (CVIBuffer_Terrain*)pGameInstance->Get_Component((LEVEL)LevelIndex, TEXT("Layer_Terrain"), TEXT("Com_VIBuffer"), 0);
+	if (!pVIBuffer_Terrain)
+		return;
+	CTransform*	pTransform_Terrain = (CTransform*)pGameInstance->Get_Component((LEVEL)LevelIndex, TEXT("Layer_Terrain"), TEXT("Com_Transform"), 0);
+	if (!pTransform_Terrain)
+		return;
 
-	Safe_AddRef(pTarget);
-
-	m_TargetPos = pTarget->Get_Pos();
-
-	Safe_Release(pTarget);
-
-	Safe_Release(pGameInstance);
-
-	m_pTransformCom->LookAt(m_TargetPos);
-	m_pTransformCom->Go_Straight(fTimeDelta*0.1f);
+	_float3 vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float3 vScale = m_pTransformCom->Get_Scale();
+	vPosition.y = pVIBuffer_Terrain->Compute_Height(vPosition, pTransform_Terrain->Get_WorldMatrix(), (vScale.y*0.5f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
-CMonster * CMonster::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+DIR_STATE CMonster::Get_Unprocessed_Dir(DIR_STATE eDir)
 {
-	CMonster*	pInstance = new CMonster(pGraphic_Device);
-
-	if (FAILED(pInstance->Initialize_Prototype()))
+	DIR_STATE eOldDir = (DIR_STATE)((int)eDir - m_iDirOffset);
+	if (eOldDir < 0)
 	{
-		ERR_MSG(TEXT("Failed to Created : CMonster"));
-		Safe_Release(pInstance);
+		eDir = (DIR_STATE)((int)eOldDir + 4);
+		return eDir;
 	}
 
-	return pInstance;
+	return eOldDir;
 }
 
-CGameObject * CMonster::Clone(void* pArg)
+DIR_STATE CMonster::Get_Processed_Dir(DIR_STATE eDir)
 {
-	CMonster*	pInstance = new CMonster(*this);
-
-	if (FAILED(pInstance->Initialize(pArg)))
+	DIR_STATE eNewDir = (DIR_STATE)((int)eDir + m_iDirOffset);
+	if (eNewDir > 3)
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CMonster"));
-		Safe_Release(pInstance);
+		eDir = (DIR_STATE)((int)eNewDir - 4);
+		return eDir;
+	}
+	
+	return eNewDir;
+}
+
+void CMonster::Calculate_Direction(_float3 vTargetPos)
+{
+	// Old Logic
+	/*
+	// Set Direction
+	_float fX = vTargetPos.x - Get_Position().x;
+	_float fZ = vTargetPos.z - Get_Position().z;
+
+	// Move Horizontally
+	if (abs(fX) > abs(fZ))
+		if (fX > 0)
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_RIGHT);
+		else
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_LEFT);
+	// Move Vertically
+	else
+		if (fZ > 0)
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_UP);
+		else
+			m_eDir = Get_Processed_Dir(DIR_STATE::DIR_DOWN);
+	*/
+
+	// New Logic
+	_float3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	vLook.y = 0.f;
+	_float3 vTargetDir = vTargetPos - Get_Position();
+	D3DXVec3Normalize(&vLook, &vLook);
+	D3DXVec3Normalize(&vTargetDir, &vTargetDir);
+
+	_float fDot = D3DXVec3Dot(&vTargetDir, &vLook);
+	_float fAngleRadian = acos(fDot);
+	_float fAngleDegree = D3DXToDegree(fAngleRadian);
+
+	_float3 vCross;
+	D3DXVec3Cross(&vCross, &vTargetDir, &vLook);
+
+	if (vCross.y > 0.f)
+	{
+		if (fAngleDegree > 0.f && fAngleDegree <= 45.f)
+			m_eDir = DIR_UP;
+		else if (fAngleDegree > 45.f && fAngleDegree <= 135.f)
+			m_eDir = DIR_LEFT;
+		else if (fAngleDegree > 135.f && fAngleDegree <= 180.f)
+			m_eDir = DIR_DOWN;
+	}
+	else
+	{
+		if (fAngleDegree > 0.f && fAngleDegree <= 45.f)
+			m_eDir = DIR_UP;
+		else if (fAngleDegree > 45.f && fAngleDegree <= 135.f)
+			m_eDir = DIR_RIGHT;
+		else if (fAngleDegree > 135.f && fAngleDegree <= 180.f)
+			m_eDir = DIR_DOWN;
+	}
+}
+
+_float CMonster::Take_Damage(float fDamage, void * DamageType, CGameObject * DamageCauser)
+{
+	if (fDamage <= 0 || m_bDead)
+		return 0.f;
+
+	m_tInfo.iCurrentHp -= fDamage;
+
+	if (m_tInfo.iCurrentHp <= 0)
+	{
+		m_tInfo.iCurrentHp = 0.f;
+		m_bDead = true;
 	}
 
-	return pInstance;
+	return fDamage;
 }
+
 
 void CMonster::Free()
 {
@@ -230,4 +291,10 @@ void CMonster::Free()
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pShaderCom);
+
+	for (auto& iter : m_vecTexture)
+		Safe_Release(iter);
+
+	m_vecTexture.clear();
 }

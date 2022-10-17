@@ -9,9 +9,10 @@
 *.exp
 *.ilk
 *.exe
-*.lib
 *.pch
 *.suo
 *.res
 *.log
 *.VC.db
+*.ipch
+*.VC.VC.opendb

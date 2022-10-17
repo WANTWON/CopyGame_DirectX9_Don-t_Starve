@@ -25,6 +25,8 @@ public:
 	HRESULT Ready_Layer_Monster(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Terrain(const _tchar* pLayerTag);
 
+	HRESULT Ready_Layer_logo(const _tchar* pLayerTag);
+
 private:
 
 public:

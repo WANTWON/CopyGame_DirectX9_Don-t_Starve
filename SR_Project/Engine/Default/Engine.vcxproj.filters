@@ -79,6 +79,30 @@
     <Filter Include="01.Utility\03.Components\Collider">
       <UniqueIdentifier>{11816ccc-002f-497b-9a60-521110f52178}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.Picking">
+      <UniqueIdentifier>{ae6fb8e8-a4a4-455b-909f-0c5ee4031308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.SoundMgr">
+      <UniqueIdentifier>{d6c928c1-659c-4723-8daa-71cf7a82c4f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\Manager">
+      <UniqueIdentifier>{a4a7e3e8-5eb7-4b8b-a80c-ca2352fdd0b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.FrustumCullingMgr">
+      <UniqueIdentifier>{13f8536a-38e8-4955-aaf2-adf953d0b779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\Collider_Rect">
+      <UniqueIdentifier>{c52c9a2e-82f4-45d1-81af-e802b3e7fbf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Collider\Collider_Cube">
+      <UniqueIdentifier>{3fbf911b-d544-4cc0-b4cc-bf562f0288b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\Shader">
+      <UniqueIdentifier>{a8150990-5f75-40d8-968b-65d95413c106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05.ObserverPattern">
+      <UniqueIdentifier>{cbd2ea99-cbda-4e2f-9a86-30f11ca07cd3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -147,8 +171,32 @@
     <ClCompile Include="..\Private\KeyMgr.cpp">
       <Filter>01.Utility\97.Keys</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Collider.cpp">
-      <Filter>01.Utility\03.Components\Collider</Filter>
+    <ClCompile Include="..\Private\Picking.cpp">
+      <Filter>01.Utility\04.Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sound_Manager.cpp">
+      <Filter>01.Utility\96.SoundMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CullingMgr.cpp">
+      <Filter>01.Utility\95.FrustumCullingMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Collider_Rect.cpp">
+      <Filter>01.Utility\03.Components\Collider\Collider_Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collider_Cube.cpp">
+      <Filter>01.Utility\03.Components\Collider\Collider_Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collider_Manager.cpp">
+      <Filter>01.Utility\03.Components\Collider\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Shader.cpp">
+      <Filter>01.Utility\03.Components\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ObserverTarget.cpp">
+      <Filter>01.Utility\05.ObserverPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Observer.cpp">
+      <Filter>01.Utility\05.ObserverPattern</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,8 +281,32 @@
     <ClInclude Include="..\Public\KeyMgr.h">
       <Filter>01.Utility\97.Keys</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Collider.h">
-      <Filter>01.Utility\03.Components\Collider</Filter>
+    <ClInclude Include="..\Public\Picking.h">
+      <Filter>01.Utility\04.Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sound_Manager.h">
+      <Filter>01.Utility\96.SoundMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CullingMgr.h">
+      <Filter>01.Utility\95.FrustumCullingMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Collider_Rect.h">
+      <Filter>01.Utility\03.Components\Collider\Collider_Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collider_Cube.h">
+      <Filter>01.Utility\03.Components\Collider\Collider_Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collider_Manager.h">
+      <Filter>01.Utility\03.Components\Collider\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Shader.h">
+      <Filter>01.Utility\03.Components\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Observer.h">
+      <Filter>01.Utility\05.ObserverPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ObserverTarget.h">
+      <Filter>01.Utility\05.ObserverPattern</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

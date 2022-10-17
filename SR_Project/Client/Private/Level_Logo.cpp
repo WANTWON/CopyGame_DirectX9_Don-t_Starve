@@ -5,6 +5,9 @@
 #include "Level_Loading.h"
 #include "Player.h"
 
+_bool g_bscenechange = true;
+
+
 CLevel_Logo::CLevel_Logo(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -15,11 +18,17 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+	CGameInstance::Get_Instance()->PlayBGM(L"Logosong.wav", 0.5f);
+
 	//if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 	//	return E_FAIL;
 
 	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		//return E_FAIL;
+
+		if (FAILED(Ready_Layer_logo(TEXT("Layer_Logo"))))
+		return E_FAIL;
+	
 
 	return S_OK;
 }
@@ -28,8 +37,20 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);	
 
-	if (GetKeyState(VK_SPACE) & 0x8000)
+	/*if (GetKeyState(VK_SPACE) & 0x8000)
 	{
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GAMEPLAY))))
+			return;
+
+		Safe_Release(pGameInstance);
+	}
+	else */
+	if (g_bscenechange == false)
+	{
+		g_bscenechange = true;
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
@@ -92,6 +113,25 @@ HRESULT CLevel_Logo::Ready_Layer_Terrain(const _tchar * pLayerTag)
 
 	return S_OK;
 }
+
+HRESULT CLevel_Logo::Ready_Layer_logo (const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_logoscene"), LEVEL_LOGO, pLayerTag, nullptr)))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_startbutton"), LEVEL_LOGO, pLayerTag, nullptr)))
+		return E_FAIL;
+
+	
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
 
 CLevel_Logo * CLevel_Logo::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {

@@ -24,14 +24,20 @@ private:
 	virtual ~CTexture() = default;
 
 public:
+	LPDIRECT3DBASETEXTURE9 Get_Texture(_uint iIndex) {
+		return m_Textures[iIndex];
+	}
+
+public:
 	HRESULT Initialize_Prototype(TYPE eType, const _tchar* pTextureFilePath, _uint iNumTexture);
 	HRESULT Initialize(void* pArg) override;
 
 public:
 	HRESULT Bind_OnGraphicDev(_uint iIndex = 0);
+	HRESULT Bind_OnGraphicDev_Debug();
 
 public:
-	void MoveFrame(const _tchar* TimerTag);
+	bool MoveFrame(const _tchar* TimerTag, _bool bLoop = true);
 	void Set_Frame(int iStartTex, int iEndTex, int iSpeed);
 	void Set_ZeroFrame() { m_TextureDesc.m_iCurrentTex = 0; }
 	TEXTUREDESC& Get_Frame() { return m_TextureDesc;}

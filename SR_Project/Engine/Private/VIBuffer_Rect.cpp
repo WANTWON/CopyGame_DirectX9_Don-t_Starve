@@ -1,4 +1,6 @@
 #include "..\Public\VIBuffer_Rect.h"
+#include "Picking.h"
+#include "Transform.h"
 
 CVIBuffer_Rect::CVIBuffer_Rect(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CVIBuffer(pGraphic_Device)
@@ -13,6 +15,7 @@ CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer_Rect & rhs)
 HRESULT CVIBuffer_Rect::Initialize_Prototype()
 {
 	m_iNumVertices = 4;
+	m_pVerticesPos = new _float3[m_iNumVertices];
 	m_iStride = sizeof(VTXTEX);
 	m_dwFVF = D3DFVF_XYZ | D3DFVF_TEX1;
 	m_ePrimitiveType = D3DPT_TRIANGLELIST;
@@ -26,16 +29,16 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 
 	m_pVB->Lock(0, /*m_iNumVertices * m_iStride*/0, (void**)&pVertices, 0);
 
-	pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
+	m_pVerticesPos[0] = pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
 	pVertices[0].vTexture = _float2(0.0f, 0.f);
 
-	pVertices[1].vPosition = _float3(0.5f, 0.5f, 0.f);
+	m_pVerticesPos[1] = pVertices[1].vPosition = _float3(0.5f, 0.5f, 0.f);
 	pVertices[1].vTexture = _float2(1.f, 0.f);
 
-	pVertices[2].vPosition = _float3(0.5f, -0.5f, 0.f);
+	m_pVerticesPos[2] = pVertices[2].vPosition = _float3(0.5f, -0.5f, 0.f);
 	pVertices[2].vTexture = _float2(1.f, 1.f);
 
-	pVertices[3].vPosition = _float3(-0.5f, -0.5f, 0.f);
+	m_pVerticesPos[3] = pVertices[3].vPosition = _float3(-0.5f, -0.5f, 0.f);
 	pVertices[3].vTexture = _float2(0.f, 1.f);
 	m_pVB->Unlock();
 
@@ -65,6 +68,36 @@ HRESULT CVIBuffer_Rect::Initialize(void* pArg)
 {
 
 	return S_OK;
+}
+
+_bool CVIBuffer_Rect::Picking(CTransform * pTransform, _float3 * pOut)
+{
+	CPicking*		pPicking = CPicking::Get_Instance();
+
+	Safe_AddRef(pPicking);
+
+	_float4x4   WorldMatrix = pTransform->Get_WorldMatrix();
+	_float4x4	WorldMatrixInverse;
+	D3DXMatrixInverse(&WorldMatrixInverse, nullptr, &WorldMatrix);
+
+	pPicking->Transform_ToLocalSpace(WorldMatrixInverse);
+
+	if (true == pPicking->Intersect_InLocalSpace(m_pVerticesPos[0], m_pVerticesPos[1], m_pVerticesPos[2], pOut))
+		goto Coll;
+
+	else if (true == pPicking->Intersect_InLocalSpace(m_pVerticesPos[0], m_pVerticesPos[2], m_pVerticesPos[3], pOut))
+		goto Coll;
+
+	Safe_Release(pPicking);
+	return false;
+
+
+Coll:
+	D3DXVec3TransformCoord(pOut, pOut, &WorldMatrix);
+
+	Safe_Release(pPicking);
+
+	return true;
 }
 
 CVIBuffer_Rect * CVIBuffer_Rect::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -97,4 +130,8 @@ void CVIBuffer_Rect::Free()
 {
 	__super::Free();
 
+	if (false == m_isCloned)
+	{
+		Safe_Delete_Array(m_pVerticesPos);
+	}
 }
