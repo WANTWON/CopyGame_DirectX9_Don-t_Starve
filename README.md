@@ -91,8 +91,8 @@
 
 ## 3. 쉐이더
 
-<img src="https://github.com/WANTWON/CopyGame_DirectX9_Don-t_Starve/assets/106663427/d16ab8ee-f046-4009-bc54-2d6b953e6730" width="50%"/>
-<img src="https://github.com/WANTWON/CopyGame_DirectX9_Don-t_Starve/assets/106663427/f055e000-8f48-4775-9631-37a14debb743" width="50%"/>
+<img src="https://github.com/WANTWON/CopyGame_DirectX9_Don-t_Starve/assets/106663427/d16ab8ee-f046-4009-bc54-2d6b953e6730" width="30%"/>
+<img src="https://github.com/WANTWON/CopyGame_DirectX9_Don-t_Starve/assets/106663427/f055e000-8f48-4775-9631-37a14debb743" width="30%"/>
 
 - **옵저버 패턴**을이용해서 시간의 흐름을 기록하고, DAY,DINNER,NIGHT로 시간의 흐름이 바뀔 때마다 전체 객체들의 쉐이더 처리를 공통적으로 바꿀 수 있도록 처리했습니다. 시간의 흐름이 바뀔 때마다 플레이어의 스탯 변화, 몬스터들의 등장 변화 등 또한 옵저버 패턴을 이용했습니다.
 - 밤이 될 경우 플레이어의 좌표를 기준으로 Min과 Max 범위를 설정해 Fog 효과를 주어 횃불효과를 주었습니다.
