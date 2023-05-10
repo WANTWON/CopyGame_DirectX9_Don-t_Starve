@@ -74,7 +74,7 @@
 ![제목 없는 동영상 - Clipchamp로 제작 (1)](https://github.com/WANTWON/CopyGame_DirectX9_Don-t_Starve/assets/106663427/175c3a8a-c222-4a0e-81b5-836c640e1338)
 
 
-- FPS 카메라는 1인칭 시점으로 Q와 E를 통해 각도를 회전할 수 있습니다. 동시에 플레이어의 Look Vector 도 카메라의 Look Vector를 따라가게 설정했습니다.
+- FPS 카메라는 1인칭 시점으로 Q와 E를 통해 플레이어의 Look Vector 를 회전할 수 있게 했습니다.  동시에 카메라의 Look Vector 도 플레이어의 Look Vector를 따라가게 설정했습니다.
 
 ### Target Camera
 
